@@ -61,4 +61,40 @@ public class RateBeerProvider {
             return buildUri(RateBeerDatabase.NETWORK_REQUEST_STATUSES, String.valueOf(id));
         }
     }
+
+    @TableEndpoint(table = RateBeerDatabase.BEERS) public static class Beers {
+        @ContentUri(
+                path = RateBeerDatabase.BEERS,
+                type = "vnd.android.cursor.item/vnd.android.quickbeer.next.beer",
+                defaultSort = JsonIdColumns.ID + " ASC")
+        public static final Uri BEERS = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.BEERS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.BEERS + "/*",
+                name = "BEERS_ID",
+                type = "vnd.android.cursor.item/vnd.android.quickbeer.next.beer",
+                whereColumn = BeerColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(RateBeerDatabase.BEERS, String.valueOf(id));
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.BEER_SEARCHES) public static class BeerSearches {
+        @ContentUri(
+                path = RateBeerDatabase.BEER_SEARCHES,
+                type = "vnd.android.cursor.dir/vnd.android.quickbeer.next.beersearch",
+                defaultSort = BeerSearchColumns.SEARCH + " ASC")
+        public static final Uri BEER_SEARCHES = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.BEER_SEARCHES);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.BEER_SEARCHES + "/*",
+                name = "RATEBEER_REPOSITORY_SEARCHES_SEARCH",
+                type = "vnd.android.cursor.item/vnd.android.quickbeer.next.beersearch",
+                whereColumn = BeerSearchColumns.SEARCH,
+                pathSegment = 1)
+        public static Uri withSearch(String search) {
+            return buildUri(RateBeerDatabase.BEER_SEARCHES, search);
+        }
+    }
 }

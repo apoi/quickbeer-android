@@ -15,7 +15,6 @@ import retrofit.client.OkClient;
  */
 @Module
 public final class NetworkModule {
-
     @Provides
     @Singleton
     public NetworkApi provideNetworkApi(@Named("okClient") Client client) {
@@ -34,5 +33,4 @@ public final class NetworkModule {
     public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation) {
         return networkInstrumentation.decorateNetwork(new OkHttpClient());
     }
-
 }

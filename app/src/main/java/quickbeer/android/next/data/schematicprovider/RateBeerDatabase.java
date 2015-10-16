@@ -9,4 +9,6 @@ public final class RateBeerDatabase {
 
     @Table(NetworkRequestStatusColumns.class) public static final String NETWORK_REQUEST_STATUSES = "networkRequestStatuses";
     @Table(UserSettingsColumns.class) public static final String USER_SETTINGS = "userSettings";
+    @Table(BeerColumns.class) public static final String BEERS = "beers";
+    @Table(BeerSearchColumns.class) public static final String BEER_SEARCHES = "beerSearches";
 }

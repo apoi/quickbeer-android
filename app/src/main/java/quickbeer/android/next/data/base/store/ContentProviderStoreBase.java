@@ -43,9 +43,10 @@ public abstract class ContentProviderStoreBase<T> {
     protected void insertOrUpdate(T item, Uri uri) {
         Preconditions.checkNotNull(item, "Item to be inserted cannot be null");
 
-        Log.v(TAG, "insertOrUpdate to " + uri);
         ContentValues values = getContentValuesForItem(item);
+        Log.v(TAG, "insertOrUpdate to " + uri);
         Log.v(TAG, "values(" + values + ")");
+
         if (contentResolver.update(uri, values, null, null) == 0) {
             final Uri resultUri = contentResolver.insert(uri, values);
             Log.v(TAG, "Inserted at " + resultUri);
