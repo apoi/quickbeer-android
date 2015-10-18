@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 

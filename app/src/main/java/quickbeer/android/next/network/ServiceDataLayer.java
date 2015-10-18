@@ -25,12 +25,17 @@ public class ServiceDataLayer extends DataLayerBase {
     @NonNull
     final private Collection<Fetcher> fetchers;
 
-    public ServiceDataLayer(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
+    public ServiceDataLayer(@NonNull Fetcher beerSearchFetcher,
+                            @NonNull Fetcher topBeersFetcher,
+                            @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
                             @NonNull BeerSearchStore beerSearchStore) {
         super(networkRequestStatusStore, beerStore, beerSearchStore);
 
-        fetchers = Arrays.asList();
+        fetchers = Arrays.asList(
+                beerSearchFetcher,
+                topBeersFetcher
+        );
     }
 
     public void processIntent(@NonNull Intent intent) {
@@ -63,7 +68,7 @@ public class ServiceDataLayer extends DataLayerBase {
 
     @Nullable
     private Fetcher findFetcherByIdentifier(@NonNull String identifier) {
-        Preconditions.checkNotNull(identifier, "Identifier cannot nbe null.");
+        Preconditions.checkNotNull(identifier, "Identifier cannot be null.");
 
         for (Fetcher fetcher : fetchers) {
             if (fetcher.getIdentifier().equals(identifier)) {

@@ -2,6 +2,7 @@ package quickbeer.android.next.data;
 
 import android.content.Context;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -13,8 +14,10 @@ import quickbeer.android.next.data.store.StoreModule;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.ServiceDataLayer;
+import quickbeer.android.next.network.fetchers.base.Fetcher;
+import quickbeer.android.next.network.fetchers.base.FetcherModule;
 
-@Module(includes = { StoreModule.class })
+@Module(includes = { FetcherModule.class, StoreModule.class })
 public final class DataStoreModule {
 
     @Provides
@@ -53,10 +56,14 @@ public final class DataStoreModule {
 
     @Provides
     @Singleton
-    public ServiceDataLayer provideServiceDataLayer(NetworkRequestStatusStore networkRequestStatusStore,
+    public ServiceDataLayer provideServiceDataLayer(@Named("beerSearch") Fetcher beerSearchFetcher,
+                                                    @Named("topBeers") Fetcher topBeersFetcher,
+                                                    NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
                                                     BeerSearchStore beerSearchStore) {
-        return new ServiceDataLayer(networkRequestStatusStore,
+        return new ServiceDataLayer(beerSearchFetcher,
+                topBeersFetcher,
+                networkRequestStatusStore,
                 beerStore,
                 beerSearchStore);
     }

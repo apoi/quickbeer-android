@@ -1,4 +1,4 @@
-package quickbeer.android.next.network;
+package quickbeer.android.next.network.utils;
 
 import android.support.annotation.NonNull;
 

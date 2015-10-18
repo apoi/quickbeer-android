@@ -13,7 +13,8 @@ import quickbeer.android.next.network.NetworkService;
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
-        DataStoreModule.class
+        DataStoreModule.class,
+        InstrumentationModule.class
 })
 public interface Graph {
 
