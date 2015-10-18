@@ -51,7 +51,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeerSeach(@NonNull final String searchString) {
+    public Observable<DataStreamNotification<BeerSearch>> getBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
 
         final Uri uri = beerSearchStore.getUriForKey(searchString);
@@ -67,7 +67,7 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
 
-        final Observable<DataStreamNotification<BeerSearch>> beerSearchStream = getBeerSeach(searchString);
+        final Observable<DataStreamNotification<BeerSearch>> beerSearchStream = getBeerSearch(searchString);
         fetchBeerSearch(searchString);
         return beerSearchStream;
     }
