@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.Map;
 
-import quickbeer.android.next.network.results.BeerSearchResults;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Preconditions;
 import retrofit.RestAdapter;
@@ -33,13 +32,11 @@ public class NetworkApi {
 
     public Observable<List<Beer>> search(Map<String, String> params) {
         return rateBeerService
-                .search(params)
-                .map(BeerSearchResults::getItems);
+                .search(params);
     }
 
     public Observable<List<Beer>> searchTopBeers(Map<String, String> params) {
         return rateBeerService
-                .searchTopBeers(params)
-                .map(BeerSearchResults::getItems);
+                .searchTopBeers(params);
     }
 }

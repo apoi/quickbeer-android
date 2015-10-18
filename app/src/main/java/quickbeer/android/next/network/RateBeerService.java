@@ -1,8 +1,9 @@
 package quickbeer.android.next.network;
 
+import java.util.List;
 import java.util.Map;
 
-import quickbeer.android.next.network.results.BeerSearchResults;
+import quickbeer.android.next.pojo.Beer;
 import retrofit.http.GET;
 import retrofit.http.QueryMap;
 import rx.Observable;
@@ -12,8 +13,8 @@ import rx.Observable;
  */
 public interface RateBeerService {
     @GET("/json/bff.asp")
-    Observable<BeerSearchResults> search(@QueryMap Map<String, String> search);
+    Observable<List<Beer>> search(@QueryMap Map<String, String> search);
 
     @GET("/json/tb.asp")
-    Observable<BeerSearchResults> searchTopBeers(@QueryMap Map<String, String> search);
+    Observable<List<Beer>> searchTopBeers(@QueryMap Map<String, String> search);
 }

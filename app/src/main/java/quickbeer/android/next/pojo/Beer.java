@@ -2,23 +2,37 @@ package quickbeer.android.next.pojo;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 import quickbeer.android.next.utils.Preconditions;
 
 /**
  * Created by antti on 17.10.2015.
  */
 public class Beer {
-    final private int id;
+    @SerializedName("BeerID")
+    private int id;
 
-    @NonNull
-    final private String name;
+    @SerializedName("BeerName")
+    private String name;
 
-    public Beer(int id, @NonNull String name) {
-        Preconditions.checkNotNull(name, "Beer name can't be null");
+    @SerializedName("OverallPctl")
+    private float overallRating;
 
-        this.name = name;
-        this.id = id;
-    }
+    @SerializedName("StylePctl")
+    private float styleRating;
+
+    @SerializedName("BeerStyleID")
+    private int styleId;
+
+    @SerializedName("BrewerID")
+    private int brewerId;
+
+    @SerializedName("BrewerName")
+    private String brewerName;
+
+    @SerializedName("BrewerCountryId")
+    private int countryId;
 
     public int getId() {
         return id;
