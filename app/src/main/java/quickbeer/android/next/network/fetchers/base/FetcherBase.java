@@ -18,8 +18,8 @@ import rx.functions.Action1;
  */
 abstract public class FetcherBase implements Fetcher {
     private static final String TAG = FetcherBase.class.getSimpleName();
-
     public static final int NO_ERROR_CODE = -1;
+    public static String IDENTIFIER = "fetcherBase";
 
     protected final NetworkApi networkApi;
     private final Action1<NetworkRequestStatus> updateNetworkRequestStatus;
@@ -27,8 +27,8 @@ abstract public class FetcherBase implements Fetcher {
 
     public FetcherBase(@NonNull NetworkApi networkApi,
                        @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus) {
-        Preconditions.checkNotNull(networkApi, "Network Api cannot be null.");
-        Preconditions.checkNotNull(updateNetworkRequestStatus, "Update Network Status cannot be null.");
+        Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
+        Preconditions.checkNotNull(updateNetworkRequestStatus, "Update network status cannot be null.");
 
         this.networkApi = networkApi;
         this.updateNetworkRequestStatus = updateNetworkRequestStatus;

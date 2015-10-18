@@ -1,6 +1,7 @@
 package quickbeer.android.next.data;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
@@ -9,6 +10,7 @@ import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.data.utils.DataLayerUtils;
+import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
@@ -71,6 +73,24 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeerSearch(@NonNull final String searchString) {
+        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+
+        final Observable<DataStreamNotification<BeerSearch>> beerSearchStream = getBeerSeach(searchString);
+        fetchBeerSearch(searchString);
+        return beerSearchStream;
+    }
+
+    private void fetchBeerSearch(@NonNull final String searchString) {
+        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
+        intent.putExtra("searchString", searchString);
+        context.startService(intent);
+    }
+
+    @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getTopBeers() {
         final Uri uri = beerSearchStore.getUriForKey(TopBeersFetcher.SEARCH);
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
@@ -79,5 +99,19 @@ public class DataLayer extends DataLayerBase {
                 beerSearchStore.getStream(TopBeersFetcher.SEARCH);
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopBeers() {
+        final Observable<DataStreamNotification<BeerSearch>> topBeersStream = getTopBeers();
+        fetchTopBeers();
+        return topBeersStream;
+    }
+
+    private void fetchTopBeers() {
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
+        intent.putExtra("fetcherIdentifier", TopBeersFetcher.IDENTIFIER);
+        context.startService(intent);
     }
 }

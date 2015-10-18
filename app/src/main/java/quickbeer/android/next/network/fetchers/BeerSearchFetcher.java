@@ -27,6 +27,7 @@ import rx.schedulers.Schedulers;
  */
 public class BeerSearchFetcher extends FetcherBase {
     private static final String TAG = BeerSearchFetcher.class.getSimpleName();
+    public static final String IDENTIFIER = TAG;
 
     private final BeerStore beerStore;
     private final BeerSearchStore beerSearchStore;
@@ -42,6 +43,11 @@ public class BeerSearchFetcher extends FetcherBase {
 
         this.beerStore = beerStore;
         this.beerSearchStore = beerSearchStore;
+    }
+
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
     }
 
     @Override

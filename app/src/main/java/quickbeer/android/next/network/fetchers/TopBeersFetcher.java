@@ -19,6 +19,7 @@ import rx.functions.Action1;
  */
 public class TopBeersFetcher extends BeerSearchFetcher {
     private static final String TAG = TopBeersFetcher.class.getSimpleName();
+    public static final String IDENTIFIER = TAG;
     public static final String SEARCH = "//top50";
 
     public TopBeersFetcher(@NonNull NetworkApi networkApi,
@@ -26,6 +27,11 @@ public class TopBeersFetcher extends BeerSearchFetcher {
                            @NonNull BeerStore beerStore,
                            @NonNull BeerSearchStore beerSearchStore) {
         super(networkApi, updateNetworkRequestStatus, beerStore, beerSearchStore);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
     }
 
     @Override
