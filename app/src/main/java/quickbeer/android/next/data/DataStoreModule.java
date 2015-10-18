@@ -28,6 +28,16 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetBeerSearch provideGetBeerSearch(DataLayer dataLayer) {
+        return dataLayer::fetchAndGetBeerSearch;
+    }
+
+    @Provides
+    public DataLayer.GetTopBeers provideGetTopBeers(DataLayer dataLayer) {
+        return dataLayer::fetchAndGetTopBeers;
+    }
+
+    @Provides
     @Singleton
     public DataLayer provideApplicationDataLayer(@ForApplication Context context,
                                                  UserSettingsStore userSettingsStore,

@@ -50,15 +50,6 @@ public class DataLayer extends DataLayerBase {
         userSettingsStore.put(userSettings);
     }
 
-    public interface GetUserSettings {
-        @NonNull
-        Observable<UserSettings> call();
-    }
-
-    public interface SetUserSettings {
-        void call(@NonNull UserSettings userSettings);
-    }
-
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getBeerSeach(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
@@ -113,5 +104,24 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
         intent.putExtra("fetcherIdentifier", TopBeersFetcher.IDENTIFIER);
         context.startService(intent);
+    }
+
+    public interface GetUserSettings {
+        @NonNull
+        Observable<UserSettings> call();
+    }
+
+    public interface SetUserSettings {
+        void call(@NonNull UserSettings userSettings);
+    }
+
+    public interface GetBeerSearch {
+        @NonNull
+        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String search);
+    }
+
+    public interface GetTopBeers {
+        @NonNull
+        Observable<DataStreamNotification<BeerSearch>> call();
     }
 }
