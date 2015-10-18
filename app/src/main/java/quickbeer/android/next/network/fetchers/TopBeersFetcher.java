@@ -10,7 +10,7 @@ import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
-import quickbeer.android.next.utils.NetworkUtils;
+import quickbeer.android.next.network.utils.NetworkUtils;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -19,6 +19,7 @@ import rx.functions.Action1;
  */
 public class TopBeersFetcher extends BeerSearchFetcher {
     private static final String TAG = TopBeersFetcher.class.getSimpleName();
+    public static final String SEARCH = "//top50";
 
     public TopBeersFetcher(@NonNull NetworkApi networkApi,
                            @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
@@ -29,7 +30,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        fetchBeerSearch("//top50");
+        fetchBeerSearch(SEARCH);
     }
 
     @NonNull

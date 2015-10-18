@@ -20,4 +20,16 @@ public final class StoreModule {
     public NetworkRequestStatusStore provideNetworkRequestStatusStore(ContentResolver contentResolver) {
         return new NetworkRequestStatusStore(contentResolver);
     }
+
+    @Provides
+    @Singleton
+    public BeerStore provideBeerStore(ContentResolver contentResolver) {
+        return new BeerStore(contentResolver);
+    }
+
+    @Provides
+    @Singleton
+    public BeerSearchStore provideBeerSearchStore(ContentResolver contentResolver) {
+        return new BeerSearchStore(contentResolver);
+    }
 }

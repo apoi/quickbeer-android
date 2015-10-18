@@ -6,6 +6,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.StoreModule;
 import quickbeer.android.next.data.store.UserSettingsStore;
@@ -29,13 +31,23 @@ public final class DataStoreModule {
     @Singleton
     public DataLayer provideApplicationDataLayer(@ForApplication Context context,
                                                  UserSettingsStore userSettingsStore,
-                                                 NetworkRequestStatusStore networkRequestStatusStore) {
-        return new DataLayer(context, userSettingsStore, networkRequestStatusStore);
+                                                 NetworkRequestStatusStore networkRequestStatusStore,
+                                                 BeerStore beerStore,
+                                                 BeerSearchStore beerSearchStore) {
+        return new DataLayer(context,
+                userSettingsStore,
+                networkRequestStatusStore,
+                beerStore,
+                beerSearchStore);
     }
 
     @Provides
     @Singleton
-    public ServiceDataLayer provideServiceDataLayer(NetworkRequestStatusStore networkRequestStatusStore) {
-        return new ServiceDataLayer(networkRequestStatusStore);
+    public ServiceDataLayer provideServiceDataLayer(NetworkRequestStatusStore networkRequestStatusStore,
+                                                    BeerStore beerStore,
+                                                    BeerSearchStore beerSearchStore) {
+        return new ServiceDataLayer(networkRequestStatusStore,
+                beerStore,
+                beerSearchStore);
     }
 }

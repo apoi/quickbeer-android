@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import quickbeer.android.next.data.DataLayerBase;
+import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
-import quickbeer.android.next.network.fetchers.Fetcher;
+import quickbeer.android.next.network.fetchers.base.Fetcher;
 import quickbeer.android.next.utils.Preconditions;
 
 /**
@@ -23,8 +25,10 @@ public class ServiceDataLayer extends DataLayerBase {
     @NonNull
     final private Collection<Fetcher> fetchers;
 
-    public ServiceDataLayer(@NonNull NetworkRequestStatusStore networkRequestStatusStore) {
-        super(networkRequestStatusStore);
+    public ServiceDataLayer(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
+                            @NonNull BeerStore beerStore,
+                            @NonNull BeerSearchStore beerSearchStore) {
+        super(networkRequestStatusStore, beerStore, beerSearchStore);
 
         fetchers = Arrays.asList();
     }

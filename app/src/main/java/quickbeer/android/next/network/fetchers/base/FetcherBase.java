@@ -1,4 +1,4 @@
-package quickbeer.android.next.network.fetchers;
+package quickbeer.android.next.network.fetchers.base;
 
 import android.support.annotation.NonNull;
 import android.util.Log;
