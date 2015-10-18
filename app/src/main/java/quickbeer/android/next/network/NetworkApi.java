@@ -31,15 +31,15 @@ public class NetworkApi {
         rateBeerService = restAdapter.create(RateBeerService.class);
     }
 
-    public Observable<List<Beer>> search(Map<String, String> search) {
+    public Observable<List<Beer>> search(Map<String, String> params) {
         return rateBeerService
-                .search(search)
+                .search(params)
                 .map(BeerSearchResults::getItems);
     }
 
-    public Observable<List<Beer>> searchTopBeers() {
+    public Observable<List<Beer>> searchTopBeers(Map<String, String> params) {
         return rateBeerService
-                .searchTopBeers()
+                .searchTopBeers(params)
                 .map(BeerSearchResults::getItems);
     }
 }

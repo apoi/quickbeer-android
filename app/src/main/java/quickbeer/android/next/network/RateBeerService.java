@@ -14,6 +14,6 @@ public interface RateBeerService {
     @GET("/json/bff.asp")
     Observable<BeerSearchResults> search(@QueryMap Map<String, String> search);
 
-    @GET("/json/tb.asp?m=top50")
-    Observable<BeerSearchResults> searchTopBeers();
+    @GET("/json/tb.asp")
+    Observable<BeerSearchResults> searchTopBeers(@QueryMap Map<String, String> search);
 }

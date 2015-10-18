@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import quickbeer.android.next.data.store.BeerSearchStore;
@@ -15,6 +14,7 @@ import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
+import quickbeer.android.next.utils.NetworkUtils;
 import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
 import rx.Subscription;
@@ -87,7 +87,7 @@ public class BeerSearchFetcher extends FetcherBase {
     protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
 
-        return networkApi.search(Collections.singletonMap("q", searchString));
+        return networkApi.search(NetworkUtils.createRequestParams("bn", searchString));
     }
 
     @NonNull

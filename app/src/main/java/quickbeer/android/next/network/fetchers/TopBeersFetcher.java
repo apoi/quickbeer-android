@@ -10,6 +10,7 @@ import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
+import quickbeer.android.next.utils.NetworkUtils;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -34,6 +35,6 @@ public class TopBeersFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     protected Observable<List<Beer>> createNetworkObservable(String searchString) {
-        return networkApi.searchTopBeers();
+        return networkApi.searchTopBeers(NetworkUtils.createRequestParams("m", "top50"));
     }
 }
