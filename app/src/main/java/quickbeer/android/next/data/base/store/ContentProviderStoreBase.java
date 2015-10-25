@@ -41,7 +41,7 @@ public abstract class ContentProviderStoreBase<T> {
     }
 
     protected void insertOrUpdate(T item, Uri uri) {
-        Preconditions.checkNotNull(item, "Item to be inserted cannot be null");
+        Preconditions.checkNotNull(item, "Item to be inserted cannot be null.");
 
         ContentValues values = getContentValuesForItem(item);
         Log.v(TAG, "insertOrUpdate to " + uri);
@@ -57,7 +57,7 @@ public abstract class ContentProviderStoreBase<T> {
 
     @NonNull
     protected List<T> queryList(Uri uri) {
-        Preconditions.checkNotNull(uri, "Uri cannot be null");
+        Preconditions.checkNotNull(uri, "Uri cannot be null.");
 
         Cursor cursor = contentResolver.query(uri, getProjection(), null, null, null);
         List<T> list = new ArrayList<>();

@@ -31,13 +31,18 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetBeer provideGetBeer(DataLayer dataLayer) {
+        return dataLayer::getBeer;
+    }
+
+    @Provides
     public DataLayer.GetBeerSearch provideGetBeerSearch(DataLayer dataLayer) {
         return dataLayer::fetchAndGetBeerSearch;
     }
 
     @Provides
     public DataLayer.GetTopBeers provideGetTopBeers(DataLayer dataLayer) {
-        return dataLayer::fetchAndGetTopBeers;
+        return dataLayer::getTopBeers;
     }
 
     @Provides

@@ -13,8 +13,11 @@ import rx.Observable;
  */
 public interface RateBeerService {
     @GET("/json/bff.asp")
-    Observable<List<Beer>> search(@QueryMap Map<String, String> search);
+    Observable<Beer> getBeer(@QueryMap Map<String, String> params);
+
+    @GET("/json/bff.asp")
+    Observable<List<Beer>> search(@QueryMap Map<String, String> params);
 
     @GET("/json/tb.asp")
-    Observable<List<Beer>> searchTopBeers(@QueryMap Map<String, String> search);
+    Observable<List<Beer>> searchTopBeers(@QueryMap Map<String, String> params);
 }

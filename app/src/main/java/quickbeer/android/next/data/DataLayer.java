@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
@@ -12,6 +13,7 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.data.utils.DataLayerUtils;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
+import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
 import quickbeer.android.next.pojo.UserSettings;
@@ -51,8 +53,35 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
+    public Observable<Beer> getBeer(@NonNull Integer beerId) {
+        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+        Log.v(TAG, "getBeer");
+
+        return beerStore.getStream(beerId);
+    }
+
+    @NonNull
+    public Observable<Beer> fetchAndGetBeer(@NonNull Integer beerId) {
+        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+        Log.v(TAG, "fetchAndGetBeer");
+
+        fetchBeer(beerId);
+        return beerStore.getStream(beerId);
+    }
+
+    private void fetchBeer(@NonNull Integer beerId) {
+        Log.v(TAG, "fetchBeer");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
+        intent.putExtra("id", beerId);
+        context.startService(intent);
+    }
+
+    @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        Log.v(TAG, "getBeerSearch");
 
         final Uri uri = beerSearchStore.getUriForKey(searchString);
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
@@ -66,6 +95,7 @@ public class DataLayer extends DataLayerBase {
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        Log.v(TAG, "fetchAndGetBeerSearch");
 
         final Observable<DataStreamNotification<BeerSearch>> beerSearchStream = getBeerSearch(searchString);
         fetchBeerSearch(searchString);
@@ -74,6 +104,7 @@ public class DataLayer extends DataLayerBase {
 
     private void fetchBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        Log.v(TAG, "fetchBeerSearch");
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
@@ -83,6 +114,8 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getTopBeers() {
+        Log.v(TAG, "getTopBeers");
+
         final Uri uri = beerSearchStore.getUriForKey(TopBeersFetcher.SEARCH);
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
@@ -94,12 +127,16 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopBeers() {
+        Log.v(TAG, "fetchAndGetTopBeers");
+
         final Observable<DataStreamNotification<BeerSearch>> topBeersStream = getTopBeers();
         fetchTopBeers();
         return topBeersStream;
     }
 
     private void fetchTopBeers() {
+        Log.v(TAG, "fetchTopBeers");
+
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
         intent.putExtra("fetcherIdentifier", TopBeersFetcher.IDENTIFIER);
@@ -113,6 +150,11 @@ public class DataLayer extends DataLayerBase {
 
     public interface SetUserSettings {
         void call(@NonNull UserSettings userSettings);
+    }
+
+    public interface GetBeer {
+        @NonNull
+        Observable<Beer> call(int beerId);
     }
 
     public interface GetBeerSearch {

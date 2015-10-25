@@ -30,6 +30,11 @@ public class NetworkApi {
         rateBeerService = restAdapter.create(RateBeerService.class);
     }
 
+    public Observable<Beer> getBeer(Map<String, String> params) {
+        return rateBeerService
+                .getBeer(params);
+    }
+
     public Observable<List<Beer>> search(Map<String, String> params) {
         return rateBeerService
                 .search(params);
