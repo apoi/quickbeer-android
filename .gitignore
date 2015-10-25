@@ -30,4 +30,6 @@ proguard/
 /.idea
 *.iml
 .DS_Store
+
+# Project
 /app/src/main/res/raw/
