@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <quickbeer.android.next.view.BeersView
+    <quickbeer.android.next.view.BeerListView
         android:id="@+id/beers_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,5 +15,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </quickbeer.android.next.view.BeersView>
+    </quickbeer.android.next.view.BeerListView>
 </LinearLayout>

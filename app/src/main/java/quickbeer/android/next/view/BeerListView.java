@@ -25,16 +25,16 @@ import rx.subscriptions.Subscriptions;
 /**
  * Created by antti on 25.10.2015.
  */
-public class BeersView extends FrameLayout {
+public class BeerListView extends FrameLayout {
 
     private RecyclerView repositoriesListView;
     private BeerListAdapter beerListAdapter;
 
-    public BeersView(Context context) {
+    public BeerListView(Context context) {
         super(context, null);
     }
 
-    public BeersView(Context context, AttributeSet attrs) {
+    public BeerListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -58,10 +58,10 @@ public class BeersView extends FrameLayout {
     }
 
     public static class ViewBinder extends RxViewBinder {
-        private BeersView view;
+        private BeerListView view;
         private BeerListViewModel viewModel;
 
-        public ViewBinder(@NonNull BeersView view,
+        public ViewBinder(@NonNull BeerListView view,
                           @NonNull BeerListViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");

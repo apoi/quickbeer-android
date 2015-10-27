@@ -11,7 +11,7 @@ import javax.inject.Inject;
 
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.view.BeersView;
+import quickbeer.android.next.view.BeerListView;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 
 /**
@@ -20,7 +20,7 @@ import quickbeer.android.next.viewmodels.BeerListViewModel;
 public class BeerListFragment extends Fragment {
     private static final String TAG = BeerListFragment.class.getSimpleName();
 
-    private BeersView.ViewBinder beersViewBinder;
+    private BeerListView.ViewBinder beersViewBinder;
 
     @Inject
     BeerListViewModel beerListViewModel;
@@ -45,7 +45,7 @@ public class BeerListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        beersViewBinder = new BeersView.ViewBinder((BeersView) view.findViewById(R.id.beers_view), beerListViewModel);
+        beersViewBinder = new BeerListView.ViewBinder((BeerListView) view.findViewById(R.id.beers_view), beerListViewModel);
         beerListViewModel.subscribeToDataStore();
     }
 
