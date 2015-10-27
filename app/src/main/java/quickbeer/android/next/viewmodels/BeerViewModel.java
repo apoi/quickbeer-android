@@ -25,14 +25,14 @@ public class BeerViewModel extends BaseViewModel {
     @NonNull
     private final DataLayer.GetBeer getBeer;
 
-    private final int beerId;
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
+    private final int beerId;
 
     public BeerViewModel(final int beerId, @NonNull DataLayer.GetBeer getBeer) {
         Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
 
-        this.beerId = beerId;
         this.getBeer = getBeer;
+        this.beerId = beerId;
     }
 
     @NonNull
@@ -46,6 +46,6 @@ public class BeerViewModel extends BaseViewModel {
 
         compositeSubscription.add(getBeer
                 .call(beerId)
-                .subscribe());
+                .subscribe(beer::onNext));
     }
 }

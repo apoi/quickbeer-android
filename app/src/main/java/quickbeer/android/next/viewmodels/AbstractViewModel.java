@@ -19,6 +19,13 @@ abstract public class AbstractViewModel {
         subscribeToDataStoreInternal(compositeSubscription);
     }
 
+    final public void subscribeToDataStoreOnce() {
+        Log.v(TAG, "subscribeToDataStoreOnce");
+        if (compositeSubscription == null) {
+            subscribeToDataStore();
+        }
+    }
+
     public void dispose() {
         Log.v(TAG, "dispose");
 

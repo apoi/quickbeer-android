@@ -32,8 +32,8 @@ public class BeerListFragment extends Fragment {
         QuickBeer.getInstance().getGraph().inject(this);
 
         beerListViewModel.getSelectBeer()
-                .subscribe(beer -> {
-                    Log.d(TAG, "Selected beer " + beer.getName());
+                .subscribe(beerId -> {
+                    Log.d(TAG, "Selected beer " + beerId);
                 });
     }
 

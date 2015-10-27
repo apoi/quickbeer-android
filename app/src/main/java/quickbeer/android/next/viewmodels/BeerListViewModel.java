@@ -7,10 +7,8 @@ import java.util.List;
 
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.data.DataStreamNotification;
-import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.utils.Preconditions;
-import quickbeer.android.next.utils.RxUtils;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -28,8 +26,8 @@ public class BeerListViewModel extends BaseViewModel {
     private final DataLayer.GetTopBeers getTopBeers;
     private final DataLayer.GetBeer getBeer;
 
-    private final PublishSubject<Beer> selectBeer = PublishSubject.create();
-    private final BehaviorSubject<List<Beer>> beers = BehaviorSubject.create();
+    private final PublishSubject<Integer> selectBeer = PublishSubject.create();
+    private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
     public BeerListViewModel(@NonNull DataLayer.GetTopBeers getTopBeers,
                              @NonNull DataLayer.GetBeer getBeer) {
@@ -40,18 +38,16 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    public Observable<Beer> getSelectBeer() {
+    public Observable<Integer> getSelectBeer() {
         return selectBeer.asObservable();
     }
 
-    public void selectBeer(@NonNull Beer beer) {
-        Preconditions.checkNotNull(beer, "Beer cannot be null.");
-
-        this.selectBeer.onNext(beer);
+    public void selectBeer(final int beerId) {
+        this.selectBeer.onNext(beerId);
     }
 
     @NonNull
-    public Observable<List<Beer>> getBeers() {
+    public Observable<List<BeerViewModel>> getBeers() {
         return beers.asObservable();
     }
 
@@ -71,7 +67,7 @@ public class BeerListViewModel extends BaseViewModel {
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Log.d(TAG, "Search finished"))
                 .map(BeerSearch::getItems)
-                .flatMap(toBeerList())
+                .flatMap(toBeerViewModelList())
                 .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " beers from the view model"))
                 .subscribe(beers::onNext));
 
@@ -80,18 +76,9 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    Func1<List<Integer>, Observable<List<Beer>>> toBeerList() {
-        return repositoryIds -> Observable.from(repositoryIds)
-                .map(this::getBeerObservable)
-                .toList()
-                .flatMap(RxUtils::toObservableList);
-    }
-
-    @NonNull
-    Observable<Beer> getBeerObservable(@NonNull Integer beerId) {
-        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
-
-        return getBeer.call(beerId)
-                .doOnNext((beer) -> Log.v(TAG, "Received beer " + beer.getId()));
+    Func1<List<Integer>, Observable<List<BeerViewModel>>> toBeerViewModelList() {
+        return beerIds -> Observable.from(beerIds)
+                .map(integer -> new BeerViewModel(integer, getBeer))
+                .toList();
     }
 }
