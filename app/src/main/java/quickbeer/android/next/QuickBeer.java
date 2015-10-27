@@ -2,7 +2,6 @@ package quickbeer.android.next;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import quickbeer.android.next.injections.Graph;
 

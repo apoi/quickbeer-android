@@ -8,9 +8,9 @@ import java.util.List;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
+import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.NetworkRequestStatus;
-import quickbeer.android.next.network.utils.NetworkUtils;
 import rx.Observable;
 import rx.functions.Action1;
 

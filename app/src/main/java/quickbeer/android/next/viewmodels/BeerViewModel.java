@@ -3,17 +3,11 @@ package quickbeer.android.next.viewmodels;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.List;
-
 import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.data.DataStreamNotification;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
-import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
 /**
