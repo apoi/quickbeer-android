@@ -21,13 +21,8 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by antti on 25.10.2015.
  */
-public class BeerListViewModel extends AbstractViewModel {
+public class BeerListViewModel extends BaseViewModel {
     private static final String TAG = BeerListViewModel.class.getSimpleName();
-    private static final int MAX_ITEMS_COUNT = 5;
-
-    public enum ProgressStatus {
-        LOADING, ERROR, IDLE
-    }
 
     @NonNull
     private final DataLayer.GetTopBeers getTopBeers;
@@ -35,7 +30,6 @@ public class BeerListViewModel extends AbstractViewModel {
 
     private final PublishSubject<Beer> selectBeer = PublishSubject.create();
     private final BehaviorSubject<List<Beer>> beers = BehaviorSubject.create();
-    private final BehaviorSubject<ProgressStatus> networkRequestStatusText = BehaviorSubject.create();
 
     public BeerListViewModel(@NonNull DataLayer.GetTopBeers getTopBeers,
                              @NonNull DataLayer.GetBeer getBeer) {
@@ -59,11 +53,6 @@ public class BeerListViewModel extends AbstractViewModel {
     @NonNull
     public Observable<List<Beer>> getBeers() {
         return beers.asObservable();
-    }
-
-    @NonNull
-    public Observable<ProgressStatus> getNetworkRequestStatus() {
-        return networkRequestStatusText.asObservable();
     }
 
     @Override
@@ -104,24 +93,5 @@ public class BeerListViewModel extends AbstractViewModel {
 
         return getBeer.call(beerId)
                 .doOnNext((beer) -> Log.v(TAG, "Received beer " + beer.getId()));
-    }
-
-    @NonNull
-    static Func1<DataStreamNotification, ProgressStatus> toProgressStatus() {
-        return notification -> {
-            if (notification.isFetchingStart()) {
-                return ProgressStatus.LOADING;
-            } else if (notification.isFetchingError()) {
-                return ProgressStatus.ERROR;
-            } else {
-                return ProgressStatus.IDLE;
-            }
-        };
-    }
-
-    void setNetworkStatusText(@NonNull ProgressStatus status) {
-        Preconditions.checkNotNull(status, "ProgressStatus cannot be null.");
-
-        networkRequestStatusText.onNext(status);
     }
 }
