@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.view.BeersView;
-import quickbeer.android.next.viewmodels.BeersViewModel;
+import quickbeer.android.next.viewmodels.BeerListViewModel;
 
 /**
  * Created by antti on 25.10.2015.
@@ -23,7 +23,7 @@ public class BeerListFragment extends Fragment {
     private BeersView.ViewBinder beersViewBinder;
 
     @Inject
-    BeersViewModel beersViewModel;
+    BeerListViewModel beerListViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class BeerListFragment extends Fragment {
 
         QuickBeer.getInstance().getGraph().inject(this);
 
-        beersViewModel.getSelectBeer()
+        beerListViewModel.getSelectBeer()
                 .subscribe(beer -> {
                     Log.d(TAG, "Selected beer " + beer.getName());
                 });
@@ -45,8 +45,8 @@ public class BeerListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        beersViewBinder = new BeersView.ViewBinder((BeersView) view.findViewById(R.id.beers_view), beersViewModel);
-        beersViewModel.subscribeToDataStore();
+        beersViewBinder = new BeersView.ViewBinder((BeersView) view.findViewById(R.id.beers_view), beerListViewModel);
+        beerListViewModel.subscribeToDataStore();
     }
 
     @Override
@@ -64,13 +64,13 @@ public class BeerListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        beersViewModel.unsubscribeFromDataStore();
+        beerListViewModel.unsubscribeFromDataStore();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        beersViewModel.dispose();
-        beersViewModel = null;
+        beerListViewModel.dispose();
+        beerListViewModel = null;
     }
 }

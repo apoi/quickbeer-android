@@ -11,7 +11,6 @@ import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.utils.Preconditions;
 import quickbeer.android.next.utils.RxUtils;
-import quickbeer.android.next.view.BeersView;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -22,8 +21,8 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by antti on 25.10.2015.
  */
-public class BeersViewModel extends AbstractViewModel {
-    private static final String TAG = BeersViewModel.class.getSimpleName();
+public class BeerListViewModel extends AbstractViewModel {
+    private static final String TAG = BeerListViewModel.class.getSimpleName();
     private static final int MAX_ITEMS_COUNT = 5;
 
     public enum ProgressStatus {
@@ -38,8 +37,8 @@ public class BeersViewModel extends AbstractViewModel {
     private final BehaviorSubject<List<Beer>> beers = BehaviorSubject.create();
     private final BehaviorSubject<ProgressStatus> networkRequestStatusText = BehaviorSubject.create();
 
-    public BeersViewModel(@NonNull DataLayer.GetTopBeers getTopBeers,
-                          @NonNull DataLayer.GetBeer getBeer) {
+    public BeerListViewModel(@NonNull DataLayer.GetTopBeers getTopBeers,
+                             @NonNull DataLayer.GetBeer getBeer) {
         Preconditions.checkNotNull(getTopBeers, "GetTopBeers cannot be null.");
 
         this.getTopBeers = getTopBeers;
@@ -94,7 +93,6 @@ public class BeersViewModel extends AbstractViewModel {
     @NonNull
     Func1<List<Integer>, Observable<List<Beer>>> toBeerList() {
         return repositoryIds -> Observable.from(repositoryIds)
-                .take(5)
                 .map(this::getBeerObservable)
                 .toList()
                 .flatMap(RxUtils::toObservableList);

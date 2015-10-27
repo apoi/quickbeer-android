@@ -16,7 +16,7 @@ import java.util.List;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Preconditions;
-import quickbeer.android.next.viewmodels.BeersViewModel;
+import quickbeer.android.next.viewmodels.BeerListViewModel;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -59,10 +59,10 @@ public class BeersView extends FrameLayout {
 
     public static class ViewBinder extends RxViewBinder {
         private BeersView view;
-        private BeersViewModel viewModel;
+        private BeerListViewModel viewModel;
 
         public ViewBinder(@NonNull BeersView view,
-                          @NonNull BeersViewModel viewModel) {
+                          @NonNull BeerListViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 

@@ -11,7 +11,7 @@ import quickbeer.android.next.data.DataLayer.GetTopBeers;
 @Module
 public class ViewModelModule {
     @Provides
-    public BeersViewModel provideBeersViewModel(GetTopBeers getTopBeers, GetBeer getBeer) {
-        return new BeersViewModel(getTopBeers, getBeer);
+    public BeerListViewModel provideBeersViewModel(GetTopBeers getTopBeers, GetBeer getBeer) {
+        return new BeerListViewModel(getTopBeers, getBeer);
     }
 }
