@@ -5,13 +5,13 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import io.reark.reark.network.fetchers.FetcherBase;
+import io.reark.reark.pojo.NetworkRequestStatus;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
-import quickbeer.android.next.network.fetchers.base.FetcherBase;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.NetworkRequestStatus;
-import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -24,15 +24,18 @@ public class BeerFetcher extends FetcherBase {
     private static final String TAG = BeerFetcher.class.getSimpleName();
     public static final String IDENTIFIER = TAG;
 
+    private final NetworkApi networkApi;
     private final BeerStore beerStore;
 
     public BeerFetcher(@NonNull NetworkApi networkApi,
                        @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                        @NonNull BeerStore beerStore) {
-        super(networkApi, updateNetworkRequestStatus);
+        super(updateNetworkRequestStatus);
 
+        Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
 
+        this.networkApi = networkApi;
         this.beerStore = beerStore;
     }
 

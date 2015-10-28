@@ -2,8 +2,9 @@ package quickbeer.android.next.viewmodels;
 
 import android.support.annotation.NonNull;
 
-import quickbeer.android.next.data.DataStreamNotification;
-import quickbeer.android.next.utils.Preconditions;
+import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Preconditions;
+import io.reark.reark.viewmodels.AbstractViewModel;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;

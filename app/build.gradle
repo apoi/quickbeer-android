@@ -50,17 +50,22 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    apt 'com.google.dagger:dagger-compiler:2.0'
-    compile 'com.google.dagger:dagger:2.0'
-
     compile 'com.android.support:recyclerview-v7:23.1.0'
     compile 'com.android.support:appcompat-v7:23.1.0'
     compile 'com.android.support:design:23.1.0'
 
+    // Dagger
+    apt 'com.google.dagger:dagger-compiler:2.0'
+    compile 'com.google.dagger:dagger:2.0'
+
+    // RxJava
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.tehmou:rxandroidarchitecture:0.1'
 
+    // Use local in-development version of reark
+    compile project(path: ':reark:reark')
+
+    // Schematic
     apt 'net.simonvt.schematic:schematic-compiler:0.6.2'
     compile 'net.simonvt.schematic:schematic:0.6.2'
 

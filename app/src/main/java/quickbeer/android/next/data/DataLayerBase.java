@@ -2,10 +2,10 @@ package quickbeer.android.next.data;
 
 import android.support.annotation.NonNull;
 
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
-import quickbeer.android.next.utils.Preconditions;
 
 /**
  * Created by antti on 18.10.2015.

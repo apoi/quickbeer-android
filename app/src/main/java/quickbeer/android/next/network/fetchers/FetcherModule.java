@@ -1,16 +1,15 @@
-package quickbeer.android.next.network.fetchers.base;
+package quickbeer.android.next.network.fetchers;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reark.reark.network.fetchers.Fetcher;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.NetworkModule;
-import quickbeer.android.next.network.fetchers.BeerSearchFetcher;
-import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 
 @Module(includes = NetworkModule.class)
 public final class FetcherModule {

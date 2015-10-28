@@ -9,13 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.tehmou.rxandroidarchitecture.utils.RxViewBinder;
-
 import java.util.Collections;
 import java.util.List;
 
+import io.reark.reark.utils.Preconditions;
+import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
-import quickbeer.android.next.utils.Preconditions;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import rx.Observable;

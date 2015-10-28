@@ -6,18 +6,19 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.data.utils.DataLayerUtils;
+import io.reark.reark.pojo.NetworkRequestStatus;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
-import quickbeer.android.next.data.utils.DataLayerUtils;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
-import quickbeer.android.next.pojo.NetworkRequestStatus;
 import quickbeer.android.next.pojo.UserSettings;
-import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
 
 public class DataLayer extends DataLayerBase {

@@ -9,14 +9,14 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import quickbeer.android.next.data.base.store.SingleItemContentProviderStoreBase;
+import io.reark.reark.data.store.SingleItemContentProviderStore;
+import io.reark.reark.pojo.NetworkRequestStatus;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
-import quickbeer.android.next.pojo.NetworkRequestStatus;
-import quickbeer.android.next.utils.Preconditions;
 
-public class NetworkRequestStatusStore extends SingleItemContentProviderStoreBase<NetworkRequestStatus, Integer> {
+public class NetworkRequestStatusStore extends SingleItemContentProviderStore<NetworkRequestStatus, Integer> {
     private static final String TAG = NetworkRequestStatusStore.class.getSimpleName();
 
     public NetworkRequestStatusStore(@NonNull ContentResolver contentResolver) {

@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reark.reark.network.fetchers.Fetcher;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
@@ -14,8 +15,7 @@ import quickbeer.android.next.data.store.StoreModule;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.ServiceDataLayer;
-import quickbeer.android.next.network.fetchers.base.Fetcher;
-import quickbeer.android.next.network.fetchers.base.FetcherModule;
+import quickbeer.android.next.network.fetchers.FetcherModule;
 
 @Module(includes = { FetcherModule.class, StoreModule.class })
 public final class DataStoreModule {

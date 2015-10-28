@@ -5,10 +5,10 @@ import android.util.Log;
 
 import java.util.List;
 
+import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.data.DataStreamNotification;
 import quickbeer.android.next.pojo.BeerSearch;
-import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -52,7 +52,7 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     @Override
-    protected void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+    public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<BeerSearch>> beerSearchSource =

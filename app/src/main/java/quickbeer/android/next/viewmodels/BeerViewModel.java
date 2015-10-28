@@ -3,9 +3,9 @@ package quickbeer.android.next.viewmodels;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.utils.Preconditions;
 import rx.Observable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -35,7 +35,7 @@ public class BeerViewModel extends BaseViewModel {
     }
 
     @Override
-    protected void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+    public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         compositeSubscription.add(getBeer

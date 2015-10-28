@@ -8,16 +8,16 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import quickbeer.android.next.data.base.store.SingleItemContentProviderStoreBase;
+import io.reark.reark.data.store.SingleItemContentProviderStore;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.utils.Preconditions;
 
 /**
  * Created by antti on 17.10.2015.
  */
-public class BeerStore extends SingleItemContentProviderStoreBase<Beer, Integer> {
+public class BeerStore extends SingleItemContentProviderStore<Beer, Integer> {
     private static final String TAG = BeerStore.class.getSimpleName();
 
     public BeerStore(@NonNull ContentResolver contentResolver) {

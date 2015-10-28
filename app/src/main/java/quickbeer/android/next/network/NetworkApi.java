@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import java.util.List;
 import java.util.Map;
 
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.utils.Preconditions;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import rx.Observable;

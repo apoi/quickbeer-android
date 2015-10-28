@@ -8,7 +8,7 @@ import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
-import quickbeer.android.next.utils.Preconditions;
+import io.reark.reark.utils.Preconditions;
 
 @ContentProvider(authority = quickbeer.android.next.data.schematicprovider.RateBeerProvider.AUTHORITY, database = RateBeerDatabase.class)
 public class RateBeerProvider {

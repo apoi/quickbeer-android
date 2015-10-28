@@ -9,12 +9,12 @@ import android.util.Log;
 import java.util.Arrays;
 import java.util.Collection;
 
+import io.reark.reark.network.fetchers.Fetcher;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayerBase;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
-import quickbeer.android.next.network.fetchers.base.Fetcher;
-import quickbeer.android.next.utils.Preconditions;
 
 /**
  * Created by ttuo on 16/04/15.

@@ -7,14 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.tehmou.rxandroidarchitecture.utils.RxViewBinder;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reark.reark.utils.Preconditions;
+import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.utils.Preconditions;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;

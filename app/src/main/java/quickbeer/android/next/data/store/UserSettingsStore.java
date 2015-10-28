@@ -8,18 +8,18 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.store.SingleItemContentProviderStore;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.data.base.store.SingleItemContentProviderStoreBase;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
 import quickbeer.android.next.pojo.UserSettings;
-import quickbeer.android.next.utils.Preconditions;
 
 /**
  * Created by ttuo on 07/01/15.
  */
-public class UserSettingsStore extends SingleItemContentProviderStoreBase<UserSettings, Integer> {
+public class UserSettingsStore extends SingleItemContentProviderStore<UserSettings, Integer> {
     private static final String TAG = UserSettingsStore.class.getSimpleName();
 
     public UserSettingsStore(@NonNull ContentResolver contentResolver) {
@@ -67,7 +67,6 @@ public class UserSettingsStore extends SingleItemContentProviderStoreBase<UserSe
         final UserSettings value = new Gson().fromJson(json, UserSettings.class);
         return value;
     }
-
 
     @NonNull
     @Override

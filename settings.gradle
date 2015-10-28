@@ -1,1 +1,3 @@
 include ':app'
+include 'reark:reark'
+project(':reark:reark').projectDir = new File(settingsDir, '../reark/reark')
