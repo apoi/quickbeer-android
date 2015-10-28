@@ -57,8 +57,16 @@ public class BeerSearchStore extends SingleItemContentProviderStore<BeerSearch, 
     @Override
     protected BeerSearch read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerSearchColumns.JSON));
-        final BeerSearch value = new Gson().fromJson(json, BeerSearch.class);
-        return value;
+        return new Gson().fromJson(json, BeerSearch.class);
+    }
+
+    @NonNull
+    @Override
+    protected ContentValues readRaw(Cursor cursor) {
+        final String json = cursor.getString(cursor.getColumnIndex(BeerSearchColumns.JSON));
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(BeerSearchColumns.JSON, json);
+        return contentValues;
     }
 
     @NonNull
@@ -67,5 +75,10 @@ public class BeerSearchStore extends SingleItemContentProviderStore<BeerSearch, 
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.BeerSearches.withSearch(id);
+    }
+
+    @Override
+    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
+        return v1.getAsString(BeerSearchColumns.JSON).equals(v2.getAsString(BeerSearchColumns.JSON));
     }
 }

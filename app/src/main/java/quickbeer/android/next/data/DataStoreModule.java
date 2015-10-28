@@ -42,7 +42,7 @@ public final class DataStoreModule {
 
     @Provides
     public DataLayer.GetTopBeers provideGetTopBeers(DataLayer dataLayer) {
-        return dataLayer::getTopBeers;
+        return dataLayer::fetchAndGetTopBeers;
     }
 
     @Provides

@@ -29,6 +29,10 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
         }
     }
 
+    private boolean hasUserSettings() {
+        return query(DataLayer.DEFAULT_USER_ID) != null;
+    }
+
     @NonNull
     @Override
     protected Integer getIdFor(@NonNull UserSettings item) {
@@ -39,10 +43,6 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
     @Override
     public Uri getContentUri() {
         return RateBeerProvider.UserSettings.USER_SETTINGS;
-    }
-
-    private boolean hasUserSettings() {
-        return query(DataLayer.DEFAULT_USER_ID) != null;
     }
 
     @NonNull
@@ -64,8 +64,16 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
     @Override
     protected UserSettings read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
-        final UserSettings value = new Gson().fromJson(json, UserSettings.class);
-        return value;
+        return new Gson().fromJson(json, UserSettings.class);
+    }
+
+    @NonNull
+    @Override
+    protected ContentValues readRaw(Cursor cursor) {
+        final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(JsonIdColumns.JSON, json);
+        return contentValues;
     }
 
     @NonNull
@@ -74,5 +82,10 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.UserSettings.withId(id);
+    }
+
+    @Override
+    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
+        return v1.getAsString(JsonIdColumns.JSON).equals(v2.getAsString(JsonIdColumns.JSON));
     }
 }
