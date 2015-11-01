@@ -21,7 +21,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * Created by antti on 25.10.2015.
  */
-public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.ViewHolder> {
+public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder> {
     private static final String TAG = BeerListAdapter.class.getSimpleName();
 
     private final List<BeerViewModel> beers = new ArrayList<>();
@@ -66,14 +66,18 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.ViewHo
      * View holder for beer list items
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView nameTextView;
         private ViewBinder viewBinder;
+        private TextView nameTextView;
+        private TextView styleTextView;
+        private TextView brewerTextView;
 
         public ViewHolder(View view, View.OnClickListener onClickListener) {
             super(view);
 
-            this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
             this.viewBinder = new ViewBinder(this);
+            this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
+            this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
+            this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
 
             view.setOnClickListener(onClickListener);
         }
@@ -87,10 +91,14 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.ViewHo
             Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
             nameTextView.setText(beer.getName());
+            styleTextView.setText(beer.getBrewerName());
+            brewerTextView.setText(beer.getBrewerName());
         }
 
         public void clear() {
             nameTextView.setText("");
+            styleTextView.setText("");
+            brewerTextView.setText("");
         }
     }
 

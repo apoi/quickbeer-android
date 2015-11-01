@@ -62,9 +62,23 @@ public class Beer {
         return name;
     }
 
+    @NonNull
+    public String getStyleName() {
+        return styleName;
+    }
+
+    @NonNull
+    public String getBrewerName() {
+        return brewerName;
+    }
+
     @Override
     public String toString() {
-        return "Beer{" + "id=" + id + ", name='" + name + '\'' + '}';
+        return "Beer{" + "id=" + id
+                + ", name='" + name + '\''
+                + ", style='" + styleName + '\''
+                + ", brewer='" + brewerName + '\''
+                + '}';
     }
 
     @Override
@@ -76,12 +90,7 @@ public class Beer {
         }
 
         Beer that = (Beer) o;
-
-        if (id != that.id) {
-            return false;
-        }
-
-        return true;
+        return id == that.id;
     }
 
     @Override

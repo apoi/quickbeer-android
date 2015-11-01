@@ -2,11 +2,14 @@ package quickbeer.android.next.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +51,13 @@ public class BeerListView extends FrameLayout {
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        beersListView.setItemAnimator(new DefaultItemAnimator());
         beersListView.setAdapter(beerListAdapter);
+
+        beersListView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
+                .paintProvider(beerListAdapter)
+                .marginProvider(beerListAdapter)
+                .build());
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {
