@@ -5,12 +5,12 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
 import io.reark.reark.data.store.SingleItemContentProviderStore;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;

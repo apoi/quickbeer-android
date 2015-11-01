@@ -1,11 +1,11 @@
 package quickbeer.android.next.viewmodels;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.BeerSearch;

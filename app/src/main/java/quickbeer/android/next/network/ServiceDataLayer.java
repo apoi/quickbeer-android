@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.Collection;
 
 import io.reark.reark.network.fetchers.Fetcher;
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayerBase;
 import quickbeer.android.next.data.store.BeerSearchStore;

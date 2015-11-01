@@ -3,10 +3,10 @@ package quickbeer.android.next.network;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 import javax.inject.Inject;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 
 /**

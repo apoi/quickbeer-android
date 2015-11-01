@@ -3,10 +3,10 @@ package quickbeer.android.next.network.fetchers;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
