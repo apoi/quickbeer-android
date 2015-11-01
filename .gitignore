@@ -33,3 +33,5 @@ proguard/
 
 # Project
 /app/src/main/res/raw/
+gradle.properties
+*.jks
