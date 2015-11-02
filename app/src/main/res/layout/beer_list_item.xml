@@ -10,14 +10,18 @@
     android:paddingLeft="15dp"
     android:paddingRight="15dp">
 
-    <ImageView
+    <TextView
         android:id="@+id/beer_stars"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="15dp"
-        android:src="@drawable/score_3" />
+        android:gravity="center"
+        android:textColor="@color/text_primary"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/listitem_text_score"
+        android:background="@drawable/score_unrated" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -30,9 +34,9 @@
             android:id="@+id/beer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-thin"
-            android:textSize="18sp"
+            android:textSize="@dimen/listitem_text_primary"
             android:singleLine="true"
             android:ellipsize="end"
             tools:text="Missing beer name" />
@@ -41,10 +45,9 @@
             android:id="@+id/beer_style"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_secondary"
             android:fontFamily="sans-serif-thin"
-            android:layout_marginTop="-1dp"
-            android:textSize="14sp"
+            android:textSize="@dimen/listitem_text_secondary"
             android:singleLine="true"
             android:ellipsize="end"
             tools:text="Missing beer style" />
@@ -53,10 +56,10 @@
             android:id="@+id/brewer_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_secondary"
             android:fontFamily="sans-serif-thin"
             android:layout_marginTop="-2dp"
-            android:textSize="14sp"
+            android:textSize="@dimen/listitem_text_secondary"
             android:singleLine="true"
             android:ellipsize="end"
             tools:text="Missing brewer name" />

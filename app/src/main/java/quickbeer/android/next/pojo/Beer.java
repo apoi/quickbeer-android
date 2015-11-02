@@ -72,6 +72,11 @@ public class Beer {
         return brewerName;
     }
 
+    @NonNull
+    public int getRating() {
+        return Math.round(overallRating);
+    }
+
     @Override
     public String toString() {
         return "Beer{" + "id=" + id

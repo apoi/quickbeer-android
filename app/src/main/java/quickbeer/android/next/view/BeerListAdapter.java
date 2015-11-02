@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -67,6 +69,7 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private ViewBinder viewBinder;
+        private TextView rating;
         private TextView nameTextView;
         private TextView styleTextView;
         private TextView brewerTextView;
@@ -75,6 +78,7 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
             super(view);
 
             this.viewBinder = new ViewBinder(this);
+            this.rating = (TextView) view.findViewById(R.id.beer_stars);
             this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
             this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
             this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
@@ -90,12 +94,16 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
         public void setBeer(@NonNull Beer beer) {
             Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
+            rating.setBackgroundResource(Score.Stars.UNRATED.getResource());
+            rating.setText(String.valueOf(beer.getRating()));
             nameTextView.setText(beer.getName());
             styleTextView.setText(beer.getBrewerName());
             brewerTextView.setText(beer.getBrewerName());
         }
 
         public void clear() {
+            rating.setBackground(null);
+            rating.setText("");
             nameTextView.setText("");
             styleTextView.setText("");
             brewerTextView.setText("");

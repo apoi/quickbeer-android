@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF303030</color>
-    <color name="colorPrimaryDark">#FF000000</color>
-    <color name="colorAccent">#FFF39815</color>
+    <color name="color_primary">#FF303030</color>
+    <color name="color_primary_dark">#FF000000</color>
+    <color name="color_accent">#FFF39815</color>
 
-    <color name="colorHighlight">#FF606060</color>
-    <color name="colorHighlightPress">#44606060</color>
-    <color name="colorHighlightFocus">#77606060</color>
+    <color name="color_highlight">#FF606060</color>
+    <color name="color_highlight_press">#44606060</color>
+    <color name="color_highlight_focus">#77606060</color>
+
+    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_secondary">#99FFFFFF</color>
 </resources>

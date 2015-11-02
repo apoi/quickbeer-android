@@ -20,7 +20,7 @@ public abstract class BaseListAdapter<T extends RecyclerView.ViewHolder>
         Paint paint = new Paint();
         paint.setColor(Color.WHITE);
         paint.setStrokeWidth(1);
-        paint.setAlpha(50);
+        paint.setAlpha(25);
         return paint;
     }
 

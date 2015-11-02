@@ -3,4 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="listitem_text_score">18sp</dimen>
+    <dimen name="listitem_text_primary">17sp</dimen>
+    <dimen name="listitem_text_secondary">13sp</dimen>
 </resources>
