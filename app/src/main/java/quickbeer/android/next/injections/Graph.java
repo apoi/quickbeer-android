@@ -8,6 +8,9 @@ import dagger.Component;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.MainActivity;
 import quickbeer.android.next.data.DataStoreModule;
+import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerStore;
+import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.viewmodels.ViewModelModule;
@@ -25,6 +28,10 @@ public interface Graph {
     void inject(NetworkService networkService);
     void inject(MainActivity mainActivity);
     void inject(BeerListFragment beerListFragment);
+
+    void inject(BeerStore store);
+    void inject(BeerSearchStore store);
+    void inject(NetworkRequestStatusStore store);
 
     final class Initializer {
         public static Graph init(Application application) {

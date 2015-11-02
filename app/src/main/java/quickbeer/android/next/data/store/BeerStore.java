@@ -6,10 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-
-import io.reark.reark.data.store.SingleItemContentProviderStore;
 import io.reark.reark.utils.Preconditions;
+import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.Beer;
@@ -17,11 +15,13 @@ import quickbeer.android.next.pojo.Beer;
 /**
  * Created by antti on 17.10.2015.
  */
-public class BeerStore extends SingleItemContentProviderStore<Beer, Integer> {
+public class BeerStore extends StoreBase<Beer, Integer> {
     private static final String TAG = BeerStore.class.getSimpleName();
 
     public BeerStore(@NonNull ContentResolver contentResolver) {
         super(contentResolver);
+
+        QuickBeer.getInstance().getGraph().inject(this);
     }
 
     @NonNull
@@ -49,7 +49,7 @@ public class BeerStore extends SingleItemContentProviderStore<Beer, Integer> {
     protected ContentValues getContentValuesForItem(Beer item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerColumns.ID, item.getId());
-        contentValues.put(BeerColumns.JSON, new Gson().toJson(item));
+        contentValues.put(BeerColumns.JSON, getGson().toJson(item));
         return contentValues;
     }
 
@@ -57,7 +57,7 @@ public class BeerStore extends SingleItemContentProviderStore<Beer, Integer> {
     @Override
     protected Beer read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
-        return new Gson().fromJson(json, Beer.class);
+        return getGson().fromJson(json, Beer.class);
     }
 
     @NonNull
