@@ -52,6 +52,12 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
     }
 
     @Override
+    public void onViewRecycled(ViewHolder holder) {
+        holder.unbind();
+        super.onViewRecycled(holder);
+    }
+
+    @Override
     public int getItemCount() {
         return beers.size();
     }
@@ -86,8 +92,12 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
         }
 
         public void bind(BeerViewModel viewModel) {
-            clear();
             this.viewBinder.bind(viewModel);
+        }
+
+        public void unbind() {
+            clear();
+            this.viewBinder.unbind();
         }
 
         public void setBeer(@NonNull Beer beer) {
