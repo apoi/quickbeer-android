@@ -1,4 +1,4 @@
-package quickbeer.android.next.view;
+package quickbeer.android.next.views;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,15 +16,18 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.viewmodels.BeerViewModel;
+import quickbeer.android.next.views.listitems.ItemType;
+import quickbeer.android.next.views.listitems.HeaderViewHolder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by antti on 25.10.2015.
  */
-public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder> {
+public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     private static final String TAG = BeerListAdapter.class.getSimpleName();
 
+    private final String header = "World";
     private final List<BeerViewModel> beers = new ArrayList<>();
     private View.OnClickListener onClickListener;
 
@@ -37,29 +40,55 @@ public class BeerListAdapter extends BaseListAdapter<BeerListAdapter.ViewHolder>
     }
 
     public BeerViewModel getItem(int position) {
-        return beers.get(position);
+        return beers.get(position - 1);
     }
 
     @Override
-    public BeerListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);
-        return new ViewHolder(v, onClickListener);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == ItemType.HEADER.ordinal()) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_list_item, parent, false);
+            return new HeaderViewHolder(v);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);
+            return new ViewHolder(v, onClickListener);
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(beers.get(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ItemType type = ItemType.values()[(getItemViewType(position))];
+
+        switch (type) {
+            case HEADER:
+                ((HeaderViewHolder) holder).setHeader(header);
+                break;
+            case BEER:
+                ((ViewHolder) holder).bind(getItem(position));
+                break;
+        }
     }
 
     @Override
-    public void onViewRecycled(ViewHolder holder) {
-        holder.unbind();
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof ViewHolder) {
+            ((ViewHolder) holder).unbind();
+        }
+
         super.onViewRecycled(holder);
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return ItemType.HEADER.ordinal();
+        } else {
+            return ItemType.BEER.ordinal();
+        }
+    }
+
+    @Override
     public int getItemCount() {
-        return beers.size();
+        return beers.size() + 1;
     }
 
     public void set(List<BeerViewModel> beers) {

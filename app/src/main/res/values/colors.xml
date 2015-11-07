@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary">#FF303030</color>
-    <color name="color_primary_dark">#FF000000</color>
-    <color name="color_accent">#FFF39815</color>
+    <color name="color_primary_dark">#000000</color>
+    <color name="color_primary">#212121</color>
+    <color name="color_main_dark">#303030</color>
+    <color name="color_main_light">#424242</color>
+
+    <color name="color_accent">#F39815</color>
+    <color name="color_divider">#44FFFFFF</color>
 
     <color name="color_highlight">#FF606060</color>
     <color name="color_highlight_press">#44606060</color>

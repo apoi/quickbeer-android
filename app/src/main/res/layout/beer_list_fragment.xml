@@ -1,19 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<quickbeer.android.next.views.BeerListView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/beers_view"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_light">
 
-    <quickbeer.android.next.view.BeerListView
-        android:id="@+id/beers_view"
+    <LinearLayout
+        android:id="@+id/menu_view"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/beers_list_view"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@color/text_primary"
+            android:text="Menu Text Part A"
+            android:textSize="16sp" />
 
-    </quickbeer.android.next.view.BeerListView>
-</LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|top"
+            android:textColor="@color/text_primary"
+            android:text="Menu Text Part B"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/beers_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</quickbeer.android.next.views.BeerListView>

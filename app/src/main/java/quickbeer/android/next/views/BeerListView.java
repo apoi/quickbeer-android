@@ -1,4 +1,4 @@
-package quickbeer.android.next.view;
+package quickbeer.android.next.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -47,17 +48,27 @@ public class BeerListView extends FrameLayout {
         super.onFinishInflate();
 
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
-
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beersListView.setItemAnimator(new DefaultItemAnimator());
         beersListView.setAdapter(beerListAdapter);
 
-        beersListView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(getContext())
-                .paintProvider(beerListAdapter)
-                .marginProvider(beerListAdapter)
-                .build());
+        View menuView = findViewById(R.id.menu_view);
+        menuView.setOnTouchListener((v, event) -> {
+            Log.d(TAG, "CLICKED");
+            return true;
+        });
+
+        beersListView.setOnTouchListener((v, event) -> {
+            menuView.dispatchTouchEvent(event);
+            return false;
+        });
+
+        beersListView.setOnDragListener((v, event) -> {
+            menuView.dispatchDragEvent(event);
+            return false;
+        });
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {
