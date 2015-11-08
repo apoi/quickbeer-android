@@ -26,8 +26,6 @@ import rx.subscriptions.CompositeSubscription;
  * Created by antti on 25.10.2015.
  */
 public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
-    private static final String TAG = BeerListAdapter.class.getSimpleName();
-
     private final String header = "World";
     private final List<BeerViewModel> beers = new ArrayList<>();
     private View.OnClickListener onClickListener;
@@ -42,7 +40,6 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     }
 
     public void setHeaderHeight(int height) {
-        Log.w("FOO", "HEIGHT " + height);
         this.headerHeight = height;
     }
 
@@ -54,6 +51,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ItemType.HEADER.ordinal()) {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_list_item, parent, false);
+            v.getLayoutParams().height = this.headerHeight;
             return new HeaderViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);

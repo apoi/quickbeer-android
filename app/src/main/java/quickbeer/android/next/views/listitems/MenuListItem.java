@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 
 /**
@@ -39,7 +38,7 @@ public class MenuListItem {
             iconView = (ImageView) view.findViewById(R.id.menu_icon);
 
             view.setOnClickListener(v -> {
-                Log.e("FOO", "CLICK!");
+                // Navigate
             });
         }
     }

@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
+    android:layout_height="@dimen/menu_item_height"
+    android:paddingLeft="@dimen/list_item_padding"
+    android:paddingRight="@dimen/list_item_padding"
     android:background="@drawable/listitem_ripple_dark">
 
     <LinearLayout
@@ -16,11 +15,11 @@
 
         <TextView
             android:id="@+id/beer_stars"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="15dp"
+            android:layout_width="@dimen/list_item_icon_size"
+            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_marginTop="@dimen/list_item_icon_margin"
+            android:layout_marginBottom="@dimen/list_item_icon_margin"
+            android:layout_marginRight="@dimen/list_item_icon_margin_right"
             android:gravity="center"
             android:textColor="@color/text_primary"
             android:fontFamily="sans-serif-thin"
@@ -42,8 +41,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_primary"
                 android:singleLine="true"
-                android:ellipsize="end"
-                tools:text="Missing beer name" />
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/beer_style"
@@ -53,8 +51,7 @@
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_secondary"
                 android:singleLine="true"
-                android:ellipsize="end"
-                tools:text="Missing beer style" />
+                android:ellipsize="end" />
 
             <TextView
                 android:id="@+id/brewer_name"
@@ -65,8 +62,7 @@
                 android:layout_marginTop="-2dp"
                 android:textSize="@dimen/listitem_text_secondary"
                 android:singleLine="true"
-                android:ellipsize="end"
-                tools:text="Missing brewer name" />
+                android:ellipsize="end" />
 
         </LinearLayout>
 

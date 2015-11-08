@@ -2,7 +2,6 @@ package quickbeer.android.next.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -63,11 +62,15 @@ public class BeerListView extends FrameLayout {
         menuListView.setAdapter(menuListAdapter);
 
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
-        beerListAdapter.setHeaderHeight(menuListView.getHeight());
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beersListView.setAdapter(beerListAdapter);
+
+        // Set enough margin for the menu to be visible
+        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_item_height);
+        final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
+        beerListAdapter.setHeaderHeight(menuListItems.size() * menuItemHeight + headerItemHeight);
 
         // Redirect unhandled click events to menu
         beersListView.setOnTouchListener((v, event) -> {
