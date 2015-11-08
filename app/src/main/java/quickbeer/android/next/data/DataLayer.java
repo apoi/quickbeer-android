@@ -15,6 +15,7 @@ import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
+import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
@@ -74,7 +75,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "fetchBeer");
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
+        intent.putExtra("serviceUriString", RateBeerService.BEER.toString());
         intent.putExtra("id", beerId);
         context.startService(intent);
     }
@@ -108,7 +109,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "fetchBeerSearch");
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
+        intent.putExtra("serviceUriString", RateBeerService.SEARCH.toString());
         intent.putExtra("searchString", searchString);
         context.startService(intent);
     }
@@ -139,8 +140,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "fetchTopBeers");
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("contentUriString", beerSearchStore.getContentUri().toString());
-        intent.putExtra("fetcherIdentifier", TopBeersFetcher.IDENTIFIER);
+        intent.putExtra("serviceUriString", RateBeerService.TOP50.toString());
         context.startService(intent);
     }
 

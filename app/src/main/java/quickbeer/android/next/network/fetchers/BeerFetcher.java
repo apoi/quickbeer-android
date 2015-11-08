@@ -10,6 +10,7 @@ import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
+import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
 import rx.Observable;
@@ -22,7 +23,6 @@ import rx.schedulers.Schedulers;
  */
 public class BeerFetcher extends FetcherBase {
     private static final String TAG = BeerFetcher.class.getSimpleName();
-    public static final String IDENTIFIER = TAG;
 
     private final NetworkApi networkApi;
     private final BeerStore beerStore;
@@ -37,11 +37,6 @@ public class BeerFetcher extends FetcherBase {
 
         this.networkApi = networkApi;
         this.beerStore = beerStore;
-    }
-
-    @Override
-    public String getIdentifier() {
-        return IDENTIFIER;
     }
 
     @Override
@@ -83,7 +78,7 @@ public class BeerFetcher extends FetcherBase {
 
     @NonNull
     @Override
-    public Uri getContentUri() {
-        return beerStore.getContentUri();
+    public Uri getServiceUri() {
+        return RateBeerService.BEER;
     }
 }

@@ -41,49 +41,27 @@ public class ServiceDataLayer extends DataLayerBase {
     public void processIntent(@NonNull Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null.");
 
-        final String fetcherIdentifier = intent.getStringExtra("fetcherIdentifier");
-        final String contentUriString = intent.getStringExtra("contentUriString");
-
-        if (fetcherIdentifier != null) {
-            Fetcher matchingFetcher = findFetcherByIdentifier(fetcherIdentifier);
+        final String serviceUriString = intent.getStringExtra("serviceUriString");
+        if (serviceUriString != null) {
+            final Uri serviceUri = Uri.parse(serviceUriString);
+            Fetcher matchingFetcher = findFetcher(serviceUri);
             if (matchingFetcher != null) {
-                Log.v(TAG, "Fetcher found for " + fetcherIdentifier);
+                Log.v(TAG, "Fetcher found for " + serviceUri);
                 matchingFetcher.fetch(intent);
             } else {
-                Log.e(TAG, "Unknown identifier " + fetcherIdentifier);
-            }
-        } else if (contentUriString != null) {
-            final Uri contentUri = Uri.parse(contentUriString);
-            Fetcher matchingFetcher = findFetcherByContentUri(contentUri);
-            if (matchingFetcher != null) {
-                Log.v(TAG, "Fetcher found for " + contentUri);
-                matchingFetcher.fetch(intent);
-            } else {
-                Log.e(TAG, "Unknown Uri " + contentUri);
+                Log.e(TAG, "Unknown Uri " + serviceUri);
             }
         } else {
-            Log.e(TAG, "No fetcher found");
+            Log.e(TAG, "No Uri defined");
         }
     }
 
     @Nullable
-    private Fetcher findFetcherByIdentifier(@NonNull String identifier) {
-        Preconditions.checkNotNull(identifier, "Identifier cannot be null.");
+    private Fetcher findFetcher(@NonNull Uri serviceUri) {
+        Preconditions.checkNotNull(serviceUri, "Service URI cannot be null.");
 
         for (Fetcher fetcher : fetchers) {
-            if (fetcher.getIdentifier().equals(identifier)) {
-                return fetcher;
-            }
-        }
-        return null;
-    }
-
-    @Nullable
-    private Fetcher findFetcherByContentUri(@NonNull Uri contentUri) {
-        Preconditions.checkNotNull(contentUri, "Content URL cannot be null.");
-
-        for (Fetcher fetcher : fetchers) {
-            if (fetcher.getContentUri().equals(contentUri)) {
+            if (fetcher.getServiceUri().equals(serviceUri)) {
                 return fetcher;
             }
         }
