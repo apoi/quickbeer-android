@@ -6,7 +6,7 @@
     android:layout_height="70dp"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@drawable/listitem_ripple_dark">
 
     <LinearLayout
         android:orientation="horizontal"

@@ -69,9 +69,6 @@ dependencies {
     apt 'net.simonvt.schematic:schematic-compiler:0.6.2'
     compile 'net.simonvt.schematic:schematic:0.6.2'
 
-    // List dividers
-    compile 'com.yqritc:recyclerview-flexibledivider:1.2.6'
-
     compile 'javax.annotation:jsr250-api:1.0'
     compile 'com.squareup.okhttp:okhttp:2.5.0'
     compile 'com.squareup.retrofit:retrofit:1.9.0'

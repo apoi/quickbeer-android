@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.views.BeerListView;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
+import quickbeer.android.next.views.BeerListView;
 
 /**
  * Created by antti on 25.10.2015.

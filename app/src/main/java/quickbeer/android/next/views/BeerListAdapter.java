@@ -10,14 +10,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.viewmodels.BeerViewModel;
-import quickbeer.android.next.views.listitems.ItemType;
 import quickbeer.android.next.views.listitems.HeaderViewHolder;
+import quickbeer.android.next.views.listitems.ItemType;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -30,6 +31,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     private final String header = "World";
     private final List<BeerViewModel> beers = new ArrayList<>();
     private View.OnClickListener onClickListener;
+    private int headerHeight = 0;
 
     public BeerListAdapter(List<BeerViewModel> beers) {
         this.beers.addAll(beers);
@@ -37,6 +39,11 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
+    }
+
+    public void setHeaderHeight(int height) {
+        Log.w("FOO", "HEIGHT " + height);
+        this.headerHeight = height;
     }
 
     public BeerViewModel getItem(int position) {

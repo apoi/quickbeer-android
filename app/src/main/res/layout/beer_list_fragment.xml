@@ -7,29 +7,10 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_light">
 
-    <LinearLayout
-        android:id="@+id/menu_view"
-        android:orientation="vertical"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/menu_list_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:textColor="@color/text_primary"
-            android:text="Menu Text Part A"
-            android:textSize="16sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|top"
-            android:textColor="@color/text_primary"
-            android:text="Menu Text Part B"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/beers_list_view"

@@ -5,6 +5,7 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="listitem_text_header">30sp</dimen>
+    <dimen name="listitem_text_menu">24sp</dimen>
     <dimen name="listitem_text_score">18sp</dimen>
     <dimen name="listitem_text_primary">17sp</dimen>
     <dimen name="listitem_text_secondary">13sp</dimen>

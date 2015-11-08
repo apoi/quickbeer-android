@@ -20,7 +20,7 @@ public class ApiKey {
     public static String getApiKey(@NonNull Context context) {
         try {
             // RateBeer API keys may not be shared. You'll need to acquire your own key.
-            // Store the key as plain text in the file app/src/main/res/raw/apikey.txt.
+            // Store the key as plain textView in the file app/src/main/res/raw/apikey.txt.
             InputStream stream = context.getResources().openRawResource(R.raw.apikey);
             BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
 

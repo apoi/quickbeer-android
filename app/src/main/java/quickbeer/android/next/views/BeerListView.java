@@ -6,12 +6,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +19,7 @@ import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.viewmodels.BeerViewModel;
+import quickbeer.android.next.views.listitems.MenuListItem;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -35,6 +34,10 @@ public class BeerListView extends FrameLayout {
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
 
+    private List<MenuListItem> menuListItems;
+    private RecyclerView menuListView;
+    private MenuListAdapter menuListAdapter;
+
     public BeerListView(Context context) {
         super(context, null);
     }
@@ -47,28 +50,33 @@ public class BeerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
+        menuListItems = new ArrayList<>();
+        menuListItems.add(new MenuListItem("search beers", R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("best beers", R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("brewers", R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("scan barcode", R.drawable.score_unrated));
+
+        menuListAdapter = new MenuListAdapter(menuListItems);
+        menuListView = (RecyclerView) findViewById(R.id.menu_list_view);
+        menuListView.setHasFixedSize(true);
+        menuListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        menuListView.setAdapter(menuListAdapter);
+
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
+        beerListAdapter.setHeaderHeight(menuListView.getHeight());
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        beersListView.setItemAnimator(new DefaultItemAnimator());
         beersListView.setAdapter(beerListAdapter);
 
-        View menuView = findViewById(R.id.menu_view);
-        menuView.setOnTouchListener((v, event) -> {
-            Log.d(TAG, "CLICKED");
-            return true;
-        });
-
+        // Redirect unhandled click events to menu
         beersListView.setOnTouchListener((v, event) -> {
-            menuView.dispatchTouchEvent(event);
+            menuListView.dispatchTouchEvent(event);
             return false;
         });
 
-        beersListView.setOnDragListener((v, event) -> {
-            menuView.dispatchDragEvent(event);
-            return false;
-        });
+        // No scrolling for the menu, override listener
+        menuListView.setOnScrollListener(new RecyclerView.OnScrollListener() {});
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {
