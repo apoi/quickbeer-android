@@ -11,35 +11,33 @@ import android.view.View;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
-import quickbeer.android.next.fragments.BeerListFragment;
+import quickbeer.android.next.fragments.MainFragment;
+import quickbeer.android.next.fragments.SearchResultsFragment;
 
 public class MainActivity extends AppCompatActivity {
-    Toolbar toolbar;
-    SearchAdapter adapter;
-    MaterialSearchView searchView;
-    View searchViewOverlay;
+    private Toolbar toolbar;
+    private SearchAdapter adapter;
+    private MaterialSearchView searchView;
+    private View searchViewOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BeerListFragment())
+                    .add(R.id.container, new MainFragment())
                     .commit();
         }
 
@@ -61,12 +59,14 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return false;
+                searchView.closeSearch();
+                MainActivity.this.onSearch(query);
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                return true;
             }
         });
 
@@ -133,5 +133,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void onSearch(String query) {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.container, new SearchResultsFragment())
+                .commit();
     }
 }

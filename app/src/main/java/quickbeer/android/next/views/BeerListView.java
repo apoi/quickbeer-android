@@ -33,10 +33,6 @@ public class BeerListView extends FrameLayout {
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
 
-    private List<MenuListItem> menuListItems;
-    private RecyclerView menuListView;
-    private MenuListAdapter menuListAdapter;
-
     public BeerListView(Context context) {
         super(context, null);
     }
@@ -45,41 +41,23 @@ public class BeerListView extends FrameLayout {
         super(context, attrs);
     }
 
+    protected RecyclerView getListView() {
+        return beersListView;
+    }
+
+    protected BeerListAdapter getAdapter() {
+        return beerListAdapter;
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
-        menuListItems = new ArrayList<>();
-        menuListItems.add(new MenuListItem("search beers", R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("best beers", R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("brewers", R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("scan barcode", R.drawable.score_unrated));
-
-        menuListAdapter = new MenuListAdapter(menuListItems);
-        menuListView = (RecyclerView) findViewById(R.id.menu_list_view);
-        menuListView.setHasFixedSize(true);
-        menuListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        menuListView.setAdapter(menuListAdapter);
 
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beersListView.setAdapter(beerListAdapter);
-
-        // Set enough margin for the menu to be visible
-        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_item_height);
-        final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
-        beerListAdapter.setHeaderHeight(menuListItems.size() * menuItemHeight + headerItemHeight);
-
-        // Redirect unhandled click events to menu
-        beersListView.setOnTouchListener((v, event) -> {
-            menuListView.dispatchTouchEvent(event);
-            return false;
-        });
-
-        // No scrolling for the menu, override listener
-        menuListView.setOnScrollListener(new RecyclerView.OnScrollListener() {});
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {

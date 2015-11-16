@@ -25,6 +25,10 @@ public class BeerListFragment extends Fragment {
     @Inject
     BeerListViewModel beerListViewModel;
 
+    public int getLayout() {
+        return R.layout.beer_list_fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +43,7 @@ public class BeerListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.beer_list_fragment, container, false);
+        return inflater.inflate(getLayout(), container, false);
     }
 
     @Override
