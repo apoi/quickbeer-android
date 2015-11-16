@@ -22,18 +22,15 @@ import rx.subscriptions.CompositeSubscription;
 public class BeerListViewModel extends BaseViewModel {
     private static final String TAG = BeerListViewModel.class.getSimpleName();
 
-    @NonNull
-    private final DataLayer.GetTopBeers getTopBeers;
     private final DataLayer.GetBeer getBeer;
+    private Observable<DataStreamNotification<BeerSearch>> sourceObservable;
 
     private final PublishSubject<Integer> selectBeer = PublishSubject.create();
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
-    public BeerListViewModel(@NonNull DataLayer.GetTopBeers getTopBeers,
-                             @NonNull DataLayer.GetBeer getBeer) {
-        Preconditions.checkNotNull(getTopBeers, "GetTopBeers cannot be null.");
+    public BeerListViewModel(@NonNull DataLayer.GetBeer getBeer) {
+        Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
 
-        this.getTopBeers = getTopBeers;
         this.getBeer = getBeer;
     }
 
@@ -51,12 +48,18 @@ public class BeerListViewModel extends BaseViewModel {
         return beers.asObservable();
     }
 
+    public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        this.sourceObservable = sourceObservable;
+    }
+
     @Override
     public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+        Preconditions.checkNotNull(sourceObservable, "Source observable hasn't been set.");
+
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<BeerSearch>> beerSearchSource =
-                getTopBeers.call().publish();
+                sourceObservable.publish();
 
         compositeSubscription.add(beerSearchSource
                 .map(toProgressStatus())

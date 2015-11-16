@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import quickbeer.android.next.R;
@@ -58,6 +57,7 @@ public class MainView extends BeerListView {
         });
 
         // No scrolling for the menu, override listener
-        menuListView.setOnScrollListener(new RecyclerView.OnScrollListener() {});
+        menuListView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        });
     }
 }

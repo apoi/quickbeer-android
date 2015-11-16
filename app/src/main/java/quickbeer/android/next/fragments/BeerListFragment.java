@@ -8,11 +8,14 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
+import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
+import rx.Observable;
 
 /**
  * Created by antti on 25.10.2015.
@@ -27,6 +30,11 @@ public class BeerListFragment extends Fragment {
 
     public int getLayout() {
         return R.layout.beer_list_fragment;
+    }
+
+    public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        beerListViewModel.setSourceObservable(sourceObservable);
+        beerListViewModel.subscribeToDataStore();
     }
 
     @Override
@@ -50,7 +58,6 @@ public class BeerListFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         beersViewBinder = new BeerListView.ViewBinder((BeerListView) view.findViewById(R.id.beers_view), beerListViewModel);
-        beerListViewModel.subscribeToDataStore();
     }
 
     @Override
