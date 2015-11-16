@@ -12,6 +12,8 @@
     <color name="color_highlight_press">#44606060</color>
     <color name="color_highlight_focus">#77606060</color>
 
-    <color name="text_primary">#FFFFFFFF</color>
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_primary_inverted">#000000</color>
     <color name="text_secondary">#99FFFFFF</color>
+    <color name="text_secondary_inverted">#99000000</color>
 </resources>
