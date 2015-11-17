@@ -21,7 +21,7 @@
             android:layout_marginBottom="@dimen/list_item_icon_margin"
             android:layout_marginRight="@dimen/list_item_icon_margin_right"
             android:gravity="center"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:fontFamily="sans-serif-thin"
             android:textSize="@dimen/listitem_text_score"
             android:background="@drawable/score_unrated" />
@@ -37,7 +37,7 @@
                 android:id="@+id/beer_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/white"
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_primary"
                 android:singleLine="true"
@@ -47,7 +47,7 @@
                 android:id="@+id/beer_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/gray_300"
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_secondary"
                 android:singleLine="true"
@@ -57,7 +57,7 @@
                 android:id="@+id/brewer_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/gray_300"
                 android:fontFamily="sans-serif-thin"
                 android:layout_marginTop="-2dp"
                 android:textSize="@dimen/listitem_text_secondary"
@@ -72,6 +72,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_gravity="bottom"
-        android:background="@color/color_main_light" />
+        android:background="@color/gray_800" />
 
 </FrameLayout>

@@ -26,7 +26,7 @@
             android:id="@+id/menu_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:fontFamily="sans-serif-thin"
             android:textSize="@dimen/listitem_text_menu"
             android:layout_gravity="center_vertical"
@@ -40,6 +40,6 @@
         android:layout_width="match_parent"
         android:layout_height="1px"
         android:layout_gravity="bottom"
-        android:background="@color/color_primary" />
+        android:background="@color/gray_900" />
 
 </FrameLayout>

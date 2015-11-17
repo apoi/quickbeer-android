@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="color_primary_dark">#000000</color>
-    <color name="color_primary">#212121</color>
-    <color name="color_main_dark">#303030</color>
-    <color name="color_main_light">#424242</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 
-    <color name="color_accent">#F39815</color>
-    <color name="color_divider">#44FFFFFF</color>
+    <!-- https://www.google.com/design/spec/style/color.html#color-color-palette -->
+    <color name="gray_900">#212121</color>
+    <color name="gray_850">#303030</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_300">#E0E0E0</color>
 
-    <color name="color_highlight">#FF606060</color>
-    <color name="color_highlight_press">#44606060</color>
-    <color name="color_highlight_focus">#77606060</color>
+    <!-- Color of the gray field elements on white background -->
+    <color name="gray_platform_secondary">#838383</color>
 
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_primary_inverted">#000000</color>
-    <color name="text_secondary">#99FFFFFF</color>
-    <color name="text_secondary_inverted">#99000000</color>
+    <!-- Not that many other colors -->
+    <color name="orange">#F39815</color>
 </resources>

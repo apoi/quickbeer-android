@@ -22,7 +22,7 @@
             android:id="@+id/header_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/white"
             android:fontFamily="sans-serif-thin"
             android:textSize="@dimen/listitem_text_header"
             android:padding="@dimen/header_item_text_padding"

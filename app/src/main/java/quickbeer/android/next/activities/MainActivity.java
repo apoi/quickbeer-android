@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     private void setupNavigationDrawer() {
         AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(this)
-                .withHeaderBackground(R.color.color_accent)
+                .withHeaderBackground(R.color.orange)
                 .build();
 
         new DrawerBuilder()
