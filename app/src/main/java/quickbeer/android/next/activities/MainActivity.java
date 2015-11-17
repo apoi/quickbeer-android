@@ -1,6 +1,11 @@
 package quickbeer.android.next.activities;
 
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -9,22 +14,24 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
 import quickbeer.android.next.fragments.MainFragment;
 import quickbeer.android.next.fragments.SearchResultsFragment;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        FragmentManager.OnBackStackChangedListener,
+        NavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     private Toolbar toolbar;
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
     private View searchViewOverlay;
 
     @Override
@@ -41,8 +48,20 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        drawerLayout.setDrawerListener(drawerToggle);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        drawerToggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         setupSearch();
-        setupNavigationDrawer();
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
     private void setupSearch() {
@@ -85,31 +104,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupNavigationDrawer() {
-        AccountHeader header = new AccountHeaderBuilder()
-                .withActivity(this)
-                .withHeaderBackground(R.color.orange)
-                .build();
-
-        new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-                .withAccountHeader(header)
-                .addDrawerItems(
-                        new PrimaryDrawerItem().withName("Home"),
-                        new PrimaryDrawerItem().withName("Profile"),
-                        new PrimaryDrawerItem().withName("Top Beers"),
-                        new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName("About")
-                )
-                .withOnDrawerItemClickListener((view, position, drawerItem) -> true)
-                .build();
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
 
         MenuItem item = menu.findItem(R.id.action_search);
         searchView.setMenuItem(item);
@@ -119,25 +117,69 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Log.d(TAG, "onOptionsItemSelected");
+
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onBackPressed() {
+        Log.d(TAG, "onBackPressed");
+
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();
+        } else if (canNavigateUp()) {
+            getSupportFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
         }
     }
 
     private void onSearch(String query) {
+        Log.d(TAG, "onSearch(" + query + ")");
+
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, new SearchResultsFragment())
+                .addToBackStack(null)
                 .commit();
+    }
+
+    @Override
+    public void onBackStackChanged() {
+        Log.d(TAG, "onBackStackChanged");
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(canNavigateUp());
+        drawerToggle.syncState();
+    }
+
+    private boolean canNavigateUp() {
+        boolean value = getSupportFragmentManager().getBackStackEntryCount() > 0;
+        Log.d(TAG, "canNavigateUp(" + value + ")");
+
+        return value;
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        Log.d(TAG, "onSupportNavigateUp");
+
+        getSupportFragmentManager().popBackStack();
+        return true;
+    }
+
+    private void updateToggle() {
+
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle drawerLayout actions
+        int id = item.getItemId();
+        if (id == R.id.nav_camera) {
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

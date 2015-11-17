@@ -15,4 +15,5 @@
 
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>
+    <color name="orange_dark">#b76e06</color>
 </resources>

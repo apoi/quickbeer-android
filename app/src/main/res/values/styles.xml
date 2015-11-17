@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="MaterialDrawerTheme.ActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/gray_900</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/orange</item>
@@ -10,10 +10,11 @@
 
         <!-- App general background -->
         <item name="android:windowBackground">@drawable/background_dark</item>
+    </style>
 
-        <!-- Navigation drawer selected items -->
-        <item name="material_drawer_selected">@color/gray_900</item>
-        <item name="material_drawer_selected_text">@color/orange</item>
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="spinBars">true</item>
+        <item name="color">@android:color/white</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
