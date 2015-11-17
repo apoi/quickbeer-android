@@ -37,7 +37,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
     private ActionBarDrawerToggle drawerToggle;
     private View searchViewOverlay;
 
-    private BehaviorSubject<String> querySubject = BehaviorSubject.create();
+    private PublishSubject<String> querySubject = PublishSubject.create();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
     abstract protected Fragment getFragment();
 
     public final Observable<String> getQueryObservable() {
-        return querySubject;
+        return querySubject.asObservable();
     }
 
     private void setupSearch() {

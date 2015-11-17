@@ -7,13 +7,14 @@ import android.support.v4.app.Fragment;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.fragments.MainFragment;
+import rx.Subscription;
 
 public class MainActivity extends ActivityBase {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
 
         getQueryObservable().subscribe(

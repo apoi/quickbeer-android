@@ -19,6 +19,8 @@ public class BeerSearchFragment extends BeerListFragment {
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
 
+    private Observable<String> queryObservable;
+
     @Override
     public int getLayout() {
         return R.layout.beer_list_fragment;
@@ -27,11 +29,8 @@ public class BeerSearchFragment extends BeerListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        QuickBeer.getInstance().getGraph().inject(this);
-    }
 
-    public void setQueryObservable(Observable<String> queryObservable) {
-        Log.d(TAG, "setQueryObservable");
+        QuickBeer.getInstance().getGraph().inject(this);
 
         queryObservable.subscribe(
                 query -> {
@@ -41,5 +40,11 @@ public class BeerSearchFragment extends BeerListFragment {
                 throwable -> {
                     Log.e(TAG, "error", throwable);
                 });
+    }
+
+    public void setQueryObservable(Observable<String> queryObservable) {
+        Log.d(TAG, "setQueryObservable");
+
+        this.queryObservable = queryObservable;
     }
 }

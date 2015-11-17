@@ -13,7 +13,8 @@ public class BeerSearchActivity extends ActivityBase {
     @Override
     protected Fragment getFragment() {
         BeerSearchFragment fragment = new BeerSearchFragment();
-        fragment.setQueryObservable(getQueryObservable());
+        String query = getIntent().getStringExtra("query");
+        fragment.setQueryObservable(getQueryObservable().startWith(query));
         return fragment;
     }
 }
