@@ -14,6 +14,7 @@ import io.reark.reark.utils.Preconditions;
 public class RateBeerProvider {
     public static final String AUTHORITY = "quickbeer.android.next.data.schematicprovider.RateBeerProvider";
 
+    static final String BASE_TYPE = "vnd.android.cursor.item/";
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     private static Uri buildUri(@NonNull String... paths) {
@@ -29,14 +30,14 @@ public class RateBeerProvider {
     @TableEndpoint(table = RateBeerDatabase.USER_SETTINGS) public static class UserSettings {
         @ContentUri(
                 path = RateBeerDatabase.USER_SETTINGS,
-                type = "vnd.android.cursor.dir/vnd.quickbeer.android.next.usersettings",
+                type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
                 defaultSort = JsonIdColumns.ID + " ASC")
         public static final Uri USER_SETTINGS = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.USER_SETTINGS);
 
         @InexactContentUri(
-                path = RateBeerDatabase.USER_SETTINGS + "/#",
+                path = RateBeerDatabase.USER_SETTINGS + "/*",
                 name = "USER_SETTINGS_ID",
-                type = "vnd.android.cursor.item/vnd.quickbeer.android.next.usersettings",
+                type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
                 whereColumn = UserSettingsColumns.ID,
                 pathSegment = 1)
         public static Uri withId(long id) {
@@ -47,14 +48,14 @@ public class RateBeerProvider {
     @TableEndpoint(table = RateBeerDatabase.NETWORK_REQUEST_STATUSES) public static class NetworkRequestStatuses {
         @ContentUri(
                 path = RateBeerDatabase.NETWORK_REQUEST_STATUSES,
-                type = "vnd.android.cursor.dir/vnd.quickbeer.android.next.networkrequeststatus",
+                type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
                 defaultSort = JsonIdColumns.ID + " ASC")
         public static final Uri NETWORK_REQUEST_STATUSES = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.NETWORK_REQUEST_STATUSES);
 
         @InexactContentUri(
                 path = RateBeerDatabase.NETWORK_REQUEST_STATUSES + "/*",
                 name = "NETWORK_REQUEST_STATUSES_ID",
-                type = "vnd.android.cursor.item/vnd.quickbeer.android.next.networkrequeststatus",
+                type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
                 whereColumn = NetworkRequestStatusColumns.ID,
                 pathSegment = 1)
         public static Uri withId(long id) {
@@ -65,14 +66,14 @@ public class RateBeerProvider {
     @TableEndpoint(table = RateBeerDatabase.BEERS) public static class Beers {
         @ContentUri(
                 path = RateBeerDatabase.BEERS,
-                type = "vnd.android.cursor.item/vnd.quickbeer.android.next.beer",
+                type = BASE_TYPE + RateBeerDatabase.BEERS,
                 defaultSort = JsonIdColumns.ID + " ASC")
         public static final Uri BEERS = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.BEERS);
 
         @InexactContentUri(
                 path = RateBeerDatabase.BEERS + "/*",
                 name = "BEERS_ID",
-                type = "vnd.android.cursor.item/vnd.quickbeer.android.next.beer",
+                type = BASE_TYPE + RateBeerDatabase.BEERS,
                 whereColumn = BeerColumns.ID,
                 pathSegment = 1)
         public static Uri withId(long id) {
@@ -83,14 +84,14 @@ public class RateBeerProvider {
     @TableEndpoint(table = RateBeerDatabase.BEER_SEARCHES) public static class BeerSearches {
         @ContentUri(
                 path = RateBeerDatabase.BEER_SEARCHES,
-                type = "vnd.android.cursor.dir/vnd.quickbeer.android.next.beersearch",
+                type = BASE_TYPE + RateBeerDatabase.BEER_SEARCHES,
                 defaultSort = BeerSearchColumns.SEARCH + " ASC")
         public static final Uri BEER_SEARCHES = Uri.parse("content://" + AUTHORITY + "/" + RateBeerDatabase.BEER_SEARCHES);
 
         @InexactContentUri(
                 path = RateBeerDatabase.BEER_SEARCHES + "/*",
-                name = "RATEBEER_REPOSITORY_SEARCHES_SEARCH",
-                type = "vnd.android.cursor.item/vnd.quickbeer.android.next.beersearch",
+                name = "RATEBEER_SEARCHES_SEARCH",
+                type = BASE_TYPE + RateBeerDatabase.BEER_SEARCHES,
                 whereColumn = BeerSearchColumns.SEARCH,
                 pathSegment = 1)
         public static Uri withSearch(String search) {

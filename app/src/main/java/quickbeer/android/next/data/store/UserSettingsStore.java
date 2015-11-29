@@ -24,13 +24,17 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
 
     public UserSettingsStore(@NonNull ContentResolver contentResolver) {
         super(contentResolver);
-        if (!hasUserSettings()) {
-            put(new UserSettings());
-        }
+
+        initUserSettings();
     }
 
-    private boolean hasUserSettings() {
-        return query(DataLayer.DEFAULT_USER_ID) != null;
+    private void initUserSettings() {
+        getOne(DataLayer.DEFAULT_USER_ID)
+                .first()
+                .filter(userSettings -> userSettings == null)
+                .subscribe(userSettings -> {
+                    put(new UserSettings());
+                });
     }
 
     @NonNull

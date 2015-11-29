@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
@@ -78,6 +81,20 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.BEER.toString());
         intent.putExtra("id", beerId);
         context.startService(intent);
+    }
+
+    @NonNull
+    public Observable<List<String>> getBeerSearchQueries() {
+        Log.v(TAG, "getBeerSearchQueries");
+
+        return beerSearchStore.get("")
+                .map(beerSearches -> {
+                    List<String> searches = new ArrayList<>();
+                    for (BeerSearch search : beerSearches) {
+                        searches.add(search.getSearch());
+                    }
+                    return searches;
+                });
     }
 
     @NonNull
@@ -156,6 +173,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetBeer {
         @NonNull
         Observable<Beer> call(int beerId);
+    }
+
+    public interface GetBeerSearchQueries {
+        @NonNull
+        Observable<List<String>> call();
     }
 
     public interface GetBeerSearch {
