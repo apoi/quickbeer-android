@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.views.listitems.MenuListItem;
 
@@ -51,13 +52,9 @@ public class MainView extends BeerListView {
         getAdapter().setHeaderHeight(menuListItems.size() * menuItemHeight + headerItemHeight);
 
         // Redirect unhandled click events to menu
-        getListView().setOnTouchListener((v, event) -> {
+        getListView().setOnTouchListener((view, event) -> {
             menuListView.dispatchTouchEvent(event);
             return false;
-        });
-
-        // No scrolling for the menu, override listener
-        menuListView.setOnScrollListener(new RecyclerView.OnScrollListener() {
         });
     }
 }
