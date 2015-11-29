@@ -1,4 +1,4 @@
-package quickbeer.android.next.views;
+package quickbeer.android.next.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.adapters.BaseListAdapter;
 import quickbeer.android.next.views.listitems.ItemType;
 import quickbeer.android.next.views.listitems.MenuListItem;
 

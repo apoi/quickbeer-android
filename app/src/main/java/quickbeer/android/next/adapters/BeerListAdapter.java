@@ -1,4 +1,4 @@
-package quickbeer.android.next.views;
+package quickbeer.android.next.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import java.util.List;
 import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
+import quickbeer.android.next.adapters.BaseListAdapter;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.viewmodels.BeerViewModel;

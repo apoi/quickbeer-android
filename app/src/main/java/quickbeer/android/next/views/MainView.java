@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.adapters.MenuListAdapter;
 import quickbeer.android.next.views.listitems.MenuListItem;
 
 /**

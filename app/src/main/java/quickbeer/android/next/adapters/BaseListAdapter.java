@@ -1,4 +1,4 @@
-package quickbeer.android.next.views;
+package quickbeer.android.next.adapters;
 
 import android.support.v7.widget.RecyclerView;
 
