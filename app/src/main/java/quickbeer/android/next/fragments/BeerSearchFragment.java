@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.ActivityBase;
 import quickbeer.android.next.data.DataLayer;
-import rx.Observable;
 
 /**
  * Created by antti on 16.11.2015.
@@ -19,7 +19,7 @@ public class BeerSearchFragment extends BeerListFragment {
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
 
-    private Observable<String> queryObservable;
+    private String query;
 
     @Override
     public int getLayout() {
@@ -32,19 +32,29 @@ public class BeerSearchFragment extends BeerListFragment {
 
         QuickBeer.getInstance().getGraph().inject(this);
 
-        queryObservable.subscribe(
-                query -> {
-                    Log.d(TAG, "query(" + query + ")");
-                    setSourceObservable(getBeerSearch.call(query));
-                },
-                throwable -> {
-                    Log.e(TAG, "error", throwable);
-                });
+        if (savedInstanceState != null) {
+            query = savedInstanceState.getString("query");
+        }
+
+        ((ActivityBase) getActivity())
+                .getQueryObservable()
+                .startWith(query)
+                .subscribe(
+                        query -> {
+                            Log.d(TAG, "query(" + query + ")");
+                            setSourceObservable(getBeerSearch.call(query));
+                        },
+                        throwable -> {
+                            Log.e(TAG, "error", throwable);
+                        });
     }
 
-    public void setQueryObservable(Observable<String> queryObservable) {
-        Log.d(TAG, "setQueryObservable");
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("query", query);
+    }
 
-        this.queryObservable = queryObservable;
+    public void setQuery(final String query) {
+        this.query = query;
     }
 }

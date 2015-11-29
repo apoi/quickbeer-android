@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.views.listitems.MenuListItem;
 

@@ -6,7 +6,6 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import quickbeer.android.next.QuickBeer;
-import quickbeer.android.next.activities.MainActivity;
 import quickbeer.android.next.data.DataStoreModule;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;

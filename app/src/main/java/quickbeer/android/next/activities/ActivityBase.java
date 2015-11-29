@@ -5,7 +5,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -19,7 +18,6 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
 import rx.Observable;
-import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 
 /**
@@ -30,11 +28,8 @@ public abstract class ActivityBase extends AppCompatActivity implements
 
     private static final String TAG = ActivityBase.class.getSimpleName();
 
-    private Toolbar toolbar;
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
     private View searchViewOverlay;
 
     private PublishSubject<String> querySubject = PublishSubject.create();
@@ -44,26 +39,19 @@ public abstract class ActivityBase extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(getLayout());
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, getFragment())
                     .commit();
         }
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawerLayout.setDrawerListener(drawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        drawerToggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         setupSearch();
     }
@@ -134,6 +122,12 @@ public abstract class ActivityBase extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected");
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }
