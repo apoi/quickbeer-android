@@ -13,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.data.DataLayer;
@@ -53,7 +55,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
         oldSearchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
                 (List<String> list, String query) -> {
-                    list.add(query);
+                    if (query != null && !query.isEmpty()) {
+                        list.add(query);
+                    }
                     return list;
                 })
                 .startWith(oldSearches)
@@ -73,7 +77,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public Object getItem(int position) {
+    public String getItem(int position) {
         return adapterList.get(position);
     }
 
@@ -88,7 +92,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             @Override
             protected FilterResults performFiltering(CharSequence filter) {
                 FilterResults results = new FilterResults();
-                List<String> filtered = new ArrayList<>();
+                Set<String> filtered = new HashSet<>();
 
                 if (!TextUtils.isEmpty(filter)) {
                     for (String value : sourceList) {
@@ -98,7 +102,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                     }
                 }
 
-                results.values = filtered;
+                results.values = new ArrayList<>(filtered);
                 results.count = filtered.size();
                 return results;
             }

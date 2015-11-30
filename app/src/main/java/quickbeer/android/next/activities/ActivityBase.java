@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -80,12 +81,14 @@ public abstract class ActivityBase extends AppCompatActivity implements
 
     abstract protected Fragment getFragment();
 
-    public final Observable<String> getQueryObservable() {
-        return querySubject.asObservable();
+    public Observable<String> getQueryObservable() {
+        return querySubject
+                .asObservable()
+                .distinctUntilChanged();
     }
 
     private void setupSearch() {
-        adapter = new SearchAdapter(this, getBeerSearchQueries, querySubject);
+        adapter = new SearchAdapter(this, getBeerSearchQueries, getQueryObservable());
         searchViewOverlay = findViewById(R.id.search_view_overlay);
         searchViewOverlay.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && searchView.isSearchOpen()) {
@@ -125,6 +128,11 @@ public abstract class ActivityBase extends AppCompatActivity implements
                 searchView.setAdapter(null);
                 searchViewOverlay.setVisibility(View.GONE);
             }
+        });
+
+        searchView.setOnItemClickListener((parent, view, position, id) -> {
+            searchView.closeSearch();
+            querySubject.onNext(adapter.getItem(position));
         });
     }
 

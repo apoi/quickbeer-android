@@ -19,8 +19,6 @@ public class BeerSearchFragment extends BeerListFragment {
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
 
-    private String query;
-
     @Override
     public int getLayout() {
         return R.layout.beer_list_fragment;
@@ -32,13 +30,8 @@ public class BeerSearchFragment extends BeerListFragment {
 
         QuickBeer.getInstance().getGraph().inject(this);
 
-        if (savedInstanceState != null) {
-            query = savedInstanceState.getString("query");
-        }
-
         ((ActivityBase) getActivity())
                 .getQueryObservable()
-                .startWith(query)
                 .subscribe(
                         query -> {
                             Log.d(TAG, "query(" + query + ")");
@@ -50,11 +43,7 @@ public class BeerSearchFragment extends BeerListFragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putString("query", query);
-    }
-
-    public void setQuery(final String query) {
-        this.query = query;
+    public void onResume() {
+        super.onResume();
     }
 }
