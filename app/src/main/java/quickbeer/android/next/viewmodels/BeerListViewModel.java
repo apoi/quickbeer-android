@@ -2,6 +2,7 @@ package quickbeer.android.next.viewmodels;
 
 import android.support.annotation.NonNull;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -49,6 +50,7 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        this.beers.onNext(Collections.emptyList());
         this.sourceObservable = sourceObservable;
     }
 
