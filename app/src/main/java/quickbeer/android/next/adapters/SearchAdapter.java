@@ -15,28 +15,56 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reark.reark.utils.Log;
+import quickbeer.android.next.data.DataLayer;
+import rx.Observable;
+import rx.Subscription;
+
 /**
  * Created by antti on 16.11.2015.
  */
 public class SearchAdapter extends BaseAdapter implements Filterable {
+    private static final String TAG = SearchAdapter.class.getSimpleName();
 
     private List<String> adapterList = new ArrayList<>();
     private List<String> sourceList = new ArrayList<>();
 
     private Drawable suggestionIcon;
-    private LayoutInflater inflater;
+    private final LayoutInflater inflater;
+    private final DataLayer.GetBeerSearchQueries beerSearchQueries;
+    private final Observable<String> queryObservable;
+    private Subscription oldSearchesSubscription;
 
-    public SearchAdapter(Context context) {
-        inflater = LayoutInflater.from(context);
+    public SearchAdapter(Context context, DataLayer.GetBeerSearchQueries beerSearchQueries,
+                         Observable<String> queryObservable) {
+        this.inflater = LayoutInflater.from(context);
+        this.beerSearchQueries = beerSearchQueries;
+        this.queryObservable = queryObservable;
 
-        sourceList.add("koff porter");
-        sourceList.add("baltic porter");
-        sourceList.add("sundays");
-        sourceList.add("judas iscariot");
-        sourceList.add("nogne");
-        sourceList.add("imperial pils");
-        sourceList.add("pilsner urquell");
-        sourceList.add("strongest stout");
+        refreshQueryList();
+    }
+
+    public void refreshQueryList() {
+        if (oldSearchesSubscription != null) {
+            oldSearchesSubscription.unsubscribe();
+        }
+
+        Observable<List<String>> oldSearches = beerSearchQueries.call();
+
+        oldSearchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
+                (List<String> list, String query) -> {
+                    list.add(query);
+                    return list;
+                })
+                .startWith(oldSearches)
+                .subscribe(
+                        list -> {
+                            Log.w(TAG, "got query list " + list.size());
+                            sourceList = list;
+                        },
+                        throwable -> {
+                            Log.e(TAG, "error", throwable);
+                        });
     }
 
     @Override

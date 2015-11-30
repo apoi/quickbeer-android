@@ -14,9 +14,13 @@ import android.view.View;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
+import javax.inject.Inject;
+
 import io.reark.reark.utils.Log;
+import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
+import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -34,9 +38,14 @@ public abstract class ActivityBase extends AppCompatActivity implements
 
     private PublishSubject<String> querySubject = PublishSubject.create();
 
+    @Inject
+    DataLayer.GetBeerSearchQueries getBeerSearchQueries;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        QuickBeer.getInstance().getGraph().inject(this);
 
         setContentView(getLayout());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -56,6 +65,15 @@ public abstract class ActivityBase extends AppCompatActivity implements
         setupSearch();
     }
 
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+        // There may have been queries while this fragment was paused. Refresh the search
+        // history list adapter to have the latest queries available.
+        adapter.refreshQueryList();
+    }
+
     protected int getLayout() {
         return R.layout.main_activity;
     }
@@ -67,7 +85,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
     }
 
     private void setupSearch() {
-        adapter = new SearchAdapter(this);
+        adapter = new SearchAdapter(this, getBeerSearchQueries, querySubject);
         searchViewOverlay = findViewById(R.id.search_view_overlay);
         searchViewOverlay.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && searchView.isSearchOpen()) {

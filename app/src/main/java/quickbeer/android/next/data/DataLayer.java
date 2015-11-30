@@ -91,7 +91,10 @@ public class DataLayer extends DataLayerBase {
                 .map(beerSearches -> {
                     List<String> searches = new ArrayList<>();
                     for (BeerSearch search : beerSearches) {
-                        searches.add(search.getSearch());
+                        // Filter out meta searches, such as __top50
+                        if (!search.getSearch().startsWith("__")) {
+                            searches.add(search.getSearch());
+                        }
                     }
                     return searches;
                 });

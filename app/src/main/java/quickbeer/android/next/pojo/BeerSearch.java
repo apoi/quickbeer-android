@@ -21,4 +21,12 @@ public class BeerSearch {
     public List<Integer> getItems() {
         return items;
     }
+
+    @Override
+    public String toString() {
+        return "BeerSearch{search=" + search
+                + ", items='" + (items == null ? "null " : items.size())
+                + '}';
+    }
+
 }
