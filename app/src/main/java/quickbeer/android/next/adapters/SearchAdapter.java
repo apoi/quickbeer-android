@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     private final LayoutInflater inflater;
     private final DataLayer.GetBeerSearchQueries beerSearchQueries;
     private final Observable<String> queryObservable;
-    private Subscription oldSearchesSubscription;
+    private Subscription searchesSubscription;
 
     public SearchAdapter(Context context, DataLayer.GetBeerSearchQueries beerSearchQueries,
                          Observable<String> queryObservable) {
@@ -47,13 +48,13 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     public void refreshQueryList() {
-        if (oldSearchesSubscription != null) {
-            oldSearchesSubscription.unsubscribe();
+        if (searchesSubscription != null) {
+            searchesSubscription.unsubscribe();
         }
 
         Observable<List<String>> oldSearches = beerSearchQueries.call();
 
-        oldSearchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
+        searchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
                 (List<String> list, String query) -> {
                     if (query != null && !query.isEmpty()) {
                         list.add(query);
@@ -61,14 +62,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                     return list;
                 })
                 .startWith(oldSearches)
-                .subscribe(
-                        list -> {
-                            Log.w(TAG, "got query list " + list.size());
-                            sourceList = list;
-                        },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        });
+                .subscribe(list -> sourceList = list);
     }
 
     @Override
@@ -95,8 +89,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                 Set<String> filtered = new HashSet<>();
 
                 if (!TextUtils.isEmpty(filter)) {
+                    List<String> filters = Arrays.asList(filter.toString().split(" "));
                     for (String value : sourceList) {
-                        if (value.contains(filter)) {
+                        if (containsFilters(value, filters)) {
                             filtered.add(value);
                         }
                     }
@@ -115,6 +110,15 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                 }
             }
         };
+    }
+
+    private boolean containsFilters(String value, List<String> filters) {
+        for (String filter : filters) {
+            if (!value.contains(filter)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

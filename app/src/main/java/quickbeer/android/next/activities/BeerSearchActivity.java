@@ -1,7 +1,6 @@
 package quickbeer.android.next.activities;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.next.fragments.BeerSearchFragment;
