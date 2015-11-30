@@ -56,9 +56,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
 
         searchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
                 (List<String> list, String query) -> {
-                    if (query != null && !query.isEmpty()) {
-                        list.add(query);
-                    }
+                    list.add(query);
                     return list;
                 })
                 .startWith(oldSearches)

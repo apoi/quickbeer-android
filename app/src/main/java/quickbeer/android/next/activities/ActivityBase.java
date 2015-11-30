@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -101,8 +102,12 @@ public abstract class ActivityBase extends AppCompatActivity implements
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit(" + query + ")");
-                searchView.closeSearch();
-                querySubject.onNext(query);
+                if (query.length() > 3) {
+                    searchView.closeSearch();
+                    querySubject.onNext(query);
+                } else {
+                    Toast.makeText(ActivityBase.this, R.string.search_too_short, Toast.LENGTH_SHORT).show();
+                }
                 return true;
             }
 

@@ -4,4 +4,5 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="search_too_short">Query needs to be at least four characters</string>
 </resources>
