@@ -67,8 +67,8 @@ public class BeerFetcher extends FetcherBase {
                 .subscribe(beerStore::put,
                         e -> Log.e(TAG, "Error fetching beer " + beerId, e));
 
-        //requestMap.put(beerId, subscription);
-        //startRequest(uri);
+        requestMap.put(beerId, subscription);
+        startRequest(uri);
     }
 
     @NonNull

@@ -19,7 +19,7 @@ public interface RateBeerService {
     static Uri TOP50 = Uri.parse("ratebeer/top50");
 
     @GET("/json/bff.asp")
-    Observable<Beer> getBeer(@QueryMap Map<String, String> params);
+    Observable<List<Beer>> getBeer(@QueryMap Map<String, String> params);
 
     @GET("/json/bff.asp")
     Observable<List<Beer>> search(@QueryMap Map<String, String> params);

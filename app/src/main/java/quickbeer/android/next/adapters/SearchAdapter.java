@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.Subscription;

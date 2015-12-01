@@ -14,7 +14,17 @@ import quickbeer.android.next.network.NetworkModule;
 @Module(includes = NetworkModule.class)
 public final class FetcherModule {
     @Provides
-    @Named("beerSearch")
+    @Named("beerFetcher")
+    public Fetcher provideBeerFetcher(NetworkApi networkApi,
+                                            NetworkRequestStatusStore networkRequestStatusStore,
+                                            BeerStore beerStore) {
+        return new BeerFetcher(networkApi,
+                networkRequestStatusStore::put,
+                beerStore);
+    }
+
+    @Provides
+    @Named("beerSearchFetcher")
     public Fetcher provideBeerSearchFetcher(NetworkApi networkApi,
                                             NetworkRequestStatusStore networkRequestStatusStore,
                                             BeerStore beerStore,
@@ -26,7 +36,7 @@ public final class FetcherModule {
     }
 
     @Provides
-    @Named("topBeers")
+    @Named("topBeersFetcher")
     public Fetcher provideTopBeersFetcher(NetworkApi networkApi,
                                           NetworkRequestStatusStore networkRequestStatusStore,
                                           BeerStore beerStore,

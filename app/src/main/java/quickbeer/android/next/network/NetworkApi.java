@@ -32,7 +32,8 @@ public class NetworkApi {
 
     public Observable<Beer> getBeer(Map<String, String> params) {
         return rateBeerService
-                .getBeer(params);
+                .getBeer(params)
+                .map(list -> list.get(0)); // API returns a list of one beer
     }
 
     public Observable<List<Beer>> search(Map<String, String> params) {

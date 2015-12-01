@@ -139,7 +139,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
             rating.setBackgroundResource(Score.Stars.UNRATED.getResource());
             rating.setText(String.valueOf(beer.getRating()));
             nameTextView.setText(beer.getName());
-            styleTextView.setText(beer.getBrewerName());
+            styleTextView.setText(beer.getStyleName());
             brewerTextView.setText(beer.getBrewerName());
         }
 

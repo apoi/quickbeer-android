@@ -32,7 +32,7 @@ public final class DataStoreModule {
 
     @Provides
     public DataLayer.GetBeer provideGetBeer(DataLayer dataLayer) {
-        return dataLayer::getBeer;
+        return dataLayer::fetchAndGetBeer;
     }
 
     @Provides
@@ -66,12 +66,14 @@ public final class DataStoreModule {
 
     @Provides
     @Singleton
-    public ServiceDataLayer provideServiceDataLayer(@Named("beerSearch") Fetcher beerSearchFetcher,
-                                                    @Named("topBeers") Fetcher topBeersFetcher,
+    public ServiceDataLayer provideServiceDataLayer(@Named("beerFetcher") Fetcher beerFetcher,
+                                                    @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
+                                                    @Named("topBeersFetcher") Fetcher topBeersFetcher,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
                                                     BeerSearchStore beerSearchStore) {
-        return new ServiceDataLayer(beerSearchFetcher,
+        return new ServiceDataLayer(beerFetcher,
+                beerSearchFetcher,
                 topBeersFetcher,
                 networkRequestStatusStore,
                 beerStore,
