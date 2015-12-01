@@ -74,7 +74,7 @@ public class Beer {
 
     @NonNull
     public int getRating() {
-        return Math.round(overallRating);
+        return overallRating > 0 ? Math.round(overallRating) : -1;
     }
 
     @Override

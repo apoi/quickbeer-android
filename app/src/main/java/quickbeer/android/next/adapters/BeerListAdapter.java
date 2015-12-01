@@ -107,7 +107,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private ViewBinder viewBinder;
-        private TextView rating;
+        private TextView ratingTextView;
         private TextView nameTextView;
         private TextView styleTextView;
         private TextView brewerTextView;
@@ -116,7 +116,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
             super(view);
 
             this.viewBinder = new ViewBinder(this);
-            this.rating = (TextView) view.findViewById(R.id.beer_stars);
+            this.ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
             this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
             this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
             this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
@@ -136,16 +136,20 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
         public void setBeer(@NonNull Beer beer) {
             Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
-            rating.setBackgroundResource(Score.Stars.UNRATED.getResource());
-            rating.setText(String.valueOf(beer.getRating()));
+            String rating = beer.getRating() >= 0
+                    ? String.valueOf(beer.getRating())
+                    : "?";
+
+            ratingTextView.setBackgroundResource(Score.Stars.UNRATED.getResource());
+            ratingTextView.setText(rating);
             nameTextView.setText(beer.getName());
             styleTextView.setText(beer.getStyleName());
             brewerTextView.setText(beer.getBrewerName());
         }
 
         public void clear() {
-            rating.setBackground(null);
-            rating.setText("");
+            ratingTextView.setBackground(null);
+            ratingTextView.setText("");
             nameTextView.setText("");
             styleTextView.setText("");
             brewerTextView.setText("");
