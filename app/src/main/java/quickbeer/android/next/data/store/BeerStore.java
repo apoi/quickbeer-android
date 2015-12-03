@@ -81,4 +81,12 @@ public class BeerStore extends StoreBase<Beer, Integer> {
     protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
         return v1.getAsString(BeerColumns.JSON).equals(v2.getAsString(BeerColumns.JSON));
     }
+
+    @NonNull
+    @Override
+    protected ContentValues mergeValues(ContentValues v1, ContentValues v2) {
+        Beer b1 = getGson().fromJson(v1.getAsString(BeerColumns.JSON), Beer.class);
+        Beer b2 = getGson().fromJson(v2.getAsString(BeerColumns.JSON), Beer.class);
+        return getContentValuesForItem(b1.overwrite(b2));
+    }
 }
