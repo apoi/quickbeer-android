@@ -26,7 +26,7 @@ public class BeerSearch {
     public String toString() {
         return "BeerSearch{search=" + search
                 + ", items='" + (items == null ? "null " : items.size())
-                + '}';
+                + "'}";
     }
 
 }

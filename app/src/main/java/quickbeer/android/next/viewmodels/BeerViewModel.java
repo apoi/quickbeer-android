@@ -2,11 +2,13 @@ package quickbeer.android.next.viewmodels;
 
 import android.support.annotation.NonNull;
 
+import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.Beer;
 import rx.Observable;
+import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
@@ -38,8 +40,20 @@ public class BeerViewModel extends BaseViewModel {
     public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
-        compositeSubscription.add(getBeer
-                .call(beerId)
+        ConnectableObservable<DataStreamNotification<Beer>> beerSource =
+                getBeer.call(beerId).publish();
+
+        compositeSubscription.add(beerSource
+                .map(toProgressStatus())
+                .subscribe(this::setNetworkStatusText));
+
+        compositeSubscription.add(beerSource
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .doOnNext(beerSearch -> Log.d(TAG, "Beer get finished"))
                 .subscribe(beer::onNext));
+
+        compositeSubscription.add(beerSource
+                .connect());
     }
 }

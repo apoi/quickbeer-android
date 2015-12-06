@@ -143,6 +143,12 @@ public class Beer {
         return value <= 0;
     }
 
+    public boolean hasDetails() {
+        return brewerId > 0
+                && styleName != null
+                && !styleName.isEmpty();
+    }
+
     @Override
     public String toString() {
         return "Beer{" + "id=" + id

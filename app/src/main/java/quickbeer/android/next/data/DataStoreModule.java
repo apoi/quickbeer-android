@@ -32,7 +32,7 @@ public final class DataStoreModule {
 
     @Provides
     public DataLayer.GetBeer provideGetBeer(DataLayer dataLayer) {
-        return dataLayer::fetchAndGetBeer;
+        return dataLayer::getBeer;
     }
 
     @Provides
@@ -42,12 +42,12 @@ public final class DataStoreModule {
 
     @Provides
     public DataLayer.GetBeerSearch provideGetBeerSearch(DataLayer dataLayer) {
-        return dataLayer::fetchAndGetBeerSearch;
+        return dataLayer::getBeerSearch;
     }
 
     @Provides
     public DataLayer.GetTopBeers provideGetTopBeers(DataLayer dataLayer) {
-        return dataLayer::fetchAndGetTopBeers;
+        return dataLayer::getTopBeers;
     }
 
     @Provides

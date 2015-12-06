@@ -83,8 +83,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
 
     public Observable<String> getQueryObservable() {
         return querySubject
-                .asObservable()
-                .distinctUntilChanged();
+                .asObservable();
     }
 
     private void setupSearch() {

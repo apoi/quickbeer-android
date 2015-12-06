@@ -58,20 +58,41 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<Beer> getBeer(@NonNull Integer beerId) {
+    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
         Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
-        Log.v(TAG, "getBeer");
+        Log.v(TAG, "getBeerResultStream");
 
-        return beerStore.getStream(beerId);
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(beerId.toString().hashCode());
+
+        final Observable<Beer> beerObservable =
+                beerStore.getStream(beerId);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, beerObservable);
     }
 
     @NonNull
-    public Observable<Beer> fetchAndGetBeer(@NonNull Integer beerId) {
+    public Observable<DataStreamNotification<Beer>> getBeer(@NonNull Integer beerId) {
+        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+        Log.v(TAG, "getBeer");
+
+        // Trigger a fetch only if full details haven't been fetched
+        beerStore.getOne(beerId)
+                .filter(beer -> beer == null || !beer.hasDetails())
+                .doOnNext(beer -> Log.v(TAG, "Beer not cached, fetching"))
+                .subscribe(beer -> fetchBeer(beerId));
+
+        return getBeerResultStream(beerId);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Beer>> fetchAndGetBeer(@NonNull Integer beerId) {
         Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
         Log.v(TAG, "fetchAndGetBeer");
 
         fetchBeer(beerId);
-        return beerStore.getStream(beerId);
+        return getBeerResultStream(beerId);
     }
 
     private void fetchBeer(@NonNull Integer beerId) {
@@ -101,17 +122,34 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getBeerSearchResultStream(@NonNull final String searchString) {
+        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        Log.v(TAG, "getBeerSearchResultStream");
+
+        final Uri uri = beerSearchStore.getUriForKey(searchString);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<BeerSearch> beerSearchObservable =
+                beerSearchStore.getStream(searchString);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, beerSearchObservable);
+    }
+
+    @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "getBeerSearch");
 
-        final Uri uri = beerSearchStore.getUriForKey(searchString);
-        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(searchString);
-        return DataLayerUtils.createDataStreamNotificationObservable(
-                networkRequestStatusObservable, beerSearchObservable);
+        // Trigger a fetch only if there was no cached result
+        beerSearchStore.getOne(searchString)
+                .filter(results -> results == null || results.getItems().size() == 0)
+                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                .subscribe(results -> fetchBeerSearch(searchString));
+
+        return getBeerSearchResultStream(searchString);
     }
 
     @NonNull
@@ -119,9 +157,8 @@ public class DataLayer extends DataLayerBase {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "fetchAndGetBeerSearch");
 
-        final Observable<DataStreamNotification<BeerSearch>> beerSearchStream = getBeerSearch(searchString);
         fetchBeerSearch(searchString);
-        return beerSearchStream;
+        return getBeerSearchResultStream(searchString);
     }
 
     private void fetchBeerSearch(@NonNull final String searchString) {
@@ -135,25 +172,40 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getTopBeersResultStream() {
+        Log.v(TAG, "getTopBeersResultStream");
+
+        final Uri uri = beerSearchStore.getUriForKey(TopBeersFetcher.SEARCH);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<BeerSearch> beerSearchObservable =
+                beerSearchStore.getStream(TopBeersFetcher.SEARCH);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, beerSearchObservable);
+    }
+
+    @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getTopBeers() {
         Log.v(TAG, "getTopBeers");
 
-        final Uri uri = beerSearchStore.getUriForKey(TopBeersFetcher.SEARCH);
-        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(TopBeersFetcher.SEARCH);
-        return DataLayerUtils.createDataStreamNotificationObservable(
-                networkRequestStatusObservable, beerSearchObservable);
+        // Trigger a fetch only if there was no cached result
+        beerSearchStore.getOne(RateBeerService.TOP50.toString())
+                .filter(results -> results == null || results.getItems().size() == 0)
+                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                .subscribe(results -> fetchTopBeers());
+
+        return getTopBeersResultStream();
     }
 
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopBeers() {
         Log.v(TAG, "fetchAndGetTopBeers");
 
-        final Observable<DataStreamNotification<BeerSearch>> topBeersStream = getTopBeers();
         fetchTopBeers();
-        return topBeersStream;
+        return getTopBeersResultStream();
     }
 
     private void fetchTopBeers() {
@@ -175,7 +227,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetBeer {
         @NonNull
-        Observable<Beer> call(int beerId);
+        Observable<DataStreamNotification<Beer>> call(int beerId);
     }
 
     public interface GetBeerSearchQueries {

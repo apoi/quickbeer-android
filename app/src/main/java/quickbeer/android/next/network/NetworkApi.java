@@ -24,7 +24,7 @@ public class NetworkApi {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(client)
                 .setEndpoint("http://www.ratebeer.com")
-                .setLogLevel(RestAdapter.LogLevel.NONE)
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
 
         rateBeerService = restAdapter.create(RateBeerService.class);
