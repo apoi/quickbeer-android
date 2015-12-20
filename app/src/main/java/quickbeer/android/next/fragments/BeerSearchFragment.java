@@ -41,9 +41,4 @@ public class BeerSearchFragment extends BeerListFragment {
                             Log.e(TAG, "error", throwable);
                         });
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 }

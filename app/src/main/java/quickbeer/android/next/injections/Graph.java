@@ -11,6 +11,7 @@ import quickbeer.android.next.data.DataStoreModule;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
+import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 import quickbeer.android.next.fragments.MainFragment;
@@ -34,6 +35,7 @@ public interface Graph {
     void inject(MainFragment mainFragment);
     void inject(BeerListFragment beerListFragment);
     void inject(BeerSearchFragment beerSearchFragment);
+    void inject(BeerDetailsFragment beerDetailsFragment);
 
     void inject(BeerStore store);
     void inject(BeerSearchStore store);

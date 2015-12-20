@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quickbeer.android.next.views.BeerDetailsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/beer_details_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_light">
+
+    <quickbeer.android.next.views.BeerDetailsRatingView
+        android:id="@+id/rating_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/beers_details_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+</quickbeer.android.next.views.BeerDetailsView>
