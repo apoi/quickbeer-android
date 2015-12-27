@@ -4,9 +4,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
@@ -22,8 +24,6 @@ import rx.subscriptions.Subscriptions;
  * Created by antti on 13.12.2015.
  */
 public class BeerDetailsView extends FrameLayout {
-    private static final String TAG = BeerDetailsView.class.getSimpleName();
-
     private RecyclerView beerDetailsListView;
     private BeerDetailsAdapter beerDetailsAdapter;
 
@@ -31,8 +31,12 @@ public class BeerDetailsView extends FrameLayout {
         super(context);
     }
 
+    public BeerDetailsView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
     private void setBeer(@NonNull Beer beer) {
-        Preconditions.checkNotNull(beer, "Bee cannot be null.");
+        Preconditions.checkNotNull(beer, "Beer cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 
         beerDetailsAdapter.set(beer);

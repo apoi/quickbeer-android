@@ -42,8 +42,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         this.inflater = LayoutInflater.from(context);
         this.beerSearchQueries = beerSearchQueries;
         this.queryObservable = queryObservable;
-
-        refreshQueryList();
     }
 
     public void refreshQueryList() {

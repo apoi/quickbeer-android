@@ -3,6 +3,7 @@ package quickbeer.android.next.activities;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 
 /**
@@ -32,6 +33,10 @@ public class BeerDetailsActivity extends ActivityBase {
 
     @Override
     protected Fragment getFragment() {
-        return new BeerSearchFragment();
+        return new BeerDetailsFragment();
+    }
+
+    public int getBeerId() {
+        return beerId;
     }
 }

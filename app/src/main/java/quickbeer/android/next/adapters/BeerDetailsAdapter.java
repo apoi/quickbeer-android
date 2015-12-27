@@ -62,7 +62,11 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return 1;
+        if (beer != null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     public void set(Beer beer) {
@@ -95,7 +99,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             nameTextView.setText(beer.getName());
             brewerTextView.setText(beer.getBrewerName());
             styleTextView.setText(beer.getStyleName());
-            ratingTextView.setText(beer.getRating());
+            ratingTextView.setText(String.valueOf(beer.getRating()));
         }
     }
 }

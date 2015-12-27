@@ -14,6 +14,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Score;
@@ -50,6 +51,10 @@ public class BeerDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        viewModel = new BeerViewModel(((BeerDetailsActivity) getActivity()).getBeerId(), getBeer);
+        viewModel.subscribeToDataStore();
+
         viewBinder = new BeerDetailsView.ViewBinder((BeerDetailsView) view.findViewById(R.id.beer_details_view), viewModel);
     }
 
