@@ -10,7 +10,7 @@ import rx.Observable;
  * Created by antti on 17.11.2015.
  */
 public class BeerSearchActivity extends ActivityBase {
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = BeerSearchActivity.class.getSimpleName();
 
     private String query;
 

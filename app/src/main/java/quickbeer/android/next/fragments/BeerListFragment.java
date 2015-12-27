@@ -1,5 +1,6 @@
 package quickbeer.android.next.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,10 +13,13 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
+import rx.Subscription;
 
 /**
  * Created by antti on 25.10.2015.
@@ -24,6 +28,7 @@ public class BeerListFragment extends Fragment {
     private static final String TAG = BeerListFragment.class.getSimpleName();
 
     private BeerListView.ViewBinder beersViewBinder;
+    private Subscription selectBeerSubscription;
 
     @Inject
     BeerListViewModel beerListViewModel;
@@ -42,11 +47,6 @@ public class BeerListFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         QuickBeer.getInstance().getGraph().inject(this);
-
-        beerListViewModel.getSelectBeer()
-                .subscribe(beerId -> {
-                    Log.d(TAG, "Selected beer " + beerId);
-                });
     }
 
     @Override
@@ -64,12 +64,25 @@ public class BeerListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         beersViewBinder.bind();
+
+        selectBeerSubscription = beerListViewModel
+                .getSelectBeer()
+                .subscribe(beerId -> {
+                    Log.d(TAG, "Selected beer " + beerId);
+
+                    Intent intent = new Intent(getActivity(), BeerDetailsActivity.class);
+                    intent.putExtra("beerId", beerId);
+                    startActivity(intent);
+                });
+
     }
 
     @Override
     public void onPause() {
         super.onPause();
         beersViewBinder.unbind();
+
+        selectBeerSubscription.unsubscribe();
     }
 
     @Override

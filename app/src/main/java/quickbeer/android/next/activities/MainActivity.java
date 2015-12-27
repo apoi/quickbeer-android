@@ -33,9 +33,10 @@ public class MainActivity extends ActivityBase {
         getQueryObservable().subscribe(
                 query -> {
                     Log.d(TAG, "query(" + query + ")");
+
                     Intent intent = new Intent(this, BeerSearchActivity.class);
                     intent.putExtra("query", query);
-                    startActivityForResult(intent, 0);
+                    startActivity(intent);
                 },
                 throwable -> {
                     Log.e(TAG, "error", throwable);

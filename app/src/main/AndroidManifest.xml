@@ -27,6 +27,10 @@
             android:name=".activities.BeerSearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".activities.BeerDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name=".data.schematicprovider.generated.RateBeerProvider"
             android:authorities="quickbeer.android.next.data.schematicprovider.RateBeerProvider"

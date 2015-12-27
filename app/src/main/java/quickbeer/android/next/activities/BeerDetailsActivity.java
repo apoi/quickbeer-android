@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.next.fragments.BeerSearchFragment;
-import rx.Observable;
 
 /**
  * Created by antti on 9.12.2015.
@@ -12,23 +11,23 @@ import rx.Observable;
 public class BeerDetailsActivity extends ActivityBase {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
-    private String query;
+    private int beerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            query = savedInstanceState.getString("beerId");
+            beerId = savedInstanceState.getInt("beerId");
         } else {
-            query = getIntent().getStringExtra("beerId");
+            beerId = getIntent().getIntExtra("beerId", 0);
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("beerId", query);
+        outState.putInt("beerId", beerId);
     }
 
     @Override
