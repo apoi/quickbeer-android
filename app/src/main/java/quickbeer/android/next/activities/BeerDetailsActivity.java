@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.next.fragments.BeerDetailsFragment;
-import quickbeer.android.next.fragments.BeerSearchFragment;
 
 /**
  * Created by antti on 9.12.2015.

@@ -7,17 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.List;
-
 import io.reark.reark.utils.Preconditions;
-import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.viewmodels.BaseViewModel;
-import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.views.listitems.ItemType;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by antti on 13.12.2015.

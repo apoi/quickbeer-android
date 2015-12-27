@@ -5,20 +5,16 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 
-import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerDetailsAdapter;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.viewmodels.BeerViewModel;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
-import rx.subscriptions.Subscriptions;
 
 /**
  * Created by antti on 13.12.2015.

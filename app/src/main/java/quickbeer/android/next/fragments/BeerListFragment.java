@@ -14,7 +14,6 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
