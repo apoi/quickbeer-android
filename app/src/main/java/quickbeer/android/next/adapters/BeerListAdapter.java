@@ -125,11 +125,11 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
         }
 
         public void bind(BeerViewModel viewModel) {
+            clear();
             this.viewBinder.bind(viewModel);
         }
 
         public void unbind() {
-            clear();
             this.viewBinder.unbind();
         }
 
