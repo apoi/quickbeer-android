@@ -63,7 +63,7 @@ public class BeerListView extends FrameLayout {
         Preconditions.checkNotNull(beers, "Beer list cannot be null.");
         Preconditions.checkState(beerListAdapter != null, "Beer list adapter cannot be null.");
 
-        Log.v(TAG, "Settings " + beers.size() + " beers to adapter");
+        Log.v(TAG, "Setting " + beers.size() + " beers to adapter");
         beerListAdapter.set(beers);
     }
 
