@@ -79,6 +79,7 @@ public class DataLayer extends DataLayerBase {
 
         // Trigger a fetch only if full details haven't been fetched
         beerStore.getOne(beerId)
+                .first()
                 .filter(beer -> beer == null || !beer.hasDetails())
                 .doOnNext(beer -> Log.v(TAG, "Beer not cached, fetching"))
                 .subscribe(beer -> fetchBeer(beerId));
@@ -145,6 +146,7 @@ public class DataLayer extends DataLayerBase {
 
         // Trigger a fetch only if there was no cached result
         beerSearchStore.getOne(searchString)
+                .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
                 .subscribe(results -> fetchBeerSearch(searchString));
@@ -193,6 +195,7 @@ public class DataLayer extends DataLayerBase {
 
         // Trigger a fetch only if there was no cached result
         beerSearchStore.getOne(RateBeerService.TOP50.toString())
+                .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
                 .subscribe(results -> fetchTopBeers());
