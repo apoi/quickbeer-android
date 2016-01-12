@@ -37,6 +37,9 @@ public class BeerListFragment extends Fragment {
     }
 
     public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        // Unsubscribe old source before setting the new one, otherwise the subscribe
+        // call assumes the old subscription to still be valid.
+        beerListViewModel.unsubscribeFromDataStore();
         beerListViewModel.setSourceObservable(sourceObservable);
         beerListViewModel.subscribeToDataStore();
     }
