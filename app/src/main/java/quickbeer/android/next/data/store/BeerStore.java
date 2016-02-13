@@ -71,7 +71,7 @@ public class BeerStore extends StoreBase<Beer, Integer> {
 
     @NonNull
     @Override
-    public Uri getUriForKey(@NonNull Integer id) {
+    public Uri getUriForId(@NonNull Integer id) {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.Beers.withId(id);

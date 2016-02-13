@@ -127,7 +127,7 @@ public class DataLayer extends DataLayerBase {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "getBeerSearchResultStream");
 
-        final Uri uri = beerSearchStore.getUriForKey(searchString);
+        final Uri uri = beerSearchStore.getUriForId(searchString);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
@@ -177,7 +177,7 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<BeerSearch>> getTopBeersResultStream() {
         Log.v(TAG, "getTopBeersResultStream");
 
-        final Uri uri = beerSearchStore.getUriForKey(TopBeersFetcher.SEARCH);
+        final Uri uri = beerSearchStore.getUriForId(TopBeersFetcher.SEARCH);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());

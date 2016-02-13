@@ -77,7 +77,7 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
 
     @NonNull
     @Override
-    public Uri getUriForKey(@NonNull Integer id) {
+    public Uri getUriForId(@NonNull Integer id) {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.NetworkRequestStatuses.withId(id);

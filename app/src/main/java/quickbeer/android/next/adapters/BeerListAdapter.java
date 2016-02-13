@@ -173,7 +173,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
             this.viewModel = viewModel;
-            this.viewModel.subscribeToDataStoreOnce();
+            this.viewModel.subscribeToDataStore();
             bind();
         }
 

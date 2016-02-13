@@ -68,7 +68,7 @@ public class BeerSearchFetcher extends FetcherBase {
             return;
         }
 
-        final String uri = beerSearchStore.getUriForKey(searchString).toString();
+        final String uri = beerSearchStore.getUriForId(searchString).toString();
         Subscription subscription = createNetworkObservable(searchString)
                 .subscribeOn(Schedulers.computation())
                 .map((beers) -> {
