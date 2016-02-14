@@ -79,9 +79,12 @@ public class Beer {
         return brewerName;
     }
 
-    @NonNull
     public int getRating() {
         return overallRating > 0 ? Math.round(overallRating) : -1;
+    }
+
+    public float getAbv() {
+        return alcohol;
     }
 
     public Beer overwrite(Beer other) {

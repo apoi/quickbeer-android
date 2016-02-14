@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/menu_item_height"
+    android:layout_height="wrap_content"
     android:paddingLeft="@dimen/list_item_padding"
     android:paddingRight="@dimen/list_item_padding"
-    android:background="@drawable/listitem_ripple_dark">
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/beer_stars"
@@ -26,22 +24,45 @@
             android:textSize="@dimen/listitem_text_score"
             android:background="@drawable/score_unrated" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/beer_name"
+            android:layout_toRightOf="@id/beer_stars"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="@dimen/beer_details_header_text"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
-            <TextView
-                android:id="@+id/beer_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:fontFamily="sans-serif-thin"
-                android:textSize="@dimen/listitem_text_primary"
-                android:singleLine="true"
-                android:ellipsize="end" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <View
+            android:id="@+id/placeholder_left"
+            android:layout_width="@dimen/list_item_icon_size"
+            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_marginRight="@dimen/list_item_icon_margin_right"
+            android:visibility="invisible"/>
+
+        <View
+            android:id="@+id/line_left"
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/gray_700"/>
+
+        <LinearLayout
+            android:id="@+id/details_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:paddingLeft="5dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/beer_style"
@@ -50,6 +71,19 @@
                 android:textColor="@color/gray_300"
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_secondary"
+                android:textStyle="italic"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/beer_abv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_300"
+                android:fontFamily="sans-serif-thin"
+                android:layout_marginTop="-2dp"
+                android:textSize="@dimen/listitem_text_secondary"
+                android:textStyle="italic"
                 android:singleLine="true"
                 android:ellipsize="end" />
 
@@ -61,6 +95,19 @@
                 android:fontFamily="sans-serif-thin"
                 android:layout_marginTop="-2dp"
                 android:textSize="@dimen/listitem_text_secondary"
+                android:textStyle="italic"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/brewer_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_300"
+                android:fontFamily="sans-serif-thin"
+                android:layout_marginTop="-2dp"
+                android:textSize="@dimen/listitem_text_secondary"
+                android:textStyle="italic"
                 android:singleLine="true"
                 android:ellipsize="end" />
 
@@ -68,10 +115,4 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="bottom"
-        android:background="@color/gray_800" />
-
-</FrameLayout>
+</LinearLayout>

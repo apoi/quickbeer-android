@@ -75,24 +75,30 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         private TextView ratingTextView;
         private TextView nameTextView;
         private TextView styleTextView;
+        private TextView abvTextView;
         private TextView brewerTextView;
+        private TextView locationTextView;
 
         public BeerDetailsViewHolder(View view) {
             super(view);
 
-            this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
-            this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
-            this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
             this.ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
+            this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
+            this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
+            this.abvTextView = (TextView) view.findViewById(R.id.beer_abv);
+            this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
+            this.locationTextView = (TextView) view.findViewById(R.id.brewer_location);
         }
 
         public void setBeer(@NonNull Beer beer) {
             Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
-            nameTextView.setText(beer.getName());
-            brewerTextView.setText(beer.getBrewerName());
-            styleTextView.setText(beer.getStyleName());
             ratingTextView.setText(String.valueOf(beer.getRating()));
+            nameTextView.setText(beer.getName());
+            styleTextView.setText(beer.getStyleName());
+            abvTextView.setText(String.format("ABV: %.1f", beer.getAbv()));
+            brewerTextView.setText(beer.getBrewerName());
+            locationTextView.setText("TODO data from brewer");
         }
     }
 }
