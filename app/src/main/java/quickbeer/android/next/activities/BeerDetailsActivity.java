@@ -1,8 +1,10 @@
 package quickbeer.android.next.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 
 /**
@@ -22,6 +24,18 @@ public class BeerDetailsActivity extends ActivityBase {
         } else {
             beerId = getIntent().getIntExtra("beerId", 0);
         }
+
+        getQueryObservable().subscribe(
+                query -> {
+                    Log.d(TAG, "query(" + query + ")");
+
+                    Intent intent = new Intent(this, BeerSearchActivity.class);
+                    intent.putExtra("query", query);
+                    startActivity(intent);
+                },
+                throwable -> {
+                    Log.e(TAG, "error", throwable);
+                });
     }
 
     @Override
