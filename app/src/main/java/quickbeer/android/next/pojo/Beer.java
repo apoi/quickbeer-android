@@ -1,5 +1,6 @@
 package quickbeer.android.next.pojo;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
@@ -85,6 +86,14 @@ public class Beer {
 
     public float getAbv() {
         return alcohol;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImageUri() {
+        return String.format("https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg", getId());
     }
 
     public Beer overwrite(Beer other) {

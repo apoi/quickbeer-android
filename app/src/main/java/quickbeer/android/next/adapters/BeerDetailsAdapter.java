@@ -5,7 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
@@ -78,6 +81,8 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         private TextView abvTextView;
         private TextView brewerTextView;
         private TextView locationTextView;
+        private TextView descriptionTextView;
+        private ImageView imageView;
 
         public BeerDetailsViewHolder(View view) {
             super(view);
@@ -88,6 +93,8 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             this.abvTextView = (TextView) view.findViewById(R.id.beer_abv);
             this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
             this.locationTextView = (TextView) view.findViewById(R.id.brewer_location);
+            this.descriptionTextView = (TextView) view.findViewById(R.id.beer_description);
+            this.imageView = (ImageView) view.findViewById(R.id.beer_details_image);
         }
 
         public void setBeer(@NonNull Beer beer) {
@@ -99,6 +106,11 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             abvTextView.setText(String.format("ABV: %.1f", beer.getAbv()));
             brewerTextView.setText(beer.getBrewerName());
             locationTextView.setText("TODO data from brewer");
+            descriptionTextView.setText(beer.getDescription());
+
+            Picasso.with(imageView.getContext())
+                    .load(beer.getImageUri())
+                    .into(imageView);
         }
     }
 }
