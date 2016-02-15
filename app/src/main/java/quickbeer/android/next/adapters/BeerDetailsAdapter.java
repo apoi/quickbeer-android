@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.utils.BottleLabelExtractor;
 import quickbeer.android.next.views.listitems.ItemType;
 
 /**
@@ -108,9 +110,21 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             locationTextView.setText("TODO data from brewer");
             descriptionTextView.setText(beer.getDescription());
 
-            Picasso.with(imageView.getContext())
-                    .load(beer.getImageUri())
-                    .into(imageView);
+            imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                public boolean onPreDraw() {
+                    imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+
+                    final int width = imageView.getMeasuredWidth();
+                    final int height = imageView.getMeasuredHeight();
+
+                    Picasso.with(imageView.getContext())
+                            .load(beer.getImageUri())
+                            .transform(new BottleLabelExtractor(width, height))
+                            .into(imageView);
+
+                    return true;
+                }
+            });
         }
     }
 }

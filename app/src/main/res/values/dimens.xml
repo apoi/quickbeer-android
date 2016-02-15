@@ -27,5 +27,4 @@
     <dimen name="list_item_icon_margin_right">15dp</dimen>
 
     <dimen name="beer_details_header_text">30dp</dimen>
-    <dimen name="beer_details_image_size">50dp</dimen>
 </resources>
