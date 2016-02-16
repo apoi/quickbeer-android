@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray_300"
                     android:fontFamily="sans-serif-thin"
-                    android:textSize="@dimen/listitem_text_secondary"
+                    android:textSize="@dimen/beer_details_info_text"
                     android:textStyle="italic"
                     android:singleLine="true"
                     android:ellipsize="end" />
@@ -90,7 +90,7 @@
                     android:textColor="@color/gray_300"
                     android:fontFamily="sans-serif-thin"
                     android:layout_marginTop="-2dp"
-                    android:textSize="@dimen/listitem_text_secondary"
+                    android:textSize="@dimen/beer_details_info_text"
                     android:textStyle="italic"
                     android:singleLine="true"
                     android:ellipsize="end" />
@@ -102,7 +102,7 @@
                     android:textColor="@color/gray_300"
                     android:fontFamily="sans-serif-thin"
                     android:layout_marginTop="-2dp"
-                    android:textSize="@dimen/listitem_text_secondary"
+                    android:textSize="@dimen/beer_details_info_text"
                     android:textStyle="italic"
                     android:singleLine="true"
                     android:ellipsize="end" />
@@ -114,7 +114,7 @@
                     android:textColor="@color/gray_300"
                     android:fontFamily="sans-serif-thin"
                     android:layout_marginTop="-2dp"
-                    android:textSize="@dimen/listitem_text_secondary"
+                    android:textSize="@dimen/beer_details_info_text"
                     android:textStyle="italic"
                     android:singleLine="true"
                     android:ellipsize="end" />
@@ -126,7 +126,7 @@
                     android:paddingTop="10dp"
                     android:textColor="@color/gray_300"
                     android:fontFamily="sans-serif-thin"
-                    android:textSize="@dimen/listitem_text_secondary"/>
+                    android:textSize="@dimen/beer_details_info_text"/>
 
             </LinearLayout>
 

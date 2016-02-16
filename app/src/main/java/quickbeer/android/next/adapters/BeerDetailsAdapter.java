@@ -15,6 +15,7 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
+import quickbeer.android.next.utils.StringUtils;
 import quickbeer.android.next.views.listitems.ItemType;
 
 /**
@@ -108,7 +109,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             abvTextView.setText(String.format("ABV: %.1f", beer.getAbv()));
             brewerTextView.setText(beer.getBrewerName());
             locationTextView.setText("TODO data from brewer");
-            descriptionTextView.setText(beer.getDescription());
+            descriptionTextView.setText(StringUtils.value(beer.getDescription(), "No description available."));
 
             imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
