@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.utils.BottleLabelExtractor;
+import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.views.listitems.ItemType;
 
 /**
@@ -119,7 +119,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
 
                     Picasso.with(imageView.getContext())
                             .load(beer.getImageUri())
-                            .transform(new BottleLabelExtractor(width, height))
+                            .transform(new ContainerLabelExtractor(width, height))
                             .into(imageView);
 
                     return true;
