@@ -12,7 +12,9 @@ import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerDetailsAdapter;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.viewmodels.BeerViewModel;
+import quickbeer.android.next.viewmodels.ReviewListViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -35,7 +37,14 @@ public class BeerDetailsView extends FrameLayout {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 
-        beerDetailsAdapter.set(beer);
+        beerDetailsAdapter.setBeer(beer);
+    }
+
+    private void setReviews(@NonNull ReviewList reviews) {
+        Preconditions.checkNotNull(reviews, "Reviews cannot be null.");
+        Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
+
+        beerDetailsAdapter.setReviews(reviews);
     }
 
     @Override
@@ -52,12 +61,12 @@ public class BeerDetailsView extends FrameLayout {
     /**
      * View binder between BeerViewModel and the BeerDetailsView
      */
-    public static class ViewBinder extends RxViewBinder {
+    public static class BeerViewBinder extends RxViewBinder {
         private BeerDetailsView view;
         private BeerViewModel viewModel;
 
-        public ViewBinder(@NonNull BeerDetailsView view,
-                          @NonNull BeerViewModel viewModel) {
+        public BeerViewBinder(@NonNull BeerDetailsView view,
+                              @NonNull BeerViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
@@ -70,6 +79,30 @@ public class BeerDetailsView extends FrameLayout {
             subscription.add(viewModel.getBeer()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::setBeer));
+        }
+    }
+
+    /**
+     * View binder between ReviewListViewModel and the BeerDetailsView
+     */
+    public static class ReviewViewBinder extends RxViewBinder {
+        private BeerDetailsView view;
+        private ReviewListViewModel viewModel;
+
+        public ReviewViewBinder(@NonNull BeerDetailsView view,
+                                @NonNull ReviewListViewModel viewModel) {
+            Preconditions.checkNotNull(view, "View cannot be null.");
+            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
+
+            this.view = view;
+            this.viewModel = viewModel;
+        }
+
+        @Override
+        protected void bindInternal(@NonNull CompositeSubscription subscription) {
+            subscription.add(viewModel.getReviews()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(view::setReviews));
         }
     }
 }

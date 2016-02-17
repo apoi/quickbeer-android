@@ -1,7 +1,6 @@
 package quickbeer.android.next.data;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -54,7 +53,7 @@ public final class DataStoreModule {
     }
 
     @Provides
-    public DataLayer.GetReviewsForBeer provideGetReviewsForBeer(DataLayer dataLayer) {
+    public DataLayer.GetReviews provideGetReviews(DataLayer dataLayer) {
         return dataLayer::getReviews;
     }
 

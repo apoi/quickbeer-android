@@ -8,8 +8,8 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.QuickBeer;
-import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
+import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
 import quickbeer.android.next.pojo.ReviewList;
 
 public class ReviewListStore extends StoreBase<ReviewList, Integer> {

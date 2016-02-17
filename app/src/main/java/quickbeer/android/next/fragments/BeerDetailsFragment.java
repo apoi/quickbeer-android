@@ -13,6 +13,7 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.viewmodels.BeerViewModel;
+import quickbeer.android.next.viewmodels.ReviewListViewModel;
 import quickbeer.android.next.views.BeerDetailsView;
 
 /**
@@ -21,11 +22,17 @@ import quickbeer.android.next.views.BeerDetailsView;
 public class BeerDetailsFragment extends Fragment {
     private static final String TAG = BeerDetailsFragment.class.getSimpleName();
 
-    private BeerViewModel viewModel;
-    private BeerDetailsView.ViewBinder viewBinder;
+    private BeerViewModel beerViewModel;
+    private BeerDetailsView.BeerViewBinder beerViewBinder;
+
+    private ReviewListViewModel reviewListViewModel;
+    private BeerDetailsView.ReviewViewBinder reviewViewBinder;
 
     @Inject
     DataLayer.GetBeer getBeer;
+
+    @Inject
+    DataLayer.GetReviews getReviews;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,34 +50,46 @@ public class BeerDetailsFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        viewModel = new BeerViewModel(((BeerDetailsActivity) getActivity()).getBeerId(), getBeer);
-        viewModel.subscribeToDataStore();
+        int beerId = ((BeerDetailsActivity) getActivity()).getBeerId();
+        BeerDetailsView detailsView = (BeerDetailsView) view.findViewById(R.id.beer_details_view);
 
-        viewBinder = new BeerDetailsView.ViewBinder((BeerDetailsView) view.findViewById(R.id.beer_details_view), viewModel);
+        beerViewModel = new BeerViewModel(beerId, getBeer);
+        beerViewModel.subscribeToDataStore();
+        beerViewBinder = new BeerDetailsView.BeerViewBinder(detailsView, beerViewModel);
+
+        reviewListViewModel = new ReviewListViewModel(beerId, getReviews);
+        reviewListViewModel.subscribeToDataStore();
+        reviewViewBinder = new BeerDetailsView.ReviewViewBinder(detailsView, reviewListViewModel);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        viewBinder.bind();
+        beerViewBinder.bind();
+        reviewViewBinder.bind();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        viewBinder.unbind();
+        beerViewBinder.unbind();
+        reviewViewBinder.unbind();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        viewModel.unsubscribeFromDataStore();
+        beerViewModel.unsubscribeFromDataStore();
+        reviewListViewModel.unsubscribeFromDataStore();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        viewModel.dispose();
-        viewModel = null;
+        beerViewModel.dispose();
+        beerViewModel = null;
+
+        reviewListViewModel.dispose();
+        reviewListViewModel = null;
     }
 }

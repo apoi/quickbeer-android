@@ -7,5 +7,6 @@ public enum ItemType {
     MENU,
     HEADER,
     BEER,
-    RATING
+    RATING,
+    REVIEW
 }

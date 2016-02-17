@@ -292,7 +292,7 @@ public class DataLayer extends DataLayerBase {
         Observable<DataStreamNotification<BeerSearch>> call();
     }
 
-    public interface GetReviewsForBeer {
+    public interface GetReviews {
         @NonNull
         Observable<DataStreamNotification<ReviewList>> call(int beerId);
     }

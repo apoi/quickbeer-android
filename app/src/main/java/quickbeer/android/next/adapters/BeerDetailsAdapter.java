@@ -14,6 +14,8 @@ import com.squareup.picasso.Picasso;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Review;
+import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.utils.StringUtils;
 import quickbeer.android.next.views.listitems.ItemType;
@@ -24,6 +26,7 @@ import quickbeer.android.next.views.listitems.ItemType;
 public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
     private Beer beer;
+    private ReviewList reviews;
 
     public BeerDetailsAdapter() {
     }
@@ -44,32 +47,45 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
 
         switch (type) {
             case BEER:
-            default:
                 ((BeerDetailsViewHolder) holder).setBeer((Beer) getItem(position));
+                break;
+            case REVIEW:
+                ((ReviewViewHolder) holder).setReview((Review) getItem(position));
                 break;
         }
     }
 
     public Object getItem(int position) {
-        return beer;
+        if (position == 0) {
+            return beer;
+        } else {
+            return reviews.getItems().get(position - 1);
+        }
     }
 
     @Override
     public int getItemViewType(int position) {
-        return ItemType.BEER.ordinal();
+        if (position == 0) {
+            return ItemType.BEER.ordinal();
+        } else {
+            return ItemType.REVIEW.ordinal();
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (beer != null) {
-            return 1;
-        } else {
-            return 0;
-        }
+        return (beer != null ? 1 : 0) +
+                (reviews != null ? reviews.getItems().size() : 0);
     }
 
-    public void set(Beer beer) {
+    public void setBeer(Beer beer) {
         this.beer = beer;
+
+        notifyDataSetChanged();
+    }
+
+    public void setReviews(ReviewList reviews) {
+        this.reviews = reviews;
 
         notifyDataSetChanged();
     }
@@ -128,4 +144,19 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             });
         }
     }
+
+    /**
+     * View holder for reviews in list
+     */
+    protected static class ReviewViewHolder extends RecyclerView.ViewHolder {
+
+        public ReviewViewHolder(View view) {
+            super(view);
+        }
+
+        public void setReview(@NonNull Review review) {
+            Preconditions.checkNotNull(review, "Review cannot be null.");
+        }
+    }
+
 }

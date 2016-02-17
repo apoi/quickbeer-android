@@ -179,7 +179,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
         @Override
         protected void bindInternal(@NonNull CompositeSubscription subscription) {
-            Preconditions.checkNotNull(viewModel, "ViewModel hasn't been set.");
+            Preconditions.checkNotNull(viewModel, "ViewModel hasn't been setBeer.");
 
             subscription.add(viewModel.getBeer()
                     .observeOn(AndroidSchedulers.mainThread())

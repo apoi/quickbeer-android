@@ -56,7 +56,7 @@ public class BeerListViewModel extends BaseViewModel {
 
     @Override
     public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
-        Preconditions.checkNotNull(sourceObservable, "Source observable hasn't been set.");
+        Preconditions.checkNotNull(sourceObservable, "Source observable hasn't been setBeer.");
 
         Log.v(TAG, "subscribeToDataStoreInternal");
 
