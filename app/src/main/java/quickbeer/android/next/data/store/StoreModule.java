@@ -32,4 +32,10 @@ public final class StoreModule {
     public BeerSearchStore provideBeerSearchStore(ContentResolver contentResolver) {
         return new BeerSearchStore(contentResolver);
     }
+
+    @Provides
+    @Singleton
+    public ReviewStore provideReviewStore(ContentResolver contentResolver) {
+        return new ReviewStore(contentResolver);
+    }
 }

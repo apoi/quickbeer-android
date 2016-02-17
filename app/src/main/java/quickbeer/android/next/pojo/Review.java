@@ -68,4 +68,8 @@ public class Review extends OverwritablePojo<Review> {
     protected Class<Review> getTypeParameterClass() {
         return Review.class;
     }
+
+    public int getId() {
+        return id;
+    }
 }

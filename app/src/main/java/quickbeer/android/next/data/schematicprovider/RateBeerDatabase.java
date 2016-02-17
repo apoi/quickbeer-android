@@ -11,4 +11,5 @@ public final class RateBeerDatabase {
     @Table(UserSettingsColumns.class) public static final String USER_SETTINGS = "userSettings";
     @Table(BeerColumns.class) public static final String BEERS = "beers";
     @Table(BeerSearchColumns.class) public static final String BEER_SEARCHES = "beerSearches";
+    @Table(ReviewColumns.class) public static final String REVIEWS = "reviews";
 }
