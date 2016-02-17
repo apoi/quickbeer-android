@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Review;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
 import rx.Observable;
@@ -44,5 +45,10 @@ public class NetworkApi {
     public Observable<List<Beer>> searchTopBeers(Map<String, String> params) {
         return rateBeerService
                 .searchTopBeers(params);
+    }
+
+    public Observable<List<Review>> getReviews(Map<String, String> params) {
+        return rateBeerService
+                .getReviews(params);
     }
 }

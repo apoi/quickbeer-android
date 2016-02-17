@@ -8,6 +8,8 @@ import io.reark.reark.network.fetchers.Fetcher;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
+import quickbeer.android.next.data.store.ReviewListStore;
+import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.NetworkModule;
 
@@ -45,5 +47,17 @@ public final class FetcherModule {
                 networkRequestStatusStore::put,
                 beerStore,
                 beerSearchStore);
+    }
+
+    @Provides
+    @Named("reviewFetcher")
+    public Fetcher provideReviewFetcher(NetworkApi networkApi,
+                                        NetworkRequestStatusStore networkRequestStatusStore,
+                                        ReviewStore reviewStore,
+                                        ReviewListStore reviewListStore) {
+        return new ReviewFetcher(networkApi,
+                networkRequestStatusStore::put,
+                reviewStore,
+                reviewListStore);
     }
 }
