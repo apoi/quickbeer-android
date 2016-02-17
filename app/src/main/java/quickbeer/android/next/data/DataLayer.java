@@ -16,12 +16,15 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
+import quickbeer.android.next.data.store.ReviewListStore;
+import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.pojo.UserSettings;
 import rx.Observable;
 
@@ -36,8 +39,10 @@ public class DataLayer extends DataLayerBase {
                      @NonNull UserSettingsStore userSettingsStore,
                      @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                      @NonNull BeerStore beerStore,
-                     @NonNull BeerSearchStore beerSearchStore) {
-        super(networkRequestStatusStore, beerStore, beerSearchStore);
+                     @NonNull BeerSearchStore beerSearchStore,
+                     @NonNull ReviewStore reviewStore,
+                     @NonNull ReviewListStore reviewListStore) {
+        super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
 
         Preconditions.checkNotNull(context, "Context cannot be null.");
         Preconditions.checkNotNull(userSettingsStore, "User Settings Store cannot be null.");
@@ -219,6 +224,45 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    @NonNull
+    public Observable<DataStreamNotification<ReviewList>> getReviewsResultStream(final int beerId) {
+        Log.v(TAG, "getReviewsResultStream(" + beerId + ")");
+
+        final Uri uri = reviewListStore.getUriForId(beerId);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<ReviewList> reviewListObservable =
+                reviewListStore.getStream(beerId);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, reviewListObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<ReviewList>> getReviews(final int beerId) {
+        Log.v(TAG, "getReviews(" + beerId + ")");
+
+        // Trigger a fetch only if there was no cached result
+        reviewListStore.getOne(beerId)
+                .first()
+                .filter(results -> results == null || results.getItems().size() == 0)
+                .doOnNext(results -> Log.v(TAG, "Reviews not cached, fetching"))
+                .subscribe(results -> fetchReviews(beerId));
+
+        return getReviewsResultStream(beerId);
+    }
+
+    private void fetchReviews(final int beerId) {
+        Log.v(TAG, "fetchReviews(" + beerId + ")");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
+        intent.putExtra("beerId", beerId);
+        context.startService(intent);
+    }
+
     public interface GetUserSettings {
         @NonNull
         Observable<UserSettings> call();
@@ -246,5 +290,10 @@ public class DataLayer extends DataLayerBase {
     public interface GetTopBeers {
         @NonNull
         Observable<DataStreamNotification<BeerSearch>> call();
+    }
+
+    public interface GetReviewsForBeer {
+        @NonNull
+        Observable<DataStreamNotification<ReviewList>> call(int beerId);
     }
 }

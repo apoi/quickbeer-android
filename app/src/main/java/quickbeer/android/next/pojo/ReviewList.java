@@ -2,20 +2,17 @@ package quickbeer.android.next.pojo;
 
 import java.util.List;
 
-/**
- * Created by antti on 17.10.2015.
- */
-public class BeerSearch {
-    final private String search;
+public class ReviewList {
+    final private int beerId;
     final private List<Integer> items;
 
-    public BeerSearch(final String search, final List<Integer> items) {
-        this.search = search;
+    public ReviewList(final int beerId, final List<Integer> items) {
+        this.beerId = beerId;
         this.items = items;
     }
 
-    public String getSearch() {
-        return search;
+    public int getBeerId() {
+        return beerId;
     }
 
     public List<Integer> getItems() {
@@ -24,7 +21,7 @@ public class BeerSearch {
 
     @Override
     public String toString() {
-        return "BeerSearch{search=" + search
+        return "ReviewList{beerId=" + beerId
                 + ", items='" + (items == null ? "null " : items.size())
                 + "'}";
     }

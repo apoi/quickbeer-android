@@ -38,4 +38,10 @@ public final class StoreModule {
     public ReviewStore provideReviewStore(ContentResolver contentResolver) {
         return new ReviewStore(contentResolver);
     }
+
+    @Provides
+    @Singleton
+    public ReviewListStore provideReviewListStore(ContentResolver contentResolver) {
+        return new ReviewListStore(contentResolver);
+    }
 }

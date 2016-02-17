@@ -90,7 +90,7 @@ public class RateBeerProvider {
 
         @InexactContentUri(
                 path = RateBeerDatabase.BEER_SEARCHES + "/*",
-                name = "RATEBEER_SEARCHES_SEARCH",
+                name = "BEER_SEARCHES_ID",
                 type = BASE_TYPE + RateBeerDatabase.BEER_SEARCHES,
                 whereColumn = BeerSearchColumns.SEARCH,
                 pathSegment = 1)
@@ -114,6 +114,24 @@ public class RateBeerProvider {
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(RateBeerDatabase.REVIEWS, String.valueOf(id));
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.REVIEW_LISTS) public static class ReviewLists {
+        @ContentUri(
+                path = RateBeerDatabase.REVIEW_LISTS,
+                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
+                defaultSort = ReviewListColumns.BEER_ID + " ASC")
+        public static final Uri REVIEW_LISTS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REVIEW_LISTS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.REVIEW_LISTS + "/*",
+                name = "REVIEW_LISTS_ID",
+                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
+                whereColumn = ReviewListColumns.BEER_ID,
+                pathSegment = 1)
+        public static Uri withBeerId(Integer beerId) {
+            return buildUri(RateBeerDatabase.REVIEW_LISTS, String.valueOf(beerId));
         }
     }
 }

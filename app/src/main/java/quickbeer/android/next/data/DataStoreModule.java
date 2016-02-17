@@ -1,6 +1,7 @@
 package quickbeer.android.next.data;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -11,6 +12,8 @@ import io.reark.reark.network.fetchers.Fetcher;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
+import quickbeer.android.next.data.store.ReviewListStore;
+import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.data.store.StoreModule;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.injections.ForApplication;
@@ -51,17 +54,26 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetReviewsForBeer provideGetReviewsForBeer(DataLayer dataLayer) {
+        return dataLayer::getReviews;
+    }
+
+    @Provides
     @Singleton
     public DataLayer provideApplicationDataLayer(@ForApplication Context context,
                                                  UserSettingsStore userSettingsStore,
                                                  NetworkRequestStatusStore networkRequestStatusStore,
                                                  BeerStore beerStore,
-                                                 BeerSearchStore beerSearchStore) {
+                                                 BeerSearchStore beerSearchStore,
+                                                 ReviewStore reviewStore,
+                                                 ReviewListStore reviewListStore) {
         return new DataLayer(context,
                 userSettingsStore,
                 networkRequestStatusStore,
                 beerStore,
-                beerSearchStore);
+                beerSearchStore,
+                reviewStore,
+                reviewListStore);
     }
 
     @Provides
@@ -71,12 +83,16 @@ public final class DataStoreModule {
                                                     @Named("topBeersFetcher") Fetcher topBeersFetcher,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
-                                                    BeerSearchStore beerSearchStore) {
+                                                    BeerSearchStore beerSearchStore,
+                                                    ReviewStore reviewStore,
+                                                    ReviewListStore reviewListStore) {
         return new ServiceDataLayer(beerFetcher,
                 beerSearchFetcher,
                 topBeersFetcher,
                 networkRequestStatusStore,
                 beerStore,
-                beerSearchStore);
+                beerSearchStore,
+                reviewStore,
+                reviewListStore);
     }
 }

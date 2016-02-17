@@ -15,6 +15,8 @@ import quickbeer.android.next.data.DataLayerBase;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
+import quickbeer.android.next.data.store.ReviewListStore;
+import quickbeer.android.next.data.store.ReviewStore;
 
 /**
  * Created by ttuo on 16/04/15.
@@ -30,8 +32,10 @@ public class ServiceDataLayer extends DataLayerBase {
                             @NonNull Fetcher topBeersFetcher,
                             @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
-                            @NonNull BeerSearchStore beerSearchStore) {
-        super(networkRequestStatusStore, beerStore, beerSearchStore);
+                            @NonNull BeerSearchStore beerSearchStore,
+                            @NonNull ReviewStore reviewStore,
+                            @NonNull ReviewListStore reviewListStore) {
+        super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
 
         fetchers = Arrays.asList(
                 beerFetcher,
