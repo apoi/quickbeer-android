@@ -24,6 +24,7 @@ import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.pojo.UserSettings;
 import rx.Observable;
@@ -225,6 +226,15 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
+    public Observable<Review> getReview(final int reviewId) {
+        Log.v(TAG, "getReview(" + reviewId + ")");
+
+        // Reviews are never fetched one-by-one, only as a list of reviews. This method can only
+        // return reviews from the local store, no fetching.
+        return reviewStore.getStream(reviewId);
+    }
+
+    @NonNull
     public Observable<DataStreamNotification<ReviewList>> getReviewsResultStream(final int beerId) {
         Log.v(TAG, "getReviewsResultStream(" + beerId + ")");
 
@@ -290,6 +300,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetTopBeers {
         @NonNull
         Observable<DataStreamNotification<BeerSearch>> call();
+    }
+
+    public interface GetReview {
+        @NonNull
+        Observable<Review> call(int reviewId);
     }
 
     public interface GetReviews {

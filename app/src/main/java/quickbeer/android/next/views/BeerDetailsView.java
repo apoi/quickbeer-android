@@ -7,14 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
+import java.util.List;
+
 import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerDetailsAdapter;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.viewmodels.ReviewListViewModel;
+import quickbeer.android.next.viewmodels.ReviewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -40,7 +42,7 @@ public class BeerDetailsView extends FrameLayout {
         beerDetailsAdapter.setBeer(beer);
     }
 
-    private void setReviews(@NonNull ReviewList reviews) {
+    private void setReviews(@NonNull List<ReviewViewModel> reviews) {
         Preconditions.checkNotNull(reviews, "Reviews cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 
@@ -85,12 +87,12 @@ public class BeerDetailsView extends FrameLayout {
     /**
      * View binder between ReviewListViewModel and the BeerDetailsView
      */
-    public static class ReviewViewBinder extends RxViewBinder {
+    public static class ReviewListViewBinder extends RxViewBinder {
         private BeerDetailsView view;
         private ReviewListViewModel viewModel;
 
-        public ReviewViewBinder(@NonNull BeerDetailsView view,
-                                @NonNull ReviewListViewModel viewModel) {
+        public ReviewListViewBinder(@NonNull BeerDetailsView view,
+                                    @NonNull ReviewListViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 

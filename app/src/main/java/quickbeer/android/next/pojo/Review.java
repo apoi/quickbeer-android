@@ -72,4 +72,8 @@ public class Review extends OverwritablePojo<Review> {
     public int getId() {
         return id;
     }
+
+    public String getDescription() {
+        return comments;
+    }
 }

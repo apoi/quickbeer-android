@@ -53,6 +53,11 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetReview provideGetReview(DataLayer dataLayer) {
+        return dataLayer::getReview;
+    }
+
+    @Provides
     public DataLayer.GetReviews provideGetReviews(DataLayer dataLayer) {
         return dataLayer::getReviews;
     }

@@ -11,14 +11,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import io.reark.reark.utils.Preconditions;
+import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Review;
-import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.utils.StringUtils;
+import quickbeer.android.next.viewmodels.ReviewViewModel;
 import quickbeer.android.next.views.listitems.ItemType;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by antti on 13.12.2015.
@@ -26,7 +31,7 @@ import quickbeer.android.next.views.listitems.ItemType;
 public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
     private Beer beer;
-    private ReviewList reviews;
+    private List<ReviewViewModel> reviews;
 
     public BeerDetailsAdapter() {
     }
@@ -37,7 +42,8 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_details_view, parent, false);
             return new BeerDetailsViewHolder(v);
         } else {
-            return null;
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_details_review, parent, false);
+            return new ReviewViewHolder(v);
         }
     }
 
@@ -47,20 +53,25 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
 
         switch (type) {
             case BEER:
-                ((BeerDetailsViewHolder) holder).setBeer((Beer) getItem(position));
+                ((BeerDetailsViewHolder) holder).setBeer(beer);
                 break;
             case REVIEW:
-                ((ReviewViewHolder) holder).setReview((Review) getItem(position));
+                ((ReviewViewHolder) holder).bind(getItem(position));
                 break;
         }
     }
 
-    public Object getItem(int position) {
-        if (position == 0) {
-            return beer;
-        } else {
-            return reviews.getItems().get(position - 1);
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if (holder instanceof ReviewViewHolder) {
+            ((ReviewViewHolder) holder).unbind();
         }
+
+        super.onViewRecycled(holder);
+    }
+
+    public ReviewViewModel getItem(int position) {
+        return reviews.get(position - 1);
     }
 
     @Override
@@ -75,7 +86,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
     @Override
     public int getItemCount() {
         return (beer != null ? 1 : 0) +
-                (reviews != null ? reviews.getItems().size() : 0);
+                (reviews != null ? reviews.size() : 0);
     }
 
     public void setBeer(Beer beer) {
@@ -84,7 +95,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         notifyDataSetChanged();
     }
 
-    public void setReviews(ReviewList reviews) {
+    public void setReviews(List<ReviewViewModel> reviews) {
         this.reviews = reviews;
 
         notifyDataSetChanged();
@@ -149,13 +160,65 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
      * View holder for reviews in list
      */
     protected static class ReviewViewHolder extends RecyclerView.ViewHolder {
+        private ReviewViewBinder reviewViewBinder;
+        private TextView descriptionTextView;
 
         public ReviewViewHolder(View view) {
             super(view);
+
+            this.reviewViewBinder = new ReviewViewBinder(this);
+            this.descriptionTextView = (TextView) view.findViewById(R.id.review_description);
         }
+
+        public void bind(ReviewViewModel viewModel) {
+            clear();
+            this.reviewViewBinder.bind(viewModel);
+        }
+
+        public void unbind() {
+            this.reviewViewBinder.unbind();
+        }
+
 
         public void setReview(@NonNull Review review) {
             Preconditions.checkNotNull(review, "Review cannot be null.");
+
+            this.descriptionTextView.setText(review.getDescription());
+        }
+
+        public void clear() {
+            this.descriptionTextView.setText("");
+        }
+    }
+
+    /**
+     * View binder between BeerViewModel and the view holder
+     */
+    private static class ReviewViewBinder extends RxViewBinder {
+        private ReviewViewHolder viewHolder;
+        private ReviewViewModel viewModel;
+
+        public ReviewViewBinder(@NonNull ReviewViewHolder viewHolder) {
+            Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");
+
+            this.viewHolder = viewHolder;
+        }
+
+        public void bind(@NonNull ReviewViewModel viewModel) {
+            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
+
+            this.viewModel = viewModel;
+            this.viewModel.subscribeToDataStore();
+            bind();
+        }
+
+        @Override
+        protected void bindInternal(@NonNull CompositeSubscription subscription) {
+            Preconditions.checkNotNull(viewModel, "ViewModel hasn't been setBeer.");
+
+            subscription.add(viewModel.getReview()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(viewHolder::setReview));
         }
     }
 

@@ -26,13 +26,16 @@ public class BeerDetailsFragment extends Fragment {
     private BeerDetailsView.BeerViewBinder beerViewBinder;
 
     private ReviewListViewModel reviewListViewModel;
-    private BeerDetailsView.ReviewViewBinder reviewViewBinder;
+    private BeerDetailsView.ReviewListViewBinder reviewListViewBinder;
 
     @Inject
     DataLayer.GetBeer getBeer;
 
     @Inject
     DataLayer.GetReviews getReviews;
+
+    @Inject
+    DataLayer.GetReview getReview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,23 +60,23 @@ public class BeerDetailsFragment extends Fragment {
         beerViewModel.subscribeToDataStore();
         beerViewBinder = new BeerDetailsView.BeerViewBinder(detailsView, beerViewModel);
 
-        reviewListViewModel = new ReviewListViewModel(beerId, getReviews);
+        reviewListViewModel = new ReviewListViewModel(beerId, getReviews, getReview);
         reviewListViewModel.subscribeToDataStore();
-        reviewViewBinder = new BeerDetailsView.ReviewViewBinder(detailsView, reviewListViewModel);
+        reviewListViewBinder = new BeerDetailsView.ReviewListViewBinder(detailsView, reviewListViewModel);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         beerViewBinder.bind();
-        reviewViewBinder.bind();
+        reviewListViewBinder.bind();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         beerViewBinder.unbind();
-        reviewViewBinder.unbind();
+        reviewListViewBinder.unbind();
     }
 
     @Override
