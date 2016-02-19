@@ -2,6 +2,8 @@ package quickbeer.android.next.network;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Review;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
+import retrofit.converter.GsonConverter;
 import rx.Observable;
 
 /**
@@ -19,12 +22,14 @@ public class NetworkApi {
 
     private final RateBeerService rateBeerService;
 
-    public NetworkApi(@NonNull Client client) {
+    public NetworkApi(@NonNull Client client, @NonNull Gson gson) {
         Preconditions.checkNotNull(client, "Client cannot be null.");
+        Preconditions.checkNotNull(client, "Gson cannot be null.");
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(client)
                 .setEndpoint("http://www.ratebeer.com")
+                .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
 

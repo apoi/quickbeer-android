@@ -4,11 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.util.Date;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.next.network.utils.DateDeserializer;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.StringDeserializer;
 import retrofit.client.Client;
@@ -21,8 +24,8 @@ import retrofit.client.OkClient;
 public final class NetworkModule {
     @Provides
     @Singleton
-    public NetworkApi provideNetworkApi(@Named("okClient") Client client) {
-        return new NetworkApi(client);
+    public NetworkApi provideNetworkApi(@Named("okClient") Client client, Gson gson) {
+        return new NetworkApi(client, gson);
     }
 
     @Provides
@@ -41,6 +44,9 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public Gson unescapingGson() {
-        return new GsonBuilder().registerTypeAdapter(String.class, new StringDeserializer()).create();
+        return new GsonBuilder()
+                .registerTypeAdapter(String.class, new StringDeserializer())
+                .registerTypeAdapter(Date.class, new DateDeserializer())
+                .create();
     }
 }
