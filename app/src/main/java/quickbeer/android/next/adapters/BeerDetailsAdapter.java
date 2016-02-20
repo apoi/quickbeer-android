@@ -165,13 +165,19 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
      */
     protected static class ReviewViewHolder extends RecyclerView.ViewHolder {
         private ReviewViewBinder reviewViewBinder;
+        private TextView ratingTextView;
         private TextView descriptionTextView;
+        private TextView reviewerTextView;
+        private TextView locationTextView;
 
         public ReviewViewHolder(View view) {
             super(view);
 
             this.reviewViewBinder = new ReviewViewBinder(this);
+            this.ratingTextView = (TextView) view.findViewById(R.id.review_rating);
             this.descriptionTextView = (TextView) view.findViewById(R.id.review_description);
+            this.reviewerTextView = (TextView) view.findViewById(R.id.reviewer);
+            this.locationTextView = (TextView) view.findViewById(R.id.reviewer_location);
         }
 
         public void bind(ReviewViewModel viewModel) {
@@ -187,7 +193,14 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         public void setReview(@NonNull Review review) {
             Preconditions.checkNotNull(review, "Review cannot be null.");
 
+            this.ratingTextView.setText(String.format("%.1f", review.getRating()));
             this.descriptionTextView.setText(review.getDescription());
+            this.reviewerTextView.setText(String.format("%s @ %s", review.getReviewer(), review.getDate()));
+            this.locationTextView.setText(review.getLocation());
+
+            if (review.getLocation().isEmpty()) {
+                this.locationTextView.setVisibility(View.GONE);
+            }
         }
 
         public void clear() {
