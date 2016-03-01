@@ -96,10 +96,12 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     }
 
     public void set(List<BeerViewModel> beers) {
-        this.beers.clear();
-        this.beers.addAll(beers);
+        if (!beers.equals(this.beers)) {
+            this.beers.clear();
+            this.beers.addAll(beers);
 
-        notifyDataSetChanged();
+            notifyDataSetChanged();
+        }
     }
 
     /**

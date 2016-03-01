@@ -90,15 +90,19 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
     }
 
     public void setBeer(Beer beer) {
-        this.beer = beer;
+        if (!beer.equals(this.beer)) {
+            this.beer = beer;
 
-        notifyDataSetChanged();
+            notifyDataSetChanged();
+        }
     }
 
     public void setReviews(List<ReviewViewModel> reviews) {
-        this.reviews = reviews;
+        if (!reviews.equals(this.reviews)) {
+            this.reviews = reviews;
 
-        notifyDataSetChanged();
+            notifyDataSetChanged();
+        }
     }
 
     /**
