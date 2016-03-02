@@ -9,10 +9,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import io.reark.reark.pojo.OverwritablePojo;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Review extends OverwritablePojo<Review> {
+public class Review extends BasePojo<Review> {
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
 
     @SerializedName("RatingID")

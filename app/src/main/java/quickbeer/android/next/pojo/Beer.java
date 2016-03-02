@@ -4,12 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import io.reark.reark.pojo.OverwritablePojo;
-
 /**
  * Created by antti on 17.10.2015.
  */
-public class Beer extends OverwritablePojo<Beer> {
+public class Beer extends BasePojo<Beer> {
     @SerializedName("BeerID")
     private int id;
 
