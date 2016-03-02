@@ -124,7 +124,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             ratingTextView.setText(String.valueOf(beer.getRating()));
             nameTextView.setText(beer.getName());
             styleTextView.setText(beer.getStyleName());
-            abvTextView.setText(String.format("ABV: %.1f", beer.getAbv()));
+            abvTextView.setText(String.format("ABV: %.1f%%", beer.getAbv()));
             brewerTextView.setText(beer.getBrewerName());
             locationTextView.setText("TODO data from brewer");
             descriptionTextView.setText(StringUtils.value(beer.getDescription(), "No description available."));
