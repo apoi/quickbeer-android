@@ -7,7 +7,9 @@ import java.util.List;
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
+import io.reark.reark.utils.RxUtils;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.ReviewList;
 import rx.Observable;
 import rx.functions.Func1;
@@ -22,7 +24,7 @@ public class ReviewListViewModel extends BaseViewModel {
     private final DataLayer.GetReview getReview;
     private Observable<DataStreamNotification<ReviewList>> sourceObservable;
 
-    private final BehaviorSubject<List<ReviewViewModel>> reviews = BehaviorSubject.create();
+    private final BehaviorSubject<List<Review>> reviews = BehaviorSubject.create();
     private final int beerId;
 
     public ReviewListViewModel(final int beerId,
@@ -37,7 +39,7 @@ public class ReviewListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    public Observable<List<ReviewViewModel>> getReviews() {
+    public Observable<List<Review>> getReviews() {
         return reviews.asObservable();
     }
 
@@ -55,10 +57,10 @@ public class ReviewListViewModel extends BaseViewModel {
         compositeSubscription.add(reviewSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
-                .doOnNext(beerSearch -> Log.d(TAG, "Review get finished"))
+                .doOnNext(search -> Log.d(TAG, "Review get finished"))
                 .map(ReviewList::getItems)
-                .flatMap(toReviewViewModelList())
-                .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " beers from the view model"))
+                .flatMap(toReviewList())
+                .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " reviews from the view model"))
                 .subscribe(reviews::onNext));
 
         compositeSubscription.add(reviewSource
@@ -66,9 +68,19 @@ public class ReviewListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    Func1<List<Integer>, Observable<List<ReviewViewModel>>> toReviewViewModelList() {
+    private Func1<List<Integer>, Observable<List<Review>>> toReviewList() {
         return reviewIds -> Observable.from(reviewIds)
-                .map(integer -> new ReviewViewModel(integer, getReview))
-                .toList();
+                .map(this::getReviewObservable)
+                .toList()
+                .flatMap(RxUtils::toObservableList);
+    }
+
+    @NonNull
+    private Observable<Review> getReviewObservable(@NonNull Integer reviewId) {
+        Preconditions.checkNotNull(reviewId, "Review id cannot be null.");
+
+        return getReview
+                .call(reviewId)
+                .doOnNext((review) -> Log.v(TAG, "Received review " + review.getId()));
     }
 }

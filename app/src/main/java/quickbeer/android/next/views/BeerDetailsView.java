@@ -14,9 +14,9 @@ import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerDetailsAdapter;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.viewmodels.ReviewListViewModel;
-import quickbeer.android.next.viewmodels.ReviewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -42,7 +42,7 @@ public class BeerDetailsView extends FrameLayout {
         beerDetailsAdapter.setBeer(beer);
     }
 
-    private void setReviews(@NonNull List<ReviewViewModel> reviews) {
+    private void setReviews(@NonNull List<Review> reviews) {
         Preconditions.checkNotNull(reviews, "Reviews cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 

@@ -14,16 +14,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import io.reark.reark.utils.Preconditions;
-import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.utils.StringUtils;
-import quickbeer.android.next.viewmodels.ReviewViewModel;
 import quickbeer.android.next.views.listitems.ItemType;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by antti on 13.12.2015.
@@ -31,7 +27,7 @@ import rx.subscriptions.CompositeSubscription;
 public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
     private Beer beer;
-    private List<ReviewViewModel> reviews;
+    private List<Review> reviews;
 
     public BeerDetailsAdapter() {
     }
@@ -56,21 +52,12 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
                 ((BeerDetailsViewHolder) holder).setBeer(beer);
                 break;
             case REVIEW:
-                ((ReviewViewHolder) holder).bind(getItem(position));
+                ((ReviewViewHolder) holder).setReview(getItem(position));
                 break;
         }
     }
 
-    @Override
-    public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if (holder instanceof ReviewViewHolder) {
-            ((ReviewViewHolder) holder).unbind();
-        }
-
-        super.onViewRecycled(holder);
-    }
-
-    public ReviewViewModel getItem(int position) {
+    public Review getItem(int position) {
         return reviews.get(position - 1);
     }
 
@@ -97,7 +84,7 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         }
     }
 
-    public void setReviews(List<ReviewViewModel> reviews) {
+    public void setReviews(List<Review> reviews) {
         if (!reviews.equals(this.reviews)) {
             this.reviews = reviews;
 
@@ -164,7 +151,6 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
      * View holder for reviews in list
      */
     protected static class ReviewViewHolder extends RecyclerView.ViewHolder {
-        private ReviewViewBinder reviewViewBinder;
         private TextView ratingTextView;
         private TextView descriptionTextView;
         private TextView reviewerTextView;
@@ -173,22 +159,11 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
         public ReviewViewHolder(View view) {
             super(view);
 
-            this.reviewViewBinder = new ReviewViewBinder(this);
             this.ratingTextView = (TextView) view.findViewById(R.id.review_rating);
             this.descriptionTextView = (TextView) view.findViewById(R.id.review_description);
             this.reviewerTextView = (TextView) view.findViewById(R.id.reviewer);
             this.locationTextView = (TextView) view.findViewById(R.id.reviewer_location);
         }
-
-        public void bind(ReviewViewModel viewModel) {
-            clear();
-            this.reviewViewBinder.bind(viewModel);
-        }
-
-        public void unbind() {
-            this.reviewViewBinder.unbind();
-        }
-
 
         public void setReview(@NonNull Review review) {
             Preconditions.checkNotNull(review, "Review cannot be null.");
@@ -207,36 +182,4 @@ public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder>
             this.descriptionTextView.setText("");
         }
     }
-
-    /**
-     * View binder between BeerViewModel and the view holder
-     */
-    private static class ReviewViewBinder extends RxViewBinder {
-        private ReviewViewHolder viewHolder;
-        private ReviewViewModel viewModel;
-
-        public ReviewViewBinder(@NonNull ReviewViewHolder viewHolder) {
-            Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");
-
-            this.viewHolder = viewHolder;
-        }
-
-        public void bind(@NonNull ReviewViewModel viewModel) {
-            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
-            this.viewModel = viewModel;
-            this.viewModel.subscribeToDataStore();
-            bind();
-        }
-
-        @Override
-        protected void bindInternal(@NonNull CompositeSubscription subscription) {
-            Preconditions.checkNotNull(viewModel, "ViewModel hasn't been setBeer.");
-
-            subscription.add(viewModel.getReview()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(viewHolder::setReview));
-        }
-    }
-
 }
