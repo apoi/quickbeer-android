@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import dagger.Component;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.ActivityBase;
+import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.data.DataStoreModule;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
@@ -33,6 +34,7 @@ public interface Graph {
     void inject(NetworkService networkService);
 
     void inject(ActivityBase activityBase);
+    void inject(BeerDetailsActivity beerDetailsActivity);
 
     void inject(MainFragment mainFragment);
     void inject(BeerListFragment beerListFragment);
