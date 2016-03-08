@@ -9,9 +9,6 @@ import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
 
-/**
- * Created by antti on 18.10.2015.
- */
 public class DataLayerBase {
     protected final NetworkRequestStatusStore networkRequestStatusStore;
     protected final BeerStore beerStore;

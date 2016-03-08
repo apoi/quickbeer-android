@@ -9,9 +9,6 @@ import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
 
-/**
- * Created by antti on 16.11.2015.
- */
 public class MainFragment extends BeerListFragment {
     @Inject
     DataLayer.GetTopBeers getTopBeers;

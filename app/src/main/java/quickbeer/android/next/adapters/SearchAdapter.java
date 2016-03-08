@@ -22,9 +22,6 @@ import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.Subscription;
 
-/**
- * Created by antti on 16.11.2015.
- */
 public class SearchAdapter extends BaseAdapter implements Filterable {
     private static final String TAG = SearchAdapter.class.getSimpleName();
 

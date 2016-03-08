@@ -11,9 +11,6 @@ import java.io.InputStreamReader;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class ApiKey {
     private static final String TAG = ApiKey.class.getSimpleName();
 

@@ -17,9 +17,6 @@ import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by antti on 25.10.2015.
- */
 public class BeerListViewModel extends BaseViewModel {
     private static final String TAG = BeerListViewModel.class.getSimpleName();
 

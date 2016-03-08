@@ -15,9 +15,6 @@ import retrofit.client.Client;
 import retrofit.converter.GsonConverter;
 import rx.Observable;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class NetworkApi {
 
     private final RateBeerService rateBeerService;

@@ -6,9 +6,6 @@ import android.widget.TextView;
 
 import quickbeer.android.next.R;
 
-/**
- * Created by antti on 7.11.2015.
- */
 public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
     private TextView header;

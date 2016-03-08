@@ -42,9 +42,6 @@ import quickbeer.android.next.network.utils.StringDeserializer;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
 
-/**
- * Created by Pawel Polanski on 5/16/15.
- */
 @Module
 public final class NetworkModule {
     @Provides

@@ -25,9 +25,6 @@ import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-/**
- * Created by antti on 17.11.2015.
- */
 public abstract class ActivityBase extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 

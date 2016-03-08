@@ -2,9 +2,6 @@ package quickbeer.android.next.utils;
 
 import quickbeer.android.next.R;
 
-/**
- * Created by antti on 2.11.2015.
- */
 public class Score {
 
     public enum Stars {

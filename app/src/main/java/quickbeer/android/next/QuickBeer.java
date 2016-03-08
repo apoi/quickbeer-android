@@ -5,9 +5,6 @@ import android.support.annotation.NonNull;
 
 import quickbeer.android.next.injections.Graph;
 
-/**
- * Created by antti on 16.10.2015.
- */
 public class QuickBeer extends Application {
 
     private static QuickBeer instance;

@@ -20,9 +20,6 @@ import quickbeer.android.next.viewmodels.ReviewListViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by antti on 13.12.2015.
- */
 public class BeerDetailsView extends FrameLayout {
     private RecyclerView beerDetailsListView;
     private BeerDetailsAdapter beerDetailsAdapter;

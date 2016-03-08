@@ -34,9 +34,6 @@ import dagger.Provides;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.NullNetworkInstrumentation;
 
-/**
- * Created by Pawel Polanski on 4/24/15.
- */
 @Module
 public class InstrumentationModule {
     @Provides

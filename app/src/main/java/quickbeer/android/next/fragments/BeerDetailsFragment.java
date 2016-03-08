@@ -16,9 +16,6 @@ import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.viewmodels.ReviewListViewModel;
 import quickbeer.android.next.views.BeerDetailsView;
 
-/**
- * Created by antti on 9.12.2015.
- */
 public class BeerDetailsFragment extends Fragment {
     private static final String TAG = BeerDetailsFragment.class.getSimpleName();
 

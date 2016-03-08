@@ -12,9 +12,6 @@ import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by antti on 27.10.2015.
- */
 public class BeerViewModel extends BaseViewModel {
     private static final String TAG = BeerViewModel.class.getSimpleName();
 

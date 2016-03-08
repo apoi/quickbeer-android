@@ -34,9 +34,6 @@ import javax.inject.Inject;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 
-/**
- * Created by ttuo on 16/04/15.
- */
 public class NetworkService extends Service {
     private static final String TAG = NetworkService.class.getSimpleName();
 

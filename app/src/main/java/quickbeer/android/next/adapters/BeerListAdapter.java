@@ -21,9 +21,6 @@ import quickbeer.android.next.views.listitems.ItemType;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
-/**
- * Created by antti on 25.10.2015.
- */
 public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     private final String header = "World";
     private final List<BeerViewModel> beers = new ArrayList<>();

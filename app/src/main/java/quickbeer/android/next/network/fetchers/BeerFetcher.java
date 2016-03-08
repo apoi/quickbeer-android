@@ -18,9 +18,6 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by antti on 25.10.2015.
- */
 public class BeerFetcher extends FetcherBase {
     private static final String TAG = BeerFetcher.class.getSimpleName();
 

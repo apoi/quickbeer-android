@@ -20,9 +20,6 @@ import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
 import rx.Subscription;
 
-/**
- * Created by antti on 25.10.2015.
- */
 public class BeerListFragment extends Fragment {
     private static final String TAG = BeerListFragment.class.getSimpleName();
 

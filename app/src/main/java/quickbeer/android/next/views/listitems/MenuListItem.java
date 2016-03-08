@@ -7,9 +7,6 @@ import android.widget.TextView;
 
 import quickbeer.android.next.R;
 
-/**
- * Created by antti on 8.11.2015.
- */
 public class MenuListItem {
     private String text;
     private int icon;

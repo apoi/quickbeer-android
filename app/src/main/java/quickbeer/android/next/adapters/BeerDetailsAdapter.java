@@ -21,9 +21,6 @@ import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.utils.StringUtils;
 import quickbeer.android.next.views.listitems.ItemType;
 
-/**
- * Created by antti on 13.12.2015.
- */
 public class BeerDetailsAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
 
     private Beer beer;

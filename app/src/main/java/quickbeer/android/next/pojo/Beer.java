@@ -4,9 +4,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class Beer extends BasePojo<Beer> {
     @SerializedName("BeerID")
     private int id;

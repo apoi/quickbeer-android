@@ -2,9 +2,6 @@ package quickbeer.android.next.pojo;
 
 import java.util.List;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class BeerSearch {
     final private String search;
     final private List<Integer> items;

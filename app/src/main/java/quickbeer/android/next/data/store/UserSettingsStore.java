@@ -41,9 +41,6 @@ import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
 import quickbeer.android.next.pojo.UserSettings;
 
-/**
- * Created by ttuo on 07/01/15.
- */
 public class UserSettingsStore extends SingleItemContentProviderStore<UserSettings, Integer> {
     private static final String TAG = UserSettingsStore.class.getSimpleName();
 

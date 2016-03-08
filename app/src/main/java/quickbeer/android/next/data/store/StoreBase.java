@@ -9,9 +9,6 @@ import javax.inject.Inject;
 
 import io.reark.reark.data.store.SingleItemContentProviderStore;
 
-/**
- * Created by antti on 2.11.2015.
- */
 public abstract class StoreBase<T, U> extends SingleItemContentProviderStore<T, U> {
 
     @Inject

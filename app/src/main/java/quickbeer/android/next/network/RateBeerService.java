@@ -11,9 +11,6 @@ import retrofit.http.GET;
 import retrofit.http.QueryMap;
 import rx.Observable;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public interface RateBeerService {
     static Uri BEER = Uri.parse("ratebeer/beer");
     static Uri SEARCH = Uri.parse("ratebeer/search");

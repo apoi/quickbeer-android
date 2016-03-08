@@ -10,9 +10,6 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.views.listitems.ItemType;
 import quickbeer.android.next.views.listitems.MenuListItem;
 
-/**
- * Created by antti on 8.11.2015.
- */
 public class MenuListAdapter extends BaseListAdapter<MenuListItem.MenuViewHolder> {
     private final List<MenuListItem> items;
 

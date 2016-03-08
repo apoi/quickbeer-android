@@ -6,9 +6,6 @@ import android.support.v4.app.Fragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 import rx.Observable;
 
-/**
- * Created by antti on 17.11.2015.
- */
 public class BeerSearchActivity extends ActivityBase {
     private static final String TAG = BeerSearchActivity.class.getSimpleName();
 

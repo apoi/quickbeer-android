@@ -9,9 +9,6 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
-/**
- * Created by antti on 27.10.2015.
- */
 public abstract class BaseViewModel extends AbstractViewModel {
 
     public enum ProgressStatus {

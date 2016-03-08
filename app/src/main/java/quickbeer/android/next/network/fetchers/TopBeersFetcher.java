@@ -16,9 +16,6 @@ import quickbeer.android.next.pojo.Beer;
 import rx.Observable;
 import rx.functions.Action1;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class TopBeersFetcher extends BeerSearchFetcher {
     private static final String TAG = TopBeersFetcher.class.getSimpleName();
     public static final String SEARCH = "__top50";

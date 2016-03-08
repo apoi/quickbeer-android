@@ -12,9 +12,6 @@ import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.BeerSearch;
 
-/**
- * Created by antti on 17.10.2015.
- */
 public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     private static final String TAG = BeerSearchStore.class.getSimpleName();
 

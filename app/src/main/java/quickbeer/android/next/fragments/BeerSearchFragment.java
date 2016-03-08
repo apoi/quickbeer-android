@@ -10,9 +10,6 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.activities.ActivityBase;
 import quickbeer.android.next.data.DataLayer;
 
-/**
- * Created by antti on 16.11.2015.
- */
 public class BeerSearchFragment extends BeerListFragment {
     private static final String TAG = BeerSearchFragment.class.getSimpleName();
 

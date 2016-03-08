@@ -4,9 +4,6 @@ import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.next.data.DataLayer.GetBeer;
 
-/**
- * Created by antti on 25.10.2015.
- */
 @Module
 public class ViewModelModule {
     @Provides

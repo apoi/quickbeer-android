@@ -12,9 +12,6 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.MenuListAdapter;
 import quickbeer.android.next.views.listitems.MenuListItem;
 
-/**
- * Created by antti on 16.11.2015.
- */
 public class MainView extends BeerListView {
     private static final String TAG = MainView.class.getSimpleName();
 

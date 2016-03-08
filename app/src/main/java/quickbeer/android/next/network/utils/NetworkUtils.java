@@ -6,9 +6,6 @@ import java.util.Map;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.utils.ApiKey;
 
-/**
- * Created by antti on 18.10.2015.
- */
 public class NetworkUtils {
 
     private static String apiKey;

@@ -23,9 +23,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
 
-/**
- * Created by antti on 25.10.2015.
- */
 public class BeerListView extends FrameLayout {
     private static final String TAG = BeerListView.class.getSimpleName();
 
