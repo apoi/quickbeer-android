@@ -18,8 +18,8 @@ public final class FetcherModule {
     @Provides
     @Named("beerFetcher")
     public Fetcher provideBeerFetcher(NetworkApi networkApi,
-                                            NetworkRequestStatusStore networkRequestStatusStore,
-                                            BeerStore beerStore) {
+                                      NetworkRequestStatusStore networkRequestStatusStore,
+                                      BeerStore beerStore) {
         return new BeerFetcher(networkApi,
                 networkRequestStatusStore::put,
                 beerStore);
