@@ -17,24 +17,32 @@
  */
 package quickbeer.android.next.views.listitems;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.BeerSearchActivity;
 
 public class MenuListItem {
     private String text;
+    private Class target;
     private int icon;
 
-    public MenuListItem(String text, int icon) {
+    public MenuListItem(String text, Class target, int icon) {
         this.text = text;
+        this.target = target;
         this.icon = icon;
     }
 
     public String getText() {
         return text;
+    }
+
+    public Class getTarget() {
+        return target;
     }
 
     public int getIcon() {
@@ -44,6 +52,7 @@ public class MenuListItem {
     public static class MenuViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView iconView;
+        public Class target;
 
         public MenuViewHolder(View view) {
             super(view);
@@ -52,7 +61,8 @@ public class MenuListItem {
             iconView = (ImageView) view.findViewById(R.id.menu_icon);
 
             view.setOnClickListener(v -> {
-                // Navigate
+                Intent intent = new Intent(view.getContext(), target);
+                view.getContext().startActivity(intent);
             });
         }
     }

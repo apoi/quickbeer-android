@@ -45,6 +45,7 @@ public class MenuListAdapter extends BaseListAdapter<MenuListItem.MenuViewHolder
         MenuListItem item = items.get(position);
         holder.textView.setText(item.getText());
         holder.iconView.setImageResource(item.getIcon());
+        holder.target = item.getTarget();
     }
 
     @Override

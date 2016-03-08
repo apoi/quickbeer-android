@@ -26,23 +26,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.adapters.MenuListAdapter;
 import quickbeer.android.next.views.listitems.MenuListItem;
 
-public class MainView extends BeerListView {
-    private static final String TAG = MainView.class.getSimpleName();
+public class TopBeersView extends BeerListView {
+    private static final String TAG = TopBeersView.class.getSimpleName();
 
     private List<MenuListItem> menuListItems;
     private RecyclerView menuListView;
     private MenuListAdapter menuListAdapter;
 
-    public MainView(Context context) {
+    public TopBeersView(Context context) {
         super(context);
     }
 
-    public MainView(Context context, AttributeSet attrs) {
+    public TopBeersView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -51,10 +50,9 @@ public class MainView extends BeerListView {
         super.onFinishInflate();
 
         menuListItems = new ArrayList<>();
-        menuListItems.add(new MenuListItem("search beers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("best beers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("brewers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("scan barcode", TopBeersActivity.class, R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("best worldwide", TopBeersActivity.class, R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("best by country", TopBeersActivity.class, R.drawable.score_unrated));
+        menuListItems.add(new MenuListItem("best by style", TopBeersActivity.class, R.drawable.score_unrated));
 
         menuListAdapter = new MenuListAdapter(menuListItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);
