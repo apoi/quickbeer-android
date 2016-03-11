@@ -24,28 +24,25 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.views.listitems.ActivityLaunchItem;
 import quickbeer.android.next.views.listitems.ItemType;
-import quickbeer.android.next.views.listitems.MenuListItem;
 
-public class MenuListAdapter extends BaseListAdapter<MenuListItem.MenuViewHolder> {
-    private final List<MenuListItem> items;
+public class MenuListAdapter extends BaseListAdapter<ActivityLaunchItem.MenuViewHolder> {
+    private final List<ActivityLaunchItem> items;
 
-    public MenuListAdapter(List<MenuListItem> items) {
+    public MenuListAdapter(List<ActivityLaunchItem> items) {
         this.items = items;
     }
 
     @Override
-    public MenuListItem.MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ActivityLaunchItem.MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_list_item, parent, false);
-        return new MenuListItem.MenuViewHolder(v);
+        return new ActivityLaunchItem.MenuViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(MenuListItem.MenuViewHolder holder, int position) {
-        MenuListItem item = items.get(position);
-        holder.textView.setText(item.getText());
-        holder.iconView.setImageResource(item.getIcon());
-        holder.target = item.getTarget();
+    public void onBindViewHolder(ActivityLaunchItem.MenuViewHolder holder, int position) {
+        holder.setItem(items.get(position));
     }
 
     @Override

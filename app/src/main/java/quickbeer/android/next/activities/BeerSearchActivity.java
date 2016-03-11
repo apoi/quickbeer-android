@@ -27,19 +27,34 @@ public class BeerSearchActivity extends ActivityBase {
     private static final String TAG = BeerSearchActivity.class.getSimpleName();
 
     private String query;
+    private SearchType searchType;
+
+    public enum SearchType {
+        BEER_SEARCH,
+        BEST_IN_WORLD,
+        BEST_IN_COUNTRY,
+        BEST_IN_STYLE;
+
+        public static SearchType value(int index) {
+            return values()[index];
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             query = savedInstanceState.getString("query");
+            searchType = SearchType.value(savedInstanceState.getInt("searchType", 0));
         } else {
             query = getIntent().getStringExtra("query");
+            searchType = SearchType.value(getIntent().getIntExtra("searchType", 0));
         }
 
-        // Toolbar title reflects the search query
-        getQueryObservable()
-                .doOnNext(s -> query = s)
-                .subscribe(this::setTitle);
+        if (searchType == SearchType.BEER_SEARCH) {
+            getQueryObservable()
+                    .doOnNext(s -> query = s)
+                    .subscribe(this::setTitle);
+        }
 
         super.onCreate(savedInstanceState);
     }
@@ -48,13 +63,19 @@ public class BeerSearchActivity extends ActivityBase {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("query", query);
+        outState.putInt("searchType", searchType.ordinal());
     }
 
     @Override
     public Observable<String> getQueryObservable() {
-        // This activity always starts with a submitted query
-        return super.getQueryObservable()
-                .startWith(query);
+        Observable<String> queryObservable = super.getQueryObservable();
+
+        // Free search always starts with a submitted query
+        if (searchType == SearchType.BEER_SEARCH) {
+            queryObservable.startWith(query);
+        }
+
+        return queryObservable;
     }
 
     @Override

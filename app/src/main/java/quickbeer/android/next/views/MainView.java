@@ -26,17 +26,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.adapters.MenuListAdapter;
-import quickbeer.android.next.views.listitems.MenuListItem;
+import quickbeer.android.next.views.listitems.ActivityLaunchItem;
 
 public class MainView extends BeerListView {
     private static final String TAG = MainView.class.getSimpleName();
 
-    private List<MenuListItem> menuListItems;
     private RecyclerView menuListView;
     private MenuListAdapter menuListAdapter;
+    private List<ActivityLaunchItem> activityLaunchItems = new ArrayList<>();
 
     public MainView(Context context) {
         super(context);
@@ -50,13 +49,12 @@ public class MainView extends BeerListView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        menuListItems = new ArrayList<>();
-        menuListItems.add(new MenuListItem("search beers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("best beers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("brewers", TopBeersActivity.class, R.drawable.score_unrated));
-        menuListItems.add(new MenuListItem("scan barcode", TopBeersActivity.class, R.drawable.score_unrated));
+        activityLaunchItems.add(new ActivityLaunchItem("search beers", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best beers", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("brewers", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("scan barcode", R.drawable.score_unrated, TopBeersActivity.class));
 
-        menuListAdapter = new MenuListAdapter(menuListItems);
+        menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);
         menuListView.setHasFixedSize(true);
         menuListView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,7 +63,7 @@ public class MainView extends BeerListView {
         // Set enough margin for the menu to be visible
         final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_item_height);
         final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
-        getAdapter().setHeaderHeight(menuListItems.size() * menuItemHeight + headerItemHeight);
+        getAdapter().setHeaderHeight(activityLaunchItems.size() * menuItemHeight + headerItemHeight);
 
         // Redirect unhandled click events to menu
         getListView().setOnTouchListener((view, event) -> {
