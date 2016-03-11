@@ -18,6 +18,7 @@
 package quickbeer.android.next.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -25,6 +26,7 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.ActivityBase;
+import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.data.DataLayer;
 
 public class BeerSearchFragment extends BeerListFragment {
@@ -32,6 +34,9 @@ public class BeerSearchFragment extends BeerListFragment {
 
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
+
+    @Inject
+    DataLayer.GetTopBeers getTopBeers;
 
     @Override
     public int getLayout() {
@@ -44,7 +49,7 @@ public class BeerSearchFragment extends BeerListFragment {
 
         QuickBeer.getInstance().getGraph().inject(this);
 
-        ((ActivityBase) getActivity())
+        ((BeerSearchActivity) getActivity())
                 .getQueryObservable()
                 .subscribe(
                         query -> {
@@ -54,5 +59,20 @@ public class BeerSearchFragment extends BeerListFragment {
                         throwable -> {
                             Log.e(TAG, "error", throwable);
                         });
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        switch (((BeerSearchActivity) getActivity()).getSearchType()) {
+            case BEST_IN_WORLD:
+                setSourceObservable(getTopBeers.call());
+                break;
+            case BEER_SEARCH:
+            case BEST_IN_COUNTRY:
+            case BEST_IN_STYLE:
+                break;
+        }
     }
 }

@@ -26,8 +26,8 @@ import rx.Observable;
 public class BeerSearchActivity extends ActivityBase {
     private static final String TAG = BeerSearchActivity.class.getSimpleName();
 
-    private String query;
     private SearchType searchType;
+    private String query;
 
     public enum SearchType {
         BEER_SEARCH,
@@ -43,11 +43,11 @@ public class BeerSearchActivity extends ActivityBase {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            searchType = SearchType.value(savedInstanceState.getInt("launchType", 0));
             query = savedInstanceState.getString("query");
-            searchType = SearchType.value(savedInstanceState.getInt("searchType", 0));
         } else {
+            searchType = SearchType.value(getIntent().getIntExtra("launchType", 0));
             query = getIntent().getStringExtra("query");
-            searchType = SearchType.value(getIntent().getIntExtra("searchType", 0));
         }
 
         if (searchType == SearchType.BEER_SEARCH) {
@@ -81,5 +81,9 @@ public class BeerSearchActivity extends ActivityBase {
     @Override
     protected Fragment getFragment() {
         return new BeerSearchFragment();
+    }
+
+    public SearchType getSearchType() {
+        return searchType;
     }
 }
