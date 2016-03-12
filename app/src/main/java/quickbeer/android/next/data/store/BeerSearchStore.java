@@ -23,6 +23,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
@@ -32,8 +34,8 @@ import quickbeer.android.next.pojo.BeerSearch;
 public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     private static final String TAG = BeerSearchStore.class.getSimpleName();
 
-    public BeerSearchStore(@NonNull ContentResolver contentResolver) {
-        super(contentResolver);
+    public BeerSearchStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
+        super(contentResolver, gson);
 
         QuickBeer.getInstance().getGraph().inject(this);
     }

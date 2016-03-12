@@ -19,6 +19,8 @@ package quickbeer.android.next.data.store;
 
 import android.content.ContentResolver;
 
+import com.google.gson.Gson;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -34,31 +36,31 @@ public final class StoreModule {
 
     @Provides
     @Singleton
-    public NetworkRequestStatusStore provideNetworkRequestStatusStore(ContentResolver contentResolver) {
-        return new NetworkRequestStatusStore(contentResolver);
+    public NetworkRequestStatusStore provideNetworkRequestStatusStore(ContentResolver contentResolver, Gson gson) {
+        return new NetworkRequestStatusStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BeerStore provideBeerStore(ContentResolver contentResolver) {
-        return new BeerStore(contentResolver);
+    public BeerStore provideBeerStore(ContentResolver contentResolver, Gson gson) {
+        return new BeerStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BeerSearchStore provideBeerSearchStore(ContentResolver contentResolver) {
-        return new BeerSearchStore(contentResolver);
+    public BeerSearchStore provideBeerSearchStore(ContentResolver contentResolver, Gson gson) {
+        return new BeerSearchStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public ReviewStore provideReviewStore(ContentResolver contentResolver) {
-        return new ReviewStore(contentResolver);
+    public ReviewStore provideReviewStore(ContentResolver contentResolver, Gson gson) {
+        return new ReviewStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public ReviewListStore provideReviewListStore(ContentResolver contentResolver) {
-        return new ReviewListStore(contentResolver);
+    public ReviewListStore provideReviewListStore(ContentResolver contentResolver, Gson gson) {
+        return new ReviewListStore(contentResolver, gson);
     }
 }

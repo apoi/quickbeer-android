@@ -23,6 +23,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
@@ -32,8 +34,8 @@ import quickbeer.android.next.pojo.Review;
 public class ReviewStore extends StoreBase<Review, Integer> {
     private static final String TAG = ReviewStore.class.getSimpleName();
 
-    public ReviewStore(@NonNull ContentResolver contentResolver) {
-        super(contentResolver);
+    public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
+        super(contentResolver, gson);
 
         QuickBeer.getInstance().getGraph().inject(this);
     }
