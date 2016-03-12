@@ -15,24 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.network.utils;
+package quickbeer.android.next.utils;
 
-import java.util.HashMap;
-import java.util.Map;
+import android.content.Context;
 
-public class NetworkUtils {
+import javax.inject.Singleton;
 
-    private final String apiKey;
+import dagger.Module;
+import dagger.Provides;
+import quickbeer.android.next.injections.ForApplication;
+import quickbeer.android.next.network.utils.ApiKey;
+import quickbeer.android.next.network.utils.NetworkUtils;
 
-    public NetworkUtils(String apiKey) {
-        this.apiKey = apiKey;
+@Module
+public final class UtilsModule {
+    @Provides
+    @Singleton
+    public NetworkUtils providesNetworkUtils(@ForApplication Context context) {
+        return new NetworkUtils(new ApiKey().getApiKey(context));
     }
 
-    public Map<String, String> createRequestParams(String key, String value) {
-        Map<String, String> map = new HashMap<>();
-        map.put("k", apiKey);
-        map.put(key, value);
-
-        return map;
+    @Provides
+    @Singleton
+    public Countries providesCountries() {
+        return new Countries();
     }
 }

@@ -43,21 +43,25 @@ import rx.schedulers.Schedulers;
 public class ReviewFetcher extends FetcherBase {
     private static final String TAG = ReviewFetcher.class.getSimpleName();
 
-    protected final NetworkApi networkApi;
+    private final NetworkApi networkApi;
+    private final NetworkUtils networkUtils;
     private final ReviewStore reviewStore;
     private final ReviewListStore reviewListStore;
 
     public ReviewFetcher(@NonNull NetworkApi networkApi,
+                         @NonNull NetworkUtils networkUtils,
                          @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                          @NonNull ReviewStore reviewStore,
                          @NonNull ReviewListStore reviewListStore) {
         super(updateNetworkRequestStatus);
 
         Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
+        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
         Preconditions.checkNotNull(reviewStore, "Review store cannot be null.");
         Preconditions.checkNotNull(reviewListStore, "Review list store cannot be null.");
 
         this.networkApi = networkApi;
+        this.networkUtils = networkUtils;
         this.reviewStore = reviewStore;
         this.reviewListStore = reviewListStore;
     }
@@ -104,7 +108,7 @@ public class ReviewFetcher extends FetcherBase {
 
     @NonNull
     protected Observable<List<Review>> createNetworkObservable(final int beerId) {
-        return networkApi.getReviews(NetworkUtils.createRequestParams("bid", String.valueOf(beerId)));
+        return networkApi.getReviews(networkUtils.createRequestParams("bid", String.valueOf(beerId)));
     }
 
     @NonNull

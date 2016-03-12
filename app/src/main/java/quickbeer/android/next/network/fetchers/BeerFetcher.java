@@ -39,17 +39,21 @@ public class BeerFetcher extends FetcherBase {
     private static final String TAG = BeerFetcher.class.getSimpleName();
 
     private final NetworkApi networkApi;
+    private final NetworkUtils networkUtils;
     private final BeerStore beerStore;
 
     public BeerFetcher(@NonNull NetworkApi networkApi,
+                       @NonNull NetworkUtils networkUtils,
                        @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                        @NonNull BeerStore beerStore) {
         super(updateNetworkRequestStatus);
 
-        Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
+        Preconditions.checkNotNull(networkApi, "Network API cannot be null.");
+        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
 
         this.networkApi = networkApi;
+        this.networkUtils = networkUtils;
         this.beerStore = beerStore;
     }
 
@@ -87,7 +91,7 @@ public class BeerFetcher extends FetcherBase {
 
     @NonNull
     private Observable<Beer> createNetworkObservable(int beerId) {
-        return networkApi.getBeer(NetworkUtils.createRequestParams("bd", String.valueOf(beerId)));
+        return networkApi.getBeer(networkUtils.createRequestParams("bd", String.valueOf(beerId)));
     }
 
     @NonNull

@@ -29,15 +29,18 @@ import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.NetworkModule;
+import quickbeer.android.next.network.utils.NetworkUtils;
 
 @Module(includes = NetworkModule.class)
 public final class FetcherModule {
     @Provides
     @Named("beerFetcher")
     public Fetcher provideBeerFetcher(NetworkApi networkApi,
+                                      NetworkUtils networkUtils,
                                       NetworkRequestStatusStore networkRequestStatusStore,
                                       BeerStore beerStore) {
         return new BeerFetcher(networkApi,
+                networkUtils,
                 networkRequestStatusStore::put,
                 beerStore);
     }
@@ -45,10 +48,12 @@ public final class FetcherModule {
     @Provides
     @Named("beerSearchFetcher")
     public Fetcher provideBeerSearchFetcher(NetworkApi networkApi,
+                                            NetworkUtils networkUtils,
                                             NetworkRequestStatusStore networkRequestStatusStore,
                                             BeerStore beerStore,
                                             BeerSearchStore beerSearchStore) {
         return new BeerSearchFetcher(networkApi,
+                networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
                 beerSearchStore);
@@ -57,10 +62,12 @@ public final class FetcherModule {
     @Provides
     @Named("topBeersFetcher")
     public Fetcher provideTopBeersFetcher(NetworkApi networkApi,
+                                          NetworkUtils networkUtils,
                                           NetworkRequestStatusStore networkRequestStatusStore,
                                           BeerStore beerStore,
                                           BeerSearchStore beerSearchStore) {
         return new TopBeersFetcher(networkApi,
+                networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
                 beerSearchStore);
@@ -69,10 +76,12 @@ public final class FetcherModule {
     @Provides
     @Named("reviewFetcher")
     public Fetcher provideReviewFetcher(NetworkApi networkApi,
+                                        NetworkUtils networkUtils,
                                         NetworkRequestStatusStore networkRequestStatusStore,
                                         ReviewStore reviewStore,
                                         ReviewListStore reviewListStore) {
         return new ReviewFetcher(networkApi,
+                networkUtils,
                 networkRequestStatusStore::put,
                 reviewStore,
                 reviewListStore);

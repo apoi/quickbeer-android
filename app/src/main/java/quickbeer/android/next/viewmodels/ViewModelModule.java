@@ -22,7 +22,7 @@ import dagger.Provides;
 import quickbeer.android.next.data.DataLayer.GetBeer;
 
 @Module
-public class ViewModelModule {
+public final class ViewModelModule {
     @Provides
     public BeerListViewModel provideBeersViewModel(GetBeer getBeer) {
         return new BeerListViewModel(getBeer);

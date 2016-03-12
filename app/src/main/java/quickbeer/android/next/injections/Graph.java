@@ -37,11 +37,13 @@ import quickbeer.android.next.fragments.BeerSearchFragment;
 import quickbeer.android.next.fragments.MainFragment;
 import quickbeer.android.next.fragments.TopBeersFragment;
 import quickbeer.android.next.network.NetworkService;
+import quickbeer.android.next.utils.UtilsModule;
 import quickbeer.android.next.viewmodels.ViewModelModule;
 
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
+        UtilsModule.class,
         DataStoreModule.class,
         ViewModelModule.class,
         InstrumentationModule.class

@@ -44,20 +44,25 @@ public class BeerSearchFetcher extends FetcherBase {
     private static final String TAG = BeerSearchFetcher.class.getSimpleName();
 
     protected final NetworkApi networkApi;
+    protected final NetworkUtils networkUtils;
+
     private final BeerStore beerStore;
     private final BeerSearchStore beerSearchStore;
 
     public BeerSearchFetcher(@NonNull NetworkApi networkApi,
+                             @NonNull NetworkUtils networkUtils,
                              @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                              @NonNull BeerStore beerStore,
                              @NonNull BeerSearchStore beerSearchStore) {
         super(updateNetworkRequestStatus);
 
         Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
+        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
         Preconditions.checkNotNull(beerSearchStore, "Beer search store cannot be null.");
 
         this.networkApi = networkApi;
+        this.networkUtils = networkUtils;
         this.beerStore = beerStore;
         this.beerSearchStore = beerSearchStore;
     }
@@ -106,7 +111,7 @@ public class BeerSearchFetcher extends FetcherBase {
     protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
 
-        return networkApi.search(NetworkUtils.createRequestParams("bn", searchString));
+        return networkApi.search(networkUtils.createRequestParams("bn", searchString));
     }
 
     @NonNull

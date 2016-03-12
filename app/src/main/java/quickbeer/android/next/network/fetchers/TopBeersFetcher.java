@@ -38,10 +38,11 @@ public class TopBeersFetcher extends BeerSearchFetcher {
     public static final String SEARCH = "__top50";
 
     public TopBeersFetcher(@NonNull NetworkApi networkApi,
+                           @NonNull NetworkUtils networkUtils,
                            @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                            @NonNull BeerStore beerStore,
                            @NonNull BeerSearchStore beerSearchStore) {
-        super(networkApi, updateNetworkRequestStatus, beerStore, beerSearchStore);
+        super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerSearchStore);
     }
 
     @Override
@@ -52,7 +53,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     protected Observable<List<Beer>> createNetworkObservable(String searchString) {
-        return networkApi.searchTopBeers(NetworkUtils.createRequestParams("m", "top50"));
+        return networkApi.searchTopBeers(networkUtils.createRequestParams("m", "top50"));
     }
 
     @NonNull
