@@ -62,7 +62,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
 
         QuickBeer.getInstance().getGraph().inject(this);
 
-        setContentView(getLayout());
+        setContentView(getContentViewLayout());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,7 +89,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
         adapter.refreshQueryList();
     }
 
-    protected int getLayout() {
+    protected int getContentViewLayout() {
         return R.layout.main_activity;
     }
 
