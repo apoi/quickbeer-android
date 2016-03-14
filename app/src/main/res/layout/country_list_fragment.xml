@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quickbeer.android.next.views.CountryListView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/countries_view"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_light">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/countries_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+
+</quickbeer.android.next.views.CountryListView>

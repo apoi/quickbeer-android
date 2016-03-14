@@ -20,32 +20,33 @@ package quickbeer.android.next.views.listitems;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.BeerSearchActivity;
+import quickbeer.android.next.pojo.Country;
 
-public class ActivityLaunchItem {
+public class CountryListItem {
     private int icon;
     private String text;
     private Class target;
     private Integer launchType;
     private String launchKey;
 
-    public ActivityLaunchItem(String text, int icon, Class target) {
+    public CountryListItem(String text, int icon, Class target) {
         this.text = text;
         this.icon = icon;
         this.target = target;
     }
 
-    public ActivityLaunchItem(String text, int icon, Class target, int launchType) {
+    public CountryListItem(String text, int icon, Class target, int launchType) {
         this.text = text;
         this.icon = icon;
         this.target = target;
         this.launchType = launchType;
     }
 
-    public ActivityLaunchItem(String text, int icon, Class target, int launchType, String launchKey) {
+    public CountryListItem(String text, int icon, Class target, int launchType, String launchKey) {
         this.text = text;
         this.icon = icon;
         this.target = target;
@@ -55,34 +56,28 @@ public class ActivityLaunchItem {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
-        private ImageView iconView;
-        private ActivityLaunchItem launchItem;
+        private TextView iconView;
+        private Country country;
 
         public ViewHolder(View view) {
             super(view);
 
-            textView = (TextView) view.findViewById(R.id.menu_text);
-            iconView = (ImageView) view.findViewById(R.id.menu_icon);
+            iconView = (TextView) view.findViewById(R.id.country_icon);
+            textView = (TextView) view.findViewById(R.id.country_name);
 
             view.setOnClickListener(this::launchActivity);
         }
 
-        public void setItem(ActivityLaunchItem item) {
-            launchItem = item;
-            textView.setText(item.text);
-            iconView.setImageResource(item.icon);
+        public void setItem(Country country) {
+            this.country = country;
+            iconView.setText(country.getCode());
+            textView.setText(country.getName());
         }
 
         private void launchActivity(View view) {
-            Intent intent = new Intent(view.getContext(), launchItem.target);
-
-            if (launchItem.launchType != null) {
-                intent.putExtra("launchType", launchItem.launchType);
-            }
-
-            if (launchItem.launchKey != null) {
-                intent.putExtra("launchKey", launchItem.launchKey);
-            }
+            Intent intent = new Intent(view.getContext(), BeerSearchActivity.class);
+            intent.putExtra("launchType", BeerSearchActivity.SearchType.BEST_IN_COUNTRY.ordinal());
+            intent.putExtra("countryId", country.getId());
 
             view.getContext().startActivity(intent);
         }

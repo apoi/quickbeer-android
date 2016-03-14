@@ -27,7 +27,7 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.views.listitems.ActivityLaunchItem;
 import quickbeer.android.next.views.listitems.ItemType;
 
-public class MenuListAdapter extends BaseListAdapter<ActivityLaunchItem.MenuViewHolder> {
+public class MenuListAdapter extends BaseListAdapter<ActivityLaunchItem.ViewHolder> {
     private final List<ActivityLaunchItem> items;
 
     public MenuListAdapter(List<ActivityLaunchItem> items) {
@@ -35,13 +35,13 @@ public class MenuListAdapter extends BaseListAdapter<ActivityLaunchItem.MenuView
     }
 
     @Override
-    public ActivityLaunchItem.MenuViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ActivityLaunchItem.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_list_item, parent, false);
-        return new ActivityLaunchItem.MenuViewHolder(v);
+        return new ActivityLaunchItem.ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ActivityLaunchItem.MenuViewHolder holder, int position) {
+    public void onBindViewHolder(ActivityLaunchItem.ViewHolder holder, int position) {
         holder.setItem(items.get(position));
     }
 

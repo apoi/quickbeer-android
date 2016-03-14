@@ -39,6 +39,7 @@ import quickbeer.android.next.fragments.TopBeersFragment;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.utils.UtilsModule;
 import quickbeer.android.next.viewmodels.ViewModelModule;
+import quickbeer.android.next.views.CountryListView;
 
 @Singleton
 @Component(modules = {
@@ -61,6 +62,8 @@ public interface Graph {
     void inject(BeerSearchFragment beerSearchFragment);
     void inject(BeerDetailsFragment beerDetailsFragment);
     void inject(TopBeersFragment topBeersFragment);
+
+    void inject(CountryListView countryListView);
 
     void inject(BeerStore store);
     void inject(BeerSearchStore store);
