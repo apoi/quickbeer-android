@@ -26,9 +26,10 @@ import android.support.v7.widget.Toolbar;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
+import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.fragments.MainFragment;
 
-public class MainActivity extends BeerSearchActivity {
+public class MainActivity extends SearchActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout drawerLayout;

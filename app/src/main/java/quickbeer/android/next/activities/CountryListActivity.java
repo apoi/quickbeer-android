@@ -19,6 +19,7 @@ package quickbeer.android.next.activities;
 
 import android.support.v4.app.Fragment;
 
+import quickbeer.android.next.activities.base.FilterActivity;
 import quickbeer.android.next.fragments.CountryListFragment;
 
 public class CountryListActivity extends FilterActivity {

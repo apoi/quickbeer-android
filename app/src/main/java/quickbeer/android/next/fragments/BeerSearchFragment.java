@@ -47,17 +47,6 @@ public class BeerSearchFragment extends BeerListFragment {
         super.onCreate(savedInstanceState);
 
         QuickBeer.getInstance().getGraph().inject(this);
-
-        ((BeerSearchActivity) getActivity())
-                .getQueryObservable()
-                .subscribe(
-                        query -> {
-                            Log.d(TAG, "query(" + query + ")");
-                            setSourceObservable(getBeerSearch.call(query));
-                        },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        });
     }
 
     @Override
@@ -71,6 +60,16 @@ public class BeerSearchFragment extends BeerListFragment {
             case BEER_SEARCH:
             case BEST_IN_COUNTRY:
             case BEST_IN_STYLE:
+                ((BeerSearchActivity) getActivity())
+                        .getQueryObservable()
+                        .subscribe(
+                                query -> {
+                                    Log.d(TAG, "query(" + query + ")");
+                                    setSourceObservable(getBeerSearch.call(query));
+                                },
+                                throwable -> {
+                                    Log.e(TAG, "error", throwable);
+                                });
                 break;
         }
     }

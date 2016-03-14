@@ -19,6 +19,7 @@ package quickbeer.android.next.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v4.app.Fragment;
 
 import io.reark.reark.utils.Log;
@@ -28,9 +29,8 @@ public class TopBeersActivity extends BeerSearchActivity {
     private static final String TAG = TopBeersActivity.class.getSimpleName();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
 
         getQueryObservable().subscribe(
                 query -> {
@@ -43,6 +43,7 @@ public class TopBeersActivity extends BeerSearchActivity {
                 throwable -> {
                     Log.e(TAG, "error", throwable);
                 });
+
     }
 
     @Override

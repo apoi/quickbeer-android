@@ -54,8 +54,12 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                          Observable<List<String>> initialQueriesObservable,
                          Observable<String> newQueriesObservable) {
         this.inflater = LayoutInflater.from(context);
-        this.initialQueriesObservable = initialQueriesObservable;
-        this.newQueriesObservable = newQueriesObservable;
+
+        this.initialQueriesObservable = initialQueriesObservable
+                .filter(s -> s != null);
+
+        this.newQueriesObservable = newQueriesObservable
+                .filter(s -> s != null);
     }
 
     public void refreshQueryList() {

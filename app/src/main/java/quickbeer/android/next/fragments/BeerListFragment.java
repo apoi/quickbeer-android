@@ -97,7 +97,6 @@ public class BeerListFragment extends Fragment {
     public void onPause() {
         super.onPause();
         beersViewBinder.unbind();
-
         selectBeerSubscription.unsubscribe();
     }
 

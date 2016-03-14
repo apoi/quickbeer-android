@@ -2,8 +2,8 @@
     <string name="app_name">QuickBeer</string>
     <string name="action_settings">Settings</string>
 
-    <string name="base_activity_search_hint">Search</string>
-    <string name="country_activity_search_hint">Filter countries</string>
+    <string name="search_box_hint_search_beers">Search beers</string>
+    <string name="search_box_hint_filter_countries">Filter countries</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

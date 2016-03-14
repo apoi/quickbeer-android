@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.activities;
+package quickbeer.android.next.activities.base;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public abstract class FilterActivity extends SearchBarActivity {
 
     @Override
     protected String getSearchHint() {
-        return getString(R.string.country_activity_search_hint);
+        return getString(R.string.search_box_hint_filter_countries);
     }
 
     @Override
