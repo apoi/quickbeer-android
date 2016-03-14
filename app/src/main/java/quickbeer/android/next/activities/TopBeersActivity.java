@@ -24,7 +24,7 @@ import android.support.v4.app.Fragment;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.fragments.TopBeersFragment;
 
-public class TopBeersActivity extends SearchActivityBase {
+public class TopBeersActivity extends BeerSearchActivity {
     private static final String TAG = TopBeersActivity.class.getSimpleName();
 
     @Override

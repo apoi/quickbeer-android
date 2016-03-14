@@ -1,5 +1,23 @@
+/**
+ * This file is part of QuickBeer.
+ * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 package quickbeer.android.next.adapters;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,16 +27,40 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Country;
 import quickbeer.android.next.views.listitems.CountryListItem;
 
 public class CountryListAdapter extends BaseListAdapter<CountryListItem.ViewHolder> {
-    private final List<Country> countries;
+    private static final String TAG = CountryListAdapter.class.getSimpleName();
+
+    private final List<Country> sourceList;
+    private final List<Country> adapterList = new ArrayList<>();
 
     public CountryListAdapter(Collection<Country> countries) {
-        this.countries = new ArrayList<>(countries);
-        Collections.sort(this.countries);
+        this.sourceList = new ArrayList<>(countries);
+        Collections.sort(this.sourceList);
+
+        this.adapterList.addAll(sourceList);
+    }
+
+    public void filterList(String filter) {
+        Log.v(TAG, "filter(" + filter + ")");
+
+        adapterList.clear();
+
+        if (TextUtils.isEmpty(filter)) {
+            adapterList.addAll(sourceList);
+        } else {
+            for (Country country : sourceList) {
+                if (country.getName().toLowerCase().contains(filter.toLowerCase())) {
+                    adapterList.add(country);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 
     @Override
@@ -29,11 +71,11 @@ public class CountryListAdapter extends BaseListAdapter<CountryListItem.ViewHold
 
     @Override
     public void onBindViewHolder(CountryListItem.ViewHolder holder, int position) {
-        holder.setItem(countries.get(position));
+        holder.setItem(adapterList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return countries.size();
+        return adapterList.size();
     }
 }

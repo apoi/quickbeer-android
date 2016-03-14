@@ -29,6 +29,7 @@ import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.CountryListAdapter;
 import quickbeer.android.next.utils.Countries;
+import rx.Observable;
 
 public class CountryListView extends FrameLayout {
     private RecyclerView countryListView;
@@ -43,6 +44,10 @@ public class CountryListView extends FrameLayout {
 
     public CountryListView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public void setFilterObservable(Observable<String> filterObservable) {
+        filterObservable.subscribe(countryListAdapter::filterList);
     }
 
     @Override

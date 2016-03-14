@@ -17,13 +17,33 @@
  */
 package quickbeer.android.next.activities;
 
-import android.support.v4.app.Fragment;
+import java.util.List;
 
-import quickbeer.android.next.fragments.CountryListFragment;
+import quickbeer.android.next.R;
+import rx.Observable;
 
-public class CountryListActivity extends FilterActivity {
+public abstract class FilterActivity extends SearchBarActivity {
     @Override
-    protected Fragment getFragment() {
-        return new CountryListFragment();
+    protected Observable<List<String>> getInitialQueriesObservable() {
+        return Observable.empty();
+    }
+
+    @Override
+    protected String getSearchHint() {
+        return getString(R.string.country_activity_search_hint);
+    }
+
+    @Override
+    protected boolean liveFiltering() {
+        return true;
+    }
+
+    @Override
+    protected int minimumSearchLength() {
+        return -1;
+    }
+
+    @Override
+    protected void showTooShortSearchError() {
     }
 }

@@ -28,7 +28,7 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.fragments.MainFragment;
 
-public class MainActivity extends SearchActivityBase {
+public class MainActivity extends BeerSearchActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private DrawerLayout drawerLayout;

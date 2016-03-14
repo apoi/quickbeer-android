@@ -1,19 +1,27 @@
-/**
- * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+/*
+ * The MIT License
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Copyright (c) 2013-2016 reark project contributors
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * https://github.com/reark/reark/graphs/contributors
  *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package quickbeer.android.next.activities;
 
@@ -28,24 +36,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
-import javax.inject.Inject;
+import java.util.List;
 
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
-import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public abstract class SearchActivityBase extends AppCompatActivity implements
+public abstract class SearchBarActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = SearchActivityBase.class.getSimpleName();
+    private static final String TAG = SearchBarActivity.class.getSimpleName();
 
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
@@ -53,14 +58,9 @@ public abstract class SearchActivityBase extends AppCompatActivity implements
 
     private PublishSubject<String> querySubject = PublishSubject.create();
 
-    @Inject
-    DataLayer.GetBeerSearchQueries getBeerSearchQueries;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        QuickBeer.getInstance().getGraph().inject(this);
 
         setContentView(getContentViewLayout());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -93,15 +93,13 @@ public abstract class SearchActivityBase extends AppCompatActivity implements
         return R.layout.main_activity;
     }
 
-    abstract protected Fragment getFragment();
-
     public Observable<String> getQueryObservable() {
         return querySubject
                 .asObservable();
     }
 
     private void setupSearch() {
-        adapter = new SearchAdapter(this, getBeerSearchQueries, getQueryObservable());
+        adapter = new SearchAdapter(this, getInitialQueriesObservable(), getQueryObservable());
         searchViewOverlay = findViewById(R.id.search_view_overlay);
         searchViewOverlay.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && searchView.isSearchOpen()) {
@@ -111,23 +109,34 @@ public abstract class SearchActivityBase extends AppCompatActivity implements
         });
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setHint(getSearchHint());
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Log.d(TAG, "onQueryTextSubmit(" + query + ")");
-                if (query.length() > 3) {
+                if (updateQueryText(query)) {
                     searchView.closeSearch();
-                    querySubject.onNext(query);
-                } else {
-                    Toast.makeText(SearchActivityBase.this, R.string.search_too_short, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                Log.v(TAG, "onQueryTextChange(" + newText + ")");
+            public boolean onQueryTextChange(String query) {
+                Log.v(TAG, "onQueryTextChange(" + query + ")");
+                if (liveFiltering()) {
+                    updateQueryText(query);
+                }
                 return true;
+            }
+
+            private boolean updateQueryText(String query) {
+                if (query.length() > minimumSearchLength()) {
+                    querySubject.onNext(query);
+                    return true;
+                } else {
+                    showTooShortSearchError();
+                    return false;
+                }
             }
         });
 
@@ -197,4 +206,16 @@ public abstract class SearchActivityBase extends AppCompatActivity implements
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    protected abstract Observable<List<String>> getInitialQueriesObservable();
+
+    protected abstract String getSearchHint();
+
+    protected abstract boolean liveFiltering();
+
+    protected abstract int minimumSearchLength();
+
+    protected abstract void showTooShortSearchError();
+
+    protected abstract Fragment getFragment();
 }

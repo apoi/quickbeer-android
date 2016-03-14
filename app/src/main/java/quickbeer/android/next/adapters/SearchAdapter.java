@@ -35,27 +35,27 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.Subscription;
 
 public class SearchAdapter extends BaseAdapter implements Filterable {
     private static final String TAG = SearchAdapter.class.getSimpleName();
 
-    private List<String> adapterList = new ArrayList<>();
     private List<String> sourceList = new ArrayList<>();
+    private List<String> adapterList = new ArrayList<>();
 
     private Drawable suggestionIcon;
     private final LayoutInflater inflater;
-    private final DataLayer.GetBeerSearchQueries beerSearchQueries;
-    private final Observable<String> queryObservable;
+    private final Observable<List<String>> initialQueriesObservable;
+    private final Observable<String> newQueriesObservable;
     private Subscription searchesSubscription;
 
-    public SearchAdapter(Context context, DataLayer.GetBeerSearchQueries beerSearchQueries,
-                         Observable<String> queryObservable) {
+    public SearchAdapter(Context context,
+                         Observable<List<String>> initialQueriesObservable,
+                         Observable<String> newQueriesObservable) {
         this.inflater = LayoutInflater.from(context);
-        this.beerSearchQueries = beerSearchQueries;
-        this.queryObservable = queryObservable;
+        this.initialQueriesObservable = initialQueriesObservable;
+        this.newQueriesObservable = newQueriesObservable;
     }
 
     public void refreshQueryList() {
@@ -63,14 +63,12 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             searchesSubscription.unsubscribe();
         }
 
-        Observable<List<String>> oldSearches = beerSearchQueries.call();
-
-        searchesSubscription = Observable.combineLatest(oldSearches, queryObservable,
+        searchesSubscription = Observable.combineLatest(initialQueriesObservable, newQueriesObservable,
                 (List<String> list, String query) -> {
                     list.add(query);
                     return list;
                 })
-                .startWith(oldSearches)
+                .startWith(initialQueriesObservable)
                 .subscribe(list -> sourceList = list);
     }
 
