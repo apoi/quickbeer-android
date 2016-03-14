@@ -42,10 +42,10 @@ import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public abstract class ActivityBase extends AppCompatActivity implements
+public abstract class SearchActivityBase extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = ActivityBase.class.getSimpleName();
+    private static final String TAG = SearchActivityBase.class.getSimpleName();
 
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
@@ -119,7 +119,7 @@ public abstract class ActivityBase extends AppCompatActivity implements
                     searchView.closeSearch();
                     querySubject.onNext(query);
                 } else {
-                    Toast.makeText(ActivityBase.this, R.string.search_too_short, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivityBase.this, R.string.search_too_short, Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }

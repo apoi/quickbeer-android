@@ -24,7 +24,7 @@ import android.support.v4.app.Fragment;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.fragments.CountryListFragment;
 
-public class CountryListActivity extends ActivityBase {
+public class CountryListActivity extends SearchActivityBase {
     private static final String TAG = CountryListActivity.class.getSimpleName();
 
     @Override

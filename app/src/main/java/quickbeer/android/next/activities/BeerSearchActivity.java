@@ -23,7 +23,7 @@ import android.support.v4.app.Fragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 import rx.Observable;
 
-public class BeerSearchActivity extends ActivityBase {
+public class BeerSearchActivity extends SearchActivityBase {
     private static final String TAG = BeerSearchActivity.class.getSimpleName();
 
     private SearchType searchType;

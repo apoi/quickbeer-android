@@ -29,7 +29,7 @@ import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 
-public class BeerDetailsActivity extends ActivityBase {
+public class BeerDetailsActivity extends SearchActivityBase {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
