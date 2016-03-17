@@ -217,7 +217,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getTopBeers");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(RateBeerService.TOP50.toString())
+        beerSearchStore.getOne(TopBeersFetcher.SEARCH)
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
