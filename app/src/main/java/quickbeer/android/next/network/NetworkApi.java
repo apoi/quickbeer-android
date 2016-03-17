@@ -70,4 +70,9 @@ public class NetworkApi {
         return rateBeerService
                 .getReviews(params);
     }
+
+    public Observable<List<Beer>> getBestInCountry(Map<String, String> params) {
+        return rateBeerService
+                .getBestInCountry(params);
+    }
 }
