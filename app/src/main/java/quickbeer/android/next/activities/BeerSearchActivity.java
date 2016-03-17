@@ -22,6 +22,7 @@ import android.support.v4.app.Fragment;
 
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.fragments.BeerSearchFragment;
+import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
 
 public class BeerSearchActivity extends SearchActivity {
@@ -31,6 +32,7 @@ public class BeerSearchActivity extends SearchActivity {
 
         // Set title to reflect the search
         getQueryObservable()
+                .filter(new NullFilter())
                 .subscribe(this::setTitle);
     }
 
