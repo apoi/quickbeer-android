@@ -28,6 +28,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
@@ -115,7 +117,7 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
             @Override
             public boolean onQueryTextChange(String query) {
                 Log.v(TAG, "onQueryTextChange(" + query + ")");
-                if (liveFiltering()) {
+                if (liveFilteringEnabled()) {
                     updateQueryText(query);
                 }
                 return true;
@@ -136,14 +138,24 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
             @Override
             public void onSearchViewShown() {
                 Log.d(TAG, "onSearchViewShown");
-                searchViewOverlay.setVisibility(View.VISIBLE);
-                searchView.setAdapter(adapter);
+
+                if (contentOverlayEnabled()) {
+                    Animation fadeIn = new AlphaAnimation(0.0f, 0.5f);
+                    fadeIn.setDuration(100);
+                    fadeIn.setFillAfter(true);
+
+                    searchView.setAdapter(adapter);
+                    searchViewOverlay.setVisibility(View.VISIBLE);
+                    searchViewOverlay.startAnimation(fadeIn);
+                }
             }
 
             @Override
             public void onSearchViewClosed() {
                 Log.d(TAG, "onSearchViewClosed");
+
                 searchView.setAdapter(null);
+                searchViewOverlay.clearAnimation();
                 searchViewOverlay.setVisibility(View.GONE);
             }
         });
@@ -203,7 +215,9 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
 
     protected abstract String getSearchHint();
 
-    protected abstract boolean liveFiltering();
+    protected abstract boolean liveFilteringEnabled();
+
+    protected abstract boolean contentOverlayEnabled();
 
     protected abstract int minimumSearchLength();
 

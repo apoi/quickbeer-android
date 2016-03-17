@@ -93,8 +93,13 @@ public abstract class SearchActivity extends SearchBarActivity {
     }
 
     @Override
-    protected boolean liveFiltering() {
+    protected boolean liveFilteringEnabled() {
         return false;
+    }
+
+    @Override
+    protected boolean contentOverlayEnabled() {
+        return true;
     }
 
     @Override
