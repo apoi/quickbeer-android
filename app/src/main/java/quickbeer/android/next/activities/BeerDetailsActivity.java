@@ -26,10 +26,12 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
+import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
+import rx.android.schedulers.AndroidSchedulers;
 
-public class BeerDetailsActivity extends BeerSearchActivity {
+public class BeerDetailsActivity extends SearchActivity {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
@@ -51,6 +53,7 @@ public class BeerDetailsActivity extends BeerSearchActivity {
 
         // Set the title for activity
         getBeer.call(beerId)
+                .observeOn(AndroidSchedulers.mainThread())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
