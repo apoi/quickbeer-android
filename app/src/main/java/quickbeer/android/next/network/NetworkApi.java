@@ -71,8 +71,8 @@ public class NetworkApi {
                 .getReviews(params);
     }
 
-    public Observable<List<Beer>> getBestInCountry(Map<String, String> params) {
+    public Observable<List<Beer>> getTopInCountry(Map<String, String> params) {
         return rateBeerService
-                .getBestInCountry(params);
+                .getTopInCountry(params);
     }
 }

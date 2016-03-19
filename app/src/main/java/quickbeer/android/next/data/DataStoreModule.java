@@ -70,6 +70,11 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetTopInCountry provideGetTopInCountry(DataLayer dataLayer) {
+        return dataLayer::getTopInCountry;
+    }
+
+    @Provides
     public DataLayer.GetReview provideGetReview(DataLayer dataLayer) {
         return dataLayer::getReview;
     }

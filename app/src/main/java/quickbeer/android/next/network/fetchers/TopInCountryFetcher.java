@@ -46,11 +46,15 @@ public class TopInCountryFetcher extends BeerSearchFetcher {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerSearchStore);
     }
 
+    public static String getSearchIdentifier(String countryId) {
+        return String.format("%s=%s", SEARCH, countryId);
+    }
+
     @Override
     public void fetch(@NonNull Intent intent) {
         final String countryId = intent.getStringExtra("countryId");
         if (countryId != null) {
-            fetchBeerSearch(String.format("%s=%s", SEARCH, countryId));
+            fetchBeerSearch(getSearchIdentifier(countryId));
         } else {
             Log.e(TAG, "No countryId provided in the intent extras");
         }
@@ -59,7 +63,7 @@ public class TopInCountryFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     protected Observable<List<Beer>> createNetworkObservable(String countryId) {
-        return networkApi.getBestInCountry(networkUtils.createRequestParams("c", String.valueOf(countryId)));
+        return networkApi.getTopInCountry(networkUtils.createRequestParams("c", String.valueOf(countryId)));
     }
 
     @NonNull

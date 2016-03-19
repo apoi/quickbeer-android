@@ -48,5 +48,5 @@ public interface RateBeerService {
     Observable<List<Review>> getReviews(@QueryMap Map<String, String> params);
 
     @GET("/json/bcc.asp")
-    Observable<List<Beer>> getBestInCountry(@QueryMap Map<String, String> params);
+    Observable<List<Beer>> getTopInCountry(@QueryMap Map<String, String> params);
 }

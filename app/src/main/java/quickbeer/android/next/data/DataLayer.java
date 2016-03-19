@@ -39,6 +39,7 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.fetchers.TopBeersFetcher;
+import quickbeer.android.next.network.fetchers.TopInCountryFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.Review;
@@ -69,6 +70,8 @@ public class DataLayer extends DataLayerBase {
         this.userSettingsStore = userSettingsStore;
     }
 
+    //// GET USER SETTINGS
+
     @NonNull
     public Observable<UserSettings> getUserSettings() {
         return userSettingsStore.getStream(DEFAULT_USER_ID);
@@ -79,6 +82,8 @@ public class DataLayer extends DataLayerBase {
 
         userSettingsStore.put(userSettings);
     }
+
+    //// GET BEER DETAILS
 
     @NonNull
     public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
@@ -145,6 +150,8 @@ public class DataLayer extends DataLayerBase {
                 });
     }
 
+    //// SEARCH BEERS
+
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getBeerSearchResultStream(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
@@ -196,6 +203,8 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    //// TOP BEERS
+
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getTopBeersResultStream() {
         Log.v(TAG, "getTopBeersResultStream");
@@ -241,6 +250,57 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.TOP50.toString());
         context.startService(intent);
     }
+
+    //// TOP IN COUNTRY
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getTopInCountryResultStream(@NonNull final String countryId) {
+        Log.v(TAG, "getTopInCountryResultStream");
+
+        final Uri uri = beerSearchStore.getUriForId(TopInCountryFetcher.getSearchIdentifier(countryId));
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<BeerSearch> beerSearchObservable =
+                beerSearchStore.getStream(TopInCountryFetcher.getSearchIdentifier(countryId));
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, beerSearchObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getTopInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "getTopInCountry");
+
+        // Trigger a fetch only if there was no cached result
+        beerSearchStore.getOne(TopInCountryFetcher.getSearchIdentifier(countryId))
+                .first()
+                .filter(results -> results == null || results.getItems().size() == 0)
+                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                .subscribe(results -> fetchTopBeers());
+
+        return getTopInCountryResultStream(countryId);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "fetchAndGetTopInCountry");
+
+        fetchTopInCountry(countryId);
+        return getTopInCountryResultStream(countryId);
+    }
+
+    private void fetchTopInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "fetchTopInCountry");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.COUNTRY.toString());
+        intent.putExtra("countryId", countryId);
+        context.startService(intent);
+    }
+
+    //// REVIEWS
 
     @NonNull
     public Observable<Review> getReview(final int reviewId) {
@@ -317,6 +377,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetTopBeers {
         @NonNull
         Observable<DataStreamNotification<BeerSearch>> call();
+    }
+
+    public interface GetTopInCountry {
+        @NonNull
+        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String countryId);
     }
 
     public interface GetReview {
