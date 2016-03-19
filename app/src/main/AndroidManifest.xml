@@ -44,7 +44,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.TopInCountryActivity"
+            android:name=".activities.BeersInCountryActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

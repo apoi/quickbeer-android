@@ -251,11 +251,11 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
-    //// TOP IN COUNTRY
+    //// BEERS IN COUNTRY
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getTopInCountryResultStream(@NonNull final String countryId) {
-        Log.v(TAG, "getTopInCountryResultStream");
+    public Observable<DataStreamNotification<BeerSearch>> getBeersInCountryResultStream(@NonNull final String countryId) {
+        Log.v(TAG, "getBeersInCountryResultStream");
 
         final String queryId = beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId);
         final Uri uri = beerSearchStore.getUriForId(queryId);
@@ -271,29 +271,29 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getTopInCountry(@NonNull final String countryId) {
-        Log.v(TAG, "getTopInCountry");
+    public Observable<DataStreamNotification<BeerSearch>> getBeersInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "getBeersInCountry");
 
         // Trigger a fetch only if there was no cached result
         beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchTopInCountry(countryId));
+                .subscribe(results -> fetchBeersInCountry(countryId));
 
-        return getTopInCountryResultStream(countryId);
+        return getBeersInCountryResultStream(countryId);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopInCountry(@NonNull final String countryId) {
-        Log.v(TAG, "fetchAndGetTopInCountry");
+    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeersInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "fetchAndGetBeersInCountry");
 
-        fetchTopInCountry(countryId);
-        return getTopInCountryResultStream(countryId);
+        fetchBeersInCountry(countryId);
+        return getBeersInCountryResultStream(countryId);
     }
 
-    private void fetchTopInCountry(@NonNull final String countryId) {
-        Log.v(TAG, "fetchTopInCountry");
+    private void fetchBeersInCountry(@NonNull final String countryId) {
+        Log.v(TAG, "fetchBeersInCountry");
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.COUNTRY.toString());
@@ -430,7 +430,7 @@ public class DataLayer extends DataLayerBase {
         Observable<DataStreamNotification<BeerSearch>> call();
     }
 
-    public interface GetTopInCountry {
+    public interface GetBeersInCountry {
         @NonNull
         Observable<DataStreamNotification<BeerSearch>> call(@NonNull String countryId);
     }

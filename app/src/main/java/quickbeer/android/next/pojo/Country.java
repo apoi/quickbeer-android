@@ -17,7 +17,7 @@
  */
 package quickbeer.android.next.pojo;
 
-import quickbeer.android.next.activities.TopInCountryActivity;
+import quickbeer.android.next.activities.BeersInCountryActivity;
 
 public class Country extends SimpleItem {
     private final int id;
@@ -44,6 +44,6 @@ public class Country extends SimpleItem {
 
     @Override
     public Class getLinkedActivity() {
-        return TopInCountryActivity.class;
+        return BeersInCountryActivity.class;
     }
 }

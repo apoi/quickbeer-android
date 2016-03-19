@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.TopInCountryActivity;
 import quickbeer.android.next.pojo.SimpleItem;
 
 public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {

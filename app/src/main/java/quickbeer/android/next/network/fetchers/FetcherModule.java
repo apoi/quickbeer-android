@@ -74,13 +74,13 @@ public final class FetcherModule {
     }
 
     @Provides
-    @Named("topInCountryFetcher")
-    public Fetcher provideTopInCountryFetcher(NetworkApi networkApi,
-                                              NetworkUtils networkUtils,
-                                              NetworkRequestStatusStore networkRequestStatusStore,
-                                              BeerStore beerStore,
-                                              BeerSearchStore beerSearchStore) {
-        return new TopInCountryFetcher(networkApi,
+    @Named("beersInCountryFetcher")
+    public Fetcher provideBeersInCountryFetcher(NetworkApi networkApi,
+                                                NetworkUtils networkUtils,
+                                                NetworkRequestStatusStore networkRequestStatusStore,
+                                                BeerStore beerStore,
+                                                BeerSearchStore beerSearchStore) {
+        return new BeersInCountryFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,

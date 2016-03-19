@@ -61,7 +61,7 @@ public class NetworkApi {
                 .search(params);
     }
 
-    public Observable<List<Beer>> searchTopBeers(Map<String, String> params) {
+    public Observable<List<Beer>> getBeersInCountry(Map<String, String> params) {
         return rateBeerService
                 .topBeers(params);
     }

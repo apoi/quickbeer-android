@@ -70,8 +70,8 @@ public final class DataStoreModule {
     }
 
     @Provides
-    public DataLayer.GetTopInCountry provideGetTopInCountry(DataLayer dataLayer) {
-        return dataLayer::getTopInCountry;
+    public DataLayer.GetBeersInCountry provideGetBeersInCountry(DataLayer dataLayer) {
+        return dataLayer::getBeersInCountry;
     }
 
     @Provides
@@ -112,7 +112,7 @@ public final class DataStoreModule {
     public ServiceDataLayer provideServiceDataLayer(@Named("beerFetcher") Fetcher beerFetcher,
                                                     @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
                                                     @Named("topBeersFetcher") Fetcher topBeersFetcher,
-                                                    @Named("topInCountryFetcher") Fetcher topInCountryFetcher,
+                                                    @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
                                                     @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
                                                     @Named("reviewFetcher") Fetcher reviewFetcher,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
@@ -123,7 +123,7 @@ public final class DataStoreModule {
         return new ServiceDataLayer(beerFetcher,
                 beerSearchFetcher,
                 topBeersFetcher,
-                topInCountryFetcher,
+                beersInCountryFetcher,
                 beersInStyleFetcher,
                 reviewFetcher,
                 networkRequestStatusStore,

@@ -35,14 +35,14 @@ import quickbeer.android.next.pojo.Beer;
 import rx.Observable;
 import rx.functions.Action1;
 
-public class TopInCountryFetcher extends BeerSearchFetcher {
-    private static final String TAG = TopInCountryFetcher.class.getSimpleName();
+public class BeersInCountryFetcher extends BeerSearchFetcher {
+    private static final String TAG = BeersInCountryFetcher.class.getSimpleName();
 
-    public TopInCountryFetcher(@NonNull NetworkApi networkApi,
-                               @NonNull NetworkUtils networkUtils,
-                               @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                               @NonNull BeerStore beerStore,
-                               @NonNull BeerSearchStore beerSearchStore) {
+    public BeersInCountryFetcher(@NonNull NetworkApi networkApi,
+                                 @NonNull NetworkUtils networkUtils,
+                                 @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                                 @NonNull BeerStore beerStore,
+                                 @NonNull BeerSearchStore beerSearchStore) {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerSearchStore);
     }
 
@@ -62,7 +62,7 @@ public class TopInCountryFetcher extends BeerSearchFetcher {
         Map<String, String> params = networkUtils.createRequestParams("m", "country");
         params.put("c", countryId);
 
-        return networkApi.searchTopBeers(params);
+        return networkApi.getBeersInCountry(params);
     }
 
     @NonNull

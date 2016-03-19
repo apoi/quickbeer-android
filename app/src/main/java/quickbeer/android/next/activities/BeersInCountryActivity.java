@@ -23,10 +23,10 @@ import android.support.v4.app.Fragment;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.activities.base.SearchActivity;
-import quickbeer.android.next.fragments.TopInCountryFragment;
+import quickbeer.android.next.fragments.BeersInCountryFragment;
 
-public class TopInCountryActivity extends SearchActivity {
-    private static final String TAG = TopInCountryActivity.class.getSimpleName();
+public class BeersInCountryActivity extends SearchActivity {
+    private static final String TAG = BeersInCountryActivity.class.getSimpleName();
 
     private String countryId;
 
@@ -61,7 +61,7 @@ public class TopInCountryActivity extends SearchActivity {
 
     @Override
     protected Fragment getFragment() {
-        return new TopInCountryFragment();
+        return new BeersInCountryFragment();
     }
 
     public String getCountryId() {

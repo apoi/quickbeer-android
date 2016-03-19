@@ -24,14 +24,14 @@ import javax.inject.Inject;
 
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.TopInCountryActivity;
+import quickbeer.android.next.activities.BeersInCountryActivity;
 import quickbeer.android.next.data.DataLayer;
 
-public class TopInCountryFragment extends BeerListFragment {
-    private static final String TAG = TopInCountryFragment.class.getSimpleName();
+public class BeersInCountryFragment extends BeerListFragment {
+    private static final String TAG = BeersInCountryFragment.class.getSimpleName();
 
     @Inject
-    DataLayer.GetTopInCountry getTopInCountry;
+    DataLayer.GetBeersInCountry getBeersInCountry;
 
     @Override
     public int getLayout() {
@@ -49,7 +49,7 @@ public class TopInCountryFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String countryId = ((TopInCountryActivity) getActivity()).getCountryId();
-        setSourceObservable(getTopInCountry.call(countryId));
+        String countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
+        setSourceObservable(getBeersInCountry.call(countryId));
     }
 }
