@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerListAdapter;
+import quickbeer.android.next.viewmodels.BaseViewModel;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import rx.Observable;
@@ -45,6 +47,7 @@ public class BeerListView extends FrameLayout {
 
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
+    private TextView searchStatusTextView;
 
     public BeerListView(Context context) {
         super(context, null);
@@ -67,10 +70,13 @@ public class BeerListView extends FrameLayout {
         super.onFinishInflate();
 
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
+
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
         beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beersListView.setAdapter(beerListAdapter);
+
+        searchStatusTextView = (TextView) findViewById(R.id.search_status);
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {
@@ -79,6 +85,20 @@ public class BeerListView extends FrameLayout {
 
         Log.v(TAG, "Setting " + beers.size() + " beers to adapter");
         beerListAdapter.set(beers);
+    }
+
+    private void setProgressStatus(@NonNull BaseViewModel.ProgressStatus progressStatus) {
+        switch (progressStatus) {
+            case LOADING:
+                searchStatusTextView.setText(R.string.search_status_loading);
+                break;
+            case ERROR:
+                searchStatusTextView.setText(R.string.search_status_error);
+                break;
+            case IDLE:
+                searchStatusTextView.setText("");
+                break;
+        }
     }
 
     /**
@@ -110,6 +130,10 @@ public class BeerListView extends FrameLayout {
                     })
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe());
+
+            subscription.add(viewModel.getNetworkRequestStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(view::setProgressStatus));
         }
 
         private void beerListAdapterOnClick(View clickedView) {

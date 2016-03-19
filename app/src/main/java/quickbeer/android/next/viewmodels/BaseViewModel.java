@@ -32,17 +32,17 @@ public abstract class BaseViewModel extends AbstractViewModel {
         LOADING, ERROR, IDLE
     }
 
-    protected final BehaviorSubject<ProgressStatus> networkRequestStatusText = BehaviorSubject.create();
+    protected final BehaviorSubject<ProgressStatus> progressStatus = BehaviorSubject.create();
 
     @NonNull
     public Observable<ProgressStatus> getNetworkRequestStatus() {
-        return networkRequestStatusText.asObservable();
+        return progressStatus.asObservable();
     }
 
     void setNetworkStatusText(@NonNull ProgressStatus status) {
         Preconditions.checkNotNull(status, "ProgressStatus cannot be null.");
 
-        networkRequestStatusText.onNext(status);
+        progressStatus.onNext(status);
     }
 
     @NonNull

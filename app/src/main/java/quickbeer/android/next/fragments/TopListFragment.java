@@ -32,7 +32,7 @@ public class TopListFragment extends BeerListFragment {
 
     @Override
     public int getLayout() {
-        return R.layout.top_beers_fragment;
+        return R.layout.top_list_fragment;
     }
 
     @Override

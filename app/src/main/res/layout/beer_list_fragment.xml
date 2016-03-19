@@ -7,10 +7,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/background_light">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/beers_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical" />
+    <include layout="@layout/beer_search_result_list" />
 
 </quickbeer.android.next.views.BeerListView>
