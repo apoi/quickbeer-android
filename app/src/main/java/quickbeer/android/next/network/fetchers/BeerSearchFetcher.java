@@ -77,18 +77,20 @@ public class BeerSearchFetcher extends FetcherBase {
         }
     }
 
-    protected void fetchBeerSearch(@NonNull final String searchString) {
-        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+    protected void fetchBeerSearch(@NonNull final String query) {
+        Preconditions.checkNotNull(query, "Search string cannot be null.");
 
-        Log.d(TAG, "fetchBeerSearch(" + searchString + ")");
-        if (requestMap.containsKey(searchString.hashCode()) &&
-                !requestMap.get(searchString.hashCode()).isUnsubscribed()) {
-            Log.d(TAG, "Found an ongoing request for search " + searchString);
+        String queryId = beerSearchStore.getQueryId(getServiceUri(), query);
+        Log.d(TAG, "fetchBeerSearch(" + queryId + ")");
+
+        if (requestMap.containsKey(queryId.hashCode()) &&
+                !requestMap.get(queryId.hashCode()).isUnsubscribed()) {
+            Log.d(TAG, "Found an ongoing request for search " + queryId);
             return;
         }
 
-        final String uri = beerSearchStore.getUriForId(searchString).toString();
-        Subscription subscription = createNetworkObservable(searchString)
+        final String uri = beerSearchStore.getUriForId(queryId).toString();
+        Subscription subscription = createNetworkObservable(query)
                 .subscribeOn(Schedulers.computation())
                 .map((beers) -> {
                     final List<Integer> beerIds = new ArrayList<>();
@@ -96,14 +98,14 @@ public class BeerSearchFetcher extends FetcherBase {
                         beerStore.put(beer);
                         beerIds.add(beer.getId());
                     }
-                    return new BeerSearch(searchString, beerIds);
+                    return new BeerSearch(queryId, beerIds);
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(beerSearchStore::put,
-                        e -> Log.e(TAG, "Error fetching beer search for '" + searchString + "'", e));
+                        e -> Log.e(TAG, "Error fetching beer search for '" + queryId + "'", e));
 
-        requestMap.put(searchString.hashCode(), subscription);
+        requestMap.put(queryId.hashCode(), subscription);
         startRequest(uri);
     }
 

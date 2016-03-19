@@ -37,6 +37,9 @@ public class BeerSearchFragment extends BeerListFragment {
     @Inject
     DataLayer.GetTopBeers getTopBeers;
 
+    @Inject
+    DataLayer.GetTopInCountry getTopInCountry;
+
     @Override
     public int getLayout() {
         return R.layout.beer_list_fragment;
@@ -57,8 +60,11 @@ public class BeerSearchFragment extends BeerListFragment {
             case BEST_IN_WORLD:
                 setSourceObservable(getTopBeers.call());
                 break;
-            case BEER_SEARCH:
             case BEST_IN_COUNTRY:
+                String countryId = ((BeerSearchActivity) getActivity()).getQuery();
+                setSourceObservable(getTopInCountry.call(countryId));
+                break;
+            case BEER_SEARCH:
             case BEST_IN_STYLE:
                 ((BeerSearchActivity) getActivity())
                         .getQueryObservable()

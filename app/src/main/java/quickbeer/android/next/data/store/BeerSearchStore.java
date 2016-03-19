@@ -26,9 +26,9 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
+import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.BeerSearch;
 
 public class BeerSearchStore extends StoreBase<BeerSearch, String> {
@@ -36,8 +36,26 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
 
     public BeerSearchStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
+    }
 
-        QuickBeer.getInstance().getGraph().inject(this);
+    // Beer search store needs separate query identifiers for normal searches and fixed searches
+    // (top50, top in country, top in style). Fixed searches come attached with a service uri
+    // identifier to make sure they stand apart from the normal searches.
+    public String getQueryId(@NonNull Uri serviceUri, @NonNull String query) {
+        Preconditions.checkNotNull(serviceUri, "Service Uri cannot be null.");
+        Preconditions.checkNotNull(query, "Query cannot be null.");
+
+        if (serviceUri == RateBeerService.SEARCH) {
+            return query;
+        } else if (!query.isEmpty()) {
+            return String.format("%s_%s", serviceUri, query);
+        } else {
+            return serviceUri.toString();
+        }
+    }
+
+    public String getQueryId(@NonNull Uri serviceUri) {
+        return getQueryId(serviceUri, "");
     }
 
     @NonNull

@@ -36,7 +36,6 @@ import com.google.gson.Gson;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
@@ -46,8 +45,6 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
 
     public NetworkRequestStatusStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
-
-        QuickBeer.getInstance().getGraph().inject(this);
     }
 
     @NonNull

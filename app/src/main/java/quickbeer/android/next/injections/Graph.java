@@ -26,11 +26,6 @@ import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.data.DataStoreModule;
-import quickbeer.android.next.data.store.BeerSearchStore;
-import quickbeer.android.next.data.store.BeerStore;
-import quickbeer.android.next.data.store.NetworkRequestStatusStore;
-import quickbeer.android.next.data.store.ReviewListStore;
-import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
@@ -64,12 +59,6 @@ public interface Graph {
     void inject(TopBeersFragment topBeersFragment);
 
     void inject(CountryListView countryListView);
-
-    void inject(BeerStore store);
-    void inject(BeerSearchStore store);
-    void inject(ReviewStore store);
-    void inject(ReviewListStore store);
-    void inject(NetworkRequestStatusStore store);
 
     final class Initializer {
         public static Graph init(Application application) {

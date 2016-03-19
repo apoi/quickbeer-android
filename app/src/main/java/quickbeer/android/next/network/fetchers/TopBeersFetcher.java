@@ -35,7 +35,6 @@ import rx.functions.Action1;
 
 public class TopBeersFetcher extends BeerSearchFetcher {
     private static final String TAG = TopBeersFetcher.class.getSimpleName();
-    public static final String SEARCH = "__top50";
 
     public TopBeersFetcher(@NonNull NetworkApi networkApi,
                            @NonNull NetworkUtils networkUtils,
@@ -47,7 +46,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        fetchBeerSearch(SEARCH);
+        fetchBeerSearch(getServiceUri().toString());
     }
 
     @NonNull

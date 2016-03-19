@@ -52,6 +52,7 @@ public class ServiceDataLayer extends DataLayerBase {
     public ServiceDataLayer(@NonNull Fetcher beerFetcher,
                             @NonNull Fetcher beerSearchFetcher,
                             @NonNull Fetcher topBeersFetcher,
+                            @NonNull Fetcher topInCountryFetcher,
                             @NonNull Fetcher reviewsFetcher,
                             @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
@@ -64,6 +65,7 @@ public class ServiceDataLayer extends DataLayerBase {
                 beerFetcher,
                 beerSearchFetcher,
                 topBeersFetcher,
+                topInCountryFetcher,
                 reviewsFetcher
         );
     }

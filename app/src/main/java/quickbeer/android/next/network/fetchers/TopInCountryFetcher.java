@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
@@ -36,7 +37,6 @@ import rx.functions.Action1;
 
 public class TopInCountryFetcher extends BeerSearchFetcher {
     private static final String TAG = TopInCountryFetcher.class.getSimpleName();
-    public static final String SEARCH = "__country";
 
     public TopInCountryFetcher(@NonNull NetworkApi networkApi,
                                @NonNull NetworkUtils networkUtils,
@@ -46,15 +46,11 @@ public class TopInCountryFetcher extends BeerSearchFetcher {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerSearchStore);
     }
 
-    public static String getSearchIdentifier(String countryId) {
-        return String.format("%s=%s", SEARCH, countryId);
-    }
-
     @Override
     public void fetch(@NonNull Intent intent) {
         final String countryId = intent.getStringExtra("countryId");
         if (countryId != null) {
-            fetchBeerSearch(getSearchIdentifier(countryId));
+            fetchBeerSearch(countryId);
         } else {
             Log.e(TAG, "No countryId provided in the intent extras");
         }
@@ -63,7 +59,10 @@ public class TopInCountryFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     protected Observable<List<Beer>> createNetworkObservable(String countryId) {
-        return networkApi.getTopInCountry(networkUtils.createRequestParams("c", String.valueOf(countryId)));
+        Map<String, String> params = networkUtils.createRequestParams("m", "country");
+        params.put("c", countryId);
+
+        return networkApi.searchTopBeers(params);
     }
 
     @NonNull

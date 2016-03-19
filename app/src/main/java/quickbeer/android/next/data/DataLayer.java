@@ -38,8 +38,6 @@ import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
-import quickbeer.android.next.network.fetchers.TopBeersFetcher;
-import quickbeer.android.next.network.fetchers.TopInCountryFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.Review;
@@ -157,13 +155,14 @@ public class DataLayer extends DataLayerBase {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "getBeerSearchResultStream");
 
-        final Uri uri = beerSearchStore.getUriForId(searchString);
+        final String queryId = beerSearchStore.getQueryId(RateBeerService.SEARCH, searchString);
+        final Uri uri = beerSearchStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
         final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(searchString);
+                beerSearchStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -175,7 +174,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getBeerSearch");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(searchString)
+        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.SEARCH, searchString))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -209,13 +208,14 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<BeerSearch>> getTopBeersResultStream() {
         Log.v(TAG, "getTopBeersResultStream");
 
-        final Uri uri = beerSearchStore.getUriForId(TopBeersFetcher.SEARCH);
+        final String queryId = beerSearchStore.getQueryId(RateBeerService.TOP50);
+        final Uri uri = beerSearchStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
         final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(TopBeersFetcher.SEARCH);
+                beerSearchStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -226,7 +226,7 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getTopBeers");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(TopBeersFetcher.SEARCH)
+        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.TOP50))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -257,13 +257,14 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<BeerSearch>> getTopInCountryResultStream(@NonNull final String countryId) {
         Log.v(TAG, "getTopInCountryResultStream");
 
-        final Uri uri = beerSearchStore.getUriForId(TopInCountryFetcher.getSearchIdentifier(countryId));
+        final String queryId = beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId);
+        final Uri uri = beerSearchStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
         final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(TopInCountryFetcher.getSearchIdentifier(countryId));
+                beerSearchStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -274,11 +275,11 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getTopInCountry");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(TopInCountryFetcher.getSearchIdentifier(countryId))
+        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchTopBeers());
+                .subscribe(results -> fetchTopInCountry(countryId));
 
         return getTopInCountryResultStream(countryId);
     }

@@ -43,7 +43,6 @@ public class TopBeersActivity extends BeerSearchActivity {
                 throwable -> {
                     Log.e(TAG, "error", throwable);
                 });
-
     }
 
     @Override

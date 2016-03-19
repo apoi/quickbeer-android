@@ -77,7 +77,7 @@ public class CountryListItem {
         private void launchActivity(View view) {
             Intent intent = new Intent(view.getContext(), BeerSearchActivity.class);
             intent.putExtra("launchType", BeerSearchActivity.SearchType.BEST_IN_COUNTRY.ordinal());
-            intent.putExtra("countryId", country.getId());
+            intent.putExtra("query", String.valueOf(country.getId()));
 
             view.getContext().startActivity(intent);
         }

@@ -26,7 +26,6 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.ReviewColumns;
 import quickbeer.android.next.pojo.Review;
@@ -36,8 +35,6 @@ public class ReviewStore extends StoreBase<Review, Integer> {
 
     public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
-
-        QuickBeer.getInstance().getGraph().inject(this);
     }
 
     @NonNull
