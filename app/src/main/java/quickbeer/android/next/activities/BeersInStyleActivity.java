@@ -35,9 +35,9 @@ public class BeersInStyleActivity extends SearchActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            styleId = savedInstanceState.getString("styleId");
+            styleId = savedInstanceState.getString("id");
         } else {
-            styleId = getIntent().getStringExtra("styleId");
+            styleId = getIntent().getStringExtra("id");
         }
 
         getQueryObservable().subscribe(
@@ -56,7 +56,7 @@ public class BeersInStyleActivity extends SearchActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("styleId", styleId);
+        outState.putString("id", styleId);
     }
 
     @Override

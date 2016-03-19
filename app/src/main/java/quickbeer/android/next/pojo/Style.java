@@ -17,6 +17,8 @@
  */
 package quickbeer.android.next.pojo;
 
+import quickbeer.android.next.activities.BeersInStyleActivity;
+
 public class Style extends SimpleItem {
     private final int id;
     private final String name;
@@ -36,5 +38,10 @@ public class Style extends SimpleItem {
 
     public String getCode() {
         return name.substring(0, 2);
+    }
+
+    @Override
+    public Class getLinkedActivity() {
+        return BeersInStyleActivity.class;
     }
 }

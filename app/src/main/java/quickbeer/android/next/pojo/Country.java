@@ -17,6 +17,8 @@
  */
 package quickbeer.android.next.pojo;
 
+import quickbeer.android.next.activities.TopInCountryActivity;
+
 public class Country extends SimpleItem {
     private final int id;
     private final String name;
@@ -38,5 +40,10 @@ public class Country extends SimpleItem {
 
     public String getCode() {
         return code;
+    }
+
+    @Override
+    public Class getLinkedActivity() {
+        return TopInCountryActivity.class;
     }
 }

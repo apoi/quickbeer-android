@@ -51,6 +51,10 @@
             android:name=".activities.StyleListActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".activities.BeersInStyleActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <provider
             android:name=".data.schematicprovider.generated.RateBeerProvider"
             android:authorities="quickbeer.android.next.data.schematicprovider.RateBeerProvider"

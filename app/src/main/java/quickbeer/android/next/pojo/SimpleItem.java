@@ -23,6 +23,7 @@ public abstract class SimpleItem implements Comparable<SimpleItem> {
     public abstract int getId();
     public abstract String getName();
     public abstract String getCode();
+    public abstract Class getLinkedActivity();
 
     @Override
     public int compareTo(@NonNull SimpleItem another) {

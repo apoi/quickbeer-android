@@ -47,8 +47,8 @@ public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void launchActivity(View view) {
-        Intent intent = new Intent(view.getContext(), TopInCountryActivity.class);
-        intent.putExtra("countryId", String.valueOf(simpleItem.getId()));
+        Intent intent = new Intent(view.getContext(), simpleItem.getLinkedActivity());
+        intent.putExtra("id", String.valueOf(simpleItem.getId()));
 
         view.getContext().startActivity(intent);
     }

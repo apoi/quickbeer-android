@@ -35,9 +35,9 @@ public class TopInCountryActivity extends SearchActivity {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            countryId = savedInstanceState.getString("countryId");
+            countryId = savedInstanceState.getString("id");
         } else {
-            countryId = getIntent().getStringExtra("countryId");
+            countryId = getIntent().getStringExtra("id");
         }
 
         getQueryObservable().subscribe(
@@ -56,7 +56,7 @@ public class TopInCountryActivity extends SearchActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("countryId", countryId);
+        outState.putString("id", countryId);
     }
 
     @Override
