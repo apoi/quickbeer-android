@@ -19,18 +19,19 @@ package quickbeer.android.next.activities.base;
 
 import java.util.List;
 
-import quickbeer.android.next.R;
 import rx.Observable;
 
 public abstract class FilterActivity extends SearchBarActivity {
     @Override
-    protected Observable<List<String>> getInitialQueriesObservable() {
-        return Observable.empty();
+    protected void onResume() {
+        super.onResume();
+
+        closeSearch();
     }
 
     @Override
-    protected String getSearchHint() {
-        return getString(R.string.search_box_hint_filter_countries);
+    protected Observable<List<String>> getInitialQueriesObservable() {
+        return Observable.empty();
     }
 
     @Override

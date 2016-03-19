@@ -19,6 +19,7 @@ package quickbeer.android.next.activities;
 
 import android.support.v4.app.Fragment;
 
+import quickbeer.android.next.R;
 import quickbeer.android.next.activities.base.FilterActivity;
 import quickbeer.android.next.fragments.CountryListFragment;
 
@@ -26,5 +27,10 @@ public class CountryListActivity extends FilterActivity {
     @Override
     protected Fragment getFragment() {
         return new CountryListFragment();
+    }
+
+    @Override
+    protected String getSearchHint() {
+        return getString(R.string.search_box_hint_filter_countries);
     }
 }
