@@ -24,31 +24,31 @@ import android.widget.TextView;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.TopInCountryActivity;
-import quickbeer.android.next.pojo.Country;
+import quickbeer.android.next.pojo.SimpleItem;
 
-public class CountryListItemViewHolder extends RecyclerView.ViewHolder {
+public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
     private TextView textView;
     private TextView iconView;
-    private Country country;
+    private SimpleItem simpleItem;
 
-    public CountryListItemViewHolder(View view) {
+    public SimpleListItemViewHolder(View view) {
         super(view);
 
-        iconView = (TextView) view.findViewById(R.id.country_icon);
-        textView = (TextView) view.findViewById(R.id.country_name);
+        iconView = (TextView) view.findViewById(R.id.list_item_icon);
+        textView = (TextView) view.findViewById(R.id.list_item_name);
 
         view.setOnClickListener(this::launchActivity);
     }
 
-    public void setItem(Country country) {
-        this.country = country;
-        iconView.setText(country.getCode());
-        textView.setText(country.getName());
+    public void setItem(SimpleItem simpleItem) {
+        this.simpleItem = simpleItem;
+        iconView.setText(simpleItem.getCode());
+        textView.setText(simpleItem.getName());
     }
 
     private void launchActivity(View view) {
         Intent intent = new Intent(view.getContext(), TopInCountryActivity.class);
-        intent.putExtra("countryId", String.valueOf(country.getId()));
+        intent.putExtra("countryId", String.valueOf(simpleItem.getId()));
 
         view.getContext().startActivity(intent);
     }

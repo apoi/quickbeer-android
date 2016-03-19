@@ -23,44 +23,32 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import javax.inject.Inject;
-
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.adapters.CountryListAdapter;
-import quickbeer.android.next.utils.Countries;
+import quickbeer.android.next.adapters.SimpleListAdapter;
+import quickbeer.android.next.utils.SimpleListSource;
 import rx.Observable;
 
-public class CountryListView extends FrameLayout {
-    private RecyclerView countryListView;
-    private CountryListAdapter countryListAdapter;
+public class SimpleListView extends FrameLayout {
+    private SimpleListAdapter simpleListAdapter;
 
-    @Inject
-    Countries countries;
-
-    public CountryListView(Context context) {
+    public SimpleListView(Context context) {
         super(context);
     }
 
-    public CountryListView(Context context, AttributeSet attrs) {
+    public SimpleListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setFilterObservable(Observable<String> filterObservable) {
-        filterObservable.subscribe(countryListAdapter::filterList);
+    public void setListSource(SimpleListSource source) {
+        simpleListAdapter = new SimpleListAdapter(source.getList());
+
+        RecyclerView simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);
+        simpleListView.setHasFixedSize(true);
+        simpleListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        simpleListView.setAdapter(simpleListAdapter);
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-        QuickBeer.getInstance().getGraph().inject(this);
-
-        countryListAdapter = new CountryListAdapter(countries.getCountries());
-
-        countryListView = (RecyclerView) findViewById(R.id.countries_list_view);
-        countryListView.setHasFixedSize(true);
-        countryListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        countryListView.setAdapter(countryListAdapter);
+    public void setFilterObservable(Observable<String> filterObservable) {
+        filterObservable.subscribe(simpleListAdapter::filterList);
     }
 }

@@ -25,12 +25,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.CountryListActivity;
-import quickbeer.android.next.utils.Countries;
+import quickbeer.android.next.activities.StyleListActivity;
+import quickbeer.android.next.utils.Styles;
 import quickbeer.android.next.views.SimpleListView;
 import rx.Observable;
 
-public class CountryListFragment extends Fragment {
+public class StyleListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.simple_list_fragment, container, false);
@@ -40,9 +40,9 @@ public class CountryListFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((SimpleListView) view).setListSource(new Countries());
+        ((SimpleListView) view).setListSource(new Styles());
 
-        Observable<String> filterObservable = ((CountryListActivity) getActivity()).getQueryObservable();
+        Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
         ((SimpleListView) view).setFilterObservable(filterObservable);
     }
 }

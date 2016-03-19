@@ -4,6 +4,7 @@
 
     <string name="search_box_hint_search_beers">Search beers</string>
     <string name="search_box_hint_filter_countries">Filter countries</string>
+    <string name="search_box_hint_filter_styles">Filter styles</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

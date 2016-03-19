@@ -36,7 +36,6 @@ import quickbeer.android.next.fragments.TopListFragment;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.utils.UtilsModule;
 import quickbeer.android.next.viewmodels.ViewModelModule;
-import quickbeer.android.next.views.CountryListView;
 
 @Singleton
 @Component(modules = {
@@ -61,8 +60,6 @@ public interface Graph {
     void inject(TopListFragment topListFragment);
     void inject(TopBeersFragment topBeersFragment);
     void inject(TopInCountryFragment topInCountryFragment);
-
-    void inject(CountryListView countryListView);
 
     final class Initializer {
         public static Graph init(Application application) {

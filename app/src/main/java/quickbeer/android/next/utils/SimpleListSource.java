@@ -17,21 +17,11 @@
  */
 package quickbeer.android.next.utils;
 
-import android.content.Context;
+import java.util.Collection;
 
-import javax.inject.Singleton;
+import quickbeer.android.next.pojo.SimpleItem;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.next.injections.ForApplication;
-import quickbeer.android.next.network.utils.ApiKey;
-import quickbeer.android.next.network.utils.NetworkUtils;
-
-@Module
-public final class UtilsModule {
-    @Provides
-    @Singleton
-    public NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
-    }
+public interface SimpleListSource {
+    SimpleItem getItem(int id);
+    Collection<SimpleItem> getList();
 }

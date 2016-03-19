@@ -17,7 +17,7 @@
  */
 package quickbeer.android.next.pojo;
 
-public class Country implements Comparable<Country> {
+public class Country extends SimpleItem {
     private final int id;
     private final String name;
     private final String code;
@@ -38,10 +38,5 @@ public class Country implements Comparable<Country> {
 
     public String getCode() {
         return code;
-    }
-
-    @Override
-    public int compareTo(Country another) {
-        return name.compareTo(another.name);
     }
 }

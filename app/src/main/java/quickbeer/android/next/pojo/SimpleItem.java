@@ -15,23 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.utils;
+package quickbeer.android.next.pojo;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 
-import javax.inject.Singleton;
+public abstract class SimpleItem implements Comparable<SimpleItem> {
+    public abstract int getId();
+    public abstract String getName();
+    public abstract String getCode();
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.next.injections.ForApplication;
-import quickbeer.android.next.network.utils.ApiKey;
-import quickbeer.android.next.network.utils.NetworkUtils;
-
-@Module
-public final class UtilsModule {
-    @Provides
-    @Singleton
-    public NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
+    @Override
+    public int compareTo(@NonNull SimpleItem another) {
+        return getName().compareTo(another.getName());
     }
 }

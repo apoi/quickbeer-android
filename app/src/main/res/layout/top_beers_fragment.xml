@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quickbeer.android.next.views.TopBeersView
+<quickbeer.android.next.views.TopListView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/beers_view"
     android:orientation="vertical"
@@ -18,4 +18,4 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
 
-</quickbeer.android.next.views.TopBeersView>
+</quickbeer.android.next.views.TopListView>

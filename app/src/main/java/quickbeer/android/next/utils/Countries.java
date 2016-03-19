@@ -22,20 +22,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import quickbeer.android.next.pojo.Country;
+import quickbeer.android.next.pojo.SimpleItem;
 
-public class Countries {
+public class Countries implements SimpleListSource {
 
-    private final Map<Integer, Country> countries = new HashMap<>();
+    private final Map<Integer, SimpleItem> countries = new HashMap<>();
 
     public Countries() {
         initCountries();
     }
 
-    public Country getCountry(int id) {
+    @Override
+    public SimpleItem getItem(int id) {
         return countries.get(id);
     }
 
-    public Collection<Country> getCountries() {
+    @Override
+    public Collection<SimpleItem> getList() {
         return countries.values();
     }
 

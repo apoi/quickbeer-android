@@ -14,7 +14,7 @@
         android:layout_gravity="center_vertical">
 
         <TextView
-            android:id="@+id/country_icon"
+            android:id="@+id/list_item_icon"
             android:layout_width="@dimen/list_item_icon_size"
             android:layout_height="@dimen/list_item_icon_size"
             android:layout_marginTop="@dimen/list_item_icon_margin"
@@ -27,7 +27,7 @@
             android:background="@drawable/score_unrated" />
 
         <TextView
-            android:id="@+id/country_name"
+            android:id="@+id/list_item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"

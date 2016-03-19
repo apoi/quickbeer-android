@@ -27,22 +27,23 @@ import java.util.List;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.CountryListActivity;
+import quickbeer.android.next.activities.StyleListActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.adapters.MenuListAdapter;
 import quickbeer.android.next.views.listitems.ActivityLaunchItem;
 
-public class TopBeersView extends BeerListView {
-    private static final String TAG = TopBeersView.class.getSimpleName();
+public class TopListView extends BeerListView {
+    private static final String TAG = TopListView.class.getSimpleName();
 
     private RecyclerView menuListView;
     private MenuListAdapter menuListAdapter;
     private List<ActivityLaunchItem> activityLaunchItems = new ArrayList<>();
 
-    public TopBeersView(Context context) {
+    public TopListView(Context context) {
         super(context);
     }
 
-    public TopBeersView(Context context, AttributeSet attrs) {
+    public TopListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -52,7 +53,7 @@ public class TopBeersView extends BeerListView {
 
         activityLaunchItems.add(new ActivityLaunchItem("best worldwide", R.drawable.score_unrated, TopBeersActivity.class));
         activityLaunchItems.add(new ActivityLaunchItem("best by country", R.drawable.score_unrated, CountryListActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.score_unrated, CountryListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.score_unrated, StyleListActivity.class));
 
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);

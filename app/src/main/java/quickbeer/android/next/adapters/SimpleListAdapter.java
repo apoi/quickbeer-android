@@ -29,16 +29,16 @@ import java.util.List;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
-import quickbeer.android.next.pojo.Country;
-import quickbeer.android.next.views.listitems.CountryListItemViewHolder;
+import quickbeer.android.next.pojo.SimpleItem;
+import quickbeer.android.next.views.listitems.SimpleListItemViewHolder;
 
-public class CountryListAdapter extends BaseListAdapter<CountryListItemViewHolder> {
-    private static final String TAG = CountryListAdapter.class.getSimpleName();
+public class SimpleListAdapter extends BaseListAdapter<SimpleListItemViewHolder> {
+    private static final String TAG = SimpleListAdapter.class.getSimpleName();
 
-    private final List<Country> sourceList;
-    private final List<Country> adapterList = new ArrayList<>();
+    private final List<SimpleItem> sourceList;
+    private final List<SimpleItem> adapterList = new ArrayList<>();
 
-    public CountryListAdapter(Collection<Country> countries) {
+    public SimpleListAdapter(Collection<SimpleItem> countries) {
         this.sourceList = new ArrayList<>(countries);
         Collections.sort(this.sourceList);
 
@@ -53,9 +53,9 @@ public class CountryListAdapter extends BaseListAdapter<CountryListItemViewHolde
         if (TextUtils.isEmpty(filter)) {
             adapterList.addAll(sourceList);
         } else {
-            for (Country country : sourceList) {
-                if (country.getName().toLowerCase().contains(filter.toLowerCase())) {
-                    adapterList.add(country);
+            for (SimpleItem item : sourceList) {
+                if (item.getName().toLowerCase().contains(filter.toLowerCase())) {
+                    adapterList.add(item);
                 }
             }
         }
@@ -64,13 +64,13 @@ public class CountryListAdapter extends BaseListAdapter<CountryListItemViewHolde
     }
 
     @Override
-    public CountryListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.country_list_item, parent, false);
-        return new CountryListItemViewHolder(v);
+    public SimpleListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false);
+        return new SimpleListItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(CountryListItemViewHolder holder, int position) {
+    public void onBindViewHolder(SimpleListItemViewHolder holder, int position) {
         holder.setItem(adapterList.get(position));
     }
 

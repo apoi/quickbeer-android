@@ -15,23 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.utils;
+package quickbeer.android.next.activities;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 
-import javax.inject.Singleton;
+import quickbeer.android.next.R;
+import quickbeer.android.next.activities.base.FilterActivity;
+import quickbeer.android.next.fragments.StyleListFragment;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.next.injections.ForApplication;
-import quickbeer.android.next.network.utils.ApiKey;
-import quickbeer.android.next.network.utils.NetworkUtils;
+public class StyleListActivity extends FilterActivity {
+    @Override
+    protected Fragment getFragment() {
+        return new StyleListFragment();
+    }
 
-@Module
-public final class UtilsModule {
-    @Provides
-    @Singleton
-    public NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
+    @Override
+    protected String getSearchHint() {
+        return getString(R.string.search_box_hint_filter_styles);
     }
 }
