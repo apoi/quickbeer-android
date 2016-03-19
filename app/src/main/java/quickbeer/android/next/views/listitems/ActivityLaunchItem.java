@@ -29,28 +29,11 @@ public class ActivityLaunchItem {
     private int icon;
     private String text;
     private Class target;
-    private Integer launchType;
-    private String launchKey;
 
     public ActivityLaunchItem(String text, int icon, Class target) {
         this.text = text;
         this.icon = icon;
         this.target = target;
-    }
-
-    public ActivityLaunchItem(String text, int icon, Class target, int launchType) {
-        this.text = text;
-        this.icon = icon;
-        this.target = target;
-        this.launchType = launchType;
-    }
-
-    public ActivityLaunchItem(String text, int icon, Class target, int launchType, String launchKey) {
-        this.text = text;
-        this.icon = icon;
-        this.target = target;
-        this.launchType = launchType;
-        this.launchKey = launchKey;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,15 +58,6 @@ public class ActivityLaunchItem {
 
         private void launchActivity(View view) {
             Intent intent = new Intent(view.getContext(), launchItem.target);
-
-            if (launchItem.launchType != null) {
-                intent.putExtra("launchType", launchItem.launchType);
-            }
-
-            if (launchItem.launchKey != null) {
-                intent.putExtra("launchKey", launchItem.launchKey);
-            }
-
             view.getContext().startActivity(intent);
         }
     }

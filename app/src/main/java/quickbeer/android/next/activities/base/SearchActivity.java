@@ -30,38 +30,19 @@ import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
 
 public abstract class SearchActivity extends SearchBarActivity {
-    private SearchType searchType;
     private String query;
 
     @Inject
     DataLayer.GetBeerSearchQueries getBeerSearchQueries;
-
-    public enum SearchType {
-        BEER_SEARCH,
-        BEST_IN_WORLD,
-        BEST_IN_COUNTRY,
-        BEST_IN_STYLE;
-
-        public static SearchType value(int index) {
-            return values()[index];
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         QuickBeer.getInstance().getGraph().inject(this);
 
         if (savedInstanceState != null) {
-            searchType = SearchType.value(savedInstanceState.getInt("launchType", SearchType.BEER_SEARCH.ordinal()));
             query = savedInstanceState.getString("query");
         } else {
-            searchType = SearchType.value(getIntent().getIntExtra("launchType", SearchType.BEER_SEARCH.ordinal()));
             query = getIntent().getStringExtra("query");
-        }
-
-        if (searchType == SearchType.BEER_SEARCH) {
-            getQueryObservable()
-                    .subscribe(s -> query = s);
         }
 
         super.onCreate(savedInstanceState);
@@ -71,15 +52,14 @@ public abstract class SearchActivity extends SearchBarActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("query", query);
-        outState.putInt("searchType", searchType.ordinal());
     }
 
     public String getQuery() {
         return query;
     }
 
-    public SearchType getSearchType() {
-        return searchType;
+    public void setQuery(String query) {
+        this.query = query;
     }
 
     @Override

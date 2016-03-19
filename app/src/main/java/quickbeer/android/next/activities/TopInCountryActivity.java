@@ -23,14 +23,22 @@ import android.support.v4.app.Fragment;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.activities.base.SearchActivity;
-import quickbeer.android.next.fragments.TopBeersFragment;
+import quickbeer.android.next.fragments.TopInCountryFragment;
 
-public class TopBeersActivity extends SearchActivity {
-    private static final String TAG = TopBeersActivity.class.getSimpleName();
+public class TopInCountryActivity extends SearchActivity {
+    private static final String TAG = TopInCountryActivity.class.getSimpleName();
+
+    private String countryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            countryId = savedInstanceState.getString("countryId");
+        } else {
+            countryId = getIntent().getStringExtra("countryId");
+        }
 
         getQueryObservable().subscribe(
                 query -> {
@@ -46,7 +54,17 @@ public class TopBeersActivity extends SearchActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("countryId", countryId);
+    }
+
+    @Override
     protected Fragment getFragment() {
-        return new TopBeersFragment();
+        return new TopInCountryFragment();
+    }
+
+    public String getCountryId() {
+        return countryId;
     }
 }

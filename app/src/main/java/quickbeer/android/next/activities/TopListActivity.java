@@ -17,36 +17,36 @@
  */
 package quickbeer.android.next.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.activities.base.SearchActivity;
-import quickbeer.android.next.fragments.BeerSearchFragment;
-import rx.Observable;
+import quickbeer.android.next.fragments.TopListFragment;
 
-public class BeerSearchActivity extends SearchActivity {
-    private static final String TAG = BeerSearchActivity.class.getSimpleName();
+public class TopListActivity extends SearchActivity {
+    private static final String TAG = TopListActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set title to reflect the search, update query
-        getQueryObservable()
-                .doOnNext(this::setTitle)
-                .doOnNext(this::setQuery)
-                .subscribe();
+        getQueryObservable().subscribe(
+                query -> {
+                    Log.d(TAG, "query(" + query + ")");
+
+                    Intent intent = new Intent(this, BeerSearchActivity.class);
+                    intent.putExtra("query", query);
+                    startActivity(intent);
+                },
+                throwable -> {
+                    Log.e(TAG, "error", throwable);
+                });
     }
 
     @Override
     protected Fragment getFragment() {
-        return new BeerSearchFragment();
-    }
-
-    @Override
-    public Observable<String> getQueryObservable() {
-        // Free search always starts with a submitted query
-        return super.getQueryObservable()
-                .startWith(getQuery());
+        return new TopListFragment();
     }
 }

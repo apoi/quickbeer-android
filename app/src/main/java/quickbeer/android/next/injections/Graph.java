@@ -31,6 +31,8 @@ import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 import quickbeer.android.next.fragments.MainFragment;
 import quickbeer.android.next.fragments.TopBeersFragment;
+import quickbeer.android.next.fragments.TopInCountryFragment;
+import quickbeer.android.next.fragments.TopListFragment;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.utils.UtilsModule;
 import quickbeer.android.next.viewmodels.ViewModelModule;
@@ -56,7 +58,9 @@ public interface Graph {
     void inject(BeerListFragment beerListFragment);
     void inject(BeerSearchFragment beerSearchFragment);
     void inject(BeerDetailsFragment beerDetailsFragment);
+    void inject(TopListFragment topListFragment);
     void inject(TopBeersFragment topBeersFragment);
+    void inject(TopInCountryFragment topInCountryFragment);
 
     void inject(CountryListView countryListView);
 

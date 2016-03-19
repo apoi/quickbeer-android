@@ -30,9 +30,9 @@ import java.util.List;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Country;
-import quickbeer.android.next.views.listitems.CountryListItem;
+import quickbeer.android.next.views.listitems.CountryListItemViewHolder;
 
-public class CountryListAdapter extends BaseListAdapter<CountryListItem.ViewHolder> {
+public class CountryListAdapter extends BaseListAdapter<CountryListItemViewHolder> {
     private static final String TAG = CountryListAdapter.class.getSimpleName();
 
     private final List<Country> sourceList;
@@ -64,13 +64,13 @@ public class CountryListAdapter extends BaseListAdapter<CountryListItem.ViewHold
     }
 
     @Override
-    public CountryListItem.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CountryListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.country_list_item, parent, false);
-        return new CountryListItem.ViewHolder(v);
+        return new CountryListItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(CountryListItem.ViewHolder holder, int position) {
+    public void onBindViewHolder(CountryListItemViewHolder holder, int position) {
         holder.setItem(adapterList.get(position));
     }
 

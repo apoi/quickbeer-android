@@ -22,17 +22,16 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
+import quickbeer.android.next.activities.TopInCountryActivity;
 import quickbeer.android.next.data.DataLayer;
 
-public class BeerSearchFragment extends BeerListFragment {
-    private static final String TAG = BeerSearchFragment.class.getSimpleName();
+public class TopInCountryFragment extends BeerListFragment {
+    private static final String TAG = TopInCountryFragment.class.getSimpleName();
 
     @Inject
-    DataLayer.GetBeerSearch getBeerSearch;
+    DataLayer.GetTopInCountry getTopInCountry;
 
     @Override
     public int getLayout() {
@@ -50,15 +49,7 @@ public class BeerSearchFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((BeerSearchActivity) getActivity())
-                .getQueryObservable()
-                .subscribe(
-                        query -> {
-                            Log.d(TAG, "query(" + query + ")");
-                            setSourceObservable(getBeerSearch.call(query));
-                        },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        });
+        String countryId = ((TopInCountryActivity) getActivity()).getCountryId();
+        setSourceObservable(getTopInCountry.call(countryId));
     }
 }

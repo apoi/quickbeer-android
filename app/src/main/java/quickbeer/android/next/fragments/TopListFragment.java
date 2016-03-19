@@ -22,43 +22,28 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.data.DataLayer;
 
-public class BeerSearchFragment extends BeerListFragment {
-    private static final String TAG = BeerSearchFragment.class.getSimpleName();
-
+public class TopListFragment extends BeerListFragment {
     @Inject
-    DataLayer.GetBeerSearch getBeerSearch;
+    DataLayer.GetTopBeers getTopBeers;
 
     @Override
     public int getLayout() {
-        return R.layout.beer_list_fragment;
+        return R.layout.top_beers_fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         QuickBeer.getInstance().getGraph().inject(this);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        ((BeerSearchActivity) getActivity())
-                .getQueryObservable()
-                .subscribe(
-                        query -> {
-                            Log.d(TAG, "query(" + query + ")");
-                            setSourceObservable(getBeerSearch.call(query));
-                        },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        });
+        setSourceObservable(getTopBeers.call());
     }
 }

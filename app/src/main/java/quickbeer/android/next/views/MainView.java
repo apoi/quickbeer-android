@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.TopBeersActivity;
+import quickbeer.android.next.activities.TopListActivity;
 import quickbeer.android.next.adapters.MenuListAdapter;
 import quickbeer.android.next.views.listitems.ActivityLaunchItem;
 
@@ -49,10 +49,10 @@ public class MainView extends BeerListView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        activityLaunchItems.add(new ActivityLaunchItem("search beers", R.drawable.score_unrated, TopBeersActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("best beers", R.drawable.score_unrated, TopBeersActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("brewers", R.drawable.score_unrated, TopBeersActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("scan barcode", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("search beers", R.drawable.score_unrated, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best beers", R.drawable.score_unrated, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("brewers", R.drawable.score_unrated, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("scan barcode", R.drawable.score_unrated, TopListActivity.class));
 
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);

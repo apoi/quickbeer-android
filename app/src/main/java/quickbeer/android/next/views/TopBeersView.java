@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.activities.CountryListActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.adapters.MenuListAdapter;
@@ -51,14 +50,9 @@ public class TopBeersView extends BeerListView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        activityLaunchItems.add(new ActivityLaunchItem(
-                "best worldwide", R.drawable.score_unrated, BeerSearchActivity.class,
-                BeerSearchActivity.SearchType.BEST_IN_WORLD.ordinal(), "World"));
-
-        activityLaunchItems.add(new ActivityLaunchItem(
-                "best by country", R.drawable.score_unrated, CountryListActivity.class));
-
-        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best worldwide", R.drawable.score_unrated, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best by country", R.drawable.score_unrated, CountryListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.score_unrated, CountryListActivity.class));
 
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);

@@ -38,6 +38,7 @@ import java.util.List;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
+import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -89,7 +90,8 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
 
     public Observable<String> getQueryObservable() {
         return querySubject
-                .asObservable();
+                .asObservable()
+                .filter(new NullFilter());
     }
 
     private void setupSearch() {
