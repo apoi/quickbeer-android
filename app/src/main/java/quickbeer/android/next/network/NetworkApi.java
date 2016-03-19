@@ -66,6 +66,11 @@ public class NetworkApi {
                 .topBeers(params);
     }
 
+    public Observable<List<Beer>> getBeersInStyle(Map<String, String> params) {
+        return rateBeerService
+                .beersInStyle(params);
+    }
+
     public Observable<List<Review>> getReviews(Map<String, String> params) {
         return rateBeerService
                 .getReviews(params);

@@ -33,6 +33,7 @@ public interface RateBeerService {
     Uri SEARCH  = Uri.parse("__search");
     Uri TOP50   = Uri.parse("__top50");
     Uri COUNTRY = Uri.parse("__country");
+    Uri STYLE   = Uri.parse("__style");
     Uri REVIEWS = Uri.parse("__reviews");
 
     @GET("/json/bff.asp")
@@ -43,6 +44,9 @@ public interface RateBeerService {
 
     @GET("/json/tb.asp")
     Observable<List<Beer>> topBeers(@QueryMap Map<String, String> params);
+
+    @GET("/json/style.asp")
+    Observable<List<Beer>> beersInStyle(@QueryMap Map<String, String> params);
 
     @GET("/json/gr.asp")
     Observable<List<Review>> getReviews(@QueryMap Map<String, String> params);

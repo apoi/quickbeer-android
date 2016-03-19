@@ -75,6 +75,11 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetBeersInStyle provideGetBeersInStyle(DataLayer dataLayer) {
+        return dataLayer::getBeersInStyle;
+    }
+
+    @Provides
     public DataLayer.GetReview provideGetReview(DataLayer dataLayer) {
         return dataLayer::getReview;
     }
@@ -108,6 +113,7 @@ public final class DataStoreModule {
                                                     @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
                                                     @Named("topBeersFetcher") Fetcher topBeersFetcher,
                                                     @Named("topInCountryFetcher") Fetcher topInCountryFetcher,
+                                                    @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
                                                     @Named("reviewFetcher") Fetcher reviewFetcher,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
@@ -118,6 +124,7 @@ public final class DataStoreModule {
                 beerSearchFetcher,
                 topBeersFetcher,
                 topInCountryFetcher,
+                beersInStyleFetcher,
                 reviewFetcher,
                 networkRequestStatusStore,
                 beerStore,

@@ -301,6 +301,56 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    //// BEERS IN STYLE
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getBeersInStyleResultStream(@NonNull final String styleId) {
+        Log.v(TAG, "getBeersInStyleResultStream");
+
+        final String queryId = beerSearchStore.getQueryId(RateBeerService.STYLE, styleId);
+        final Uri uri = beerSearchStore.getUriForId(queryId);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<BeerSearch> beerSearchObservable =
+                beerSearchStore.getStream(queryId);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, beerSearchObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getBeersInStyle(@NonNull final String styleId) {
+        Log.v(TAG, "getBeersInStyle");
+
+        // Trigger a fetch only if there was no cached result
+        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.STYLE, styleId))
+                .first()
+                .filter(results -> results == null || results.getItems().size() == 0)
+                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                .subscribe(results -> fetchBeersInStyle(styleId));
+
+        return getBeersInStyleResultStream(styleId);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeersInStyle(@NonNull final String styleId) {
+        Log.v(TAG, "fetchAndGetBeersInStyle");
+
+        fetchBeersInStyle(styleId);
+        return getBeersInStyleResultStream(styleId);
+    }
+
+    private void fetchBeersInStyle(@NonNull final String styleId) {
+        Log.v(TAG, "fetchBeersInStyle");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.STYLE.toString());
+        intent.putExtra("styleId", styleId);
+        context.startService(intent);
+    }
+
     //// REVIEWS
 
     @NonNull
@@ -383,6 +433,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetTopInCountry {
         @NonNull
         Observable<DataStreamNotification<BeerSearch>> call(@NonNull String countryId);
+    }
+
+    public interface GetBeersInStyle {
+        @NonNull
+        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String styleId);
     }
 
     public interface GetReview {
