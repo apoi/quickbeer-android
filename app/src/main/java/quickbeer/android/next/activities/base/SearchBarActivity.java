@@ -91,7 +91,8 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
     public Observable<String> getQueryObservable() {
         return querySubject
                 .asObservable()
-                .filter(new NullFilter());
+                .filter(new NullFilter())
+                .distinctUntilChanged();
     }
 
     private void setupSearch() {
@@ -141,9 +142,13 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
             public void onSearchViewShown() {
                 Log.d(TAG, "onSearchViewShown");
 
+                getQueryObservable()
+                        .first()
+                        .subscribe(query -> searchView.setQuery(query, false));
+
                 if (contentOverlayEnabled()) {
                     Animation fadeIn = new AlphaAnimation(0.0f, 0.5f);
-                    fadeIn.setDuration(100);
+                    fadeIn.setDuration(250);
                     fadeIn.setFillAfter(true);
 
                     searchView.setAdapter(adapter);
