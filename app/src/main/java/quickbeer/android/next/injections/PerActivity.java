@@ -15,32 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next;
+package quickbeer.android.next.injections;
 
-import android.app.Application;
-import android.support.annotation.NonNull;
+import java.lang.annotation.Retention;
 
-import quickbeer.android.next.injections.ApplicationGraph;
+import javax.inject.Scope;
 
-public class QuickBeer extends Application {
-    private static QuickBeer instance;
-    private ApplicationGraph applicationGraph;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-        applicationGraph = ApplicationGraph.Initializer.init(this);
-        applicationGraph.inject(this);
-    }
-
-    @NonNull
-    public static QuickBeer getInstance() {
-        return instance;
-    }
-
-    @NonNull
-    public ApplicationGraph getGraph() {
-        return applicationGraph;
-    }
+@Scope
+@Retention(RUNTIME)
+public @interface PerActivity {
 }

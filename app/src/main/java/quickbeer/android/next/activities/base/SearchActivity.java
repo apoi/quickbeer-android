@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
 import rx.Observable;
@@ -37,8 +36,6 @@ public abstract class SearchActivity extends SearchBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        QuickBeer.getInstance().getGraph().inject(this);
-
         if (savedInstanceState != null) {
             query = savedInstanceState.getString("query");
         } else {
@@ -46,6 +43,12 @@ public abstract class SearchActivity extends SearchBarActivity {
         }
 
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void inject() {
+        super.inject();
+        getGraph().inject(this);
     }
 
     @Override

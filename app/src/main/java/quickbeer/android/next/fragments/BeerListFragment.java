@@ -28,9 +28,9 @@ import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
@@ -62,7 +62,7 @@ public class BeerListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        QuickBeer.getInstance().getGraph().inject(this);
+        ((BaseActivity) getActivity()).getGraph().inject(this);
     }
 
     @Override

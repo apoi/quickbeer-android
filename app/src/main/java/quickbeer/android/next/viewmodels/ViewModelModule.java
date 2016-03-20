@@ -20,11 +20,18 @@ package quickbeer.android.next.viewmodels;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.next.data.DataLayer.GetBeer;
+import quickbeer.android.next.injections.PerActivity;
 
 @Module
 public final class ViewModelModule {
     @Provides
     public BeerListViewModel provideBeersViewModel(GetBeer getBeer) {
         return new BeerListViewModel(getBeer);
+    }
+
+    @Provides
+    @PerActivity
+    public ProgressIndicatorViewModel provideProgressIndicatorViewModel() {
+        return new ProgressIndicatorViewModel();
     }
 }

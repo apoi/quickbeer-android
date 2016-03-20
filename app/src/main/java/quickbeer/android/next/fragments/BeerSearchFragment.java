@@ -23,9 +23,9 @@ import android.view.View;
 import javax.inject.Inject;
 
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerSearchActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 
 public class BeerSearchFragment extends BeerListFragment {
@@ -43,7 +43,7 @@ public class BeerSearchFragment extends BeerListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        QuickBeer.getInstance().getGraph().inject(this);
+        ((BaseActivity) getActivity()).getGraph().inject(this);
     }
 
     @Override

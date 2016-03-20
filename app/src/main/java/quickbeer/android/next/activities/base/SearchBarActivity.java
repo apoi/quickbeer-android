@@ -22,7 +22,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,15 +35,18 @@ import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
 import quickbeer.android.next.rx.NullFilter;
+import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.next.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public abstract class SearchBarActivity extends AppCompatActivity implements
+public abstract class SearchBarActivity extends BaseActivity implements
         NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = SearchBarActivity.class.getSimpleName();
@@ -52,9 +54,11 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
     private View searchViewOverlay;
-    private ProgressIndicatorBar progressIndicatorBar;
 
     private PublishSubject<String> querySubject = PublishSubject.create();
+
+    @Inject
+    ProgressIndicatorViewModel progressIndicatorViewModel;
 
     @Override
     protected void  onCreate(Bundle savedInstanceState) {
@@ -75,9 +79,16 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
                     .commit();
         }
 
-        this.progressIndicatorBar = (ProgressIndicatorBar) findViewById(R.id.progress_indicator_bar);
+        ((ProgressIndicatorBar) findViewById(R.id.progress_indicator_bar))
+                .setViewModel(progressIndicatorViewModel);
 
         setupSearch();
+    }
+
+    @Override
+    protected void inject() {
+        super.inject();
+        getGraph().inject(this);
     }
 
     @Override

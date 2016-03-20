@@ -39,20 +39,20 @@ public final class ApplicationModule {
 
     private final Application application;
 
-    ApplicationModule(Application application) {
+    public ApplicationModule(Application application) {
         this.application = application;
     }
 
     @Provides
     @Singleton
     @ForApplication
-    Context providesApplicationContext() {
+    public Context providesApplicationContext() {
         return application;
     }
 
     @Provides
     @Singleton
-    Application providesApplication() {
+    public Application providesApplication() {
         return application;
     }
 

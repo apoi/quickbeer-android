@@ -25,9 +25,9 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.viewmodels.ReviewListViewModel;
@@ -55,7 +55,7 @@ public class BeerDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        QuickBeer.getInstance().getGraph().inject(this);
+        ((BaseActivity) getActivity()).getGraph().inject(this);
     }
 
     @Override

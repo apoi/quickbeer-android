@@ -17,15 +17,14 @@
  */
 package quickbeer.android.next.injections;
 
-import android.app.Application;
-
-import javax.inject.Singleton;
+import android.app.Activity;
 
 import dagger.Component;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.activities.base.SearchActivity;
-import quickbeer.android.next.data.DataStoreModule;
+import quickbeer.android.next.activities.base.SearchBarActivity;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
@@ -34,24 +33,20 @@ import quickbeer.android.next.fragments.BeersInStyleFragment;
 import quickbeer.android.next.fragments.MainFragment;
 import quickbeer.android.next.fragments.TopBeersFragment;
 import quickbeer.android.next.fragments.TopListFragment;
-import quickbeer.android.next.network.NetworkService;
-import quickbeer.android.next.utils.UtilsModule;
 import quickbeer.android.next.viewmodels.ViewModelModule;
 
-@Singleton
-@Component(modules = {
-        ApplicationModule.class,
-        UtilsModule.class,
-        DataStoreModule.class,
-        ViewModelModule.class,
-        InstrumentationModule.class
-})
-public interface Graph {
-
-    void inject(QuickBeer quickBeer);
-    void inject(NetworkService networkService);
-
-    void inject(SearchActivity searchActivityBase);
+@PerActivity
+@Component(
+        dependencies = ApplicationGraph.class,
+        modules = {
+                ActivityModule.class,
+                ViewModelModule.class
+        }
+)
+public interface ActivityGraph {
+    void inject(BaseActivity baseActivity);
+    void inject(SearchBarActivity searchBarActivity);
+    void inject(SearchActivity searchActivity);
     void inject(BeerDetailsActivity beerDetailsActivity);
 
     void inject(MainFragment mainFragment);
@@ -64,9 +59,9 @@ public interface Graph {
     void inject(BeersInStyleFragment beersInStyleFragment);
 
     final class Initializer {
-        public static Graph init(Application application) {
-            return DaggerGraph.builder()
-                    .applicationModule(new ApplicationModule(application))
+        public static ActivityGraph init(Activity activity) {
+            return DaggerActivityGraph.builder()
+                    .applicationGraph(QuickBeer.getInstance().getGraph())
                     .build();
         }
     }

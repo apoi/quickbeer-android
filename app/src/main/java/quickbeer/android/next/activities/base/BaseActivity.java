@@ -15,32 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next;
+package quickbeer.android.next.activities.base;
 
-import android.app.Application;
-import android.support.annotation.NonNull;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 
-import quickbeer.android.next.injections.ApplicationGraph;
+import quickbeer.android.next.injections.ActivityGraph;
 
-public class QuickBeer extends Application {
-    private static QuickBeer instance;
-    private ApplicationGraph applicationGraph;
+public class BaseActivity extends AppCompatActivity {
+    private ActivityGraph activityGraph;
 
     @Override
-    public void onCreate() {
-        super.onCreate();
-        instance = this;
-        applicationGraph = ApplicationGraph.Initializer.init(this);
-        applicationGraph.inject(this);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        activityGraph = ActivityGraph.Initializer.init(this);
+        inject();
     }
 
-    @NonNull
-    public static QuickBeer getInstance() {
-        return instance;
+    public ActivityGraph getGraph() {
+        return activityGraph;
     }
 
-    @NonNull
-    public ApplicationGraph getGraph() {
-        return applicationGraph;
+    protected void inject() {
+        activityGraph.inject(this);
     }
 }

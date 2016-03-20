@@ -25,7 +25,6 @@ import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
@@ -42,8 +41,6 @@ public class BeerDetailsActivity extends SearchActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        QuickBeer.getInstance().getGraph().inject(this);
 
         if (savedInstanceState != null) {
             beerId = savedInstanceState.getInt("beerId");
@@ -74,6 +71,12 @@ public class BeerDetailsActivity extends SearchActivity {
                 throwable -> {
                     Log.e(TAG, "error in query", throwable);
                 });
+    }
+
+    @Override
+    protected void inject() {
+        super.inject();
+        getGraph().inject(this);
     }
 
     @Override

@@ -22,9 +22,9 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeersInStyleActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 
 public class BeersInStyleFragment extends BeerListFragment {
@@ -42,7 +42,7 @@ public class BeersInStyleFragment extends BeerListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        QuickBeer.getInstance().getGraph().inject(this);
+        ((BaseActivity) getActivity()).getGraph().inject(this);
     }
 
     @Override
