@@ -40,7 +40,7 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
 import quickbeer.android.next.rx.NullFilter;
-import quickbeer.android.next.views.progressindicator.ProgressIndicatorBar;
+import quickbeer.android.next.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 

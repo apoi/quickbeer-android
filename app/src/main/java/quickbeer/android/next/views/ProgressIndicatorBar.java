@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.views.progressindicator;
+package quickbeer.android.next.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -29,7 +29,8 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.views.progressindicator.ProgressIndicatorController.Status;
+import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
+import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel.Status;
 
 public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_SCROLL_DURATION = 1200;
@@ -39,7 +40,6 @@ public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_END_FADE_DURATION = 300;
 
     private View progressBar;
-
     private Status nextStatus = Status.IDLE;
     private float progress = 0;
 
@@ -71,17 +71,13 @@ public class ProgressIndicatorBar extends FrameLayout {
         progressBar = new View(getContext());
         progressBar.setBackgroundColor(getResources().getColor(R.color.orange));
         progressBar.setLayoutParams(params);
+        progressBar.setVisibility(INVISIBLE);
 
         addView(progressBar);
+    }
 
-        progressBar.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                progressBar.getViewTreeObserver().removeOnPreDrawListener(this);
-                animateScroller();
-                return true;
-            }
-        });
+    public void setViewModel(ProgressIndicatorViewModel viewModel) {
+
     }
 
     public void setProgress(Status status, float progress) {
@@ -95,6 +91,8 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void applyNextStatus() {
+        progressBar.setVisibility(VISIBLE);
+
         switch (nextStatus) {
             case INDEFINITE:
                 animateScroller();
