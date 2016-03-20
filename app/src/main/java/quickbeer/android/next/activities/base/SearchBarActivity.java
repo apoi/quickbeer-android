@@ -32,6 +32,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 
 import java.util.List;
 
@@ -138,12 +139,11 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
         });
 
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
-            @Override public void onSearchViewAboutToShow() {}
             @Override public void onSearchViewAboutToClose() {}
 
             @Override
-            public void onSearchViewShown() {
-                Log.d(TAG, "onSearchViewShown");
+            public void onSearchViewAboutToShow() {
+                Log.d(TAG, "onSearchViewAboutToShow");
 
                 getQueryObservable()
                         .first()
@@ -151,13 +151,19 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
 
                 if (contentOverlayEnabled()) {
                     Animation fadeIn = new AlphaAnimation(0.0f, 0.5f);
-                    fadeIn.setDuration(250);
+                    fadeIn.setDuration(AnimationUtil.ANIMATION_DURATION_MEDIUM);
                     fadeIn.setFillAfter(true);
 
-                    searchView.setAdapter(adapter);
                     searchViewOverlay.setVisibility(View.VISIBLE);
                     searchViewOverlay.startAnimation(fadeIn);
                 }
+            }
+
+            @Override
+            public void onSearchViewShown() {
+                Log.d(TAG, "onSearchViewShown");
+
+                searchView.setAdapter(adapter);
             }
 
             @Override
