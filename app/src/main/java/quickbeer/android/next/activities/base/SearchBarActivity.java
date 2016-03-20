@@ -138,6 +138,9 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
         });
 
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override public void onSearchViewAboutToShow() {}
+            @Override public void onSearchViewAboutToClose() {}
+
             @Override
             public void onSearchViewShown() {
                 Log.d(TAG, "onSearchViewShown");
