@@ -20,7 +20,8 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <quickbeer.android.next.views.ProgressIndicatorBar
+        <quickbeer.android.next.views.progressindicator.ProgressIndicatorBar
+            android:id="@+id/progress_indicator_bar"
             android:layout_width="match_parent"
             android:layout_height="1dp" />
 

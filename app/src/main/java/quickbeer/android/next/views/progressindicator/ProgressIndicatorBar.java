@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.views;
+package quickbeer.android.next.views.progressindicator;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -29,23 +29,19 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.views.progressindicator.ProgressIndicatorController.Status;
 
 public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_SCROLL_DURATION = 1200;
+    private static final int ANIMATION_PROGRESS_DURATION = 400;
     private static final int ANIMATION_END_SCALE_DURATION = 400;
     private static final int ANIMATION_END_PAUSE_DURATION = 300;
     private static final int ANIMATION_END_FADE_DURATION = 300;
 
-    public enum Status {
-        IDLE,
-        INDEFINITE,
-        LOADING;
-    }
-
     private View progressBar;
-    private float loadingProgress = 0;
 
-    private int counter = 0;
+    private Status nextStatus = Status.IDLE;
+    private float progress = 0;
 
     public ProgressIndicatorBar(Context context) {
         super(context);
@@ -88,21 +84,28 @@ public class ProgressIndicatorBar extends FrameLayout {
         });
     }
 
-    public void setStatus(Status status) {
-        switch (status) {
-            case IDLE:
-                animateToEnd();
-                break;
+    public void setProgress(Status status, float progress) {
+        this.nextStatus = status;
+        this.progress = progress;
+
+        // Indefinite status waits until next repeat before applying new status
+        if (status != Status.INDEFINITE) {
+            applyNextStatus();
+        }
+    }
+
+    private void applyNextStatus() {
+        switch (nextStatus) {
             case INDEFINITE:
                 animateScroller();
                 break;
             case LOADING:
+                animateToProgress(progress);
+                break;
+            case IDLE:
+                animateToEnd();
                 break;
         }
-    }
-
-    public void setProgress(float progress) {
-
     }
 
     private void animateScroller() {
@@ -114,19 +117,13 @@ public class ProgressIndicatorBar extends FrameLayout {
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(Animation.INFINITE);
         animation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-            }
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationEnd(Animation animation) {}
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                if (counter++ == 1) {
-                    animateToEnd();
+                if (nextStatus != Status.INDEFINITE) {
+                    applyNextStatus();
                 }
             }
         });
@@ -135,7 +132,24 @@ public class ProgressIndicatorBar extends FrameLayout {
         progressBar.startAnimation(animation);
     }
 
+    private void animateToProgress(float progress) {
+        float newScale = (getWidth() * progress / progressBar.getWidth()) + 1;
+
+        ScaleAnimation animation = new ScaleAnimation(1, newScale,
+                progressBar.getHeight(), progressBar.getHeight());
+        animation.setDuration(ANIMATION_PROGRESS_DURATION);
+        animation.setFillAfter(true);
+
+        progressBar.clearAnimation();
+        progressBar.startAnimation(animation);
+    }
+
     private void animateToEnd() {
+        if (progressBar.getAnimation() == null) {
+            // Non-active progress bar doesn't need end animation
+            return;
+        }
+
         ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / progressBar.getWidth()) + 1,
                 progressBar.getHeight(), progressBar.getHeight());
         animation.setDuration(ANIMATION_END_SCALE_DURATION);

@@ -40,6 +40,7 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
 import quickbeer.android.next.rx.NullFilter;
+import quickbeer.android.next.views.progressindicator.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -51,6 +52,7 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
     private View searchViewOverlay;
+    private ProgressIndicatorBar progressIndicatorBar;
 
     private PublishSubject<String> querySubject = PublishSubject.create();
 
@@ -72,6 +74,8 @@ public abstract class SearchBarActivity extends AppCompatActivity implements
                     .add(R.id.container, getFragment())
                     .commit();
         }
+
+        this.progressIndicatorBar = (ProgressIndicatorBar) findViewById(R.id.progress_indicator_bar);
 
         setupSearch();
     }
