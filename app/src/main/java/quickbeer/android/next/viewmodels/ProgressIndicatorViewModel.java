@@ -42,19 +42,29 @@ public class ProgressIndicatorViewModel {
     private final BehaviorSubject<Pair<Status, Float>> progressSubject = BehaviorSubject.create();
 
     public ProgressIndicatorViewModel() {
+        sourceObservables.onNext(new ArrayList<>());
+        subscribe();
     }
 
-    public void susbcribe() {
+    public void subscribe() {
         if (subscription != null) {
             unsubscribe();
         }
 
         subscription = sourceObservables.asObservable()
+                .doOnNext(observableList -> Log.d(TAG, "Aggregating " + observableList.size()))
                 .flatMap(observableList -> {
-                    return Observable.merge(observableList)
-                            .reduce(new Pair<>(0f, 0), (aggregate, progress) -> {
-                                return new Pair<>(aggregate.first + progress, aggregate.second + 1);
-                            });
+                    return Observable.combineLatest(observableList, args -> {
+                        float progress = 0.0f;
+                        int count = 0;
+
+                        for (Object o : args) {
+                            progress += (Float) o;
+                            count++;
+                        }
+
+                        return new Pair<>(progress, count);
+                    });
                 })
                 .doOnNext(aggregate -> {
                     Log.d(TAG, "Aggregate progress: " +
@@ -67,14 +77,17 @@ public class ProgressIndicatorViewModel {
 
                     if (count == 0) {
                         // Nothing in progress, though shouldn't happen
-                        return new Pair<Status, Float>(Status.IDLE, 0f);
+                        return new Pair<Status, Float>(Status.IDLE, 0.0f);
                     } else if (count == 1 && progress < 1) {
                         // One request in who knows what state. We don't receive progress
                         // notifications, so we can't show progress for a single request.
-                        return new Pair<Status, Float>(Status.INDEFINITE, 0f);
-                    } else {
+                        return new Pair<Status, Float>(Status.INDEFINITE, 0.0f);
+                    } else if (progress < 1) {
                         // Multiple requests or done, we can actually show progress
                         return new Pair<Status, Float>(Status.LOADING, progress);
+                    } else {
+                        // Finished, back to idle
+                        return new Pair<Status, Float>(Status.IDLE, 1.0f);
                     }
                 })
                 .doOnNext(progress -> {
@@ -97,11 +110,12 @@ public class ProgressIndicatorViewModel {
         return progressSubject.asObservable();
     }
 
-    public void addSourceObservable(Observable<DataStreamNotification> observable) {
+    public void addSourceObservable(Observable<? extends DataStreamNotification> observable) {
         Log.d(TAG, "addDataStreamNotificationObservable");
 
         List<Observable<Float>> list = sourceObservables.getValue();
         list.add(observable.map(this::toProgress));
+
         sourceObservables.onNext(list);
     }
 

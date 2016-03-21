@@ -28,11 +28,15 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel.Status;
+import rx.android.schedulers.AndroidSchedulers;
 
 public class ProgressIndicatorBar extends FrameLayout {
+    private static final String TAG = ProgressIndicatorBar.class.getSimpleName();
+
     private static final int ANIMATION_SCROLL_DURATION = 1200;
     private static final int ANIMATION_PROGRESS_DURATION = 400;
     private static final int ANIMATION_END_SCALE_DURATION = 400;
@@ -40,6 +44,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_END_FADE_DURATION = 300;
 
     private View progressBar;
+    private Status currentStatus = Status.IDLE;
     private Status nextStatus = Status.IDLE;
     private float progress = 0;
 
@@ -74,24 +79,36 @@ public class ProgressIndicatorBar extends FrameLayout {
         progressBar.setVisibility(INVISIBLE);
 
         addView(progressBar);
+        applyNextStatus();
     }
 
-    public void setViewModel(ProgressIndicatorViewModel viewModel) {
-
+    public void setViewModel(ProgressIndicatorViewModel progressViewModel) {
+        progressViewModel
+                .getProgress()
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(progress -> setProgress(progress.first, progress.second));
     }
 
     public void setProgress(Status status, float progress) {
+        Log.v(TAG, "New progress: " + status + ", " + progress);
+
         this.nextStatus = status;
         this.progress = progress;
 
         // Indefinite status waits until next repeat before applying new status
-        if (status != Status.INDEFINITE) {
+        if (currentStatus != Status.INDEFINITE) {
             applyNextStatus();
         }
     }
 
     private void applyNextStatus() {
-        progressBar.setVisibility(VISIBLE);
+        // Initialisation may not be finished yet
+        if (progressBar == null) {
+            return;
+        }
+
+        currentStatus = nextStatus;
 
         switch (nextStatus) {
             case INDEFINITE:
@@ -126,6 +143,7 @@ public class ProgressIndicatorBar extends FrameLayout {
             }
         });
 
+        progressBar.setVisibility(VISIBLE);
         progressBar.clearAnimation();
         progressBar.startAnimation(animation);
     }
@@ -138,6 +156,7 @@ public class ProgressIndicatorBar extends FrameLayout {
         animation.setDuration(ANIMATION_PROGRESS_DURATION);
         animation.setFillAfter(true);
 
+        progressBar.setVisibility(VISIBLE);
         progressBar.clearAnimation();
         progressBar.startAnimation(animation);
     }
@@ -162,6 +181,7 @@ public class ProgressIndicatorBar extends FrameLayout {
             }
         });
 
+        progressBar.setVisibility(VISIBLE);
         progressBar.clearAnimation();
         progressBar.startAnimation(animation);
     }

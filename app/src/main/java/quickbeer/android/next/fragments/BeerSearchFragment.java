@@ -22,17 +22,24 @@ import android.view.View;
 
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
+import rx.Observable;
 
 public class BeerSearchFragment extends BeerListFragment {
     private static final String TAG = BeerSearchFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
+
+    @Inject
+    ProgressIndicatorViewModel progressIndicatorViewModel;
 
     @Override
     public int getLayout() {
@@ -55,7 +62,12 @@ public class BeerSearchFragment extends BeerListFragment {
                 .subscribe(
                         query -> {
                             Log.d(TAG, "query(" + query + ")");
-                            setSourceObservable(getBeerSearch.call(query));
+
+                            Observable<DataStreamNotification<BeerSearch>> observable =
+                                    getBeerSearch.call(query).publish().refCount();
+
+                            setSourceObservable(observable);
+                            progressIndicatorViewModel.addSourceObservable(observable);
                         },
                         throwable -> {
                             Log.e(TAG, "error", throwable);
