@@ -33,6 +33,7 @@ import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.fragments.base.BaseFragment;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
+import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
 import rx.Subscription;
@@ -46,16 +47,25 @@ public class BeerListFragment extends BaseFragment {
     @Inject
     BeerListViewModel beerListViewModel;
 
+    @Inject
+    ProgressIndicatorViewModel progressIndicatorViewModel;
+
     public int getLayout() {
         return R.layout.beer_list_fragment;
     }
 
     public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        Observable<DataStreamNotification<BeerSearch>> observable =
+                sourceObservable.publish().refCount();
+
         // Unsubscribe old source before setting the new one, otherwise the subscribe
         // call assumes the old subscription to still be valid.
         beerListViewModel.unsubscribeFromDataStore();
         beerListViewModel.setSourceObservable(sourceObservable);
         beerListViewModel.subscribeToDataStore();
+
+        // Hook up the search observable status to progress indicator
+        progressIndicatorViewModel.addSourceObservable(observable);
     }
 
     @Override
