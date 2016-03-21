@@ -132,12 +132,14 @@ public class ProgressIndicatorBar extends FrameLayout {
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(Animation.INFINITE);
         animation.setAnimationListener(new Animation.AnimationListener() {
+            private int repeatCounter = 0;
+
             @Override public void onAnimationStart(Animation animation) {}
             @Override public void onAnimationEnd(Animation animation) {}
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                if (nextStatus != Status.INDEFINITE) {
+                if (++repeatCounter % 2 == 0 && nextStatus != Status.INDEFINITE) {
                     applyNextStatus();
                 }
             }
