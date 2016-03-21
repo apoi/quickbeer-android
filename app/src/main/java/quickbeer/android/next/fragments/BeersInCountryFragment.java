@@ -24,7 +24,6 @@ import javax.inject.Inject;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeersInCountryActivity;
-import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 
 public class BeersInCountryFragment extends BeerListFragment {
@@ -41,8 +40,7 @@ public class BeersInCountryFragment extends BeerListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((BaseActivity) getActivity()).getGraph().inject(this);
+        getGraph().inject(this);
     }
 
     @Override

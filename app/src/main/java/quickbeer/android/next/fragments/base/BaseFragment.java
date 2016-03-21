@@ -15,34 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.fragments;
+package quickbeer.android.next.fragments.base;
 
-import android.os.Bundle;
-import android.view.View;
+import android.support.v4.app.Fragment;
 
-import javax.inject.Inject;
+import quickbeer.android.next.activities.base.BaseActivity;
+import quickbeer.android.next.injections.ActivityGraph;
 
-import quickbeer.android.next.R;
-import quickbeer.android.next.data.DataLayer;
-
-public class TopListFragment extends BeerListFragment {
-    @Inject
-    DataLayer.GetTopBeers getTopBeers;
-
-    @Override
-    public int getLayout() {
-        return R.layout.top_list_fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setSourceObservable(getTopBeers.call());
+public abstract class BaseFragment extends Fragment {
+    protected ActivityGraph getGraph() {
+        return ((BaseActivity) getActivity()).getGraph();
     }
 }

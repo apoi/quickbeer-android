@@ -19,7 +19,7 @@ package quickbeer.android.next.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,14 +30,14 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
-import quickbeer.android.next.activities.base.BaseActivity;
+import quickbeer.android.next.fragments.base.BaseFragment;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
 import rx.Subscription;
 
-public class BeerListFragment extends Fragment {
+public class BeerListFragment extends BaseFragment {
     private static final String TAG = BeerListFragment.class.getSimpleName();
 
     private BeerListView.ViewBinder beersViewBinder;
@@ -59,10 +59,9 @@ public class BeerListFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((BaseActivity) getActivity()).getGraph().inject(this);
+        getGraph().inject(this);
     }
 
     @Override

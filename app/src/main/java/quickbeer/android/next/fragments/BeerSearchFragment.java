@@ -26,7 +26,6 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerSearchActivity;
-import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
@@ -49,8 +48,7 @@ public class BeerSearchFragment extends BeerListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((BaseActivity) getActivity()).getGraph().inject(this);
+        getGraph().inject(this);
     }
 
     @Override

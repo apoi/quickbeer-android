@@ -23,7 +23,6 @@ import android.view.View;
 import javax.inject.Inject;
 
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.data.DataLayer;
 
 public class TopBeersFragment  extends BeerListFragment {
@@ -40,14 +39,12 @@ public class TopBeersFragment  extends BeerListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        ((BaseActivity) getActivity()).getGraph().inject(this);
+        getGraph().inject(this);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setSourceObservable(getTopBeers.call());
     }
 }
