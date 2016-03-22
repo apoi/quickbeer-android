@@ -35,8 +35,7 @@ import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
+import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
@@ -46,8 +45,8 @@ import quickbeer.android.next.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public abstract class SearchBarActivity extends BaseActivity implements
-        NavigationView.OnNavigationItemSelectedListener {
+public abstract class SearchBarActivity extends BaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener, ProgressStatusAggregator {
 
     private static final String TAG = SearchBarActivity.class.getSimpleName();
 
@@ -56,9 +55,7 @@ public abstract class SearchBarActivity extends BaseActivity implements
     private View searchViewOverlay;
 
     private PublishSubject<String> querySubject = PublishSubject.create();
-
-    @Inject
-    ProgressIndicatorViewModel progressIndicatorViewModel;
+    private final ProgressIndicatorViewModel progressIndicatorViewModel = new ProgressIndicatorViewModel();
 
     @Override
     protected void  onCreate(Bundle savedInstanceState) {
@@ -199,6 +196,11 @@ public abstract class SearchBarActivity extends BaseActivity implements
 
     public void closeSearch() {
         searchView.closeSearch();
+    }
+
+    @Override
+    public void addProgressObservable(Observable<? extends DataStreamNotification> observable) {
+        progressIndicatorViewModel.addProgressObservable(observable);
     }
 
     @Override

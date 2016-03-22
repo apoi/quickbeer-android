@@ -24,11 +24,12 @@ import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
+import quickbeer.android.next.activities.base.ProgressStatusAggregator;
 import rx.Observable;
 import rx.Subscription;
 import rx.subjects.BehaviorSubject;
 
-public class ProgressIndicatorViewModel {
+public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
     private final static String TAG = ProgressIndicatorViewModel.class.getSimpleName();
 
     public enum Status {
@@ -110,7 +111,8 @@ public class ProgressIndicatorViewModel {
         return progressSubject.asObservable();
     }
 
-    public void addSourceObservable(Observable<? extends DataStreamNotification> observable) {
+    @Override
+    public void addProgressObservable(Observable<? extends DataStreamNotification> observable) {
         Log.d(TAG, "addDataStreamNotificationObservable");
 
         List<Observable<Float>> list = sourceObservables.getValue();

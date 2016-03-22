@@ -30,10 +30,10 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.fragments.base.BaseFragment;
 import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
-import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
 import rx.Subscription;
@@ -46,9 +46,6 @@ public class BeerListFragment extends BaseFragment {
 
     @Inject
     BeerListViewModel beerListViewModel;
-
-    @Inject
-    ProgressIndicatorViewModel progressIndicatorViewModel;
 
     public int getLayout() {
         return R.layout.beer_list_fragment;
@@ -65,7 +62,7 @@ public class BeerListFragment extends BaseFragment {
         beerListViewModel.subscribeToDataStore();
 
         // Hook up the search observable status to progress indicator
-        progressIndicatorViewModel.addSourceObservable(observable);
+        ((SearchActivity) getActivity()).addProgressObservable(observable);
     }
 
     @Override
@@ -99,7 +96,6 @@ public class BeerListFragment extends BaseFragment {
                     intent.putExtra("beerId", beerId);
                     startActivity(intent);
                 });
-
     }
 
     @Override

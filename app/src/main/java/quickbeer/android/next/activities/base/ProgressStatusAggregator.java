@@ -15,16 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.viewmodels;
+package quickbeer.android.next.activities.base;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.next.data.DataLayer.GetBeer;
+import io.reark.reark.data.DataStreamNotification;
+import rx.Observable;
 
-@Module
-public final class ViewModelModule {
-    @Provides
-    public BeerListViewModel provideBeersViewModel(GetBeer getBeer) {
-        return new BeerListViewModel(getBeer);
-    }
+public interface ProgressStatusAggregator {
+    void addProgressObservable(Observable<? extends DataStreamNotification> observable);
 }
