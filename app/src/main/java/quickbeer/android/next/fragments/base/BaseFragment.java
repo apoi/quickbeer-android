@@ -19,11 +19,11 @@ package quickbeer.android.next.fragments.base;
 
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.next.activities.base.BaseActivity;
-import quickbeer.android.next.injections.ActivityGraph;
+import quickbeer.android.next.QuickBeer;
+import quickbeer.android.next.injections.ApplicationGraph;
 
 public abstract class BaseFragment extends Fragment {
-    protected ActivityGraph getGraph() {
-        return ((BaseActivity) getActivity()).getGraph();
+    protected ApplicationGraph getGraph() {
+        return QuickBeer.getInstance().getGraph();
     }
 }

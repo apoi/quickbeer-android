@@ -23,12 +23,23 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import quickbeer.android.next.QuickBeer;
-import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.activities.BeerDetailsActivity;
+import quickbeer.android.next.activities.base.BaseActivity;
+import quickbeer.android.next.activities.base.SearchActivity;
+import quickbeer.android.next.activities.base.SearchBarActivity;
 import quickbeer.android.next.data.DataStoreModule;
+import quickbeer.android.next.fragments.BeerDetailsFragment;
+import quickbeer.android.next.fragments.BeerListFragment;
+import quickbeer.android.next.fragments.BeerSearchFragment;
+import quickbeer.android.next.fragments.BeersInCountryFragment;
+import quickbeer.android.next.fragments.BeersInStyleFragment;
+import quickbeer.android.next.fragments.MainFragment;
+import quickbeer.android.next.fragments.TopBeersFragment;
+import quickbeer.android.next.fragments.TopListFragment;
 import quickbeer.android.next.network.NetworkModule;
 import quickbeer.android.next.network.NetworkService;
-import quickbeer.android.next.network.ServiceDataLayer;
 import quickbeer.android.next.utils.UtilsModule;
+import quickbeer.android.next.viewmodels.ViewModelModule;
 
 @Singleton
 @Component(modules = {
@@ -36,24 +47,26 @@ import quickbeer.android.next.utils.UtilsModule;
         NetworkModule.class,
         InstrumentationModule.class,
         UtilsModule.class,
+        ViewModelModule.class,
         DataStoreModule.class,
 })
 public interface ApplicationGraph {
-    DataLayer provideApplicationDataLayer();
-    DataLayer.GetBeer provideGetBeer();
-    DataLayer.GetBeerSearch provideGetBeerSearch();
-    DataLayer.GetBeerSearchQueries provideGetBeerSearchQueries();
-    DataLayer.GetBeersInCountry provideGetBeersInCountry();
-    DataLayer.GetBeersInStyle provideGetBeersInStyle();
-    DataLayer.GetReview provideGetReview();
-    DataLayer.GetReviews provideGetReviews();
-    DataLayer.GetTopBeers provideGetTopBeers();
-    DataLayer.GetUserSettings provideGetUserSettings();
-    DataLayer.SetUserSettings provideSetUserSettings();
-    ServiceDataLayer provideServiceDataLayer();
-
     void inject(QuickBeer quickBeer);
     void inject(NetworkService networkService);
+
+    void inject(BaseActivity baseActivity);
+    void inject(SearchBarActivity searchBarActivity);
+    void inject(SearchActivity searchActivity);
+    void inject(BeerDetailsActivity beerDetailsActivity);
+
+    void inject(MainFragment mainFragment);
+    void inject(BeerListFragment beerListFragment);
+    void inject(BeerSearchFragment beerSearchFragment);
+    void inject(BeerDetailsFragment beerDetailsFragment);
+    void inject(TopListFragment topListFragment);
+    void inject(TopBeersFragment topBeersFragment);
+    void inject(BeersInCountryFragment beersInCountryFragment);
+    void inject(BeersInStyleFragment beersInStyleFragment);
 
     final class Initializer {
         public static ApplicationGraph init(Application application) {

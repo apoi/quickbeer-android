@@ -21,23 +21,20 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import quickbeer.android.next.injections.ActivityGraph;
+import quickbeer.android.next.QuickBeer;
+import quickbeer.android.next.injections.ApplicationGraph;
 
 public class BaseActivity extends AppCompatActivity {
-    private ActivityGraph activityGraph;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activityGraph = ActivityGraph.Initializer.init(this);
         inject();
     }
 
-    public ActivityGraph getGraph() {
-        return activityGraph;
+    public ApplicationGraph getGraph() {
+        return QuickBeer.getInstance().getGraph();
     }
 
     protected void inject() {
-        activityGraph.inject(this);
     }
 }
