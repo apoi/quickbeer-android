@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
@@ -98,7 +99,7 @@ public class BeerSearchFetcher extends FetcherBase {
                         beerStore.put(beer);
                         beerIds.add(beer.getId());
                     }
-                    return new BeerSearch(queryId, beerIds);
+                    return new BeerSearch(queryId, beerIds, new Date());
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))

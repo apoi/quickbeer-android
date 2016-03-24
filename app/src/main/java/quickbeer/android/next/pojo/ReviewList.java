@@ -17,15 +17,18 @@
  */
 package quickbeer.android.next.pojo;
 
+import java.util.Date;
 import java.util.List;
 
 public class ReviewList {
-    final private int beerId;
-    final private List<Integer> items;
+    private final int beerId;
+    private final List<Integer> items;
+    private Date updateDate;
 
-    public ReviewList(final int beerId, final List<Integer> items) {
+    public ReviewList(final int beerId, final List<Integer> items, final Date updateDate) {
         this.beerId = beerId;
         this.items = items;
+        this.updateDate = updateDate;
     }
 
     public int getBeerId() {
@@ -36,10 +39,19 @@ public class ReviewList {
         return items;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date value) {
+        updateDate = value;
+    }
+
     @Override
     public String toString() {
         return "ReviewList{beerId=" + beerId
                 + ", items='" + (items == null ? "null " : items.size())
+                + ", updated='" + updateDate
                 + "'}";
     }
 }

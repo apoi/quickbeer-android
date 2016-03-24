@@ -18,8 +18,13 @@
 package quickbeer.android.next.pojo;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Date;
+
+import io.reark.reark.utils.Preconditions;
 
 public class Beer extends BasePojo<Beer> {
     @SerializedName("BeerID")
@@ -66,6 +71,12 @@ public class Beer extends BasePojo<Beer> {
 
     @SerializedName("BrewerCountryId")
     private int countryId;
+
+    private int tick;
+    private int reviewId;
+    private boolean isModified;
+    private Date updateDate;
+    private Date accessDate;
 
     @NonNull
     @Override
@@ -114,6 +125,54 @@ public class Beer extends BasePojo<Beer> {
                 && !styleName.isEmpty();
     }
 
+    public boolean isTicked() {
+        return tick > 0;
+    }
+
+    public int getTick() {
+        return tick;
+    }
+
+    public void setTick(int value) {
+        tick = value;
+    }
+
+    public boolean isReviewed() {
+        return reviewId > 0;
+    }
+
+    public int getReviewId() {
+        return reviewId;
+    }
+
+    public void setReviewId(int value) {
+        reviewId = value;
+    }
+
+    public boolean isModified() {
+        return isModified;
+    }
+
+    public void setIsModified(boolean value) {
+        isModified = value;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date date) {
+        updateDate = date;
+    }
+
+    public Date getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(Date date) {
+        accessDate = date;
+    }
+
     @Override
     public String toString() {
         return "Beer{" + "id=" + id
@@ -134,6 +193,9 @@ public class Beer extends BasePojo<Beer> {
         Beer beer = (Beer) o;
 
         if (id != beer.id) return false;
+        if (updateDate != null ? !updateDate.equals(beer.updateDate) : beer.updateDate != null) return false;
+        if (accessDate != null ? !accessDate.equals(beer.accessDate) : beer.accessDate != null) return false;
+
         if (styleId != beer.styleId) return false;
         if (brewerId != beer.brewerId) return false;
         if (countryId != beer.countryId) return false;
@@ -149,6 +211,10 @@ public class Beer extends BasePojo<Beer> {
         if (styleName != null ? !styleName.equals(beer.styleName) : beer.styleName != null) return false;
         if (brewerName != null ? !brewerName.equals(beer.brewerName) : beer.brewerName != null) return false;
         if (description != null ? !description.equals(beer.description) : beer.description != null) return false;
+
+        if (tick != beer.tick) return false;
+        if (reviewId != beer.reviewId) return false;
+        if (isModified != beer.isModified) return false;
 
         return (isAlias != beer.isAlias);
     }
@@ -172,9 +238,14 @@ public class Beer extends BasePojo<Beer> {
         result = 31 * result + (rateCount != +0.0f ? Float.floatToIntBits(rateCount) : 0);
         result = 31 * result + (alcohol != +0.0f ? Float.floatToIntBits(alcohol) : 0);
         result = 31 * result + (ibu != +0.0f ? Float.floatToIntBits(ibu) : 0);
-
         result = 31 * result + (isAlias ? 1 : 0);
+
+        result = 31 * result + tick;
+        result = 31 * result + reviewId;
+        result = 31 * result + (isModified ? 1 : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
+
         return result;
     }
 }
-

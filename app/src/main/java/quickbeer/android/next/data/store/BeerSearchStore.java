@@ -25,11 +25,14 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.utils.DateUtils;
 
 public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     private static final String TAG = BeerSearchStore.class.getSimpleName();
@@ -75,7 +78,11 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     @NonNull
     @Override
     protected String[] getProjection() {
-        return new String[] { BeerSearchColumns.SEARCH, BeerSearchColumns.JSON };
+        return new String[] {
+                BeerSearchColumns.SEARCH,
+                BeerSearchColumns.JSON,
+                BeerSearchColumns.UPDATED
+        };
     }
 
     @NonNull
@@ -84,6 +91,7 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerSearchColumns.SEARCH, item.getSearch());
         contentValues.put(BeerSearchColumns.JSON, getGson().toJson(item));
+        contentValues.put(BeerSearchColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
         return contentValues;
     }
 
@@ -91,16 +99,12 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     @Override
     protected BeerSearch read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerSearchColumns.JSON));
-        return getGson().fromJson(json, BeerSearch.class);
-    }
+        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerSearchColumns.UPDATED)));
 
-    @NonNull
-    @Override
-    protected ContentValues readRaw(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(BeerSearchColumns.JSON));
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerSearchColumns.JSON, json);
-        return contentValues;
+        BeerSearch beerSearch = getGson().fromJson(json, BeerSearch.class);
+        beerSearch.setUpdateDate(updated);
+
+        return beerSearch;
     }
 
     @NonNull
@@ -109,10 +113,5 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.BeerSearches.withSearch(id);
-    }
-
-    @Override
-    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
-        return v1.getAsString(BeerSearchColumns.JSON).equals(v2.getAsString(BeerSearchColumns.JSON));
     }
 }

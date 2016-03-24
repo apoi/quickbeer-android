@@ -92,23 +92,9 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
 
     @NonNull
     @Override
-    protected ContentValues readRaw(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(JsonIdColumns.JSON, json);
-        return contentValues;
-    }
-
-    @NonNull
-    @Override
     public Uri getUriForId(@NonNull Integer id) {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.NetworkRequestStatuses.withId(id);
-    }
-
-    @Override
-    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
-        return v1.getAsString(JsonIdColumns.JSON).equals(v2.getAsString(JsonIdColumns.JSON));
     }
 }

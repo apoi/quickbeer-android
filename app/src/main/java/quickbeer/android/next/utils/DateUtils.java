@@ -15,13 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.data.schematicprovider;
+package quickbeer.android.next.utils;
 
-import net.simonvt.schematic.annotation.DataType;
-import net.simonvt.schematic.annotation.PrimaryKey;
+import java.util.Date;
 
-public interface BeerSearchColumns {
-    @DataType(DataType.Type.TEXT) @PrimaryKey String SEARCH = "id";
-    @DataType(DataType.Type.TEXT) String JSON = "json";
-    @DataType(DataType.Type.INTEGER) String UPDATED = "updated";
+public class DateUtils {
+    private DateUtils() {}
+
+    public static int toDbValue(Date date) {
+        return date != null
+                ? (int) (date.getTime() / 1000)
+                : 0;
+    }
+
+    public static Date fromDbValue(int value) {
+        return value > 0
+                ? new Date((long) value * 1000)
+                : null;
+    }
+
+    public static boolean isLater(Date first, Date second) {
+        if (first == null) {
+            return false;
+        } else if (second == null) {
+            return true;
+        } else {
+            return first.compareTo(second) > 0;
+        }
+    }
 }

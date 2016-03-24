@@ -17,15 +17,18 @@
  */
 package quickbeer.android.next.pojo;
 
+import java.util.Date;
 import java.util.List;
 
 public class BeerSearch {
-    final private String search;
-    final private List<Integer> items;
+    private final String search;
+    private final List<Integer> items;
+    private Date updateDate;
 
-    public BeerSearch(final String search, final List<Integer> items) {
+    public BeerSearch(final String search, final List<Integer> items, final Date updateDate) {
         this.search = search;
         this.items = items;
+        this.updateDate = updateDate;
     }
 
     public String getSearch() {
@@ -36,10 +39,19 @@ public class BeerSearch {
         return items;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date value) {
+        updateDate = value;
+    }
+
     @Override
     public String toString() {
         return "BeerSearch{search=" + search
                 + ", items='" + (items == null ? "null " : items.size())
+                + ", updated='" + updateDate
                 + "'}";
     }
 }

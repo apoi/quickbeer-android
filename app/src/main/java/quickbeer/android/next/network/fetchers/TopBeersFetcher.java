@@ -46,7 +46,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        fetchBeerSearch(getServiceUri().toString());
+        fetchBeerSearch("");
     }
 
     @NonNull

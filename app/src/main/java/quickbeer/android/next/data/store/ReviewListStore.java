@@ -25,10 +25,14 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
+
 import io.reark.reark.utils.Preconditions;
+import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
 import quickbeer.android.next.pojo.ReviewList;
+import quickbeer.android.next.utils.DateUtils;
 
 public class ReviewListStore extends StoreBase<ReviewList, Integer> {
     private static final String TAG = ReviewListStore.class.getSimpleName();
@@ -54,7 +58,11 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
     @NonNull
     @Override
     protected String[] getProjection() {
-        return new String[] { ReviewListColumns.BEER_ID, ReviewListColumns.JSON };
+        return new String[] {
+                ReviewListColumns.BEER_ID,
+                ReviewListColumns.JSON,
+                ReviewListColumns.UPDATED
+        };
     }
 
     @NonNull
@@ -63,6 +71,7 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewListColumns.BEER_ID, item.getBeerId());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));
+        contentValues.put(ReviewListColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
         return contentValues;
     }
 
@@ -70,16 +79,12 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
     @Override
     protected ReviewList read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
-        return getGson().fromJson(json, ReviewList.class);
-    }
+        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
-    @NonNull
-    @Override
-    protected ContentValues readRaw(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewListColumns.JSON, json);
-        return contentValues;
+        ReviewList reviewList = getGson().fromJson(json, ReviewList.class);
+        reviewList.setUpdateDate(updated);
+
+        return reviewList;
     }
 
     @NonNull
@@ -88,10 +93,5 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.ReviewLists.withBeerId(id);
-    }
-
-    @Override
-    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
-        return v1.getAsString(ReviewListColumns.JSON).equals(v2.getAsString(ReviewListColumns.JSON));
     }
 }

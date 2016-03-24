@@ -25,10 +25,13 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.Date;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.utils.DateUtils;
 
 public class BeerStore extends StoreBase<Beer, Integer> {
     private static final String TAG = BeerStore.class.getSimpleName();
@@ -54,7 +57,16 @@ public class BeerStore extends StoreBase<Beer, Integer> {
     @NonNull
     @Override
     protected String[] getProjection() {
-        return new String[] { BeerColumns.ID, BeerColumns.JSON };
+        return new String[] {
+                BeerColumns.ID,
+                BeerColumns.JSON,
+                BeerColumns.NAME,
+                BeerColumns.TICK,
+                BeerColumns.REVIEW,
+                BeerColumns.MODIFIED,
+                BeerColumns.UPDATED,
+                BeerColumns.ACCESSED
+        };
     }
 
     @NonNull
@@ -63,6 +75,13 @@ public class BeerStore extends StoreBase<Beer, Integer> {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerColumns.ID, item.getId());
         contentValues.put(BeerColumns.JSON, getGson().toJson(item));
+        contentValues.put(BeerColumns.NAME, item.getName());
+        contentValues.put(BeerColumns.TICK, item.getTick());
+        contentValues.put(BeerColumns.REVIEW, item.getReviewId());
+        contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
+        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
+        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.getAccessDate()));
+
         return contentValues;
     }
 
@@ -70,16 +89,20 @@ public class BeerStore extends StoreBase<Beer, Integer> {
     @Override
     protected Beer read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
-        return getGson().fromJson(json, Beer.class);
-    }
+        final int tick = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK));
+        final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerColumns.REVIEW));
+        final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerColumns.MODIFIED)) > 0;
+        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
+        final Date accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
 
-    @NonNull
-    @Override
-    protected ContentValues readRaw(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerColumns.JSON, json);
-        return contentValues;
+        Beer beer = getGson().fromJson(json, Beer.class);
+        beer.setTick(tick);
+        beer.setReviewId(reviewId);
+        beer.setIsModified(isModified);
+        beer.setUpdateDate(updated);
+        beer.setAccessDate(accessed);
+
+        return beer;
     }
 
     @NonNull
@@ -90,16 +113,15 @@ public class BeerStore extends StoreBase<Beer, Integer> {
         return RateBeerProvider.Beers.withId(id);
     }
 
-    @Override
-    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
-        return v1.getAsString(BeerColumns.JSON).equals(v2.getAsString(BeerColumns.JSON));
-    }
-
     @NonNull
     @Override
-    protected ContentValues mergeValues(ContentValues v1, ContentValues v2) {
-        Beer b1 = getGson().fromJson(v1.getAsString(BeerColumns.JSON), Beer.class);
-        Beer b2 = getGson().fromJson(v2.getAsString(BeerColumns.JSON), Beer.class);
-        return getContentValuesForItem(b1.overwrite(b2));
+    protected Beer mergeValues(@NonNull Beer v1, @NonNull Beer v2) {
+        // Double-overwrite to avoid modifying the original values.
+        // Beer could implement a clone method instead.
+        Beer newValue = new Beer();
+        newValue.overwrite(v1);
+        newValue.overwrite(v2);
+
+        return newValue;
     }
 }

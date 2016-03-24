@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
@@ -95,7 +96,7 @@ public class ReviewFetcher extends FetcherBase {
                         reviewStore.put(review);
                         reviewIds.add(review.getId());
                     }
-                    return new ReviewList(beerId, reviewIds);
+                    return new ReviewList(beerId, reviewIds, new Date());
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))

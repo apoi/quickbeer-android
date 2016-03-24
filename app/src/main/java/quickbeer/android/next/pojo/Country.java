@@ -43,7 +43,7 @@ public class Country extends SimpleItem {
     }
 
     @Override
-    public Class getLinkedActivity() {
+    public Class getDisplayActivity() {
         return BeersInCountryActivity.class;
     }
 }

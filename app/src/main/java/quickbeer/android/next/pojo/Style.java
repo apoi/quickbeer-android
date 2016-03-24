@@ -41,7 +41,7 @@ public class Style extends SimpleItem {
     }
 
     @Override
-    public Class getLinkedActivity() {
+    public Class getDisplayActivity() {
         return BeersInStyleActivity.class;
     }
 }

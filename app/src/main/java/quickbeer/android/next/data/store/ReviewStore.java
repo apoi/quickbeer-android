@@ -75,31 +75,15 @@ public class ReviewStore extends StoreBase<Review, Integer> {
 
     @NonNull
     @Override
-    protected ContentValues readRaw(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(ReviewColumns.JSON));
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewColumns.JSON, json);
-        return contentValues;
-    }
-
-    @NonNull
-    @Override
     public Uri getUriForId(@NonNull Integer id) {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
         return RateBeerProvider.Reviews.withId(id);
     }
 
-    @Override
-    protected boolean contentValuesEqual(ContentValues v1, ContentValues v2) {
-        return v1.getAsString(ReviewColumns.JSON).equals(v2.getAsString(ReviewColumns.JSON));
-    }
-
     @NonNull
     @Override
-    protected ContentValues mergeValues(ContentValues v1, ContentValues v2) {
-        Review b1 = getGson().fromJson(v1.getAsString(ReviewColumns.JSON), Review.class);
-        Review b2 = getGson().fromJson(v2.getAsString(ReviewColumns.JSON), Review.class);
-        return getContentValuesForItem(b1.overwrite(b2));
+    protected Review mergeValues(@NonNull Review v1, @NonNull Review v2) {
+        return v1.overwrite(v2);
     }
 }
