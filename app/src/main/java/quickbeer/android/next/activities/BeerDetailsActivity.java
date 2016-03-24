@@ -28,6 +28,8 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
+import quickbeer.android.next.pojo.Beer;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class BeerDetailsActivity extends SearchActivity {
@@ -48,8 +50,16 @@ public class BeerDetailsActivity extends SearchActivity {
             beerId = getIntent().getIntExtra("beerId", 0);
         }
 
+        Observable<DataStreamNotification<Beer>> sourceObservable =
+                getBeer.call(beerId)
+                        .publish()
+                        .refCount();
+
+        // Pass to the activity progress indicator
+        addProgressObservable(sourceObservable);
+
         // Set the title for activity
-        getBeer.call(beerId)
+        sourceObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
