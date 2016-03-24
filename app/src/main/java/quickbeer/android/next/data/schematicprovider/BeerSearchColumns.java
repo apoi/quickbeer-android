@@ -22,5 +22,6 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 
 public interface BeerSearchColumns {
     @DataType(DataType.Type.TEXT) @PrimaryKey String SEARCH = "id";
+    @DataType(DataType.Type.INTEGER) String UPDATED = "updated";
     @DataType(DataType.Type.TEXT) String JSON = "json";
 }

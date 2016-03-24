@@ -30,9 +30,8 @@ import io.reark.reark.utils.Preconditions;
 @ContentProvider(authority = quickbeer.android.next.data.schematicprovider.RateBeerProvider.AUTHORITY, database = RateBeerDatabase.class)
 public class RateBeerProvider {
     public static final String AUTHORITY = "quickbeer.android.next.data.schematicprovider.RateBeerProvider";
-
-    private static final String BASE_TYPE = "vnd.android.cursor.item/";
     private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
+    private static final String BASE_TYPE = "vnd.android.cursor.item/";
 
     private static Uri buildUri(@NonNull String... paths) {
         Uri.Builder builder = AUTHORITY_URI.buildUpon();
