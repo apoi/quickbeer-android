@@ -58,7 +58,7 @@ public class BeerListFragment extends BaseFragment {
         // Unsubscribe old source before setting the new one, otherwise the subscribe
         // call assumes the old subscription to still be valid.
         beerListViewModel.unsubscribeFromDataStore();
-        beerListViewModel.setSourceObservable(sourceObservable);
+        beerListViewModel.setSourceObservable(observable);
         beerListViewModel.subscribeToDataStore();
 
         // Hook up the search observable status to progress indicator
