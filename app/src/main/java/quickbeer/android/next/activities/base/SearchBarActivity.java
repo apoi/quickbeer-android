@@ -80,6 +80,15 @@ public abstract class SearchBarActivity extends BaseActivity
                 .setViewModel(progressIndicatorViewModel);
 
         setupSearch();
+
+        progressIndicatorViewModel.subscribe();
+    }
+
+    @Override
+    protected void onDestroy() {
+        progressIndicatorViewModel.unsubscribe();
+
+        super.onDestroy();
     }
 
     @Override

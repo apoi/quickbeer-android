@@ -44,7 +44,6 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
 
     public ProgressIndicatorViewModel() {
         sourceObservables.onNext(new ArrayList<>());
-        subscribe();
     }
 
     public void subscribe() {

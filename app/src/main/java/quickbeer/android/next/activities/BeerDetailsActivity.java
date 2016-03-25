@@ -31,11 +31,13 @@ import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.pojo.Beer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
+import rx.subscriptions.CompositeSubscription;
 
 public class BeerDetailsActivity extends SearchActivity {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
+    private CompositeSubscription activitySubscription = new CompositeSubscription();
 
     @Inject
     DataLayer.GetBeer getBeer;
@@ -60,14 +62,14 @@ public class BeerDetailsActivity extends SearchActivity {
         addProgressObservable(sourceObservable);
 
         // Update beer access date
-        sourceObservable
+        activitySubscription.add(sourceObservable
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
-                .subscribe(beer -> accessBeer.call(beer.getId()));
+                .subscribe(beer -> accessBeer.call(beer.getId())));
 
         // Set activity title
-        sourceObservable
+        activitySubscription.add(sourceObservable
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
@@ -76,25 +78,29 @@ public class BeerDetailsActivity extends SearchActivity {
                         beer -> setTitle(beer.getName()),
                         throwable -> {
                             Log.e(TAG, "error getting beer", throwable);
-                        });
+                        }));
 
-        sourceObservable.connect();
+        activitySubscription.add(getQueryObservable()
+                .subscribe(
+                        query -> {
+                            Log.d(TAG, "query(" + query + ")");
 
-        getQueryObservable().subscribe(
-                query -> {
-                    Log.d(TAG, "query(" + query + ")");
+                            Intent intent = new Intent(this, BeerSearchActivity.class);
+                            intent.putExtra("query", query);
+                            startActivity(intent);
+                        },
+                        throwable -> {
+                            Log.e(TAG, "error in query", throwable);
+                        }));
 
-                    Intent intent = new Intent(this, BeerSearchActivity.class);
-                    intent.putExtra("query", query);
-                    startActivity(intent);
-                },
-                throwable -> {
-                    Log.e(TAG, "error in query", throwable);
-                });
+        activitySubscription.add(sourceObservable
+                .connect());
     }
 
     @Override
     protected void onDestroy() {
+        activitySubscription.clear();
+
         super.onDestroy();
     }
 
