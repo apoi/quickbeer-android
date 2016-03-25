@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -40,6 +42,9 @@ public class BeerDetailsActivity extends SearchActivity {
     @Inject
     DataLayer.GetBeer getBeer;
 
+    @Inject
+    DataLayer.AccessBeer accessBeer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,12 +63,13 @@ public class BeerDetailsActivity extends SearchActivity {
         // Pass to the activity progress indicator
         addProgressObservable(sourceObservable);
 
-        // Set the title for activity
+        // Set the title and log access
         sourceObservable
                 .observeOn(AndroidSchedulers.mainThread())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
+                .doOnNext(beer -> accessBeer.call(beer.getId()))
                 .subscribe(
                         beer -> setTitle(beer.getName()),
                         throwable -> {

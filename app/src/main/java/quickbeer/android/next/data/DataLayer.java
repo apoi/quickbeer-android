@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -43,7 +44,10 @@ import quickbeer.android.next.pojo.BeerSearch;
 import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.pojo.UserSettings;
+import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class DataLayer extends DataLayerBase {
     private static final String TAG = DataLayer.class.getSimpleName();
@@ -131,6 +135,28 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    //// ACCESS BEER
+
+    public void accessBeer(@NonNull Integer beerId) {
+        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+        Log.v(TAG, "accessBeer");
+
+        beerStore.getOne(beerId)
+                .observeOn(Schedulers.computation())
+                .first()
+                .filter(new NullFilter())
+                .map(beer -> {
+                    beer.setAccessDate(new Date());
+                    return beer;
+                })
+                .subscribe(
+                        beerStore::put,
+                        throwable -> Log.e(TAG, "Error updating beer access date:", throwable)
+                );
+    }
+
+    //// SEARCH BEERS
+
     @NonNull
     public Observable<List<String>> getBeerSearchQueries() {
         Log.v(TAG, "getBeerSearchQueries");
@@ -147,8 +173,6 @@ public class DataLayer extends DataLayerBase {
                     return searches;
                 });
     }
-
-    //// SEARCH BEERS
 
     @NonNull
     public Observable<DataStreamNotification<BeerSearch>> getBeerSearchResultStream(@NonNull final String searchString) {
@@ -413,6 +437,10 @@ public class DataLayer extends DataLayerBase {
     public interface GetBeer {
         @NonNull
         Observable<DataStreamNotification<Beer>> call(int beerId);
+    }
+
+    public interface AccessBeer {
+        void call(int beerId);
     }
 
     public interface GetBeerSearchQueries {
