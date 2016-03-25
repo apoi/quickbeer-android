@@ -17,13 +17,39 @@
  */
 package quickbeer.android.next.pojo;
 
+import java.lang.reflect.Field;
+import java.util.Date;
+
 import io.reark.reark.pojo.OverwritablePojo;
+import io.reark.reark.utils.Log;
 
 /**
  * Class to implement our specific json empty value definitions, to avoid overwriting
  * existing data with invalid values.
  */
 public abstract class BasePojo<T extends OverwritablePojo> extends OverwritablePojo<T> {
+    private final static String TAG = BasePojo.class.getSimpleName();
+
+    @Override
+    protected boolean isEmpty(Field field, OverwritablePojo pojo) {
+        try {
+            Object value = field.get(pojo);
+            if (value instanceof Date) {
+                return isEmpty((Date) value);
+            } else {
+                return super.isEmpty(field, pojo);
+            }
+        } catch (IllegalAccessException e) {
+            Log.e(TAG, "Failed get at " + field.getName(), e);
+        }
+
+        return true;
+    }
+
+    protected boolean isEmpty(Date value) {
+        return value.getTime() <= 0;
+    }
+
     @Override
     protected boolean isEmpty(int value) {
         return value == 0;

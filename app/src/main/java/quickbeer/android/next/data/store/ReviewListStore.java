@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import java.util.Date;
 
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
 import quickbeer.android.next.pojo.ReviewList;

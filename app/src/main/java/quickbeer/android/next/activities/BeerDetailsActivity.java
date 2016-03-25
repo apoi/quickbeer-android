@@ -21,8 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -31,8 +29,8 @@ import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.pojo.Beer;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.observables.ConnectableObservable;
 
 public class BeerDetailsActivity extends SearchActivity {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
@@ -55,26 +53,32 @@ public class BeerDetailsActivity extends SearchActivity {
             beerId = getIntent().getIntExtra("beerId", 0);
         }
 
-        Observable<DataStreamNotification<Beer>> sourceObservable =
-                getBeer.call(beerId)
-                        .publish()
-                        .refCount();
+        ConnectableObservable<DataStreamNotification<Beer>> sourceObservable =
+                getBeer.call(beerId).publish();
 
         // Pass to the activity progress indicator
         addProgressObservable(sourceObservable);
 
-        // Set the title and log access
+        // Update beer access date
         sourceObservable
-                .observeOn(AndroidSchedulers.mainThread())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
-                .doOnNext(beer -> accessBeer.call(beer.getId()))
+                .subscribe(beer -> accessBeer.call(beer.getId()));
+
+        // Set activity title
+        sourceObservable
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .first()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         beer -> setTitle(beer.getName()),
                         throwable -> {
                             Log.e(TAG, "error getting beer", throwable);
                         });
+
+        sourceObservable.connect();
 
         getQueryObservable().subscribe(
                 query -> {
@@ -87,6 +91,11 @@ public class BeerDetailsActivity extends SearchActivity {
                 throwable -> {
                     Log.e(TAG, "error in query", throwable);
                 });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override

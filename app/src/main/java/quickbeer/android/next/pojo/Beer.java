@@ -18,13 +18,10 @@
 package quickbeer.android.next.pojo;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-
-import io.reark.reark.utils.Preconditions;
 
 public class Beer extends BasePojo<Beer> {
     @SerializedName("BeerID")
@@ -191,11 +188,15 @@ public class Beer extends BasePojo<Beer> {
         }
 
         Beer beer = (Beer) o;
-
         if (id != beer.id) return false;
-        if (updateDate != null ? !updateDate.equals(beer.updateDate) : beer.updateDate != null) return false;
-        if (accessDate != null ? !accessDate.equals(beer.accessDate) : beer.accessDate != null) return false;
 
+        return metadataEquals(beer) && dataEquals(beer);
+    }
+
+    // Function for checking the data equality. Useful when we want to check only the data
+    // parts, leaving out e.g. the beer access date. Note that we need to check every field:
+    // this is an object comparison, not beer identity comparison.
+    public boolean dataEquals(Beer beer) {
         if (styleId != beer.styleId) return false;
         if (brewerId != beer.brewerId) return false;
         if (countryId != beer.countryId) return false;
@@ -214,9 +215,16 @@ public class Beer extends BasePojo<Beer> {
 
         if (tick != beer.tick) return false;
         if (reviewId != beer.reviewId) return false;
-        if (isModified != beer.isModified) return false;
 
-        return (isAlias != beer.isAlias);
+        return isAlias == beer.isAlias;
+    }
+
+    // Metadata equality part.
+    public boolean metadataEquals(Beer beer) {
+        if (updateDate != null ? !updateDate.equals(beer.updateDate) : beer.updateDate != null) return false;
+        if (accessDate != null ? !accessDate.equals(beer.accessDate) : beer.accessDate != null) return false;
+
+        return isModified == beer.isModified;
     }
 
     @Override
