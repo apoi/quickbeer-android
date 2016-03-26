@@ -114,7 +114,8 @@ public class DataLayer extends DataLayerBase {
                 .doOnNext(beer -> Log.v(TAG, "Beer not cached, fetching"))
                 .subscribe(beer -> fetchBeer(beerId));
 
-        // Does not emit a new notification when only beer metadata changes
+        // Does not emit a new notification when only beer metadata changes.
+        // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
                 .distinctUntilChanged(new Func1<DataStreamNotification<Beer>, Integer>() {
                     private int counter = 0; // Key object for indicating distinction

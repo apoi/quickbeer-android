@@ -122,6 +122,7 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
      * View holder for beer list items
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
+        private BeerViewModel viewModel;
         private ViewBinder viewBinder;
         private TextView ratingTextView;
         private TextView nameTextView;
@@ -131,7 +132,6 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
         public ViewHolder(View view, View.OnClickListener onClickListener) {
             super(view);
 
-            this.viewBinder = new ViewBinder(this);
             this.ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
             this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
             this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
@@ -141,12 +141,28 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
         }
 
         public void bind(BeerViewModel viewModel) {
+            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
+
             clear();
-            this.viewBinder.bind(viewModel);
+
+            this.viewModel = viewModel;
+            this.viewModel.subscribeToDataStore();
+
+            this.viewBinder = new ViewBinder(this, viewModel);
+            this.viewBinder.bind();
         }
 
         public void unbind() {
-            this.viewBinder.unbind();
+            if (this.viewBinder != null) {
+                this.viewBinder.unbind();
+                this.viewBinder = null;
+            }
+
+            if (this.viewModel != null) {
+                this.viewModel.unsubscribeFromDataStore();
+                this.viewModel.dispose();
+                this.viewModel = null;
+            }
         }
 
         public void setBeer(@NonNull Beer beer) {
@@ -179,24 +195,16 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
         private ViewHolder viewHolder;
         private BeerViewModel viewModel;
 
-        public ViewBinder(@NonNull ViewHolder viewHolder) {
+        public ViewBinder(@NonNull ViewHolder viewHolder, @NonNull BeerViewModel viewModel) {
             Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");
-
-            this.viewHolder = viewHolder;
-        }
-
-        public void bind(@NonNull BeerViewModel viewModel) {
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
+            this.viewHolder = viewHolder;
             this.viewModel = viewModel;
-            this.viewModel.subscribeToDataStore();
-            bind();
         }
 
         @Override
         protected void bindInternal(@NonNull CompositeSubscription subscription) {
-            Preconditions.checkNotNull(viewModel, "ViewModel hasn't been setBeer.");
-
             subscription.add(viewModel.getBeer()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(viewHolder::setBeer));

@@ -69,12 +69,15 @@ public class BeerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beerListAdapter = new BeerListAdapter(Collections.emptyList());
-
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
         beersListView.setHasFixedSize(true);
-        beersListView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        beerListAdapter = new BeerListAdapter(Collections.emptyList());
         beersListView.setAdapter(beerListAdapter);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setRecycleChildrenOnDetach(true);
+        beersListView.setLayoutManager(layoutManager);
 
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
     }
