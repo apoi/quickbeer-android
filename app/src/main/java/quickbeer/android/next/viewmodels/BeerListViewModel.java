@@ -28,8 +28,10 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.BeerSearch;
 import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -75,10 +77,13 @@ public class BeerListViewModel extends BaseViewModel {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<BeerSearch>> beerSearchSource =
-                sourceObservable.publish();
+                sourceObservable
+                        .subscribeOn(Schedulers.computation())
+                        .publish();
 
         compositeSubscription.add(beerSearchSource
                 .map(toProgressStatus())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::setNetworkStatusText));
 
         compositeSubscription.add(beerSearchSource

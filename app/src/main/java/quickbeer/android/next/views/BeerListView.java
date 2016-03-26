@@ -141,9 +141,11 @@ public class BeerListView extends FrameLayout {
 
         private void beerListAdapterOnClick(View clickedView) {
             final int itemPosition = view.beersListView.getChildAdapterPosition(clickedView);
+
             view.beerListAdapter
                     .getItem(itemPosition)
                     .getBeer()
+                    .first()
                     .subscribe(beer -> {
                         viewModel.selectBeer(beer.getId());
                     });
