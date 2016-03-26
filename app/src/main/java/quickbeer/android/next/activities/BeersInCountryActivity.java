@@ -40,17 +40,18 @@ public class BeersInCountryActivity extends SearchActivity {
             countryId = getIntent().getStringExtra("id");
         }
 
-        getQueryObservable().subscribe(
-                query -> {
-                    Log.d(TAG, "query(" + query + ")");
+        activitySubscription.add(getQueryObservable()
+                .subscribe(
+                        query -> {
+                            Log.d(TAG, "query(" + query + ")");
 
-                    Intent intent = new Intent(this, BeerSearchActivity.class);
-                    intent.putExtra("query", query);
-                    startActivity(intent);
-                },
-                throwable -> {
-                    Log.e(TAG, "error", throwable);
-                });
+                            Intent intent = new Intent(this, BeerSearchActivity.class);
+                            intent.putExtra("query", query);
+                            startActivity(intent);
+                        },
+                        throwable -> {
+                            Log.e(TAG, "error", throwable);
+                        }));
     }
 
     @Override

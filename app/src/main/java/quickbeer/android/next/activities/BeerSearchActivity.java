@@ -32,10 +32,10 @@ public class BeerSearchActivity extends SearchActivity {
         super.onCreate(savedInstanceState);
 
         // Set title to reflect the search, update query
-        getQueryObservable()
+        activitySubscription.add(getQueryObservable()
                 .doOnNext(this::setTitle)
                 .doOnNext(this::setQuery)
-                .subscribe();
+                .subscribe());
     }
 
     @Override

@@ -166,9 +166,10 @@ public abstract class SearchBarActivity extends BaseActivity
             public void onSearchViewAboutToShow() {
                 Log.d(TAG, "onSearchViewAboutToShow");
 
-                getQueryObservable()
+                // TODO better subscription handling
+                activitySubscription.add(getQueryObservable()
                         .first()
-                        .subscribe(query -> searchView.setQuery(query, false));
+                        .subscribe(query -> searchView.setQuery(query, false)));
 
                 if (contentOverlayEnabled()) {
                     Animation fadeIn = new AlphaAnimation(0.0f, 0.5f);

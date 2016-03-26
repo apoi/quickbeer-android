@@ -48,17 +48,18 @@ public class MainActivity extends SearchActivity {
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        getQueryObservable().subscribe(
-                query -> {
-                    Log.d(TAG, "query(" + query + ")");
+        activitySubscription.add(getQueryObservable()
+                .subscribe(
+                        query -> {
+                            Log.d(TAG, "query(" + query + ")");
 
-                    Intent intent = new Intent(this, BeerSearchActivity.class);
-                    intent.putExtra("query", query);
-                    startActivity(intent);
-                },
-                throwable -> {
-                    Log.e(TAG, "error", throwable);
-                });
+                            Intent intent = new Intent(this, BeerSearchActivity.class);
+                            intent.putExtra("query", query);
+                            startActivity(intent);
+                        },
+                        throwable -> {
+                            Log.e(TAG, "error", throwable);
+                        }));
     }
 
     @Override

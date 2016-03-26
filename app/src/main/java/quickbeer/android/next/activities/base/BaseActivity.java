@@ -23,12 +23,23 @@ import android.support.v7.app.AppCompatActivity;
 
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.injections.ApplicationGraph;
+import rx.subscriptions.CompositeSubscription;
 
 public class BaseActivity extends AppCompatActivity {
+    // Composite for subscriptions meant to stay alive for the activity's duration
+    protected CompositeSubscription activitySubscription = new CompositeSubscription();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inject();
+    }
+
+    @Override
+    protected void onDestroy() {
+        activitySubscription.clear();
+
+        super.onDestroy();
     }
 
     public ApplicationGraph getGraph() {
