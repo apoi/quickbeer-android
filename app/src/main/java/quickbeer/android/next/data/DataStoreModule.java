@@ -60,6 +60,11 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetAccessedBeers provideGetAccessedBeers(DataLayer dataLayer) {
+        return dataLayer::getAccessedBeers;
+    }
+
+    @Provides
     public DataLayer.GetBeerSearchQueries provideGetBeerSearchQueries(DataLayer dataLayer) {
         return dataLayer::getBeerSearchQueries;
     }

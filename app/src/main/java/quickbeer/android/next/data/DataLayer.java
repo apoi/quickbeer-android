@@ -190,6 +190,17 @@ public class DataLayer extends DataLayerBase {
                 );
     }
 
+    //// ACCESSED BEERS
+
+    @NonNull
+    public Observable<DataStreamNotification<BeerSearch>> getAccessedBeers() {
+        Log.v(TAG, "getAccessedBeers");
+
+        return beerStore.getAccessedBeerIds()
+                .map(beerIds -> new BeerSearch(null, beerIds, null))
+                .map(DataStreamNotification::onNext);
+    }
+
     //// SEARCH BEERS
 
     @NonNull
@@ -476,6 +487,11 @@ public class DataLayer extends DataLayerBase {
 
     public interface AccessBeer {
         void call(int beerId);
+    }
+
+    public interface GetAccessedBeers {
+        @NonNull
+        Observable<DataStreamNotification<BeerSearch>> call();
     }
 
     public interface GetBeerSearchQueries {

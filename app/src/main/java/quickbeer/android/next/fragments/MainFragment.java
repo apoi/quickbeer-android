@@ -27,7 +27,7 @@ import quickbeer.android.next.data.DataLayer;
 
 public class MainFragment extends BeerListFragment {
     @Inject
-    DataLayer.GetTopBeers getTopBeers;
+    DataLayer.GetAccessedBeers getAccessedBeers;
 
     @Override
     public int getLayout() {
@@ -43,6 +43,6 @@ public class MainFragment extends BeerListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setSourceObservable(getTopBeers.call());
+        setSourceObservable(getAccessedBeers.call());
     }
 }

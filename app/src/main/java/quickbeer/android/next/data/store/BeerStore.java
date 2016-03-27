@@ -22,22 +22,63 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.rx.NullFilter;
 import quickbeer.android.next.utils.DateUtils;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 public class BeerStore extends StoreBase<Beer, Integer> {
     private static final String TAG = BeerStore.class.getSimpleName();
 
     public BeerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
+    }
+
+    public Observable<List<Integer>> getAccessedBeerIds() {
+        return Observable.just(null)
+                .observeOn(Schedulers.io())
+                .map(empty -> {
+                    String[] projection = new String[]{ BeerColumns.ID, BeerColumns.ACCESSED };
+                    String selection = String.format("%s > 0", BeerColumns.ACCESSED); // Has access date
+                    String orderBy = String.format("%s DESC", BeerColumns.ACCESSED); // Sort by date
+
+                    return contentResolver.query(getContentUri(), projection, selection, null, orderBy);
+                })
+                .filter(new NullFilter())
+                .map(cursor -> {
+                    List<Pair<Integer, Integer>> beerIds = new ArrayList<>();
+                    if (cursor.moveToFirst()) {
+                        do {
+                            int id = cursor.getInt(cursor.getColumnIndex(BeerColumns.ID));
+                            int accessed = cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED));
+                            beerIds.add(new Pair<>(id, accessed));
+                        } while (cursor.moveToNext());
+                    }
+                    cursor.close();
+                    return beerIds;
+                })
+                .observeOn(Schedulers.computation())
+                .doOnNext(dataPair -> Log.d(TAG, "Accessed beers: " + dataPair.size()))
+                .map(dataPair -> {
+                    List<Integer> ids = new ArrayList<>();
+                    for (Pair<Integer, Integer> idAccessPair : dataPair) {
+                        ids.add(idAccessPair.first);
+                    }
+                    return ids;
+                });
     }
 
     @NonNull
