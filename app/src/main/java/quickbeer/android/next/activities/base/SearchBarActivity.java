@@ -113,8 +113,7 @@ public abstract class SearchBarActivity extends BaseActivity
     public Observable<String> getQueryObservable() {
         return querySubject
                 .asObservable()
-                .filter(new NullFilter())
-                .distinctUntilChanged();
+                .filter(new NullFilter());
     }
 
     private void setupSearch() {
