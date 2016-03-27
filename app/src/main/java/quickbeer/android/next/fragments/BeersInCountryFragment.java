@@ -48,6 +48,6 @@ public class BeersInCountryFragment extends BeerListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         String countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
-        setSourceObservable(getBeersInCountry.call(countryId));
+        setProgressingSource(getBeersInCountry.call(countryId));
     }
 }

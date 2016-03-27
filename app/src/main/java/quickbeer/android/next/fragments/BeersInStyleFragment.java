@@ -48,6 +48,6 @@ public class BeersInStyleFragment extends BeerListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         String styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
-        setSourceObservable(getBeersInStyle.call(styleId));
+        setProgressingSource(getBeersInStyle.call(styleId));
     }
 }

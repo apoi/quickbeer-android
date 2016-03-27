@@ -51,15 +51,19 @@ public class BeerListFragment extends BaseFragment {
         return R.layout.beer_list_fragment;
     }
 
-    public void setSourceObservable(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
-        Observable<DataStreamNotification<BeerSearch>> observable =
-                sourceObservable.publish().refCount();
-
+    public void setSource(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
         // Unsubscribe old source before setting the new one, otherwise the subscribe
         // call assumes the old subscription to still be valid.
         beerListViewModel.unsubscribeFromDataStore();
-        beerListViewModel.setSourceObservable(observable);
+        beerListViewModel.setSourceObservable(sourceObservable);
         beerListViewModel.subscribeToDataStore();
+    }
+
+    public void setProgressingSource(Observable<DataStreamNotification<BeerSearch>> sourceObservable) {
+        Observable<DataStreamNotification<BeerSearch>> observable =
+                sourceObservable.publish().refCount();
+
+        setSource(observable);
 
         // Hook up the search observable status to progress indicator
         ((SearchActivity) getActivity()).addProgressObservable(observable);

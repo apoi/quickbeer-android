@@ -38,6 +38,7 @@ import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.rx.NullFilter;
 import quickbeer.android.next.utils.DateUtils;
 import rx.Observable;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class BeerStore extends StoreBase<Beer, Integer> {
@@ -79,6 +80,24 @@ public class BeerStore extends StoreBase<Beer, Integer> {
                     }
                     return ids;
                 });
+    }
+
+    public Observable<Integer> getNewlyAccessedBeerIds(Date date) {
+        return getStream()
+                .filter(beer -> beer.getAccessDate() != null)
+                .distinctUntilChanged(new Func1<Beer, Date>() {
+                    // Access date as key object indicating distinction
+                    private Date latestAccess = date;
+
+                    @Override
+                    public Date call(Beer beer) {
+                        if (beer.getAccessDate().after(latestAccess)) {
+                            latestAccess = beer.getAccessDate();
+                        }
+                        return latestAccess;
+                    }
+                })
+                .map(Beer::getId);
     }
 
     @NonNull

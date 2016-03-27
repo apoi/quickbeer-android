@@ -18,16 +18,21 @@
 package quickbeer.android.next.fragments;
 
 import android.os.Bundle;
-import android.view.View;
 
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.pojo.BeerSearch;
+import rx.subjects.BehaviorSubject;
 
 public class MainFragment extends BeerListFragment {
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
+
+    private BehaviorSubject<DataStreamNotification<BeerSearch>> accessedBeersSubject = BehaviorSubject.create();
 
     @Override
     public int getLayout() {
@@ -38,11 +43,11 @@ public class MainFragment extends BeerListFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getGraph().inject(this);
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setSourceObservable(getAccessedBeers.call());
+        // MainFragment never goes away, so we can keep a perpetual subscription
+        getAccessedBeers.call()
+                .subscribe(accessedBeersSubject::onNext);
+
+        setSource(accessedBeersSubject.asObservable());
     }
 }

@@ -53,7 +53,7 @@ public class BeerSearchFragment extends BeerListFragment {
                 .subscribe(
                         query -> {
                             Log.d(TAG, "query(" + query + ")");
-                            setSourceObservable(getBeerSearch.call(query));
+                            setProgressingSource(getBeerSearch.call(query));
                         },
                         throwable -> {
                             Log.e(TAG, "error", throwable);

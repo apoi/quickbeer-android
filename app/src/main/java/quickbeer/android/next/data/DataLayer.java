@@ -47,7 +47,11 @@ import quickbeer.android.next.pojo.UserSettings;
 import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
+import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
+import rx.subjects.ReplaySubject;
 
 public class DataLayer extends DataLayerBase {
     private static final String TAG = DataLayer.class.getSimpleName();
@@ -174,7 +178,7 @@ public class DataLayer extends DataLayerBase {
 
     public void accessBeer(@NonNull Integer beerId) {
         Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
-        Log.v(TAG, "accessBeer");
+        Log.v(TAG, "accessBeer(" + beerId + ")");
 
         beerStore.getOne(beerId)
                 .observeOn(Schedulers.computation())
@@ -196,8 +200,31 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<BeerSearch>> getAccessedBeers() {
         Log.v(TAG, "getAccessedBeers");
 
-        return beerStore.getAccessedBeerIds()
-                .map(beerIds -> new BeerSearch(null, beerIds, null))
+        // Function to move/add new item to the top of a list
+        Func2<List<Integer>, Integer, List<Integer>> mergeList = (integers, integer) -> {
+            int index = integers.indexOf(integer);
+            if (index > 0) integers.remove(index);
+            if (index != 0) integers.add(0, integer);
+            return integers;
+        };
+
+        // Caching subject for keeping a list of accessed beers without querying the database
+        BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
+
+        // Observing the stores and updating the caching subject
+        beerStore.getAccessedBeerIds()
+                .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
+                .doOnNext(subject::onNext)
+                .flatMap(ids -> beerStore.getNewlyAccessedBeerIds(new Date())
+                        .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
+                        .map(id -> mergeList.call(subject.getValue(), id))
+                )
+                .subscribe(subject::onNext);
+
+        // Convert the subject to a stream similar to beer searches
+        return subject.asObservable()
+                .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
+                .map(ids -> new BeerSearch(null, ids, null))
                 .map(DataStreamNotification::onNext);
     }
 

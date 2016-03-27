@@ -45,6 +45,6 @@ public class TopBeersFragment  extends BeerListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setSourceObservable(getTopBeers.call());
+        setProgressingSource(getTopBeers.call());
     }
 }
