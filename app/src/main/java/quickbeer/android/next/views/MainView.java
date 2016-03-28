@@ -53,10 +53,10 @@ public class MainView extends BeerListView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        activityLaunchItems.add(new ActivityLaunchItem("search beers", R.drawable.score_unrated, TopListActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("best beers", R.drawable.score_unrated, TopListActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("brewers", R.drawable.score_unrated, TopListActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("scan barcode", R.drawable.score_unrated, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("search beers", R.drawable.ic_icon_search, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best beers", R.drawable.ic_icon_beer_glass, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("brewers", R.drawable.ic_icon_beer_keg, TopListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("scan barcode", R.drawable.ic_icon_camera, TopListActivity.class));
 
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);

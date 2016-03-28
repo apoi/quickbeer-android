@@ -42,12 +42,24 @@
             android:layout_height="@dimen/header_item_fade_height"
             android:background="@drawable/background_fade_up" />
 
-        <FrameLayout
-            android:id="@+id/header_area"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/header_item_height"
             android:layout_marginTop="@dimen/header_item_fade_height"
-            android:gravity="start|center">
+            android:paddingLeft="@dimen/list_item_padding"
+            android:paddingRight="@dimen/list_item_padding"
+            android:layout_gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/menu_icon"
+                android:layout_width="@dimen/beer_list_item_icon_size"
+                android:layout_height="@dimen/beer_list_item_icon_size"
+                android:layout_marginTop="@dimen/list_item_icon_margin"
+                android:layout_marginBottom="@dimen/list_item_icon_margin"
+                android:layout_marginRight="@dimen/list_item_icon_margin_right"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_icon_check"/>
 
             <TextView
                 android:id="@+id/header_text"
@@ -56,12 +68,13 @@
                 android:textColor="@color/white"
                 android:fontFamily="sans-serif-thin"
                 android:textSize="@dimen/listitem_text_header"
-                android:padding="@dimen/header_item_text_padding"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="5dp"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:text="Header overlay"/>
 
-        </FrameLayout>
+        </LinearLayout>
 
         <View
             android:id="@+id/header_bottom_fade"

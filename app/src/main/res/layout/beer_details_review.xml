@@ -17,8 +17,8 @@
 
         <TextView
             android:id="@+id/review_rating"
-            android:layout_width="@dimen/list_item_icon_size"
-            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_width="@dimen/beer_list_item_icon_size"
+            android:layout_height="@dimen/beer_list_item_icon_size"
             android:layout_marginRight="@dimen/list_item_icon_margin_right"
             android:gravity="center"
             android:textColor="@color/white"

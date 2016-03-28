@@ -30,7 +30,6 @@ import io.reark.reark.utils.Log;
 
 public class MaskingLayout extends FrameLayout {
     private Path path = new Path();
-    private int maskStart = 0;
     private int maskHeight = 0;
 
     public MaskingLayout(Context context) {
@@ -48,8 +47,6 @@ public class MaskingLayout extends FrameLayout {
     }
 
     public void setFixedMask(int start) {
-        maskStart = start;
-
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {

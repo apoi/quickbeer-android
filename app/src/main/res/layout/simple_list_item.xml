@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/menu_item_height"
+    android:layout_height="@dimen/beer_list_item_height"
     android:paddingLeft="@dimen/list_item_padding"
     android:paddingRight="@dimen/list_item_padding"
     android:background="@drawable/listitem_ripple">
@@ -15,8 +15,8 @@
 
         <TextView
             android:id="@+id/list_item_icon"
-            android:layout_width="@dimen/list_item_icon_size"
-            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_width="@dimen/beer_list_item_icon_size"
+            android:layout_height="@dimen/beer_list_item_icon_size"
             android:layout_marginTop="@dimen/list_item_icon_margin"
             android:layout_marginBottom="@dimen/list_item_icon_margin"
             android:layout_marginRight="@dimen/list_item_icon_margin_right"

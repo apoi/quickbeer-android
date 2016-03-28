@@ -55,9 +55,9 @@ public class TopListView extends BeerListView {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        activityLaunchItems.add(new ActivityLaunchItem("best worldwide", R.drawable.score_unrated, TopBeersActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("best by country", R.drawable.score_unrated, CountryListActivity.class));
-        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.score_unrated, StyleListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best worldwide", R.drawable.ic_icon_globe, TopBeersActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best by country", R.drawable.ic_icon_number_1, CountryListActivity.class));
+        activityLaunchItems.add(new ActivityLaunchItem("best by style", R.drawable.ic_icon_number_2, StyleListActivity.class));
 
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);

@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/menu_item_height">
+    android:layout_height="@dimen/menu_list_item_height">
 
     <View
         android:layout_width="match_parent"
@@ -23,14 +23,21 @@
             android:paddingRight="@dimen/list_item_padding"
             android:layout_gravity="center_vertical">
 
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="@dimen/list_item_icon_size"
-                android:layout_height="@dimen/list_item_icon_size"
+            <FrameLayout
+                android:layout_width="@dimen/beer_list_item_icon_size"
+                android:layout_height="@dimen/beer_list_item_icon_size"
                 android:layout_marginTop="@dimen/list_item_icon_margin"
                 android:layout_marginBottom="@dimen/list_item_icon_margin"
                 android:layout_marginRight="@dimen/list_item_icon_margin_right"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/menu_icon"
+                    android:layout_width="@dimen/menu_list_item_icon_size"
+                    android:layout_height="@dimen/menu_list_item_icon_size"
+                    android:layout_gravity="center" />
+
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/menu_text"

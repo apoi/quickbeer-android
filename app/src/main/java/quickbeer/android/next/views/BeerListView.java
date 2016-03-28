@@ -91,7 +91,7 @@ public class BeerListView extends FrameLayout {
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
 
         // Set enough margin for the menu to be visible
-        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_item_height);
+        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_list_item_height);
         final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
         getAdapter().setHeaderHeight(getMenuItemCount() * menuItemHeight + headerItemHeight);
 

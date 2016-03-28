@@ -43,7 +43,7 @@ public class OverlayHeader extends FrameLayout {
     }
 
     private void init() {
-        minimumTranslation = (int) -getResources().getDimension(R.dimen.header_item_fade_height);
+        minimumTranslation = 0;
     }
 
     @Override

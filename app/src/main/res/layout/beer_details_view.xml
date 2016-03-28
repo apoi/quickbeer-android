@@ -13,8 +13,8 @@
 
         <TextView
             android:id="@+id/beer_stars"
-            android:layout_width="@dimen/list_item_icon_size"
-            android:layout_height="@dimen/list_item_icon_size"
+            android:layout_width="@dimen/beer_list_item_icon_size"
+            android:layout_height="@dimen/beer_list_item_icon_size"
             android:layout_marginTop="@dimen/list_item_icon_margin"
             android:layout_marginBottom="@dimen/list_item_icon_margin"
             android:layout_marginRight="@dimen/list_item_icon_margin_right"
