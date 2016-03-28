@@ -20,19 +20,37 @@ package quickbeer.android.next.views;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import quickbeer.android.next.R;
 
-public class OverlayHeader extends LinearLayout {
+public class OverlayHeader extends FrameLayout {
+    private View bottomFade;
+
     private int basicTranslation = 0;
+    private int minimumTranslation;
 
     public OverlayHeader(Context context) {
         super(context);
+        init();
     }
 
     public OverlayHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
+        minimumTranslation = (int) -getResources().getDimension(R.dimen.header_item_fade_height);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+
+        bottomFade = findViewById(R.id.header_bottom_fade);
     }
 
     public void setMovingScrollView(RecyclerView view) {
@@ -48,8 +66,16 @@ public class OverlayHeader extends LinearLayout {
     public void addTranslation(int translation) {
         basicTranslation += translation;
 
-        setTranslationY(Math.max(
-                -getResources().getDimension(R.dimen.header_item_fade_height),
-                basicTranslation));
+        int effectiveTranslation = Math.max(
+                minimumTranslation,
+                basicTranslation);
+
+        setTranslationY(effectiveTranslation);
+
+        if (effectiveTranslation == minimumTranslation) {
+            bottomFade.setVisibility(VISIBLE);
+        } else {
+            bottomFade.setVisibility(INVISIBLE);
+        }
     }
 }

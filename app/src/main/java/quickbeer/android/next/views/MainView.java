@@ -45,6 +45,11 @@ public class MainView extends BeerListView {
     }
 
     @Override
+    protected int getMenuItemCount() {
+        return 4;
+    }
+
+    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
@@ -59,23 +64,13 @@ public class MainView extends BeerListView {
         menuListView.setLayoutManager(new NoScrollingLayoutManager(getContext()));
         menuListView.setAdapter(menuListAdapter);
 
-        // Set enough margin for the menu to be visible
-        final int numItems = activityLaunchItems.size();
-        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_item_height);
-        final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
-        getAdapter().setHeaderHeight(numItems * menuItemHeight + headerItemHeight);
-
         // Redirect unhandled click events to menu
         getListView().setOnTouchListener((view, event) -> {
             menuListView.dispatchTouchEvent(event);
             return false;
         });
 
-        BottomMaskingLayout mask = ((BottomMaskingLayout) findViewById(R.id.bottom_mask));
-        mask.setMaskingScrollView(getListView());
-
-        OverlayHeader overlayHeader = (OverlayHeader) findViewById(R.id.overlay_header);
-        overlayHeader.addTranslation(numItems * menuItemHeight);
-        overlayHeader.setMovingScrollView(getListView());
+        MaskingLayout menuListMask = ((MaskingLayout) findViewById(R.id.menu_list_mask));
+        menuListMask.setScrollingMask(getListView());
     }
 }

@@ -23,17 +23,21 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
-public class BottomMaskingLayout extends FrameLayout {
+import io.reark.reark.utils.Log;
+
+public class MaskingLayout extends FrameLayout {
     private Path path = new Path();
+    private int maskStart = 0;
     private int maskHeight = 0;
 
-    public BottomMaskingLayout(Context context) {
+    public MaskingLayout(Context context) {
         super(context);
     }
 
-    public BottomMaskingLayout(Context context, AttributeSet attrs) {
+    public MaskingLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -43,7 +47,24 @@ public class BottomMaskingLayout extends FrameLayout {
         super.dispatchDraw(canvas);
     }
 
-    public void setMaskingScrollView(RecyclerView view) {
+    public void setFixedMask(int start) {
+        maskStart = start;
+
+        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                MaskingLayout.this.getViewTreeObserver().removeOnPreDrawListener(this);
+                Log.e("MASK", "new mask: " + new RectF(0, start, MaskingLayout.this.getWidth(), MaskingLayout.this.getHeight()));
+
+                path.reset();
+                path.addRect(new RectF(0, start, MaskingLayout.this.getWidth(), MaskingLayout.this.getHeight()), Path.Direction.CCW);
+
+                return true;
+            }
+        });
+    }
+
+    public void setScrollingMask(RecyclerView view) {
         view.addOnScrollListener(new RecyclerView.OnScrollListener() {
             private int scrollY = 0;
 
@@ -63,7 +84,7 @@ public class BottomMaskingLayout extends FrameLayout {
         if (height != maskHeight) {
             maskHeight = height;
             path.reset();
-            path.addRect(new RectF(0, 0, getWidth(), height), Path.Direction.CCW);
+            path.addRect(new RectF(0, 0, getWidth(), maskHeight), Path.Direction.CCW);
 
             invalidate();
         }
