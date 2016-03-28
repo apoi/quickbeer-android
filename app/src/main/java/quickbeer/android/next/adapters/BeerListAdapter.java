@@ -33,7 +33,6 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.viewmodels.BeerViewModel;
-import quickbeer.android.next.views.listitems.HeaderViewHolder;
 import quickbeer.android.next.views.listitems.ItemType;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -41,15 +40,10 @@ import rx.subscriptions.CompositeSubscription;
 public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     private final List<BeerViewModel> beers = new ArrayList<>();
     private View.OnClickListener onClickListener;
-    private String header = "";
     private int headerHeight = 0;
 
     public BeerListAdapter(List<BeerViewModel> beers) {
         this.beers.addAll(beers);
-    }
-
-    public void setHeader(String header) {
-        this.header = header;
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
@@ -67,8 +61,8 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ItemType.HEADER.ordinal()) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_list_item, parent, false);
-            v.getLayoutParams().height = this.headerHeight;
+            View v = new View(parent.getContext());
+            v.setMinimumHeight(this.headerHeight);
             return new HeaderViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);
@@ -80,13 +74,8 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ItemType type = ItemType.values()[(getItemViewType(position))];
 
-        switch (type) {
-            case HEADER:
-                ((HeaderViewHolder) holder).setHeader(header);
-                break;
-            case BEER:
-                ((ViewHolder) holder).bind(getItem(position));
-                break;
+        if (type == ItemType.BEER) {
+            ((ViewHolder) holder).bind(getItem(position));
         }
     }
 
@@ -119,6 +108,15 @@ public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
             this.beers.addAll(beers);
 
             notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Simple view holder for the header
+     */
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
         }
     }
 
