@@ -6,10 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/menu_list_view"
+    <quickbeer.android.next.views.BottomMaskingLayout
+        android:id="@+id/bottom_mask"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/menu_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </quickbeer.android.next.views.BottomMaskingLayout>
 
     <include layout="@layout/beer_search_result_list" />
 

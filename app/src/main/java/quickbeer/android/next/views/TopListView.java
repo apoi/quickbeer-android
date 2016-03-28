@@ -70,5 +70,8 @@ public class TopListView extends BeerListView {
             menuListView.dispatchTouchEvent(event);
             return false;
         });
+
+        BottomMaskingLayout mask = ((BottomMaskingLayout) findViewById(R.id.bottom_mask));
+        mask.setMaskingScrollView(getListView());
     }
 }
