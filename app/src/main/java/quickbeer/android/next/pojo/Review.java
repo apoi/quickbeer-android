@@ -85,6 +85,9 @@ public class Review extends BasePojo<Review> {
     @SerializedName("RateCount")
     private Integer rateCount;
 
+    private boolean isDraft;
+    private boolean isModified;
+
     @NonNull
     @Override
     protected Class<Review> getTypeParameterClass() {
@@ -124,5 +127,21 @@ public class Review extends BasePojo<Review> {
         String second = StringUtils.value(country, "");
 
         return first + second;
+    }
+
+    public boolean isDraft() {
+        return isDraft;
+    }
+
+    public void setIsDraft(boolean draft) {
+        isDraft = draft;
+    }
+
+    public boolean isModified() {
+        return isModified;
+    }
+
+    public void setIsModified(boolean modified) {
+        isModified = modified;
     }
 }

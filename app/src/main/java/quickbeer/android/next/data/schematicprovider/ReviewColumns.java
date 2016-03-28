@@ -17,5 +17,9 @@
  */
 package quickbeer.android.next.data.schematicprovider;
 
+import net.simonvt.schematic.annotation.DataType;
+
 public interface ReviewColumns extends JsonIdColumns {
+    @DataType(DataType.Type.INTEGER) String DRAFT = "draft"; // Flag if this is a local draft
+    @DataType(DataType.Type.INTEGER) String MODIFIED = "modified"; // Flag if unsaved modifications
 }

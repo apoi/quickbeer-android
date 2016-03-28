@@ -54,7 +54,12 @@ public class ReviewStore extends StoreBase<Review, Integer> {
     @NonNull
     @Override
     protected String[] getProjection() {
-        return new String[] { ReviewColumns.ID, ReviewColumns.JSON };
+        return new String[] {
+                ReviewColumns.ID,
+                ReviewColumns.JSON,
+                ReviewColumns.DRAFT,
+                ReviewColumns.MODIFIED
+        };
     }
 
     @NonNull
@@ -63,6 +68,9 @@ public class ReviewStore extends StoreBase<Review, Integer> {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewColumns.ID, item.getId());
         contentValues.put(ReviewColumns.JSON, getGson().toJson(item));
+        contentValues.put(ReviewColumns.DRAFT, item.isDraft() ? 1 : 0);
+        contentValues.put(ReviewColumns.MODIFIED, item.isModified() ? 1 : 0);
+
         return contentValues;
     }
 
@@ -70,7 +78,14 @@ public class ReviewStore extends StoreBase<Review, Integer> {
     @Override
     protected Review read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewColumns.JSON));
-        return getGson().fromJson(json, Review.class);
+        final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
+        final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
+
+        Review review = getGson().fromJson(json, Review.class);
+        review.setIsDraft(isDraft);
+        review.setIsModified(isModified);
+
+        return review;
     }
 
     @NonNull
