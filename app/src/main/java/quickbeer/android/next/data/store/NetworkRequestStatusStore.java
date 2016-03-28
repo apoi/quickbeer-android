@@ -44,7 +44,8 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
     private static final String TAG = NetworkRequestStatusStore.class.getSimpleName();
 
     public NetworkRequestStatusStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
-        super(contentResolver, gson);
+        // Request store is cache only since old requests won't be interesting on startup
+        super(contentResolver, gson, true);
     }
 
     @NonNull
