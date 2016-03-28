@@ -15,35 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.utils;
+package quickbeer.android.next.views;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
 
-import javax.inject.Singleton;
-
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.next.injections.ForApplication;
-import quickbeer.android.next.network.utils.ApiKey;
-import quickbeer.android.next.network.utils.NetworkUtils;
-
-@Module
-public final class UtilsModule {
-    @Provides
-    @Singleton
-    public NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
+public class NoScrollingLayoutManager extends LinearLayoutManager {
+    public NoScrollingLayoutManager(Context context) {
+        super(context);
     }
 
-    @Provides
-    @Singleton
-    public Countries providesCountries() {
-        return new Countries();
-    }
-
-    @Provides
-    @Singleton
-    public Styles providesStyles() {
-        return new Styles();
+    @Override
+    public boolean canScrollVertically() {
+        return false;
     }
 }

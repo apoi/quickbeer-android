@@ -33,7 +33,9 @@ import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
 import quickbeer.android.next.fragments.BeersInCountryFragment;
 import quickbeer.android.next.fragments.BeersInStyleFragment;
+import quickbeer.android.next.fragments.CountryListFragment;
 import quickbeer.android.next.fragments.MainFragment;
+import quickbeer.android.next.fragments.StyleListFragment;
 import quickbeer.android.next.fragments.TopBeersFragment;
 import quickbeer.android.next.fragments.TopListFragment;
 import quickbeer.android.next.network.NetworkModule;
@@ -67,6 +69,8 @@ public interface ApplicationGraph {
     void inject(TopBeersFragment topBeersFragment);
     void inject(BeersInCountryFragment beersInCountryFragment);
     void inject(BeersInStyleFragment beersInStyleFragment);
+    void inject(CountryListFragment countryListFragment);
+    void inject(StyleListFragment styleListFragment);
 
     final class Initializer {
         public static ApplicationGraph init(Application application) {

@@ -39,13 +39,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class BeerListAdapter extends BaseListAdapter<RecyclerView.ViewHolder> {
-    private final String header = "World";
     private final List<BeerViewModel> beers = new ArrayList<>();
     private View.OnClickListener onClickListener;
+    private String header = "";
     private int headerHeight = 0;
 
     public BeerListAdapter(List<BeerViewModel> beers) {
         this.beers.addAll(beers);
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener) {

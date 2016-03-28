@@ -18,7 +18,6 @@
 package quickbeer.android.next.views;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
@@ -58,7 +57,7 @@ public class TopListView extends BeerListView {
         menuListAdapter = new MenuListAdapter(activityLaunchItems);
         menuListView = (RecyclerView) findViewById(R.id.menu_list_view);
         menuListView.setHasFixedSize(true);
-        menuListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        menuListView.setLayoutManager(new NoScrollingLayoutManager(getContext()));
         menuListView.setAdapter(menuListAdapter);
 
         // Set enough margin for the menu to be visible

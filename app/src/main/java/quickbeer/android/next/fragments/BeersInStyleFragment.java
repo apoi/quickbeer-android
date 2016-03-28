@@ -25,12 +25,17 @@ import javax.inject.Inject;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeersInStyleActivity;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.utils.Styles;
+import quickbeer.android.next.views.BeerListView;
 
 public class BeersInStyleFragment extends BeerListFragment {
     private static final String TAG = BeersInStyleFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetBeersInStyle getBeersInStyle;
+
+    @Inject
+    Styles styles;
 
     @Override
     public int getLayout() {
@@ -49,5 +54,7 @@ public class BeersInStyleFragment extends BeerListFragment {
 
         String styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
         setProgressingSource(getBeersInStyle.call(styleId));
+
+        ((BeerListView) view).setHeader(styles.getItem(Integer.parseInt(styleId)).getName());
     }
 }

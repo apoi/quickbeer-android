@@ -23,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.StyleListActivity;
 import quickbeer.android.next.fragments.base.BaseFragment;
@@ -31,6 +33,9 @@ import quickbeer.android.next.views.SimpleListView;
 import rx.Observable;
 
 public class StyleListFragment extends BaseFragment {
+    @Inject
+    Styles styles;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.simple_list_fragment, container, false);
@@ -40,7 +45,9 @@ public class StyleListFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((SimpleListView) view).setListSource(new Styles());
+        getGraph().inject(this);
+
+        ((SimpleListView) view).setListSource(styles);
 
         Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
         ((SimpleListView) view).setFilterObservable(filterObservable);

@@ -18,14 +18,15 @@
 package quickbeer.android.next.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.views.MainView;
 import rx.subjects.BehaviorSubject;
 
 public class MainFragment extends BeerListFragment {
@@ -37,6 +38,13 @@ public class MainFragment extends BeerListFragment {
     @Override
     public int getLayout() {
         return R.layout.main_fragment;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ((MainView) view).setHeader(getString(R.string.header_recently_seen));
     }
 
     @Override

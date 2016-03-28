@@ -4,8 +4,7 @@
     android:id="@+id/beer_details_view"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/background_light">
+    android:layout_height="match_parent">
 
     <quickbeer.android.next.views.BeerDetailsRatingView
         android:id="@+id/rating_view"

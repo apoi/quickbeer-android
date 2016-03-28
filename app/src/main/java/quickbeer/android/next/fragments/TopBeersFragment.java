@@ -24,8 +24,9 @@ import javax.inject.Inject;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.views.BeerListView;
 
-public class TopBeersFragment  extends BeerListFragment {
+public class TopBeersFragment extends BeerListFragment {
     private static final String TAG = TopBeersFragment.class.getSimpleName();
 
     @Inject
@@ -46,5 +47,7 @@ public class TopBeersFragment  extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setProgressingSource(getTopBeers.call());
+
+        ((BeerListView) view).setHeader(getString(R.string.header_top_world));
     }
 }

@@ -57,6 +57,10 @@ public class BeerListView extends FrameLayout {
         super(context, attrs);
     }
 
+    public void setHeader(String header) {
+        beerListAdapter.setHeader(header);
+    }
+
     protected RecyclerView getListView() {
         return beersListView;
     }
@@ -73,6 +77,7 @@ public class BeerListView extends FrameLayout {
         beersListView.setHasFixedSize(true);
 
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
+        beerListAdapter.setHeaderHeight((int) getResources().getDimension(R.dimen.header_item_height));
         beersListView.setAdapter(beerListAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

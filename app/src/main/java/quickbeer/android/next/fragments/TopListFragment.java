@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.views.TopListView;
 
 public class TopListFragment extends BeerListFragment {
     @Inject
@@ -44,5 +45,7 @@ public class TopListFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setProgressingSource(getTopBeers.call());
+
+        ((TopListView) view).setHeader(getString(R.string.header_your_reviews));
     }
 }
