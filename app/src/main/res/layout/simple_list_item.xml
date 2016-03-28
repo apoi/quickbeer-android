@@ -5,7 +5,7 @@
     android:layout_height="@dimen/menu_item_height"
     android:paddingLeft="@dimen/list_item_padding"
     android:paddingRight="@dimen/list_item_padding"
-    android:background="@drawable/listitem_ripple_dark">
+    android:background="@drawable/listitem_ripple">
 
     <LinearLayout
         android:orientation="horizontal"
