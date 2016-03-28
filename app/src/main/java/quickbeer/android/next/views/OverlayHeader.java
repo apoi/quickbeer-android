@@ -22,14 +22,13 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import quickbeer.android.next.R;
 
 public class OverlayHeader extends FrameLayout {
     private View bottomFade;
 
-    private int basicTranslation = 0;
+    private int currentTranslation = 0;
     private int minimumTranslation;
 
     public OverlayHeader(Context context) {
@@ -64,15 +63,15 @@ public class OverlayHeader extends FrameLayout {
     }
 
     public void addTranslation(int translation) {
-        basicTranslation += translation;
+        currentTranslation += translation;
 
         int effectiveTranslation = Math.max(
                 minimumTranslation,
-                basicTranslation);
+                currentTranslation);
 
         setTranslationY(effectiveTranslation);
 
-        if (effectiveTranslation == minimumTranslation) {
+        if (currentTranslation < minimumTranslation) {
             bottomFade.setVisibility(VISIBLE);
         } else {
             bottomFade.setVisibility(INVISIBLE);

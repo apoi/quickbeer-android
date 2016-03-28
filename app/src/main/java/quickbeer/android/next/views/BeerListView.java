@@ -47,6 +47,7 @@ public class BeerListView extends FrameLayout {
 
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
+    private TextView beerListHeader;
     private TextView searchStatusTextView;
 
     public BeerListView(Context context) {
@@ -58,7 +59,7 @@ public class BeerListView extends FrameLayout {
     }
 
     public void setHeader(String header) {
-        beerListAdapter.setHeader(header);
+        beerListHeader.setText(header);
     }
 
     protected RecyclerView getListView() {
@@ -88,6 +89,7 @@ public class BeerListView extends FrameLayout {
         layoutManager.setRecycleChildrenOnDetach(true);
         beersListView.setLayoutManager(layoutManager);
 
+        beerListHeader = (TextView) findViewById(R.id.header_text);
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
 
         // Set enough margin for the menu to be visible
