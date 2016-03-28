@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:gravity="center|bottom">
+    android:gravity="center|bottom"
+    android:visibility="invisible">
 
     <View
         android:layout_width="match_parent"
