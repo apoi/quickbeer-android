@@ -24,7 +24,9 @@ import java.util.Map;
 
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Review;
+import retrofit.http.FormUrlEncoded;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.QueryMap;
 import rx.Observable;
 
@@ -35,6 +37,10 @@ public interface RateBeerService {
     Uri COUNTRY = Uri.parse("__country");
     Uri STYLE   = Uri.parse("__style");
     Uri REVIEWS = Uri.parse("__reviews");
+
+    @FormUrlEncoded
+    @POST("/Signin_r.asp")
+    Observable<String> login(@QueryMap Map<String, String> params);
 
     @GET("/json/bff.asp")
     Observable<List<Beer>> getBeer(@QueryMap Map<String, String> params);

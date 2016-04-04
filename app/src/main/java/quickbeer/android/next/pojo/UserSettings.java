@@ -18,6 +18,9 @@
 package quickbeer.android.next.pojo;
 
 public class UserSettings {
+    private String username;
+    private String password;
+
     public UserSettings() {
     }
 }

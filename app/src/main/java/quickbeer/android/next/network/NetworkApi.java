@@ -42,12 +42,17 @@ public class NetworkApi {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setClient(client)
-                .setEndpoint("http://www.ratebeer.com")
+                .setEndpoint("https://www.ratebeer.com")
                 .setConverter(new GsonConverter(gson))
                 .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .build();
 
         rateBeerService = restAdapter.create(RateBeerService.class);
+    }
+
+    public Observable<String> login(Map<String, String> params) {
+        return rateBeerService
+                .login(params);
     }
 
     public Observable<Beer> getBeer(Map<String, String> params) {
