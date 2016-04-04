@@ -19,4 +19,7 @@
     <string name="header_top_world">World</string>
     <string name="header_countries">countries</string>
     <string name="header_styles">styles</string>
+    <string name="tab_beers">Beers</string>
+    <string name="tab_brewers">Brewers</string>
+    <string name="tab_places">Places</string>
 </resources>

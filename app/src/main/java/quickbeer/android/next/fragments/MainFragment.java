@@ -18,44 +18,32 @@
 package quickbeer.android.next.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
-import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.next.R;
-import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.pojo.BeerSearch;
-import quickbeer.android.next.views.MainView;
-import rx.subjects.BehaviorSubject;
+import quickbeer.android.next.adapters.MainViewAdapter;
+import quickbeer.android.next.fragments.base.BaseFragment;
 
-public class MainFragment extends BeerListFragment {
-    @Inject
-    DataLayer.GetAccessedBeers getAccessedBeers;
-
-    private BehaviorSubject<DataStreamNotification<BeerSearch>> accessedBeersSubject = BehaviorSubject.create();
+public class MainFragment extends BaseFragment {
 
     @Override
-    public int getLayout() {
-        return R.layout.main_fragment;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.main_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((MainView) view).setHeader(getString(R.string.header_recently_seen));
-    }
+        ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        viewPager.setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
-
-        // MainFragment never goes away, so we can keep a perpetual subscription
-        getAccessedBeers.call()
-                .subscribe(accessedBeersSubject::onNext);
-
-        setSource(accessedBeersSubject.asObservable());
+        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        tabLayout.setupWithViewPager(viewPager);
     }
 }
