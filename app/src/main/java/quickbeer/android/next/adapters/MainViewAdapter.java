@@ -24,7 +24,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import quickbeer.android.next.R;
 import quickbeer.android.next.fragments.RecentBeersFragment;
-import quickbeer.android.next.fragments.TopBeersFragment;
+import quickbeer.android.next.fragments.TopListFragment;
 
 public class MainViewAdapter extends FragmentPagerAdapter {
     private final Context context;
@@ -37,7 +37,7 @@ public class MainViewAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 2;
     }
 
     @Override
@@ -45,11 +45,9 @@ public class MainViewAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 return new RecentBeersFragment();
-            case 1:
-                return new TopBeersFragment();
             case 2:
             default:
-                return new TopBeersFragment();
+                return new TopListFragment();
         }
     }
 
@@ -59,10 +57,8 @@ public class MainViewAdapter extends FragmentPagerAdapter {
             case 0:
                 return context.getString(R.string.tab_beers);
             case 1:
-                return context.getString(R.string.tab_brewers);
-            case 2:
             default:
-                return context.getString(R.string.tab_places);
+                return context.getString(R.string.tab_lists);
         }
     }
 }

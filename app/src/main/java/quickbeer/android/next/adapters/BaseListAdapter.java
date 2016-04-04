@@ -19,5 +19,12 @@ package quickbeer.android.next.adapters;
 
 import android.support.v7.widget.RecyclerView;
 
-public abstract class BaseListAdapter<T extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<T> {
+public abstract class BaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    public enum ItemType {
+        MENU,
+        HEADER,
+        BEER,
+        RATING,
+        REVIEW
+    }
 }

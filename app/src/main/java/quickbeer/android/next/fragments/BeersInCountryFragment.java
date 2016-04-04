@@ -26,7 +26,6 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeersInCountryActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.utils.Countries;
-import quickbeer.android.next.views.BeerListView;
 
 public class BeersInCountryFragment extends BeerListFragment {
     private static final String TAG = BeersInCountryFragment.class.getSimpleName();
@@ -54,7 +53,5 @@ public class BeersInCountryFragment extends BeerListFragment {
 
         String countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
         setProgressingSource(getBeersInCountry.call(countryId));
-
-        ((BeerListView) view).setHeader(countries.getItem(Integer.parseInt(countryId)).getName());
     }
 }

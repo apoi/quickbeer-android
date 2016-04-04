@@ -15,12 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.views.listitems;
+package quickbeer.android.next.views.viewholders;
 
-public enum ItemType {
-    MENU,
-    HEADER,
-    BEER,
-    RATING,
-    REVIEW
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+/**
+ * Simple view holder for the header
+ */
+public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public HeaderViewHolder(View itemView) {
+        super(itemView);
+    }
 }

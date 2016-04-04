@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.views.listitems;
+package quickbeer.android.next.views.viewholders;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;

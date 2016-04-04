@@ -51,27 +51,15 @@ public class BeerListView extends FrameLayout {
     private TextView searchStatusTextView;
 
     public BeerListView(Context context) {
-        super(context, null);
+        super(context);
     }
 
     public BeerListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setHeader(String header) {
-        beerListHeader.setText(header);
-    }
-
     protected RecyclerView getListView() {
         return beersListView;
-    }
-
-    protected BeerListAdapter getAdapter() {
-        return beerListAdapter;
-    }
-
-    protected int getMenuItemCount() {
-        return 0;
     }
 
     @Override
@@ -79,30 +67,14 @@ public class BeerListView extends FrameLayout {
         super.onFinishInflate();
 
         beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
-        beersListView.setHasFixedSize(true);
-
         beerListAdapter = new BeerListAdapter(Collections.emptyList());
-        beerListAdapter.setHeaderHeight((int) getResources().getDimension(R.dimen.header_item_height));
         beersListView.setAdapter(beerListAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
         beersListView.setLayoutManager(layoutManager);
 
-        beerListHeader = (TextView) findViewById(R.id.header_text);
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
-
-        // Set enough margin for the menu to be visible
-        final int menuItemHeight = (int) getResources().getDimension(R.dimen.menu_list_item_height);
-        final int headerItemHeight = (int) getResources().getDimension(R.dimen.header_item_height);
-        getAdapter().setHeaderHeight(getMenuItemCount() * menuItemHeight + headerItemHeight);
-
-        MaskingLayout beerListMask = ((MaskingLayout) findViewById(R.id.beer_list_mask));
-        beerListMask.setFixedMask((int) getResources().getDimension(R.dimen.header_item_clip));
-
-        OverlayHeader overlayHeader = (OverlayHeader) findViewById(R.id.overlay_header);
-        overlayHeader.addTranslation(getMenuItemCount() * menuItemHeight);
-        overlayHeader.setMovingScrollView(getListView());
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {

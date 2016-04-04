@@ -17,6 +17,7 @@
  */
 package quickbeer.android.next.adapters;
 
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +31,9 @@ import java.util.List;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.SimpleItem;
-import quickbeer.android.next.views.listitems.SimpleListItemViewHolder;
+import quickbeer.android.next.views.viewholders.SimpleListItemViewHolder;
 
-public class SimpleListAdapter extends BaseListAdapter<SimpleListItemViewHolder> {
+public class SimpleListAdapter extends BaseListAdapter {
     private static final String TAG = SimpleListAdapter.class.getSimpleName();
 
     private final List<SimpleItem> sourceList;
@@ -64,14 +65,14 @@ public class SimpleListAdapter extends BaseListAdapter<SimpleListItemViewHolder>
     }
 
     @Override
-    public SimpleListItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false);
         return new SimpleListItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(SimpleListItemViewHolder holder, int position) {
-        holder.setItem(adapterList.get(position));
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        ((SimpleListItemViewHolder) holder).setItem(adapterList.get(position));
     }
 
     @Override
