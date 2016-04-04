@@ -26,30 +26,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.next.R;
+import quickbeer.android.next.pojo.Header;
 import quickbeer.android.next.viewmodels.BeerViewModel;
 import quickbeer.android.next.views.viewholders.BeerViewHolder;
 import quickbeer.android.next.views.viewholders.HeaderViewHolder;
 
 public class BeerListAdapter extends BaseListAdapter {
+
+    private Header header;
     private final List<BeerViewModel> beers = new ArrayList<>();
+    private final List<Object> items = new ArrayList<>();
+
     private View.OnClickListener onClickListener;
 
-    public BeerListAdapter(List<BeerViewModel> beers) {
-        this.beers.addAll(beers);
+    public BeerListAdapter() {
+    }
+
+    public void setHeader(Header header) {
+        this.header = header;
+
+        recreateList();
+    }
+
+    private void recreateList() {
+        items.clear();
+
+        if (header != null) {
+            items.add(header);
+        }
+
+        items.addAll(beers);
+
+        notifyDataSetChanged();
     }
 
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 
-    public BeerViewModel getItem(int position) {
-        return beers.get(position - 1);
+    public BeerViewModel getBeerViewModel(int position) {
+        return (BeerViewModel) items.get(position);
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == ItemType.HEADER.ordinal()) {
-            View v = new View(parent.getContext());
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_list_item, parent, false);
             return new HeaderViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);
@@ -61,8 +83,10 @@ public class BeerListAdapter extends BaseListAdapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ItemType type = ItemType.values()[(getItemViewType(position))];
 
-        if (type == ItemType.BEER) {
-            ((BeerViewHolder) holder).bind(getItem(position));
+        if (type == ItemType.HEADER) {
+            ((HeaderViewHolder) holder).setHeader((Header) items.get(position));
+        } else if (type == ItemType.BEER) {
+            ((BeerViewHolder) holder).bind((BeerViewModel) items.get(position));
         }
     }
 
@@ -77,7 +101,9 @@ public class BeerListAdapter extends BaseListAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        Object item = items.get(position);
+
+        if (item instanceof Header) {
             return ItemType.HEADER.ordinal();
         } else {
             return ItemType.BEER.ordinal();
@@ -86,7 +112,7 @@ public class BeerListAdapter extends BaseListAdapter {
 
     @Override
     public int getItemCount() {
-        return beers.size() + 1;
+        return items.size();
     }
 
     public void set(List<BeerViewModel> beers) {
@@ -94,7 +120,7 @@ public class BeerListAdapter extends BaseListAdapter {
             this.beers.clear();
             this.beers.addAll(beers);
 
-            notifyDataSetChanged();
+            recreateList();
         }
     }
 }

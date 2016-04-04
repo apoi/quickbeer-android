@@ -1,34 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:gravity="center|bottom"
-    android:visibility="invisible">
+    android:layout_height="50dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_item_fade_height"
-        android:background="@drawable/background_fade_up" />
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textColor="@color/white"
+        android:fontFamily="sans-serif"
+        android:textSize="@dimen/listitem_text_header"
+        android:paddingLeft="20dp"
+        android:singleLine="true"
+        android:textAllCaps="true"
+        android:ellipsize="end" />
 
-    <FrameLayout
-        android:id="@+id/header_area"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_item_height"
-        android:gravity="start|center">
-
-        <TextView
-            android:id="@+id/header_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-thin"
-            android:textSize="@dimen/listitem_text_header"
-            android:padding="@dimen/header_item_text_padding"
-            android:singleLine="true"
-            android:ellipsize="end" />
-
-    </FrameLayout>
-
-</LinearLayout>
+</FrameLayout>

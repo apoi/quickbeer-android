@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.utils.Log;
@@ -34,6 +33,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.BeerListAdapter;
+import quickbeer.android.next.pojo.Header;
 import quickbeer.android.next.viewmodels.BaseViewModel;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.viewmodels.BeerViewModel;
@@ -47,7 +47,6 @@ public class BeerListView extends FrameLayout {
 
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
-    private TextView beerListHeader;
     private TextView searchStatusTextView;
 
     public BeerListView(Context context) {
@@ -58,16 +57,12 @@ public class BeerListView extends FrameLayout {
         super(context, attrs);
     }
 
-    protected RecyclerView getListView() {
-        return beersListView;
-    }
-
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beersListView = (RecyclerView) findViewById(R.id.beers_list_view);
-        beerListAdapter = new BeerListAdapter(Collections.emptyList());
+        beersListView = (RecyclerView) findViewById(R.id.list_view);
+        beerListAdapter = new BeerListAdapter();
         beersListView.setAdapter(beerListAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -75,6 +70,10 @@ public class BeerListView extends FrameLayout {
         beersListView.setLayoutManager(layoutManager);
 
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
+    }
+
+    public void setHeader(Header header) {
+        beerListAdapter.setHeader(header);
     }
 
     private void setBeers(@NonNull List<BeerViewModel> beers) {
@@ -138,7 +137,7 @@ public class BeerListView extends FrameLayout {
             final int itemPosition = view.beersListView.getChildAdapterPosition(clickedView);
 
             view.beerListAdapter
-                    .getItem(itemPosition)
+                    .getBeerViewModel(itemPosition)
                     .getBeer()
                     .first()
                     .subscribe(beer -> {

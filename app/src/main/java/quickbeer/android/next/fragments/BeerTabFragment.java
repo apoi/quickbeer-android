@@ -18,6 +18,7 @@
 package quickbeer.android.next.fragments;
 
 import android.os.Bundle;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -25,9 +26,11 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.Header;
+import quickbeer.android.next.views.BeerListView;
 import rx.subjects.BehaviorSubject;
 
-public class RecentBeersFragment extends BeerListFragment {
+public class BeerTabFragment extends BeerListFragment {
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
 
@@ -35,7 +38,7 @@ public class RecentBeersFragment extends BeerListFragment {
 
     @Override
     public int getLayout() {
-        return R.layout.recent_beers_fragment;
+        return R.layout.beer_tab_fragment;
     }
 
     @Override
@@ -43,10 +46,17 @@ public class RecentBeersFragment extends BeerListFragment {
         super.onCreate(savedInstanceState);
         getGraph().inject(this);
 
-        // RecentBeersFragment never goes away, so we can keep a perpetual subscription
+        // BeerTabFragment never goes away, so we can keep a perpetual subscription
         getAccessedBeers.call()
                 .subscribe(accessedBeersSubject::onNext);
 
         setSource(accessedBeersSubject.asObservable());
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        ((BeerListView) view).setHeader(new Header("Recently seen beers"));
     }
 }

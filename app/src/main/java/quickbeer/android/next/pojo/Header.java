@@ -15,28 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.views.viewholders;
+package quickbeer.android.next.pojo;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.TextView;
+public class Header {
+    private String text;
 
-import quickbeer.android.next.R;
-import quickbeer.android.next.pojo.Header;
-
-/**
- * Simple view holder for the header
- */
-public class HeaderViewHolder extends RecyclerView.ViewHolder {
-    private TextView headerTextView;
-
-    public HeaderViewHolder(View view) {
-        super(view);
-
-        this.headerTextView = (TextView) view.findViewById(R.id.header_text);
+    public Header(String text) {
+        this.text = text;
     }
 
-    public void setHeader(Header header) {
-        this.headerTextView.setText(header.getText());
+    public String getText() {
+        return text;
     }
 }

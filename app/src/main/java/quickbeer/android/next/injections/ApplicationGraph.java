@@ -31,10 +31,10 @@ import quickbeer.android.next.data.DataStoreModule;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
+import quickbeer.android.next.fragments.BeerTabFragment;
 import quickbeer.android.next.fragments.BeersInCountryFragment;
 import quickbeer.android.next.fragments.BeersInStyleFragment;
 import quickbeer.android.next.fragments.CountryListFragment;
-import quickbeer.android.next.fragments.RecentBeersFragment;
 import quickbeer.android.next.fragments.StyleListFragment;
 import quickbeer.android.next.fragments.TopBeersFragment;
 import quickbeer.android.next.fragments.TopListFragment;
@@ -61,7 +61,7 @@ public interface ApplicationGraph {
     void inject(SearchActivity searchActivity);
     void inject(BeerDetailsActivity beerDetailsActivity);
 
-    void inject(RecentBeersFragment recentBeersFragment);
+    void inject(BeerTabFragment beerTabFragment);
     void inject(BeerListFragment beerListFragment);
     void inject(BeerSearchFragment beerSearchFragment);
     void inject(BeerDetailsFragment beerDetailsFragment);

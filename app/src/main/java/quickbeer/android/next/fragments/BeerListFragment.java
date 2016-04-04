@@ -83,7 +83,7 @@ public class BeerListFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        beersViewBinder = new BeerListView.ViewBinder((BeerListView) view.findViewById(R.id.beers_view), beerListViewModel);
+        beersViewBinder = new BeerListView.ViewBinder((BeerListView) view.findViewById(R.id.list_layout), beerListViewModel);
     }
 
     @Override

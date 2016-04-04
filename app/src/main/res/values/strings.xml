@@ -21,5 +21,6 @@
     <string name="header_styles">styles</string>
 
     <string name="tab_beers">Beers</string>
-    <string name="tab_lists">Top Charts</string>
+    <string name="tab_brewers">Brewers</string>
+    <string name="tab_places">Places</string>
 </resources>
