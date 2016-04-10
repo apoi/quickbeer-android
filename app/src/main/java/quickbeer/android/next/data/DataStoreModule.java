@@ -40,6 +40,11 @@ import quickbeer.android.next.network.fetchers.FetcherModule;
 public final class DataStoreModule {
 
     @Provides
+    public DataLayer.Login provideLogin(DataLayer dataLayer) {
+        return dataLayer::login;
+    }
+
+    @Provides
     public DataLayer.GetUserSettings provideGetUserSettings(DataLayer dataLayer) {
         return dataLayer::getUserSettings;
     }

@@ -87,6 +87,27 @@ public class DataLayer extends DataLayerBase {
         userSettingsStore.put(userSettings);
     }
 
+    //// LOGIN
+
+    public Observable<DataStreamNotification<UserSettings>> login() {
+        Log.v(TAG, "login");
+
+        final Uri uri = userSettingsStore.getUriForId(DEFAULT_USER_ID);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<UserSettings> userSettingsObservable =
+                userSettingsStore.getStream(DEFAULT_USER_ID);
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+        context.startService(intent);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, userSettingsObservable);
+    }
+
     //// GET BEER DETAILS
 
     @NonNull
@@ -94,8 +115,10 @@ public class DataLayer extends DataLayerBase {
         Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
         Log.v(TAG, "getBeerResultStream");
 
+        final Uri uri = beerStore.getUriForId(beerId);
+
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(beerId.toString().hashCode());
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
 
         final Observable<Beer> beerObservable =
                 beerStore.getStream(beerId);
@@ -494,6 +517,11 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
         intent.putExtra("beerId", beerId);
         context.startService(intent);
+    }
+
+    public interface Login {
+        @NonNull
+        Observable<DataStreamNotification<UserSettings>> call();
     }
 
     public interface GetUserSettings {
