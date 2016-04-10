@@ -92,7 +92,7 @@ public class BeerSearchFetcher extends FetcherBase {
 
         final String uri = beerSearchStore.getUriForId(queryId).toString();
         Subscription subscription = createNetworkObservable(query)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .map((beers) -> {
                     final List<Integer> beerIds = new ArrayList<>();
                     for (Beer beer : beers) {

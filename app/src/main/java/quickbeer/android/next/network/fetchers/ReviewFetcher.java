@@ -81,15 +81,14 @@ public class ReviewFetcher extends FetcherBase {
     protected void fetchReviews(final int beerId) {
         Log.d(TAG, "fetchReviews(" + beerId + ")");
 
-        if (requestMap.containsKey(beerId) &&
-                !requestMap.get(beerId).isUnsubscribed()) {
+        if (requestMap.containsKey(beerId) && !requestMap.get(beerId).isUnsubscribed()) {
             Log.d(TAG, "Found an ongoing request for reviews " + beerId);
             return;
         }
 
         final String uri = reviewListStore.getUriForId(beerId).toString();
         Subscription subscription = createNetworkObservable(beerId)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .map((reviews) -> {
                     final List<Integer> reviewIds = new ArrayList<>();
                     for (Review review : reviews) {

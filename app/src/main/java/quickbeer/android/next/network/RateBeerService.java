@@ -31,6 +31,7 @@ import retrofit.http.QueryMap;
 import rx.Observable;
 
 public interface RateBeerService {
+    Uri LOGIN   = Uri.parse("__login");
     Uri BEER    = Uri.parse("__beer");
     Uri SEARCH  = Uri.parse("__search");
     Uri TOP50   = Uri.parse("__top50");
