@@ -25,16 +25,27 @@
  */
 package quickbeer.android.next.network.utils;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.squareup.okhttp.OkHttpClient;
+
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 
 public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient> {
 
     @NonNull
     @Override
-    public OkHttpClient decorateNetwork(@NonNull OkHttpClient httpClient) {
-        return httpClient;
+    public OkHttpClient decorateNetwork(@NonNull OkHttpClient httpClient, @NonNull Context context) {
+        CookieManager cookieManager = new CookieManager(
+                new PersistentCookieStore(context),
+                CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+
+        OkHttpClient client = new OkHttpClient();
+        client.setCookieHandler(cookieManager);
+
+        return client;
     }
 
     @Override

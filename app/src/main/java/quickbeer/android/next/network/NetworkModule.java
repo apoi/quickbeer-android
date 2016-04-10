@@ -25,6 +25,8 @@
  */
 package quickbeer.android.next.network;
 
+import android.content.Context;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
@@ -36,6 +38,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.utils.DateDeserializer;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.StringDeserializer;
@@ -59,8 +62,8 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation) {
-        return networkInstrumentation.decorateNetwork(new OkHttpClient());
+    public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation, @ForApplication Context context) {
+        return networkInstrumentation.decorateNetwork(new OkHttpClient(), context);
     }
 
     @Provides
