@@ -69,15 +69,11 @@ public class LoginFetcher extends FetcherBase {
         final String username = intent.getStringExtra("username");
         final String password = intent.getStringExtra("password");
 
-        Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        map.put("pwd", password);
-        map.put("redirect", "example.com");
-
         final String uri = userSettingsStore.getUriForId(id).toString();
-        Subscription subscription = networkApi.login(map)
-                .subscribeOn(Schedulers.io())
+        Subscription subscription = networkApi.login(username, password, "1", "example.com")
                 .doOnNext(s -> Log.e(TAG, "Login result: " + s))
+                .doOnCompleted(() -> completeRequest(uri))
+                .doOnError(doOnError(uri))
                 .subscribe();
 
         requestMap.put(id, subscription);

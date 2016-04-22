@@ -89,7 +89,8 @@ public class DataLayer extends DataLayerBase {
 
     //// LOGIN
 
-    public Observable<DataStreamNotification<UserSettings>> login() {
+    public Observable<DataStreamNotification<UserSettings>> login(@NonNull String username,
+                                                                  @NonNull String password) {
         Log.v(TAG, "login");
 
         final Uri uri = userSettingsStore.getUriForId(DEFAULT_USER_ID);
@@ -102,6 +103,8 @@ public class DataLayer extends DataLayerBase {
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+        intent.putExtra("username", username);
+        intent.putExtra("password", password);
         context.startService(intent);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
@@ -521,7 +524,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface Login {
         @NonNull
-        Observable<DataStreamNotification<UserSettings>> call();
+        Observable<DataStreamNotification<UserSettings>> call(@NonNull String username, @NonNull String password);
     }
 
     public interface GetUserSettings {

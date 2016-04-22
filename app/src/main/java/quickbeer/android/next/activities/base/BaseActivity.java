@@ -21,7 +21,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import javax.inject.Inject;
+
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
+import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.injections.ApplicationGraph;
 import rx.subscriptions.CompositeSubscription;
 
@@ -29,10 +33,17 @@ public class BaseActivity extends AppCompatActivity {
     // Composite for subscriptions meant to stay alive for the activity's duration
     protected CompositeSubscription activitySubscription = new CompositeSubscription();
 
+    @Inject
+    DataLayer.GetUserSettings getUserSettings;
+
+    @Inject
+    DataLayer.Login login;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inject();
+        login();
     }
 
     @Override
@@ -47,5 +58,11 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void inject() {
+        getGraph().inject(this);
+    }
+
+    private void login() {
+        login.call("", "")
+                .subscribe(userSettings -> Log.d("LOGIN", "Settings: " + userSettings));
     }
 }

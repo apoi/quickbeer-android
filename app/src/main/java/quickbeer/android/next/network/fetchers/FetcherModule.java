@@ -27,12 +27,25 @@ import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
+import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.NetworkModule;
 import quickbeer.android.next.network.utils.NetworkUtils;
 
 @Module(includes = NetworkModule.class)
 public final class FetcherModule {
+    @Provides
+    @Named("loginFetcher")
+    public Fetcher provideLoginFetcher(NetworkApi networkApi,
+                                       NetworkUtils networkUtils,
+                                       NetworkRequestStatusStore networkRequestStatusStore,
+                                       UserSettingsStore userSettingsStore) {
+        return new LoginFetcher(networkApi,
+                networkUtils,
+                networkRequestStatusStore::put,
+                userSettingsStore);
+    }
+
     @Provides
     @Named("beerFetcher")
     public Fetcher provideBeerFetcher(NetworkApi networkApi,

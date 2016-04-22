@@ -29,6 +29,7 @@ import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Review;
 import retrofit.RestAdapter;
 import retrofit.client.Client;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 import rx.Observable;
 
@@ -50,9 +51,9 @@ public class NetworkApi {
         rateBeerService = restAdapter.create(RateBeerService.class);
     }
 
-    public Observable<String> login(Map<String, String> params) {
+    public Observable<Response> login(String username, String password, String saveinfo, String redirect) {
         return rateBeerService
-                .login(params);
+                .login(username, password, saveinfo, redirect);
     }
 
     public Observable<Beer> getBeer(Map<String, String> params) {

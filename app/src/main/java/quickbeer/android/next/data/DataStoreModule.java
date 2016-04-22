@@ -124,7 +124,8 @@ public final class DataStoreModule {
 
     @Provides
     @Singleton
-    public ServiceDataLayer provideServiceDataLayer(@Named("beerFetcher") Fetcher beerFetcher,
+    public ServiceDataLayer provideServiceDataLayer(@Named("loginFetcher") Fetcher loginFetcher,
+                                                    @Named("beerFetcher") Fetcher beerFetcher,
                                                     @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
                                                     @Named("topBeersFetcher") Fetcher topBeersFetcher,
                                                     @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
@@ -135,7 +136,9 @@ public final class DataStoreModule {
                                                     BeerSearchStore beerSearchStore,
                                                     ReviewStore reviewStore,
                                                     ReviewListStore reviewListStore) {
-        return new ServiceDataLayer(beerFetcher,
+        return new ServiceDataLayer(
+                loginFetcher,
+                beerFetcher,
                 beerSearchFetcher,
                 topBeersFetcher,
                 beersInCountryFetcher,

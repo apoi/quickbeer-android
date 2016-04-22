@@ -49,7 +49,8 @@ public class ServiceDataLayer extends DataLayerBase {
     @NonNull
     final private Collection<Fetcher> fetchers;
 
-    public ServiceDataLayer(@NonNull Fetcher beerFetcher,
+    public ServiceDataLayer(@NonNull Fetcher loginFetcher,
+                            @NonNull Fetcher beerFetcher,
                             @NonNull Fetcher beerSearchFetcher,
                             @NonNull Fetcher topBeersFetcher,
                             @NonNull Fetcher beersInCountryFetcher,
@@ -63,6 +64,7 @@ public class ServiceDataLayer extends DataLayerBase {
         super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
 
         fetchers = Arrays.asList(
+                loginFetcher,
                 beerFetcher,
                 beerSearchFetcher,
                 topBeersFetcher,

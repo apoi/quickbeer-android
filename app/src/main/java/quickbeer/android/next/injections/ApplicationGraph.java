@@ -28,6 +28,7 @@ import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.activities.base.SearchBarActivity;
 import quickbeer.android.next.data.DataStoreModule;
+import quickbeer.android.next.data.store.StoreModule;
 import quickbeer.android.next.fragments.BeerDetailsFragment;
 import quickbeer.android.next.fragments.BeerListFragment;
 import quickbeer.android.next.fragments.BeerSearchFragment;
@@ -51,6 +52,7 @@ import quickbeer.android.next.viewmodels.ViewModelModule;
         UtilsModule.class,
         ViewModelModule.class,
         DataStoreModule.class,
+        StoreModule.class
 })
 public interface ApplicationGraph {
     void inject(QuickBeer quickBeer);
