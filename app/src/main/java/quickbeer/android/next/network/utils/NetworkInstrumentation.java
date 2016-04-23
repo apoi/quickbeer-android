@@ -28,9 +28,13 @@ package quickbeer.android.next.network.utils;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.net.CookieManager;
+
 import quickbeer.android.next.utils.Instrumentation;
 
 public interface NetworkInstrumentation<T> extends Instrumentation {
     @NonNull
-    T decorateNetwork(@NonNull final T httpClient, @NonNull Context context);
+    T decorateNetwork(@NonNull final T httpClient,
+                      @NonNull CookieManager cookieManager,
+                      @NonNull Context context);
 }

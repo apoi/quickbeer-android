@@ -37,11 +37,9 @@ public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttp
 
     @NonNull
     @Override
-    public OkHttpClient decorateNetwork(@NonNull OkHttpClient httpClient, @NonNull Context context) {
-        CookieManager cookieManager = new CookieManager(
-                new PersistentCookieStore(context),
-                CookiePolicy.ACCEPT_ORIGINAL_SERVER);
-
+    public OkHttpClient decorateNetwork(@NonNull OkHttpClient httpClient,
+                                        @NonNull CookieManager cookieManager,
+                                        @NonNull Context context) {
         OkHttpClient client = new OkHttpClient();
         client.setCookieHandler(cookieManager);
 

@@ -31,6 +31,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.squareup.okhttp.OkHttpClient;
 
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.Date;
 
 import javax.inject.Named;
@@ -41,6 +43,7 @@ import dagger.Provides;
 import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.utils.DateDeserializer;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
+import quickbeer.android.next.network.utils.PersistentCookieStore;
 import quickbeer.android.next.network.utils.StringDeserializer;
 import retrofit.client.Client;
 import retrofit.client.OkClient;
@@ -62,16 +65,24 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation, @ForApplication Context context) {
-        return networkInstrumentation.decorateNetwork(new OkHttpClient(), context);
+    public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation,
+                                            CookieManager cookieManager,
+                                            @ForApplication Context context) {
+        return networkInstrumentation.decorateNetwork(new OkHttpClient(), cookieManager, context);
     }
 
     @Provides
     @Singleton
-    public Gson unescapingGson() {
+    public Gson provideUnescapingGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringDeserializer())
                 .registerTypeAdapter(Date.class, new DateDeserializer())
                 .create();
+    }
+
+    @Provides
+    @Singleton
+    public CookieManager provideCookieManager(@ForApplication Context context) {
+        return new CookieManager(new PersistentCookieStore(context), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
     }
 }
