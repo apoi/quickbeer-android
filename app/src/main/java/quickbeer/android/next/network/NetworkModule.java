@@ -35,7 +35,6 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.util.Date;
 
-import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -52,13 +51,12 @@ import retrofit.client.OkClient;
 public final class NetworkModule {
     @Provides
     @Singleton
-    public NetworkApi provideNetworkApi(@Named("okClient") Client client, Gson gson) {
+    public NetworkApi provideNetworkApi(Client client, Gson gson) {
         return new NetworkApi(client, gson);
     }
 
     @Provides
     @Singleton
-    @Named("okClient")
     public Client provideOkClient(OkHttpClient okHttpClient) {
         return new OkClient(okHttpClient);
     }
@@ -68,7 +66,12 @@ public final class NetworkModule {
     public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation,
                                             CookieManager cookieManager,
                                             @ForApplication Context context) {
-        return networkInstrumentation.decorateNetwork(new OkHttpClient(), cookieManager, context);
+        OkHttpClient client = new OkHttpClient();
+        client.setCookieHandler(cookieManager);
+        client.setFollowRedirects(false);
+        client.setFollowSslRedirects(false);
+
+        return networkInstrumentation.decorateNetwork(client, cookieManager, context);
     }
 
     @Provides

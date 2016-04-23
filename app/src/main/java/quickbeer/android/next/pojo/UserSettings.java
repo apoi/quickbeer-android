@@ -17,10 +17,84 @@
  */
 package quickbeer.android.next.pojo;
 
-public class UserSettings {
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
+
+import quickbeer.android.next.utils.StringUtils;
+
+public class UserSettings extends BasePojo<UserSettings> {
+    @SerializedName("username")
     private String username;
+
+    @SerializedName("password")
     private String password;
 
-    public UserSettings() {
+    @SerializedName("isLogged")
+    private boolean isLogged;
+
+    @NonNull
+    @Override
+    protected Class<UserSettings> getTypeParameterClass() {
+        return UserSettings.class;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
+    public void setIsLogged(boolean logged) {
+        isLogged = logged;
+    }
+
+    public boolean credentialEqual(String username, String password) {
+        return StringUtils.equals(username, this.username)
+                && StringUtils.equals(password, this.password);
+    }
+
+    @Override
+    public String toString() {
+        return "UserSettings{" +
+                "username='" + username + '\'' +
+                ", isLogged=" + isLogged +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserSettings that = (UserSettings) o;
+
+        if (isLogged != that.isLogged) return false;
+        if (username != null ? !username.equals(that.username) : that.username != null) return false;
+
+        return password != null ? password.equals(that.password) : that.password == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username != null ? username.hashCode() : 0;
+        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (isLogged ? 1 : 0);
+        return result;
     }
 }

@@ -46,6 +46,7 @@ import quickbeer.android.next.pojo.ReviewList;
 import quickbeer.android.next.pojo.UserSettings;
 import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
+import rx.functions.Func0;
 import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
@@ -53,10 +54,9 @@ import rx.subjects.BehaviorSubject;
 
 public class DataLayer extends DataLayerBase {
     private static final String TAG = DataLayer.class.getSimpleName();
-    public static final int DEFAULT_USER_ID = 0;
 
     private final Context context;
-    protected final UserSettingsStore userSettingsStore;
+    private final UserSettingsStore userSettingsStore;
 
     public DataLayer(@NonNull Context context,
                      @NonNull UserSettingsStore userSettingsStore,
@@ -78,7 +78,7 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<UserSettings> getUserSettings() {
-        return userSettingsStore.getStream(DEFAULT_USER_ID);
+        return userSettingsStore.getStream();
     }
 
     public void setUserSettings(@NonNull UserSettings userSettings) {
@@ -89,26 +89,54 @@ public class DataLayer extends DataLayerBase {
 
     //// LOGIN
 
-    public Observable<DataStreamNotification<UserSettings>> login(@NonNull String username,
-                                                                  @NonNull String password) {
+    public Observable<Boolean> login(@NonNull String username,
+                                     @NonNull String password) {
+        Preconditions.checkNotNull(username, "Username cannot be null.");
+        Preconditions.checkNotNull(password, "Password cannot be null.");
         Log.v(TAG, "login");
 
-        final Uri uri = userSettingsStore.getUriForId(DEFAULT_USER_ID);
+        Func0<Observable<Boolean>> doLogin = () -> {
+            final int userId = UserSettingsStore.DEFAULT_USER_ID;
+            final int id = userSettingsStore.getUriForId(userId).toString().hashCode();
 
-        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+            final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                    networkRequestStatusStore.getStream(id);
 
-        final Observable<UserSettings> userSettingsObservable =
-                userSettingsStore.getStream(DEFAULT_USER_ID);
+            Intent intent = new Intent(context, NetworkService.class);
+            intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+            intent.putExtra("username", username);
+            intent.putExtra("password", password);
+            context.startService(intent);
 
-        Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
-        intent.putExtra("username", username);
-        intent.putExtra("password", password);
-        context.startService(intent);
+            // Observe the success of the network request. Completion means we logged in
+            // successfully, while login wasn't successful on error.
+            return networkRequestStatusObservable
+                    .filter(networkRequestStatus ->
+                            networkRequestStatus.isCompleted()
+                                    || networkRequestStatus.isError())
+                    .first()
+                    .map(NetworkRequestStatus::isCompleted);
+        };
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-                networkRequestStatusObservable, userSettingsObservable);
+        // Updates the settings if needed, and performs login if we're not already logged,
+        // or if the used credentials changed.
+        return getUserSettings()
+                .filter(new NullFilter())
+                .first()
+                .map(userSettings -> {
+                    if (!userSettings.credentialEqual(username, password)) {
+                        userSettings.setUsername(username);
+                        userSettings.setPassword(password);
+                        userSettings.setIsLogged(false);
+                    }
+                    return userSettings;
+                })
+                .doOnNext(userSettingsStore::put)
+                .flatMap(userSettings -> {
+                    return userSettings.isLogged()
+                            ? Observable.just(true)
+                            : doLogin.call();
+                });
     }
 
     //// GET BEER DETAILS
@@ -524,7 +552,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface Login {
         @NonNull
-        Observable<DataStreamNotification<UserSettings>> call(@NonNull String username, @NonNull String password);
+        Observable<Boolean> call(@NonNull String username, @NonNull String password);
     }
 
     public interface GetUserSettings {

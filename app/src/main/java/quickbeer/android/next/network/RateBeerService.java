@@ -45,8 +45,7 @@ public interface RateBeerService {
     @POST("/Signin_r.asp")
     Observable<Response> login(@Field("username") String username,
                                @Field("pwd") String password,
-                               @Field("saveinfo") String saveinfo,
-                               @Field("redirect") String redirect);
+                               @Field("saveinfo") String saveinfo);
 
     @GET("/json/bff.asp")
     Observable<List<Beer>> getBeer(@QueryMap Map<String, String> params);

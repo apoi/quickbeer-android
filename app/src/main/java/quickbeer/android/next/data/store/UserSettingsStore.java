@@ -33,36 +33,72 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.net.CookieManager;
+
 import io.reark.reark.data.store.SingleItemContentProviderStore;
+import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
+import quickbeer.android.next.network.utils.LoginUtils;
 import quickbeer.android.next.pojo.UserSettings;
+import rx.Observable;
 
+/**
+ * Store to keep only single user settings.
+ */
 public class UserSettingsStore extends SingleItemContentProviderStore<UserSettings, Integer> {
     private static final String TAG = UserSettingsStore.class.getSimpleName();
 
-    public UserSettingsStore(@NonNull ContentResolver contentResolver) {
+    public static final int DEFAULT_USER_ID = 0;
+    public static final Uri LOGIN_URI = Uri.parse("UserSettingsLogin");
+
+    private final CookieManager cookieManager;
+
+    public UserSettingsStore(@NonNull ContentResolver contentResolver, @NonNull CookieManager cookieManager) {
         super(contentResolver);
+
+        this.cookieManager = cookieManager;
 
         initUserSettings();
     }
 
     private void initUserSettings() {
-        getOne(DataLayer.DEFAULT_USER_ID)
-                .first()
-                .filter(userSettings -> userSettings == null)
-                .subscribe(userSettings -> {
-                    put(new UserSettings());
-                });
+        // Initializes settings if needed, and clears the logged in flag
+        getOne().first()
+                .map(userSettings -> userSettings != null
+                        ? userSettings
+                        : new UserSettings())
+                .map(userSettings -> {
+                    userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
+                    return userSettings;
+                })
+                .doOnNext(this::put)
+                .subscribe();
+    }
+
+    @NonNull
+    public Observable<UserSettings> getOne() {
+        return super.getOne(DEFAULT_USER_ID);
+    }
+
+    @NonNull
+    @Override
+    public Observable<UserSettings> getStream() {
+        return super.getStream(DEFAULT_USER_ID);
+    }
+
+    @Override
+    public void put(@NonNull UserSettings item) {
+        Log.v(TAG, "put(" + item + ")");
+        super.put(item);
     }
 
     @NonNull
     @Override
     protected Integer getIdFor(@NonNull UserSettings item) {
-        return DataLayer.DEFAULT_USER_ID;
+        return DEFAULT_USER_ID;
     }
 
     @NonNull
@@ -81,7 +117,7 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
     @Override
     protected ContentValues getContentValuesForItem(UserSettings item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(JsonIdColumns.ID, DataLayer.DEFAULT_USER_ID);
+        contentValues.put(JsonIdColumns.ID, DEFAULT_USER_ID);
         contentValues.put(JsonIdColumns.JSON, new Gson().toJson(item));
         return contentValues;
     }

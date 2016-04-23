@@ -21,6 +21,8 @@ import android.content.ContentResolver;
 
 import com.google.gson.Gson;
 
+import java.net.CookieManager;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -30,8 +32,8 @@ import dagger.Provides;
 public final class StoreModule {
     @Provides
     @Singleton
-    public UserSettingsStore provideUserSettingsStore(ContentResolver contentResolver) {
-        return new UserSettingsStore(contentResolver);
+    public UserSettingsStore provideUserSettingsStore(ContentResolver contentResolver, CookieManager cookieManager) {
+        return new UserSettingsStore(contentResolver, cookieManager);
     }
 
     @Provides

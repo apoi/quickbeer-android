@@ -20,47 +20,46 @@ package quickbeer.android.next.network.fetchers;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.net.CookieManager;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
-import quickbeer.android.next.network.utils.NetworkUtils;
+import quickbeer.android.next.network.utils.LoginUtils;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class LoginFetcher extends FetcherBase {
     private static final String TAG = LoginFetcher.class.getSimpleName();
 
-    private final Integer id = DataLayer.DEFAULT_USER_ID;
     private final NetworkApi networkApi;
-    private final NetworkUtils networkUtils;
+    private final CookieManager cookieManager;
     private final UserSettingsStore userSettingsStore;
 
     public LoginFetcher(@NonNull NetworkApi networkApi,
-                        @NonNull NetworkUtils networkUtils,
+                        @NonNull CookieManager cookieManager,
                         @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                         @NonNull UserSettingsStore userSettingsStore) {
         super(updateNetworkRequestStatus);
 
         Preconditions.checkNotNull(networkApi, "Network API cannot be null.");
-        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
+        Preconditions.checkNotNull(cookieManager, "Cookie manager cannot be null.");
         Preconditions.checkNotNull(userSettingsStore, "Settings store cannot be null.");
 
         this.networkApi = networkApi;
-        this.networkUtils = networkUtils;
+        this.cookieManager = cookieManager;
         this.userSettingsStore = userSettingsStore;
     }
 
     @Override
     public void fetch(Intent intent) {
+        final String uri = UserSettingsStore.LOGIN_URI.toString();
+        final int id = uri.hashCode();
+
         if (requestMap.containsKey(id) && !requestMap.get(id).isUnsubscribed()) {
             Log.d(TAG, "Found an ongoing request for login");
             return;
@@ -69,9 +68,14 @@ public class LoginFetcher extends FetcherBase {
         final String username = intent.getStringExtra("username");
         final String password = intent.getStringExtra("password");
 
-        final String uri = userSettingsStore.getUriForId(id).toString();
-        Subscription subscription = networkApi.login(username, password, "1", "example.com")
-                .doOnNext(s -> Log.e(TAG, "Login result: " + s))
+        Subscription subscription = networkApi.login(username, password, "on")
+                .flatMap(response -> userSettingsStore.getOne())
+                .map(userSettings -> {
+                    userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
+                    return userSettings;
+                })
+                .doOnNext(userSettings -> Log.d(TAG, "Updating login status to " + userSettings.isLogged()))
+                .doOnNext(userSettingsStore::put)
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe();

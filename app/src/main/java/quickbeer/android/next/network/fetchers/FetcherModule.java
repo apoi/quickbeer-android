@@ -17,6 +17,8 @@
  */
 package quickbeer.android.next.network.fetchers;
 
+import java.net.CookieManager;
+
 import javax.inject.Named;
 
 import dagger.Module;
@@ -37,11 +39,11 @@ public final class FetcherModule {
     @Provides
     @Named("loginFetcher")
     public Fetcher provideLoginFetcher(NetworkApi networkApi,
-                                       NetworkUtils networkUtils,
+                                       CookieManager cookieManager,
                                        NetworkRequestStatusStore networkRequestStatusStore,
                                        UserSettingsStore userSettingsStore) {
         return new LoginFetcher(networkApi,
-                networkUtils,
+                cookieManager,
                 networkRequestStatusStore::put,
                 userSettingsStore);
     }

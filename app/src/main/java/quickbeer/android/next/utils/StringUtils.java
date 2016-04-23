@@ -27,4 +27,10 @@ public class StringUtils {
     public static String value(String primary, String secondary) {
         return hasValue(primary) ? primary : secondary;
     }
+
+    public static boolean equals(String first, String second) {
+        return first == null
+                ? second == null
+                : first.equals(second);
+    }
 }

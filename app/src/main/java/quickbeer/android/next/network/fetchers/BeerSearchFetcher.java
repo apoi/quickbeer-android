@@ -39,7 +39,6 @@ import quickbeer.android.next.pojo.BeerSearch;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 public class BeerSearchFetcher extends FetcherBase {
     private static final String TAG = BeerSearchFetcher.class.getSimpleName();
@@ -92,7 +91,6 @@ public class BeerSearchFetcher extends FetcherBase {
 
         final String uri = beerSearchStore.getUriForId(queryId).toString();
         Subscription subscription = createNetworkObservable(query)
-                .subscribeOn(Schedulers.io())
                 .map((beers) -> {
                     final List<Integer> beerIds = new ArrayList<>();
                     for (Beer beer : beers) {

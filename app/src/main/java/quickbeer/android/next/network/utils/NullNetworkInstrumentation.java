@@ -31,7 +31,6 @@ import android.support.annotation.NonNull;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.net.CookieManager;
-import java.net.CookiePolicy;
 
 public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient> {
 
@@ -40,10 +39,7 @@ public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttp
     public OkHttpClient decorateNetwork(@NonNull OkHttpClient httpClient,
                                         @NonNull CookieManager cookieManager,
                                         @NonNull Context context) {
-        OkHttpClient client = new OkHttpClient();
-        client.setCookieHandler(cookieManager);
-
-        return client;
+        return httpClient;
     }
 
     @Override
