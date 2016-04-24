@@ -57,6 +57,6 @@ public class BeerTabFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((BeerListView) view).setHeader(new Header("Recently seen beers"));
+        ((BeerListView) view).setHeader(new Header(getContext().getString(R.string.recent_beers)));
     }
 }

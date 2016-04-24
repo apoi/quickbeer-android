@@ -22,5 +22,7 @@
 
     <string name="tab_beers">Beers</string>
     <string name="tab_brewers">Brewers</string>
-    <string name="tab_places">Places</string>
+
+    <string name="recent_beers">Recently seen beers</string>
+    <string name="recent_brewers">Recently seen brewers</string>
 </resources>

@@ -20,18 +20,14 @@ package quickbeer.android.next.fragments;
 import android.os.Bundle;
 import android.view.View;
 
-import javax.inject.Inject;
-
 import quickbeer.android.next.R;
-import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.pojo.Header;
+import quickbeer.android.next.views.BeerListView;
 
-public class TopListFragment extends BeerListFragment {
-    @Inject
-    DataLayer.GetTopBeers getTopBeers;
-
+public class BrewerTabFragment extends BeerListFragment {
     @Override
     public int getLayout() {
-        return R.layout.top_list_fragment;
+        return R.layout.beer_tab_fragment;
     }
 
     @Override
@@ -43,6 +39,7 @@ public class TopListFragment extends BeerListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setProgressingSource(getTopBeers.call());
+
+        ((BeerListView) view).setHeader(new Header(getContext().getString(R.string.recent_brewers)));
     }
 }

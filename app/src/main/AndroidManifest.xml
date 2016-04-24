@@ -32,10 +32,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.TopListActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".activities.TopBeersActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
