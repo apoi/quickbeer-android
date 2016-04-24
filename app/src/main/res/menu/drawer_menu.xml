@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camera" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+    <group android:id="@+id/drawer_group_main">
+        <item
+            android:id="@+id/nav_main"
+            android:title="Main view" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:id="@+id/submenu_0" android:title="Reviews">
         <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
+            <group android:id="@+id/drawer_group_reviews">
+                <item
+                    android:id="@+id/nav_ticks"
+                    android:icon="@drawable/ic_icon_check"
+                    android:title="Ticked beers" />
+            </group>
         </menu>
     </item>
+
+    <item android:id="@+id/submenu_1" android:title="Top charts">
+        <menu>
+            <group android:id="@+id/drawer_group_charts">
+                <item
+                    android:id="@+id/nav_best"
+                    android:icon="@drawable/ic_icon_globe"
+                    android:title="Best of all" />
+                <item
+                    android:id="@+id/nav_countries"
+                    android:icon="@drawable/ic_icon_number_1"
+                    android:title="By country" />
+                <item
+                    android:id="@+id/nav_styles"
+                    android:icon="@drawable/ic_icon_number_2"
+                    android:title="By beer style" />
+            </group>
+        </menu>
+    </item>
+
+    <group android:id="@+id/drawer_group_general">
+        <item android:id="@+id/nav_about" android:title="About QuickBeer" />
+    </group>
 
 </menu>
