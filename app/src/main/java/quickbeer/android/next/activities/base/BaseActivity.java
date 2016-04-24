@@ -62,7 +62,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void login() {
-        login.call("", "")
-                .subscribe(userSettings -> Log.d("LOGIN", "Settings: " + userSettings));
+        getUserSettings.call()
+                .first()
+                .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
+                .subscribe(s -> Log.d("LOGIN", "Settings: " + s));
     }
 }
