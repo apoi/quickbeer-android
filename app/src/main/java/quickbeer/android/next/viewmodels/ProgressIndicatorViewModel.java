@@ -35,7 +35,7 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
     public enum Status {
         IDLE,
         INDEFINITE,
-        LOADING;
+        LOADING
     }
 
     private Subscription subscription;

@@ -54,14 +54,14 @@ public abstract class SearchBarActivity extends BaseActivity
     private MaterialSearchView searchView;
     private View searchViewOverlay;
 
-    private PublishSubject<String> querySubject = PublishSubject.create();
+    private final PublishSubject<String> querySubject = PublishSubject.create();
     private final ProgressIndicatorViewModel progressIndicatorViewModel = new ProgressIndicatorViewModel();
 
     @Override
     protected void  onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(getContentViewLayout());
+        setContentView(R.layout.main_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -104,10 +104,6 @@ public abstract class SearchBarActivity extends BaseActivity
         // There may have been queries while this fragment was paused. Refresh the search
         // history list adapter to have the latest queries available.
         adapter.refreshQueryList();
-    }
-
-    protected int getContentViewLayout() {
-        return R.layout.main_activity;
     }
 
     public Observable<String> getQueryObservable() {
@@ -247,11 +243,6 @@ public abstract class SearchBarActivity extends BaseActivity
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle drawerLayout actions
-        int id = item.getItemId();
-        if (id == R.id.nav_camera) {
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

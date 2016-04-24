@@ -18,7 +18,7 @@
 package quickbeer.android.next.pojo;
 
 public class Header {
-    private String text;
+    private final String text;
 
     public Header(String text) {
         this.text = text;

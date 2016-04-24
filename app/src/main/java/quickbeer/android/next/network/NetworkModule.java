@@ -71,7 +71,7 @@ public final class NetworkModule {
         client.setFollowRedirects(false);
         client.setFollowSslRedirects(false);
 
-        return networkInstrumentation.decorateNetwork(client, cookieManager, context);
+        return networkInstrumentation.decorateNetwork(client, context);
     }
 
     @Provides

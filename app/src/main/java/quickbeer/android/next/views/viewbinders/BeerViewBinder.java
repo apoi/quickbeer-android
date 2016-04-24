@@ -30,8 +30,8 @@ import rx.subscriptions.CompositeSubscription;
  * View binder between BeerViewModel and the view holder
  */
 public class BeerViewBinder extends RxViewBinder {
-    private BeerViewHolder viewHolder;
-    private BeerViewModel viewModel;
+    private final BeerViewHolder viewHolder;
+    private final BeerViewModel viewModel;
 
     public BeerViewBinder(@NonNull BeerViewHolder viewHolder, @NonNull BeerViewModel viewModel) {
         Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");

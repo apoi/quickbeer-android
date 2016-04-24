@@ -39,7 +39,7 @@ public class PersistentCookieStore implements CookieStore {
     private static final String SP_COOKIE_STORE = "cookieStore";
     private static final String SP_KEY_DELIMITER = "|"; // Unusual char in URL
     private static final String SP_KEY_DELIMITER_REGEX = "\\" + SP_KEY_DELIMITER;
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     // In memory
     private Map<URI, Set<HttpCookie>> allCookies;

@@ -28,7 +28,7 @@ import quickbeer.android.next.pojo.Header;
  * Simple view holder for the header
  */
 public class HeaderViewHolder extends RecyclerView.ViewHolder {
-    private TextView headerTextView;
+    private final TextView headerTextView;
 
     public HeaderViewHolder(View view) {
         super(view);

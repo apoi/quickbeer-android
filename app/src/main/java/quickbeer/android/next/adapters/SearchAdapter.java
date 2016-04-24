@@ -114,6 +114,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             }
 
             @Override
+            @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence filter, FilterResults results) {
                 if (results.count > 0) {
                     adapterList = (List<String>) results.values;
@@ -144,14 +145,14 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
-        String currentListData = (String) getItem(position);
+        String currentListData = getItem(position);
         mViewHolder.textView.setText(currentListData);
 
         return convertView;
     }
 
     private class MyViewHolder {
-        TextView textView;
+        final TextView textView;
         ImageView imageView;
 
         public MyViewHolder(View convertView) {

@@ -29,7 +29,7 @@ public class Score {
         SCORE_4(R.drawable.score_4),
         SCORE_5(R.drawable.score_5);
 
-        private int resource;
+        private final int resource;
 
         Stars(int resource) {
             this.resource = resource;

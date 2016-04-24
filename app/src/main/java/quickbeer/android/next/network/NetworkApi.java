@@ -51,9 +51,9 @@ public class NetworkApi {
         rateBeerService = restAdapter.create(RateBeerService.class);
     }
 
-    public Observable<Response> login(String username, String password, String saveinfo) {
+    public Observable<Response> login(String username, String password) {
         return rateBeerService
-                .login(username, password, saveinfo);
+                .login(username, password, "on");
     }
 
     public Observable<Beer> getBeer(Map<String, String> params) {

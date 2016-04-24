@@ -26,8 +26,8 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.SimpleItem;
 
 public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
-    private TextView textView;
-    private TextView iconView;
+    private final TextView textView;
+    private final TextView iconView;
     private SimpleItem simpleItem;
 
     public SimpleListItemViewHolder(View view) {

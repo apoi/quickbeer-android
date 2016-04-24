@@ -25,7 +25,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import quickbeer.android.next.R;
 import quickbeer.android.next.fragments.BeerTabFragment;
 import quickbeer.android.next.fragments.BrewerTabFragment;
-import quickbeer.android.next.fragments.TopBeersFragment;
 
 public class MainViewAdapter extends FragmentPagerAdapter {
     private final Context context;

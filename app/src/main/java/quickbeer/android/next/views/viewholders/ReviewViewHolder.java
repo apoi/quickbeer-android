@@ -30,10 +30,10 @@ import quickbeer.android.next.pojo.Review;
  * View holder for reviews in list
  */
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
-    private TextView ratingTextView;
-    private TextView descriptionTextView;
-    private TextView reviewerTextView;
-    private TextView locationTextView;
+    private final TextView ratingTextView;
+    private final TextView descriptionTextView;
+    private final TextView reviewerTextView;
+    private final TextView locationTextView;
 
     public ReviewViewHolder(View view) {
         super(view);

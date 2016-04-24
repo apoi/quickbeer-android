@@ -37,7 +37,7 @@ public class BeerDetailsActivity extends SearchActivity {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
-    private CompositeSubscription activitySubscription = new CompositeSubscription();
+    private final CompositeSubscription activitySubscription = new CompositeSubscription();
 
     @Inject
     DataLayer.GetBeer getBeer;

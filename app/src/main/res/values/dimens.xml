@@ -2,34 +2,22 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
 
     <dimen name="listitem_text_header">15sp</dimen>
-    <dimen name="listitem_text_menu">24sp</dimen>
     <dimen name="listitem_text_score">18sp</dimen>
     <dimen name="listitem_text_primary">17sp</dimen>
     <dimen name="listitem_text_secondary">13sp</dimen>
 
-    <dimen name="header_item_height">80dp</dimen>
-    <dimen name="header_item_clip">75dp</dimen>
-    <dimen name="header_item_bottom_fade_margin">79dp</dimen>
-    <dimen name="header_item_top_margin">-5dp</dimen>
-    <dimen name="header_item_fade_height">5dp</dimen>
-    <dimen name="header_item_text_padding">20dp</dimen>
-
     <dimen name="search_status_text">28sp</dimen>
     <dimen name="progress_indicator_width">35dp</dimen>
 
-    <dimen name="menu_list_item_height">60dp</dimen>
-    <dimen name="menu_list_item_icon_size">45dp</dimen>
     <dimen name="beer_list_item_height">70dp</dimen>
     <dimen name="beer_list_item_icon_size">50dp</dimen>
 
-    <dimen name="list_item_height">70dp</dimen>
     <dimen name="list_item_padding">15dp</dimen>
     <dimen name="list_item_icon_margin">10dp</dimen>
     <dimen name="list_item_icon_margin_right">15dp</dimen>
@@ -37,7 +25,6 @@
     <dimen name="beer_details_header_text">30sp</dimen>
     <dimen name="beer_details_sub_header_text">22sp</dimen>
     <dimen name="beer_details_info_text">14sp</dimen>
-    <dimen name="beer_details_left_margin">73dp</dimen>
     <dimen name="beer_details_left_margin_with_line">65dp</dimen>
     <dimen name="beer_details_line_margin">7dp</dimen>
     <dimen name="beer_details_image_size">80dp</dimen>

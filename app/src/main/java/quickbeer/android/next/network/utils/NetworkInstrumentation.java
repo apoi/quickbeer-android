@@ -35,6 +35,5 @@ import quickbeer.android.next.utils.Instrumentation;
 public interface NetworkInstrumentation<T> extends Instrumentation {
     @NonNull
     T decorateNetwork(@NonNull final T httpClient,
-                      @NonNull CookieManager cookieManager,
                       @NonNull Context context);
 }

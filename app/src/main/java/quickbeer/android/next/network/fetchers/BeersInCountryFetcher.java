@@ -58,7 +58,7 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(String countryId) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull String countryId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "country");
         params.put("c", countryId);
 

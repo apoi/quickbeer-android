@@ -78,7 +78,7 @@ public class ReviewFetcher extends FetcherBase {
         }
     }
 
-    protected void fetchReviews(final int beerId) {
+    private void fetchReviews(final int beerId) {
         Log.d(TAG, "fetchReviews(" + beerId + ")");
 
         if (requestMap.containsKey(beerId) && !requestMap.get(beerId).isUnsubscribed()) {
@@ -107,7 +107,7 @@ public class ReviewFetcher extends FetcherBase {
     }
 
     @NonNull
-    protected Observable<List<Review>> createNetworkObservable(final int beerId) {
+    private Observable<List<Review>> createNetworkObservable(final int beerId) {
         return networkApi.getReviews(networkUtils.createRequestParams("bid", String.valueOf(beerId)));
     }
 

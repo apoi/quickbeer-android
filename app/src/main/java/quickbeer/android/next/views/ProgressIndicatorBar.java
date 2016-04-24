@@ -18,6 +18,7 @@
 package quickbeer.android.next.views;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class ProgressIndicatorBar extends FrameLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         progressBar = new View(getContext());
-        progressBar.setBackgroundColor(getResources().getColor(R.color.orange));
+        progressBar.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.orange));
         progressBar.setLayoutParams(params);
         progressBar.setVisibility(INVISIBLE);
 

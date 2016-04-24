@@ -39,7 +39,6 @@ public class ReviewListViewModel extends BaseViewModel {
 
     private final DataLayer.GetReviews getReviews;
     private final DataLayer.GetReview getReview;
-    private Observable<DataStreamNotification<ReviewList>> sourceObservable;
 
     private final BehaviorSubject<List<Review>> reviews = BehaviorSubject.create();
     private final int beerId;

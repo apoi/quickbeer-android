@@ -28,10 +28,6 @@ package quickbeer.android.next.network;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import java.util.Arrays;
-import java.util.Collection;
 
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;

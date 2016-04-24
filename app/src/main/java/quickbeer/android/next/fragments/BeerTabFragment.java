@@ -34,7 +34,7 @@ public class BeerTabFragment extends BeerListFragment {
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
 
-    private BehaviorSubject<DataStreamNotification<BeerSearch>> accessedBeersSubject = BehaviorSubject.create();
+    private final BehaviorSubject<DataStreamNotification<BeerSearch>> accessedBeersSubject = BehaviorSubject.create();
 
     @Override
     public int getLayout() {

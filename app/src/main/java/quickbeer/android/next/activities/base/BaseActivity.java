@@ -31,7 +31,7 @@ import rx.subscriptions.CompositeSubscription;
 
 public class BaseActivity extends AppCompatActivity {
     // Composite for subscriptions meant to stay alive for the activity's duration
-    protected CompositeSubscription activitySubscription = new CompositeSubscription();
+    protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
     @Inject
     DataLayer.GetUserSettings getUserSettings;
@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public ApplicationGraph getGraph() {
+    protected ApplicationGraph getGraph() {
         return QuickBeer.getInstance().getGraph();
     }
 

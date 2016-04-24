@@ -27,7 +27,7 @@ import quickbeer.android.next.views.BeerListView;
 public class BrewerTabFragment extends BeerListFragment {
     @Override
     public int getLayout() {
-        return R.layout.beer_tab_fragment;
+        return R.layout.brewer_tab_fragment;
     }
 
     @Override

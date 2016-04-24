@@ -36,14 +36,14 @@ import quickbeer.android.next.utils.StringUtils;
  * View holder for all the beer details
  */
 public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
-    private TextView ratingTextView;
-    private TextView nameTextView;
-    private TextView styleTextView;
-    private TextView abvTextView;
-    private TextView brewerTextView;
-    private TextView locationTextView;
-    private TextView descriptionTextView;
-    private ImageView imageView;
+    private final TextView ratingTextView;
+    private final TextView nameTextView;
+    private final TextView styleTextView;
+    private final TextView abvTextView;
+    private final TextView brewerTextView;
+    private final TextView locationTextView;
+    private final TextView descriptionTextView;
+    private final ImageView imageView;
 
     public BeerDetailsViewHolder(View view) {
         super(view);

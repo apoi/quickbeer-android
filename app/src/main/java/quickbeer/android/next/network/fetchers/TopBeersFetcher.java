@@ -51,7 +51,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(String searchString) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull String searchString) {
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));
     }
 

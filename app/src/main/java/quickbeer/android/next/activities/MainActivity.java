@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import io.reark.reark.utils.Log;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.fragments.MainFragment;
@@ -32,18 +33,17 @@ import quickbeer.android.next.fragments.MainFragment;
 public class MainActivity extends SearchActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle drawerToggle;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
+        Preconditions.checkNotNull(drawerLayout, "DrawerLayout is required.");
 
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();

@@ -100,7 +100,7 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    Func1<List<Integer>, Observable<List<BeerViewModel>>> toBeerViewModelList() {
+    private Func1<List<Integer>, Observable<List<BeerViewModel>>> toBeerViewModelList() {
         return beerIds -> Observable.from(beerIds)
                 .map(integer -> new BeerViewModel(integer, getBeer))
                 .toList();

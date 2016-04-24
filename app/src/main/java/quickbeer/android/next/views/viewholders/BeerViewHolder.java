@@ -35,10 +35,10 @@ import quickbeer.android.next.views.viewbinders.BeerViewBinder;
 public class BeerViewHolder extends RecyclerView.ViewHolder {
     private BeerViewModel viewModel;
     private BeerViewBinder viewBinder;
-    private TextView ratingTextView;
-    private TextView nameTextView;
-    private TextView styleTextView;
-    private TextView brewerTextView;
+    private final TextView ratingTextView;
+    private final TextView nameTextView;
+    private final TextView styleTextView;
+    private final TextView brewerTextView;
 
     public BeerViewHolder(View view, View.OnClickListener onClickListener) {
         super(view);

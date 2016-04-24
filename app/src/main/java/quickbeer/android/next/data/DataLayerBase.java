@@ -33,11 +33,11 @@ public class DataLayerBase {
     protected final ReviewStore reviewStore;
     protected final ReviewListStore reviewListStore;
 
-    public DataLayerBase(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
-                         @NonNull BeerStore beerStore,
-                         @NonNull BeerSearchStore beerSearchStore,
-                         @NonNull ReviewStore reviewStore,
-                         @NonNull ReviewListStore reviewListStore) {
+    protected DataLayerBase(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
+                            @NonNull BeerStore beerStore,
+                            @NonNull BeerSearchStore beerSearchStore,
+                            @NonNull ReviewStore reviewStore,
+                            @NonNull ReviewListStore reviewListStore) {
         Preconditions.checkNotNull(networkRequestStatusStore, "Network request status store cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
         Preconditions.checkNotNull(beerSearchStore, "Beer search store cannot be null.");

@@ -38,7 +38,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 
 public class BeerDetailsView extends FrameLayout {
-    private RecyclerView beerDetailsListView;
     private BeerDetailsAdapter beerDetailsAdapter;
 
     public BeerDetailsView(Context context) {
@@ -68,7 +67,8 @@ public class BeerDetailsView extends FrameLayout {
         super.onFinishInflate();
 
         beerDetailsAdapter = new BeerDetailsAdapter();
-        beerDetailsListView = (RecyclerView) findViewById(R.id.beers_details_list_view);
+
+        RecyclerView beerDetailsListView = (RecyclerView) findViewById(R.id.beers_details_list_view);
         beerDetailsListView.setHasFixedSize(true);
         beerDetailsListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beerDetailsListView.setAdapter(beerDetailsAdapter);
@@ -78,8 +78,8 @@ public class BeerDetailsView extends FrameLayout {
      * View binder between BeerViewModel and the BeerDetailsView
      */
     public static class BeerViewBinder extends RxViewBinder {
-        private BeerDetailsView view;
-        private BeerViewModel viewModel;
+        private final BeerDetailsView view;
+        private final BeerViewModel viewModel;
 
         public BeerViewBinder(@NonNull BeerDetailsView view,
                               @NonNull BeerViewModel viewModel) {
@@ -102,8 +102,8 @@ public class BeerDetailsView extends FrameLayout {
      * View binder between ReviewListViewModel and the BeerDetailsView
      */
     public static class ReviewListViewBinder extends RxViewBinder {
-        private BeerDetailsView view;
-        private ReviewListViewModel viewModel;
+        private final BeerDetailsView view;
+        private final ReviewListViewModel viewModel;
 
         public ReviewListViewBinder(@NonNull BeerDetailsView view,
                                     @NonNull ReviewListViewModel viewModel) {

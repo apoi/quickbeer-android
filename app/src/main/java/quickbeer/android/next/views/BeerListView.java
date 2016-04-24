@@ -102,8 +102,8 @@ public class BeerListView extends FrameLayout {
      * View binder between BeerListViewModel and the BeerListView
      */
     public static class ViewBinder extends RxViewBinder {
-        private BeerListView view;
-        private BeerListViewModel viewModel;
+        private final BeerListView view;
+        private final BeerListViewModel viewModel;
 
         public ViewBinder(@NonNull BeerListView view,
                           @NonNull BeerListViewModel viewModel) {

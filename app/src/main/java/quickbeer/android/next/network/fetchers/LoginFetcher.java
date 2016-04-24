@@ -68,7 +68,7 @@ public class LoginFetcher extends FetcherBase {
         final String username = intent.getStringExtra("username");
         final String password = intent.getStringExtra("password");
 
-        Subscription subscription = networkApi.login(username, password, "on")
+        Subscription subscription = networkApi.login(username, password)
                 .flatMap(response -> userSettingsStore.getOne())
                 .map(userSettings -> {
                     userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
