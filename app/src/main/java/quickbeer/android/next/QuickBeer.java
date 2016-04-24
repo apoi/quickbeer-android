@@ -29,7 +29,9 @@ public class QuickBeer extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
         instance = this;
+
         applicationGraph = ApplicationGraph.Initializer.init(this);
         applicationGraph.inject(this);
     }

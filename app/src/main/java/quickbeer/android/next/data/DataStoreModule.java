@@ -25,6 +25,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reark.reark.network.fetchers.Fetcher;
+import io.reark.reark.network.fetchers.UriFetcherManager;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
@@ -124,26 +125,13 @@ public final class DataStoreModule {
 
     @Provides
     @Singleton
-    public ServiceDataLayer provideServiceDataLayer(@Named("loginFetcher") Fetcher loginFetcher,
-                                                    @Named("beerFetcher") Fetcher beerFetcher,
-                                                    @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
-                                                    @Named("topBeersFetcher") Fetcher topBeersFetcher,
-                                                    @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
-                                                    @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
-                                                    @Named("reviewFetcher") Fetcher reviewFetcher,
+    public ServiceDataLayer provideServiceDataLayer(UriFetcherManager fetcherManager,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
                                                     BeerSearchStore beerSearchStore,
                                                     ReviewStore reviewStore,
                                                     ReviewListStore reviewListStore) {
-        return new ServiceDataLayer(
-                loginFetcher,
-                beerFetcher,
-                beerSearchFetcher,
-                topBeersFetcher,
-                beersInCountryFetcher,
-                beersInStyleFetcher,
-                reviewFetcher,
+        return new ServiceDataLayer(fetcherManager,
                 networkRequestStatusStore,
                 beerStore,
                 beerSearchStore,

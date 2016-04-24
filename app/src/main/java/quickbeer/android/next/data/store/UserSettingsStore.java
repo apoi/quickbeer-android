@@ -84,7 +84,6 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
     }
 
     @NonNull
-    @Override
     public Observable<UserSettings> getStream() {
         return super.getStream(DEFAULT_USER_ID);
     }

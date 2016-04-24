@@ -17,13 +17,18 @@
  */
 package quickbeer.android.next.network.fetchers;
 
+import android.net.Uri;
+
 import java.net.CookieManager;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 import io.reark.reark.network.fetchers.Fetcher;
+import io.reark.reark.network.fetchers.UriFetcherManager;
 import quickbeer.android.next.data.store.BeerSearchStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
@@ -128,5 +133,28 @@ public final class FetcherModule {
                 networkRequestStatusStore::put,
                 reviewStore,
                 reviewListStore);
+    }
+
+    @Provides
+    public UriFetcherManager provideUriFetcherManager(@Named("loginFetcher") Fetcher loginFetcher,
+                                                      @Named("beerFetcher") Fetcher beerFetcher,
+                                                      @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
+                                                      @Named("topBeersFetcher") Fetcher topBeersFetcher,
+                                                      @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
+                                                      @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
+                                                      @Named("reviewFetcher") Fetcher reviewFetcher) {
+        final List<Fetcher<Uri>> fetchers = Arrays.asList(
+                loginFetcher,
+                beerFetcher,
+                beerSearchFetcher,
+                topBeersFetcher,
+                beersInCountryFetcher,
+                beersInStyleFetcher,
+                reviewFetcher
+        );
+
+        return new UriFetcherManager.Builder()
+                .fetchers(fetchers)
+                .build();
     }
 }

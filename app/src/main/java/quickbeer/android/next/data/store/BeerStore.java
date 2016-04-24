@@ -56,7 +56,7 @@ public class BeerStore extends StoreBase<Beer, Integer> {
                     String selection = String.format("%s > 0", BeerColumns.ACCESSED); // Has access date
                     String orderBy = String.format("%s DESC", BeerColumns.ACCESSED); // Sort by date
 
-                    return contentResolver.query(getContentUri(), projection, selection, null, orderBy);
+                    return getContentResolver().query(getContentUri(), projection, selection, null, orderBy);
                 })
                 .filter(new NullFilter())
                 .map(cursor -> {

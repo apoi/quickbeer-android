@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.reark.reark.data.store.SingleItemContentProviderStore;
 import io.reark.reark.utils.Log;
+import io.reark.reark.utils.Preconditions;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -55,6 +56,8 @@ public abstract class StoreBase<T, U> extends SingleItemContentProviderStore<T, 
 
     public StoreBase(@NonNull ContentResolver contentResolver, @NonNull Gson gson, boolean cacheOnly) {
         super(contentResolver);
+
+        Preconditions.checkNotNull(gson, "Gson cannot be null.");
 
         this.gson = gson;
         this.cacheOnly = cacheOnly;

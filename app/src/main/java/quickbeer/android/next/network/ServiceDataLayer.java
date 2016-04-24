@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import io.reark.reark.network.fetchers.Fetcher;
+import io.reark.reark.network.fetchers.UriFetcherManager;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayerBase;
@@ -46,16 +47,9 @@ import quickbeer.android.next.data.store.ReviewStore;
 public class ServiceDataLayer extends DataLayerBase {
     private static final String TAG = ServiceDataLayer.class.getSimpleName();
 
-    @NonNull
-    final private Collection<Fetcher> fetchers;
+    private final UriFetcherManager fetcherManager;
 
-    public ServiceDataLayer(@NonNull Fetcher loginFetcher,
-                            @NonNull Fetcher beerFetcher,
-                            @NonNull Fetcher beerSearchFetcher,
-                            @NonNull Fetcher topBeersFetcher,
-                            @NonNull Fetcher beersInCountryFetcher,
-                            @NonNull Fetcher beersInStyleFetcher,
-                            @NonNull Fetcher reviewsFetcher,
+    public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager,
                             @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
                             @NonNull BeerSearchStore beerSearchStore,
@@ -63,15 +57,9 @@ public class ServiceDataLayer extends DataLayerBase {
                             @NonNull ReviewListStore reviewListStore) {
         super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
 
-        fetchers = Arrays.asList(
-                loginFetcher,
-                beerFetcher,
-                beerSearchFetcher,
-                topBeersFetcher,
-                beersInCountryFetcher,
-                beersInStyleFetcher,
-                reviewsFetcher
-        );
+        Preconditions.checkNotNull(fetcherManager, "FetcherManager cannot be null.");
+
+        this.fetcherManager = fetcherManager;
     }
 
     public void processIntent(@NonNull Intent intent) {
@@ -80,7 +68,7 @@ public class ServiceDataLayer extends DataLayerBase {
         final String serviceUriString = intent.getStringExtra("serviceUriString");
         if (serviceUriString != null) {
             final Uri serviceUri = Uri.parse(serviceUriString);
-            Fetcher matchingFetcher = findFetcher(serviceUri);
+            Fetcher matchingFetcher = fetcherManager.findFetcher(serviceUri);
             if (matchingFetcher != null) {
                 Log.v(TAG, "Fetcher found for " + serviceUri);
                 matchingFetcher.fetch(intent);
@@ -90,17 +78,5 @@ public class ServiceDataLayer extends DataLayerBase {
         } else {
             Log.e(TAG, "No Uri defined");
         }
-    }
-
-    @Nullable
-    private Fetcher findFetcher(@NonNull Uri serviceUri) {
-        Preconditions.checkNotNull(serviceUri, "Service URI cannot be null.");
-
-        for (Fetcher fetcher : fetchers) {
-            if (fetcher.getServiceUri().equals(serviceUri)) {
-                return fetcher;
-            }
-        }
-        return null;
     }
 }
