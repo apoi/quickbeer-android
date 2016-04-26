@@ -20,19 +20,19 @@ package quickbeer.android.next.pojo;
 import java.util.Date;
 import java.util.List;
 
-public class RelationList {
-    private final int parentId;
+public class ItemList<T> {
+    private final T key;
     private final List<Integer> items;
     private Date updateDate;
 
-    public RelationList(final int parentId, final List<Integer> items, final Date updateDate) {
-        this.parentId = parentId;
+    public ItemList(final T key, final List<Integer> items, final Date updateDate) {
+        this.key = key;
         this.items = items;
         this.updateDate = updateDate;
     }
 
-    public int getParentId() {
-        return parentId;
+    public T getKey() {
+        return key;
     }
 
     public List<Integer> getItems() {
@@ -49,7 +49,7 @@ public class RelationList {
 
     @Override
     public String toString() {
-        return "RelationList{parentId=" + parentId
+        return "ItemList{key=" + key
                 + ", items='" + (items == null ? "null " : items.size())
                 + ", updated='" + updateDate
                 + "'}";

@@ -31,7 +31,6 @@ import javax.inject.Inject;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.R;
-import quickbeer.android.next.activities.BeerSearchActivity;
 import quickbeer.android.next.activities.CountryListActivity;
 import quickbeer.android.next.activities.MainActivity;
 import quickbeer.android.next.activities.StyleListActivity;

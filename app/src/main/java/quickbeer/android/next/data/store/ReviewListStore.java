@@ -24,16 +24,18 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
-import quickbeer.android.next.pojo.RelationList;
+import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.utils.DateUtils;
 
-public class ReviewListStore extends StoreBase<RelationList, Integer> {
+public class ReviewListStore extends StoreBase<ItemList<Integer>, Integer> {
     private static final String TAG = ReviewListStore.class.getSimpleName();
 
     public ReviewListStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
@@ -42,10 +44,10 @@ public class ReviewListStore extends StoreBase<RelationList, Integer> {
 
     @NonNull
     @Override
-    protected Integer getIdFor(@NonNull RelationList item) {
-        Preconditions.checkNotNull(item, "RelationList cannot be null.");
+    protected Integer getIdFor(@NonNull ItemList<Integer> item) {
+        Preconditions.checkNotNull(item, "ItemList<Integer> cannot be null.");
 
-        return item.getParentId();
+        return item.getKey();
     }
 
     @NonNull
@@ -66,9 +68,9 @@ public class ReviewListStore extends StoreBase<RelationList, Integer> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(RelationList item) {
+    protected ContentValues getContentValuesForItem(ItemList<Integer> item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewListColumns.BEER_ID, item.getParentId());
+        contentValues.put(ReviewListColumns.BEER_ID, item.getKey());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));
         contentValues.put(ReviewListColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
         return contentValues;
@@ -76,11 +78,12 @@ public class ReviewListStore extends StoreBase<RelationList, Integer> {
 
     @NonNull
     @Override
-    protected RelationList read(Cursor cursor) {
+    protected ItemList<Integer> read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
         final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
-        RelationList reviewList = getGson().fromJson(json, RelationList.class);
+        Type listType = new TypeToken<ItemList<Integer>>(){}.getType();
+        ItemList<Integer> reviewList = getGson().fromJson(json, listType);
         reviewList.setUpdateDate(updated);
 
         return reviewList;

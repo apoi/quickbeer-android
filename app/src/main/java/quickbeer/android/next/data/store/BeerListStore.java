@@ -33,10 +33,10 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BeerListColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.network.RateBeerService;
-import quickbeer.android.next.pojo.SearchList;
+import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.utils.DateUtils;
 
-public class BeerListStore extends StoreBase<SearchList<String>, String> {
+public class BeerListStore extends StoreBase<ItemList<String>, String> {
     private static final String TAG = BeerListStore.class.getSimpleName();
 
     public BeerListStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
@@ -65,7 +65,7 @@ public class BeerListStore extends StoreBase<SearchList<String>, String> {
 
     @NonNull
     @Override
-    protected String getIdFor(@NonNull SearchList<String> list) {
+    protected String getIdFor(@NonNull ItemList<String> list) {
         Preconditions.checkNotNull(list, "Search list cannot be null.");
 
         return list.getKey();
@@ -89,7 +89,7 @@ public class BeerListStore extends StoreBase<SearchList<String>, String> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(SearchList<String> item) {
+    protected ContentValues getContentValuesForItem(ItemList<String> item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerListColumns.KEY, item.getKey());
         contentValues.put(BeerListColumns.JSON, getGson().toJson(item));
@@ -99,12 +99,12 @@ public class BeerListStore extends StoreBase<SearchList<String>, String> {
 
     @NonNull
     @Override
-    protected SearchList<String> read(Cursor cursor) {
+    protected ItemList<String> read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerListColumns.JSON));
         final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)));
 
-        Type listType = new TypeToken<SearchList<String>>(){}.getType();
-        SearchList<String> beerList = getGson().fromJson(json, listType);
+        Type listType = new TypeToken<ItemList<String>>(){}.getType();
+        ItemList<String> beerList = getGson().fromJson(json, listType);
         beerList.setUpdateDate(updated);
 
         return beerList;

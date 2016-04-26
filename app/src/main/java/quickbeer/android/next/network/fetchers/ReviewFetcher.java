@@ -34,7 +34,7 @@ import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
-import quickbeer.android.next.pojo.RelationList;
+import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import rx.Observable;
 import rx.Subscription;
@@ -95,7 +95,7 @@ public class ReviewFetcher extends FetcherBase {
                         reviewStore.put(review);
                         reviewIds.add(review.getId());
                     }
-                    return new RelationList(beerId, reviewIds, new Date());
+                    return new ItemList<>(beerId, reviewIds, new Date());
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))

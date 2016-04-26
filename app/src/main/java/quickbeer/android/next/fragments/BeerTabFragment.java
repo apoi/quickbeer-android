@@ -25,8 +25,8 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.pojo.SearchList;
 import quickbeer.android.next.pojo.Header;
+import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.views.BeerListView;
 import rx.subjects.BehaviorSubject;
 
@@ -34,7 +34,7 @@ public class BeerTabFragment extends BeerListFragment {
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
 
-    private final BehaviorSubject<DataStreamNotification<SearchList<String>>> accessedBeersSubject = BehaviorSubject.create();
+    private final BehaviorSubject<DataStreamNotification<ItemList<String>>> accessedBeersSubject = BehaviorSubject.create();
 
     @Override
     public int getLayout() {

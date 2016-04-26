@@ -30,8 +30,6 @@ import android.support.annotation.NonNull;
 
 import com.squareup.okhttp.OkHttpClient;
 
-import java.net.CookieManager;
-
 public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient> {
 
     @NonNull

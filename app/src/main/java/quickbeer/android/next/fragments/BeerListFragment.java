@@ -32,7 +32,7 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.fragments.base.BaseFragment;
-import quickbeer.android.next.pojo.SearchList;
+import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
 import quickbeer.android.next.views.BeerListView;
 import rx.Observable;
@@ -51,7 +51,7 @@ public class BeerListFragment extends BaseFragment {
         return R.layout.beer_list_fragment;
     }
 
-    public void setSource(Observable<DataStreamNotification<SearchList<String>>> sourceObservable) {
+    public void setSource(Observable<DataStreamNotification<ItemList<String>>> sourceObservable) {
         // Unsubscribe old source before setting the new one, otherwise the subscribe
         // call assumes the old subscription to still be valid.
         beerListViewModel.unsubscribeFromDataStore();
@@ -59,8 +59,8 @@ public class BeerListFragment extends BaseFragment {
         beerListViewModel.subscribeToDataStore();
     }
 
-    public void setProgressingSource(Observable<DataStreamNotification<SearchList<String>>> sourceObservable) {
-        Observable<DataStreamNotification<SearchList<String>>> observable =
+    public void setProgressingSource(Observable<DataStreamNotification<ItemList<String>>> sourceObservable) {
+        Observable<DataStreamNotification<ItemList<String>>> observable =
                 sourceObservable.publish().refCount();
 
         setSource(observable);

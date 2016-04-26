@@ -26,7 +26,7 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayer;
-import quickbeer.android.next.pojo.SearchList;
+import quickbeer.android.next.pojo.ItemList;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
@@ -40,7 +40,7 @@ public class BeerListViewModel extends BaseViewModel {
     private static final String TAG = BeerListViewModel.class.getSimpleName();
 
     private final DataLayer.GetBeer getBeer;
-    private Observable<DataStreamNotification<SearchList<String>>> sourceObservable;
+    private Observable<DataStreamNotification<ItemList<String>>> sourceObservable;
 
     private final PublishSubject<Integer> selectBeer = PublishSubject.create();
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
@@ -65,7 +65,7 @@ public class BeerListViewModel extends BaseViewModel {
         return beers.asObservable();
     }
 
-    public void setSourceObservable(Observable<DataStreamNotification<SearchList<String>>> sourceObservable) {
+    public void setSourceObservable(Observable<DataStreamNotification<ItemList<String>>> sourceObservable) {
         this.beers.onNext(Collections.emptyList());
         this.sourceObservable = sourceObservable;
     }
@@ -76,7 +76,7 @@ public class BeerListViewModel extends BaseViewModel {
 
         Log.v(TAG, "subscribeToDataStoreInternal");
 
-        ConnectableObservable<DataStreamNotification<SearchList<String>>> beerSearchSource =
+        ConnectableObservable<DataStreamNotification<ItemList<String>>> beerSearchSource =
                 sourceObservable
                         .subscribeOn(Schedulers.computation())
                         .publish();
@@ -90,7 +90,7 @@ public class BeerListViewModel extends BaseViewModel {
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Log.d(TAG, "Search finished"))
-                .map(SearchList::getItems)
+                .map(ItemList::getItems)
                 .flatMap(toBeerViewModelList())
                 .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " beers from the view model"))
                 .subscribe(beers::onNext));

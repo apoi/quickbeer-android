@@ -35,7 +35,7 @@ import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.SearchList;
+import quickbeer.android.next.pojo.ItemList;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -97,7 +97,7 @@ public class BeerSearchFetcher extends FetcherBase {
                         beerStore.put(beer);
                         beerIds.add(beer.getId());
                     }
-                    return new SearchList<String>(queryId, beerIds, new Date());
+                    return new ItemList<String>(queryId, beerIds, new Date());
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
