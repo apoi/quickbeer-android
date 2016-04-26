@@ -22,81 +22,32 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.BrewerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.Brewer;
-import quickbeer.android.next.rx.NullFilter;
 import quickbeer.android.next.utils.DateUtils;
 import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
-public class BrewerStore extends StoreBase<Brewer, Integer> {
+public class BrewerStore extends AccessTrackingStore<Brewer> {
     private static final String TAG = BrewerStore.class.getSimpleName();
 
     public BrewerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
-    public Observable<List<Integer>> getAccessedBrewerIds() {
-        return Observable.just(null)
-                .observeOn(Schedulers.io())
-                .map(empty -> {
-                    String[] projection = new String[]{ BrewerColumns.ID, BrewerColumns.ACCESSED };
-                    String selection = String.format("%s > 0", BrewerColumns.ACCESSED); // Has access date
-                    String orderBy = String.format("%s DESC", BrewerColumns.ACCESSED); // Sort by date
-
-                    return getContentResolver().query(getContentUri(), projection, selection, null, orderBy);
-                })
-                .filter(new NullFilter())
-                .map(cursor -> {
-                    List<Pair<Integer, Integer>> brewerIds = new ArrayList<>();
-                    if (cursor.moveToFirst()) {
-                        do {
-                            int id = cursor.getInt(cursor.getColumnIndex(BrewerColumns.ID));
-                            int accessed = cursor.getInt(cursor.getColumnIndex(BrewerColumns.ACCESSED));
-                            brewerIds.add(new Pair<>(id, accessed));
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                    return brewerIds;
-                })
-                .observeOn(Schedulers.computation())
-                .doOnNext(dataPair -> Log.d(TAG, "Accessed brewers: " + dataPair.size()))
-                .map(dataPair -> {
-                    List<Integer> ids = new ArrayList<>();
-                    for (Pair<Integer, Integer> idAccessPair : dataPair) {
-                        ids.add(idAccessPair.first);
-                    }
-                    return ids;
-                });
+    public Observable<List<Integer>> getAccessedIds() {
+        return super.getAccessedIds(BrewerColumns.ID, BrewerColumns.ACCESSED);
     }
 
-    public Observable<Integer> getNewlyAccessedBrewerIds(Date date) {
-        return getStream()
-                .filter(brewer -> brewer.getAccessDate() != null)
-                .distinctUntilChanged(new Func1<Brewer, Date>() {
-                    // Access date as key object indicating distinction
-                    private Date latestAccess = date;
-
-                    @Override
-                    public Date call(Brewer brewer) {
-                        if (brewer.getAccessDate().after(latestAccess)) {
-                            latestAccess = brewer.getAccessDate();
-                        }
-                        return latestAccess;
-                    }
-                })
+    public Observable<Integer> getNewlyAccessedIds(Date date) {
+        return getNewlyAccessedItems(date)
                 .map(Brewer::getId);
     }
 

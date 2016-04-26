@@ -21,12 +21,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import quickbeer.android.next.pojo.base.AccessTrackingItem;
 
-import quickbeer.android.next.pojo.base.BasePojo;
-import quickbeer.android.next.pojo.base.MetadataAware;
-
-public class Beer extends BasePojo<Beer> implements MetadataAware<Beer> {
+public class Beer extends AccessTrackingItem<Beer> {
     @SerializedName("BeerID")
     private int id;
 
@@ -75,8 +72,6 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer> {
     private int tick;
     private int reviewId;
     private boolean isModified;
-    private Date updateDate;
-    private Date accessDate;
 
     @NonNull
     @Override
@@ -157,22 +152,6 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer> {
         isModified = value;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date date) {
-        updateDate = date;
-    }
-
-    public Date getAccessDate() {
-        return accessDate;
-    }
-
-    public void setAccessDate(Date date) {
-        accessDate = date;
-    }
-
     @Override
     public String toString() {
         return "Beer{" + "id=" + id
@@ -223,13 +202,10 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer> {
         return isAlias == beer.isAlias;
     }
 
-    // Metadata equality part.
     @Override
     public boolean metadataEquals(Beer beer) {
-        if (updateDate != null ? !updateDate.equals(beer.updateDate) : beer.updateDate != null) return false;
-        if (accessDate != null ? !accessDate.equals(beer.accessDate) : beer.accessDate != null) return false;
-
-        return isModified == beer.isModified;
+        return super.metadataEquals(beer)
+                && isModified == beer.isModified;
     }
 
     @Override

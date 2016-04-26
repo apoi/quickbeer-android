@@ -230,10 +230,10 @@ public class DataLayer extends DataLayerBase {
         BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
 
         // Observing the stores and updating the caching subject
-        beerStore.getAccessedBeerIds()
+        beerStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> beerStore.getNewlyAccessedBeerIds(new Date())
+                .flatMap(ids -> beerStore.getNewlyAccessedIds(new Date())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )
@@ -567,10 +567,10 @@ public class DataLayer extends DataLayerBase {
         BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
 
         // Observing the stores and updating the caching subject
-        brewerStore.getAccessedBrewerIds()
+        brewerStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> brewerStore.getNewlyAccessedBrewerIds(new Date())
+                .flatMap(ids -> brewerStore.getNewlyAccessedIds(new Date())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )

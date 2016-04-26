@@ -23,12 +23,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import quickbeer.android.next.pojo.base.BasePojo;
-import quickbeer.android.next.pojo.base.MetadataAware;
+import quickbeer.android.next.pojo.base.AccessTrackingItem;
 import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer> {
+public class Brewer extends AccessTrackingItem<Brewer> {
     @SerializedName("BrewerID")
     private int id;
 
@@ -119,9 +118,6 @@ public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer> {
     @SerializedName("RegionID")
     private String regionId;
 
-    private Date updateDate;
-    private Date accessDate;
-
     @NonNull
     @Override
     protected Class<Brewer> getTypeParameterClass() {
@@ -164,22 +160,6 @@ public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer> {
     @NonNull
     public Date getOpened() {
         return DateUtils.value(opened);
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date date) {
-        updateDate = date;
-    }
-
-    public Date getAccessDate() {
-        return accessDate;
-    }
-
-    public void setAccessDate(Date date) {
-        accessDate = date;
     }
 
     @Override
@@ -237,14 +217,6 @@ public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer> {
         if (msa != null ? !msa.equals(brewer.msa) : brewer.msa != null) return false;
 
         return regionId != null ? regionId.equals(brewer.regionId) : brewer.regionId == null;
-    }
-
-    @Override
-    public boolean metadataEquals(Brewer brewer) {
-        if (updateDate != null ? !updateDate.equals(brewer.updateDate) : brewer.updateDate != null) return false;
-        if (accessDate != null ? !accessDate.equals(brewer.accessDate) : brewer.accessDate != null) return false;
-
-        return true;
     }
 
     @Override
