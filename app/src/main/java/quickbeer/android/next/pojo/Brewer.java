@@ -117,6 +117,9 @@ public class Brewer extends BasePojo<Brewer> {
     @SerializedName("RegionID")
     private String regionId;
 
+    private Date updateDate;
+    private Date accessDate;
+
     @NonNull
     @Override
     protected Class<Brewer> getTypeParameterClass() {
@@ -159,6 +162,22 @@ public class Brewer extends BasePojo<Brewer> {
     @NonNull
     public Date getOpened() {
         return DateUtils.value(opened);
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date date) {
+        updateDate = date;
+    }
+
+    public Date getAccessDate() {
+        return accessDate;
+    }
+
+    public void setAccessDate(Date date) {
+        accessDate = date;
     }
 
     @Override

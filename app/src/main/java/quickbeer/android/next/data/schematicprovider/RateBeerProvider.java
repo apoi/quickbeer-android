@@ -150,4 +150,22 @@ public class RateBeerProvider {
             return buildUri(RateBeerDatabase.REVIEW_LISTS, String.valueOf(beerId));
         }
     }
+
+    @TableEndpoint(table = RateBeerDatabase.BREWERS) public static class Brewers {
+        @ContentUri(
+                path = RateBeerDatabase.BREWERS,
+                type = BASE_TYPE + RateBeerDatabase.BREWERS,
+                defaultSort = JsonIdColumns.ID + " ASC")
+        public static final Uri BREWERS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BREWERS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.BREWERS + "/*",
+                name = "BREWERS_ID",
+                type = BASE_TYPE + RateBeerDatabase.BREWERS,
+                whereColumn = BrewerColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(RateBeerDatabase.BREWERS, String.valueOf(id));
+        }
+    }
 }
