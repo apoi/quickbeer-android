@@ -22,6 +22,10 @@ import java.util.Date;
 public class DateUtils {
     private DateUtils() {}
 
+    public static Date value(Date date) {
+        return date != null ? date : new Date();
+    }
+
     public static int toDbValue(Date date) {
         return date != null
                 ? (int) (date.getTime() / 1000)

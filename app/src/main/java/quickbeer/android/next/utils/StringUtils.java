@@ -28,6 +28,10 @@ public class StringUtils {
         return hasValue(primary) ? primary : secondary;
     }
 
+    public static String value(String value) {
+        return value != null ? value : "";
+    }
+
     public static boolean equals(String first, String second) {
         return first == null
                 ? second == null

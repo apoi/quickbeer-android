@@ -31,43 +31,43 @@ public class Beer extends BasePojo<Beer> {
     private String name;
 
     @SerializedName("AverageRating")
-    private float averageRating;
+    private Float averageRating;
 
     @SerializedName("OverallPctl")
-    private float overallRating;
+    private Float overallRating;
 
     @SerializedName("StylePctl")
-    private float styleRating;
+    private Float styleRating;
 
     @SerializedName("RateCount")
-    private float rateCount;
+    private Float rateCount;
 
     @SerializedName("BeerStyleID")
-    private int styleId;
+    private Integer styleId;
 
     @SerializedName("BeerStyleName")
     private String styleName;
 
     @SerializedName("Alcohol")
-    private float alcohol;
+    private Float alcohol;
 
     @SerializedName("IBU")
-    private float ibu;
+    private Float ibu;
 
     @SerializedName("Description")
     private String description;
 
     @SerializedName("IsAlias")
-    private boolean isAlias;
+    private Boolean isAlias;
 
     @SerializedName("BrewerID")
-    private int brewerId;
+    private Integer brewerId;
 
     @SerializedName("BrewerName")
     private String brewerName;
 
     @SerializedName("BrewerCountryId")
-    private int countryId;
+    private Integer countryId;
 
     private int tick;
     private int reviewId;
