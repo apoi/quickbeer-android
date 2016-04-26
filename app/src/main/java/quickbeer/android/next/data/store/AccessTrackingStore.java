@@ -48,7 +48,7 @@ public abstract class AccessTrackingStore<T extends AccessTrackingItem> extends 
         return Observable.just(null)
                 .observeOn(Schedulers.io())
                 .map(empty -> {
-                    String[] projection = new String[]{ idColumn, accessColumn };
+                    String[] projection = new String[]{ idColumn };
                     String selection = String.format("%s > 0", accessColumn); // Has access date
                     String orderBy = String.format("%s DESC", accessColumn); // Sort by date
 
@@ -56,26 +56,17 @@ public abstract class AccessTrackingStore<T extends AccessTrackingItem> extends 
                 })
                 .filter(new NullFilter())
                 .map(cursor -> {
-                    List<Pair<Integer, Integer>> itemIds = new ArrayList<>();
+                    List<Integer> idList = new ArrayList<>();
                     if (cursor.moveToFirst()) {
                         do {
-                            int id = cursor.getInt(cursor.getColumnIndex(idColumn));
-                            int accessed = cursor.getInt(cursor.getColumnIndex(accessColumn));
-                            itemIds.add(new Pair<>(id, accessed));
+                            idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)));
                         } while (cursor.moveToNext());
                     }
                     cursor.close();
-                    return itemIds;
+                    return idList;
                 })
                 .observeOn(Schedulers.computation())
-                .doOnNext(dataPair -> Log.d(TAG, "Accessed items: " + dataPair.size()))
-                .map(dataPair -> {
-                    List<Integer> ids = new ArrayList<>();
-                    for (Pair<Integer, Integer> idAccessPair : dataPair) {
-                        ids.add(idAccessPair.first);
-                    }
-                    return ids;
-                });
+                .doOnNext(idList -> Log.d(TAG, "Accessed items: " + idList.size()));
     }
 
     protected Observable<T> getNewlyAccessedItems(Date date) {
