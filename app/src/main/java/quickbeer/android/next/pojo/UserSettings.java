@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import quickbeer.android.next.pojo.base.BasePojo;
 import quickbeer.android.next.utils.StringUtils;
 
 public class UserSettings extends BasePojo<UserSettings> {

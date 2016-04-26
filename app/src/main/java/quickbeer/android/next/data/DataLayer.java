@@ -43,10 +43,10 @@ import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.UserSettings;
+import quickbeer.android.next.rx.DistinctiveTracker;
 import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
 import rx.functions.Func0;
-import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -172,39 +172,7 @@ public class DataLayer extends DataLayerBase {
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
-                .distinctUntilChanged(new Func1<DataStreamNotification<Beer>, Integer>() {
-                    private int counter = 0; // Key object for indicating distinction
-                    private DataStreamNotification<Beer> previous;
-
-                    @Override
-                    public Integer call(DataStreamNotification<Beer> notification) {
-                        if (isDistinctive(notification)) {
-                            previous = notification;
-                            counter++;
-                        }
-
-                        return counter;
-                    }
-
-                    private boolean isDistinctive(DataStreamNotification<Beer> notification) {
-                        if (previous == null) {
-                            return true;
-                        } else if (!notification.getType().equals(previous.getType())) {
-                            return true;
-                        } else if (!notification.getType().equals(DataStreamNotification.Type.ON_NEXT)) {
-                            return true;
-                        } else {
-                            final Beer first = notification.getValue();
-                            final Beer second = previous.getValue();
-
-                            if (first == null || second == null) {
-                                return true;
-                            } else {
-                                return !first.dataEquals(second);
-                            }
-                        }
-                    }
-                });
+                .distinctUntilChanged(new DistinctiveTracker<Beer>());
     }
 
     @NonNull

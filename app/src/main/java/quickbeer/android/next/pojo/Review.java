@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import quickbeer.android.next.pojo.base.BasePojo;
 import quickbeer.android.next.utils.StringUtils;
 
 public class Review extends BasePojo<Review> {

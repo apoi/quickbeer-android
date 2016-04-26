@@ -23,10 +23,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
+import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Brewer extends BasePojo<Brewer> {
+public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer> {
     @SerializedName("BrewerID")
     private int id;
 
@@ -191,13 +193,20 @@ public class Brewer extends BasePojo<Brewer> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        } else if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Brewer brewer = (Brewer) o;
-
         if (id != brewer.id) return false;
+
+        return metadataEquals(brewer) && dataEquals(brewer);
+    }
+
+    @Override
+    public boolean dataEquals(Brewer brewer) {
         if (name != null ? !name.equals(brewer.name) : brewer.name != null) return false;
         if (description != null ? !description.equals(brewer.description) : brewer.description != null) return false;
         if (address != null ? !address.equals(brewer.address) : brewer.address != null) return false;
@@ -228,6 +237,14 @@ public class Brewer extends BasePojo<Brewer> {
         if (msa != null ? !msa.equals(brewer.msa) : brewer.msa != null) return false;
 
         return regionId != null ? regionId.equals(brewer.regionId) : brewer.regionId == null;
+    }
+
+    @Override
+    public boolean metadataEquals(Brewer brewer) {
+        if (updateDate != null ? !updateDate.equals(brewer.updateDate) : brewer.updateDate != null) return false;
+        if (accessDate != null ? !accessDate.equals(brewer.accessDate) : brewer.accessDate != null) return false;
+
+        return true;
     }
 
     @Override

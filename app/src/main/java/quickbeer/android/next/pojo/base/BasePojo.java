@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.pojo;
+package quickbeer.android.next.pojo.base;
 
 import java.lang.reflect.Field;
 import java.util.Date;

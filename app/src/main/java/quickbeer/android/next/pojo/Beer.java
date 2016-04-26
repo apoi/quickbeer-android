@@ -23,7 +23,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class Beer extends BasePojo<Beer> {
+import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.MetadataAware;
+
+public class Beer extends BasePojo<Beer> implements MetadataAware<Beer> {
     @SerializedName("BeerID")
     private int id;
 
@@ -196,6 +199,7 @@ public class Beer extends BasePojo<Beer> {
     // Function for checking the data equality. Useful when we want to check only the data
     // parts, leaving out e.g. the beer access date. Note that we need to check every field:
     // this is an object comparison, not beer identity comparison.
+    @Override
     public boolean dataEquals(Beer beer) {
         if (styleId != beer.styleId) return false;
         if (brewerId != beer.brewerId) return false;
@@ -220,6 +224,7 @@ public class Beer extends BasePojo<Beer> {
     }
 
     // Metadata equality part.
+    @Override
     public boolean metadataEquals(Beer beer) {
         if (updateDate != null ? !updateDate.equals(beer.updateDate) : beer.updateDate != null) return false;
         if (accessDate != null ? !accessDate.equals(beer.accessDate) : beer.accessDate != null) return false;
