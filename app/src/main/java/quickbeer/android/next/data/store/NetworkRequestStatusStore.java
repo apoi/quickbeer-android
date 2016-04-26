@@ -51,7 +51,7 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
     @NonNull
     @Override
     protected Integer getIdFor(@NonNull NetworkRequestStatus item) {
-        Preconditions.checkNotNull(item, "Network Request Status cannot be null.");
+        Preconditions.checkNotNull(item, "Network request status cannot be null.");
         return item.getUri().hashCode();
     }
 
@@ -63,7 +63,7 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
 
     @Override
     public void put(@NonNull NetworkRequestStatus item) {
-        Preconditions.checkNotNull(item, "Network Request Status cannot be null.");
+        Preconditions.checkNotNull(item, "Network request status cannot be null.");
 
         Log.v(TAG, "insertOrUpdate(" + item.getStatus() + ", " + item.getUri() + ")");
         super.put(item);

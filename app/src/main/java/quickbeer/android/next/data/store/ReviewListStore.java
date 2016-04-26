@@ -35,6 +35,9 @@ import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.utils.DateUtils;
 
+/**
+ * Class storing lists of reviews related to a specific beer id.
+ */
 public class ReviewListStore extends StoreBase<ItemList<Integer>, Integer> {
     private static final String TAG = ReviewListStore.class.getSimpleName();
 
@@ -45,7 +48,7 @@ public class ReviewListStore extends StoreBase<ItemList<Integer>, Integer> {
     @NonNull
     @Override
     protected Integer getIdFor(@NonNull ItemList<Integer> item) {
-        Preconditions.checkNotNull(item, "ItemList<Integer> cannot be null.");
+        Preconditions.checkNotNull(item, "Item list cannot be null.");
 
         return item.getKey();
     }

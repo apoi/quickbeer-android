@@ -67,7 +67,7 @@ public class DataLayer extends DataLayerBase {
         super(networkRequestStatusStore, beerStore, beerListStore, reviewStore, reviewListStore);
 
         Preconditions.checkNotNull(context, "Context cannot be null.");
-        Preconditions.checkNotNull(userSettingsStore, "User Settings Store cannot be null.");
+        Preconditions.checkNotNull(userSettingsStore, "User settings store cannot be null.");
 
         this.context = context;
         this.userSettingsStore = userSettingsStore;
@@ -81,7 +81,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     public void setUserSettings(@NonNull UserSettings userSettings) {
-        Preconditions.checkNotNull(userSettings, "User Settings cannot be null.");
+        Preconditions.checkNotNull(userSettings, "User settings cannot be null.");
 
         userSettingsStore.put(userSettings);
     }
@@ -279,7 +279,7 @@ public class DataLayer extends DataLayerBase {
                 .map(DataStreamNotification::onNext);
     }
 
-    //// KEY BEERS
+    //// SEARCH BEERS
 
     @NonNull
     public Observable<List<String>> getBeerSearchQueries() {

@@ -36,6 +36,9 @@ import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.utils.DateUtils;
 
+/**
+ * Class storing beer lists related to a string key, such as a search.
+ */
 public class BrewerListStore extends StoreBase<ItemList<String>, String> {
     private static final String TAG = BrewerListStore.class.getSimpleName();
 
@@ -66,7 +69,7 @@ public class BrewerListStore extends StoreBase<ItemList<String>, String> {
     @NonNull
     @Override
     protected String getIdFor(@NonNull ItemList<String> list) {
-        Preconditions.checkNotNull(list, "Search list cannot be null.");
+        Preconditions.checkNotNull(list, "Item list cannot be null.");
 
         return list.getKey();
     }
