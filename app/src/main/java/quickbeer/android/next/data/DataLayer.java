@@ -33,6 +33,8 @@ import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
+import quickbeer.android.next.data.store.BrewerListStore;
+import quickbeer.android.next.data.store.BrewerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
@@ -40,6 +42,7 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Brewer;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.UserSettings;
@@ -63,8 +66,13 @@ public class DataLayer extends DataLayerBase {
                      @NonNull BeerStore beerStore,
                      @NonNull BeerListStore beerListStore,
                      @NonNull ReviewStore reviewStore,
-                     @NonNull ReviewListStore reviewListStore) {
-        super(networkRequestStatusStore, beerStore, beerListStore, reviewStore, reviewListStore);
+                     @NonNull ReviewListStore reviewListStore,
+                     @NonNull BrewerStore brewerStore,
+                     @NonNull BrewerListStore brewerListStore) {
+        super(networkRequestStatusStore,
+                beerStore, beerListStore,
+                reviewStore, reviewListStore,
+                brewerStore, brewerListStore);
 
         Preconditions.checkNotNull(context, "Context cannot be null.");
         Preconditions.checkNotNull(userSettingsStore, "User settings store cannot be null.");
@@ -173,15 +181,6 @@ public class DataLayer extends DataLayerBase {
         // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
                 .distinctUntilChanged(new DistinctiveTracker<Beer>());
-    }
-
-    @NonNull
-    public Observable<DataStreamNotification<Beer>> fetchAndGetBeer(@NonNull Integer beerId) {
-        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
-        Log.v(TAG, "fetchAndGetBeer");
-
-        fetchBeer(beerId);
-        return getBeerResultStream(beerId);
     }
 
     private void fetchBeer(@NonNull Integer beerId) {
@@ -299,15 +298,6 @@ public class DataLayer extends DataLayerBase {
         return getBeerSearchResultStream(searchString);
     }
 
-    @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> fetchAndGetBeerSearch(@NonNull final String searchString) {
-        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
-        Log.v(TAG, "fetchAndGetBeerSearch");
-
-        fetchBeerSearch(searchString);
-        return getBeerSearchResultStream(searchString);
-    }
-
     private void fetchBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "fetchBeerSearch");
@@ -348,14 +338,6 @@ public class DataLayer extends DataLayerBase {
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
                 .subscribe(results -> fetchTopBeers());
 
-        return getTopBeersResultStream();
-    }
-
-    @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> fetchAndGetTopBeers() {
-        Log.v(TAG, "fetchAndGetTopBeers");
-
-        fetchTopBeers();
         return getTopBeersResultStream();
     }
 
@@ -400,14 +382,6 @@ public class DataLayer extends DataLayerBase {
         return getBeersInCountryResultStream(countryId);
     }
 
-    @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> fetchAndGetBeersInCountry(@NonNull final String countryId) {
-        Log.v(TAG, "fetchAndGetBeersInCountry");
-
-        fetchBeersInCountry(countryId);
-        return getBeersInCountryResultStream(countryId);
-    }
-
     private void fetchBeersInCountry(@NonNull final String countryId) {
         Log.v(TAG, "fetchBeersInCountry");
 
@@ -447,14 +421,6 @@ public class DataLayer extends DataLayerBase {
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
                 .subscribe(results -> fetchBeersInStyle(styleId));
 
-        return getBeersInStyleResultStream(styleId);
-    }
-
-    @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> fetchAndGetBeersInStyle(@NonNull final String styleId) {
-        Log.v(TAG, "fetchAndGetBeersInStyle");
-
-        fetchBeersInStyle(styleId);
         return getBeersInStyleResultStream(styleId);
     }
 
@@ -515,6 +481,106 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
         intent.putExtra("beerId", beerId);
         context.startService(intent);
+    }
+
+    //// GET BREWER DETAILS
+
+    @NonNull
+    public Observable<DataStreamNotification<Brewer>> getBrewerResultStream(@NonNull Integer brewerId) {
+        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+        Log.v(TAG, "getBrewerResultStream");
+
+        final Uri uri = brewerStore.getUriForId(brewerId);
+
+        final Observable<NetworkRequestStatus> networkRequestStatusObservable =
+                networkRequestStatusStore.getStream(uri.toString().hashCode());
+
+        final Observable<Brewer> brewerObservable =
+                brewerStore.getStream(brewerId);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                networkRequestStatusObservable, brewerObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Brewer>> getBrewer(@NonNull Integer brewerId) {
+        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+        Log.v(TAG, "getBrewer");
+
+        // Trigger a fetch only if full details haven't been fetched
+        beerStore.getOne(brewerId)
+                .first()
+                .filter(brewer -> brewer == null || !brewer.hasDetails())
+                .doOnNext(beer -> Log.v(TAG, "Brewer not cached, fetching"))
+                .subscribe(beer -> fetchBrewer(brewerId));
+
+        // Does not emit a new notification when only beer metadata changes.
+        // This avoids unnecessary view redraws.
+        return getBrewerResultStream(brewerId)
+                .distinctUntilChanged(new DistinctiveTracker<Brewer>());
+    }
+
+    private void fetchBrewer(@NonNull Integer brewerId) {
+        Log.v(TAG, "fetchBeer");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.BREWER.toString());
+        intent.putExtra("id", brewerId);
+        context.startService(intent);
+    }
+
+    //// ACCESS BEER
+
+    public void accessBrewer(@NonNull Integer brewerId) {
+        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+        Log.v(TAG, "accessBrewer(" + brewerId + ")");
+
+        brewerStore.getOne(brewerId)
+                .observeOn(Schedulers.computation())
+                .first()
+                .filter(new NullFilter())
+                .map(brewer -> {
+                    brewer.setAccessDate(new Date());
+                    return brewer;
+                })
+                .subscribe(
+                        brewerStore::put,
+                        throwable -> Log.e(TAG, "Error updating brewer access date:", throwable)
+                );
+    }
+
+    //// ACCESSED BEERS
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getAccessedBrewers() {
+        Log.v(TAG, "getAccessedBrewers");
+
+        // Function to move/add new item to the top of a list
+        Func2<List<Integer>, Integer, List<Integer>> mergeList = (integers, integer) -> {
+            int index = integers.indexOf(integer);
+            if (index > 0) integers.remove(index);
+            if (index != 0) integers.add(0, integer);
+            return integers;
+        };
+
+        // Caching subject for keeping a list of accessed brewers without querying the database
+        BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
+
+        // Observing the stores and updating the caching subject
+        brewerStore.getAccessedBrewerIds()
+                .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
+                .doOnNext(subject::onNext)
+                .flatMap(ids -> brewerStore.getNewlyAccessedBrewerIds(new Date())
+                        .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
+                        .map(id -> mergeList.call(subject.getValue(), id))
+                )
+                .subscribe(subject::onNext);
+
+        // Convert the subject to a stream similar to beer searches
+        return subject.asObservable()
+                .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: list now " + ids.size()))
+                .map(ids -> new ItemList<String>(null, ids, null))
+                .map(DataStreamNotification::onNext);
     }
 
     public interface Login {
@@ -579,5 +645,19 @@ public class DataLayer extends DataLayerBase {
     public interface GetReviews {
         @NonNull
         Observable<DataStreamNotification<ItemList<Integer>>> call(int beerId);
+    }
+
+    public interface GetBrewer {
+        @NonNull
+        Observable<DataStreamNotification<Brewer>> call(int brewerId);
+    }
+
+    public interface AccessBrewer {
+        void call(int beerId);
+    }
+
+    public interface GetAccessedBrewers {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call();
     }
 }

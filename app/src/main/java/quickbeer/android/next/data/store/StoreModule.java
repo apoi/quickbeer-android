@@ -50,7 +50,7 @@ public final class StoreModule {
 
     @Provides
     @Singleton
-    public BeerListStore provideBeerSearchStore(ContentResolver contentResolver, Gson gson) {
+    public BeerListStore provideBeerListStore(ContentResolver contentResolver, Gson gson) {
         return new BeerListStore(contentResolver, gson);
     }
 
@@ -64,5 +64,17 @@ public final class StoreModule {
     @Singleton
     public ReviewListStore provideReviewListStore(ContentResolver contentResolver, Gson gson) {
         return new ReviewListStore(contentResolver, gson);
+    }
+
+    @Provides
+    @Singleton
+    public BrewerStore provideBrewerStore(ContentResolver contentResolver, Gson gson) {
+        return new BrewerStore(contentResolver, gson);
+    }
+
+    @Provides
+    @Singleton
+    public BrewerListStore provideBrewerListStore(ContentResolver contentResolver, Gson gson) {
+        return new BrewerListStore(contentResolver, gson);
     }
 }

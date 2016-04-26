@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
+import quickbeer.android.next.data.store.BrewerListStore;
+import quickbeer.android.next.data.store.BrewerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
@@ -32,22 +34,30 @@ public class DataLayerBase {
     protected final BeerListStore beerListStore;
     protected final ReviewStore reviewStore;
     protected final ReviewListStore reviewListStore;
+    protected final BrewerStore brewerStore;
+    protected final BrewerListStore brewerListStore;
 
     protected DataLayerBase(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
                             @NonNull BeerListStore beerListStore,
                             @NonNull ReviewStore reviewStore,
-                            @NonNull ReviewListStore reviewListStore) {
+                            @NonNull ReviewListStore reviewListStore,
+                            @NonNull BrewerStore brewerStore,
+                            @NonNull BrewerListStore brewerListStore) {
         Preconditions.checkNotNull(networkRequestStatusStore, "Network request status store cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
-        Preconditions.checkNotNull(beerListStore, "Beer search store cannot be null.");
+        Preconditions.checkNotNull(beerListStore, "Beer list store cannot be null.");
         Preconditions.checkNotNull(reviewStore, "Review store cannot be null.");
         Preconditions.checkNotNull(reviewListStore, "Review list store cannot be null.");
+        Preconditions.checkNotNull(brewerStore, "Brewer store cannot be null.");
+        Preconditions.checkNotNull(brewerListStore, "Brewer list store cannot be null.");
 
         this.networkRequestStatusStore = networkRequestStatusStore;
         this.beerStore = beerStore;
         this.beerListStore = beerListStore;
         this.reviewStore = reviewStore;
         this.reviewListStore = reviewListStore;
+        this.brewerStore = brewerStore;
+        this.brewerListStore = brewerListStore;
     }
 }
