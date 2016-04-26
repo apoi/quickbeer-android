@@ -17,19 +17,30 @@
  */
 package quickbeer.android.next.activities.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.QuickBeer;
+import quickbeer.android.next.R;
+import quickbeer.android.next.activities.BeerSearchActivity;
+import quickbeer.android.next.activities.CountryListActivity;
+import quickbeer.android.next.activities.MainActivity;
+import quickbeer.android.next.activities.StyleListActivity;
+import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.injections.ApplicationGraph;
 import rx.subscriptions.CompositeSubscription;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     // Composite for subscriptions meant to stay alive for the activity's duration
     protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
@@ -66,5 +77,31 @@ public class BaseActivity extends AppCompatActivity {
                 .first()
                 .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
                 .subscribe(s -> Log.d("LOGIN", "Settings: " + s));
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_main:
+                startActivity(new Intent(this, MainActivity.class));
+                break;
+            case R.id.nav_ticks:
+            case R.id.nav_best:
+                startActivity(new Intent(this, TopBeersActivity.class));
+                break;
+            case R.id.nav_countries:
+                startActivity(new Intent(this, CountryListActivity.class));
+                break;
+            case R.id.nav_styles:
+                startActivity(new Intent(this, StyleListActivity.class));
+                break;
+            case R.id.nav_about:
+                return true;
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+
+        return true;
     }
 }

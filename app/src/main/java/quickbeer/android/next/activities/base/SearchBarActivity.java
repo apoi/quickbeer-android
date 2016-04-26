@@ -20,8 +20,6 @@ package quickbeer.android.next.activities.base;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,8 +43,7 @@ import quickbeer.android.next.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
-public abstract class SearchBarActivity extends BaseActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ProgressStatusAggregator {
+public abstract class SearchBarActivity extends BaseActivity implements ProgressStatusAggregator {
 
     private static final String TAG = SearchBarActivity.class.getSimpleName();
 
@@ -239,13 +236,6 @@ public abstract class SearchBarActivity extends BaseActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     protected abstract Observable<List<String>> getInitialQueriesObservable();
