@@ -20,19 +20,19 @@ package quickbeer.android.next.pojo;
 import java.util.Date;
 import java.util.List;
 
-public class ReviewList {
-    private final int beerId;
+public class RelationList {
+    private final int parentId;
     private final List<Integer> items;
     private Date updateDate;
 
-    public ReviewList(final int beerId, final List<Integer> items, final Date updateDate) {
-        this.beerId = beerId;
+    public RelationList(final int parentId, final List<Integer> items, final Date updateDate) {
+        this.parentId = parentId;
         this.items = items;
         this.updateDate = updateDate;
     }
 
-    public int getBeerId() {
-        return beerId;
+    public int getParentId() {
+        return parentId;
     }
 
     public List<Integer> getItems() {
@@ -49,7 +49,7 @@ public class ReviewList {
 
     @Override
     public String toString() {
-        return "ReviewList{beerId=" + beerId
+        return "RelationList{parentId=" + parentId
                 + ", items='" + (items == null ? "null " : items.size())
                 + ", updated='" + updateDate
                 + "'}";

@@ -20,8 +20,8 @@ package quickbeer.android.next.data.schematicprovider;
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.PrimaryKey;
 
-public interface BeerSearchColumns {
-    @DataType(DataType.Type.TEXT) @PrimaryKey String SEARCH = "id";
+public interface BrewerListColumns {
+    @DataType(DataType.Type.TEXT) @PrimaryKey String KEY = "id";
     @DataType(DataType.Type.TEXT) String JSON = "json";
     @DataType(DataType.Type.INTEGER) String UPDATED = "updated";
 }

@@ -29,7 +29,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
@@ -71,12 +71,12 @@ public final class FetcherModule {
                                             NetworkUtils networkUtils,
                                             NetworkRequestStatusStore networkRequestStatusStore,
                                             BeerStore beerStore,
-                                            BeerSearchStore beerSearchStore) {
+                                            BeerListStore beerListStore) {
         return new BeerSearchFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
-                beerSearchStore);
+                beerListStore);
     }
 
     @Provides
@@ -85,12 +85,12 @@ public final class FetcherModule {
                                           NetworkUtils networkUtils,
                                           NetworkRequestStatusStore networkRequestStatusStore,
                                           BeerStore beerStore,
-                                          BeerSearchStore beerSearchStore) {
+                                          BeerListStore beerListStore) {
         return new TopBeersFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
-                beerSearchStore);
+                beerListStore);
     }
 
     @Provides
@@ -99,12 +99,12 @@ public final class FetcherModule {
                                                 NetworkUtils networkUtils,
                                                 NetworkRequestStatusStore networkRequestStatusStore,
                                                 BeerStore beerStore,
-                                                BeerSearchStore beerSearchStore) {
+                                                BeerListStore beerListStore) {
         return new BeersInCountryFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
-                beerSearchStore);
+                beerListStore);
     }
 
     @Provides
@@ -113,12 +113,12 @@ public final class FetcherModule {
                                               NetworkUtils networkUtils,
                                               NetworkRequestStatusStore networkRequestStatusStore,
                                               BeerStore beerStore,
-                                              BeerSearchStore beerSearchStore) {
+                                              BeerListStore beerListStore) {
         return new BeersInStyleFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
                 beerStore,
-                beerSearchStore);
+                beerListStore);
     }
 
     @Provides

@@ -24,7 +24,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reark.reark.network.fetchers.UriFetcherManager;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
@@ -109,14 +109,14 @@ public final class DataStoreModule {
                                                  UserSettingsStore userSettingsStore,
                                                  NetworkRequestStatusStore networkRequestStatusStore,
                                                  BeerStore beerStore,
-                                                 BeerSearchStore beerSearchStore,
+                                                 BeerListStore beerListStore,
                                                  ReviewStore reviewStore,
                                                  ReviewListStore reviewListStore) {
         return new DataLayer(context,
                 userSettingsStore,
                 networkRequestStatusStore,
                 beerStore,
-                beerSearchStore,
+                beerListStore,
                 reviewStore,
                 reviewListStore);
     }
@@ -126,13 +126,13 @@ public final class DataStoreModule {
     public ServiceDataLayer provideServiceDataLayer(UriFetcherManager fetcherManager,
                                                     NetworkRequestStatusStore networkRequestStatusStore,
                                                     BeerStore beerStore,
-                                                    BeerSearchStore beerSearchStore,
+                                                    BeerListStore beerListStore,
                                                     ReviewStore reviewStore,
                                                     ReviewListStore reviewListStore) {
         return new ServiceDataLayer(fetcherManager,
                 networkRequestStatusStore,
                 beerStore,
-                beerSearchStore,
+                beerListStore,
                 reviewStore,
                 reviewListStore);
     }

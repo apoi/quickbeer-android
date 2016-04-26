@@ -1,5 +1,5 @@
 /**
- * This file is part of QuickBeer.
+ * This file is part of QuickBrewer.
  * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,28 +24,30 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.schematicprovider.BeerSearchColumns;
+import quickbeer.android.next.data.schematicprovider.BrewerListColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.network.RateBeerService;
-import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.SearchList;
 import quickbeer.android.next.utils.DateUtils;
 
-public class BeerSearchStore extends StoreBase<BeerSearch, String> {
-    private static final String TAG = BeerSearchStore.class.getSimpleName();
+public class BrewerListStore extends StoreBase<SearchList<String>, String> {
+    private static final String TAG = BrewerListStore.class.getSimpleName();
 
-    public BeerSearchStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
+    public BrewerListStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
-    // Beer search store needs separate query identifiers for normal searches and fixed searches
+    // Brewer search store needs separate query identifiers for normal searches and fixed searches
     // (top50, top in country, top in style). Fixed searches come attached with a service uri
     // identifier to make sure they stand apart from the normal searches.
     public String getQueryId(@NonNull Uri serviceUri, @NonNull String query) {
-        Preconditions.checkNotNull(serviceUri, "Service Uri cannot be null.");
+        Preconditions.checkNotNull(serviceUri, "Service uri cannot be null.");
         Preconditions.checkNotNull(query, "Query cannot be null.");
 
         if (serviceUri == RateBeerService.SEARCH) {
@@ -63,48 +65,49 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
 
     @NonNull
     @Override
-    protected String getIdFor(@NonNull BeerSearch item) {
-        Preconditions.checkNotNull(item, "Beer Search cannot be null.");
+    protected String getIdFor(@NonNull SearchList<String> list) {
+        Preconditions.checkNotNull(list, "Search list cannot be null.");
 
-        return item.getSearch();
+        return list.getKey();
     }
 
     @NonNull
     @Override
     public Uri getContentUri() {
-        return RateBeerProvider.BeerSearches.BEER_SEARCHES;
+        return RateBeerProvider.BrewerLists.BREWER_LISTS;
     }
 
     @NonNull
     @Override
     protected String[] getProjection() {
         return new String[] {
-                BeerSearchColumns.SEARCH,
-                BeerSearchColumns.JSON,
-                BeerSearchColumns.UPDATED
+                BrewerListColumns.KEY,
+                BrewerListColumns.JSON,
+                BrewerListColumns.UPDATED
         };
     }
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(BeerSearch item) {
+    protected ContentValues getContentValuesForItem(SearchList<String> item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerSearchColumns.SEARCH, item.getSearch());
-        contentValues.put(BeerSearchColumns.JSON, getGson().toJson(item));
-        contentValues.put(BeerSearchColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
+        contentValues.put(BrewerListColumns.KEY, item.getKey());
+        contentValues.put(BrewerListColumns.JSON, getGson().toJson(item));
+        contentValues.put(BrewerListColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
         return contentValues;
     }
 
     @NonNull
     @Override
-    protected BeerSearch read(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(BeerSearchColumns.JSON));
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerSearchColumns.UPDATED)));
+    protected SearchList<String> read(Cursor cursor) {
+        final String json = cursor.getString(cursor.getColumnIndex(BrewerListColumns.JSON));
+        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerListColumns.UPDATED)));
 
-        BeerSearch beerSearch = getGson().fromJson(json, BeerSearch.class);
-        beerSearch.setUpdateDate(updated);
+        Type listType = new TypeToken<SearchList<String>>(){}.getType();
+        SearchList<String> brewerList = getGson().fromJson(json, listType);
+        brewerList.setUpdateDate(updated);
 
-        return beerSearch;
+        return brewerList;
     }
 
     @NonNull
@@ -112,6 +115,6 @@ public class BeerSearchStore extends StoreBase<BeerSearch, String> {
     public Uri getUriForId(@NonNull String id) {
         Preconditions.checkNotNull(id, "Id cannot be null.");
 
-        return RateBeerProvider.BeerSearches.withSearch(id);
+        return RateBeerProvider.BrewerLists.withKey(id);
     }
 }

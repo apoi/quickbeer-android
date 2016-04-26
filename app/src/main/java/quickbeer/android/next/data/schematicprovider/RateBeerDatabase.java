@@ -27,8 +27,9 @@ public final class RateBeerDatabase {
     @Table(NetworkRequestStatusColumns.class) public static final String NETWORK_REQUEST_STATUSES = "networkRequestStatuses";
     @Table(UserSettingsColumns.class) public static final String USER_SETTINGS = "userSettings";
     @Table(BeerColumns.class) public static final String BEERS = "beers";
-    @Table(BeerSearchColumns.class) public static final String BEER_SEARCHES = "beerSearches";
+    @Table(BeerListColumns.class) public static final String BEER_LISTS = "beerLists";
     @Table(ReviewColumns.class) public static final String REVIEWS = "reviews";
     @Table(ReviewListColumns.class) public static final String REVIEW_LISTS = "reviewsLists";
     @Table(BeerColumns.class) public static final String BREWERS = "brewers";
+    @Table(BeerListColumns.class) public static final String BREWER_LISTS = "brewerLists";
 }

@@ -31,7 +31,7 @@ import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
@@ -40,9 +40,9 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.SearchList;
 import quickbeer.android.next.pojo.Review;
-import quickbeer.android.next.pojo.ReviewList;
+import quickbeer.android.next.pojo.RelationList;
 import quickbeer.android.next.pojo.UserSettings;
 import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
@@ -62,10 +62,10 @@ public class DataLayer extends DataLayerBase {
                      @NonNull UserSettingsStore userSettingsStore,
                      @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                      @NonNull BeerStore beerStore,
-                     @NonNull BeerSearchStore beerSearchStore,
+                     @NonNull BeerListStore beerListStore,
                      @NonNull ReviewStore reviewStore,
                      @NonNull ReviewListStore reviewListStore) {
-        super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
+        super(networkRequestStatusStore, beerStore, beerListStore, reviewStore, reviewListStore);
 
         Preconditions.checkNotNull(context, "Context cannot be null.");
         Preconditions.checkNotNull(userSettingsStore, "User Settings Store cannot be null.");
@@ -249,7 +249,7 @@ public class DataLayer extends DataLayerBase {
     //// ACCESSED BEERS
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getAccessedBeers() {
+    public Observable<DataStreamNotification<SearchList<String>>> getAccessedBeers() {
         Log.v(TAG, "getAccessedBeers");
 
         // Function to move/add new item to the top of a list
@@ -276,23 +276,23 @@ public class DataLayer extends DataLayerBase {
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
-                .map(ids -> new BeerSearch(null, ids, null))
+                .map(ids -> new SearchList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
     }
 
-    //// SEARCH BEERS
+    //// KEY BEERS
 
     @NonNull
     public Observable<List<String>> getBeerSearchQueries() {
         Log.v(TAG, "getBeerSearchQueries");
 
-        return beerSearchStore.get("")
+        return beerListStore.get("")
                 .map(beerSearches -> {
                     List<String> searches = new ArrayList<>();
-                    for (BeerSearch search : beerSearches) {
+                    for (SearchList<String> search : beerSearches) {
                         // Filter out meta searches, such as __top50
-                        if (!search.getSearch().startsWith("__")) {
-                            searches.add(search.getSearch());
+                        if (!search.getKey().startsWith("__")) {
+                            searches.add(search.getKey());
                         }
                     }
                     return searches;
@@ -300,30 +300,30 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeerSearchResultStream(@NonNull final String searchString) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeerSearchResultStream(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "getBeerSearchResultStream");
 
-        final String queryId = beerSearchStore.getQueryId(RateBeerService.SEARCH, searchString);
-        final Uri uri = beerSearchStore.getUriForId(queryId);
+        final String queryId = beerListStore.getQueryId(RateBeerService.SEARCH, searchString);
+        final Uri uri = beerListStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(queryId);
+        final Observable<SearchList<String>> beerSearchObservable =
+                beerListStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeerSearch(@NonNull final String searchString) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "getBeerSearch");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.SEARCH, searchString))
+        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.SEARCH, searchString))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -333,7 +333,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeerSearch(@NonNull final String searchString) {
+    public Observable<DataStreamNotification<SearchList<String>>> fetchAndGetBeerSearch(@NonNull final String searchString) {
         Preconditions.checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "fetchAndGetBeerSearch");
 
@@ -354,28 +354,28 @@ public class DataLayer extends DataLayerBase {
     //// TOP BEERS
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getTopBeersResultStream() {
+    public Observable<DataStreamNotification<SearchList<String>>> getTopBeersResultStream() {
         Log.v(TAG, "getTopBeersResultStream");
 
-        final String queryId = beerSearchStore.getQueryId(RateBeerService.TOP50);
-        final Uri uri = beerSearchStore.getUriForId(queryId);
+        final String queryId = beerListStore.getQueryId(RateBeerService.TOP50);
+        final Uri uri = beerListStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(queryId);
+        final Observable<SearchList<String>> beerSearchObservable =
+                beerListStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getTopBeers() {
+    public Observable<DataStreamNotification<SearchList<String>>> getTopBeers() {
         Log.v(TAG, "getTopBeers");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.TOP50))
+        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.TOP50))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -385,7 +385,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetTopBeers() {
+    public Observable<DataStreamNotification<SearchList<String>>> fetchAndGetTopBeers() {
         Log.v(TAG, "fetchAndGetTopBeers");
 
         fetchTopBeers();
@@ -403,28 +403,28 @@ public class DataLayer extends DataLayerBase {
     //// BEERS IN COUNTRY
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeersInCountryResultStream(@NonNull final String countryId) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeersInCountryResultStream(@NonNull final String countryId) {
         Log.v(TAG, "getBeersInCountryResultStream");
 
-        final String queryId = beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId);
-        final Uri uri = beerSearchStore.getUriForId(queryId);
+        final String queryId = beerListStore.getQueryId(RateBeerService.COUNTRY, countryId);
+        final Uri uri = beerListStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(queryId);
+        final Observable<SearchList<String>> beerSearchObservable =
+                beerListStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeersInCountry(@NonNull final String countryId) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeersInCountry(@NonNull final String countryId) {
         Log.v(TAG, "getBeersInCountry");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.COUNTRY, countryId))
+        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.COUNTRY, countryId))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -434,7 +434,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeersInCountry(@NonNull final String countryId) {
+    public Observable<DataStreamNotification<SearchList<String>>> fetchAndGetBeersInCountry(@NonNull final String countryId) {
         Log.v(TAG, "fetchAndGetBeersInCountry");
 
         fetchBeersInCountry(countryId);
@@ -453,28 +453,28 @@ public class DataLayer extends DataLayerBase {
     //// BEERS IN STYLE
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeersInStyleResultStream(@NonNull final String styleId) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeersInStyleResultStream(@NonNull final String styleId) {
         Log.v(TAG, "getBeersInStyleResultStream");
 
-        final String queryId = beerSearchStore.getQueryId(RateBeerService.STYLE, styleId);
-        final Uri uri = beerSearchStore.getUriForId(queryId);
+        final String queryId = beerListStore.getQueryId(RateBeerService.STYLE, styleId);
+        final Uri uri = beerListStore.getUriForId(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
-        final Observable<BeerSearch> beerSearchObservable =
-                beerSearchStore.getStream(queryId);
+        final Observable<SearchList<String>> beerSearchObservable =
+                beerListStore.getStream(queryId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> getBeersInStyle(@NonNull final String styleId) {
+    public Observable<DataStreamNotification<SearchList<String>>> getBeersInStyle(@NonNull final String styleId) {
         Log.v(TAG, "getBeersInStyle");
 
         // Trigger a fetch only if there was no cached result
-        beerSearchStore.getOne(beerSearchStore.getQueryId(RateBeerService.STYLE, styleId))
+        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.STYLE, styleId))
                 .first()
                 .filter(results -> results == null || results.getItems().size() == 0)
                 .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
@@ -484,7 +484,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<BeerSearch>> fetchAndGetBeersInStyle(@NonNull final String styleId) {
+    public Observable<DataStreamNotification<SearchList<String>>> fetchAndGetBeersInStyle(@NonNull final String styleId) {
         Log.v(TAG, "fetchAndGetBeersInStyle");
 
         fetchBeersInStyle(styleId);
@@ -512,7 +512,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<ReviewList>> getReviewsResultStream(final int beerId) {
+    public Observable<DataStreamNotification<RelationList>> getReviewsResultStream(final int beerId) {
         Log.v(TAG, "getReviewsResultStream(" + beerId + ")");
 
         final Uri uri = reviewListStore.getUriForId(beerId);
@@ -520,7 +520,7 @@ public class DataLayer extends DataLayerBase {
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
                 networkRequestStatusStore.getStream(uri.toString().hashCode());
 
-        final Observable<ReviewList> reviewListObservable =
+        final Observable<RelationList> reviewListObservable =
                 reviewListStore.getStream(beerId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
@@ -528,7 +528,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<ReviewList>> getReviews(final int beerId) {
+    public Observable<DataStreamNotification<RelationList>> getReviews(final int beerId) {
         Log.v(TAG, "getReviews(" + beerId + ")");
 
         // Trigger a fetch only if there was no cached result
@@ -570,12 +570,13 @@ public class DataLayer extends DataLayerBase {
     }
 
     public interface AccessBeer {
+
         void call(int beerId);
     }
 
     public interface GetAccessedBeers {
         @NonNull
-        Observable<DataStreamNotification<BeerSearch>> call();
+        Observable<DataStreamNotification<SearchList<String>>> call();
     }
 
     public interface GetBeerSearchQueries {
@@ -585,22 +586,22 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetBeerSearch {
         @NonNull
-        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String search);
+        Observable<DataStreamNotification<SearchList<String>>> call(@NonNull String search);
     }
 
     public interface GetTopBeers {
         @NonNull
-        Observable<DataStreamNotification<BeerSearch>> call();
+        Observable<DataStreamNotification<SearchList<String>>> call();
     }
 
     public interface GetBeersInCountry {
         @NonNull
-        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String countryId);
+        Observable<DataStreamNotification<SearchList<String>>> call(@NonNull String countryId);
     }
 
     public interface GetBeersInStyle {
         @NonNull
-        Observable<DataStreamNotification<BeerSearch>> call(@NonNull String styleId);
+        Observable<DataStreamNotification<SearchList<String>>> call(@NonNull String styleId);
     }
 
     public interface GetReview {
@@ -610,6 +611,6 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetReviews {
         @NonNull
-        Observable<DataStreamNotification<ReviewList>> call(int beerId);
+        Observable<DataStreamNotification<RelationList>> call(int beerId);
     }
 }

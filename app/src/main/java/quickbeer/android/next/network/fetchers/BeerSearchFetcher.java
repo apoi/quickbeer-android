@@ -29,13 +29,13 @@ import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.pojo.BeerSearch;
+import quickbeer.android.next.pojo.SearchList;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -47,24 +47,24 @@ public class BeerSearchFetcher extends FetcherBase {
     protected final NetworkUtils networkUtils;
 
     private final BeerStore beerStore;
-    private final BeerSearchStore beerSearchStore;
+    private final BeerListStore beerListStore;
 
     public BeerSearchFetcher(@NonNull NetworkApi networkApi,
                              @NonNull NetworkUtils networkUtils,
                              @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                              @NonNull BeerStore beerStore,
-                             @NonNull BeerSearchStore beerSearchStore) {
+                             @NonNull BeerListStore beerListStore) {
         super(updateNetworkRequestStatus);
 
         Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
         Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
         Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
-        Preconditions.checkNotNull(beerSearchStore, "Beer search store cannot be null.");
+        Preconditions.checkNotNull(beerListStore, "Beer search store cannot be null.");
 
         this.networkApi = networkApi;
         this.networkUtils = networkUtils;
         this.beerStore = beerStore;
-        this.beerSearchStore = beerSearchStore;
+        this.beerListStore = beerListStore;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class BeerSearchFetcher extends FetcherBase {
     protected void fetchBeerSearch(@NonNull final String query) {
         Preconditions.checkNotNull(query, "Search string cannot be null.");
 
-        String queryId = beerSearchStore.getQueryId(getServiceUri(), query);
+        String queryId = beerListStore.getQueryId(getServiceUri(), query);
         Log.d(TAG, "fetchBeerSearch(" + queryId + ")");
 
         if (requestMap.containsKey(queryId.hashCode()) &&
@@ -89,7 +89,7 @@ public class BeerSearchFetcher extends FetcherBase {
             return;
         }
 
-        final String uri = beerSearchStore.getUriForId(queryId).toString();
+        final String uri = beerListStore.getUriForId(queryId).toString();
         Subscription subscription = createNetworkObservable(query)
                 .map((beers) -> {
                     final List<Integer> beerIds = new ArrayList<>();
@@ -97,11 +97,11 @@ public class BeerSearchFetcher extends FetcherBase {
                         beerStore.put(beer);
                         beerIds.add(beer.getId());
                     }
-                    return new BeerSearch(queryId, beerIds, new Date());
+                    return new SearchList<String>(queryId, beerIds, new Date());
                 })
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
-                .subscribe(beerSearchStore::put,
+                .subscribe(beerListStore::put,
                         e -> Log.e(TAG, "Error fetching beer search for '" + queryId + "'", e));
 
         requestMap.put(queryId.hashCode(), subscription);

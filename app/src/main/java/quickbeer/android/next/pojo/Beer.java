@@ -101,7 +101,7 @@ public class Beer extends BasePojo<Beer> {
     }
 
     public int getRating() {
-        return overallRating > 0 ? Math.round(overallRating) : -1;
+        return overallRating != null ? Math.round(overallRating) : -1;
     }
 
     public float getAbv() {
@@ -117,7 +117,7 @@ public class Beer extends BasePojo<Beer> {
     }
 
     public boolean hasDetails() {
-        return brewerId > 0
+        return brewerId != null
                 && styleName != null
                 && !styleName.isEmpty();
     }

@@ -20,19 +20,19 @@ package quickbeer.android.next.pojo;
 import java.util.Date;
 import java.util.List;
 
-public class BeerSearch {
-    private final String search;
+public class SearchList<T> {
+    private final T key;
     private final List<Integer> items;
     private Date updateDate;
 
-    public BeerSearch(final String search, final List<Integer> items, final Date updateDate) {
-        this.search = search;
+    public SearchList(final T key, final List<Integer> items, final Date updateDate) {
+        this.key = key;
         this.items = items;
         this.updateDate = updateDate;
     }
 
-    public String getSearch() {
-        return search;
+    public T getKey() {
+        return key;
     }
 
     public List<Integer> getItems() {
@@ -49,7 +49,7 @@ public class BeerSearch {
 
     @Override
     public String toString() {
-        return "BeerSearch{search=" + search
+        return "SearchList{key=" + key
                 + ", items='" + (items == null ? "null " : items.size())
                 + ", updated='" + updateDate
                 + "'}";

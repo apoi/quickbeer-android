@@ -26,7 +26,7 @@ import java.util.Map;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
@@ -42,8 +42,8 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
                                  @NonNull NetworkUtils networkUtils,
                                  @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
                                  @NonNull BeerStore beerStore,
-                                 @NonNull BeerSearchStore beerSearchStore) {
-        super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerSearchStore);
+                                 @NonNull BeerListStore beerListStore) {
+        super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
     }
 
     @Override

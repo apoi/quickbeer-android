@@ -30,10 +30,10 @@ import java.util.Date;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.ReviewListColumns;
-import quickbeer.android.next.pojo.ReviewList;
+import quickbeer.android.next.pojo.RelationList;
 import quickbeer.android.next.utils.DateUtils;
 
-public class ReviewListStore extends StoreBase<ReviewList, Integer> {
+public class ReviewListStore extends StoreBase<RelationList, Integer> {
     private static final String TAG = ReviewListStore.class.getSimpleName();
 
     public ReviewListStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
@@ -42,10 +42,10 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
 
     @NonNull
     @Override
-    protected Integer getIdFor(@NonNull ReviewList item) {
-        Preconditions.checkNotNull(item, "ReviewList cannot be null.");
+    protected Integer getIdFor(@NonNull RelationList item) {
+        Preconditions.checkNotNull(item, "RelationList cannot be null.");
 
-        return item.getBeerId();
+        return item.getParentId();
     }
 
     @NonNull
@@ -66,9 +66,9 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(ReviewList item) {
+    protected ContentValues getContentValuesForItem(RelationList item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewListColumns.BEER_ID, item.getBeerId());
+        contentValues.put(ReviewListColumns.BEER_ID, item.getParentId());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));
         contentValues.put(ReviewListColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
         return contentValues;
@@ -76,11 +76,11 @@ public class ReviewListStore extends StoreBase<ReviewList, Integer> {
 
     @NonNull
     @Override
-    protected ReviewList read(Cursor cursor) {
+    protected RelationList read(Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
         final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
-        ReviewList reviewList = getGson().fromJson(json, ReviewList.class);
+        RelationList reviewList = getGson().fromJson(json, RelationList.class);
         reviewList.setUpdateDate(updated);
 
         return reviewList;

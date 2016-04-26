@@ -27,7 +27,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxUtils;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.Review;
-import quickbeer.android.next.pojo.ReviewList;
+import quickbeer.android.next.pojo.RelationList;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -63,7 +63,7 @@ public class ReviewListViewModel extends BaseViewModel {
     public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
-        ConnectableObservable<DataStreamNotification<ReviewList>> reviewSource =
+        ConnectableObservable<DataStreamNotification<RelationList>> reviewSource =
                 getReviews.call(beerId).publish();
 
         compositeSubscription.add(reviewSource
@@ -74,7 +74,7 @@ public class ReviewListViewModel extends BaseViewModel {
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(search -> Log.d(TAG, "Review get finished"))
-                .map(ReviewList::getItems)
+                .map(RelationList::getItems)
                 .flatMap(toReviewList())
                 .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " reviews from the view model"))
                 .subscribe(reviews::onNext));

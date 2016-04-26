@@ -34,7 +34,7 @@ import io.reark.reark.network.fetchers.UriFetcherManager;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.DataLayerBase;
-import quickbeer.android.next.data.store.BeerSearchStore;
+import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
@@ -48,10 +48,10 @@ public class ServiceDataLayer extends DataLayerBase {
     public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager,
                             @NonNull NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull BeerStore beerStore,
-                            @NonNull BeerSearchStore beerSearchStore,
+                            @NonNull BeerListStore beerListStore,
                             @NonNull ReviewStore reviewStore,
                             @NonNull ReviewListStore reviewListStore) {
-        super(networkRequestStatusStore, beerStore, beerSearchStore, reviewStore, reviewListStore);
+        super(networkRequestStatusStore, beerStore, beerListStore, reviewStore, reviewListStore);
 
         Preconditions.checkNotNull(fetcherManager, "FetcherManager cannot be null.");
 

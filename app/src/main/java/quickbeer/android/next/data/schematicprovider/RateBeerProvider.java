@@ -97,21 +97,21 @@ public class RateBeerProvider {
         }
     }
 
-    @TableEndpoint(table = RateBeerDatabase.BEER_SEARCHES) public static class BeerSearches {
+    @TableEndpoint(table = RateBeerDatabase.BEER_LISTS) public static class BeerLists {
         @ContentUri(
-                path = RateBeerDatabase.BEER_SEARCHES,
-                type = BASE_TYPE + RateBeerDatabase.BEER_SEARCHES,
-                defaultSort = BeerSearchColumns.SEARCH + " ASC")
-        public static final Uri BEER_SEARCHES = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BEER_SEARCHES);
+                path = RateBeerDatabase.BEER_LISTS,
+                type = BASE_TYPE + RateBeerDatabase.BEER_LISTS,
+                defaultSort = BeerListColumns.KEY + " ASC")
+        public static final Uri BEER_LISTS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BEER_LISTS);
 
         @InexactContentUri(
-                path = RateBeerDatabase.BEER_SEARCHES + "/*",
-                name = "BEER_SEARCHES_ID",
-                type = BASE_TYPE + RateBeerDatabase.BEER_SEARCHES,
-                whereColumn = BeerSearchColumns.SEARCH,
+                path = RateBeerDatabase.BEER_LISTS + "/*",
+                name = "BEER_LISTS_ID",
+                type = BASE_TYPE + RateBeerDatabase.BEER_LISTS,
+                whereColumn = BeerListColumns.KEY,
                 pathSegment = 1)
-        public static Uri withSearch(String search) {
-            return buildUri(RateBeerDatabase.BEER_SEARCHES, search);
+        public static Uri withKey(String key) {
+            return buildUri(RateBeerDatabase.BEER_LISTS, key);
         }
     }
 
@@ -166,6 +166,24 @@ public class RateBeerProvider {
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(RateBeerDatabase.BREWERS, String.valueOf(id));
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.BREWER_LISTS) public static class BrewerLists {
+        @ContentUri(
+                path = RateBeerDatabase.BREWER_LISTS,
+                type = BASE_TYPE + RateBeerDatabase.BREWER_LISTS,
+                defaultSort = BrewerListColumns.KEY + " ASC")
+        public static final Uri BREWER_LISTS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BREWER_LISTS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.BREWER_LISTS + "/*",
+                name = "BREWER_LISTS_ID",
+                type = BASE_TYPE + RateBeerDatabase.BREWER_LISTS,
+                whereColumn = BrewerListColumns.KEY,
+                pathSegment = 1)
+        public static Uri withKey(String key) {
+            return buildUri(RateBeerDatabase.BREWER_LISTS, key);
         }
     }
 }
