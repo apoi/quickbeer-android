@@ -180,26 +180,27 @@ public class Beer extends AccessTrackingItem<Beer> {
     // this is an object comparison, not beer identity comparison.
     @Override
     public boolean dataEquals(Beer beer) {
-        if (styleId != beer.styleId) return false;
-        if (brewerId != beer.brewerId) return false;
-        if (countryId != beer.countryId) return false;
-
-        if (Float.compare(beer.averageRating, averageRating) != 0) return false;
-        if (Float.compare(beer.overallRating, overallRating) != 0) return false;
-        if (Float.compare(beer.styleRating, styleRating) != 0) return false;
-        if (Float.compare(beer.rateCount, rateCount) != 0) return false;
-        if (Float.compare(beer.alcohol, alcohol) != 0) return false;
-        if (Float.compare(beer.ibu, ibu) != 0) return false;
-
         if (name != null ? !name.equals(beer.name) : beer.name != null) return false;
         if (styleName != null ? !styleName.equals(beer.styleName) : beer.styleName != null) return false;
-        if (brewerName != null ? !brewerName.equals(beer.brewerName) : beer.brewerName != null) return false;
         if (description != null ? !description.equals(beer.description) : beer.description != null) return false;
+
+        if (styleId != null ? !styleId.equals(beer.styleId) : beer.styleId != null) return false;
+        if (brewerId != null ? !brewerId.equals(beer.brewerId) : beer.brewerId != null) return false;
+        if (countryId != null ? !countryId.equals(beer.countryId) : beer.countryId != null) return false;
+
+        if (ibu != null ? !ibu.equals(beer.ibu) : beer.ibu != null) return false;
+        if (alcohol != null ? !alcohol.equals(beer.alcohol) : beer.alcohol != null) return false;
+        if (brewerName != null ? !brewerName.equals(beer.brewerName) : beer.brewerName != null) return false;
+
+        if (averageRating != null ? !averageRating.equals(beer.averageRating) : beer.averageRating != null) return false;
+        if (overallRating != null ? !overallRating.equals(beer.overallRating) : beer.overallRating != null) return false;
+        if (styleRating != null ? !styleRating.equals(beer.styleRating) : beer.styleRating != null) return false;
+        if (rateCount != null ? !rateCount.equals(beer.rateCount) : beer.rateCount != null) return false;
 
         if (tick != beer.tick) return false;
         if (reviewId != beer.reviewId) return false;
 
-        return isAlias == beer.isAlias;
+        return isAlias != null ? isAlias.equals(beer.isAlias) : beer.isAlias == null;
     }
 
     @Override
@@ -211,30 +212,23 @@ public class Beer extends AccessTrackingItem<Beer> {
     @Override
     public int hashCode() {
         int result = id;
-
-        result = 31 * result + styleId;
-        result = 31 * result + brewerId;
-        result = 31 * result + countryId;
-
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (averageRating != null ? averageRating.hashCode() : 0);
+        result = 31 * result + (overallRating != null ? overallRating.hashCode() : 0);
+        result = 31 * result + (styleRating != null ? styleRating.hashCode() : 0);
+        result = 31 * result + (rateCount != null ? rateCount.hashCode() : 0);
+        result = 31 * result + (styleId != null ? styleId.hashCode() : 0);
         result = 31 * result + (styleName != null ? styleName.hashCode() : 0);
+        result = 31 * result + (alcohol != null ? alcohol.hashCode() : 0);
+        result = 31 * result + (ibu != null ? ibu.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (isAlias != null ? isAlias.hashCode() : 0);
+        result = 31 * result + (brewerId != null ? brewerId.hashCode() : 0);
         result = 31 * result + (brewerName != null ? brewerName.hashCode() : 0);
-
-        result = 31 * result + (averageRating != +0.0f ? Float.floatToIntBits(averageRating) : 0);
-        result = 31 * result + (overallRating != +0.0f ? Float.floatToIntBits(overallRating) : 0);
-        result = 31 * result + (styleRating != +0.0f ? Float.floatToIntBits(styleRating) : 0);
-        result = 31 * result + (rateCount != +0.0f ? Float.floatToIntBits(rateCount) : 0);
-        result = 31 * result + (alcohol != +0.0f ? Float.floatToIntBits(alcohol) : 0);
-        result = 31 * result + (ibu != +0.0f ? Float.floatToIntBits(ibu) : 0);
-        result = 31 * result + (isAlias ? 1 : 0);
-
+        result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
         result = 31 * result + tick;
         result = 31 * result + reviewId;
         result = 31 * result + (isModified ? 1 : 0);
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
-
         return result;
     }
 }

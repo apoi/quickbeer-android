@@ -145,4 +145,61 @@ public class Review extends BasePojo<Review> {
     public void setIsModified(boolean modified) {
         isModified = modified;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Review review = (Review) o;
+
+        if (id != review.id) return false;
+        if (isDraft != review.isDraft) return false;
+        if (isModified != review.isModified) return false;
+
+        if (appearance != null ? !appearance.equals(review.appearance) : review.appearance != null) return false;
+        if (aroma != null ? !aroma.equals(review.aroma) : review.aroma != null) return false;
+        if (flavor != null ? !flavor.equals(review.flavor) : review.flavor != null) return false;
+        if (mouthfeel != null ? !mouthfeel.equals(review.mouthfeel) : review.mouthfeel != null) return false;
+        if (overall != null ? !overall.equals(review.overall) : review.overall != null) return false;
+        if (totalScore != null ? !totalScore.equals(review.totalScore) : review.totalScore != null) return false;
+        if (comments != null ? !comments.equals(review.comments) : review.comments != null) return false;
+        if (timeEntered != null ? !timeEntered.equals(review.timeEntered) : review.timeEntered != null) return false;
+        if (timeUpdated != null ? !timeUpdated.equals(review.timeUpdated) : review.timeUpdated != null) return false;
+        if (userID != null ? !userID.equals(review.userID) : review.userID != null) return false;
+        if (userName != null ? !userName.equals(review.userName) : review.userName != null) return false;
+        if (city != null ? !city.equals(review.city) : review.city != null) return false;
+        if (stateID != null ? !stateID.equals(review.stateID) : review.stateID != null) return false;
+        if (state != null ? !state.equals(review.state) : review.state != null) return false;
+        if (countryID != null ? !countryID.equals(review.countryID) : review.countryID != null) return false;
+        if (country != null ? !country.equals(review.country) : review.country != null) return false;
+
+        return rateCount != null ? rateCount.equals(review.rateCount) : review.rateCount == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (appearance != null ? appearance.hashCode() : 0);
+        result = 31 * result + (aroma != null ? aroma.hashCode() : 0);
+        result = 31 * result + (flavor != null ? flavor.hashCode() : 0);
+        result = 31 * result + (mouthfeel != null ? mouthfeel.hashCode() : 0);
+        result = 31 * result + (overall != null ? overall.hashCode() : 0);
+        result = 31 * result + (totalScore != null ? totalScore.hashCode() : 0);
+        result = 31 * result + (comments != null ? comments.hashCode() : 0);
+        result = 31 * result + (timeEntered != null ? timeEntered.hashCode() : 0);
+        result = 31 * result + (timeUpdated != null ? timeUpdated.hashCode() : 0);
+        result = 31 * result + (userID != null ? userID.hashCode() : 0);
+        result = 31 * result + (userName != null ? userName.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
+        result = 31 * result + (stateID != null ? stateID.hashCode() : 0);
+        result = 31 * result + (state != null ? state.hashCode() : 0);
+        result = 31 * result + (countryID != null ? countryID.hashCode() : 0);
+        result = 31 * result + (country != null ? country.hashCode() : 0);
+        result = 31 * result + (rateCount != null ? rateCount.hashCode() : 0);
+        result = 31 * result + (isDraft ? 1 : 0);
+        result = 31 * result + (isModified ? 1 : 0);
+        return result;
+    }
 }
