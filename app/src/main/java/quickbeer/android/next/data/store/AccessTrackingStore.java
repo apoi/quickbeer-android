@@ -19,7 +19,6 @@ package quickbeer.android.next.data.store;
 
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
 
 import com.google.gson.Gson;
 

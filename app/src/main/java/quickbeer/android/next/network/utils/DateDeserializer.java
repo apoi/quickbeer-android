@@ -35,8 +35,10 @@ import io.reark.reark.utils.Log;
 
 public class DateDeserializer implements JsonDeserializer<Date>, JsonSerializer<Date> {
     private static final String TAG = DateDeserializer.class.getSimpleName();
+
     private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT);
-    private static final DateFormat US_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aa", Locale.ROOT);
+    private static final DateFormat US_TIME_FORMAT = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aa", Locale.ROOT);
+    private static final DateFormat US_DATE_FORMAT = new SimpleDateFormat("MM/dd/yyyy", Locale.ROOT);
 
     @Override
     public JsonElement serialize(Date date, Type typeOfSrc, JsonSerializationContext context) {
@@ -50,8 +52,10 @@ public class DateDeserializer implements JsonDeserializer<Date>, JsonSerializer<
         try {
             if (date.contains("T")) {
                 return ISO_FORMAT.parse(date);
+            } else if (date.contains(" ")) {
+                return US_TIME_FORMAT.parse(date);
             } else {
-                return US_FORMAT.parse(date);
+                return US_DATE_FORMAT.parse(date);
             }
         } catch (ParseException e) {
             Log.e(TAG, "error parsing " + date, e);

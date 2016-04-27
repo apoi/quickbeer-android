@@ -21,17 +21,13 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 
 import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
 public class Review extends BasePojo<Review> {
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
-
     @SerializedName("RatingID")
     private int id;
 
@@ -108,7 +104,7 @@ public class Review extends BasePojo<Review> {
     }
 
     public String getDate() {
-        return DATE_FORMAT.format(timeEntered);
+        return DateUtils.DATE_FORMAT.format(timeEntered);
     }
 
     public String getReviewer() {

@@ -17,9 +17,14 @@
  */
 package quickbeer.android.next.utils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtils {
+    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
+
     private DateUtils() {}
 
     public static Date value(Date date) {
