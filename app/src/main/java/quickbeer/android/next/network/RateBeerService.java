@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Brewer;
 import quickbeer.android.next.pojo.Review;
 import retrofit.client.Response;
 import retrofit.http.Field;
@@ -62,4 +63,7 @@ public interface RateBeerService {
 
     @GET("/json/gr.asp")
     Observable<List<Review>> getReviews(@QueryMap Map<String, String> params);
+
+    @GET("/json/bi.asp")
+    Observable<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);
 }

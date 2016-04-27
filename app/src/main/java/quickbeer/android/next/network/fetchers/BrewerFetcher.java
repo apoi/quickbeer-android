@@ -25,78 +25,79 @@ import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.store.BeerStore;
+import quickbeer.android.next.data.store.BrewerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.Brewer;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class BeerFetcher extends FetcherBase {
-    private static final String TAG = BeerFetcher.class.getSimpleName();
+public class BrewerFetcher extends FetcherBase {
+    private static final String TAG = BrewerFetcher.class.getSimpleName();
 
     private final NetworkApi networkApi;
     private final NetworkUtils networkUtils;
-    private final BeerStore beerStore;
+    private final BrewerStore brewerStore;
 
-    public BeerFetcher(@NonNull NetworkApi networkApi,
-                       @NonNull NetworkUtils networkUtils,
-                       @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                       @NonNull BeerStore beerStore) {
+    public BrewerFetcher(@NonNull NetworkApi networkApi,
+                         @NonNull NetworkUtils networkUtils,
+                         @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                         @NonNull BrewerStore brewerStore) {
         super(updateNetworkRequestStatus);
 
         Preconditions.checkNotNull(networkApi, "Network API cannot be null.");
         Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
-        Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
+        Preconditions.checkNotNull(brewerStore, "Brewer store cannot be null.");
 
         this.networkApi = networkApi;
         this.networkUtils = networkUtils;
-        this.beerStore = beerStore;
+        this.brewerStore = brewerStore;
     }
 
     @Override
     public void fetch(Intent intent) {
         Preconditions.checkNotNull(intent, "Fetch intent cannot be null.");
 
-        final int beerId = intent.getIntExtra("id", -1);
-        if (beerId != -1) {
-            fetchBeer(beerId);
+        final int brewerId = intent.getIntExtra("id", -1);
+        if (brewerId != -1) {
+            fetchBrewer(brewerId);
         } else {
             Log.e(TAG, "No id provided in the intent extras");
         }
     }
 
-    private void fetchBeer(final int beerId) {
-        Log.d(TAG, "fetchBeer(" + beerId + ")");
+    private void fetchBrewer(final int brewerId) {
+        Log.d(TAG, "fetchBrewer(" + brewerId + ")");
 
-        if (requestMap.containsKey(beerId) && !requestMap.get(beerId).isUnsubscribed()) {
-            Log.d(TAG, "Found an ongoing request for beer " + beerId);
+        if (requestMap.containsKey(brewerId) && !requestMap.get(brewerId).isUnsubscribed()) {
+            Log.d(TAG, "Found an ongoing request for brewer " + brewerId);
             return;
         }
 
-        final String uri = beerStore.getUriForId(beerId).toString();
-        Subscription subscription = createNetworkObservable(beerId)
+        final String uri = brewerStore.getUriForId(brewerId).toString();
+        Subscription subscription = createNetworkObservable(brewerId)
                 .subscribeOn(Schedulers.io())
                 .doOnError(doOnError(uri))
                 .doOnCompleted(() -> completeRequest(uri))
-                .subscribe(beerStore::put,
-                        e -> Log.e(TAG, "Error fetching beer " + beerId, e));
+                .subscribe(brewerStore::put,
+                        e -> Log.e(TAG, "Error fetching brewer " + brewerId, e));
 
-        requestMap.put(beerId, subscription);
+        requestMap.put(brewerId, subscription);
         startRequest(uri);
     }
 
     @NonNull
-    private Observable<Beer> createNetworkObservable(int beerId) {
-        return networkApi.getBeer(networkUtils.createRequestParams("bd", String.valueOf(beerId)));
+    private Observable<Brewer> createNetworkObservable(int brewerId) {
+        return networkApi.getBrewer(networkUtils.createRequestParams("b", String.valueOf(brewerId)));
     }
 
     @NonNull
     @Override
     public Uri getServiceUri() {
-        return RateBeerService.BEER;
+        return RateBeerService.BREWER;
     }
 }

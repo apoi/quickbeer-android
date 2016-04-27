@@ -521,7 +521,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     private void fetchBrewer(@NonNull Integer brewerId) {
-        Log.v(TAG, "fetchBeer");
+        Log.v(TAG, "fetchBrewer");
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.BREWER.toString());
@@ -529,7 +529,7 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
-    //// ACCESS BEER
+    //// ACCESS BREWER
 
     public void accessBrewer(@NonNull Integer brewerId) {
         Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
@@ -549,7 +549,7 @@ public class DataLayer extends DataLayerBase {
                 );
     }
 
-    //// ACCESSED BEERS
+    //// ACCESSED BREWERS
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getAccessedBrewers() {
