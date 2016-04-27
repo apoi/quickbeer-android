@@ -483,6 +483,29 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    //// TICKS
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull final String userId) {
+        Log.v(TAG, "getTickedBeers");
+
+        fetchTickedBeers(userId);
+
+        // TODO need to trigger update on the query when new ticked beers are inserted
+        return beerStore.getTickedIds()
+                .map(ids -> new ItemList<String>(null, ids, null))
+                .map(DataStreamNotification::onNext);
+    }
+
+    private void fetchTickedBeers(@NonNull final String userId) {
+        Log.v(TAG, "fetchTickedBeers");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.TICKS.toString());
+        intent.putExtra("userId", userId);
+        context.startService(intent);
+    }
+
     //// GET BREWER DETAILS
 
     @NonNull
@@ -645,6 +668,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetReviews {
         @NonNull
         Observable<DataStreamNotification<ItemList<Integer>>> call(int beerId);
+    }
+
+    public interface GetTicks {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call(int userId);
     }
 
     public interface GetBrewer {

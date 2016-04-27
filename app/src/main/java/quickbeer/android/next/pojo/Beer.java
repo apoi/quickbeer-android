@@ -21,7 +21,10 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 import quickbeer.android.next.pojo.base.AccessTrackingItem;
+import quickbeer.android.next.utils.DateUtils;
 
 public class Beer extends AccessTrackingItem<Beer> {
     @SerializedName("BeerID")
@@ -69,7 +72,8 @@ public class Beer extends AccessTrackingItem<Beer> {
     @SerializedName("BrewerCountryId")
     private Integer countryId;
 
-    private int tick;
+    private int tickValue;
+    private Date tickDate;
     private int reviewId;
     private boolean isModified;
 
@@ -121,15 +125,23 @@ public class Beer extends AccessTrackingItem<Beer> {
     }
 
     public boolean isTicked() {
-        return tick > 0;
+        return tickValue > 0;
     }
 
-    public int getTick() {
-        return tick;
+    public int getTickValue() {
+        return tickValue;
     }
 
-    public void setTick(int value) {
-        tick = value;
+    public void setTickValue(int value) {
+        tickValue = value;
+    }
+
+    public Date getTickDate() {
+        return DateUtils.value(tickDate);
+    }
+
+    public void setTickDate(Date date) {
+        tickDate = date;
     }
 
     public boolean isReviewed() {
@@ -197,7 +209,7 @@ public class Beer extends AccessTrackingItem<Beer> {
         if (styleRating != null ? !styleRating.equals(beer.styleRating) : beer.styleRating != null) return false;
         if (rateCount != null ? !rateCount.equals(beer.rateCount) : beer.rateCount != null) return false;
 
-        if (tick != beer.tick) return false;
+        if (tickValue != beer.tickValue) return false;
         if (reviewId != beer.reviewId) return false;
 
         return isAlias != null ? isAlias.equals(beer.isAlias) : beer.isAlias == null;
@@ -226,7 +238,7 @@ public class Beer extends AccessTrackingItem<Beer> {
         result = 31 * result + (brewerId != null ? brewerId.hashCode() : 0);
         result = 31 * result + (brewerName != null ? brewerName.hashCode() : 0);
         result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + tick;
+        result = 31 * result + tickValue;
         result = 31 * result + reviewId;
         result = 31 * result + (isModified ? 1 : 0);
         return result;

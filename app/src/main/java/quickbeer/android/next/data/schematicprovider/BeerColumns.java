@@ -21,7 +21,8 @@ import net.simonvt.schematic.annotation.DataType;
 
 public interface BeerColumns extends JsonIdColumns {
     @DataType(DataType.Type.TEXT) String NAME = "name"; // Beer name
-    @DataType(DataType.Type.INTEGER) String TICK = "tick"; // Tick value
+    @DataType(DataType.Type.INTEGER) String TICK_VALUE = "tick_value"; // Tick value
+    @DataType(DataType.Type.INTEGER) String TICK_DATE = "tick_date"; // Tick date
     @DataType(DataType.Type.INTEGER) String REVIEW = "review"; // Own review id
     @DataType(DataType.Type.INTEGER) String MODIFIED = "modified"; // Flag if unsaved modifications
     @DataType(DataType.Type.INTEGER) String UPDATED = "updated"; // Date of the last data fetch
