@@ -83,6 +83,11 @@ public class NetworkApi {
                 .getReviews(params);
     }
 
+    public Observable<List<Beer>> getTicks(Map<String, String> params) {
+        return rateBeerService
+                .getTicks(params);
+    }
+
     public Observable<Brewer> getBrewer(Map<String, String> params) {
         return rateBeerService
                 .getBrewer(params)

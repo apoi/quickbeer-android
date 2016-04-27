@@ -41,7 +41,8 @@ public interface RateBeerService {
     Uri COUNTRY = Uri.parse("__country");
     Uri STYLE   = Uri.parse("__style");
     Uri REVIEWS = Uri.parse("__reviews");
-    Uri BREWER   = Uri.parse("__brewer");
+    Uri TICKS   = Uri.parse("__ticks");
+    Uri BREWER  = Uri.parse("__brewer");
 
     @FormUrlEncoded
     @POST("/Signin_r.asp")
@@ -63,6 +64,9 @@ public interface RateBeerService {
 
     @GET("/json/gr.asp")
     Observable<List<Review>> getReviews(@QueryMap Map<String, String> params);
+
+    @GET("/json/bt.asp")
+    Observable<List<Beer>> getTicks(@QueryMap Map<String, String> params);
 
     @GET("/json/bi.asp")
     Observable<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);
