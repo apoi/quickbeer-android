@@ -106,6 +106,11 @@ public final class DataStoreModule {
     }
 
     @Provides
+    public DataLayer.GetTickedBeers provideGetTickedBeers(DataLayer dataLayer) {
+        return dataLayer::getTickedBeers;
+    }
+
+    @Provides
     @Singleton
     public DataLayer provideApplicationDataLayer(@ForApplication Context context,
                                                  UserSettingsStore userSettingsStore,

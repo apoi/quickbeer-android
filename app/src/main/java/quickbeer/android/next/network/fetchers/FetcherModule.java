@@ -136,13 +136,28 @@ public final class FetcherModule {
     }
 
     @Provides
+    @Named("ticksFetcher")
+    public Fetcher provideTicksFetcher(NetworkApi networkApi,
+                                       NetworkUtils networkUtils,
+                                       NetworkRequestStatusStore networkRequestStatusStore,
+                                       BeerStore beerStore,
+                                       BeerListStore beerListStore) {
+        return new TicksFetcher(networkApi,
+                networkUtils,
+                networkRequestStatusStore::put,
+                beerStore,
+                beerListStore);
+    }
+
+    @Provides
     public UriFetcherManager provideUriFetcherManager(@Named("loginFetcher") Fetcher loginFetcher,
                                                       @Named("beerFetcher") Fetcher beerFetcher,
                                                       @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
                                                       @Named("topBeersFetcher") Fetcher topBeersFetcher,
                                                       @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
                                                       @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
-                                                      @Named("reviewFetcher") Fetcher reviewFetcher) {
+                                                      @Named("reviewFetcher") Fetcher reviewFetcher,
+                                                      @Named("ticksFetcher") Fetcher ticksFetcher) {
         final List<Fetcher<Uri>> fetchers = Arrays.asList(
                 loginFetcher,
                 beerFetcher,
@@ -150,7 +165,8 @@ public final class FetcherModule {
                 topBeersFetcher,
                 beersInCountryFetcher,
                 beersInStyleFetcher,
-                reviewFetcher
+                reviewFetcher,
+                ticksFetcher
         );
 
         return new UriFetcherManager.Builder()

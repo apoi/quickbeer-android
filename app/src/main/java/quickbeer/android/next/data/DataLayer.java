@@ -670,9 +670,9 @@ public class DataLayer extends DataLayerBase {
         Observable<DataStreamNotification<ItemList<Integer>>> call(int beerId);
     }
 
-    public interface GetTicks {
+    public interface GetTickedBeers {
         @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call(int userId);
+        Observable<DataStreamNotification<ItemList<String>>> call(String userId);
     }
 
     public interface GetBrewer {
