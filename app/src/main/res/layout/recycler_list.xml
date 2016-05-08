@@ -12,6 +12,7 @@
         android:layout_gravity="center"
         android:textColor="@color/white"
         android:fontFamily="sans-serif-thin"
+        android:textAlignment="center"
         android:textSize="@dimen/search_status_text"/>
 
     <android.support.v7.widget.RecyclerView

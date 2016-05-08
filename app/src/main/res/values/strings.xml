@@ -11,7 +11,7 @@
 
     <string name="beer_details_reviews">Reviews</string>
     <string name="search_status_loading">Searching...</string>
-    <string name="search_status_error">An error occurred. Try again soon.</string>
+    <string name="search_status_error">An error occurred.\nTry again soon.</string>
 
     <string name="tab_beers">Beers</string>
     <string name="tab_brewers">Brewers</string>
