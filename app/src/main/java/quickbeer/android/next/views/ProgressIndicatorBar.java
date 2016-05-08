@@ -44,10 +44,12 @@ public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_END_PAUSE_DURATION = 300;
     private static final int ANIMATION_END_FADE_DURATION = 300;
 
+    private final int progressBarWidth = getResources().getDimensionPixelSize(R.dimen.progress_indicator_width);
+    private float progress = 0;
+
     private View progressBar;
     private Status currentStatus = Status.IDLE;
     private Status nextStatus = Status.IDLE;
-    private float progress = 0;
 
     public ProgressIndicatorBar(Context context) {
         super(context);
@@ -71,7 +73,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private void initLayout() {
         LayoutParams params = new LayoutParams(
-                getResources().getDimensionPixelSize(R.dimen.progress_indicator_width),
+                progressBarWidth,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         progressBar = new View(getContext());
@@ -125,7 +127,9 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateScroller() {
-        int animEnd = getWidth() - progressBar.getWidth();
+        Log.v(TAG, "animateScroller()");
+
+        int animEnd = getWidth() - progressBarWidth;
 
         TranslateAnimation animation = new TranslateAnimation(0, animEnd, 0, 0);
         animation.setDuration(ANIMATION_SCROLL_DURATION);
@@ -152,7 +156,9 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToProgress(float progress) {
-        float newScale = (getWidth() * progress / progressBar.getWidth()) + 1;
+        Log.v(TAG, "animateToProgress(" + progress + ")");
+
+        float newScale = (getWidth() * progress / progressBarWidth) + 1;
 
         ScaleAnimation animation = new ScaleAnimation(1, newScale,
                 progressBar.getHeight(), progressBar.getHeight());
@@ -165,12 +171,14 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToEnd() {
+        Log.v(TAG, "animateToEnd()");
+
         if (progressBar.getAnimation() == null) {
             // Non-active progress bar doesn't need end animation
             return;
         }
 
-        ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / progressBar.getWidth()) + 1,
+        ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / progressBarWidth) + 1,
                 progressBar.getHeight(), progressBar.getHeight());
         animation.setDuration(ANIMATION_END_SCALE_DURATION);
         animation.setFillAfter(true);
@@ -190,6 +198,8 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToHidden() {
+        Log.v(TAG, "animateToHidden()");
+
         AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
         animation.setStartOffset(ANIMATION_END_PAUSE_DURATION);
         animation.setDuration(ANIMATION_END_FADE_DURATION);
