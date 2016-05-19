@@ -23,11 +23,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import quickbeer.android.next.pojo.base.AccessTrackingItem;
+import quickbeer.android.next.pojo.base.AccessTracking;
+import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Brewer extends AccessTrackingItem<Brewer> {
+public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer>, AccessTracking {
     @SerializedName("BrewerID")
     private int id;
 
@@ -118,6 +120,10 @@ public class Brewer extends AccessTrackingItem<Brewer> {
     @SerializedName("RegionID")
     private String regionId;
 
+    // Metadata fields
+    private Date updateDate;
+    private Date accessDate;
+
     @NonNull
     @Override
     protected Class<Brewer> getTypeParameterClass() {
@@ -160,6 +166,26 @@ public class Brewer extends AccessTrackingItem<Brewer> {
     @NonNull
     public Date getOpened() {
         return DateUtils.value(opened);
+    }
+
+    @Override
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    @Override
+    public void setUpdateDate(Date date) {
+        updateDate = date;
+    }
+
+    @Override
+    public Date getAccessDate() {
+        return accessDate;
+    }
+
+    @Override
+    public void setAccessDate(Date date) {
+        accessDate = date;
     }
 
     @Override
@@ -220,6 +246,14 @@ public class Brewer extends AccessTrackingItem<Brewer> {
     }
 
     @Override
+    public boolean metadataEquals(Brewer brewer) {
+        if (updateDate != null ? !updateDate.equals(brewer.getUpdateDate()) : brewer.getUpdateDate()!= null) return false;
+        if (accessDate != null ? !accessDate.equals(brewer.getAccessDate()) : brewer.getAccessDate()!= null) return false;
+
+        return true;
+    }
+
+    @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + (name != null ? name.hashCode() : 0);
@@ -251,6 +285,8 @@ public class Brewer extends AccessTrackingItem<Brewer> {
         result = 31 * result + (metroId != null ? metroId.hashCode() : 0);
         result = 31 * result + (msa != null ? msa.hashCode() : 0);
         result = 31 * result + (regionId != null ? regionId.hashCode() : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
         return result;
     }
 }

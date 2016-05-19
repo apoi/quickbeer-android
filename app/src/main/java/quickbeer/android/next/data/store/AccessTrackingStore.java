@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.utils.Log;
-import quickbeer.android.next.pojo.base.AccessTrackingItem;
+import quickbeer.android.next.pojo.base.AccessTracking;
 import quickbeer.android.next.rx.NullFilter;
 import rx.Observable;
 import rx.functions.Func1;
@@ -36,7 +36,7 @@ import rx.schedulers.Schedulers;
 /**
  * Abstract store that has some convenience methods for returning recently accessed items and ids.
  */
-public abstract class AccessTrackingStore<T extends AccessTrackingItem> extends StoreBase<T, Integer> {
+public abstract class AccessTrackingStore<T extends AccessTracking> extends StoreBase<T, Integer> {
     private static final String TAG = AccessTrackingStore.class.getSimpleName();
     
     public AccessTrackingStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {

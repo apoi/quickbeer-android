@@ -23,10 +23,12 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import quickbeer.android.next.pojo.base.AccessTrackingItem;
+import quickbeer.android.next.pojo.base.AccessTracking;
+import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.utils.DateUtils;
 
-public class Beer extends AccessTrackingItem<Beer> {
+public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessTracking {
     @SerializedName("BeerID")
     private int id;
 
@@ -75,7 +77,11 @@ public class Beer extends AccessTrackingItem<Beer> {
     private int tickValue;
     private Date tickDate;
     private int reviewId;
+
+    // Metadata fields
     private boolean isModified;
+    private Date updateDate;
+    private Date accessDate;
 
     @NonNull
     @Override
@@ -165,6 +171,26 @@ public class Beer extends AccessTrackingItem<Beer> {
     }
 
     @Override
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    @Override
+    public void setUpdateDate(Date date) {
+        updateDate = date;
+    }
+
+    @Override
+    public Date getAccessDate() {
+        return accessDate;
+    }
+
+    @Override
+    public void setAccessDate(Date date) {
+        accessDate = date;
+    }
+
+    @Override
     public String toString() {
         return "Beer{" + "id=" + id
                 + ", name='" + name + '\''
@@ -217,8 +243,10 @@ public class Beer extends AccessTrackingItem<Beer> {
 
     @Override
     public boolean metadataEquals(Beer beer) {
-        return super.metadataEquals(beer)
-                && isModified == beer.isModified;
+        if (updateDate != null ? !updateDate.equals(beer.getUpdateDate()) : beer.getUpdateDate()!= null) return false;
+        if (accessDate != null ? !accessDate.equals(beer.getAccessDate()) : beer.getAccessDate()!= null) return false;
+
+        return isModified == beer.isModified;
     }
 
     @Override
@@ -239,8 +267,11 @@ public class Beer extends AccessTrackingItem<Beer> {
         result = 31 * result + (brewerName != null ? brewerName.hashCode() : 0);
         result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
         result = 31 * result + tickValue;
+        result = 31 * result + (tickDate != null ? tickDate.hashCode() : 0);
         result = 31 * result + reviewId;
         result = 31 * result + (isModified ? 1 : 0);
+        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
+        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
         return result;
     }
 }

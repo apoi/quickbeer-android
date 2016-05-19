@@ -23,16 +23,20 @@ import android.view.View;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.pojo.Header;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.views.BeerListView;
+import rx.Subscription;
 import rx.subjects.BehaviorSubject;
 
 public class BeerTabFragment extends BeerListFragment {
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
+
+    private Subscription subscription;
 
     private final BehaviorSubject<DataStreamNotification<ItemList<String>>> accessedBeersSubject = BehaviorSubject.create();
 
@@ -47,7 +51,8 @@ public class BeerTabFragment extends BeerListFragment {
         getGraph().inject(this);
 
         // BeerTabFragment never goes away, so we can keep a perpetual subscription
-        getAccessedBeers.call()
+        subscription = getAccessedBeers.call()
+                .doOnNext(notification -> Log.d("___", "accessed: " + notification))
                 .subscribe(accessedBeersSubject::onNext);
 
         setSource(accessedBeersSubject.asObservable());
@@ -58,5 +63,12 @@ public class BeerTabFragment extends BeerListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         ((BeerListView) view).setHeader(new Header(getContext().getString(R.string.recent_beers)));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        subscription.unsubscribe();
     }
 }
