@@ -71,6 +71,7 @@ public class LoginFetcher extends FetcherBase {
         Subscription subscription = networkApi.login(username, password)
                 .flatMap(response -> userSettingsStore.getOne())
                 .map(userSettings -> {
+                    userSettings.setUserId(LoginUtils.getUserId(cookieManager));
                     userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
                     return userSettings;
                 })

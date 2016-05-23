@@ -41,6 +41,7 @@ import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.utils.DateDeserializer;
+import quickbeer.android.next.network.utils.LoginRedirectInterceptor;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.PersistentCookieStore;
 import quickbeer.android.next.network.utils.StringDeserializer;
@@ -70,6 +71,7 @@ public final class NetworkModule {
         client.setCookieHandler(cookieManager);
         client.setFollowRedirects(false);
         client.setFollowSslRedirects(false);
+        client.interceptors().add(new LoginRedirectInterceptor());
 
         return networkInstrumentation.decorateNetwork(client, context);
     }

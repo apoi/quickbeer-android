@@ -131,7 +131,7 @@ public class DataLayer extends DataLayerBase {
                 .filter(new NullFilter())
                 .first()
                 .map(userSettings -> {
-                    if (!userSettings.credentialEqual(username, password)) {
+                    if (!userSettings.credentialsEqual(username, password)) {
                         userSettings.setUsername(username);
                         userSettings.setPassword(password);
                         userSettings.setIsLogged(false);

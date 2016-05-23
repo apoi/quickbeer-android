@@ -40,6 +40,8 @@ import quickbeer.android.next.injections.ApplicationGraph;
 import rx.subscriptions.CompositeSubscription;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = BaseActivity.class.getSimpleName();
+
     // Composite for subscriptions meant to stay alive for the activity's duration
     protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
@@ -75,7 +77,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
         getUserSettings.call()
                 .first()
                 .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
-                .subscribe(s -> Log.d("LOGIN", "Settings: " + s));
+                .subscribe(s -> Log.d(TAG, "Settings: " + s));
     }
 
     @Override

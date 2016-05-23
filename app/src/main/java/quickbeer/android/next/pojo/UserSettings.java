@@ -34,6 +34,9 @@ public class UserSettings extends BasePojo<UserSettings> {
     @SerializedName("isLogged")
     private boolean isLogged;
 
+    @SerializedName("userId")
+    private String userId;
+
     @NonNull
     @Override
     protected Class<UserSettings> getTypeParameterClass() {
@@ -64,7 +67,15 @@ public class UserSettings extends BasePojo<UserSettings> {
         isLogged = logged;
     }
 
-    public boolean credentialEqual(String username, String password) {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public boolean credentialsEqual(String username, String password) {
         return StringUtils.equals(username, this.username)
                 && StringUtils.equals(password, this.password);
     }
@@ -73,6 +84,7 @@ public class UserSettings extends BasePojo<UserSettings> {
     public String toString() {
         return "UserSettings{" +
                 "username='" + username + '\'' +
+                ", userId=" + userId +
                 ", isLogged=" + isLogged +
                 '}';
     }

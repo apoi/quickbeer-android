@@ -50,4 +50,18 @@ public class LoginUtils {
         Log.d(TAG, "Login status: userCookie: " + userCookie + ", sessionCookie: " + sessionCookie);
         return userCookie && sessionCookie;
     }
+
+    public static String getUserId(CookieManager cookieManager) {
+        for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
+            if (!StringUtils.hasValue(cookie.getValue())) {
+                continue;
+            }
+
+            if (USER_ID_KEY.equals(cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+
+        return "";
+    }
 }
