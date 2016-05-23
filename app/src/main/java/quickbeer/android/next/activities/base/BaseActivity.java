@@ -34,6 +34,7 @@ import quickbeer.android.next.R;
 import quickbeer.android.next.activities.CountryListActivity;
 import quickbeer.android.next.activities.MainActivity;
 import quickbeer.android.next.activities.StyleListActivity;
+import quickbeer.android.next.activities.TickedBeersActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.injections.ApplicationGraph;
@@ -87,6 +88,8 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, MainActivity.class));
                 break;
             case R.id.nav_ticks:
+                startActivity(new Intent(this, TickedBeersActivity.class));
+                break;
             case R.id.nav_best:
                 startActivity(new Intent(this, TopBeersActivity.class));
                 break;

@@ -135,10 +135,10 @@ public class DataLayer extends DataLayerBase {
                         userSettings.setUsername(username);
                         userSettings.setPassword(password);
                         userSettings.setIsLogged(false);
+                        userSettingsStore.put(userSettings);
                     }
                     return userSettings;
                 })
-                .doOnNext(userSettingsStore::put)
                 .flatMap(userSettings -> {
                     return userSettings.isLogged()
                             ? Observable.just(true)

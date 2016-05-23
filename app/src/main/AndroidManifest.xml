@@ -35,6 +35,11 @@
             android:launchMode="singleTask"/>
 
         <activity
+            android:name=".activities.TickedBeersActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask"/>
+
+        <activity
             android:name=".activities.TopBeersActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

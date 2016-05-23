@@ -31,11 +31,11 @@ public class UserSettings extends BasePojo<UserSettings> {
     @SerializedName("password")
     private String password;
 
-    @SerializedName("isLogged")
-    private boolean isLogged;
-
     @SerializedName("userId")
     private String userId;
+
+    @SerializedName("isLogged")
+    private boolean isLogged;
 
     @NonNull
     @Override
@@ -43,16 +43,18 @@ public class UserSettings extends BasePojo<UserSettings> {
         return UserSettings.class;
     }
 
+    @NonNull
     public String getUsername() {
-        return username;
+        return StringUtils.value(username);
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
+    @NonNull
     public String getPassword() {
-        return password;
+        return StringUtils.value(password);
     }
 
     public void setPassword(String password) {
@@ -63,12 +65,13 @@ public class UserSettings extends BasePojo<UserSettings> {
         return isLogged;
     }
 
-    public void setIsLogged(boolean logged) {
-        isLogged = logged;
+    public void setIsLogged(boolean isLogged) {
+        this.isLogged = isLogged;
     }
 
+    @NonNull
     public String getUserId() {
-        return userId;
+        return StringUtils.value(userId);
     }
 
     public void setUserId(String userId) {
@@ -84,7 +87,7 @@ public class UserSettings extends BasePojo<UserSettings> {
     public String toString() {
         return "UserSettings{" +
                 "username='" + username + '\'' +
-                ", userId=" + userId +
+                ", userId='" + userId + '\'' +
                 ", isLogged=" + isLogged +
                 '}';
     }
@@ -98,6 +101,7 @@ public class UserSettings extends BasePojo<UserSettings> {
 
         if (isLogged != that.isLogged) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
 
         return password != null ? password.equals(that.password) : that.password == null;
 
