@@ -56,11 +56,20 @@ public class BeerStore extends AccessTrackingStore<Beer> {
     }
 
     public Observable<List<Integer>> getTickedIds() {
+        // Simplistic strategy of refreshing ticks list always on stream updates
+        return getStream()
+                .filter(beer -> beer.getTickDate() != null)
+                .flatMap(beer -> queryTicks())
+                .startWith(queryTicks())
+                .distinctUntilChanged();
+    }
+
+    private Observable<List<Integer>> queryTicks() {
         return Observable.just(null)
                 .observeOn(Schedulers.io())
                 .map(empty -> {
                     String[] projection = new String[]{ BeerColumns.ID };
-                    String selection = String.format("%s > 0", BeerColumns.TICK_VALUE); // Has access date
+                    String selection = String.format("%s > 0", BeerColumns.TICK_VALUE); // Has tick value
                     String orderBy = String.format("%s DESC", BeerColumns.TICK_DATE); // Sort by latest ticked
 
                     return getContentResolver().query(getContentUri(), projection, selection, null, orderBy);

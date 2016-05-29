@@ -31,6 +31,10 @@ public class ItemList<T> {
         this.updateDate = updateDate;
     }
 
+    public static <T> ItemList<T> create(final List<Integer> items) {
+        return new ItemList<>(null, items, null);
+    }
+
     public T getKey() {
         return key;
     }

@@ -241,6 +241,7 @@ public class DataLayer extends DataLayerBase {
 
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
+                .distinctUntilChanged()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
                 .map(ids -> new ItemList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
@@ -489,11 +490,12 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull final String userId) {
         Log.v(TAG, "getTickedBeers");
 
+        // Always fetch to make sure we have the latest?
         fetchTickedBeers(userId);
 
-        // TODO need to trigger update on the query when new ticked beers are inserted
         return beerStore.getTickedIds()
-                .map(ids -> new ItemList<String>(null, ids, null))
+                .doOnNext(ids -> Log.d(TAG, "Ticked ids: " + ids))
+                .map(ItemList::<String>create)
                 .map(DataStreamNotification::onNext);
     }
 
@@ -601,6 +603,7 @@ public class DataLayer extends DataLayerBase {
 
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
+                .distinctUntilChanged()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: list now " + ids.size()))
                 .map(ids -> new ItemList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
