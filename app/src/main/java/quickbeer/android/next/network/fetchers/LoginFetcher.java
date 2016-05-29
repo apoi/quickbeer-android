@@ -30,6 +30,7 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.LoginUtils;
+import quickbeer.android.next.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -67,6 +68,15 @@ public class LoginFetcher extends FetcherBase {
 
         final String username = intent.getStringExtra("username");
         final String password = intent.getStringExtra("password");
+
+        if (!StringUtils.hasValue(username) || !StringUtils.hasValue(password)) {
+            Log.d(TAG, "Missing username or password");
+            return;
+        }
+
+        LoginUtils.clearLoginCredentials(cookieManager);
+
+        Log.d(TAG, "Login with user " + username);
 
         Subscription subscription = networkApi.login(username, password)
                 .flatMap(response -> userSettingsStore.getOne())

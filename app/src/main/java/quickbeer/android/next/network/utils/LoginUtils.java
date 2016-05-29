@@ -29,6 +29,12 @@ public class LoginUtils {
     private static final String USER_ID_KEY = "UserID";
     private static final String SESSION_ID_KEY = "SessionID";
 
+    public static void clearLoginCredentials(CookieManager cookieManager) {
+        Log.d(TAG, "clearLoginCredentials");
+
+        cookieManager.getCookieStore().removeAll();
+    }
+
     public static boolean hasLoginCookie(CookieManager cookieManager) {
         boolean userCookie = false;
         boolean sessionCookie = false;
