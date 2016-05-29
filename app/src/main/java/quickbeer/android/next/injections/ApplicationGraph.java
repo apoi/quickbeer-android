@@ -24,7 +24,6 @@ import javax.inject.Singleton;
 import dagger.Component;
 import quickbeer.android.next.QuickBeer;
 import quickbeer.android.next.activities.BeerDetailsActivity;
-import quickbeer.android.next.activities.TickedBeersActivity;
 import quickbeer.android.next.activities.base.BaseActivity;
 import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.activities.base.SearchBarActivity;

@@ -74,8 +74,13 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessT
     @SerializedName("BrewerCountryId")
     private Integer countryId;
 
-    private int tickValue;
+    @SerializedName("Liked")
+    private Integer tickValue;
+
+    @SerializedName("TimeEntered")
     private Date tickDate;
+
+    // This may need to be serialized later
     private int reviewId;
 
     // Metadata fields
@@ -235,7 +240,8 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessT
         if (styleRating != null ? !styleRating.equals(beer.styleRating) : beer.styleRating != null) return false;
         if (rateCount != null ? !rateCount.equals(beer.rateCount) : beer.rateCount != null) return false;
 
-        if (tickValue != beer.tickValue) return false;
+        if (tickValue != null ? !tickValue.equals(beer.tickValue) : beer.tickValue != null) return false;
+        if (tickDate != null ? !tickDate.equals(beer.tickDate) : beer.tickDate != null) return false;
         if (reviewId != beer.reviewId) return false;
 
         return isAlias != null ? isAlias.equals(beer.isAlias) : beer.isAlias == null;
@@ -266,7 +272,7 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessT
         result = 31 * result + (brewerId != null ? brewerId.hashCode() : 0);
         result = 31 * result + (brewerName != null ? brewerName.hashCode() : 0);
         result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + tickValue;
+        result = 31 * result + (tickValue != null ? tickValue.hashCode() : 0);
         result = 31 * result + (tickDate != null ? tickDate.hashCode() : 0);
         result = 31 * result + reviewId;
         result = 31 * result + (isModified ? 1 : 0);

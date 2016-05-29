@@ -30,7 +30,6 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
-import quickbeer.android.next.activities.base.SearchActivity;
 import quickbeer.android.next.activities.base.SearchBarActivity;
 import quickbeer.android.next.fragments.base.BaseFragment;
 import quickbeer.android.next.pojo.ItemList;

@@ -46,7 +46,7 @@ public class NetworkApi {
                 .setClient(client)
                 .setEndpoint("https://www.ratebeer.com")
                 .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.BASIC)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
                 .build();
 
         rateBeerService = restAdapter.create(RateBeerService.class);
