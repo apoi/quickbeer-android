@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
@@ -59,6 +60,7 @@ public class BeerStore extends AccessTrackingStore<Beer> {
         // Simplistic strategy of refreshing ticks list always on stream updates
         return getStream()
                 .filter(beer -> beer.getTickDate() != null)
+                .debounce(1000, TimeUnit.MILLISECONDS)
                 .flatMap(beer -> queryTicks())
                 .startWith(queryTicks())
                 .distinctUntilChanged();
