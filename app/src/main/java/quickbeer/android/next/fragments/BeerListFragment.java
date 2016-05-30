@@ -30,7 +30,7 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.activities.BeerDetailsActivity;
-import quickbeer.android.next.activities.base.SearchBarActivity;
+import quickbeer.android.next.activities.base.ProgressStatusAggregator;
 import quickbeer.android.next.fragments.base.BaseFragment;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.viewmodels.BeerListViewModel;
@@ -66,7 +66,7 @@ public class BeerListFragment extends BaseFragment {
         setSource(observable);
 
         // Hook up the search observable status to progress indicator
-        ((SearchBarActivity) getActivity()).addProgressObservable(observable);
+        ((ProgressStatusAggregator) getActivity()).addProgressObservable(observable);
     }
 
     @Override
