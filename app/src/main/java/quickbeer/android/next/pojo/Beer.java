@@ -140,11 +140,11 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessT
     }
 
     public int getTickValue() {
-        return tickValue;
+        return tickValue != null ? tickValue : -1;
     }
 
     public void setTickValue(int value) {
-        tickValue = value;
+        tickValue = value >= 0 ? value : null;
     }
 
     public Date getTickDate() {
