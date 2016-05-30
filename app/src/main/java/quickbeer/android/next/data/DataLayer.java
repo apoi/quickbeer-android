@@ -60,6 +60,8 @@ public class DataLayer extends DataLayerBase {
     private final Context context;
     private final UserSettingsStore userSettingsStore;
 
+    private boolean ticksFetched = false;
+
     public DataLayer(@NonNull Context context,
                      @NonNull UserSettingsStore userSettingsStore,
                      @NonNull NetworkRequestStatusStore networkRequestStatusStore,
@@ -489,8 +491,10 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull final String userId) {
         Log.v(TAG, "getTickedBeers");
 
-        // Always fetch to make sure we have the latest?
-        fetchTickedBeers(userId);
+        if (!ticksFetched) {
+            fetchTickedBeers(userId);
+            ticksFetched = true;
+        }
 
         return beerStore.getTickedIds()
                 .doOnNext(ids -> Log.d(TAG, "Ticked ids: " + ids))
