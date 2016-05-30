@@ -39,4 +39,29 @@ public class Score {
             return resource;
         }
     }
+
+    public static Stars fromTick(int score) {
+        switch (score) {
+            case 1:
+                return Stars.SCORE_1;
+            case 2:
+                return Stars.SCORE_2;
+            case 3:
+                return Stars.SCORE_3;
+            case 4:
+                return Stars.SCORE_4;
+            case 5:
+                return Stars.SCORE_5;
+            default:
+                return Stars.UNRATED;
+        }
+    }
+
+    public static String fromRating(int rating) {
+        if (rating >= 0) {
+            return String.valueOf(rating);
+        } else {
+            return "?";
+        }
+    }
 }

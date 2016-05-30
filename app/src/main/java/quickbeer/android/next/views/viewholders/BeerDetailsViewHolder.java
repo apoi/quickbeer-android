@@ -30,6 +30,7 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
+import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.utils.StringUtils;
 
 /**
@@ -61,7 +62,14 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     public void setBeer(@NonNull Beer beer) {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
-        ratingTextView.setText(String.valueOf(beer.getRating()));
+        if (beer.getTickValue() > 0) {
+            ratingTextView.setText("");
+            ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
+        } else {
+            ratingTextView.setText(Score.fromRating(beer.getRating()));
+            ratingTextView.setBackgroundResource(R.drawable.score_unrated);
+        }
+
         nameTextView.setText(beer.getName());
         styleTextView.setText(beer.getStyleName());
         abvTextView.setText(String.format("ABV: %.1f%%", beer.getAbv()));

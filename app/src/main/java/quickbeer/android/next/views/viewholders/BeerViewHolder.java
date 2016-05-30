@@ -83,8 +83,14 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
                 ? String.valueOf(beer.getRating())
                 : "?";
 
-        ratingTextView.setBackgroundResource(Score.Stars.UNRATED.getResource());
-        ratingTextView.setText(rating);
+        if (beer.getTickValue() > 0) {
+            ratingTextView.setText("");
+            ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
+        } else {
+            ratingTextView.setText(Score.fromRating(beer.getRating()));
+            ratingTextView.setBackgroundResource(R.drawable.score_unrated);
+        }
+
         nameTextView.setText(beer.getName());
         styleTextView.setText(beer.getStyleName());
         brewerTextView.setText(beer.getBrewerName());

@@ -241,7 +241,6 @@ public class DataLayer extends DataLayerBase {
 
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
-                .distinctUntilChanged()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
                 .map(ids -> new ItemList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
