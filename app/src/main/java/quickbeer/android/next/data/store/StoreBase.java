@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import io.reark.reark.data.store.SingleItemContentProviderStore;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
+import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -95,6 +96,12 @@ public abstract class StoreBase<T, U> extends SingleItemContentProviderStore<T, 
                         : Observable.just(item)
                 )
                 .doOnError(throwable -> Log.e(TAG, "error", throwable));
+    }
+
+    @NonNull
+    @Override
+    protected String getAuthority() {
+        return RateBeerProvider.AUTHORITY;
     }
 
     protected Gson getGson() {

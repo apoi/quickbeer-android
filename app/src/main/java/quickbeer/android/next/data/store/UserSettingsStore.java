@@ -102,6 +102,12 @@ public class UserSettingsStore extends SingleItemContentProviderStore<UserSettin
 
     @NonNull
     @Override
+    protected String getAuthority() {
+        return RateBeerProvider.AUTHORITY;
+    }
+
+    @NonNull
+    @Override
     public Uri getContentUri() {
         return RateBeerProvider.UserSettings.USER_SETTINGS;
     }
