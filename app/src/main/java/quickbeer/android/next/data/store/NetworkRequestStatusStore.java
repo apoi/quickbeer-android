@@ -25,6 +25,7 @@
  */
 package quickbeer.android.next.data.store;
 
+import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -33,12 +34,16 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
+import rx.Observable;
 
 public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, Integer> {
     private static final String TAG = NetworkRequestStatusStore.class.getSimpleName();
@@ -67,6 +72,11 @@ public class NetworkRequestStatusStore extends StoreBase<NetworkRequestStatus, I
 
         Log.v(TAG, "insertOrUpdate(" + item.getStatus() + ", " + item.getUri() + ")");
         super.put(item);
+    }
+
+    @Override
+    protected Observable<ArrayList<ContentProviderOperation>> groupOperations(Observable<ContentProviderOperation> source) {
+        return source.map(operation -> new ArrayList<ContentProviderOperation>(){{ add(operation); }});
     }
 
     @NonNull
