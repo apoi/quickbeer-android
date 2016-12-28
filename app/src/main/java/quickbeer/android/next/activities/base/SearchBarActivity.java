@@ -17,6 +17,9 @@
  */
 package quickbeer.android.next.activities.base;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
+
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -28,20 +31,20 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
-
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
+import polanski.option.Option;
 import quickbeer.android.next.R;
 import quickbeer.android.next.adapters.SearchAdapter;
-import quickbeer.android.next.rx.NullFilter;
+import quickbeer.android.next.rx.RxUtils;
 import quickbeer.android.next.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.next.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+
+import static polanski.option.Option.ofObj;
 
 public abstract class SearchBarActivity extends BaseActivity implements ProgressStatusAggregator {
 
@@ -51,7 +54,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     private MaterialSearchView searchView;
     private View searchViewOverlay;
 
-    private final PublishSubject<String> querySubject = PublishSubject.create();
+    private final PublishSubject<Option<String>> querySubject = PublishSubject.create();
     private final ProgressIndicatorViewModel progressIndicatorViewModel = new ProgressIndicatorViewModel();
 
     @Override
@@ -106,7 +109,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     public Observable<String> getQueryObservable() {
         return querySubject
                 .asObservable()
-                .filter(new NullFilter());
+                .compose(RxUtils::pickValue);
     }
 
     private void setupSearch() {
@@ -142,7 +145,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
             private boolean updateQueryText(String query) {
                 if (query.length() > minimumSearchLength()) {
-                    querySubject.onNext(query);
+                    querySubject.onNext(ofObj(query));
                     return true;
                 } else {
                     showTooShortSearchError();
@@ -192,7 +195,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
         searchView.setOnItemClickListener((parent, view, position, id) -> {
             searchView.closeSearch();
-            querySubject.onNext(adapter.getItem(position));
+            querySubject.onNext(ofObj(adapter.getItem(position)));
         });
     }
 

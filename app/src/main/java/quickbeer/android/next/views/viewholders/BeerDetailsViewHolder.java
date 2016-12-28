@@ -59,7 +59,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
         this.imageView = (ImageView) view.findViewById(R.id.beer_details_image);
     }
 
-    public void setBeer(@NonNull Beer beer) {
+    public void setBeer(@NonNull final Beer beer) {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
         if (beer.getTickValue() > 0) {

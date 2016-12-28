@@ -33,7 +33,7 @@ public class BeerViewBinder extends RxViewBinder {
     private final BeerViewHolder viewHolder;
     private final BeerViewModel viewModel;
 
-    public BeerViewBinder(@NonNull BeerViewHolder viewHolder, @NonNull BeerViewModel viewModel) {
+    public BeerViewBinder(@NonNull final BeerViewHolder viewHolder, @NonNull final BeerViewModel viewModel) {
         Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");
         Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
@@ -42,7 +42,7 @@ public class BeerViewBinder extends RxViewBinder {
     }
 
     @Override
-    protected void bindInternal(@NonNull CompositeSubscription subscription) {
+    protected void bindInternal(@NonNull final CompositeSubscription subscription) {
         subscription.add(viewModel.getBeer()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(viewHolder::setBeer));

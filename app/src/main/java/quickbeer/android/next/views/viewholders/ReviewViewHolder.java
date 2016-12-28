@@ -44,7 +44,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
         this.locationTextView = (TextView) view.findViewById(R.id.reviewer_location);
     }
 
-    public void setReview(@NonNull Review review) {
+    public void setReview(@NonNull final Review review) {
         Preconditions.checkNotNull(review, "Review cannot be null.");
 
         this.ratingTextView.setText(String.format("%.1f", review.getRating()));

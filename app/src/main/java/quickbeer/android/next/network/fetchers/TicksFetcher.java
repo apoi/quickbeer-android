@@ -38,17 +38,18 @@ import rx.functions.Action1;
 public class TicksFetcher extends BeerSearchFetcher {
     private static final String TAG = TicksFetcher.class.getSimpleName();
 
-    public TicksFetcher(@NonNull NetworkApi networkApi,
-                        @NonNull NetworkUtils networkUtils,
-                        @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                        @NonNull BeerStore beerStore,
-                        @NonNull BeerListStore beerListStore) {
+    public TicksFetcher(@NonNull final NetworkApi networkApi,
+                        @NonNull final NetworkUtils networkUtils,
+                        @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                        @NonNull final BeerStore beerStore,
+                        @NonNull final BeerListStore beerListStore) {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull final Intent intent) {
         final String userId = intent.getStringExtra("userId");
+
         if (userId != null) {
             fetchBeerSearch(userId);
         } else {
@@ -58,7 +59,7 @@ public class TicksFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull String userId) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String userId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "1");
         params.put("u", userId);
 

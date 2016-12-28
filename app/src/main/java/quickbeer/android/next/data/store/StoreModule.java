@@ -32,8 +32,8 @@ import dagger.Provides;
 public final class StoreModule {
     @Provides
     @Singleton
-    public UserSettingsStore provideUserSettingsStore(ContentResolver contentResolver, CookieManager cookieManager) {
-        return new UserSettingsStore(contentResolver, cookieManager);
+    public UserSettingsStore provideUserSettingsStore(ContentResolver contentResolver, CookieManager cookieManager, Gson gson) {
+        return new UserSettingsStore(contentResolver, cookieManager, gson);
     }
 
     @Provides

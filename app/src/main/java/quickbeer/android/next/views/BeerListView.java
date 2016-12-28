@@ -76,7 +76,7 @@ public class BeerListView extends FrameLayout {
         beerListAdapter.setHeader(header);
     }
 
-    private void setBeers(@NonNull List<BeerViewModel> beers) {
+    private void setBeers(@NonNull final List<BeerViewModel> beers) {
         Preconditions.checkNotNull(beers, "Beer list cannot be null.");
         Preconditions.checkState(beerListAdapter != null, "Beer list adapter cannot be null.");
 
@@ -84,7 +84,7 @@ public class BeerListView extends FrameLayout {
         beerListAdapter.set(beers);
     }
 
-    private void setProgressStatus(@NonNull BaseViewModel.ProgressStatus progressStatus) {
+    private void setProgressStatus(@NonNull final BaseViewModel.ProgressStatus progressStatus) {
         switch (progressStatus) {
             case LOADING:
                 searchStatusTextView.setText(R.string.search_status_loading);
@@ -105,8 +105,8 @@ public class BeerListView extends FrameLayout {
         private final BeerListView view;
         private final BeerListViewModel viewModel;
 
-        public ViewBinder(@NonNull BeerListView view,
-                          @NonNull BeerListViewModel viewModel) {
+        public ViewBinder(@NonNull final BeerListView view,
+                          @NonNull final BeerListViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
@@ -115,7 +115,7 @@ public class BeerListView extends FrameLayout {
         }
 
         @Override
-        protected void bindInternal(@NonNull CompositeSubscription subscription) {
+        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel.getBeers()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::setBeers));

@@ -36,22 +36,22 @@ import rx.functions.Action1;
 public class TopBeersFetcher extends BeerSearchFetcher {
     private static final String TAG = TopBeersFetcher.class.getSimpleName();
 
-    public TopBeersFetcher(@NonNull NetworkApi networkApi,
-                           @NonNull NetworkUtils networkUtils,
-                           @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                           @NonNull BeerStore beerStore,
-                           @NonNull BeerListStore beerListStore) {
+    public TopBeersFetcher(@NonNull final NetworkApi networkApi,
+                           @NonNull final NetworkUtils networkUtils,
+                           @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                           @NonNull final BeerStore beerStore,
+                           @NonNull final BeerListStore beerListStore) {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull final Intent intent) {
         fetchBeerSearch("");
     }
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull String searchString) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));
     }
 

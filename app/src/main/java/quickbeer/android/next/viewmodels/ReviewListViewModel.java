@@ -44,8 +44,8 @@ public class ReviewListViewModel extends BaseViewModel {
     private final int beerId;
 
     public ReviewListViewModel(final int beerId,
-                               @NonNull DataLayer.GetReviews getReviews,
-                               @NonNull DataLayer.GetReview getReview) {
+                               @NonNull final DataLayer.GetReviews getReviews,
+                               @NonNull final DataLayer.GetReview getReview) {
         Preconditions.checkNotNull(getReviews, "GetReviews cannot be null.");
         Preconditions.checkNotNull(getReview, "GetReview cannot be null.");
 
@@ -60,7 +60,7 @@ public class ReviewListViewModel extends BaseViewModel {
     }
 
     @Override
-    public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+    public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<ItemList<Integer>>> reviewSource =
@@ -92,11 +92,12 @@ public class ReviewListViewModel extends BaseViewModel {
     }
 
     @NonNull
-    private Observable<Review> getReviewObservable(@NonNull Integer reviewId) {
+    private Observable<Review> getReviewObservable(@NonNull final Integer reviewId) {
         Preconditions.checkNotNull(reviewId, "Review id cannot be null.");
 
         return getReview
                 .call(reviewId)
+                .compose(quickbeer.android.next.rx.RxUtils::pickValue)
                 .doOnNext((review) -> Log.v(TAG, "Received review " + review.getId()));
     }
 }

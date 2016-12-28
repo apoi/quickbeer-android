@@ -17,166 +17,57 @@
  */
 package quickbeer.android.next.data.store;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
+import android.content.ContentResolver;
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
+import polanski.option.Option;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
-import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
+import quickbeer.android.next.data.store.cores.BeerStoreCore;
 import quickbeer.android.next.pojo.Beer;
-import quickbeer.android.next.rx.NullFilter;
-import quickbeer.android.next.utils.DateUtils;
+import quickbeer.android.next.pojo.ItemList;
+import quickbeer.android.next.rx.RxUtils;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
-public class BeerStore extends AccessTrackingStore<Beer> {
-    private static final String TAG = BeerStore.class.getSimpleName();
+public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
-    public BeerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
-        super(contentResolver, gson);
+    public BeerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+        super(new BeerStoreCore(contentResolver, gson),
+              Beer::getId,
+              Option::ofObj,
+              Option::none);
     }
 
-    public Observable<List<Integer>> getAccessedIds() {
-        return super.getAccessedIds(BeerColumns.ID, BeerColumns.ACCESSED);
-    }
-
-    public Observable<Integer> getNewlyAccessedIds(Date date) {
-        return getNewlyAccessedItems(date)
-                .map(Beer::getId);
-    }
-
+    @NonNull
     public Observable<List<Integer>> getTickedIds() {
         // Simplistic strategy of refreshing ticks list always on stream updates
-        return getStream()
+        return ((BeerStoreCore) getCore())
+                .getAllStream()
                 .filter(beer -> beer.getTickDate() != null)
                 .debounce(1000, TimeUnit.MILLISECONDS)
                 .flatMap(beer -> queryTicks())
+                .observeOn(Schedulers.computation())
                 .startWith(queryTicks())
                 .distinctUntilChanged();
     }
 
     private Observable<List<Integer>> queryTicks() {
-        return Observable.just(null)
-                .observeOn(Schedulers.io())
-                .map(empty -> {
-                    String[] projection = new String[]{ BeerColumns.ID };
-                    String selection = String.format("%s > 0", BeerColumns.TICK_VALUE); // Has tick value
-                    String orderBy = String.format("%s DESC", BeerColumns.TICK_DATE); // Sort by latest ticked
-
-                    return getContentResolver().query(getContentUri(), projection, selection, null, orderBy);
-                })
-                .filter(new NullFilter())
-                .map(cursor -> {
-                    List<Integer> idList = new ArrayList<>();
-                    if (cursor.moveToFirst()) {
-                        do {
-                            idList.add(cursor.getInt(cursor.getColumnIndex(BeerColumns.ID)));
-                        } while (cursor.moveToNext());
-                    }
-                    cursor.close();
-                    return idList;
-                })
-                .observeOn(Schedulers.computation())
-                .doOnNext(idList -> Log.d(TAG, "Ticked beers: " + idList.size()));
+        return ((BeerStoreCore) getCore()).queryTicks();
     }
 
     @NonNull
-    @Override
-    protected Integer getIdFor(@NonNull Beer item) {
-        Preconditions.checkNotNull(item, "Beer cannot be null.");
-
-        return item.getId();
+    public Observable<List<Integer>> getAccessedIds() {
+        return ((BeerStoreCore) getCore()).getAccessedIds(BeerColumns.ID, BeerColumns.ACCESSED);
     }
 
-    @NonNull
-    @Override
-    public Uri getContentUri() {
-        return RateBeerProvider.Beers.BEERS;
-    }
-
-    @NonNull
-    @Override
-    protected String[] getProjection() {
-        return new String[] {
-                BeerColumns.ID,
-                BeerColumns.JSON,
-                BeerColumns.NAME,
-                BeerColumns.TICK_VALUE,
-                BeerColumns.TICK_DATE,
-                BeerColumns.REVIEW,
-                BeerColumns.MODIFIED,
-                BeerColumns.UPDATED,
-                BeerColumns.ACCESSED
-        };
-    }
-
-    @NonNull
-    @Override
-    protected ContentValues getContentValuesForItem(Beer item) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerColumns.ID, item.getId());
-        contentValues.put(BeerColumns.JSON, getGson().toJson(item));
-        contentValues.put(BeerColumns.NAME, item.getName());
-        contentValues.put(BeerColumns.TICK_VALUE, item.getTickValue());
-        contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.getTickDate()));
-        contentValues.put(BeerColumns.REVIEW, item.getReviewId());
-        contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
-        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
-        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.getAccessDate()));
-
-        return contentValues;
-    }
-
-    @NonNull
-    @Override
-    protected Beer read(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
-        final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
-        final Date tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
-        final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerColumns.REVIEW));
-        final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerColumns.MODIFIED)) > 0;
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
-        final Date accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
-
-        Beer beer = getGson().fromJson(json, Beer.class);
-        beer.setTickValue(tickValue);
-        beer.setTickDate(tickDate);
-        beer.setReviewId(reviewId);
-        beer.setIsModified(isModified);
-        beer.setUpdateDate(updated);
-        beer.setAccessDate(accessed);
-
-        return beer;
-    }
-
-    @NonNull
-    @Override
-    public Uri getUriForId(@NonNull Integer id) {
-        Preconditions.checkNotNull(id, "Id cannot be null.");
-
-        return RateBeerProvider.Beers.withId(id);
-    }
-
-    @NonNull
-    @Override
-    protected Beer mergeValues(@NonNull Beer v1, @NonNull Beer v2) {
-        // Double-overwrite to avoid modifying the original values.
-        // Beer could implement a clone method instead.
-        Beer newValue = new Beer();
-        newValue.overwrite(v1);
-        newValue.overwrite(v2);
-
-        return newValue;
+    public Observable<Integer> getNewlyAccessedIds(@NonNull final Date date) {
+        return ((BeerStoreCore) getCore()).getNewlyAccessedItems(date)
+                                          .map(Beer::getId);
     }
 }

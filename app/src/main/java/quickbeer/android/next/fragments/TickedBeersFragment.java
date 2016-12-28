@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.R;
 import quickbeer.android.next.data.DataLayer;
+import quickbeer.android.next.rx.RxUtils;
 
 public class TickedBeersFragment extends BeerListFragment {
     private static final String TAG = TickedBeersFragment.class.getSimpleName();
@@ -51,9 +52,10 @@ public class TickedBeersFragment extends BeerListFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getUserSettings.call()
-                .filter(userSettings -> userSettings.isLogged() && !userSettings.getUserId().isEmpty())
-                .subscribe(userSettings -> setProgressingSource(getTickedBeers.call(userSettings.getUserId())),
-                        error -> Log.e(TAG, "Error getting settings", error));
+                       .compose(RxUtils::pickValue)
+                       .filter(userSettings -> userSettings.isLogged() && !userSettings.getUserId().isEmpty())
+                       .subscribe(userSettings -> setProgressingSource(getTickedBeers.call(userSettings.getUserId())),
+                                  error -> Log.e(TAG, "Error getting settings", error));
 
     }
 }

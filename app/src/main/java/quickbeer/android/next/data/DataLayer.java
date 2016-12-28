@@ -19,7 +19,6 @@ package quickbeer.android.next.data;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
+import polanski.option.Option;
 import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.BrewerListStore;
@@ -41,18 +40,27 @@ import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkService;
 import quickbeer.android.next.network.RateBeerService;
+import quickbeer.android.next.network.fetchers.BeerFetcher;
+import quickbeer.android.next.network.fetchers.BeerSearchFetcher;
+import quickbeer.android.next.network.fetchers.BrewerFetcher;
+import quickbeer.android.next.network.fetchers.LoginFetcher;
+import quickbeer.android.next.network.fetchers.ReviewFetcher;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Brewer;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import quickbeer.android.next.pojo.UserSettings;
 import quickbeer.android.next.rx.DistinctiveTracker;
-import quickbeer.android.next.rx.NullFilter;
+import quickbeer.android.next.rx.RxUtils;
 import rx.Observable;
 import rx.functions.Func0;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+import static quickbeer.android.next.data.store.NetworkRequestStatusStore.requestIdForUri;
 
 public class DataLayer extends DataLayerBase {
     private static final String TAG = DataLayer.class.getSimpleName();
@@ -62,22 +70,22 @@ public class DataLayer extends DataLayerBase {
 
     private boolean ticksFetched = false;
 
-    public DataLayer(@NonNull Context context,
-                     @NonNull UserSettingsStore userSettingsStore,
-                     @NonNull NetworkRequestStatusStore networkRequestStatusStore,
-                     @NonNull BeerStore beerStore,
-                     @NonNull BeerListStore beerListStore,
-                     @NonNull ReviewStore reviewStore,
-                     @NonNull ReviewListStore reviewListStore,
-                     @NonNull BrewerStore brewerStore,
-                     @NonNull BrewerListStore brewerListStore) {
+    public DataLayer(@NonNull final Context context,
+                     @NonNull final UserSettingsStore userSettingsStore,
+                     @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+                     @NonNull final BeerStore beerStore,
+                     @NonNull final BeerListStore beerListStore,
+                     @NonNull final ReviewStore reviewStore,
+                     @NonNull final ReviewListStore reviewListStore,
+                     @NonNull final BrewerStore brewerStore,
+                     @NonNull final BrewerListStore brewerListStore) {
         super(networkRequestStatusStore,
-                beerStore, beerListStore,
-                reviewStore, reviewListStore,
-                brewerStore, brewerListStore);
+              beerStore, beerListStore,
+              reviewStore, reviewListStore,
+              brewerStore, brewerListStore);
 
-        Preconditions.checkNotNull(context, "Context cannot be null.");
-        Preconditions.checkNotNull(userSettingsStore, "User settings store cannot be null.");
+        checkNotNull(context, "Context cannot be null.");
+        checkNotNull(userSettingsStore, "User settings store cannot be null.");
 
         this.context = context;
         this.userSettingsStore = userSettingsStore;
@@ -86,30 +94,28 @@ public class DataLayer extends DataLayerBase {
     //// GET USER SETTINGS
 
     @NonNull
-    public Observable<UserSettings> getUserSettings() {
-        return userSettingsStore.getStream();
+    public Observable<Option<UserSettings>> getUserSettings() {
+        return userSettingsStore.getOnceAndStream(UserSettingsStore.DEFAULT_USER_ID);
     }
 
-    public void setUserSettings(@NonNull UserSettings userSettings) {
-        Preconditions.checkNotNull(userSettings, "User settings cannot be null.");
-
-        userSettingsStore.put(userSettings);
+    public void setUserSettings(@NonNull final UserSettings userSettings) {
+        userSettingsStore.put(get(userSettings));
     }
 
     //// LOGIN
 
-    public Observable<Boolean> login(@NonNull String username,
-                                     @NonNull String password) {
-        Preconditions.checkNotNull(username, "Username cannot be null.");
-        Preconditions.checkNotNull(password, "Password cannot be null.");
+    public Observable<Boolean> login(@NonNull final String username,
+                                     @NonNull final String password) {
+        checkNotNull(username);
+        checkNotNull(password);
+
         Log.v(TAG, "login");
 
         Func0<Observable<Boolean>> doLogin = () -> {
-            final int userId = UserSettingsStore.DEFAULT_USER_ID;
-            final int id = userSettingsStore.getUriForId(userId).toString().hashCode();
+            final String uri = LoginFetcher.getUniqueUri();
 
             final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                    networkRequestStatusStore.getStream(id);
+                    networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
             Intent intent = new Intent(context, NetworkService.class);
             intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
@@ -121,7 +127,7 @@ public class DataLayer extends DataLayerBase {
             // successfully, while login wasn't successful on error.
             return networkRequestStatusObservable
                     .filter(networkRequestStatus ->
-                            networkRequestStatus.isCompleted()
+                                    networkRequestStatus.isCompleted()
                                     || networkRequestStatus.isError())
                     .first()
                     .map(NetworkRequestStatus::isCompleted);
@@ -130,8 +136,7 @@ public class DataLayer extends DataLayerBase {
         // Updates the settings if needed, and performs login if we're not already logged,
         // or if the used credentials changed.
         return getUserSettings()
-                .filter(new NullFilter())
-                .first()
+                .compose(RxUtils::pickValue)
                 .map(userSettings -> {
                     if (!userSettings.credentialsEqual(username, password)) {
                         userSettings.setUsername(username);
@@ -151,33 +156,32 @@ public class DataLayer extends DataLayerBase {
     //// GET BEER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
-        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull final Integer beerId) {
+        checkNotNull(beerId);
         Log.v(TAG, "getBeerResultStream");
 
-        final Uri uri = beerStore.getUriForId(beerId);
+        final String uri = BeerFetcher.getUniqueUri(beerId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
-        final Observable<Beer> beerObservable =
-                beerStore.getStream(beerId);
+        final Observable<Option<Beer>> beerObservable =
+                beerStore.getOnceAndStream(beerId);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                networkRequestStatusObservable, beerObservable);
+                networkRequestStatusObservable, beerObservable.compose(RxUtils::pickValue));
     }
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeer(@NonNull Integer beerId) {
-        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+    public Observable<DataStreamNotification<Beer>> getBeer(@NonNull final Integer beerId) {
+        checkNotNull(beerId, "Beer id cannot be null.");
         Log.v(TAG, "getBeer");
 
         // Trigger a fetch only if full details haven't been fetched
-        beerStore.getOne(beerId)
-                .first()
-                .filter(beer -> beer == null || !beer.hasDetails())
-                .doOnNext(beer -> Log.v(TAG, "Beer not cached, fetching"))
-                .subscribe(beer -> fetchBeer(beerId));
+        beerStore.getOnce(beerId)
+                 .filter(option -> option.match(beer -> !beer.hasDetails(), () -> true))
+                 .doOnNext(beer -> Log.v(TAG, "Beer not cached, fetching"))
+                 .subscribe(beer -> fetchBeer(beerId));
 
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
@@ -185,7 +189,7 @@ public class DataLayer extends DataLayerBase {
                 .distinctUntilChanged(new DistinctiveTracker<Beer>());
     }
 
-    private void fetchBeer(@NonNull Integer beerId) {
+    private void fetchBeer(@NonNull final Integer beerId) {
         Log.v(TAG, "fetchBeer");
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -196,22 +200,18 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BEER
 
-    public void accessBeer(@NonNull Integer beerId) {
-        Preconditions.checkNotNull(beerId, "Beer id cannot be null.");
+    public void accessBeer(@NonNull final Integer beerId) {
+        checkNotNull(beerId, "Beer id cannot be null.");
         Log.v(TAG, "accessBeer(" + beerId + ")");
 
-        beerStore.getOne(beerId)
-                .observeOn(Schedulers.computation())
-                .first()
-                .filter(new NullFilter())
-                .map(beer -> {
-                    beer.setAccessDate(new Date());
-                    return beer;
-                })
-                .subscribe(
-                        beerStore::put,
-                        throwable -> Log.e(TAG, "Error updating beer access date:", throwable)
-                );
+        beerStore.getOnce(beerId)
+                 .observeOn(Schedulers.computation())
+                 .compose(RxUtils::pickValue)
+                 .map(beer -> {
+                     beer.setAccessDate(new Date());
+                     return beer;
+                 })
+                 .subscribe(beerStore::put, Log.onError(TAG));
     }
 
     //// ACCESSED BEERS
@@ -233,19 +233,19 @@ public class DataLayer extends DataLayerBase {
 
         // Observing the stores and updating the caching subject
         beerStore.getAccessedIds()
-                .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
-                .doOnNext(subject::onNext)
-                .flatMap(ids -> beerStore.getNewlyAccessedIds(new Date())
-                        .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
-                        .map(id -> mergeList.call(subject.getValue(), id))
-                )
-                .subscribe(subject::onNext);
+                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
+                 .doOnNext(subject::onNext)
+                 .flatMap(ids -> beerStore.getNewlyAccessedIds(new Date())
+                                          .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
+                                          .map(id -> mergeList.call(subject.getValue(), id))
+                         )
+                 .subscribe(subject::onNext);
 
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
-                .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
-                .map(ids -> new ItemList<String>(null, ids, null))
-                .map(DataStreamNotification::onNext);
+                      .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: list now " + ids.size()))
+                      .map(ids -> new ItemList<String>(null, ids, null))
+                      .map(DataStreamNotification::onNext);
     }
 
     //// SEARCH BEERS
@@ -254,32 +254,33 @@ public class DataLayer extends DataLayerBase {
     public Observable<List<String>> getBeerSearchQueries() {
         Log.v(TAG, "getBeerSearchQueries");
 
-        return beerListStore.get("")
-                .map(beerSearches -> {
-                    List<String> searches = new ArrayList<>();
-                    for (ItemList<String> search : beerSearches) {
-                        // Filter out meta searches, such as __top50
-                        if (!search.getKey().startsWith("__")) {
-                            searches.add(search.getKey());
-                        }
-                    }
-                    return searches;
-                });
+        return beerListStore.getAllOnce("")
+                            .map(beerSearches -> {
+                                List<String> searches = new ArrayList<>(10);
+                                for (ItemList<String> search : beerSearches) {
+                                    // Filter out meta searches, such as __top50
+                                    if (!search.getKey().startsWith("__")) {
+                                        searches.add(search.getKey());
+                                    }
+                                }
+                                return searches;
+                            });
     }
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getBeerSearchResultStream(@NonNull final String searchString) {
-        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        checkNotNull(searchString);
         Log.v(TAG, "getBeerSearchResultStream");
 
-        final String queryId = beerListStore.getQueryId(RateBeerService.SEARCH, searchString);
-        final Uri uri = beerListStore.getUriForId(queryId);
+        final String queryId = BeerListStore.getQueryId(RateBeerService.SEARCH, searchString);
+        final String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<ItemList<String>> beerSearchObservable =
-                beerListStore.getStream(queryId);
+                beerListStore.getOnceAndStream(queryId)
+                             .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -287,21 +288,20 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getBeerSearch(@NonNull final String searchString) {
-        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        checkNotNull(searchString);
         Log.v(TAG, "getBeerSearch");
 
         // Trigger a fetch only if there was no cached result
-        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.SEARCH, searchString))
-                .first()
-                .filter(results -> results == null || results.getItems().size() == 0)
-                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchBeerSearch(searchString));
+        beerListStore.getOnce(BeerListStore.getQueryId(RateBeerService.SEARCH, searchString))
+                     .filter(RxUtils::isNoneOrEmpty)
+                     .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                     .subscribe(results -> fetchBeerSearch(searchString));
 
         return getBeerSearchResultStream(searchString);
     }
 
     private void fetchBeerSearch(@NonNull final String searchString) {
-        Preconditions.checkNotNull(searchString, "Search string cannot be null.");
+        checkNotNull(searchString, "Search string cannot be null.");
         Log.v(TAG, "fetchBeerSearch");
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -316,14 +316,15 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getTopBeersResultStream() {
         Log.v(TAG, "getTopBeersResultStream");
 
-        final String queryId = beerListStore.getQueryId(RateBeerService.TOP50);
-        final Uri uri = beerListStore.getUriForId(queryId);
+        final String queryId = BeerListStore.getQueryId(RateBeerService.TOP50);
+        final String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<ItemList<String>> beerSearchObservable =
-                beerListStore.getStream(queryId);
+                beerListStore.getOnceAndStream(queryId)
+                             .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -334,11 +335,10 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getTopBeers");
 
         // Trigger a fetch only if there was no cached result
-        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.TOP50))
-                .first()
-                .filter(results -> results == null || results.getItems().size() == 0)
-                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchTopBeers());
+        beerListStore.getOnce(BeerListStore.getQueryId(RateBeerService.TOP50))
+                     .filter(RxUtils::isNoneOrEmpty)
+                     .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                     .subscribe(results -> fetchTopBeers());
 
         return getTopBeersResultStream();
     }
@@ -357,14 +357,15 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getBeersInCountryResultStream(@NonNull final String countryId) {
         Log.v(TAG, "getBeersInCountryResultStream");
 
-        final String queryId = beerListStore.getQueryId(RateBeerService.COUNTRY, countryId);
-        final Uri uri = beerListStore.getUriForId(queryId);
+        final String queryId = BeerListStore.getQueryId(RateBeerService.COUNTRY, countryId);
+        final String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<ItemList<String>> beerSearchObservable =
-                beerListStore.getStream(queryId);
+                beerListStore.getOnceAndStream(queryId)
+                             .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -375,11 +376,10 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getBeersInCountry");
 
         // Trigger a fetch only if there was no cached result
-        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.COUNTRY, countryId))
-                .first()
-                .filter(results -> results == null || results.getItems().size() == 0)
-                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchBeersInCountry(countryId));
+        beerListStore.getOnce(BeerListStore.getQueryId(RateBeerService.COUNTRY, countryId))
+                     .filter(RxUtils::isNoneOrEmpty)
+                     .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                     .subscribe(results -> fetchBeersInCountry(countryId));
 
         return getBeersInCountryResultStream(countryId);
     }
@@ -399,14 +399,15 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getBeersInStyleResultStream(@NonNull final String styleId) {
         Log.v(TAG, "getBeersInStyleResultStream");
 
-        final String queryId = beerListStore.getQueryId(RateBeerService.STYLE, styleId);
-        final Uri uri = beerListStore.getUriForId(queryId);
+        final String queryId = BeerListStore.getQueryId(RateBeerService.STYLE, styleId);
+        final String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<ItemList<String>> beerSearchObservable =
-                beerListStore.getStream(queryId);
+                beerListStore.getOnceAndStream(queryId)
+                             .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, beerSearchObservable);
@@ -417,11 +418,10 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getBeersInStyle");
 
         // Trigger a fetch only if there was no cached result
-        beerListStore.getOne(beerListStore.getQueryId(RateBeerService.STYLE, styleId))
-                .first()
-                .filter(results -> results == null || results.getItems().size() == 0)
-                .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
-                .subscribe(results -> fetchBeersInStyle(styleId));
+        beerListStore.getOnce(BeerListStore.getQueryId(RateBeerService.STYLE, styleId))
+                     .filter(RxUtils::isNoneOrEmpty)
+                     .doOnNext(results -> Log.v(TAG, "Search not cached, fetching"))
+                     .subscribe(results -> fetchBeersInStyle(styleId));
 
         return getBeersInStyleResultStream(styleId);
     }
@@ -438,25 +438,26 @@ public class DataLayer extends DataLayerBase {
     //// REVIEWS
 
     @NonNull
-    public Observable<Review> getReview(final int reviewId) {
+    public Observable<Option<Review>> getReview(final int reviewId) {
         Log.v(TAG, "getReview(" + reviewId + ")");
 
         // Reviews are never fetched one-by-one, only as a list of reviews. This method can only
         // return reviews from the local store, no fetching.
-        return reviewStore.getStream(reviewId);
+        return reviewStore.getOnceAndStream(reviewId);
     }
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<Integer>>> getReviewsResultStream(final int beerId) {
         Log.v(TAG, "getReviewsResultStream(" + beerId + ")");
 
-        final Uri uri = reviewListStore.getUriForId(beerId);
+        final String uri = ReviewFetcher.getUniqueUri(beerId);
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<ItemList<Integer>> reviewListObservable =
-                reviewListStore.getStream(beerId);
+                reviewListStore.getOnceAndStream(beerId)
+                               .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, reviewListObservable);
@@ -467,11 +468,10 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getReviews(" + beerId + ")");
 
         // Trigger a fetch only if there was no cached result
-        reviewListStore.getOne(beerId)
-                .first()
-                .filter(results -> results == null || results.getItems().size() == 0)
-                .doOnNext(results -> Log.v(TAG, "Reviews not cached, fetching"))
-                .subscribe(results -> fetchReviews(beerId));
+        reviewListStore.getOnce(beerId)
+                       .filter(RxUtils::isNoneOrEmpty)
+                       .doOnNext(results -> Log.v(TAG, "Reviews not cached, fetching"))
+                       .subscribe(results -> fetchReviews(beerId));
 
         return getReviewsResultStream(beerId);
     }
@@ -497,9 +497,9 @@ public class DataLayer extends DataLayerBase {
         }
 
         return beerStore.getTickedIds()
-                .doOnNext(ids -> Log.d(TAG, "Ticked ids: " + ids))
-                .map(ItemList::<String>create)
-                .map(DataStreamNotification::onNext);
+                        .doOnNext(ids -> Log.d(TAG, "Ticked ids: " + ids))
+                        .map(ItemList::<String>create)
+                        .map(DataStreamNotification::onNext);
     }
 
     private void fetchTickedBeers(@NonNull final String userId) {
@@ -514,33 +514,32 @@ public class DataLayer extends DataLayerBase {
     //// GET BREWER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Brewer>> getBrewerResultStream(@NonNull Integer brewerId) {
-        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+    public Observable<DataStreamNotification<Brewer>> getBrewerResultStream(@NonNull final Integer brewerId) {
         Log.v(TAG, "getBrewerResultStream");
 
-        final Uri uri = brewerStore.getUriForId(brewerId);
+        final String uri = BrewerFetcher.getUniqueUri(get(brewerId));
 
         final Observable<NetworkRequestStatus> networkRequestStatusObservable =
-                networkRequestStatusStore.getStream(uri.toString().hashCode());
+                networkRequestStatusStore.getOnceAndStream(requestIdForUri(uri));
 
         final Observable<Brewer> brewerObservable =
-                brewerStore.getStream(brewerId);
+                brewerStore.getOnceAndStream(brewerId)
+                           .compose(RxUtils::pickValue);
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 networkRequestStatusObservable, brewerObservable);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<Brewer>> getBrewer(@NonNull Integer brewerId) {
-        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+    public Observable<DataStreamNotification<Brewer>> getBrewer(@NonNull final Integer brewerId) {
+        checkNotNull(brewerId, "Brewer id cannot be null.");
         Log.v(TAG, "getBrewer");
 
         // Trigger a fetch only if full details haven't been fetched
-        beerStore.getOne(brewerId)
-                .first()
-                .filter(brewer -> brewer == null || !brewer.hasDetails())
-                .doOnNext(beer -> Log.v(TAG, "Brewer not cached, fetching"))
-                .subscribe(beer -> fetchBrewer(brewerId));
+        beerStore.getOnceAndStream(brewerId)
+                 .filter(option -> option.match(brewer -> !brewer.hasDetails(), () -> true))
+                 .doOnNext(beer -> Log.v(TAG, "Brewer not cached, fetching"))
+                 .subscribe(beer -> fetchBrewer(brewerId));
 
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
@@ -548,7 +547,7 @@ public class DataLayer extends DataLayerBase {
                 .distinctUntilChanged(new DistinctiveTracker<Brewer>());
     }
 
-    private void fetchBrewer(@NonNull Integer brewerId) {
+    private void fetchBrewer(@NonNull final Integer brewerId) {
         Log.v(TAG, "fetchBrewer");
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -559,22 +558,19 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BREWER
 
-    public void accessBrewer(@NonNull Integer brewerId) {
-        Preconditions.checkNotNull(brewerId, "Brewer id cannot be null.");
+    public void accessBrewer(@NonNull final Integer brewerId) {
+        checkNotNull(brewerId);
         Log.v(TAG, "accessBrewer(" + brewerId + ")");
 
-        brewerStore.getOne(brewerId)
-                .observeOn(Schedulers.computation())
-                .first()
-                .filter(new NullFilter())
-                .map(brewer -> {
-                    brewer.setAccessDate(new Date());
-                    return brewer;
-                })
-                .subscribe(
-                        brewerStore::put,
-                        throwable -> Log.e(TAG, "Error updating brewer access date:", throwable)
-                );
+        brewerStore.getOnce(brewerId)
+                   .observeOn(Schedulers.computation())
+                   .compose(RxUtils::pickValue)
+                   .map(brewer -> {
+                       brewer.setAccessDate(new Date());
+                       return brewer;
+                   })
+                   .subscribe(brewerStore::put,
+                              Log.onError(TAG, "Error updating brewer access date"));
     }
 
     //// ACCESSED BREWERS
@@ -596,34 +592,34 @@ public class DataLayer extends DataLayerBase {
 
         // Observing the stores and updating the caching subject
         brewerStore.getAccessedIds()
-                .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
-                .doOnNext(subject::onNext)
-                .flatMap(ids -> brewerStore.getNewlyAccessedIds(new Date())
-                        .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
-                        .map(id -> mergeList.call(subject.getValue(), id))
-                )
-                .subscribe(subject::onNext);
+                   .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
+                   .doOnNext(subject::onNext)
+                   .flatMap(ids -> brewerStore.getNewlyAccessedIds(new Date())
+                                              .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
+                                              .map(id -> mergeList.call(subject.getValue(), id))
+                           )
+                   .subscribe(subject::onNext);
 
         // Convert the subject to a stream similar to beer searches
         return subject.asObservable()
-                .distinctUntilChanged()
-                .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: list now " + ids.size()))
-                .map(ids -> new ItemList<String>(null, ids, null))
-                .map(DataStreamNotification::onNext);
+                      .distinctUntilChanged()
+                      .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: list now " + ids.size()))
+                      .map(ids -> new ItemList<String>(null, ids, null))
+                      .map(DataStreamNotification::onNext);
     }
 
     public interface Login {
         @NonNull
-        Observable<Boolean> call(@NonNull String username, @NonNull String password);
+        Observable<Boolean> call(@NonNull final String username, @NonNull final String password);
     }
 
     public interface GetUserSettings {
         @NonNull
-        Observable<UserSettings> call();
+        Observable<Option<UserSettings>> call();
     }
 
     public interface SetUserSettings {
-        void call(@NonNull UserSettings userSettings);
+        void call(@NonNull final UserSettings userSettings);
     }
 
     public interface GetBeer {
@@ -648,7 +644,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetBeerSearch {
         @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull String search);
+        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull final String search);
     }
 
     public interface GetTopBeers {
@@ -658,17 +654,17 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetBeersInCountry {
         @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull String countryId);
+        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull final String countryId);
     }
 
     public interface GetBeersInStyle {
         @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull String styleId);
+        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull final String styleId);
     }
 
     public interface GetReview {
         @NonNull
-        Observable<Review> call(int reviewId);
+        Observable<Option<Review>> call(int reviewId);
     }
 
     public interface GetReviews {

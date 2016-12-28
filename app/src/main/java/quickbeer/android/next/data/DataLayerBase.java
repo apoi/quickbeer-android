@@ -28,6 +28,9 @@ import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+
 public class DataLayerBase {
     protected final NetworkRequestStatusStore networkRequestStatusStore;
     protected final BeerStore beerStore;
@@ -37,27 +40,19 @@ public class DataLayerBase {
     protected final BrewerStore brewerStore;
     protected final BrewerListStore brewerListStore;
 
-    protected DataLayerBase(@NonNull NetworkRequestStatusStore networkRequestStatusStore,
-                            @NonNull BeerStore beerStore,
-                            @NonNull BeerListStore beerListStore,
-                            @NonNull ReviewStore reviewStore,
-                            @NonNull ReviewListStore reviewListStore,
-                            @NonNull BrewerStore brewerStore,
-                            @NonNull BrewerListStore brewerListStore) {
-        Preconditions.checkNotNull(networkRequestStatusStore, "Network request status store cannot be null.");
-        Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
-        Preconditions.checkNotNull(beerListStore, "Beer list store cannot be null.");
-        Preconditions.checkNotNull(reviewStore, "Review store cannot be null.");
-        Preconditions.checkNotNull(reviewListStore, "Review list store cannot be null.");
-        Preconditions.checkNotNull(brewerStore, "Brewer store cannot be null.");
-        Preconditions.checkNotNull(brewerListStore, "Brewer list store cannot be null.");
-
-        this.networkRequestStatusStore = networkRequestStatusStore;
-        this.beerStore = beerStore;
-        this.beerListStore = beerListStore;
-        this.reviewStore = reviewStore;
-        this.reviewListStore = reviewListStore;
-        this.brewerStore = brewerStore;
-        this.brewerListStore = brewerListStore;
+    protected DataLayerBase(@NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+                            @NonNull final BeerStore beerStore,
+                            @NonNull final BeerListStore beerListStore,
+                            @NonNull final ReviewStore reviewStore,
+                            @NonNull final ReviewListStore reviewListStore,
+                            @NonNull final BrewerStore brewerStore,
+                            @NonNull final BrewerListStore brewerListStore) {
+        this.networkRequestStatusStore = get(networkRequestStatusStore);
+        this.beerStore = get(beerStore);
+        this.beerListStore = get(beerListStore);
+        this.reviewStore = get(reviewStore);
+        this.reviewListStore = get(reviewListStore);
+        this.brewerStore = get(brewerStore);
+        this.brewerListStore = get(brewerListStore);
     }
 }

@@ -37,17 +37,18 @@ import rx.functions.Action1;
 public class BeersInStyleFetcher extends BeerSearchFetcher {
     private static final String TAG = BeersInStyleFetcher.class.getSimpleName();
 
-    public BeersInStyleFetcher(@NonNull NetworkApi networkApi,
-                               @NonNull NetworkUtils networkUtils,
-                               @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                               @NonNull BeerStore beerStore,
-                               @NonNull BeerListStore beerListStore) {
+    public BeersInStyleFetcher(@NonNull final NetworkApi networkApi,
+                               @NonNull final NetworkUtils networkUtils,
+                               @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                               @NonNull final BeerStore beerStore,
+                               @NonNull final BeerListStore beerListStore) {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull final Intent intent) {
         final String styleId = intent.getStringExtra("styleId");
+
         if (styleId != null) {
             fetchBeerSearch(styleId);
         } else {
@@ -57,7 +58,7 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull String styleId) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String styleId) {
         return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId));
     }
 

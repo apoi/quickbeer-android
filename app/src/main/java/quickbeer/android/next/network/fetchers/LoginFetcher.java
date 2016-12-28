@@ -18,6 +18,7 @@
 package quickbeer.android.next.network.fetchers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.net.CookieManager;
@@ -25,43 +26,44 @@ import java.net.CookieManager;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.LoginUtils;
+import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.UserSettings;
+import quickbeer.android.next.rx.RxUtils;
 import quickbeer.android.next.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
-public class LoginFetcher extends FetcherBase {
+import static io.reark.reark.utils.Preconditions.get;
+
+public class LoginFetcher extends FetcherBase<Uri> {
     private static final String TAG = LoginFetcher.class.getSimpleName();
 
     private final NetworkApi networkApi;
     private final CookieManager cookieManager;
     private final UserSettingsStore userSettingsStore;
 
-    public LoginFetcher(@NonNull NetworkApi networkApi,
-                        @NonNull CookieManager cookieManager,
-                        @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                        @NonNull UserSettingsStore userSettingsStore) {
+    public LoginFetcher(@NonNull final NetworkApi networkApi,
+                        @NonNull final CookieManager cookieManager,
+                        @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                        @NonNull final UserSettingsStore userSettingsStore) {
         super(updateNetworkRequestStatus);
 
-        Preconditions.checkNotNull(networkApi, "Network API cannot be null.");
-        Preconditions.checkNotNull(cookieManager, "Cookie manager cannot be null.");
-        Preconditions.checkNotNull(userSettingsStore, "Settings store cannot be null.");
-
-        this.networkApi = networkApi;
-        this.cookieManager = cookieManager;
-        this.userSettingsStore = userSettingsStore;
+        this.networkApi = get(networkApi);
+        this.cookieManager = get(cookieManager);
+        this.userSettingsStore = get(userSettingsStore);
     }
 
     @Override
-    public void fetch(Intent intent) {
-        final String uri = UserSettingsStore.LOGIN_URI.toString();
+    public void fetch(@NonNull final Intent intent) {
+        final String uri = getUniqueUri();
         final int id = uri.hashCode();
 
-        if (requestMap.containsKey(id) && !requestMap.get(id).isUnsubscribed()) {
+        if (isOngoingRequest(id)) {
             Log.d(TAG, "Found an ongoing request for login");
             return;
         }
@@ -78,25 +80,34 @@ public class LoginFetcher extends FetcherBase {
 
         Log.d(TAG, "Login with user " + username);
 
-        Subscription subscription = networkApi.login(username, password)
-                .flatMap(response -> userSettingsStore.getOne())
+        Subscription subscription = networkApi
+                .login(username, password)
+                .subscribeOn(Schedulers.computation())
+                .switchMap(response -> userSettingsStore.getOnce(UserSettingsStore.DEFAULT_USER_ID))
+                .compose(RxUtils::pickValue)
                 .map(userSettings -> {
                     userSettings.setUserId(LoginUtils.getUserId(cookieManager));
                     userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
                     return userSettings;
                 })
-                .doOnNext(userSettings -> Log.d(TAG, "Updating login status to " + userSettings.isLogged()))
-                .doOnNext(userSettingsStore::put)
+                .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
-                .subscribe();
+                .doOnNext(userSettings -> Log.d(TAG, "Updating login status to " + userSettings.isLogged()))
+                .subscribe(userSettingsStore::put,
+                           e -> Log.e(TAG, "Error fetching user " + username, e));
 
-        requestMap.put(id, subscription);
-        startRequest(uri);
+        addRequest(id, subscription);
     }
 
+    @NonNull
     @Override
-    public Object getServiceUri() {
+    public Uri getServiceUri() {
         return RateBeerService.LOGIN;
+    }
+
+    @NonNull
+    public static String getUniqueUri() {
+        return UserSettings.class + "/" + UserSettingsStore.DEFAULT_USER_ID;
     }
 }

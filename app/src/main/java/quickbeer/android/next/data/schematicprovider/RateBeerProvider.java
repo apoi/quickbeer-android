@@ -33,7 +33,7 @@ public class RateBeerProvider {
     private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
     private static final String BASE_TYPE = "vnd.android.cursor.item/";
 
-    private static Uri buildUri(@NonNull String... paths) {
+    private static Uri buildUri(@NonNull final String... paths) {
         Uri.Builder builder = AUTHORITY_URI.buildUpon();
         for (String path : paths) {
             builder.appendPath(path);
@@ -56,12 +56,17 @@ public class RateBeerProvider {
                 type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
                 whereColumn = UserSettingsColumns.ID,
                 pathSegment = 1)
-        public static Uri withId(long id) {
+        public static Uri withId(int id) {
             return buildUri(RateBeerDatabase.USER_SETTINGS, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
         }
     }
 
-    @TableEndpoint(table = RateBeerDatabase.NETWORK_REQUEST_STATUSES) public static class NetworkRequestStatuses {
+    @TableEndpoint(table = RateBeerDatabase.NETWORK_REQUEST_STATUSES)
+    public static final class NetworkRequestStatuses {
         @ContentUri(
                 path = RateBeerDatabase.NETWORK_REQUEST_STATUSES,
                 type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
@@ -76,6 +81,10 @@ public class RateBeerProvider {
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(RateBeerDatabase.NETWORK_REQUEST_STATUSES, String.valueOf(id));
+        }
+
+        public static long fromUri(Uri uri) {
+            return Long.valueOf(uri.getLastPathSegment());
         }
     }
 
@@ -92,8 +101,12 @@ public class RateBeerProvider {
                 type = BASE_TYPE + RateBeerDatabase.BEERS,
                 whereColumn = BeerColumns.ID,
                 pathSegment = 1)
-        public static Uri withId(long id) {
+        public static Uri withId(int id) {
             return buildUri(RateBeerDatabase.BEERS, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
         }
     }
 
@@ -113,6 +126,10 @@ public class RateBeerProvider {
         public static Uri withKey(String key) {
             return buildUri(RateBeerDatabase.BEER_LISTS, key);
         }
+
+        public static String fromUri(Uri uri) {
+            return uri.getLastPathSegment();
+        }
     }
 
     @TableEndpoint(table = RateBeerDatabase.REVIEWS) public static class Reviews {
@@ -128,8 +145,12 @@ public class RateBeerProvider {
                 type = BASE_TYPE + RateBeerDatabase.REVIEWS,
                 whereColumn = ReviewColumns.ID,
                 pathSegment = 1)
-        public static Uri withId(long id) {
+        public static Uri withId(int id) {
             return buildUri(RateBeerDatabase.REVIEWS, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
         }
     }
 
@@ -149,6 +170,10 @@ public class RateBeerProvider {
         public static Uri withBeerId(Integer beerId) {
             return buildUri(RateBeerDatabase.REVIEW_LISTS, String.valueOf(beerId));
         }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
+        }
     }
 
     @TableEndpoint(table = RateBeerDatabase.BREWERS) public static class Brewers {
@@ -164,8 +189,12 @@ public class RateBeerProvider {
                 type = BASE_TYPE + RateBeerDatabase.BREWERS,
                 whereColumn = BrewerColumns.ID,
                 pathSegment = 1)
-        public static Uri withId(long id) {
+        public static Uri withId(int id) {
             return buildUri(RateBeerDatabase.BREWERS, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
         }
     }
 
@@ -184,6 +213,10 @@ public class RateBeerProvider {
                 pathSegment = 1)
         public static Uri withKey(String key) {
             return buildUri(RateBeerDatabase.BREWER_LISTS, key);
+        }
+
+        public static String fromUri(Uri uri) {
+            return uri.getLastPathSegment();
         }
     }
 }

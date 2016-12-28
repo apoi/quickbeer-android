@@ -38,6 +38,7 @@ import quickbeer.android.next.activities.TickedBeersActivity;
 import quickbeer.android.next.activities.TopBeersActivity;
 import quickbeer.android.next.data.DataLayer;
 import quickbeer.android.next.injections.ApplicationGraph;
+import quickbeer.android.next.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
 
 public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -76,9 +77,10 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     private void login() {
         getUserSettings.call()
-                .first()
-                .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
-                .subscribe(s -> Log.d(TAG, "Settings: " + s));
+                       .first()
+                       .compose(RxUtils::pickValue)
+                       .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
+                       .subscribe(s -> Log.d(TAG, "Settings: " + s));
     }
 
     @Override

@@ -40,7 +40,7 @@ public class BeerViewModel extends BaseViewModel {
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
     private final int beerId;
 
-    public BeerViewModel(final int beerId, @NonNull DataLayer.GetBeer getBeer) {
+    public BeerViewModel(final int beerId, @NonNull final DataLayer.GetBeer getBeer) {
         Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
 
         this.getBeer = getBeer;
@@ -53,7 +53,7 @@ public class BeerViewModel extends BaseViewModel {
     }
 
     @Override
-    public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+    public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<Beer>> beerSource =

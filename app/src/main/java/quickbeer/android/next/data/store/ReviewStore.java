@@ -17,88 +17,21 @@
  */
 package quickbeer.android.next.data.store;
 
-import android.content.ContentResolver;
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-
 import com.google.gson.Gson;
 
-import io.reark.reark.utils.Preconditions;
-import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
-import quickbeer.android.next.data.schematicprovider.ReviewColumns;
+import android.content.ContentResolver;
+import android.support.annotation.NonNull;
+
+import polanski.option.Option;
+import quickbeer.android.next.data.store.cores.ReviewStoreCore;
 import quickbeer.android.next.pojo.Review;
 
-public class ReviewStore extends StoreBase<Review, Integer> {
-    private static final String TAG = ReviewStore.class.getSimpleName();
+public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
 
-    public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
-        super(contentResolver, gson);
-    }
-
-    @NonNull
-    @Override
-    protected Integer getIdFor(@NonNull Review item) {
-        Preconditions.checkNotNull(item, "Review cannot be null.");
-
-        return item.getId();
-    }
-
-    @NonNull
-    @Override
-    public Uri getContentUri() {
-        return RateBeerProvider.Reviews.REVIEWS;
-    }
-
-    @NonNull
-    @Override
-    protected String[] getProjection() {
-        return new String[] {
-                ReviewColumns.ID,
-                ReviewColumns.JSON,
-                ReviewColumns.DRAFT,
-                ReviewColumns.MODIFIED
-        };
-    }
-
-    @NonNull
-    @Override
-    protected ContentValues getContentValuesForItem(Review item) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewColumns.ID, item.getId());
-        contentValues.put(ReviewColumns.JSON, getGson().toJson(item));
-        contentValues.put(ReviewColumns.DRAFT, item.isDraft() ? 1 : 0);
-        contentValues.put(ReviewColumns.MODIFIED, item.isModified() ? 1 : 0);
-
-        return contentValues;
-    }
-
-    @NonNull
-    @Override
-    protected Review read(Cursor cursor) {
-        final String json = cursor.getString(cursor.getColumnIndex(ReviewColumns.JSON));
-        final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
-        final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
-
-        Review review = getGson().fromJson(json, Review.class);
-        review.setIsDraft(isDraft);
-        review.setIsModified(isModified);
-
-        return review;
-    }
-
-    @NonNull
-    @Override
-    public Uri getUriForId(@NonNull Integer id) {
-        Preconditions.checkNotNull(id, "Id cannot be null.");
-
-        return RateBeerProvider.Reviews.withId(id);
-    }
-
-    @NonNull
-    @Override
-    protected Review mergeValues(@NonNull Review v1, @NonNull Review v2) {
-        return v1.overwrite(v2);
+    public ReviewStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+        super(new ReviewStoreCore(contentResolver, gson),
+              Review::getId,
+              Option::ofObj,
+              Option::none);
     }
 }

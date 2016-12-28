@@ -38,17 +38,18 @@ import rx.functions.Action1;
 public class BeersInCountryFetcher extends BeerSearchFetcher {
     private static final String TAG = BeersInCountryFetcher.class.getSimpleName();
 
-    public BeersInCountryFetcher(@NonNull NetworkApi networkApi,
-                                 @NonNull NetworkUtils networkUtils,
-                                 @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                                 @NonNull BeerStore beerStore,
-                                 @NonNull BeerListStore beerListStore) {
+    public BeersInCountryFetcher(@NonNull final NetworkApi networkApi,
+                                 @NonNull final NetworkUtils networkUtils,
+                                 @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                                 @NonNull final BeerStore beerStore,
+                                 @NonNull final BeerListStore beerListStore) {
         super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull final Intent intent) {
         final String countryId = intent.getStringExtra("countryId");
+
         if (countryId != null) {
             fetchBeerSearch(countryId);
         } else {
@@ -58,7 +59,7 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull String countryId) {
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String countryId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "country");
         params.put("c", countryId);
 

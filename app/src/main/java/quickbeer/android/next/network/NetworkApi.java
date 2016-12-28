@@ -38,7 +38,7 @@ public class NetworkApi {
 
     private final RateBeerService rateBeerService;
 
-    public NetworkApi(@NonNull Client client, @NonNull Gson gson) {
+    public NetworkApi(@NonNull final Client client, @NonNull final Gson gson) {
         Preconditions.checkNotNull(client, "Client cannot be null.");
         Preconditions.checkNotNull(client, "Gson cannot be null.");
 

@@ -17,6 +17,8 @@
  */
 package quickbeer.android.next.pojo.base;
 
+import android.support.annotation.NonNull;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 
@@ -27,11 +29,12 @@ import io.reark.reark.utils.Log;
  * Class to implement our specific json empty value definitions, to avoid overwriting
  * existing data with invalid values.
  */
-public abstract class BasePojo<T extends OverwritablePojo> extends OverwritablePojo<T> {
-    private final static String TAG = BasePojo.class.getSimpleName();
+public abstract class BasePojo<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
+
+    private static final String TAG = BasePojo.class.getSimpleName();
 
     @Override
-    protected boolean isEmpty(Field field, OverwritablePojo pojo) {
+    protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {
         try {
             Object value = field.get(pojo);
             if (value instanceof Date) {

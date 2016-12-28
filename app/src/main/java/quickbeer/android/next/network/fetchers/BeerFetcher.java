@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
@@ -35,33 +34,30 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class BeerFetcher extends FetcherBase {
+import static io.reark.reark.utils.Preconditions.get;
+
+public class BeerFetcher extends FetcherBase<Uri> {
     private static final String TAG = BeerFetcher.class.getSimpleName();
 
     private final NetworkApi networkApi;
     private final NetworkUtils networkUtils;
     private final BeerStore beerStore;
 
-    public BeerFetcher(@NonNull NetworkApi networkApi,
-                       @NonNull NetworkUtils networkUtils,
-                       @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                       @NonNull BeerStore beerStore) {
+    public BeerFetcher(@NonNull final NetworkApi networkApi,
+                       @NonNull final NetworkUtils networkUtils,
+                       @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                       @NonNull final BeerStore beerStore) {
         super(updateNetworkRequestStatus);
 
-        Preconditions.checkNotNull(networkApi, "Network API cannot be null.");
-        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
-        Preconditions.checkNotNull(beerStore, "Beer store cannot be null.");
-
-        this.networkApi = networkApi;
-        this.networkUtils = networkUtils;
-        this.beerStore = beerStore;
+        this.networkApi = get(networkApi);
+        this.networkUtils = get(networkUtils);
+        this.beerStore = get(beerStore);
     }
 
     @Override
-    public void fetch(Intent intent) {
-        Preconditions.checkNotNull(intent, "Fetch intent cannot be null.");
+    public void fetch(@NonNull final Intent intent) {
+        final int beerId = get(intent).getIntExtra("id", -1);
 
-        final int beerId = intent.getIntExtra("id", -1);
         if (beerId != -1) {
             fetchBeer(beerId);
         } else {
@@ -72,21 +68,22 @@ public class BeerFetcher extends FetcherBase {
     private void fetchBeer(final int beerId) {
         Log.d(TAG, "fetchBeer(" + beerId + ")");
 
-        if (requestMap.containsKey(beerId) && !requestMap.get(beerId).isUnsubscribed()) {
+        if (isOngoingRequest(beerId)) {
             Log.d(TAG, "Found an ongoing request for beer " + beerId);
             return;
         }
 
-        final String uri = beerStore.getUriForId(beerId).toString();
-        Subscription subscription = createNetworkObservable(beerId)
-                .subscribeOn(Schedulers.io())
-                .doOnError(doOnError(uri))
-                .doOnCompleted(() -> completeRequest(uri))
-                .subscribe(beerStore::put,
-                        e -> Log.e(TAG, "Error fetching beer " + beerId, e));
+        final String uri = getUniqueUri(beerId);
 
-        requestMap.put(beerId, subscription);
-        startRequest(uri);
+        Subscription subscription = createNetworkObservable(beerId)
+                .subscribeOn(Schedulers.computation())
+                .doOnSubscribe(() -> startRequest(uri))
+                .doOnCompleted(() -> completeRequest(uri))
+                .doOnError(doOnError(uri))
+                .subscribe(beerStore::put,
+                           e -> Log.e(TAG, "Error fetching beer " + beerId, e));
+
+        addRequest(beerId, subscription);
     }
 
     @NonNull
@@ -98,5 +95,10 @@ public class BeerFetcher extends FetcherBase {
     @Override
     public Uri getServiceUri() {
         return RateBeerService.BEER;
+    }
+
+    @NonNull
+    public static String getUniqueUri(final int id) {
+        return Beer.class + "/" + id;
     }
 }

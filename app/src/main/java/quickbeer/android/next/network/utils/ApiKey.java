@@ -31,7 +31,7 @@ import quickbeer.android.next.R;
 public class ApiKey {
     private static final String TAG = ApiKey.class.getSimpleName();
 
-    public String getApiKey(@NonNull Context context) {
+    public String getApiKey(@NonNull final Context context) {
         try {
             // RateBeer API keys may not be shared. You'll need to acquire your own key.
             // Store the key as plain text in the file app/src/main/res/raw/apikey.txt.

@@ -28,12 +28,12 @@ import java.util.List;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
+import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import rx.Observable;
@@ -41,7 +41,9 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class ReviewFetcher extends FetcherBase {
+import static io.reark.reark.utils.Preconditions.get;
+
+public class ReviewFetcher extends FetcherBase<Uri> {
     private static final String TAG = ReviewFetcher.class.getSimpleName();
 
     private final NetworkApi networkApi;
@@ -49,26 +51,21 @@ public class ReviewFetcher extends FetcherBase {
     private final ReviewStore reviewStore;
     private final ReviewListStore reviewListStore;
 
-    public ReviewFetcher(@NonNull NetworkApi networkApi,
-                         @NonNull NetworkUtils networkUtils,
-                         @NonNull Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                         @NonNull ReviewStore reviewStore,
-                         @NonNull ReviewListStore reviewListStore) {
+    public ReviewFetcher(@NonNull final NetworkApi networkApi,
+                         @NonNull final NetworkUtils networkUtils,
+                         @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                         @NonNull final ReviewStore reviewStore,
+                         @NonNull final ReviewListStore reviewListStore) {
         super(updateNetworkRequestStatus);
 
-        Preconditions.checkNotNull(networkApi, "Network api cannot be null.");
-        Preconditions.checkNotNull(networkUtils, "Network utils cannot be null.");
-        Preconditions.checkNotNull(reviewStore, "Review store cannot be null.");
-        Preconditions.checkNotNull(reviewListStore, "Review list store cannot be null.");
-
-        this.networkApi = networkApi;
-        this.networkUtils = networkUtils;
-        this.reviewStore = reviewStore;
-        this.reviewListStore = reviewListStore;
+        this.networkApi = get(networkApi);
+        this.networkUtils = get(networkUtils);
+        this.reviewStore = get(reviewStore);
+        this.reviewListStore = get(reviewListStore);
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull final Intent intent) {
         final int beerId = intent.getIntExtra("beerId", -1);
 
         if (beerId > 0) {
@@ -81,29 +78,30 @@ public class ReviewFetcher extends FetcherBase {
     private void fetchReviews(final int beerId) {
         Log.d(TAG, "fetchReviews(" + beerId + ")");
 
-        if (requestMap.containsKey(beerId) && !requestMap.get(beerId).isUnsubscribed()) {
-            Log.d(TAG, "Found an ongoing request for reviews " + beerId);
+        if (isOngoingRequest(beerId)) {
+            Log.d(TAG, "Found an ongoing request for reviews for beer " + beerId);
             return;
         }
 
-        final String uri = reviewListStore.getUriForId(beerId).toString();
+        final String uri = getUniqueUri(beerId);
+
         Subscription subscription = createNetworkObservable(beerId)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .map((reviews) -> {
-                    final List<Integer> reviewIds = new ArrayList<>();
-                    for (Review review : reviews) {
+                    final List<Integer> reviewIds = new ArrayList<>(10);
+                    for (final Review review : reviews) {
                         reviewStore.put(review);
                         reviewIds.add(review.getId());
                     }
                     return new ItemList<>(beerId, reviewIds, new Date());
                 })
+                .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(reviewListStore::put,
-                        e -> Log.e(TAG, "Error fetching reviews for '" + beerId + "'", e));
+                           e -> Log.e(TAG, "Error fetching reviews for beer " + beerId, e));
 
-        requestMap.put(beerId, subscription);
-        startRequest(uri);
+        addRequest(beerId, subscription);
     }
 
     @NonNull
@@ -115,5 +113,10 @@ public class ReviewFetcher extends FetcherBase {
     @Override
     public Uri getServiceUri() {
         return RateBeerService.REVIEWS;
+    }
+
+    @NonNull
+    public static String getUniqueUri(final int id) {
+        return Review.class + "/" + id;
     }
 }

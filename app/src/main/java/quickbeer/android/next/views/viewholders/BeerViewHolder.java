@@ -76,7 +76,7 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void setBeer(@NonNull Beer beer) {
+    public void setBeer(@NonNull final Beer beer) {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
         String rating = beer.getRating() >= 0

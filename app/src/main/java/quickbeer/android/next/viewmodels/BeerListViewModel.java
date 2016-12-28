@@ -45,7 +45,7 @@ public class BeerListViewModel extends BaseViewModel {
     private final PublishSubject<Integer> selectBeer = PublishSubject.create();
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
-    public BeerListViewModel(@NonNull DataLayer.GetBeer getBeer) {
+    public BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
         Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
 
         this.getBeer = getBeer;
@@ -71,7 +71,7 @@ public class BeerListViewModel extends BaseViewModel {
     }
 
     @Override
-    public void subscribeToDataStoreInternal(@NonNull CompositeSubscription compositeSubscription) {
+    public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
         Preconditions.checkNotNull(sourceObservable, "Source observable hasn't been setBeer.");
 
         Log.v(TAG, "subscribeToDataStoreInternal");

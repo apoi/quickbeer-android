@@ -39,7 +39,7 @@ public abstract class BaseViewModel extends AbstractViewModel {
         return progressStatus.asObservable();
     }
 
-    void setNetworkStatusText(@NonNull ProgressStatus status) {
+    void setNetworkStatusText(@NonNull final ProgressStatus status) {
         Preconditions.checkNotNull(status, "ProgressStatus cannot be null.");
 
         progressStatus.onNext(status);

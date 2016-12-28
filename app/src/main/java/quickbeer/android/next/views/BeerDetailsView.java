@@ -48,14 +48,14 @@ public class BeerDetailsView extends FrameLayout {
         super(context, attrs);
     }
 
-    private void setBeer(@NonNull Beer beer) {
+    private void setBeer(@NonNull final Beer beer) {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 
         beerDetailsAdapter.setBeer(beer);
     }
 
-    private void setReviews(@NonNull List<Review> reviews) {
+    private void setReviews(@NonNull final List<Review> reviews) {
         Preconditions.checkNotNull(reviews, "Reviews cannot be null.");
         Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
 
@@ -81,8 +81,8 @@ public class BeerDetailsView extends FrameLayout {
         private final BeerDetailsView view;
         private final BeerViewModel viewModel;
 
-        public BeerViewBinder(@NonNull BeerDetailsView view,
-                              @NonNull BeerViewModel viewModel) {
+        public BeerViewBinder(@NonNull final BeerDetailsView view,
+                              @NonNull final BeerViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
@@ -91,7 +91,7 @@ public class BeerDetailsView extends FrameLayout {
         }
 
         @Override
-        protected void bindInternal(@NonNull CompositeSubscription subscription) {
+        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel.getBeer()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::setBeer));
@@ -105,8 +105,8 @@ public class BeerDetailsView extends FrameLayout {
         private final BeerDetailsView view;
         private final ReviewListViewModel viewModel;
 
-        public ReviewListViewBinder(@NonNull BeerDetailsView view,
-                                    @NonNull ReviewListViewModel viewModel) {
+        public ReviewListViewBinder(@NonNull final BeerDetailsView view,
+                                    @NonNull final ReviewListViewModel viewModel) {
             Preconditions.checkNotNull(view, "View cannot be null.");
             Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
 
@@ -115,7 +115,7 @@ public class BeerDetailsView extends FrameLayout {
         }
 
         @Override
-        protected void bindInternal(@NonNull CompositeSubscription subscription) {
+        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel.getReviews()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::setReviews));

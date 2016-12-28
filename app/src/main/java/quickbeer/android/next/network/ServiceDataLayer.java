@@ -47,14 +47,14 @@ public class ServiceDataLayer extends DataLayerBase {
 
     private final UriFetcherManager fetcherManager;
 
-    public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager,
-                            @NonNull NetworkRequestStatusStore networkRequestStatusStore,
-                            @NonNull BeerStore beerStore,
-                            @NonNull BeerListStore beerListStore,
-                            @NonNull ReviewStore reviewStore,
-                            @NonNull ReviewListStore reviewListStore,
-                            @NonNull BrewerStore brewerStore,
-                            @NonNull BrewerListStore brewerListStore) {
+    public ServiceDataLayer(@NonNull final UriFetcherManager fetcherManager,
+                            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+                            @NonNull final BeerStore beerStore,
+                            @NonNull final BeerListStore beerListStore,
+                            @NonNull final ReviewStore reviewStore,
+                            @NonNull final ReviewListStore reviewListStore,
+                            @NonNull final BrewerStore brewerStore,
+                            @NonNull final BrewerListStore brewerListStore) {
         super(networkRequestStatusStore,
                 beerStore, beerListStore,
                 reviewStore, reviewListStore,
@@ -65,7 +65,7 @@ public class ServiceDataLayer extends DataLayerBase {
         this.fetcherManager = fetcherManager;
     }
 
-    public void processIntent(@NonNull Intent intent) {
+    public void processIntent(@NonNull final Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null.");
 
         final String serviceUriString = intent.getStringExtra("serviceUriString");
