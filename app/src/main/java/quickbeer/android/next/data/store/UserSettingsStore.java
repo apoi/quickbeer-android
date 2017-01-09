@@ -38,6 +38,7 @@ import polanski.option.Option;
 import quickbeer.android.next.data.store.cores.UserSettingsStoreCore;
 import quickbeer.android.next.network.utils.LoginUtils;
 import quickbeer.android.next.pojo.UserSettings;
+import quickbeer.android.next.rx.RxUtils;
 
 /**
  * Store to keep only single user settings.
@@ -65,7 +66,7 @@ public class UserSettingsStore extends StoreBase<Integer, UserSettings, Option<U
     private void initUserSettings() {
         // Initializes settings if needed, and clears the logged in flag
         getOnce(DEFAULT_USER_ID)
-                .map(settings -> settings.orDefault(UserSettings::new))
+                .compose(RxUtils::pickValue)
                 .map(userSettings -> {
                     userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
                     return userSettings;

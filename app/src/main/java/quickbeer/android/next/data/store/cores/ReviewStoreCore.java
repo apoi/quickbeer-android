@@ -72,7 +72,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
     @NonNull
     @Override
-    protected Review read(final Cursor cursor) {
+    protected Review read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewColumns.JSON));
         final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
@@ -86,7 +86,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(final Review item) {
+    protected ContentValues getContentValuesForItem(@NonNull final Review item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewColumns.ID, item.getId());
         contentValues.put(ReviewColumns.JSON, getGson().toJson(item));

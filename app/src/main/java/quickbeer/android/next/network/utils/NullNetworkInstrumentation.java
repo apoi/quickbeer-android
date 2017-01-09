@@ -25,18 +25,16 @@
  */
 package quickbeer.android.next.network.utils;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 
-public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient> {
+public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient.Builder> {
 
     @NonNull
     @Override
-    public OkHttpClient decorateNetwork(@NonNull final OkHttpClient httpClient,
-                                        @NonNull final Context context) {
-        return httpClient;
+    public OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder) {
+        return clientBuilder;
     }
 
     @Override

@@ -29,7 +29,6 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.squareup.okhttp.OkHttpClient;
 
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -39,46 +38,39 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.JavaNetCookieJar;
+import okhttp3.OkHttpClient;
 import quickbeer.android.next.injections.ForApplication;
 import quickbeer.android.next.network.utils.DateDeserializer;
-import quickbeer.android.next.network.utils.LoginRedirectInterceptor;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.PersistentCookieStore;
 import quickbeer.android.next.network.utils.StringDeserializer;
-import retrofit.client.Client;
-import retrofit.client.OkClient;
 
 @Module
 public final class NetworkModule {
+
     @Provides
     @Singleton
-    public NetworkApi provideNetworkApi(Client client, Gson gson) {
-        return new NetworkApi(client, gson);
+    public static NetworkApi provideNetworkApi(OkHttpClient client) {
+        return new NetworkApi(client);
     }
 
     @Provides
     @Singleton
-    public Client provideOkClient(OkHttpClient okHttpClient) {
-        return new OkClient(okHttpClient);
+    public static OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
+                                                   CookieManager cookieManager,
+                                                   @ForApplication Context context) {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .followRedirects(false)
+                .followSslRedirects(false);
+
+        return networkInstrumentation.decorateNetwork(builder).build();
     }
 
     @Provides
     @Singleton
-    public OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient> networkInstrumentation,
-                                            CookieManager cookieManager,
-                                            @ForApplication Context context) {
-        OkHttpClient client = new OkHttpClient();
-        client.setCookieHandler(cookieManager);
-        client.setFollowRedirects(false);
-        client.setFollowSslRedirects(false);
-        client.interceptors().add(new LoginRedirectInterceptor());
-
-        return networkInstrumentation.decorateNetwork(client, context);
-    }
-
-    @Provides
-    @Singleton
-    public Gson provideUnescapingGson() {
+    public static Gson provideUnescapingGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringDeserializer())
                 .registerTypeAdapter(Date.class, new DateDeserializer())
@@ -87,7 +79,7 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public CookieManager provideCookieManager(@ForApplication Context context) {
+    public static CookieManager provideCookieManager(@ForApplication Context context) {
         return new CookieManager(new PersistentCookieStore(context), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
     }
 }

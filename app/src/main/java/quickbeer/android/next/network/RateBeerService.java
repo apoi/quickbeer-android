@@ -22,15 +22,15 @@ import android.net.Uri;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Response;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Brewer;
 import quickbeer.android.next.pojo.Review;
-import retrofit.client.Response;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.QueryMap;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.QueryMap;
 import rx.Observable;
 
 public interface RateBeerService {

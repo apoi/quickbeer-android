@@ -25,12 +25,11 @@
  */
 package quickbeer.android.next.injections;
 
-import com.squareup.okhttp.OkHttpClient;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.OkHttpClient;
 import quickbeer.android.next.network.utils.NetworkInstrumentation;
 import quickbeer.android.next.network.utils.NullNetworkInstrumentation;
 
@@ -38,7 +37,7 @@ import quickbeer.android.next.network.utils.NullNetworkInstrumentation;
 public class InstrumentationModule {
     @Provides
     @Singleton
-    public NetworkInstrumentation<OkHttpClient> providesNetworkInstrumentation() {
+    public static NetworkInstrumentation<OkHttpClient.Builder> providesNetworkInstrumentation() {
         return new NullNetworkInstrumentation();
     }
 }

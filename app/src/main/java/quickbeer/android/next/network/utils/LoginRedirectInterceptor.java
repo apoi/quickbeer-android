@@ -17,13 +17,12 @@
  */
 package quickbeer.android.next.network.utils;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 
 import io.reark.reark.utils.Log;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginRedirectInterceptor implements Interceptor {
     private static final String TAG = LoginRedirectInterceptor.class.getSimpleName();
@@ -33,7 +32,7 @@ public class LoginRedirectInterceptor implements Interceptor {
         Request request = chain.request();
         Response response = chain.proceed(request);
 
-        if (request.uri().getPath().equals("/Signin_r.asp") && response.isRedirect()) {
+        if (request.url().encodedPath().equals("/Signin_r.asp") && response.isRedirect()) {
             Log.d(TAG, "Modifying response for login request");
 
             return new Response.Builder()

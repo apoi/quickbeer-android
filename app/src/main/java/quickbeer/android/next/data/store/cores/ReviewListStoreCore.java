@@ -75,7 +75,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
 
     @NonNull
     @Override
-    protected ItemList<Integer> read(final Cursor cursor) {
+    protected ItemList<Integer> read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
         final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
@@ -88,7 +88,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(final ItemList<Integer> item) {
+    protected ContentValues getContentValuesForItem(@NonNull final ItemList<Integer> item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewListColumns.BEER_ID, item.getKey());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));

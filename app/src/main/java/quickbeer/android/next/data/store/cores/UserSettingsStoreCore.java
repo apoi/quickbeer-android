@@ -72,14 +72,14 @@ public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> 
 
     @NonNull
     @Override
-    protected UserSettings read(final Cursor cursor) {
+    protected UserSettings read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
         return new Gson().fromJson(json, UserSettings.class);
     }
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(final UserSettings item) {
+    protected ContentValues getContentValuesForItem(@NonNull final UserSettings item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(JsonIdColumns.ID, item.getUserId());
         contentValues.put(JsonIdColumns.JSON, new Gson().toJson(item));

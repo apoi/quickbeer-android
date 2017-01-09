@@ -117,6 +117,6 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
     @NonNull
     public static String getUniqueUri(@NonNull final String id) {
-        return ItemList.class + "/Beer/" + id;
+        return ItemList.class + "/" + id;
     }
 }

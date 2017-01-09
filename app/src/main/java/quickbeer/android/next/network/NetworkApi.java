@@ -19,37 +19,34 @@ package quickbeer.android.next.network;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-
 import java.util.List;
 import java.util.Map;
 
-import io.reark.reark.utils.Preconditions;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Brewer;
 import quickbeer.android.next.pojo.Review;
-import retrofit.RestAdapter;
-import retrofit.client.Client;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class NetworkApi {
 
     private final RateBeerService rateBeerService;
 
-    public NetworkApi(@NonNull final Client client, @NonNull final Gson gson) {
-        Preconditions.checkNotNull(client, "Client cannot be null.");
-        Preconditions.checkNotNull(client, "Gson cannot be null.");
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setClient(client)
-                .setEndpoint("https://www.ratebeer.com")
-                .setConverter(new GsonConverter(gson))
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+    public NetworkApi(@NonNull final OkHttpClient client) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://www.ratebeer.com")
+                .client(get(client))
                 .build();
 
-        rateBeerService = restAdapter.create(RateBeerService.class);
+        rateBeerService = retrofit.create(RateBeerService.class);
     }
 
     public Observable<Response> login(String username, String password) {
