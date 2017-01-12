@@ -17,10 +17,10 @@
  */
 package quickbeer.android.next.data.store;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import polanski.option.Option;
 import quickbeer.android.next.data.store.cores.ReviewListStoreCore;

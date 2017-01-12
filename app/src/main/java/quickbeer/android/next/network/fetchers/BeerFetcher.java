@@ -39,8 +39,13 @@ import static io.reark.reark.utils.Preconditions.get;
 public class BeerFetcher extends FetcherBase<Uri> {
     private static final String TAG = BeerFetcher.class.getSimpleName();
 
+    @NonNull
     private final NetworkApi networkApi;
+
+    @NonNull
     private final NetworkUtils networkUtils;
+
+    @NonNull
     private final BeerStore beerStore;
 
     public BeerFetcher(@NonNull final NetworkApi networkApi,
@@ -81,7 +86,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(beerStore::put,
-                           e -> Log.e(TAG, "Error fetching beer " + beerId, e));
+                           Log.onError(TAG, "Error fetching beer " + beerId));
 
         addRequest(beerId, subscription);
     }

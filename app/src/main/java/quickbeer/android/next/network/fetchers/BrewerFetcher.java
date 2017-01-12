@@ -28,7 +28,6 @@ import quickbeer.android.next.data.store.BrewerStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
-import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Brewer;
 import rx.Observable;
 import rx.Subscription;
@@ -40,8 +39,13 @@ import static io.reark.reark.utils.Preconditions.get;
 public class BrewerFetcher extends FetcherBase<Uri> {
     private static final String TAG = BrewerFetcher.class.getSimpleName();
 
+    @NonNull
     private final NetworkApi networkApi;
+
+    @NonNull
     private final NetworkUtils networkUtils;
+
+    @NonNull
     private final BrewerStore brewerStore;
 
     public BrewerFetcher(@NonNull final NetworkApi networkApi,
@@ -82,7 +86,7 @@ public class BrewerFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(brewerStore::put,
-                        e -> Log.e(TAG, "Error fetching brewer " + brewerId, e));
+                        Log.onError(TAG, "Error fetching brewer " + brewerId));
 
         addRequest(brewerId, subscription);
     }

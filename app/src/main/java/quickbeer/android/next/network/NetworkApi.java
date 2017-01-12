@@ -19,6 +19,8 @@ package quickbeer.android.next.network;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 import java.util.Map;
 
@@ -38,10 +40,10 @@ public class NetworkApi {
 
     private final RateBeerService rateBeerService;
 
-    public NetworkApi(@NonNull final OkHttpClient client) {
+    public NetworkApi(@NonNull final OkHttpClient client, @NonNull final Gson gson) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(get(gson)))
                 .baseUrl("https://www.ratebeer.com")
                 .client(get(client))
                 .build();

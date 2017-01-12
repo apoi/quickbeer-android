@@ -33,7 +33,6 @@ import quickbeer.android.next.data.store.ReviewStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
-import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.pojo.Review;
 import rx.Observable;
@@ -46,9 +45,16 @@ import static io.reark.reark.utils.Preconditions.get;
 public class ReviewFetcher extends FetcherBase<Uri> {
     private static final String TAG = ReviewFetcher.class.getSimpleName();
 
+    @NonNull
     private final NetworkApi networkApi;
+
+    @NonNull
     private final NetworkUtils networkUtils;
+
+    @NonNull
     private final ReviewStore reviewStore;
+
+    @NonNull
     private final ReviewListStore reviewListStore;
 
     public ReviewFetcher(@NonNull final NetworkApi networkApi,
@@ -99,7 +105,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(reviewListStore::put,
-                           e -> Log.e(TAG, "Error fetching reviews for beer " + beerId, e));
+                        Log.onError(TAG, "Error fetching reviews for beer " + beerId));
 
         addRequest(beerId, subscription);
     }

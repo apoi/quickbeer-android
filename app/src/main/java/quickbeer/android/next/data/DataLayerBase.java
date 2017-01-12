@@ -19,7 +19,6 @@ package quickbeer.android.next.data;
 
 import android.support.annotation.NonNull;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.BeerListStore;
 import quickbeer.android.next.data.store.BeerStore;
 import quickbeer.android.next.data.store.BrewerListStore;
@@ -28,7 +27,6 @@ import quickbeer.android.next.data.store.NetworkRequestStatusStore;
 import quickbeer.android.next.data.store.ReviewListStore;
 import quickbeer.android.next.data.store.ReviewStore;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class DataLayerBase {

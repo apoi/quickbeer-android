@@ -118,7 +118,7 @@ public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessT
     }
 
     public float getAbv() {
-        return alcohol;
+        return alcohol != null ? alcohol : -1;
     }
 
     public String getDescription() {

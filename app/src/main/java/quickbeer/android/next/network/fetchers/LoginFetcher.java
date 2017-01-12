@@ -30,7 +30,6 @@ import quickbeer.android.next.data.store.UserSettingsStore;
 import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.LoginUtils;
-import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.UserSettings;
 import quickbeer.android.next.rx.RxUtils;
 import quickbeer.android.next.utils.StringUtils;
@@ -43,8 +42,13 @@ import static io.reark.reark.utils.Preconditions.get;
 public class LoginFetcher extends FetcherBase<Uri> {
     private static final String TAG = LoginFetcher.class.getSimpleName();
 
+    @NonNull
     private final NetworkApi networkApi;
+
+    @NonNull
     private final CookieManager cookieManager;
+
+    @NonNull
     private final UserSettingsStore userSettingsStore;
 
     public LoginFetcher(@NonNull final NetworkApi networkApi,
@@ -95,7 +99,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .doOnError(doOnError(uri))
                 .doOnNext(userSettings -> Log.d(TAG, "Updating login status to " + userSettings.isLogged()))
                 .subscribe(userSettingsStore::put,
-                           e -> Log.e(TAG, "Error fetching user " + username, e));
+                           Log.onError(TAG, "Error fetching user " + username));
 
         addRequest(id, subscription);
     }

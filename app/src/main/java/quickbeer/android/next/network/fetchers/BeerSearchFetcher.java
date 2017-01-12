@@ -40,15 +40,22 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerSearchFetcher extends FetcherBase<Uri> {
     private static final String TAG = BeerSearchFetcher.class.getSimpleName();
 
+    @NonNull
     protected final NetworkApi networkApi;
+
+    @NonNull
     protected final NetworkUtils networkUtils;
 
+    @NonNull
     private final BeerStore beerStore;
+
+    @NonNull
     private final BeerListStore beerListStore;
 
     public BeerSearchFetcher(@NonNull final NetworkApi networkApi,
@@ -78,10 +85,11 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     protected void fetchBeerSearch(@NonNull final String query) {
         Log.d(TAG, "fetchBeerSearch(" + query + ")");
 
-        final String uri = getUniqueUri(get(query));
+        final String queryId = getQueryId(getServiceUri(), get(query));
+        final String uri = getUniqueUri(queryId);
 
         if (isOngoingRequest(uri.hashCode())) {
-            Log.d(TAG, "Found an ongoing request for search " + query);
+            Log.d(TAG, "Found an ongoing request for search " + queryId);
             return;
         }
 
@@ -93,13 +101,13 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                         beerStore.put(beer);
                         beerIds.add(beer.getId());
                     }
-                    return new ItemList<>(uri, beerIds, new Date());
+                    return new ItemList<>(queryId, beerIds, new Date());
                 })
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(beerListStore::put,
-                           e -> Log.e(TAG, "Error fetching beer search for '" + uri + "'", e));
+                           Log.onError(TAG, "Error fetching beer search for '" + uri + "'"));
 
         addRequest(uri.hashCode(), subscription);
     }
@@ -115,8 +123,28 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         return RateBeerService.SEARCH;
     }
 
+    // Brewer search store needs separate query identifiers for normal searches and fixed searches
+    // (top50, top in country, top in style). Fixed searches come attached with a service uri
+    // identifier to make sure they stand apart from the normal searches.
+    public static String getQueryId(@NonNull final Uri serviceUri, @NonNull final String query) {
+        checkNotNull(serviceUri);
+        checkNotNull(query);
+
+        if (serviceUri.equals(RateBeerService.SEARCH)) {
+            return query;
+        } else if (!query.isEmpty()) {
+            return String.format("%s_%s", serviceUri, query);
+        } else {
+            return serviceUri.toString();
+        }
+    }
+
+    public static String getQueryId(@NonNull final Uri serviceUri) {
+        return getQueryId(serviceUri, "");
+    }
+
     @NonNull
     public static String getUniqueUri(@NonNull final String id) {
-        return ItemList.class + "/" + id;
+        return ItemList.class + "/beerSearch/" + id;
     }
 }

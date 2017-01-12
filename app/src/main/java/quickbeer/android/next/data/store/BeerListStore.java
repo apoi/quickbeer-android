@@ -17,15 +17,14 @@
  */
 package quickbeer.android.next.data.store;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
-import io.reark.reark.utils.Preconditions;
 import polanski.option.Option;
 import quickbeer.android.next.data.store.cores.BeerListStoreCore;
 import quickbeer.android.next.network.RateBeerService;
@@ -45,32 +44,5 @@ public class BeerListStore extends StoreBase<String, ItemList<String>, Option<It
               ItemList::getKey,
               Option::ofObj,
               Option::none);
-    }
-
-    @NonNull
-    public Observable<List<ItemList<String>>> getAllOnce(@NonNull final String id) {
-        return ((BeerListStoreCore) getCore()).getAllCached(id);
-    }
-
-
-
-    // Brewer search store needs separate query identifiers for normal searches and fixed searches
-    // (top50, top in country, top in style). Fixed searches come attached with a service uri
-    // identifier to make sure they stand apart from the normal searches.
-    public static String getQueryId(@NonNull final Uri serviceUri, @NonNull final String query) {
-        checkNotNull(serviceUri);
-        checkNotNull(query);
-
-        if (serviceUri.equals(RateBeerService.SEARCH)) {
-            return query;
-        } else if (!query.isEmpty()) {
-            return String.format("%s_%s", serviceUri, query);
-        } else {
-            return serviceUri.toString();
-        }
-    }
-
-    public static String getQueryId(@NonNull final Uri serviceUri) {
-        return getQueryId(serviceUri, "");
     }
 }

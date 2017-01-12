@@ -17,14 +17,14 @@
  */
 package quickbeer.android.next.data.store.cores;
 
-import com.google.gson.Gson;
-
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,14 +40,10 @@ import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 
-public class NetworkRequestStatusStoreCore extends ContentProviderStoreCore<Integer, NetworkRequestStatus> {
-
-    private final Gson gson;
+public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, NetworkRequestStatus> {
 
     public NetworkRequestStatusStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(contentResolver);
-
-        this.gson = Preconditions.get(gson);
+        super(contentResolver, gson);
     }
 
     @NonNull
@@ -55,12 +51,6 @@ public class NetworkRequestStatusStoreCore extends ContentProviderStoreCore<Inte
     protected Observable<List<ContentProviderOperation>> groupOperations(@NonNull final Observable<ContentProviderOperation> source) {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.
         return source.map(Collections::singletonList);
-    }
-
-    @NonNull
-    @Override
-    protected String getAuthority() {
-        return RateBeerProvider.AUTHORITY;
     }
 
     @NonNull
@@ -82,7 +72,7 @@ public class NetworkRequestStatusStoreCore extends ContentProviderStoreCore<Inte
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(JsonIdColumns.ID, item.getUri().hashCode());
-        contentValues.put(JsonIdColumns.JSON, gson.toJson(item));
+        contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));
         return contentValues;
     }
 
@@ -92,7 +82,7 @@ public class NetworkRequestStatusStoreCore extends ContentProviderStoreCore<Inte
         checkNotNull(cursor);
 
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
-        return gson.fromJson(json, NetworkRequestStatus.class);
+        return getGson().fromJson(json, NetworkRequestStatus.class);
     }
 
     @NonNull

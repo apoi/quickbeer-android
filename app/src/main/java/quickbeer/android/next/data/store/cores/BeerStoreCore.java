@@ -17,18 +17,19 @@
  */
 package quickbeer.android.next.data.store.cores;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.utils.Log;
 import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
@@ -102,7 +103,8 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     public Observable<Beer> getNewlyAccessedItems(@NonNull final Date date) {
-        return getAllStream()
+        return getStream()
+                .map(StoreItem::item)
                 .filter(item -> item.getAccessDate() != null)
                 .distinctUntilChanged(new Func1<Beer, Date>() {
                     // Access date as key object indicating distinction

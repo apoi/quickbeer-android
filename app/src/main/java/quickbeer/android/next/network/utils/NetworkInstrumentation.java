@@ -25,7 +25,6 @@
  */
 package quickbeer.android.next.network.utils;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 
 import quickbeer.android.next.utils.Instrumentation;

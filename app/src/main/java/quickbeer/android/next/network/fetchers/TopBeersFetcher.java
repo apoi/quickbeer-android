@@ -30,6 +30,7 @@ import quickbeer.android.next.network.NetworkApi;
 import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.network.utils.NetworkUtils;
 import quickbeer.android.next.pojo.Beer;
+import quickbeer.android.next.pojo.ItemList;
 import rx.Observable;
 import rx.functions.Action1;
 
@@ -46,7 +47,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull final Intent intent) {
-        fetchBeerSearch("");
+        fetchBeerSearch(getServiceUri().toString());
     }
 
     @NonNull

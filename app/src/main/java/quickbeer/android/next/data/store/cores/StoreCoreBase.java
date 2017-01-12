@@ -18,16 +18,22 @@
 package quickbeer.android.next.data.store.cores;
 
 import android.content.ContentResolver;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import java.util.List;
+
+import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.data.stores.cores.ContentProviderStoreCore;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
+import quickbeer.android.next.pojo.Beer;
+import rx.Observable;
 
 public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U> {
-    private static final String TAG = StoreCoreBase.class.getSimpleName();
 
+    @NonNull
     private final Gson gson;
 
     protected StoreCoreBase(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
@@ -36,6 +42,17 @@ public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U>
         this.gson = gson;
     }
 
+    @NonNull
+    public Observable<List<U>> getAllOnce() {
+        return getAllOnce(getContentUri());
+    }
+
+    @NonNull
+    public Observable<U> getAllStream() {
+        return getStream().map(StoreItem::item);
+    }
+
+    @Override
     @NonNull
     protected String getAuthority() {
         return RateBeerProvider.AUTHORITY;

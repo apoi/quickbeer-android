@@ -17,27 +17,51 @@
  */
 package quickbeer.android.next.data.store;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import io.reark.reark.data.stores.DefaultStore;
-import io.reark.reark.data.stores.interfaces.StoreCoreInterface;
+import io.reark.reark.data.stores.StoreItem;
+import io.reark.reark.utils.Preconditions;
+import quickbeer.android.next.data.store.cores.StoreCoreBase;
+import quickbeer.android.next.pojo.ItemList;
+import rx.Observable;
 
 class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
 
-    private final StoreCoreInterface<T, U> core;
+    @NonNull
+    private final StoreCoreBase<T, U> core;
 
-    StoreBase(@NonNull final StoreCoreInterface<T, U> core,
+    @NonNull
+    private final GetNullSafe<U, R> getNullSafe;
+
+    StoreBase(@NonNull final StoreCoreBase<T, U> core,
               @NonNull final GetIdForItem<T, U> getIdForItem,
               @NonNull final GetNullSafe<U, R> getNullSafe,
               @NonNull final GetEmptyValue<R> getEmptyValue) {
-        super(core, getIdForItem, getNullSafe, getEmptyValue);
+        super(Preconditions.get(core),
+                Preconditions.get(getIdForItem),
+                Preconditions.get(getNullSafe),
+                Preconditions.get(getEmptyValue));
 
         this.core = core;
+        this.getNullSafe = getNullSafe;
     }
 
     @NonNull
-    StoreCoreInterface<T, U> getCore() {
-        return this.core;
+    StoreCoreBase<T, U> getCore() {
+        return core;
+    }
+
+    @NonNull
+    public Observable<List<U>> getAllOnce() {
+        return core.getAllOnce();
+    }
+
+    @NonNull
+    public Observable<R> getAllStream() {
+        return core.getAllStream()
+                .map(getNullSafe::call);
     }
 }

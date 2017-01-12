@@ -17,9 +17,6 @@
  */
 package quickbeer.android.next.activities.base;
 
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
-import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
-
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -30,6 +27,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 
 import java.util.List;
 

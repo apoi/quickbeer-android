@@ -25,11 +25,10 @@
  */
 package quickbeer.android.next.data.store;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
-import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import java.net.CookieManager;
 

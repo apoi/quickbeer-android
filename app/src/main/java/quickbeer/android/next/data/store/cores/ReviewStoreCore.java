@@ -17,13 +17,13 @@
  */
 package quickbeer.android.next.data.store.cores;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;

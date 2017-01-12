@@ -51,15 +51,15 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public static NetworkApi provideNetworkApi(OkHttpClient client) {
-        return new NetworkApi(client);
+    public static NetworkApi provideNetworkApi(OkHttpClient client, Gson gson) {
+        return new NetworkApi(client, gson);
     }
 
     @Provides
     @Singleton
-    public static OkHttpClient provideOkHttpClient(NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
-                                                   CookieManager cookieManager,
-                                                   @ForApplication Context context) {
+    public static OkHttpClient provideOkHttpClient(
+            NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
+            CookieManager cookieManager) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(new JavaNetCookieJar(cookieManager))
                 .followRedirects(false)

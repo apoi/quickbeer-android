@@ -6,7 +6,6 @@ import polanski.option.Option;
 import polanski.option.OptionUnsafe;
 import quickbeer.android.next.pojo.ItemList;
 import rx.Observable;
-import rx.functions.Func1;
 
 public final class RxUtils<T> {
 

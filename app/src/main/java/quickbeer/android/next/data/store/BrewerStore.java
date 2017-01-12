@@ -17,20 +17,17 @@
  */
 package quickbeer.android.next.data.store;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import java.util.Date;
 import java.util.List;
 
 import polanski.option.Option;
-import quickbeer.android.next.data.schematicprovider.BeerColumns;
 import quickbeer.android.next.data.schematicprovider.BrewerColumns;
-import quickbeer.android.next.data.store.cores.BeerStoreCore;
 import quickbeer.android.next.data.store.cores.BrewerStoreCore;
-import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.pojo.Brewer;
 import rx.Observable;
 

@@ -25,21 +25,22 @@
  */
 package quickbeer.android.next.data.store;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
 
+import com.google.gson.Gson;
+
 import io.reark.reark.pojo.NetworkRequestStatus;
+import polanski.option.Option;
 import quickbeer.android.next.data.store.cores.NetworkRequestStatusStoreCore;
 
-public class NetworkRequestStatusStore extends StoreBase<Integer, NetworkRequestStatus, NetworkRequestStatus> {
+public class NetworkRequestStatusStore extends StoreBase<Integer, NetworkRequestStatus, Option<NetworkRequestStatus>> {
 
     public NetworkRequestStatusStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new NetworkRequestStatusStoreCore(contentResolver, gson),
               status -> requestIdForUri(status.getUri()),
-              status -> status == null ? NetworkRequestStatus.none() : status,
-              NetworkRequestStatus::none);
+              Option::ofObj,
+              Option::none);
     }
 
     @NonNull

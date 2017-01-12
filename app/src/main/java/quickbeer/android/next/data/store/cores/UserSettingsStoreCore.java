@@ -17,13 +17,13 @@
  */
 package quickbeer.android.next.data.store.cores;
 
-import com.google.gson.Gson;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
@@ -32,10 +32,6 @@ import quickbeer.android.next.data.schematicprovider.UserSettingsColumns;
 import quickbeer.android.next.pojo.UserSettings;
 
 public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> {
-    private static final String TAG = UserSettingsStoreCore.class.getSimpleName();
-
-    public static final int DEFAULT_USER_ID = 0;
-    public static final Uri LOGIN_URI = Uri.parse("UserSettingsLogin");
 
     public UserSettingsStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);
@@ -74,7 +70,7 @@ public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> 
     @Override
     protected UserSettings read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
-        return new Gson().fromJson(json, UserSettings.class);
+        return getGson().fromJson(json, UserSettings.class);
     }
 
     @NonNull
@@ -82,7 +78,7 @@ public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> 
     protected ContentValues getContentValuesForItem(@NonNull final UserSettings item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(JsonIdColumns.ID, item.getUserId());
-        contentValues.put(JsonIdColumns.JSON, new Gson().toJson(item));
+        contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));
 
         return contentValues;
     }
