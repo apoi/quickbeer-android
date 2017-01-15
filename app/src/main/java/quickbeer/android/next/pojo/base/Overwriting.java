@@ -29,9 +29,9 @@ import io.reark.reark.utils.Log;
  * Class to implement our specific json empty value definitions, to avoid overwriting
  * existing data with invalid values.
  */
-public abstract class BasePojo<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
+public abstract class Overwriting<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
 
-    private static final String TAG = BasePojo.class.getSimpleName();
+    private static final String TAG = Overwriting.class.getSimpleName();
 
     @Override
     protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {

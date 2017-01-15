@@ -205,7 +205,7 @@ public class DataLayer extends DataLayerBase {
                 .observeOn(Schedulers.computation())
                 .compose(RxUtils::pickValue)
                 .map(beer -> {
-                    beer.setAccessDate(new Date());
+                    //beer.setAccessDate(new Date()); TODO separate access table
                     return beer;
                 })
                 .subscribe(beerStore::put, Log.onError(TAG));
@@ -539,8 +539,8 @@ public class DataLayer extends DataLayerBase {
         Log.v(TAG, "getBrewer");
 
         // Trigger a fetch only if full details haven't been fetched
-        beerStore.getOnceAndStream(brewerId)
-                .filter(option -> option.match(brewer -> !brewer.hasDetails(), () -> true))
+        brewerStore.getOnceAndStream(brewerId)
+                .filter(option -> option.match(brewer -> brewer.getName().isEmpty(), () -> true))
                 .doOnNext(beer -> Log.v(TAG, "Brewer not cached, fetching"))
                 .subscribe(beer -> fetchBrewer(brewerId));
 

@@ -66,7 +66,7 @@ public class BeerDetailsActivity extends SearchActivity {
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
-                .subscribe(beer -> accessBeer.call(beer.getId())));
+                .subscribe(beer -> accessBeer.call(beer.id())));
 
         // Set activity title
         activitySubscription.add(sourceObservable
@@ -75,7 +75,7 @@ public class BeerDetailsActivity extends SearchActivity {
                 .first()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        beer -> setTitle(beer.getName()),
+                        beer -> setTitle(beer.name()),
                         throwable -> {
                             Log.e(TAG, "error getting beer", throwable);
                         }));

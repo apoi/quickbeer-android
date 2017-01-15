@@ -99,7 +99,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                     final List<Integer> beerIds = new ArrayList<>(10);
                     for (final Beer beer : beers) {
                         beerStore.put(beer);
-                        beerIds.add(beer.getId());
+                        beerIds.add(beer.id());
                     }
                     return new ItemList<>(queryId, beerIds, new Date());
                 })

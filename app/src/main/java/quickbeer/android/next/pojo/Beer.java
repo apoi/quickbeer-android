@@ -3,281 +3,243 @@
  * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General public abstract License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * but WITHOUT ANY WARRANTY(); without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * GNU General public abstract License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of the GNU General public abstract License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package quickbeer.android.next.pojo;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import quickbeer.android.next.pojo.base.AccessTracking;
-import quickbeer.android.next.pojo.base.BasePojo;
 import quickbeer.android.next.pojo.base.MetadataAware;
-import quickbeer.android.next.utils.DateUtils;
+import quickbeer.android.next.pojo.base.Overwriting;
 
-public class Beer extends BasePojo<Beer> implements MetadataAware<Beer>, AccessTracking {
+import static io.reark.reark.utils.Preconditions.get;
+
+@SuppressWarnings("InnerClassReferencedViaSubclass")
+@AutoValue
+public abstract class Beer implements MetadataAware<Beer> {
+
+    @NonNull
     @SerializedName("BeerID")
-    private int id;
+    public abstract Integer id();
 
+    @Nullable
     @SerializedName("BeerName")
-    private String name;
+    public abstract String name();
 
+    @Nullable
     @SerializedName("AverageRating")
-    private Float averageRating;
+    public abstract Float averageRating();
 
+    @Nullable
     @SerializedName("OverallPctl")
-    private Float overallRating;
+    public abstract Float overallRating();
 
+    @Nullable
     @SerializedName("StylePctl")
-    private Float styleRating;
+    public abstract Float styleRating();
 
+    @Nullable
     @SerializedName("RateCount")
-    private Float rateCount;
+    public abstract Float rateCount();
 
+    @Nullable
     @SerializedName("BeerStyleID")
-    private Integer styleId;
+    public abstract Integer styleId();
 
+    @Nullable
     @SerializedName("BeerStyleName")
-    private String styleName;
+    public abstract String styleName();
 
+    @Nullable
     @SerializedName("Alcohol")
-    private Float alcohol;
+    public abstract Float alcohol();
 
+    @Nullable
     @SerializedName("IBU")
-    private Float ibu;
+    public abstract Float ibu();
 
+    @Nullable
     @SerializedName("Description")
-    private String description;
+    public abstract String description();
 
+    @Nullable
     @SerializedName("IsAlias")
-    private Boolean isAlias;
+    public abstract Boolean isAlias();
 
+    @Nullable
     @SerializedName("BrewerID")
-    private Integer brewerId;
+    public abstract Integer brewerId();
 
+    @Nullable
     @SerializedName("BrewerName")
-    private String brewerName;
+    public abstract String brewerName();
 
+    @Nullable
     @SerializedName("BrewerCountryId")
-    private Integer countryId;
+    public abstract Integer countryId();
 
+    @Nullable
     @SerializedName("Liked")
-    private Integer tickValue;
+    public abstract Integer tickValue();
 
+    @Nullable
     @SerializedName("TimeEntered")
-    private Date tickDate;
+    public abstract Date tickDate();
 
-    // This may need to be serialized later
-    private int reviewId;
+    // Metadata
 
-    // Metadata fields
-    private boolean isModified;
-    private Date updateDate;
-    private Date accessDate;
+    @Nullable
+    public abstract Integer reviewId();
 
-    @NonNull
-    @Override
-    protected Class<Beer> getTypeParameterClass() {
-        return Beer.class;
-    }
+    @Nullable
+    public abstract Boolean isModified();
 
-    public int getId() {
-        return id;
-    }
+    @Nullable
+    public abstract Date updateDate();
 
-    @NonNull
-    public String getName() {
-        return name;
-    }
+    @Nullable
+    public abstract Date accessDate();
 
-    @NonNull
-    public String getStyleName() {
-        return styleName;
-    }
-
-    @NonNull
-    public String getBrewerName() {
-        return brewerName;
-    }
-
-    public int getRating() {
-        return overallRating != null ? Math.round(overallRating) : -1;
-    }
-
-    public float getAbv() {
-        return alcohol != null ? alcohol : -1;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getImageUri() {
-        return String.format("https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg", getId());
-    }
+    // Accessors
 
     public boolean hasDetails() {
-        return brewerId != null
+        final String styleName = styleName();
+
+        return brewerId() != null
                 && styleName != null
                 && !styleName.isEmpty();
     }
 
+    public int rating() {
+        return overallRating() != null ? Math.round(overallRating()) : -1;
+    }
+
+    public float getAbv() {
+        return alcohol() != null ? alcohol() : -1;
+    }
+
+    public String getImageUri() {
+        return String.format("https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg", id());
+    }
+
     public boolean isTicked() {
-        return tickValue > 0;
+        return tickValue() > 0;
     }
 
     public int getTickValue() {
-        return tickValue != null ? tickValue : -1;
+        return tickValue() != null ? tickValue() : -1;
     }
 
-    public void setTickValue(int value) {
-        tickValue = value >= 0 ? value : null;
-    }
+    // Equality
 
-    public Date getTickDate() {
-        return DateUtils.value(tickDate);
-    }
-
-    public void setTickDate(Date date) {
-        tickDate = date;
-    }
-
-    public boolean isReviewed() {
-        return reviewId > 0;
-    }
-
-    public int getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(int value) {
-        reviewId = value;
-    }
-
-    public boolean isModified() {
-        return isModified;
-    }
-
-    public void setIsModified(boolean value) {
-        isModified = value;
+    @Override
+    public boolean dataEquals(@NonNull final Beer other) {
+        return false;
     }
 
     @Override
-    public Date getUpdateDate() {
-        return updateDate;
+    public boolean metadataEquals(@NonNull final Beer other) {
+        if (updateDate() != null ? !updateDate().equals(other.updateDate()) : other.updateDate()!= null) return false;
+        if (accessDate() != null ? !accessDate().equals(other.accessDate()) : other.accessDate()!= null) return false;
+
+        return isModified() == other.isModified();
     }
 
-    @Override
-    public void setUpdateDate(Date date) {
-        updateDate = date;
+    // Plumbing
+
+    @NonNull
+    public static TypeAdapter<Beer> typeAdapter(@NonNull final Gson gson) {
+        return new AutoValue_Beer.GsonTypeAdapter(get(gson));
     }
 
-    @Override
-    public Date getAccessDate() {
-        return accessDate;
-    }
+    @SuppressWarnings("ClassReferencesSubclass")
+    @AutoValue.Builder
+    public abstract static class Builder extends Overwriting<AutoValue_Beer.Builder> {
 
-    @Override
-    public void setAccessDate(Date date) {
-        accessDate = date;
-    }
+        public abstract Builder id(final Integer id);
 
-    @Override
-    public String toString() {
-        return "Beer{" + "id=" + id
-                + ", name='" + name + '\''
-                + ", style='" + styleName + '\''
-                + ", brewer='" + brewerName + '\''
-                + '}';
-    }
+        public abstract Builder name(@Nullable final String name);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o == null || getClass() != o.getClass()) {
-            return false;
+        public abstract Builder averageRating(@Nullable final Float averageRating);
+
+        public abstract Builder overallRating(@Nullable final Float overallRating);
+
+        public abstract Builder styleRating(@Nullable final Float styleRating);
+
+        public abstract Builder rateCount(@Nullable final Float rateCount);
+
+        public abstract Builder styleId(@Nullable final Integer styleId);
+
+        public abstract Builder styleName(@Nullable final String styleName);
+
+        public abstract Builder alcohol(@Nullable final Float alcohol);
+
+        public abstract Builder ibu(@Nullable final Float ibu);
+
+        public abstract Builder description(@Nullable final String description);
+
+        public abstract Builder isAlias(@Nullable final Boolean isAlias);
+
+        public abstract Builder brewerId(@Nullable final Integer brewerId);
+
+        public abstract Builder brewerName(@Nullable final String brewerName);
+
+        public abstract Builder countryId(@Nullable final Integer countryId);
+
+        public abstract Builder tickValue(@Nullable final Integer tickValue);
+
+        public abstract Builder tickDate(@Nullable final Date tickDate);
+
+        public abstract Builder reviewId(@Nullable final Integer reviewId);
+
+        public abstract Builder isModified(@Nullable final Boolean isModified);
+
+        public abstract Builder updateDate(@Nullable final Date updateDate);
+
+        public abstract Builder accessDate(@Nullable final Date accessDate);
+
+        public abstract Beer build();
+
+        @NonNull
+        @Override
+        protected Class<AutoValue_Beer.Builder> getTypeParameterClass() {
+            return AutoValue_Beer.Builder.class;
         }
-
-        Beer beer = (Beer) o;
-        if (id != beer.id) return false;
-
-        return metadataEquals(beer) && dataEquals(beer);
     }
 
-    // Function for checking the data equality. Useful when we want to check only the data
-    // parts, leaving out e.g. the beer access date. Note that we need to check every field:
-    // this is an object comparison, not beer identity comparison.
-    @Override
-    public boolean dataEquals(Beer beer) {
-        if (name != null ? !name.equals(beer.name) : beer.name != null) return false;
-        if (styleName != null ? !styleName.equals(beer.styleName) : beer.styleName != null) return false;
-        if (description != null ? !description.equals(beer.description) : beer.description != null) return false;
-
-        if (styleId != null ? !styleId.equals(beer.styleId) : beer.styleId != null) return false;
-        if (brewerId != null ? !brewerId.equals(beer.brewerId) : beer.brewerId != null) return false;
-        if (countryId != null ? !countryId.equals(beer.countryId) : beer.countryId != null) return false;
-
-        if (ibu != null ? !ibu.equals(beer.ibu) : beer.ibu != null) return false;
-        if (alcohol != null ? !alcohol.equals(beer.alcohol) : beer.alcohol != null) return false;
-        if (brewerName != null ? !brewerName.equals(beer.brewerName) : beer.brewerName != null) return false;
-
-        if (averageRating != null ? !averageRating.equals(beer.averageRating) : beer.averageRating != null) return false;
-        if (overallRating != null ? !overallRating.equals(beer.overallRating) : beer.overallRating != null) return false;
-        if (styleRating != null ? !styleRating.equals(beer.styleRating) : beer.styleRating != null) return false;
-        if (rateCount != null ? !rateCount.equals(beer.rateCount) : beer.rateCount != null) return false;
-
-        if (tickValue != null ? !tickValue.equals(beer.tickValue) : beer.tickValue != null) return false;
-        if (tickDate != null ? !tickDate.equals(beer.tickDate) : beer.tickDate != null) return false;
-        if (reviewId != beer.reviewId) return false;
-
-        return isAlias != null ? isAlias.equals(beer.isAlias) : beer.isAlias == null;
+    @NonNull
+    public static Builder builder() {
+        return new AutoValue_Beer.Builder();
     }
 
-    @Override
-    public boolean metadataEquals(Beer beer) {
-        if (updateDate != null ? !updateDate.equals(beer.getUpdateDate()) : beer.getUpdateDate()!= null) return false;
-        if (accessDate != null ? !accessDate.equals(beer.getAccessDate()) : beer.getAccessDate()!= null) return false;
-
-        return isModified == beer.isModified;
+    @NonNull
+    public static Builder builder(@NonNull final Beer beer) {
+        return new AutoValue_Beer.Builder(beer);
     }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (averageRating != null ? averageRating.hashCode() : 0);
-        result = 31 * result + (overallRating != null ? overallRating.hashCode() : 0);
-        result = 31 * result + (styleRating != null ? styleRating.hashCode() : 0);
-        result = 31 * result + (rateCount != null ? rateCount.hashCode() : 0);
-        result = 31 * result + (styleId != null ? styleId.hashCode() : 0);
-        result = 31 * result + (styleName != null ? styleName.hashCode() : 0);
-        result = 31 * result + (alcohol != null ? alcohol.hashCode() : 0);
-        result = 31 * result + (ibu != null ? ibu.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (isAlias != null ? isAlias.hashCode() : 0);
-        result = 31 * result + (brewerId != null ? brewerId.hashCode() : 0);
-        result = 31 * result + (brewerName != null ? brewerName.hashCode() : 0);
-        result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + (tickValue != null ? tickValue.hashCode() : 0);
-        result = 31 * result + (tickDate != null ? tickDate.hashCode() : 0);
-        result = 31 * result + reviewId;
-        result = 31 * result + (isModified ? 1 : 0);
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
-        return result;
+    @NonNull
+    public static Beer merge(@NonNull final Beer v1, @NonNull final Beer v2) {
+        AutoValue_Beer.Builder builder1 = new AutoValue_Beer.Builder(get(v1));
+        AutoValue_Beer.Builder builder2 = new AutoValue_Beer.Builder(get(v2));
+
+        return builder1.overwrite(builder2).build();
     }
 }

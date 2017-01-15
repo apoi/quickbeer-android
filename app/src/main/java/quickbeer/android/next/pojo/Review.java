@@ -23,11 +23,11 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.Overwriting;
 import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Review extends BasePojo<Review> {
+public class Review extends Overwriting<Review> {
     @SerializedName("RatingID")
     private int id;
 

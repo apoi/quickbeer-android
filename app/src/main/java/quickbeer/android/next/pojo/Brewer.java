@@ -24,12 +24,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 
 import quickbeer.android.next.pojo.base.AccessTracking;
-import quickbeer.android.next.pojo.base.BasePojo;
+import quickbeer.android.next.pojo.base.Overwriting;
 import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.utils.DateUtils;
 import quickbeer.android.next.utils.StringUtils;
 
-public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer>, AccessTracking {
+public class Brewer extends Overwriting<Brewer> implements MetadataAware<Brewer>, AccessTracking {
     @SerializedName("BrewerID")
     private int id;
 
@@ -212,7 +212,7 @@ public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer>, A
     }
 
     @Override
-    public boolean dataEquals(Brewer brewer) {
+    public boolean dataEquals(@NonNull Brewer brewer) {
         if (name != null ? !name.equals(brewer.name) : brewer.name != null) return false;
         if (description != null ? !description.equals(brewer.description) : brewer.description != null) return false;
         if (address != null ? !address.equals(brewer.address) : brewer.address != null) return false;
@@ -246,7 +246,7 @@ public class Brewer extends BasePojo<Brewer> implements MetadataAware<Brewer>, A
     }
 
     @Override
-    public boolean metadataEquals(Brewer brewer) {
+    public boolean metadataEquals(@NonNull Brewer brewer) {
         if (updateDate != null ? !updateDate.equals(brewer.getUpdateDate()) : brewer.getUpdateDate()!= null) return false;
         if (accessDate != null ? !accessDate.equals(brewer.getAccessDate()) : brewer.getAccessDate()!= null) return false;
 

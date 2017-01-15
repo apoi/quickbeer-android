@@ -141,7 +141,7 @@ public class BeerListView extends FrameLayout {
                     .getBeer()
                     .first()
                     .subscribe(beer -> {
-                        viewModel.selectBeer(beer.getId());
+                        viewModel.selectBeer(beer.id());
                     });
         }
     }

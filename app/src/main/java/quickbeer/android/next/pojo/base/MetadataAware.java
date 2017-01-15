@@ -17,7 +17,9 @@
  */
 package quickbeer.android.next.pojo.base;
 
+import android.support.annotation.NonNull;
+
 public interface MetadataAware<T> {
-    boolean dataEquals(T other);
-    boolean metadataEquals(T other);
+    boolean dataEquals(@NonNull final T other);
+    boolean metadataEquals(@NonNull final T other);
 }

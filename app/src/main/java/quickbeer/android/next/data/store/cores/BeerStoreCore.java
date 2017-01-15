@@ -105,15 +105,15 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     public Observable<Beer> getNewlyAccessedItems(@NonNull final Date date) {
         return getStream()
                 .map(StoreItem::item)
-                .filter(item -> item.getAccessDate() != null)
+                .filter(item -> item.accessDate() != null)
                 .distinctUntilChanged(new Func1<Beer, Date>() {
                     // Access date as key object indicating distinction
                     private Date latestAccess = date;
 
                     @Override
                     public Date call(Beer item) {
-                        if (item.getAccessDate().after(latestAccess)) {
-                            latestAccess = item.getAccessDate();
+                        if (item.accessDate().after(latestAccess)) {
+                            latestAccess = item.accessDate();
                         }
                         return latestAccess;
                     }
@@ -165,30 +165,29 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
         final Date accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
 
-        Beer beer = getGson().fromJson(json, Beer.class);
-        beer.setTickValue(tickValue);
-        beer.setTickDate(tickDate);
-        beer.setReviewId(reviewId);
-        beer.setIsModified(isModified);
-        beer.setUpdateDate(updated);
-        beer.setAccessDate(accessed);
-
-        return beer;
+        return Beer.builder(getGson().fromJson(json, Beer.class))
+                .tickValue(tickValue)
+                .tickDate(tickDate)
+                .reviewId(reviewId)
+                .isModified(isModified)
+                .updateDate(updated)
+                .accessDate(accessed)
+                .build();
     }
 
     @NonNull
     @Override
     protected ContentValues getContentValuesForItem(@NonNull final Beer item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerColumns.ID, item.getId());
+        contentValues.put(BeerColumns.ID, item.id());
         contentValues.put(BeerColumns.JSON, getGson().toJson(item));
-        contentValues.put(BeerColumns.NAME, item.getName());
-        contentValues.put(BeerColumns.TICK_VALUE, item.getTickValue());
-        contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.getTickDate()));
-        contentValues.put(BeerColumns.REVIEW, item.getReviewId());
+        contentValues.put(BeerColumns.NAME, item.name());
+        contentValues.put(BeerColumns.TICK_VALUE, item.tickValue());
+        contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.tickDate()));
+        contentValues.put(BeerColumns.REVIEW, item.reviewId());
         contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
-        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
-        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.getAccessDate()));
+        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.updateDate()));
+        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.accessDate()));
 
         return contentValues;
     }
@@ -196,12 +195,6 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     @NonNull
     @Override
     protected Beer mergeValues(@NonNull final Beer v1, @NonNull final Beer v2) {
-        // Double-overwrite to avoid modifying the original values.
-        // Beer could implement a clone method instead.
-        Beer newValue = new Beer();
-        newValue.overwrite(v1);
-        newValue.overwrite(v2);
-
-        return newValue;
+        return Beer.merge(v1, v2);
     }
 }

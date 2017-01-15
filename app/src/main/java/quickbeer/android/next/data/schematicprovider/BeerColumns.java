@@ -18,8 +18,12 @@
 package quickbeer.android.next.data.schematicprovider;
 
 import net.simonvt.schematic.annotation.DataType;
+import net.simonvt.schematic.annotation.PrimaryKey;
 
-public interface BeerColumns extends JsonIdColumns {
+public interface BeerColumns {
+    @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "id";
+    @DataType(DataType.Type.TEXT) String JSON = "json";
+
     @DataType(DataType.Type.TEXT) String NAME = "name"; // Beer name
     @DataType(DataType.Type.INTEGER) String TICK_VALUE = "tick_value"; // Tick value
     @DataType(DataType.Type.INTEGER) String TICK_DATE = "tick_date"; // Tick date

@@ -79,21 +79,21 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
     public void setBeer(@NonNull final Beer beer) {
         Preconditions.checkNotNull(beer, "Beer cannot be null.");
 
-        String rating = beer.getRating() >= 0
-                ? String.valueOf(beer.getRating())
+        String rating = beer.rating() >= 0
+                ? String.valueOf(beer.rating())
                 : "?";
 
         if (beer.getTickValue() > 0) {
             ratingTextView.setText("");
             ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
         } else {
-            ratingTextView.setText(Score.fromRating(beer.getRating()));
+            ratingTextView.setText(Score.fromRating(beer.rating()));
             ratingTextView.setBackgroundResource(R.drawable.score_unrated);
         }
 
-        nameTextView.setText(beer.getName());
-        styleTextView.setText(beer.getStyleName());
-        brewerTextView.setText(beer.getBrewerName());
+        nameTextView.setText(beer.name());
+        styleTextView.setText(beer.styleName());
+        brewerTextView.setText(beer.brewerName());
     }
 
     public void clear() {

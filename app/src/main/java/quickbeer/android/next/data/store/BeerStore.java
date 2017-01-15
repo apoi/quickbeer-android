@@ -37,7 +37,7 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
     public BeerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new BeerStoreCore(contentResolver, gson),
-              Beer::getId,
+              Beer::id,
               Option::ofObj,
               Option::none);
     }
@@ -47,7 +47,7 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
         // Simplistic strategy of refreshing ticks list always on stream updates
         return ((BeerStoreCore) getCore())
                 .getAllStream()
-                .filter(beer -> beer.getTickDate() != null)
+                .filter(beer -> beer.tickDate() != null)
                 .debounce(1000, TimeUnit.MILLISECONDS)
                 .flatMap(beer -> queryTicks())
                 .observeOn(Schedulers.computation())
@@ -66,6 +66,6 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
     public Observable<Integer> getNewlyAccessedIds(@NonNull final Date date) {
         return ((BeerStoreCore) getCore()).getNewlyAccessedItems(date)
-                                          .map(Beer::getId);
+                                          .map(Beer::id);
     }
 }

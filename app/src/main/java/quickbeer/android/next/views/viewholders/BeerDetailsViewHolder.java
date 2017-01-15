@@ -66,16 +66,16 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
             ratingTextView.setText("");
             ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
         } else {
-            ratingTextView.setText(Score.fromRating(beer.getRating()));
+            ratingTextView.setText(Score.fromRating(beer.rating()));
             ratingTextView.setBackgroundResource(R.drawable.score_unrated);
         }
 
-        nameTextView.setText(beer.getName());
-        styleTextView.setText(beer.getStyleName());
-        abvTextView.setText(String.format("ABV: %.1f%%", beer.getAbv()));
-        brewerTextView.setText(beer.getBrewerName());
+        nameTextView.setText(beer.name());
+        styleTextView.setText(beer.styleName());
+        abvTextView.setText(String.format("ABV: %.1f%%", beer.alcohol()));
+        brewerTextView.setText(beer.brewerName());
         locationTextView.setText("TODO data from brewer");
-        descriptionTextView.setText(StringUtils.value(beer.getDescription(), "No description available."));
+        descriptionTextView.setText(StringUtils.value(beer.description(), "No description available."));
 
         imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
