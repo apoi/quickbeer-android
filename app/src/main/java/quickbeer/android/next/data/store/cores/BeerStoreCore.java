@@ -166,7 +166,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
         final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
 
-        return Beer.builder(getGson().fromJson(json, Beer.class))
+        return Beer.builder(Beer.fromJson(json, getGson()))
                 .tickValue(tickValue)
                 .tickDate(tickDate)
                 //.reviewId(reviewId)

@@ -75,6 +75,7 @@ public final class NetworkModule {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringDeserializer())
                 .registerTypeAdapter(DateTime.class, new DateDeserializer())
+                .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
                 .create();
     }
 

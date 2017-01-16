@@ -40,7 +40,8 @@ public class NetworkApi {
 
     private final RateBeerService rateBeerService;
 
-    public NetworkApi(@NonNull final OkHttpClient client, @NonNull final Gson gson) {
+    public NetworkApi(@NonNull final OkHttpClient client,
+                      @NonNull final Gson gson) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(get(gson)))

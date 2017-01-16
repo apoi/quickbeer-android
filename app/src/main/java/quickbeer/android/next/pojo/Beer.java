@@ -23,12 +23,15 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
+import java.io.IOException;
 import java.util.Locale;
 
+import io.reark.reark.utils.Log;
 import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.pojo.base.Overwriting;
 import quickbeer.android.next.utils.Constants;
@@ -37,8 +40,11 @@ import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
+@JsonAdapter(AutoValue_Beer.GsonTypeAdapter.class)
 @AutoValue
 public abstract class Beer implements MetadataAware<Beer> {
+
+    private static final String TAG = Beer.class.getSimpleName();
 
     @NonNull
     @SerializedName("BeerID")
@@ -159,11 +165,6 @@ public abstract class Beer implements MetadataAware<Beer> {
 
     // Plumbing
 
-    @NonNull
-    public static TypeAdapter<Beer> typeAdapter(@NonNull final Gson gson) {
-        return new AutoValue_Beer.GsonTypeAdapter(get(gson));
-    }
-
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
     public abstract static class Builder extends Overwriting<AutoValue_Beer.Builder> {
@@ -210,6 +211,21 @@ public abstract class Beer implements MetadataAware<Beer> {
         @Override
         protected Class<AutoValue_Beer.Builder> getTypeParameterClass() {
             return AutoValue_Beer.Builder.class;
+        }
+    }
+
+    @NonNull
+    public static TypeAdapter<Beer> typeAdapter(@NonNull final Gson gson) {
+        return new AutoValue_Beer.GsonTypeAdapter(get(gson));
+    }
+
+    @NonNull
+    public static Beer fromJson(@NonNull final String json, @NonNull final Gson gson) {
+        try {
+            return new AutoValue_Beer.GsonTypeAdapter(get(gson)).fromJson(get(json));
+        } catch (IOException e) {
+            Log.e(TAG, "Failed parsing json!", e);
+            return builder().build();
         }
     }
 

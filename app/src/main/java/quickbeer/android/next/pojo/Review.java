@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
@@ -34,6 +35,7 @@ import quickbeer.android.next.utils.StringUtils;
 import static io.reark.reark.utils.Preconditions.get;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
+@JsonAdapter(AutoValue_Review.GsonTypeAdapter.class)
 @AutoValue
 public abstract class Review {
 
