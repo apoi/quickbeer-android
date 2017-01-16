@@ -15,16 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next.data.schematicprovider;
+package quickbeer.android.next.utils;
 
-import net.simonvt.schematic.annotation.DataType;
-import net.simonvt.schematic.annotation.PrimaryKey;
+public interface Constants {
 
-public interface BrewerColumns {
-    @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "id";
-    @DataType(DataType.Type.TEXT) String JSON = "json";
+    String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
 
-    @DataType(DataType.Type.TEXT) String NAME = "name"; // Brewer name
-    @DataType(DataType.Type.INTEGER) String UPDATED = "updated"; // Date of the last data fetch
-    @DataType(DataType.Type.INTEGER) String ACCESSED = "accessed"; // Date of the last access
 }

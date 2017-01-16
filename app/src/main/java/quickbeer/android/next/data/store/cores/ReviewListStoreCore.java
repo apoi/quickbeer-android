@@ -26,8 +26,9 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
+
 import java.lang.reflect.Type;
-import java.util.Date;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
@@ -73,11 +74,12 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
         };
     }
 
+    @SuppressWarnings("EmptyClass")
     @NonNull
     @Override
     protected ItemList<Integer> read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
         Type listType = new TypeToken<ItemList<Integer>>(){}.getType();
         ItemList<Integer> reviewList = getGson().fromJson(json, listType);

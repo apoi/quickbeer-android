@@ -15,38 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.next;
+package quickbeer.android.next.pojo;
 
-import android.app.Application;
 import android.support.annotation.NonNull;
 
-import net.danlew.android.joda.JodaTimeAndroid;
+import com.google.auto.value.AutoValue;
 
-import quickbeer.android.next.injections.ApplicationGraph;
+import org.joda.time.DateTime;
 
-public class QuickBeer extends Application {
-    private static QuickBeer instance;
-    private ApplicationGraph applicationGraph;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        JodaTimeAndroid.init(this);
-
-        instance = this;
-
-        applicationGraph = ApplicationGraph.Initializer.init(this);
-        applicationGraph.inject(this);
-    }
+@AutoValue
+public abstract class Metadata {
 
     @NonNull
-    public static QuickBeer getInstance() {
-        return instance;
-    }
+    public abstract DateTime updated();
 
     @NonNull
-    public ApplicationGraph getGraph() {
-        return applicationGraph;
-    }
+    public abstract DateTime accessed();
+
 }

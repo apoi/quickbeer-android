@@ -25,8 +25,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.data.stores.StoreItem;
@@ -102,18 +103,18 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     }
 
     @NonNull
-    public Observable<Beer> getNewlyAccessedItems(@NonNull final Date date) {
+    public Observable<Beer> getNewlyAccessedItems(@NonNull final DateTime date) {
         return getStream()
                 .map(StoreItem::item)
-                .filter(item -> item.accessDate() != null)
-                .distinctUntilChanged(new Func1<Beer, Date>() {
+                .filter(item -> DateUtils.isValidDate(item.metadata().accessed()))
+                .distinctUntilChanged(new Func1<Beer, DateTime>() {
                     // Access date as key object indicating distinction
-                    private Date latestAccess = date;
+                    private DateTime latestAccess = date;
 
                     @Override
-                    public Date call(Beer item) {
-                        if (item.accessDate().after(latestAccess)) {
-                            latestAccess = item.accessDate();
+                    public DateTime call(Beer item) {
+                        if (item.metadata().accessed().isAfter(latestAccess)) {
+                            latestAccess = item.metadata().accessed();
                         }
                         return latestAccess;
                     }
@@ -159,19 +160,19 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     protected Beer read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
         final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
-        final Date tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
+        final DateTime tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
         final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerColumns.REVIEW));
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerColumns.MODIFIED)) > 0;
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
-        final Date accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
+        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
 
         return Beer.builder(getGson().fromJson(json, Beer.class))
                 .tickValue(tickValue)
                 .tickDate(tickDate)
-                .reviewId(reviewId)
-                .isModified(isModified)
-                .updateDate(updated)
-                .accessDate(accessed)
+                //.reviewId(reviewId)
+                //.isModified(isModified)
+                //.updateDate(updated)
+                //.accessDate(accessed)
                 .build();
     }
 
@@ -184,10 +185,10 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         contentValues.put(BeerColumns.NAME, item.name());
         contentValues.put(BeerColumns.TICK_VALUE, item.tickValue());
         contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.tickDate()));
-        contentValues.put(BeerColumns.REVIEW, item.reviewId());
-        contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
-        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.updateDate()));
-        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.accessDate()));
+        //contentValues.put(BeerColumns.REVIEW, item.reviewId());
+        //contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
+        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.metadata().updated()));
+        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.metadata().accessed()));
 
         return contentValues;
     }

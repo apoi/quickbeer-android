@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -99,7 +101,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                         reviewStore.put(review);
                         reviewIds.add(review.getId());
                     }
-                    return new ItemList<>(beerId, reviewIds, new Date());
+                    return new ItemList<>(beerId, reviewIds, DateTime.now());
                 })
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))

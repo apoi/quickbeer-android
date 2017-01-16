@@ -25,8 +25,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.data.stores.StoreItem;
@@ -73,18 +74,18 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     }
 
     @NonNull
-    public Observable<Brewer> getNewlyAccessedItems(@NonNull final Date date) {
+    public Observable<Brewer> getNewlyAccessedItems(@NonNull final DateTime date) {
         return getStream()
                 .map(StoreItem::item)
-                .filter(item -> item.getAccessDate() != null)
-                .distinctUntilChanged(new Func1<Brewer, Date>() {
+                .filter(item -> item.metadata().accessed().isAfter(0))
+                .distinctUntilChanged(new Func1<Brewer, DateTime>() {
                     // Access date as key object indicating distinction
-                    private Date latestAccess = date;
+                    private DateTime latestAccess = date;
 
                     @Override
-                    public Date call(Brewer item) {
-                        if (item.getAccessDate().after(latestAccess)) {
-                            latestAccess = item.getAccessDate();
+                    public DateTime call(Brewer item) {
+                        if (item.metadata().accessed().isAfter(latestAccess)) {
+                            latestAccess = item.metadata().accessed();
                         }
                         return latestAccess;
                     }
@@ -125,25 +126,24 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     @Override
     protected Brewer read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BrewerColumns.JSON));
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerColumns.UPDATED)));
-        final Date accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerColumns.ACCESSED)));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerColumns.UPDATED)));
+        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerColumns.ACCESSED)));
 
-        Brewer brewer = getGson().fromJson(json, Brewer.class);
-        brewer.setUpdateDate(updated);
-        brewer.setAccessDate(accessed);
-
-        return brewer;
+        return Brewer.builder(getGson().fromJson(json, Brewer.class))
+                //.updateDate(updated)
+                //.accessDate(accessed)
+                .build();
     }
 
     @NonNull
     @Override
     protected ContentValues getContentValuesForItem(@NonNull final Brewer item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BrewerColumns.ID, item.getId());
+        contentValues.put(BrewerColumns.ID, item.id());
         contentValues.put(BrewerColumns.JSON, getGson().toJson(item));
-        contentValues.put(BrewerColumns.NAME, item.getName());
-        contentValues.put(BrewerColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
-        contentValues.put(BrewerColumns.ACCESSED, DateUtils.toDbValue(item.getAccessDate()));
+        contentValues.put(BrewerColumns.NAME, item.name());
+        contentValues.put(BrewerColumns.UPDATED, DateUtils.toDbValue(item.metadata().updated()));
+        contentValues.put(BrewerColumns.ACCESSED, DateUtils.toDbValue(item.metadata().accessed()));
 
         return contentValues;
     }
@@ -151,10 +151,6 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     @NonNull
     @Override
     protected Brewer mergeValues(@NonNull final Brewer v1, @NonNull final Brewer v2) {
-        Brewer newValue = new Brewer();
-        newValue.overwrite(v1);
-        newValue.overwrite(v2);
-
-        return newValue;
+        return Brewer.merge(v1, v2);
     }
 }

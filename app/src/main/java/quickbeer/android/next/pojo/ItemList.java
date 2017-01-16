@@ -17,44 +17,60 @@
  */
 package quickbeer.android.next.pojo;
 
-import java.util.Date;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ItemList<T> {
-    private final T key;
-    private final List<Integer> items;
-    private Date updateDate;
 
-    public ItemList(final T key, final List<Integer> items, final Date updateDate) {
+    @Nullable
+    private final T key;
+
+    @NonNull
+    private final List<Integer> items;
+
+    @Nullable
+    private DateTime updateDate;
+
+    public ItemList(@Nullable final T key, @NonNull final List<Integer> items, @Nullable final DateTime updateDate) {
         this.key = key;
-        this.items = items;
+        this.items = new ArrayList<>(items);
         this.updateDate = updateDate;
     }
 
+    @NonNull
     public static <T> ItemList<T> create(final List<Integer> items) {
         return new ItemList<>(null, items, null);
     }
 
+    @Nullable
     public T getKey() {
         return key;
     }
 
+    @NonNull
     public List<Integer> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
-    public Date getUpdateDate() {
+    @Nullable
+    public DateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(Date value) {
+    public void setUpdateDate(@Nullable final DateTime value) {
         updateDate = value;
     }
 
     @Override
     public String toString() {
         return "ItemList{key=" + key
-                + ", items='" + (items == null ? "null " : items.size())
+                + ", items='" + items.size()
                 + ", updated='" + updateDate
                 + "'}";
     }

@@ -18,275 +18,260 @@
 package quickbeer.android.next.pojo;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import org.joda.time.DateTime;
 
-import quickbeer.android.next.pojo.base.AccessTracking;
-import quickbeer.android.next.pojo.base.Overwriting;
 import quickbeer.android.next.pojo.base.MetadataAware;
-import quickbeer.android.next.utils.DateUtils;
-import quickbeer.android.next.utils.StringUtils;
+import quickbeer.android.next.pojo.base.Overwriting;
 
-public class Brewer extends Overwriting<Brewer> implements MetadataAware<Brewer>, AccessTracking {
+import static io.reark.reark.utils.Preconditions.get;
+
+@SuppressWarnings("InnerClassReferencedViaSubclass")
+@AutoValue
+public abstract class Brewer implements MetadataAware<Brewer> {
+
+    @NonNull
     @SerializedName("BrewerID")
-    private int id;
+    public abstract Integer id();
 
+    @Nullable
     @SerializedName("BrewerName")
-    private String name;
+    public abstract String name();
 
+    @Nullable
     @SerializedName("BrewerDescription")
-    private String description;
+    public abstract String description();
 
+    @Nullable
     @SerializedName("BrewerAddress")
-    private String address;
+    public abstract String address();
 
+    @Nullable
     @SerializedName("BrewerCity")
-    private String city;
+    public abstract String city();
 
+    @Nullable
     @SerializedName("BrewerStateID")
-    private Integer stateId;
+    public abstract Integer stateId();
 
+    @Nullable
     @SerializedName("BrewerCountryID")
-    private Integer countryId;
+    public abstract Integer countryId();
 
+    @Nullable
     @SerializedName("BrewerZipCode")
-    private String zipCode;
+    public abstract String zipCode();
 
+    @Nullable
     @SerializedName("BrewerTypeID")
-    private Integer typeId;
+    public abstract Integer typeId();
 
+    @Nullable
     @SerializedName("BrewerType")
-    private String type;
+    public abstract String type();
 
+    @Nullable
     @SerializedName("BrewerWebSite")
-    private String website;
+    public abstract String website();
 
+    @Nullable
     @SerializedName("Facebook")
-    private String facebook;
+    public abstract String facebook();
 
+    @Nullable
     @SerializedName("Twitter")
-    private String twitter;
+    public abstract String twitter();
 
+    @Nullable
     @SerializedName("BrewerEmail")
-    private String email;
+    public abstract String email();
 
+    @Nullable
     @SerializedName("BrewerPhone")
-    private String phone;
+    public abstract String phone();
 
+    @Nullable
     @SerializedName("Barrels")
-    private Integer barrels;
+    public abstract Integer barrels();
 
+    @Nullable
     @SerializedName("Opened")
-    private Date opened;
+    public abstract DateTime opened();
 
+    @Nullable
     @SerializedName("EnteredOn")
-    private Date enteredOn;
+    public abstract DateTime enteredOn();
 
+    @Nullable
     @SerializedName("EnteredBy")
-    private Integer enteredBy;
+    public abstract Integer enteredBy();
 
+    @Nullable
     @SerializedName("LogoImage")
-    private String logo;
+    public abstract String logo();
 
+    @Nullable
     @SerializedName("ViewCount")
-    private String viewCount;
+    public abstract String viewCount();
 
+    @Nullable
     @SerializedName("Score")
-    private Integer score;
+    public abstract Integer score();
 
+    @Nullable
     @SerializedName("OOB")
-    private Boolean outOfBusiness;
+    public abstract Boolean outOfBusiness();
 
+    @Nullable
     @SerializedName("retired")
-    private Boolean retired;
+    public abstract Boolean retired();
 
+    @Nullable
     @SerializedName("AreaCode")
-    private String areaCode;
+    public abstract String areaCode();
 
+    @Nullable
     @SerializedName("Hours")
-    private String hours;
+    public abstract String hours();
 
+    @Nullable
     @SerializedName("HeadBrewer")
-    private String headBrewer;
+    public abstract String headBrewer();
 
+    @Nullable
     @SerializedName("MetroID")
-    private String metroId;
+    public abstract String metroId();
 
+    @Nullable
     @SerializedName("MSA")
-    private String msa;
+    public abstract String msa();
 
+    @Nullable
     @SerializedName("RegionID")
-    private String regionId;
+    public abstract String regionId();
 
-    // Metadata fields
-    private Date updateDate;
-    private Date accessDate;
+    // Metadata
 
     @NonNull
+    public abstract Metadata metadata();
+
+    // Accessors
+
+    // Equality
+
     @Override
-    protected Class<Brewer> getTypeParameterClass() {
-        return Brewer.class;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    @NonNull
-    public String getName() {
-        return StringUtils.value(name);
-    }
-
-    @NonNull
-    public String getDescription() {
-        return StringUtils.value(description);
-    }
-
-    @NonNull
-    public String getCity() {
-        return StringUtils.value(city);
-    }
-
-    public int getCountryId() {
-        return countryId != null ? countryId : -1;
-    }
-
-    @NonNull
-    public String getType() {
-        return StringUtils.value(type);
-    }
-
-    @NonNull
-    public String getWebsite() {
-        return StringUtils.value(website);
-    }
-
-    @NonNull
-    public Date getOpened() {
-        return DateUtils.value(opened);
+    public boolean dataEquals(@NonNull final Brewer other) {
+        return false; // TODO how to do this nicely
     }
 
     @Override
-    public Date getUpdateDate() {
-        return updateDate;
+    public boolean metadataEquals(@NonNull final Brewer other) {
+        return metadata().equals(other.metadata());
     }
 
-    @Override
-    public void setUpdateDate(Date date) {
-        updateDate = date;
+    // Plumbing
+
+    @NonNull
+    public static TypeAdapter<Brewer> typeAdapter(@NonNull final Gson gson) {
+        return new AutoValue_Brewer.GsonTypeAdapter(get(gson));
     }
 
-    @Override
-    public Date getAccessDate() {
-        return accessDate;
-    }
+    @SuppressWarnings("ClassReferencesSubclass")
+    @AutoValue.Builder
+    public abstract static class Builder extends Overwriting<AutoValue_Brewer.Builder> {
 
-    @Override
-    public void setAccessDate(Date date) {
-        accessDate = date;
-    }
+        public abstract Builder id(final Integer id);
 
-    @Override
-    public String toString() {
-        return "Brewer{" +
-                "name='" + name + '\'' +
-                ", city='" + city + '\'' +
-                ", countryId=" + countryId +
-                '}';
-    }
+        public abstract Builder name(@Nullable final String id);
+        
+        public abstract Builder description(@Nullable final String description);
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        } else if (o == null || getClass() != o.getClass()) {
-            return false;
+        public abstract Builder address(@Nullable final String address);
+
+        public abstract Builder city(@Nullable final String city);
+
+        public abstract Builder stateId(@Nullable final Integer stateId);
+
+        public abstract Builder countryId(@Nullable final Integer countryId);
+
+        public abstract Builder zipCode(@Nullable final String zipCode);
+
+        public abstract Builder typeId(@Nullable final Integer typeId);
+
+        public abstract Builder type(@Nullable final String type);
+
+        public abstract Builder website(@Nullable final String website);
+
+        public abstract Builder facebook(@Nullable final String facebook);
+
+        public abstract Builder twitter(@Nullable final String twitter);
+
+        public abstract Builder email(@Nullable final String email);
+
+        public abstract Builder phone(@Nullable final String phone);
+
+        public abstract Builder barrels(@Nullable final Integer barrels);
+
+        public abstract Builder opened(@Nullable final DateTime opened);
+
+        public abstract Builder enteredOn(@Nullable final DateTime enteredOn);
+
+        public abstract Builder enteredBy(@Nullable final Integer enteredBy);
+
+        public abstract Builder logo(@Nullable final String logo);
+
+        public abstract Builder viewCount(@Nullable final String viewCount);
+
+        public abstract Builder score(@Nullable final Integer score);
+
+        public abstract Builder outOfBusiness(@Nullable final Boolean outOfBusiness);
+
+        public abstract Builder retired(@Nullable final Boolean retired);
+
+        public abstract Builder areaCode(@Nullable final String areaCode);
+
+        public abstract Builder hours(@Nullable final String hours);
+
+        public abstract Builder headBrewer(@Nullable final String headBrewer);
+
+        public abstract Builder metroId(@Nullable final String metroId);
+
+        public abstract Builder msa(@Nullable final String msa);
+
+        public abstract Builder regionId(@Nullable final String regionId);
+        
+        public abstract Builder metadata(@Nullable final Metadata metadata);
+
+        public abstract Brewer build();
+
+        @NonNull
+        @Override
+        protected Class<AutoValue_Brewer.Builder> getTypeParameterClass() {
+            return AutoValue_Brewer.Builder.class;
         }
-
-        Brewer brewer = (Brewer) o;
-        if (id != brewer.id) return false;
-
-        return metadataEquals(brewer) && dataEquals(brewer);
     }
 
-    @Override
-    public boolean dataEquals(@NonNull Brewer brewer) {
-        if (name != null ? !name.equals(brewer.name) : brewer.name != null) return false;
-        if (description != null ? !description.equals(brewer.description) : brewer.description != null) return false;
-        if (address != null ? !address.equals(brewer.address) : brewer.address != null) return false;
-        if (city != null ? !city.equals(brewer.city) : brewer.city != null) return false;
-        if (stateId != null ? !stateId.equals(brewer.stateId) : brewer.stateId != null) return false;
-        if (countryId != null ? !countryId.equals(brewer.countryId) : brewer.countryId != null) return false;
-        if (zipCode != null ? !zipCode.equals(brewer.zipCode) : brewer.zipCode != null) return false;
-        if (typeId != null ? !typeId.equals(brewer.typeId) : brewer.typeId != null) return false;
-        if (type != null ? !type.equals(brewer.type) : brewer.type != null) return false;
-        if (website != null ? !website.equals(brewer.website) : brewer.website != null) return false;
-        if (facebook != null ? !facebook.equals(brewer.facebook) : brewer.facebook != null) return false;
-        if (twitter != null ? !twitter.equals(brewer.twitter) : brewer.twitter != null) return false;
-        if (email != null ? !email.equals(brewer.email) : brewer.email != null) return false;
-        if (phone != null ? !phone.equals(brewer.phone) : brewer.phone != null) return false;
-        if (barrels != null ? !barrels.equals(brewer.barrels) : brewer.barrels != null) return false;
-        if (opened != null ? !opened.equals(brewer.opened) : brewer.opened != null) return false;
-        if (enteredOn != null ? !enteredOn.equals(brewer.enteredOn) : brewer.enteredOn != null) return false;
-        if (enteredBy != null ? !enteredBy.equals(brewer.enteredBy) : brewer.enteredBy != null) return false;
-        if (logo != null ? !logo.equals(brewer.logo) : brewer.logo != null) return false;
-        if (viewCount != null ? !viewCount.equals(brewer.viewCount) : brewer.viewCount != null) return false;
-        if (score != null ? !score.equals(brewer.score) : brewer.score != null) return false;
-        if (outOfBusiness != null ? !outOfBusiness.equals(brewer.outOfBusiness) : brewer.outOfBusiness != null) return false;
-        if (retired != null ? !retired.equals(brewer.retired) : brewer.retired != null) return false;
-        if (areaCode != null ? !areaCode.equals(brewer.areaCode) : brewer.areaCode != null) return false;
-        if (hours != null ? !hours.equals(brewer.hours) : brewer.hours != null) return false;
-        if (headBrewer != null ? !headBrewer.equals(brewer.headBrewer) : brewer.headBrewer != null) return false;
-        if (metroId != null ? !metroId.equals(brewer.metroId) : brewer.metroId != null) return false;
-        if (msa != null ? !msa.equals(brewer.msa) : brewer.msa != null) return false;
-
-        return regionId != null ? regionId.equals(brewer.regionId) : brewer.regionId == null;
+    @NonNull
+    public static Builder builder() {
+        return new AutoValue_Brewer.Builder();
     }
 
-    @Override
-    public boolean metadataEquals(@NonNull Brewer brewer) {
-        if (updateDate != null ? !updateDate.equals(brewer.getUpdateDate()) : brewer.getUpdateDate()!= null) return false;
-        if (accessDate != null ? !accessDate.equals(brewer.getAccessDate()) : brewer.getAccessDate()!= null) return false;
-
-        return true;
+    @NonNull
+    public static Builder builder(@NonNull final Brewer brewer) {
+        return new AutoValue_Brewer.Builder(brewer);
     }
 
-    @Override
-    public int hashCode() {
-        int result = id;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (stateId != null ? stateId.hashCode() : 0);
-        result = 31 * result + (countryId != null ? countryId.hashCode() : 0);
-        result = 31 * result + (zipCode != null ? zipCode.hashCode() : 0);
-        result = 31 * result + (typeId != null ? typeId.hashCode() : 0);
-        result = 31 * result + (type != null ? type.hashCode() : 0);
-        result = 31 * result + (website != null ? website.hashCode() : 0);
-        result = 31 * result + (facebook != null ? facebook.hashCode() : 0);
-        result = 31 * result + (twitter != null ? twitter.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (phone != null ? phone.hashCode() : 0);
-        result = 31 * result + (barrels != null ? barrels.hashCode() : 0);
-        result = 31 * result + (opened != null ? opened.hashCode() : 0);
-        result = 31 * result + (enteredOn != null ? enteredOn.hashCode() : 0);
-        result = 31 * result + (enteredBy != null ? enteredBy.hashCode() : 0);
-        result = 31 * result + (logo != null ? logo.hashCode() : 0);
-        result = 31 * result + (viewCount != null ? viewCount.hashCode() : 0);
-        result = 31 * result + (score != null ? score.hashCode() : 0);
-        result = 31 * result + (outOfBusiness != null ? outOfBusiness.hashCode() : 0);
-        result = 31 * result + (retired != null ? retired.hashCode() : 0);
-        result = 31 * result + (areaCode != null ? areaCode.hashCode() : 0);
-        result = 31 * result + (hours != null ? hours.hashCode() : 0);
-        result = 31 * result + (headBrewer != null ? headBrewer.hashCode() : 0);
-        result = 31 * result + (metroId != null ? metroId.hashCode() : 0);
-        result = 31 * result + (msa != null ? msa.hashCode() : 0);
-        result = 31 * result + (regionId != null ? regionId.hashCode() : 0);
-        result = 31 * result + (updateDate != null ? updateDate.hashCode() : 0);
-        result = 31 * result + (accessDate != null ? accessDate.hashCode() : 0);
-        return result;
+    @NonNull
+    public static Brewer merge(@NonNull final Brewer v1, @NonNull final Brewer v2) {
+        AutoValue_Brewer.Builder builder1 = new AutoValue_Brewer.Builder(get(v1));
+        AutoValue_Brewer.Builder builder2 = new AutoValue_Brewer.Builder(get(v2));
+
+        return builder1.overwrite(builder2).build();
     }
 }

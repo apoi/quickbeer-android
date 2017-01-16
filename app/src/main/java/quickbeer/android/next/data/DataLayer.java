@@ -21,7 +21,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -232,7 +233,7 @@ public class DataLayer extends DataLayerBase {
         beerStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> beerStore.getNewlyAccessedIds(new Date())
+                .flatMap(ids -> beerStore.getNewlyAccessedIds(DateTime.now())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )
@@ -540,7 +541,7 @@ public class DataLayer extends DataLayerBase {
 
         // Trigger a fetch only if full details haven't been fetched
         brewerStore.getOnceAndStream(brewerId)
-                .filter(option -> option.match(brewer -> brewer.getName().isEmpty(), () -> true))
+                .filter(option -> option.match(brewer -> brewer.name().isEmpty(), () -> true))
                 .doOnNext(beer -> Log.v(TAG, "Brewer not cached, fetching"))
                 .subscribe(beer -> fetchBrewer(brewerId));
 
@@ -569,7 +570,7 @@ public class DataLayer extends DataLayerBase {
                 .observeOn(Schedulers.computation())
                 .compose(RxUtils::pickValue)
                 .map(brewer -> {
-                    brewer.setAccessDate(new Date());
+                    //brewer.setAccessDate(new Date()); TODO separate access table
                     return brewer;
                 })
                 .subscribe(brewerStore::put,
@@ -597,7 +598,7 @@ public class DataLayer extends DataLayerBase {
         brewerStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> brewerStore.getNewlyAccessedIds(new Date())
+                .flatMap(ids -> brewerStore.getNewlyAccessedIds(DateTime.now())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )

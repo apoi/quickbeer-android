@@ -26,12 +26,16 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.ContainerLabelExtractor;
 import quickbeer.android.next.utils.Score;
 import quickbeer.android.next.utils.StringUtils;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 /**
  * View holder for all the beer details
@@ -49,18 +53,18 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     public BeerDetailsViewHolder(View view) {
         super(view);
 
-        this.ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
-        this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
-        this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
-        this.abvTextView = (TextView) view.findViewById(R.id.beer_abv);
-        this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
-        this.locationTextView = (TextView) view.findViewById(R.id.brewer_location);
-        this.descriptionTextView = (TextView) view.findViewById(R.id.beer_description);
-        this.imageView = (ImageView) view.findViewById(R.id.beer_details_image);
+        ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
+        nameTextView = (TextView) view.findViewById(R.id.beer_name);
+        styleTextView = (TextView) view.findViewById(R.id.beer_style);
+        abvTextView = (TextView) view.findViewById(R.id.beer_abv);
+        brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
+        locationTextView = (TextView) view.findViewById(R.id.brewer_location);
+        descriptionTextView = (TextView) view.findViewById(R.id.beer_description);
+        imageView = (ImageView) view.findViewById(R.id.beer_details_image);
     }
 
     public void setBeer(@NonNull final Beer beer) {
-        Preconditions.checkNotNull(beer, "Beer cannot be null.");
+        checkNotNull(beer);
 
         if (beer.getTickValue() > 0) {
             ratingTextView.setText("");
@@ -72,7 +76,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
         nameTextView.setText(beer.name());
         styleTextView.setText(beer.styleName());
-        abvTextView.setText(String.format("ABV: %.1f%%", beer.alcohol()));
+        abvTextView.setText(String.format(Locale.ROOT, "ABV: %.1f%%", beer.getAbv()));
         brewerTextView.setText(beer.brewerName());
         locationTextView.setText("TODO data from brewer");
         descriptionTextView.setText(StringUtils.value(beer.description(), "No description available."));

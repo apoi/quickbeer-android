@@ -22,7 +22,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.List;
 
 import polanski.option.Option;
@@ -35,7 +36,7 @@ public class BrewerStore  extends StoreBase<Integer, Brewer, Option<Brewer>> {
 
     public BrewerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new BrewerStoreCore(contentResolver, gson),
-              Brewer::getId,
+              Brewer::id,
               Option::ofObj,
               Option::none);
     }
@@ -45,8 +46,8 @@ public class BrewerStore  extends StoreBase<Integer, Brewer, Option<Brewer>> {
         return ((BrewerStoreCore) getCore()).getAccessedIds(BrewerColumns.ID, BrewerColumns.ACCESSED);
     }
 
-    public Observable<Integer> getNewlyAccessedIds(@NonNull final Date date) {
+    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
         return ((BrewerStoreCore) getCore()).getNewlyAccessedItems(date)
-                                            .map(Brewer::getId);
+                                            .map(Brewer::id);
     }
 }

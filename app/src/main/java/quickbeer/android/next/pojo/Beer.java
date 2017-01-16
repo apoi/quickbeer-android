@@ -25,12 +25,16 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
+import java.util.Locale;
 
 import quickbeer.android.next.pojo.base.MetadataAware;
 import quickbeer.android.next.pojo.base.Overwriting;
+import quickbeer.android.next.utils.Constants;
 
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
 @AutoValue
@@ -102,21 +106,12 @@ public abstract class Beer implements MetadataAware<Beer> {
 
     @Nullable
     @SerializedName("TimeEntered")
-    public abstract Date tickDate();
+    public abstract DateTime tickDate();
 
     // Metadata
 
-    @Nullable
-    public abstract Integer reviewId();
-
-    @Nullable
-    public abstract Boolean isModified();
-
-    @Nullable
-    public abstract Date updateDate();
-
-    @Nullable
-    public abstract Date accessDate();
+    @NonNull
+    public abstract Metadata metadata();
 
     // Accessors
 
@@ -129,38 +124,37 @@ public abstract class Beer implements MetadataAware<Beer> {
     }
 
     public int rating() {
-        return overallRating() != null ? Math.round(overallRating()) : -1;
+        return ofObj(overallRating())
+                .map(Math::round)
+                .orDefault(() -> -1);
     }
 
     public float getAbv() {
-        return alcohol() != null ? alcohol() : -1;
+        return ofObj(alcohol()).orDefault(() -> -1.0f);
     }
 
     public String getImageUri() {
-        return String.format("https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg", id());
+        return String.format(Locale.ROOT, Constants.BEER_IMAGE_PATH, id());
     }
 
     public boolean isTicked() {
-        return tickValue() > 0;
+        return getTickValue() > 0;
     }
 
     public int getTickValue() {
-        return tickValue() != null ? tickValue() : -1;
+        return ofObj(tickValue()).orDefault(() -> -1);
     }
 
     // Equality
 
     @Override
     public boolean dataEquals(@NonNull final Beer other) {
-        return false;
+        return false; // TODO how to do this nicely
     }
 
     @Override
     public boolean metadataEquals(@NonNull final Beer other) {
-        if (updateDate() != null ? !updateDate().equals(other.updateDate()) : other.updateDate()!= null) return false;
-        if (accessDate() != null ? !accessDate().equals(other.accessDate()) : other.accessDate()!= null) return false;
-
-        return isModified() == other.isModified();
+        return metadata().equals(other.metadata());
     }
 
     // Plumbing
@@ -206,15 +200,9 @@ public abstract class Beer implements MetadataAware<Beer> {
 
         public abstract Builder tickValue(@Nullable final Integer tickValue);
 
-        public abstract Builder tickDate(@Nullable final Date tickDate);
+        public abstract Builder tickDate(@Nullable final DateTime tickDate);
 
-        public abstract Builder reviewId(@Nullable final Integer reviewId);
-
-        public abstract Builder isModified(@Nullable final Boolean isModified);
-
-        public abstract Builder updateDate(@Nullable final Date updateDate);
-
-        public abstract Builder accessDate(@Nullable final Date accessDate);
+        public abstract Builder metadata(@Nullable final Metadata metadata);
 
         public abstract Beer build();
 

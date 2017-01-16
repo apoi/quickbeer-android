@@ -22,7 +22,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -64,7 +65,7 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
         return ((BeerStoreCore) getCore()).getAccessedIds(BeerColumns.ID, BeerColumns.ACCESSED);
     }
 
-    public Observable<Integer> getNewlyAccessedIds(@NonNull final Date date) {
+    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
         return ((BeerStoreCore) getCore()).getNewlyAccessedItems(date)
                                           .map(Beer::id);
     }

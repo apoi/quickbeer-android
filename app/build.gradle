@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "quickbeer.android.next"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -77,6 +77,9 @@ dependencies {
 
     // Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // Joda-Time
+    compile 'net.danlew:android.joda:2.9.5.1'
 
     // Retrofit
     compile 'com.squareup.retrofit2:retrofit:2.1.0'

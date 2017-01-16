@@ -21,6 +21,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +103,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                         beerStore.put(beer);
                         beerIds.add(beer.id());
                     }
-                    return new ItemList<>(queryId, beerIds, new Date());
+                    return new ItemList<>(queryId, beerIds, DateTime.now());
                 })
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))

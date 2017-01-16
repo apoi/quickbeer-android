@@ -21,12 +21,15 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.next.pojo.base.MetadataAware;
 import rx.functions.Func1;
 
+import static io.reark.reark.data.DataStreamNotification.Type.ON_NEXT;
+
 /**
  * Class to be used with Observable.distinctUntilChanged. This passes items only when they
  * differ from the previously passed item with their non-metadata parts. Metadata is identified
  * with the MetadataAware interface that the streamed classes should implement.
  */
 public class DistinctiveTracker<T extends MetadataAware<T>> implements Func1<DataStreamNotification<T>, Integer> {
+
     private int counter = 0; // Key object for indicating distinction
     private DataStreamNotification<T> previous;
 
@@ -43,19 +46,19 @@ public class DistinctiveTracker<T extends MetadataAware<T>> implements Func1<Dat
     private boolean isDistinctive(DataStreamNotification<T> notification) {
         if (previous == null) {
             return true;
-        } else if (!notification.getType().equals(previous.getType())) {
-            return true;
-        } else if (!notification.getType().equals(DataStreamNotification.Type.ON_NEXT)) {
-            return true;
-        } else {
-            final T first = notification.getValue();
-            final T second = previous.getValue();
-
-            if (first == null || second == null) {
-                return true;
-            } else {
-                return !first.dataEquals(second);
-            }
         }
+
+        if (notification.getType() != previous.getType()) {
+            return true;
+        }
+
+        if (notification.getType() != ON_NEXT) {
+            return true;
+        }
+
+        final T first = notification.getValue();
+        final T second = previous.getValue();
+
+        return (first == null || second == null) || !first.dataEquals(second);
     }
 }

@@ -26,6 +26,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
+
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
@@ -72,11 +74,12 @@ public class BeerListStoreCore extends StoreCoreBase<String, ItemList<String>> {
         };
     }
 
+    @SuppressWarnings("EmptyClass")
     @NonNull
     @Override
     protected ItemList<String> read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerListColumns.JSON));
-        final Date updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)));
 
         final Type listType = new TypeToken<ItemList<String>>(){}.getType();
         ItemList<String> beerList = getGson().fromJson(json, listType);
