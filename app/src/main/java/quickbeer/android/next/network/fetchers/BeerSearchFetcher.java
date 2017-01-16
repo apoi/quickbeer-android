@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
@@ -97,14 +96,11 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(query)
                 .subscribeOn(Schedulers.computation())
-                .map((beers) -> {
-                    final List<Integer> beerIds = new ArrayList<>(10);
-                    for (final Beer beer : beers) {
-                        beerStore.put(beer);
-                        beerIds.add(beer.id());
-                    }
-                    return new ItemList<>(queryId, beerIds, DateTime.now());
-                })
+                .flatMap(Observable::from)
+                .doOnNext(beerStore::put)
+                .map(Beer::id)
+                .toList()
+                .map(beerIds -> ItemList.create(queryId, beerIds, DateTime.now()))
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))

@@ -22,10 +22,8 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.data.stores.DefaultStore;
-import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.store.cores.StoreCoreBase;
-import quickbeer.android.next.pojo.ItemList;
 import rx.Observable;
 
 class StoreBase<T, U, R> extends DefaultStore<T, U, R> {

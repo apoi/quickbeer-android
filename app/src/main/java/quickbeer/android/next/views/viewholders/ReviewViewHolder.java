@@ -22,6 +22,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Review;
@@ -47,9 +49,9 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     public void setReview(@NonNull final Review review) {
         Preconditions.checkNotNull(review, "Review cannot be null.");
 
-        this.ratingTextView.setText(String.format("%.1f", review.getRating()));
-        this.descriptionTextView.setText(review.getDescription());
-        this.reviewerTextView.setText(String.format("%s @ %s", review.getReviewer(), review.getDate()));
+        this.ratingTextView.setText(String.format(Locale.ROOT, "%.1f", review.totalScore()));
+        this.descriptionTextView.setText(review.comments());
+        this.reviewerTextView.setText(String.format("%s @ %s", review.userName(), review.getDate()));
         this.locationTextView.setText(review.getLocation());
 
         if (review.getLocation().isEmpty()) {

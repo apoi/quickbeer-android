@@ -77,21 +77,16 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
         final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
 
-        Review review = getGson().fromJson(json, Review.class);
-        review.setIsDraft(isDraft);
-        review.setIsModified(isModified);
-
-        return review;
+        return Review.builder(getGson().fromJson(json, Review.class))
+                .build();
     }
 
     @NonNull
     @Override
     protected ContentValues getContentValuesForItem(@NonNull final Review item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewColumns.ID, item.getId());
+        contentValues.put(ReviewColumns.ID, item.id());
         contentValues.put(ReviewColumns.JSON, getGson().toJson(item));
-        contentValues.put(ReviewColumns.DRAFT, item.isDraft() ? 1 : 0);
-        contentValues.put(ReviewColumns.MODIFIED, item.isModified() ? 1 : 0);
 
         return contentValues;
     }
@@ -99,10 +94,6 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     @NonNull
     @Override
     protected Review mergeValues(@NonNull final Review v1, @NonNull final Review v2) {
-        Review newValue = new Review();
-        newValue.overwrite(v1);
-        newValue.overwrite(v2);
-
-        return newValue;
+        return Review.merge(v1, v2);
     }
 }

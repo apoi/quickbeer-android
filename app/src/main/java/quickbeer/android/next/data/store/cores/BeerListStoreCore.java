@@ -29,14 +29,11 @@ import com.google.gson.reflect.TypeToken;
 import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
-import java.util.Date;
-import java.util.List;
 
 import quickbeer.android.next.data.schematicprovider.BeerListColumns;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.pojo.ItemList;
 import quickbeer.android.next.utils.DateUtils;
-import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
 

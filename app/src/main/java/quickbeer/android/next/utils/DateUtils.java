@@ -17,14 +17,12 @@
  */
 package quickbeer.android.next.utils;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
 
 public final class DateUtils {

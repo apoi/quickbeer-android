@@ -23,8 +23,6 @@ import android.support.annotation.NonNull;
 
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
@@ -95,14 +93,11 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(beerId)
                 .subscribeOn(Schedulers.computation())
-                .map((reviews) -> {
-                    final List<Integer> reviewIds = new ArrayList<>(10);
-                    for (final Review review : reviews) {
-                        reviewStore.put(review);
-                        reviewIds.add(review.getId());
-                    }
-                    return new ItemList<>(beerId, reviewIds, DateTime.now());
-                })
+                .flatMap(Observable::from)
+                .doOnNext(reviewStore::put)
+                .map(Review::id)
+                .toList()
+                .map(reviewIds -> ItemList.create(beerId, reviewIds, DateTime.now()))
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))

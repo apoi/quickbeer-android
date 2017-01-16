@@ -29,12 +29,9 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.List;
 
-import io.reark.reark.data.stores.cores.ContentProviderStoreCore;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.data.schematicprovider.JsonIdColumns;
 import quickbeer.android.next.data.schematicprovider.NetworkRequestStatusColumns;
-import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider.NetworkRequestStatuses;
 import rx.Observable;
 

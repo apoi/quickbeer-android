@@ -30,9 +30,10 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.joda.time.DateTime;
+
 import java.net.CookieManager;
 import java.net.CookiePolicy;
-import java.util.Date;
 
 import javax.inject.Singleton;
 
@@ -73,7 +74,7 @@ public final class NetworkModule {
     public static Gson provideUnescapingGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringDeserializer())
-                .registerTypeAdapter(Date.class, new DateDeserializer())
+                .registerTypeAdapter(DateTime.class, new DateDeserializer())
                 .create();
     }
 

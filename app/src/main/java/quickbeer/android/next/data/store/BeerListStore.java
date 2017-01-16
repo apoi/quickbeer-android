@@ -18,20 +18,13 @@
 package quickbeer.android.next.data.store;
 
 import android.content.ContentResolver;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
 import polanski.option.Option;
 import quickbeer.android.next.data.store.cores.BeerListStoreCore;
-import quickbeer.android.next.network.RateBeerService;
 import quickbeer.android.next.pojo.ItemList;
-import rx.Observable;
-
-import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 /**
  * Class storing beer lists related to a string key, such as a search.

@@ -30,7 +30,7 @@ public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
 
     public ReviewStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new ReviewStoreCore(contentResolver, gson),
-              Review::getId,
+              Review::id,
               Option::ofObj,
               Option::none);
     }

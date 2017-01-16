@@ -18,7 +18,6 @@
 package quickbeer.android.next.data.store.cores;
 
 import android.content.ContentResolver;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
@@ -28,7 +27,6 @@ import java.util.List;
 import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.data.stores.cores.ContentProviderStoreCore;
 import quickbeer.android.next.data.schematicprovider.RateBeerProvider;
-import quickbeer.android.next.pojo.Beer;
 import rx.Observable;
 
 public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U> {

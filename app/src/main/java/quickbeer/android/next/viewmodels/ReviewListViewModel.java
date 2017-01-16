@@ -98,6 +98,6 @@ public class ReviewListViewModel extends BaseViewModel {
         return getReview
                 .call(reviewId)
                 .compose(quickbeer.android.next.rx.RxUtils::pickValue)
-                .doOnNext((review) -> Log.v(TAG, "Received review " + review.getId()));
+                .doOnNext((review) -> Log.v(TAG, "Received review " + review.id()));
     }
 }

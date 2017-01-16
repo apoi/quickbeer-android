@@ -28,7 +28,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.next.R;
 import quickbeer.android.next.pojo.Beer;
 import quickbeer.android.next.utils.ContainerLabelExtractor;

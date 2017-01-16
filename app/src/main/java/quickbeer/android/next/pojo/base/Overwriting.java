@@ -19,8 +19,9 @@ package quickbeer.android.next.pojo.base;
 
 import android.support.annotation.NonNull;
 
+import org.joda.time.DateTime;
+
 import java.lang.reflect.Field;
-import java.util.Date;
 
 import io.reark.reark.pojo.OverwritablePojo;
 import io.reark.reark.utils.Log;
@@ -37,8 +38,8 @@ public abstract class Overwriting<T extends OverwritablePojo<T>> extends Overwri
     protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {
         try {
             Object value = field.get(pojo);
-            if (value instanceof Date) {
-                return isEmpty((Date) value);
+            if (value instanceof DateTime) {
+                return isEmpty((DateTime) value);
             } else {
                 return super.isEmpty(field, pojo);
             }
@@ -49,8 +50,8 @@ public abstract class Overwriting<T extends OverwritablePojo<T>> extends Overwri
         return true;
     }
 
-    protected boolean isEmpty(Date value) {
-        return value.getTime() <= 0;
+    protected boolean isEmpty(DateTime value) {
+        return value.getMillis() <= 0;
     }
 
     @Override
