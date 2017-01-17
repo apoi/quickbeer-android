@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,15 +28,15 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.pojo.base.MetadataAware;
-import quickbeer.android.pojo.base.Overwriting;
+import quickbeer.android.data.pojos.base.MetadataAware;
+import quickbeer.android.data.pojos.base.Overwriting;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
 @JsonAdapter(AutoValue_Brewer.GsonTypeAdapter.class)
 @AutoValue
-public abstract class Brewer implements MetadataAware<Brewer> {
+public abstract class Brewer {
 
     @NonNull
     @SerializedName("BrewerID")
@@ -158,24 +158,9 @@ public abstract class Brewer implements MetadataAware<Brewer> {
     @SerializedName("RegionID")
     public abstract String regionId();
 
-    // Metadata
-
-    @NonNull
-    public abstract Metadata metadata();
-
     // Accessors
 
     // Equality
-
-    @Override
-    public boolean dataEquals(@NonNull final Brewer other) {
-        return false; // TODO how to do this nicely
-    }
-
-    @Override
-    public boolean metadataEquals(@NonNull final Brewer other) {
-        return metadata().equals(other.metadata());
-    }
 
     // Plumbing
 
@@ -247,8 +232,6 @@ public abstract class Brewer implements MetadataAware<Brewer> {
         public abstract Builder msa(@Nullable final String msa);
 
         public abstract Builder regionId(@Nullable final String regionId);
-        
-        public abstract Builder metadata(@Nullable final Metadata metadata);
 
         public abstract Brewer build();
 

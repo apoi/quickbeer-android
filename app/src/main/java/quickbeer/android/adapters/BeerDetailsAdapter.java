@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.Beer;
-import quickbeer.android.pojo.Review;
+import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Review;
 import quickbeer.android.views.viewholders.BeerDetailsViewHolder;
 import quickbeer.android.views.viewholders.ReviewViewHolder;
 

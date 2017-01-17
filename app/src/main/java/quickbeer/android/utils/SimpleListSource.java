@@ -19,7 +19,7 @@ package quickbeer.android.utils;
 
 import java.util.Collection;
 
-import quickbeer.android.pojo.SimpleItem;
+import quickbeer.android.data.pojos.SimpleItem;
 
 public interface SimpleListSource {
     SimpleItem getItem(int id);

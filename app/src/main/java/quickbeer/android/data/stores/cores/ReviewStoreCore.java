@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.ReviewColumns;
-import quickbeer.android.pojo.Review;
+import quickbeer.android.data.pojos.Review;
 
 public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     private static final String TAG = ReviewStoreCore.class.getSimpleName();

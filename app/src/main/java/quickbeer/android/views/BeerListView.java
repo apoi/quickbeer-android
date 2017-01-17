@@ -33,7 +33,7 @@ import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerListAdapter;
-import quickbeer.android.pojo.Header;
+import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BaseViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerViewModel;

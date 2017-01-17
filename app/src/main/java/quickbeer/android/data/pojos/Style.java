@@ -15,21 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
-import android.support.annotation.NonNull;
+import quickbeer.android.activities.BeersInStyleActivity;
 
-import com.google.auto.value.AutoValue;
+public class Style extends SimpleItem {
+    private final int id;
+    private final String name;
 
-import org.joda.time.DateTime;
+    public Style(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-@AutoValue
-public abstract class Metadata {
+    public int getId() {
+        return id;
+    }
 
-    @NonNull
-    public abstract DateTime updated();
+    public String getName() {
+        return name;
+    }
 
-    @NonNull
-    public abstract DateTime accessed();
+    public String getCode() {
+        return name.substring(0, 2);
+    }
 
+    @Override
+    public Class getDisplayActivity() {
+        return BeersInStyleActivity.class;
+    }
 }

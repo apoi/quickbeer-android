@@ -15,35 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
-import quickbeer.android.activities.BeersInCountryActivity;
+public class Header {
+    private final String text;
 
-public class Country extends SimpleItem {
-    private final int id;
-    private final String name;
-    private final String code;
-
-    public Country(int id, String name, String code) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
+    public Header(String text) {
+        this.text = text;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public Class getDisplayActivity() {
-        return BeersInCountryActivity.class;
+    public String getText() {
+        return text;
     }
 }

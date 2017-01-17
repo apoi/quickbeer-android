@@ -30,7 +30,7 @@ import java.util.List;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.R;
-import quickbeer.android.pojo.SimpleItem;
+import quickbeer.android.data.pojos.SimpleItem;
 import quickbeer.android.views.viewholders.SimpleListItemViewHolder;
 
 public class SimpleListAdapter extends BaseListAdapter {

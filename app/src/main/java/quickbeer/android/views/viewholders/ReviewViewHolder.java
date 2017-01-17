@@ -26,7 +26,7 @@ import java.util.Locale;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
-import quickbeer.android.pojo.Review;
+import quickbeer.android.data.pojos.Review;
 
 /**
  * View holder for reviews in list

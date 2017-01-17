@@ -35,8 +35,10 @@ import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.DataLayerBase;
 import quickbeer.android.data.stores.BeerListStore;
+import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.BrewerListStore;
+import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
@@ -51,14 +53,16 @@ public class ServiceDataLayer extends DataLayerBase {
                             @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull final BeerStore beerStore,
                             @NonNull final BeerListStore beerListStore,
+                            @NonNull final BeerMetadataStore beerMetadataStore,
                             @NonNull final ReviewStore reviewStore,
                             @NonNull final ReviewListStore reviewListStore,
                             @NonNull final BrewerStore brewerStore,
-                            @NonNull final BrewerListStore brewerListStore) {
+                            @NonNull final BrewerListStore brewerListStore,
+                            @NonNull final BrewerMetadataStore brewerMetadataStore) {
         super(networkRequestStatusStore,
-                beerStore, beerListStore,
+                beerStore, beerListStore, beerMetadataStore,
                 reviewStore, reviewListStore,
-                brewerStore, brewerListStore);
+                brewerStore, brewerListStore, brewerMetadataStore);
 
         Preconditions.checkNotNull(fetcherManager, "FetcherManager cannot be null.");
 

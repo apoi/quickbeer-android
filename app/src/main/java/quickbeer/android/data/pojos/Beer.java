@@ -3,19 +3,19 @@
  * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General public abstract License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY(); without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General public abstract License for more details.
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General public abstract License
+ * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,8 +32,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import io.reark.reark.utils.Log;
-import quickbeer.android.pojo.base.MetadataAware;
-import quickbeer.android.pojo.base.Overwriting;
+import quickbeer.android.data.pojos.base.Overwriting;
 import quickbeer.android.utils.Constants;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -42,7 +41,7 @@ import static polanski.option.Option.ofObj;
 @SuppressWarnings("InnerClassReferencedViaSubclass")
 @JsonAdapter(AutoValue_Beer.GsonTypeAdapter.class)
 @AutoValue
-public abstract class Beer implements MetadataAware<Beer> {
+public abstract class Beer {
 
     private static final String TAG = Beer.class.getSimpleName();
 
@@ -114,11 +113,6 @@ public abstract class Beer implements MetadataAware<Beer> {
     @SerializedName("TimeEntered")
     public abstract DateTime tickDate();
 
-    // Metadata
-
-    @NonNull
-    public abstract Metadata metadata();
-
     // Accessors
 
     public boolean hasDetails() {
@@ -149,18 +143,6 @@ public abstract class Beer implements MetadataAware<Beer> {
 
     public int getTickValue() {
         return ofObj(tickValue()).orDefault(() -> -1);
-    }
-
-    // Equality
-
-    @Override
-    public boolean dataEquals(@NonNull final Beer other) {
-        return false; // TODO how to do this nicely
-    }
-
-    @Override
-    public boolean metadataEquals(@NonNull final Beer other) {
-        return metadata().equals(other.metadata());
     }
 
     // Plumbing
@@ -202,8 +184,6 @@ public abstract class Beer implements MetadataAware<Beer> {
         public abstract Builder tickValue(@Nullable final Integer tickValue);
 
         public abstract Builder tickDate(@Nullable final DateTime tickDate);
-
-        public abstract Builder metadata(@Nullable final Metadata metadata);
 
         public abstract Beer build();
 

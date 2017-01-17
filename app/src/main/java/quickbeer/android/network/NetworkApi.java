@@ -26,9 +26,9 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
-import quickbeer.android.pojo.Beer;
-import quickbeer.android.pojo.Brewer;
-import quickbeer.android.pojo.Review;
+import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.Review;
 import quickbeer.android.utils.Constants;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

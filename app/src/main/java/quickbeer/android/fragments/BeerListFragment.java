@@ -32,7 +32,7 @@ import quickbeer.android.R;
 import quickbeer.android.activities.BeerDetailsActivity;
 import quickbeer.android.activities.base.ProgressStatusAggregator;
 import quickbeer.android.fragments.base.BaseFragment;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;
 import rx.Observable;

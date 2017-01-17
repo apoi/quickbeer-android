@@ -27,8 +27,10 @@ import net.simonvt.schematic.annotation.TableEndpoint;
 
 import quickbeer.android.data.columns.BeerColumns;
 import quickbeer.android.data.columns.BeerListColumns;
+import quickbeer.android.data.columns.BeerMetadataColumns;
 import quickbeer.android.data.columns.BrewerColumns;
 import quickbeer.android.data.columns.BrewerListColumns;
+import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
@@ -54,7 +56,7 @@ public final class RateBeerProvider {
         @ContentUri(
                 path = RateBeerDatabase.USER_SETTINGS,
                 type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
-                defaultSort = JsonIdColumns.ID + " ASC")
+                defaultSort = UserSettingsColumns.ID + " ASC")
         public static final Uri USER_SETTINGS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.USER_SETTINGS);
 
         @InexactContentUri(
@@ -77,7 +79,7 @@ public final class RateBeerProvider {
         @ContentUri(
                 path = RateBeerDatabase.NETWORK_REQUEST_STATUSES,
                 type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
-                defaultSort = JsonIdColumns.ID + " ASC")
+                defaultSort = NetworkRequestStatusColumns.ID + " ASC")
         public static final Uri NETWORK_REQUEST_STATUSES = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.NETWORK_REQUEST_STATUSES);
 
         @InexactContentUri(
@@ -100,7 +102,7 @@ public final class RateBeerProvider {
         @ContentUri(
                 path = RateBeerDatabase.BEERS,
                 type = BASE_TYPE + RateBeerDatabase.BEERS,
-                defaultSort = JsonIdColumns.ID + " ASC")
+                defaultSort = BeerColumns.ID + " ASC")
         public static final Uri BEERS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BEERS);
 
         @InexactContentUri(
@@ -141,45 +143,22 @@ public final class RateBeerProvider {
         }
     }
 
-    @TableEndpoint(table = RateBeerDatabase.REVIEWS)
-    public static final class Reviews {
+    @TableEndpoint(table = RateBeerDatabase.BEER_METADATA)
+    public static final class BeerMetadata {
         @ContentUri(
-                path = RateBeerDatabase.REVIEWS,
-                type = BASE_TYPE + RateBeerDatabase.REVIEWS,
-                defaultSort = JsonIdColumns.ID + " ASC")
-        public static final Uri REVIEWS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REVIEWS);
+                path = RateBeerDatabase.BEER_METADATA,
+                type = BASE_TYPE + RateBeerDatabase.BEER_METADATA,
+                defaultSort = BeerMetadataColumns.ID + " ASC")
+        public static final Uri BEER_METADATA = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BEER_METADATA);
 
         @InexactContentUri(
-                path = RateBeerDatabase.REVIEWS + "/*",
-                name = "REVIEWS_ID",
-                type = BASE_TYPE + RateBeerDatabase.REVIEWS,
-                whereColumn = ReviewColumns.ID,
+                path = RateBeerDatabase.BEER_METADATA + "/*",
+                name = "BEER_METADATA_ID",
+                type = BASE_TYPE + RateBeerDatabase.BEER_METADATA,
+                whereColumn = BeerMetadataColumns.ID,
                 pathSegment = 1)
         public static Uri withId(int id) {
-            return buildUri(RateBeerDatabase.REVIEWS, String.valueOf(id));
-        }
-
-        public static int fromUri(Uri uri) {
-            return Integer.valueOf(uri.getLastPathSegment());
-        }
-    }
-
-    @TableEndpoint(table = RateBeerDatabase.REVIEW_LISTS)
-    public static final class ReviewLists {
-        @ContentUri(
-                path = RateBeerDatabase.REVIEW_LISTS,
-                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
-                defaultSort = ReviewListColumns.BEER_ID + " ASC")
-        public static final Uri REVIEW_LISTS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REVIEW_LISTS);
-
-        @InexactContentUri(
-                path = RateBeerDatabase.REVIEW_LISTS + "/*",
-                name = "REVIEW_LISTS_ID",
-                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
-                whereColumn = ReviewListColumns.BEER_ID,
-                pathSegment = 1)
-        public static Uri withBeerId(Integer beerId) {
-            return buildUri(RateBeerDatabase.REVIEW_LISTS, String.valueOf(beerId));
+            return buildUri(RateBeerDatabase.BEER_METADATA, String.valueOf(id));
         }
 
         public static int fromUri(Uri uri) {
@@ -192,7 +171,7 @@ public final class RateBeerProvider {
         @ContentUri(
                 path = RateBeerDatabase.BREWERS,
                 type = BASE_TYPE + RateBeerDatabase.BREWERS,
-                defaultSort = JsonIdColumns.ID + " ASC")
+                defaultSort = BrewerColumns.ID + " ASC")
         public static final Uri BREWERS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BREWERS);
 
         @InexactContentUri(
@@ -230,6 +209,75 @@ public final class RateBeerProvider {
 
         public static String fromUri(Uri uri) {
             return uri.getLastPathSegment();
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.BREWER_METADATA)
+    public static final class BrewerMetadata {
+        @ContentUri(
+                path = RateBeerDatabase.BREWER_METADATA,
+                type = BASE_TYPE + RateBeerDatabase.BREWER_METADATA,
+                defaultSort = BrewerMetadataColumns.ID + " ASC")
+        public static final Uri BREWER_METADATA = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.BREWER_METADATA);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.BREWER_METADATA + "/*",
+                name = "BREWER_METADATA_ID",
+                type = BASE_TYPE + RateBeerDatabase.BREWER_METADATA,
+                whereColumn = BrewerMetadataColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(int id) {
+            return buildUri(RateBeerDatabase.BREWER_METADATA, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.REVIEWS)
+    public static final class Reviews {
+        @ContentUri(
+                path = RateBeerDatabase.REVIEWS,
+                type = BASE_TYPE + RateBeerDatabase.REVIEWS,
+                defaultSort = ReviewColumns.ID + " ASC")
+        public static final Uri REVIEWS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REVIEWS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.REVIEWS + "/*",
+                name = "REVIEWS_ID",
+                type = BASE_TYPE + RateBeerDatabase.REVIEWS,
+                whereColumn = ReviewColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(int id) {
+            return buildUri(RateBeerDatabase.REVIEWS, String.valueOf(id));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
+        }
+    }
+
+    @TableEndpoint(table = RateBeerDatabase.REVIEW_LISTS)
+    public static final class ReviewLists {
+        @ContentUri(
+                path = RateBeerDatabase.REVIEW_LISTS,
+                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
+                defaultSort = ReviewListColumns.BEER_ID + " ASC")
+        public static final Uri REVIEW_LISTS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REVIEW_LISTS);
+
+        @InexactContentUri(
+                path = RateBeerDatabase.REVIEW_LISTS + "/*",
+                name = "REVIEW_LISTS_ID",
+                type = BASE_TYPE + RateBeerDatabase.REVIEW_LISTS,
+                whereColumn = ReviewListColumns.BEER_ID,
+                pathSegment = 1)
+        public static Uri withBeerId(Integer beerId) {
+            return buildUri(RateBeerDatabase.REVIEW_LISTS, String.valueOf(beerId));
+        }
+
+        public static int fromUri(Uri uri) {
+            return Integer.valueOf(uri.getLastPathSegment());
         }
     }
 }

@@ -18,6 +18,7 @@
 package quickbeer.android.data.stores;
 
 import android.content.ContentResolver;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
@@ -32,49 +33,82 @@ import dagger.Provides;
 public final class StoreModule {
     @Provides
     @Singleton
-    public UserSettingsStore provideUserSettingsStore(ContentResolver contentResolver, CookieManager cookieManager, Gson gson) {
+    static UserSettingsStore provideUserSettingsStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final CookieManager cookieManager,
+            @NonNull final Gson gson) {
         return new UserSettingsStore(contentResolver, cookieManager, gson);
     }
 
     @Provides
     @Singleton
-    public NetworkRequestStatusStore provideNetworkRequestStatusStore(ContentResolver contentResolver, Gson gson) {
+    static NetworkRequestStatusStore provideNetworkRequestStatusStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new NetworkRequestStatusStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BeerStore provideBeerStore(ContentResolver contentResolver, Gson gson) {
+    static BeerStore provideBeerStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new BeerStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BeerListStore provideBeerListStore(ContentResolver contentResolver, Gson gson) {
+    static BeerListStore provideBeerListStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new BeerListStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public ReviewStore provideReviewStore(ContentResolver contentResolver, Gson gson) {
+    static BeerMetadataStore provideBeerMetadataStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
+        return new BeerMetadataStore(contentResolver, gson);
+    }
+
+    @Provides
+    @Singleton
+    static ReviewStore provideReviewStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new ReviewStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public ReviewListStore provideReviewListStore(ContentResolver contentResolver, Gson gson) {
+    static ReviewListStore provideReviewListStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new ReviewListStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BrewerStore provideBrewerStore(ContentResolver contentResolver, Gson gson) {
+    static BrewerStore provideBrewerStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new BrewerStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    public BrewerListStore provideBrewerListStore(ContentResolver contentResolver, Gson gson) {
+    static BrewerListStore provideBrewerListStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
         return new BrewerListStore(contentResolver, gson);
+    }
+
+    @Provides
+    @Singleton
+    static BrewerMetadataStore provideBrewerMetadataStore(
+            @NonNull final ContentResolver contentResolver,
+            @NonNull final Gson gson) {
+        return new BrewerMetadataStore(contentResolver, gson);
     }
 }

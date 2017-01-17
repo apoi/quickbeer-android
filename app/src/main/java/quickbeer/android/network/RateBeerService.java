@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Response;
-import quickbeer.android.pojo.Beer;
-import quickbeer.android.pojo.Brewer;
-import quickbeer.android.pojo.Review;
+import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.Review;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;

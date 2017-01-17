@@ -30,14 +30,12 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.utils.Log;
 import quickbeer.android.data.columns.BeerColumns;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.providers.RateBeerProvider;
-import quickbeer.android.pojo.Beer;
 import quickbeer.android.utils.DateUtils;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -77,51 +75,6 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIds(@NonNull final String idColumn, @NonNull final String accessColumn) {
-        return Observable
-                .fromCallable(() -> {
-                    String[] projection = { idColumn };
-                    String selection = String.format("%s > 0", accessColumn); // Has access date
-                    String orderBy = String.format("%s DESC", accessColumn); // Sort by date
-
-                    List<Integer> idList = new ArrayList<>(10);
-
-                    final Cursor cursor = getContentResolver().query(getContentUri(), projection, selection, null, orderBy);
-
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            do {
-                                idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)));
-                            } while (cursor.moveToNext());
-                        }
-                        cursor.close();
-                    }
-
-                    return idList;
-                })
-                .subscribeOn(Schedulers.io());
-    }
-
-    @NonNull
-    public Observable<Beer> getNewlyAccessedItems(@NonNull final DateTime date) {
-        return getStream()
-                .map(StoreItem::item)
-                .filter(item -> DateUtils.isValidDate(item.metadata().accessed()))
-                .distinctUntilChanged(new Func1<Beer, DateTime>() {
-                    // Access date as key object indicating distinction
-                    private DateTime latestAccess = date;
-
-                    @Override
-                    public DateTime call(Beer item) {
-                        if (item.metadata().accessed().isAfter(latestAccess)) {
-                            latestAccess = item.metadata().accessed();
-                        }
-                        return latestAccess;
-                    }
-                });
-    }
-
-    @NonNull
     @Override
     protected Uri getUriForId(@NonNull final Integer id) {
         return RateBeerProvider.Beers.withId(get(id));
@@ -148,10 +101,6 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
                 BeerColumns.NAME,
                 BeerColumns.TICK_VALUE,
                 BeerColumns.TICK_DATE,
-                BeerColumns.REVIEW,
-                BeerColumns.MODIFIED,
-                BeerColumns.UPDATED,
-                BeerColumns.ACCESSED
         };
     }
 
@@ -161,18 +110,10 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
         final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
         final DateTime tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
-        final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerColumns.REVIEW));
-        final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerColumns.MODIFIED)) > 0;
-        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.UPDATED)));
-        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.ACCESSED)));
 
         return Beer.builder(Beer.fromJson(json, getGson()))
                 .tickValue(tickValue)
                 .tickDate(tickDate)
-                //.reviewId(reviewId)
-                //.isModified(isModified)
-                //.updateDate(updated)
-                //.accessDate(accessed)
                 .build();
     }
 
@@ -185,10 +126,6 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         contentValues.put(BeerColumns.NAME, item.name());
         contentValues.put(BeerColumns.TICK_VALUE, item.tickValue());
         contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.tickDate()));
-        //contentValues.put(BeerColumns.REVIEW, item.reviewId());
-        //contentValues.put(BeerColumns.MODIFIED, item.isModified() ? 1 : 0);
-        contentValues.put(BeerColumns.UPDATED, DateUtils.toDbValue(item.metadata().updated()));
-        contentValues.put(BeerColumns.ACCESSED, DateUtils.toDbValue(item.metadata().accessed()));
 
         return contentValues;
     }

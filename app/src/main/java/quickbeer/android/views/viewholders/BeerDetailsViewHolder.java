@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Locale;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.Beer;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.ContainerLabelExtractor;
 import quickbeer.android.utils.Score;
 import quickbeer.android.utils.StringUtils;

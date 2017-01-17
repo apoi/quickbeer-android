@@ -30,9 +30,16 @@ import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import polanski.option.Option;
+import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.pojos.UserSettings;
 import quickbeer.android.data.stores.BeerListStore;
+import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.BrewerListStore;
+import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
@@ -45,12 +52,6 @@ import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.network.fetchers.BrewerFetcher;
 import quickbeer.android.network.fetchers.LoginFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
-import quickbeer.android.pojo.Beer;
-import quickbeer.android.pojo.Brewer;
-import quickbeer.android.pojo.ItemList;
-import quickbeer.android.pojo.Review;
-import quickbeer.android.pojo.UserSettings;
-import quickbeer.android.rx.DistinctiveTracker;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import rx.functions.Func0;
@@ -68,27 +69,24 @@ public class DataLayer extends DataLayerBase {
     private final Context context;
     private final UserSettingsStore userSettingsStore;
 
-    private boolean ticksFetched = false;
-
     public DataLayer(@NonNull final Context context,
                      @NonNull final UserSettingsStore userSettingsStore,
                      @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
                      @NonNull final BeerStore beerStore,
                      @NonNull final BeerListStore beerListStore,
+                     @NonNull final BeerMetadataStore beerMetadataStore,
                      @NonNull final ReviewStore reviewStore,
                      @NonNull final ReviewListStore reviewListStore,
                      @NonNull final BrewerStore brewerStore,
-                     @NonNull final BrewerListStore brewerListStore) {
+                     @NonNull final BrewerListStore brewerListStore,
+                     @NonNull final BrewerMetadataStore brewerMetadataStore) {
         super(networkRequestStatusStore,
-                beerStore, beerListStore,
+                beerStore, beerListStore, beerMetadataStore,
                 reviewStore, reviewListStore,
-                brewerStore, brewerListStore);
+                brewerStore, brewerListStore, brewerMetadataStore);
 
-        checkNotNull(context, "Context cannot be null.");
-        checkNotNull(userSettingsStore, "User settings store cannot be null.");
-
-        this.context = context;
-        this.userSettingsStore = userSettingsStore;
+        this.context = get(context);
+        this.userSettingsStore = get(userSettingsStore);
     }
 
     //// GET USER SETTINGS
@@ -184,7 +182,7 @@ public class DataLayer extends DataLayerBase {
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
-                .distinctUntilChanged(new DistinctiveTracker<Beer>());
+                .distinctUntilChanged();
     }
 
     private void fetchBeer(@NonNull final Integer beerId) {
@@ -230,10 +228,10 @@ public class DataLayer extends DataLayerBase {
         BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
 
         // Observing the stores and updating the caching subject
-        beerStore.getAccessedIds()
+        beerMetadataStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBeers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> beerStore.getNewlyAccessedIds(DateTime.now())
+                .flatMap(ids -> beerMetadataStore.getNewlyAccessedIds(DateTime.now())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBeers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )
@@ -493,11 +491,6 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull final String userId) {
         Log.v(TAG, "getTickedBeers");
 
-        if (!ticksFetched) {
-            fetchTickedBeers(userId);
-            ticksFetched = true;
-        }
-
         return beerStore.getTickedIds()
                 .doOnNext(ids -> Log.d(TAG, "Ticked ids: " + ids))
                 .map(ItemList::<String>create)
@@ -548,7 +541,7 @@ public class DataLayer extends DataLayerBase {
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
         return getBrewerResultStream(brewerId)
-                .distinctUntilChanged(new DistinctiveTracker<Brewer>());
+                .distinctUntilChanged();
     }
 
     private void fetchBrewer(@NonNull final Integer brewerId) {
@@ -595,10 +588,10 @@ public class DataLayer extends DataLayerBase {
         BehaviorSubject<List<Integer>> subject = BehaviorSubject.create();
 
         // Observing the stores and updating the caching subject
-        brewerStore.getAccessedIds()
+        brewerMetadataStore.getAccessedIds()
                 .doOnNext(ids -> Log.d(TAG, "getAccessedBrewers: initial of " + ids.size()))
                 .doOnNext(subject::onNext)
-                .flatMap(ids -> brewerStore.getNewlyAccessedIds(DateTime.now())
+                .flatMap(ids -> brewerMetadataStore.getNewlyAccessedIds(DateTime.now())
                         .doOnNext(id -> Log.d(TAG, "getAccessedBrewers: accessed " + id))
                         .map(id -> mergeList.call(subject.getValue(), id))
                 )

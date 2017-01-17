@@ -15,33 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.columns;
 
-import quickbeer.android.activities.BeersInStyleActivity;
+import net.simonvt.schematic.annotation.DataType;
+import net.simonvt.schematic.annotation.PrimaryKey;
 
-public class Style extends SimpleItem {
-    private final int id;
-    private final String name;
-
-    public Style(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getCode() {
-        return name.substring(0, 2);
-    }
-
-    @Override
-    public Class getDisplayActivity() {
-        return BeersInStyleActivity.class;
-    }
+public interface BrewerMetadataColumns {
+    @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "brewer_d";
+    @DataType(DataType.Type.INTEGER) String UPDATED = "updated"; // Date of the last data fetch
+    @DataType(DataType.Type.INTEGER) String ACCESSED = "accessed"; // Date of the last access
 }

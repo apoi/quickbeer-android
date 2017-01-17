@@ -24,7 +24,7 @@ import android.widget.TextView;
 
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
-import quickbeer.android.pojo.Beer;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.Score;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewbinders.BeerViewBinder;

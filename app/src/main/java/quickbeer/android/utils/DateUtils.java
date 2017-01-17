@@ -47,6 +47,10 @@ public final class DateUtils {
                 : null;
     }
 
+    public static DateTime safeFromDbValue(int value) {
+        return new DateTime((long) value * 1000);
+    }
+
     public static boolean isLater(@Nullable final DateTime first, @Nullable final DateTime second) {
         return first != null && (second == null || first.compareTo(second) > 0);
     }

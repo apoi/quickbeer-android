@@ -18,7 +18,7 @@
 package quickbeer.android.rx;
 
 import io.reark.reark.data.DataStreamNotification;
-import quickbeer.android.pojo.base.MetadataAware;
+import quickbeer.android.data.pojos.base.MetadataAware;
 import rx.functions.Func1;
 
 import static io.reark.reark.data.DataStreamNotification.Type.ON_NEXT;

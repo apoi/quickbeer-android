@@ -23,7 +23,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.SimpleItem;
+import quickbeer.android.data.pojos.SimpleItem;
 
 public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
     private final TextView textView;

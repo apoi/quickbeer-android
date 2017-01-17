@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.Header;
+import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewholders.BeerViewHolder;
 import quickbeer.android.views.viewholders.HeaderViewHolder;

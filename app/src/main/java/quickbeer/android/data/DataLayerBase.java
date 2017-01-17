@@ -19,9 +19,12 @@ package quickbeer.android.data;
 
 import android.support.annotation.NonNull;
 
+import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerListStore;
+import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.BrewerListStore;
+import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
@@ -31,26 +34,35 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class DataLayerBase {
     protected final NetworkRequestStatusStore networkRequestStatusStore;
+
     protected final BeerStore beerStore;
     protected final BeerListStore beerListStore;
+    protected final BeerMetadataStore beerMetadataStore;
+
     protected final ReviewStore reviewStore;
     protected final ReviewListStore reviewListStore;
+
     protected final BrewerStore brewerStore;
     protected final BrewerListStore brewerListStore;
+    protected final BrewerMetadataStore brewerMetadataStore;
 
     protected DataLayerBase(@NonNull final NetworkRequestStatusStore networkRequestStatusStore,
                             @NonNull final BeerStore beerStore,
                             @NonNull final BeerListStore beerListStore,
+                            @NonNull final BeerMetadataStore beerMetadataStore,
                             @NonNull final ReviewStore reviewStore,
                             @NonNull final ReviewListStore reviewListStore,
                             @NonNull final BrewerStore brewerStore,
-                            @NonNull final BrewerListStore brewerListStore) {
+                            @NonNull final BrewerListStore brewerListStore,
+                            @NonNull final BrewerMetadataStore brewerMetadataStore) {
         this.networkRequestStatusStore = get(networkRequestStatusStore);
         this.beerStore = get(beerStore);
         this.beerListStore = get(beerListStore);
+        this.beerMetadataStore = get(beerMetadataStore);
         this.reviewStore = get(reviewStore);
         this.reviewListStore = get(reviewListStore);
         this.brewerStore = get(brewerStore);
         this.brewerListStore = get(brewerListStore);
+        this.brewerMetadataStore = get(brewerMetadataStore);
     }
 }

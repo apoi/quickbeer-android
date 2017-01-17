@@ -29,7 +29,7 @@ import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.UserSettingsColumns;
-import quickbeer.android.pojo.UserSettings;
+import quickbeer.android.data.pojos.UserSettings;
 
 public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> {
 

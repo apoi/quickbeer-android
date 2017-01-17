@@ -15,16 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos.base;
 
-public class Header {
-    private final String text;
+import android.support.annotation.NonNull;
 
-    public Header(String text) {
-        this.text = text;
-    }
-
-    public String getText() {
-        return text;
-    }
+public interface MetadataAware<T> {
+    boolean dataEquals(@NonNull final T other);
+    boolean metadataEquals(@NonNull final T other);
 }

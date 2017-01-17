@@ -22,7 +22,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.Header;
+import quickbeer.android.data.pojos.Header;
 
 /**
  * Simple view holder for the header

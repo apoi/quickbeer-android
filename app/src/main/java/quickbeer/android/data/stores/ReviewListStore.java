@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 
 import polanski.option.Option;
 import quickbeer.android.data.stores.cores.ReviewListStoreCore;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 
 /**
  * Class storing lists of reviews related to a specific beer id.

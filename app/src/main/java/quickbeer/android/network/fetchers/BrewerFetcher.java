@@ -28,7 +28,7 @@ import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import quickbeer.android.pojo.Brewer;
+import quickbeer.android.data.pojos.Brewer;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;

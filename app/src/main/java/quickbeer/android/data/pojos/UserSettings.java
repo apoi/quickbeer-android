@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import quickbeer.android.pojo.base.Overwriting;
+import quickbeer.android.data.pojos.base.Overwriting;
 import quickbeer.android.utils.StringUtils;
 
 public class UserSettings extends Overwriting<UserSettings> {

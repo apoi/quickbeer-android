@@ -15,23 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.data.stores;
+package quickbeer.android.data.columns;
 
-import android.content.ContentResolver;
-import android.support.annotation.NonNull;
+import net.simonvt.schematic.annotation.DataType;
+import net.simonvt.schematic.annotation.PrimaryKey;
 
-import com.google.gson.Gson;
-
-import polanski.option.Option;
-import quickbeer.android.data.stores.cores.ReviewStoreCore;
-import quickbeer.android.data.pojos.Review;
-
-public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
-
-    public ReviewStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new ReviewStoreCore(contentResolver, gson),
-              Review::id,
-              Option::ofObj,
-              Option::none);
-    }
+public interface BeerMetadataColumns {
+    @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "beer_id";
+    @DataType(DataType.Type.INTEGER) String UPDATED = "updated"; // Date of the last data fetch
+    @DataType(DataType.Type.INTEGER) String ACCESSED = "accessed"; // Date of the last access
+    @DataType(DataType.Type.INTEGER) String REVIEW_ID = "review_id"; // Own review id
+    @DataType(DataType.Type.INTEGER) String MODIFIED = "modified"; // Flag if unsaved modifications
 }

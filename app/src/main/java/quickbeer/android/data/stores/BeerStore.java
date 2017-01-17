@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import polanski.option.Option;
 import quickbeer.android.data.columns.BeerColumns;
 import quickbeer.android.data.stores.cores.BeerStoreCore;
-import quickbeer.android.pojo.Beer;
+import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
@@ -58,15 +58,5 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
     private Observable<List<Integer>> queryTicks() {
         return ((BeerStoreCore) getCore()).queryTicks();
-    }
-
-    @NonNull
-    public Observable<List<Integer>> getAccessedIds() {
-        return ((BeerStoreCore) getCore()).getAccessedIds(BeerColumns.ID, BeerColumns.ACCESSED);
-    }
-
-    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
-        return ((BeerStoreCore) getCore()).getNewlyAccessedItems(date)
-                                          .map(Beer::id);
     }
 }

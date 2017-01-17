@@ -1,5 +1,5 @@
 /**
- * This file is part of QuickBrewer.
+ * This file is part of QuickBeer.
  * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,16 +28,26 @@ import java.util.List;
 
 import polanski.option.Option;
 import quickbeer.android.data.columns.BrewerColumns;
-import quickbeer.android.data.stores.cores.BrewerStoreCore;
-import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.columns.BrewerMetadataColumns;
+import quickbeer.android.data.pojos.BrewerMetadata;
+import quickbeer.android.data.stores.cores.BrewerMetadataStoreCore;
 import rx.Observable;
 
-public class BrewerStore  extends StoreBase<Integer, Brewer, Option<Brewer>> {
+public class BrewerMetadataStore extends StoreBase<Integer, BrewerMetadata, Option<BrewerMetadata>> {
 
-    public BrewerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new BrewerStoreCore(contentResolver, gson),
-              Brewer::id,
-              Option::ofObj,
-              Option::none);
+    public BrewerMetadataStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+        super(new BrewerMetadataStoreCore(contentResolver, gson),
+                BrewerMetadata::brewerId,
+                Option::ofObj,
+                Option::none);
+    }
+
+    @NonNull
+    public Observable<List<Integer>> getAccessedIds() {
+        return ((BrewerMetadataStoreCore) getCore()).getAccessedIds(BrewerColumns.ID, BrewerMetadataColumns.ACCESSED);
+    }
+
+    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
+        return ((BrewerMetadataStoreCore) getCore()).getNewlyAccessedItems(date);
     }
 }

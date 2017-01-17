@@ -36,7 +36,7 @@ import io.reark.reark.utils.Log;
 import polanski.option.Option;
 import quickbeer.android.data.stores.cores.UserSettingsStoreCore;
 import quickbeer.android.network.utils.LoginUtils;
-import quickbeer.android.pojo.UserSettings;
+import quickbeer.android.data.pojos.UserSettings;
 import quickbeer.android.rx.RxUtils;
 
 /**

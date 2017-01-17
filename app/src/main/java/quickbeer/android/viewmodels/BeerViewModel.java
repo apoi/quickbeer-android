@@ -23,7 +23,7 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.pojo.Beer;
+import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;

@@ -33,7 +33,7 @@ import java.lang.reflect.Type;
 import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.ReviewListColumns;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.utils.DateUtils;
 
 public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer>> {

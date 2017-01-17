@@ -28,7 +28,7 @@ import io.reark.reark.utils.Log;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.fragments.BeerDetailsFragment;
-import quickbeer.android.pojo.Beer;
+import quickbeer.android.data.pojos.Beer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;

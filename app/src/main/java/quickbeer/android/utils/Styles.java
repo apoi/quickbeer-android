@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import quickbeer.android.pojo.SimpleItem;
-import quickbeer.android.pojo.Style;
+import quickbeer.android.data.pojos.SimpleItem;
+import quickbeer.android.data.pojos.Style;
 
 public class Styles implements SimpleListSource {
 

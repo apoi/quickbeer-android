@@ -23,8 +23,5 @@ import net.simonvt.schematic.annotation.PrimaryKey;
 public interface BrewerColumns {
     @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "id";
     @DataType(DataType.Type.TEXT) String JSON = "json";
-
-    @DataType(DataType.Type.TEXT) String NAME = "name"; // Brewer name
-    @DataType(DataType.Type.INTEGER) String UPDATED = "updated"; // Date of the last data fetch
-    @DataType(DataType.Type.INTEGER) String ACCESSED = "accessed"; // Date of the last access
+    @DataType(DataType.Type.TEXT) String NAME = "name";
 }

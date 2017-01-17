@@ -21,8 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import quickbeer.android.pojo.Country;
-import quickbeer.android.pojo.SimpleItem;
+import quickbeer.android.data.pojos.Country;
+import quickbeer.android.data.pojos.SimpleItem;
 
 public class Countries implements SimpleListSource {
 

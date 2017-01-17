@@ -30,7 +30,7 @@ import quickbeer.android.data.stores.UserSettingsStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.LoginUtils;
-import quickbeer.android.pojo.UserSettings;
+import quickbeer.android.data.pojos.UserSettings;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;

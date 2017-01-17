@@ -22,6 +22,10 @@ import net.simonvt.schematic.annotation.Table;
 
 import quickbeer.android.data.columns.BeerColumns;
 import quickbeer.android.data.columns.BeerListColumns;
+import quickbeer.android.data.columns.BeerMetadataColumns;
+import quickbeer.android.data.columns.BrewerColumns;
+import quickbeer.android.data.columns.BrewerListColumns;
+import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.columns.ReviewListColumns;
@@ -34,10 +38,15 @@ final class RateBeerDatabase {
 
     @Table(NetworkRequestStatusColumns.class) static final String NETWORK_REQUEST_STATUSES = "networkRequestStatuses";
     @Table(UserSettingsColumns.class) static final String USER_SETTINGS = "userSettings";
+
     @Table(BeerColumns.class) static final String BEERS = "beers";
     @Table(BeerListColumns.class) static final String BEER_LISTS = "beerLists";
+    @Table(BeerMetadataColumns.class) static final String BEER_METADATA = "beerMetadata";
+
+    @Table(BrewerColumns.class) static final String BREWERS = "brewers";
+    @Table(BrewerListColumns.class) static final String BREWER_LISTS = "brewerLists";
+    @Table(BrewerMetadataColumns.class) static final String BREWER_METADATA = "brewerMetadata";
+
     @Table(ReviewColumns.class) static final String REVIEWS = "reviews";
     @Table(ReviewListColumns.class) static final String REVIEW_LISTS = "reviewsLists";
-    @Table(BeerColumns.class) static final String BREWERS = "brewers";
-    @Table(BeerListColumns.class) static final String BREWER_LISTS = "brewerLists";
 }

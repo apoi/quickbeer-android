@@ -32,7 +32,7 @@ import java.lang.reflect.Type;
 
 import quickbeer.android.data.columns.BrewerListColumns;
 import quickbeer.android.data.providers.RateBeerProvider;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.utils.DateUtils;
 
 import static io.reark.reark.utils.Preconditions.get;

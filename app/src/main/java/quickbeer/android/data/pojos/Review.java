@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.pojo.base.Overwriting;
+import quickbeer.android.data.pojos.base.Overwriting;
 import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
 

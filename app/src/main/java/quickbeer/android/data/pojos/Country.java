@@ -15,18 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo;
+package quickbeer.android.data.pojos;
 
-import android.support.annotation.NonNull;
+import quickbeer.android.activities.BeersInCountryActivity;
 
-public abstract class SimpleItem implements Comparable<SimpleItem> {
-    public abstract int getId();
-    public abstract String getName();
-    public abstract String getCode();
-    public abstract Class getDisplayActivity();
+public class Country extends SimpleItem {
+    private final int id;
+    private final String name;
+    private final String code;
+
+    public Country(int id, String name, String code) {
+        this.id = id;
+        this.name = name;
+        this.code = code;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getCode() {
+        return code;
+    }
 
     @Override
-    public int compareTo(@NonNull final SimpleItem another) {
-        return getName().compareTo(another.getName());
+    public Class getDisplayActivity() {
+        return BeersInCountryActivity.class;
     }
 }

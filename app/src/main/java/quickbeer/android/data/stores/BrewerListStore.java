@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 
 import polanski.option.Option;
 import quickbeer.android.data.stores.cores.BrewerListStoreCore;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 
 /**
  * Class storing brewer lists related to a string key, such as a search.

@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import polanski.option.Option;
 import polanski.option.OptionUnsafe;
-import quickbeer.android.pojo.ItemList;
+import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
 
 public final class RxUtils<T> {

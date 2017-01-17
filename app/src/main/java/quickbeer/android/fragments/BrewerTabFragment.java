@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import quickbeer.android.R;
-import quickbeer.android.pojo.Header;
+import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
 
 public class BrewerTabFragment extends BeerListFragment {

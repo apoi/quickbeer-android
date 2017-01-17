@@ -15,11 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.pojo.base;
+package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
-public interface MetadataAware<T> {
-    boolean dataEquals(@NonNull final T other);
-    boolean metadataEquals(@NonNull final T other);
+public abstract class SimpleItem implements Comparable<SimpleItem> {
+    public abstract int getId();
+    public abstract String getName();
+    public abstract String getCode();
+    public abstract Class getDisplayActivity();
+
+    @Override
+    public int compareTo(@NonNull final SimpleItem another) {
+        return getName().compareTo(another.getName());
+    }
 }
