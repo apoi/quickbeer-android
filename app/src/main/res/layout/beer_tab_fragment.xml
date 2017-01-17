@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quickbeer.android.next.views.BeerListView
+<quickbeer.android.views.BeerListView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/list_layout"
     android:orientation="vertical"
@@ -8,4 +8,4 @@
 
     <include layout="@layout/recycler_list" />
 
-</quickbeer.android.next.views.BeerListView>
+</quickbeer.android.views.BeerListView>
