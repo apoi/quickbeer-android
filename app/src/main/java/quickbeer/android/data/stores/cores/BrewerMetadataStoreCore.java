@@ -125,10 +125,12 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     @NonNull
     @Override
     protected BrewerMetadata read(@NonNull final Cursor cursor) {
-        final DateTime updated = DateUtils.safeFromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)));
-        final DateTime accessed = DateUtils.safeFromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)));
+        final int brewerId = cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ID));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)));
+        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)));
 
         return BrewerMetadata.builder()
+                .brewerId(brewerId)
                 .updated(updated)
                 .accessed(accessed)
                 .build();

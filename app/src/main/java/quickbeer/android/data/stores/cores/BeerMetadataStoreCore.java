@@ -35,6 +35,7 @@ import quickbeer.android.data.columns.BeerMetadataColumns;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.utils.DateUtils;
+import quickbeer.android.utils.ValueUtils;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
@@ -127,12 +128,14 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     @NonNull
     @Override
     protected BeerMetadata read(@NonNull final Cursor cursor) {
-        final DateTime updated = DateUtils.safeFromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)));
-        final DateTime accessed = DateUtils.safeFromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)));
+        final int beerId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ID));
+        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)));
+        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)));
         final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.REVIEW_ID));
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.MODIFIED)) > 0;
 
         return BeerMetadata.builder()
+                .beerId(beerId)
                 .updated(updated)
                 .accessed(accessed)
                 .reviewId(reviewId)
@@ -148,7 +151,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
         contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toDbValue(item.updated()));
         contentValues.put(BeerMetadataColumns.ACCESSED, DateUtils.toDbValue(item.accessed()));
         contentValues.put(BeerMetadataColumns.REVIEW_ID, item.reviewId());
-        contentValues.put(BeerMetadataColumns.MODIFIED, item.isModified() ? 1 : 0);
+        contentValues.put(BeerMetadataColumns.MODIFIED, ValueUtils.asInt(item.isModified()));
 
         return contentValues;
     }

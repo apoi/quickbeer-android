@@ -24,11 +24,13 @@ import android.support.annotation.NonNull;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
+import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.BrewerMetadata;
+import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import quickbeer.android.data.pojos.Brewer;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -48,15 +50,20 @@ public class BrewerFetcher extends FetcherBase<Uri> {
     @NonNull
     private final BrewerStore brewerStore;
 
+    @NonNull
+    private final BrewerMetadataStore metadataStore;
+
     public BrewerFetcher(@NonNull final NetworkApi networkApi,
                          @NonNull final NetworkUtils networkUtils,
                          @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                         @NonNull final BrewerStore brewerStore) {
+                         @NonNull final BrewerStore brewerStore,
+                         @NonNull final BrewerMetadataStore metadataStore) {
         super(updateNetworkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
         this.brewerStore = get(brewerStore);
+        this.metadataStore = get(metadataStore);
     }
 
     @Override
@@ -85,7 +92,9 @@ public class BrewerFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
-                .subscribe(brewerStore::put,
+                .doOnNext(brewerStore::put)
+                .map(BrewerMetadata::newUpdate)
+                .subscribe(metadataStore::put,
                         Log.onError(TAG, "Error fetching brewer " + brewerId));
 
         addRequest(brewerId, subscription);

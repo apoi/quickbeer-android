@@ -18,6 +18,7 @@
 package quickbeer.android.network.fetchers;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import java.net.CookieManager;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import dagger.Provides;
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
 import quickbeer.android.data.stores.BeerListStore;
+import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
@@ -41,12 +43,14 @@ import quickbeer.android.network.utils.NetworkUtils;
 
 @Module(includes = NetworkModule.class)
 public final class FetcherModule {
+
     @Provides
     @Named("loginFetcher")
-    public Fetcher provideLoginFetcher(NetworkApi networkApi,
-                                       CookieManager cookieManager,
-                                       NetworkRequestStatusStore networkRequestStatusStore,
-                                       UserSettingsStore userSettingsStore) {
+    static Fetcher<Uri> provideLoginFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final CookieManager cookieManager,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final UserSettingsStore userSettingsStore) {
         return new LoginFetcher(networkApi,
                 cookieManager,
                 networkRequestStatusStore::put,
@@ -55,23 +59,27 @@ public final class FetcherModule {
 
     @Provides
     @Named("beerFetcher")
-    public Fetcher provideBeerFetcher(NetworkApi networkApi,
-                                      NetworkUtils networkUtils,
-                                      NetworkRequestStatusStore networkRequestStatusStore,
-                                      BeerStore beerStore) {
+    static Fetcher<Uri> provideBeerFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerMetadataStore metadataStore) {
         return new BeerFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
-                beerStore);
+                beerStore,
+                metadataStore);
     }
 
     @Provides
     @Named("beerSearchFetcher")
-    public Fetcher provideBeerSearchFetcher(NetworkApi networkApi,
-                                            NetworkUtils networkUtils,
-                                            NetworkRequestStatusStore networkRequestStatusStore,
-                                            BeerStore beerStore,
-                                            BeerListStore beerListStore) {
+    static Fetcher<Uri> provideBeerSearchFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
         return new BeerSearchFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -81,11 +89,12 @@ public final class FetcherModule {
 
     @Provides
     @Named("topBeersFetcher")
-    public Fetcher provideTopBeersFetcher(NetworkApi networkApi,
-                                          NetworkUtils networkUtils,
-                                          NetworkRequestStatusStore networkRequestStatusStore,
-                                          BeerStore beerStore,
-                                          BeerListStore beerListStore) {
+    static Fetcher<Uri> provideTopBeersFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
         return new TopBeersFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -95,11 +104,12 @@ public final class FetcherModule {
 
     @Provides
     @Named("beersInCountryFetcher")
-    public Fetcher provideBeersInCountryFetcher(NetworkApi networkApi,
-                                                NetworkUtils networkUtils,
-                                                NetworkRequestStatusStore networkRequestStatusStore,
-                                                BeerStore beerStore,
-                                                BeerListStore beerListStore) {
+    static Fetcher<Uri> provideBeersInCountryFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
         return new BeersInCountryFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -109,11 +119,12 @@ public final class FetcherModule {
 
     @Provides
     @Named("beersInStyleFetcher")
-    public Fetcher provideBeersInStyleFetcher(NetworkApi networkApi,
-                                              NetworkUtils networkUtils,
-                                              NetworkRequestStatusStore networkRequestStatusStore,
-                                              BeerStore beerStore,
-                                              BeerListStore beerListStore) {
+    static Fetcher<Uri> provideBeersInStyleFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
         return new BeersInStyleFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -123,11 +134,12 @@ public final class FetcherModule {
 
     @Provides
     @Named("reviewFetcher")
-    public Fetcher provideReviewFetcher(NetworkApi networkApi,
-                                        NetworkUtils networkUtils,
-                                        NetworkRequestStatusStore networkRequestStatusStore,
-                                        ReviewStore reviewStore,
-                                        ReviewListStore reviewListStore) {
+    static Fetcher<Uri> provideReviewFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            ReviewStore reviewStore,
+            ReviewListStore reviewListStore) {
         return new ReviewFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -137,11 +149,12 @@ public final class FetcherModule {
 
     @Provides
     @Named("ticksFetcher")
-    public Fetcher provideTicksFetcher(NetworkApi networkApi,
-                                       NetworkUtils networkUtils,
-                                       NetworkRequestStatusStore networkRequestStatusStore,
-                                       BeerStore beerStore,
-                                       BeerListStore beerListStore) {
+    static Fetcher<Uri> provideTicksFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
         return new TicksFetcher(networkApi,
                 networkUtils,
                 networkRequestStatusStore::put,
@@ -150,14 +163,15 @@ public final class FetcherModule {
     }
 
     @Provides
-    public UriFetcherManager provideUriFetcherManager(@Named("loginFetcher") Fetcher loginFetcher,
-                                                      @Named("beerFetcher") Fetcher beerFetcher,
-                                                      @Named("beerSearchFetcher") Fetcher beerSearchFetcher,
-                                                      @Named("topBeersFetcher") Fetcher topBeersFetcher,
-                                                      @Named("beersInCountryFetcher") Fetcher beersInCountryFetcher,
-                                                      @Named("beersInStyleFetcher") Fetcher beersInStyleFetcher,
-                                                      @Named("reviewFetcher") Fetcher reviewFetcher,
-                                                      @Named("ticksFetcher") Fetcher ticksFetcher) {
+    static UriFetcherManager provideUriFetcherManager(
+            @Named("loginFetcher") @NonNull final Fetcher<Uri> loginFetcher,
+            @Named("beerFetcher") @NonNull final Fetcher<Uri> beerFetcher,
+            @Named("beerSearchFetcher") @NonNull final Fetcher<Uri> beerSearchFetcher,
+            @Named("topBeersFetcher") @NonNull final Fetcher<Uri> topBeersFetcher,
+            @Named("beersInCountryFetcher") @NonNull final Fetcher<Uri> beersInCountryFetcher,
+            @Named("beersInStyleFetcher") @NonNull final Fetcher<Uri> beersInStyleFetcher,
+            @Named("reviewFetcher") @NonNull final Fetcher<Uri> reviewFetcher,
+            @Named("ticksFetcher") @NonNull final Fetcher<Uri> ticksFetcher) {
         final List<Fetcher<Uri>> fetchers = Arrays.asList(
                 loginFetcher,
                 beerFetcher,

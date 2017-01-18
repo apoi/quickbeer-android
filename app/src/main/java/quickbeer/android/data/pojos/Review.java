@@ -114,7 +114,7 @@ public abstract class Review {
     // Accessors
 
     public String getDate() {
-        return DateUtils.DATE_FORMAT.format(timeEntered());
+        return DateUtils.format(timeEntered());
     }
 
     public String getLocation() {

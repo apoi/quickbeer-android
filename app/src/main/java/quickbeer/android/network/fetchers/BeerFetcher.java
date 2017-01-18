@@ -20,10 +20,15 @@ package quickbeer.android.network.fetchers;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import javax.inject.Inject;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
+import quickbeer.android.data.pojos.BeerMetadata;
+import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
@@ -48,15 +53,20 @@ public class BeerFetcher extends FetcherBase<Uri> {
     @NonNull
     private final BeerStore beerStore;
 
+    @NonNull
+    private final BeerMetadataStore metadataStore;
+
     public BeerFetcher(@NonNull final NetworkApi networkApi,
                        @NonNull final NetworkUtils networkUtils,
                        @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                       @NonNull final BeerStore beerStore) {
+                       @NonNull final BeerStore beerStore,
+                       @NonNull final BeerMetadataStore metadataStore) {
         super(updateNetworkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
         this.beerStore = get(beerStore);
+        this.metadataStore = get(metadataStore);
     }
 
     @Override
@@ -85,7 +95,9 @@ public class BeerFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
-                .subscribe(beerStore::put,
+                .doOnNext(beerStore::put)
+                .map(BeerMetadata::newUpdate)
+                .subscribe(metadataStore::put,
                            Log.onError(TAG, "Error fetching beer " + beerId));
 
         addRequest(beerId, subscription);

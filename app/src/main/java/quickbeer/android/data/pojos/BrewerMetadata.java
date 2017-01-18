@@ -38,10 +38,10 @@ public abstract class BrewerMetadata {
     @NonNull
     public abstract Integer brewerId();
 
-    @NonNull
+    @Nullable
     public abstract DateTime updated();
 
-    @NonNull
+    @Nullable
     public abstract DateTime accessed();
 
     @SuppressWarnings("ClassReferencesSubclass")
@@ -50,9 +50,9 @@ public abstract class BrewerMetadata {
 
         public abstract Builder brewerId(final Integer brewerId);
 
-        public abstract Builder updated(@NonNull final DateTime updated);
+        public abstract Builder updated(@Nullable final DateTime updated);
 
-        public abstract Builder accessed(@NonNull final DateTime accessed);
+        public abstract Builder accessed(@Nullable final DateTime accessed);
 
         public abstract BrewerMetadata build();
 
@@ -71,6 +71,22 @@ public abstract class BrewerMetadata {
     @NonNull
     public static Builder builder(@NonNull final BrewerMetadata metadata) {
         return new AutoValue_BrewerMetadata.Builder(metadata);
+    }
+
+    @NonNull
+    public static BrewerMetadata newUpdate(@NonNull final Brewer brewer) {
+        return builder()
+                .brewerId(brewer.id())
+                .updated(DateTime.now())
+                .build();
+    }
+
+    @NonNull
+    public static BrewerMetadata newAccess(@NonNull final Brewer brewer) {
+        return builder()
+                .brewerId(brewer.id())
+                .accessed(DateTime.now())
+                .build();
     }
 
     @NonNull

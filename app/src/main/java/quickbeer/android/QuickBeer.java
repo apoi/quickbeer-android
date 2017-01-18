@@ -19,22 +19,30 @@ package quickbeer.android;
 
 import android.app.Application;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import quickbeer.android.injections.ApplicationGraph;
 
+import static io.reark.reark.utils.Preconditions.get;
+
+@SuppressWarnings({"StaticVariableUsedBeforeInitialization", "AssignmentToStaticFieldFromInstanceMethod"})
 public class QuickBeer extends Application {
+
+    @Nullable
     private static QuickBeer instance;
+
+    @Nullable
     private ApplicationGraph applicationGraph;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        JodaTimeAndroid.init(this);
-
         instance = this;
+
+        JodaTimeAndroid.init(this);
 
         applicationGraph = ApplicationGraph.Initializer.init(this);
         applicationGraph.inject(this);
@@ -42,11 +50,11 @@ public class QuickBeer extends Application {
 
     @NonNull
     public static QuickBeer getInstance() {
-        return instance;
+        return get(instance);
     }
 
     @NonNull
     public ApplicationGraph getGraph() {
-        return applicationGraph;
+        return get(applicationGraph);
     }
 }

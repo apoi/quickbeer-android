@@ -38,16 +38,16 @@ public abstract class BeerMetadata {
     @NonNull
     public abstract Integer beerId();
 
-    @NonNull
+    @Nullable
     public abstract DateTime updated();
 
-    @NonNull
+    @Nullable
     public abstract DateTime accessed();
 
     @Nullable
     public abstract Integer reviewId();
 
-    @NonNull
+    @Nullable
     public abstract Boolean isModified();
 
     @SuppressWarnings("ClassReferencesSubclass")
@@ -56,13 +56,13 @@ public abstract class BeerMetadata {
 
         public abstract Builder beerId(final Integer beerId);
 
-        public abstract Builder updated(@NonNull final DateTime updated);
+        public abstract Builder updated(@Nullable final DateTime updated);
 
-        public abstract Builder accessed(@NonNull final DateTime accessed);
+        public abstract Builder accessed(@Nullable final DateTime accessed);
 
         public abstract Builder reviewId(@Nullable final Integer reviewId);
 
-        public abstract Builder isModified(@NonNull final Boolean isModified);
+        public abstract Builder isModified(@Nullable final Boolean isModified);
 
         public abstract BeerMetadata build();
 
@@ -81,6 +81,22 @@ public abstract class BeerMetadata {
     @NonNull
     public static Builder builder(@NonNull final BeerMetadata metadata) {
         return new AutoValue_BeerMetadata.Builder(metadata);
+    }
+
+    @NonNull
+    public static BeerMetadata newUpdate(@NonNull final Beer beer) {
+        return builder()
+                .beerId(beer.id())
+                .updated(DateTime.now())
+                .build();
+    }
+
+    @NonNull
+    public static BeerMetadata newAccess(@NonNull final Beer beer) {
+        return builder()
+                .beerId(beer.id())
+                .accessed(DateTime.now())
+                .build();
     }
 
     @NonNull

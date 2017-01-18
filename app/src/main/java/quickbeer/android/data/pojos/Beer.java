@@ -33,7 +33,7 @@ import java.util.Locale;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.base.Overwriting;
-import quickbeer.android.utils.Constants;
+import quickbeer.android.Constants;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;

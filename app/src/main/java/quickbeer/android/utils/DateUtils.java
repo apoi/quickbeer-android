@@ -17,42 +17,40 @@
  */
 package quickbeer.android.utils;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.joda.time.DateTime;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public final class DateUtils {
 
-    public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT);
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     private DateUtils() {}
 
+    @NonNull
     public static DateTime value(@Nullable final DateTime date) {
-        return date != null ? date : new DateTime();
+        return isValidDate(date) ? date : new DateTime(0);
     }
 
-    public static int toDbValue(@Nullable final DateTime date) {
-        return date != null
-                ? (int) (date.getMillis() / 1000)
-                : 0;
+    @NonNull
+    public static String format(@Nullable final DateTime date) {
+        return value(date).toString(DATE_FORMAT);
     }
 
+    @Nullable
     public static DateTime fromDbValue(int value) {
         return value > 0
                 ? new DateTime((long) value * 1000)
                 : null;
     }
 
-    public static DateTime safeFromDbValue(int value) {
-        return new DateTime((long) value * 1000);
-    }
-
-    public static boolean isLater(@Nullable final DateTime first, @Nullable final DateTime second) {
-        return first != null && (second == null || first.compareTo(second) > 0);
+    public static int toDbValue(@Nullable final DateTime date) {
+        return isValidDate(date)
+                ? (int) (date.getMillis() / 1000)
+                : 0;
     }
 
     public static boolean isValidDate(@Nullable final DateTime date) {
