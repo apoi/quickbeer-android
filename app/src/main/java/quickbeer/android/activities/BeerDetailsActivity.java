@@ -19,6 +19,8 @@ package quickbeer.android.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
@@ -27,23 +29,31 @@ import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.fragments.BeerDetailsFragment;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.BeerMetadata;
+import quickbeer.android.data.stores.BeerMetadataStore;
+import quickbeer.android.fragments.BeerDetailsFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsActivity extends SearchActivity {
     private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
-    private final CompositeSubscription activitySubscription = new CompositeSubscription();
+
+    @NonNull
+    private final CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     @Inject
+    @Nullable
     DataLayer.GetBeer getBeer;
 
     @Inject
-    DataLayer.AccessBeer accessBeer;
+    @Nullable
+    BeerMetadataStore metadataStore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,31 +66,31 @@ public class BeerDetailsActivity extends SearchActivity {
         }
 
         ConnectableObservable<DataStreamNotification<Beer>> sourceObservable =
-                getBeer.call(beerId).publish();
+                get(getBeer).call(beerId).publish();
 
         // Pass to the activity progress indicator
         addProgressObservable(sourceObservable);
 
         // Update beer access date
-        activitySubscription.add(sourceObservable
+        compositeSubscription.add(sourceObservable
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
-                .subscribe(beer -> accessBeer.call(beer.id())));
+                .map(BeerMetadata::newAccess)
+                .subscribe(get(metadataStore)::put,
+                        Log.onError(TAG, "error updating access date")));
 
         // Set activity title
-        activitySubscription.add(sourceObservable
+        compositeSubscription.add(sourceObservable
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .first()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        beer -> setTitle(beer.name()),
-                        throwable -> {
-                            Log.e(TAG, "error getting beer", throwable);
-                        }));
+                .map(Beer::name)
+                .subscribe(this::setTitle,
+                        Log.onError(TAG, "error getting beer")));
 
-        activitySubscription.add(getQueryObservable()
+        compositeSubscription.add(getQueryObservable()
                 .subscribe(
                         query -> {
                             Log.d(TAG, "query(" + query + ")");
@@ -89,17 +99,15 @@ public class BeerDetailsActivity extends SearchActivity {
                             intent.putExtra("query", query);
                             startActivity(intent);
                         },
-                        throwable -> {
-                            Log.e(TAG, "error in query", throwable);
-                        }));
+                        Log.onError(TAG, "error in query")));
 
-        activitySubscription.add(sourceObservable
+        compositeSubscription.add(sourceObservable
                 .connect());
     }
 
     @Override
     protected void onDestroy() {
-        activitySubscription.clear();
+        compositeSubscription.clear();
 
         super.onDestroy();
     }

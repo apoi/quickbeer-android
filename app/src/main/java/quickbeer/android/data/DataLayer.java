@@ -194,22 +194,6 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
-    //// ACCESS BEER
-
-    public void accessBeer(@NonNull final Integer beerId) {
-        checkNotNull(beerId, "Beer id cannot be null.");
-        Log.v(TAG, "accessBeer(" + beerId + ")");
-
-        beerStore.getOnce(beerId)
-                .observeOn(Schedulers.computation())
-                .compose(RxUtils::pickValue)
-                .map(beer -> {
-                    //beer.setAccessDate(new Date()); TODO separate access table
-                    return beer;
-                })
-                .subscribe(beerStore::put, Log.onError(TAG));
-    }
-
     //// ACCESSED BEERS
 
     @NonNull
