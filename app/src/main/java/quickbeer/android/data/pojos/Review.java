@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.data.pojos.base.Overwriting;
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
 
@@ -133,7 +133,7 @@ public abstract class Review {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends Overwriting<AutoValue_Review.Builder> {
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_Review.Builder> {
 
         public abstract Builder id(final Integer id);
 
@@ -172,6 +172,11 @@ public abstract class Review {
         public abstract Builder rateCount(@Nullable final Integer rateCount);
 
         public abstract Review build();
+
+        @Override
+        public boolean equals(Object o) {
+            return false;
+        }
 
         @NonNull
         @Override

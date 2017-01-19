@@ -52,7 +52,7 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
         view.setOnClickListener(onClickListener);
     }
 
-    public void bind(BeerViewModel viewModel) {
+    public void bind(@NonNull final BeerViewModel viewModel) {
         clear();
 
         this.viewModel = get(viewModel);

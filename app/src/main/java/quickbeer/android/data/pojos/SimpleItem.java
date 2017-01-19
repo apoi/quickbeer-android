@@ -20,9 +20,16 @@ package quickbeer.android.data.pojos;
 import android.support.annotation.NonNull;
 
 public abstract class SimpleItem implements Comparable<SimpleItem> {
+
     public abstract int getId();
+
+    @NonNull
     public abstract String getName();
+
+    @NonNull
     public abstract String getCode();
+
+    @NonNull
     public abstract Class getDisplayActivity();
 
     @Override

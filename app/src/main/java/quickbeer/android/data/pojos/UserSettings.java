@@ -21,10 +21,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
-import quickbeer.android.data.pojos.base.Overwriting;
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 import quickbeer.android.utils.StringUtils;
 
-public class UserSettings extends Overwriting<UserSettings> {
+public class UserSettings extends OverwritableBuilder<UserSettings> {
+
     @SerializedName("username")
     private String username;
 

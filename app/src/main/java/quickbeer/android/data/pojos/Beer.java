@@ -33,10 +33,11 @@ import java.util.Locale;
 
 import io.reark.reark.utils.Log;
 import quickbeer.android.Constants;
-import quickbeer.android.data.pojos.base.Overwriting;
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
+import static quickbeer.android.utils.StringUtils.hasValue;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
 @JsonAdapter(AutoValue_Beer.GsonTypeAdapter.class)
@@ -116,11 +117,7 @@ public abstract class Beer {
     // Accessors
 
     public boolean hasDetails() {
-        final String styleName = styleName();
-
-        return brewerId() != null
-                && styleName != null
-                && !styleName.isEmpty();
+        return brewerId() != null && hasValue(styleName());
     }
 
     public int rating() {
@@ -149,7 +146,7 @@ public abstract class Beer {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends Overwriting<AutoValue_Beer.Builder> {
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_Beer.Builder> {
 
         public abstract Builder id(final Integer id);
 

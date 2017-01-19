@@ -24,7 +24,7 @@ import com.google.auto.value.AutoValue;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.data.pojos.base.Overwriting;
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -51,7 +51,7 @@ public abstract class BeerMetadata {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends Overwriting<AutoValue_BeerMetadata.Builder> {
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_BeerMetadata.Builder> {
 
         public abstract Builder beerId(final Integer beerId);
 

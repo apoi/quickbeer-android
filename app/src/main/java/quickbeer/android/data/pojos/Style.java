@@ -17,6 +17,8 @@
  */
 package quickbeer.android.data.pojos;
 
+import android.support.annotation.NonNull;
+
 import quickbeer.android.activities.BeersInStyleActivity;
 
 public class Style extends SimpleItem {
@@ -28,18 +30,24 @@ public class Style extends SimpleItem {
         this.name = name;
     }
 
+    @Override
     public int getId() {
         return id;
     }
 
+    @NonNull
+    @Override
     public String getName() {
         return name;
     }
 
+    @NonNull
+    @Override
     public String getCode() {
         return name.substring(0, 2);
     }
 
+    @NonNull
     @Override
     public Class getDisplayActivity() {
         return BeersInStyleActivity.class;

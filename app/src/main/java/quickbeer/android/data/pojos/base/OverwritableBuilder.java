@@ -30,9 +30,9 @@ import io.reark.reark.utils.Log;
  * Class to implement our specific json empty value definitions, to avoid overwriting
  * existing data with invalid values.
  */
-public abstract class Overwriting<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
+public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
 
-    private static final String TAG = Overwriting.class.getSimpleName();
+    private static final String TAG = OverwritableBuilder.class.getSimpleName();
 
     @Override
     protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {
@@ -75,5 +75,15 @@ public abstract class Overwriting<T extends OverwritablePojo<T>> extends Overwri
     @Override
     protected boolean isEmpty(float value) {
         return value == 0;
+    }
+
+    /**
+     * The AutoValue builder class does not create a proper equals method. We can instead claim
+     * to be always non-equal, as this is for builder class equality only; the equality of the
+     * actual pojos was verified before invoking the overwriting through merge.
+     */
+    @Override
+    public boolean equals(Object o) {
+        return false;
     }
 }

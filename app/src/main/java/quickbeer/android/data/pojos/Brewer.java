@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.data.pojos.base.Overwriting;
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -170,7 +170,7 @@ public abstract class Brewer {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends Overwriting<AutoValue_Brewer.Builder> {
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_Brewer.Builder> {
 
         public abstract Builder id(final Integer id);
 
