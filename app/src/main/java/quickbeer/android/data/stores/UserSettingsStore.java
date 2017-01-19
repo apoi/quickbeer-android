@@ -30,53 +30,21 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.net.CookieManager;
-
-import io.reark.reark.utils.Log;
 import polanski.option.Option;
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.UserSettings;
 import quickbeer.android.data.stores.cores.UserSettingsStoreCore;
-import quickbeer.android.network.utils.LoginUtils;
-import quickbeer.android.rx.RxUtils;
 
 /**
  * Store to keep only single user settings.
  */
 public class UserSettingsStore extends StoreBase<Integer, UserSettings, Option<UserSettings>> {
-    private static final String TAG = UserSettingsStore.class.getSimpleName();
-
-    public static final int DEFAULT_USER_ID = 0;
-
-    private final CookieManager cookieManager;
 
     public UserSettingsStore(@NonNull final ContentResolver contentResolver,
-                             @NonNull final CookieManager cookieManager,
                              @NonNull final Gson gson) {
         super(new UserSettingsStoreCore(contentResolver, gson),
-              item -> DEFAULT_USER_ID,
+              item -> Constants.DEFAULT_USER_ID,
               Option::ofObj,
               Option::none);
-
-        this.cookieManager = cookieManager;
-
-        initUserSettings();
-    }
-
-    private void initUserSettings() {
-        // Initializes settings if needed, and clears the logged in flag
-        getOnce(DEFAULT_USER_ID)
-                .compose(RxUtils::pickValue)
-                .map(userSettings -> {
-                    userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
-                    return userSettings;
-                })
-                .doOnNext(this::put)
-                .subscribe();
-    }
-
-    @Override
-    public void put(@NonNull final UserSettings item) {
-        Log.v(TAG, "put(" + item + ")");
-        super.put(item);
     }
 }

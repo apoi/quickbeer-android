@@ -19,6 +19,8 @@ package quickbeer.android;
 
 public interface Constants {
 
+    int DEFAULT_USER_ID = 0;
+
     String BASE_URL = "https://www.ratebeer.com";
 
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";

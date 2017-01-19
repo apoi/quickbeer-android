@@ -35,9 +35,8 @@ public final class StoreModule {
     @Singleton
     static UserSettingsStore provideUserSettingsStore(
             @NonNull final ContentResolver contentResolver,
-            @NonNull final CookieManager cookieManager,
             @NonNull final Gson gson) {
-        return new UserSettingsStore(contentResolver, cookieManager, gson);
+        return new UserSettingsStore(contentResolver, gson);
     }
 
     @Provides

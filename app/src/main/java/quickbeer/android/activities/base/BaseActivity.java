@@ -19,6 +19,7 @@ package quickbeer.android.activities.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -56,7 +57,9 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         inject();
+
         login();
     }
 
@@ -77,14 +80,15 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
 
     private void login() {
         getUserSettings.call()
-                       .first()
-                       .compose(RxUtils::pickValue)
-                       .flatMap(s -> login.call(s.getUsername(), s.getPassword()))
-                       .subscribe(s -> Log.d(TAG, "Settings: " + s));
+                .first()
+                .compose(RxUtils::pickValue)
+                .filter(userSettings -> !userSettings.isLogged())
+                .flatMap(s -> login.call(s.username(), s.password()))
+                .subscribe(s -> Log.d(TAG, "Settings: " + s));
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_main:
                 startActivity(new Intent(this, MainActivity.class));
@@ -102,6 +106,7 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, StyleListActivity.class));
                 break;
             case R.id.nav_about:
+            default:
                 return true;
         }
 

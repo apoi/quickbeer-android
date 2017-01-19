@@ -26,12 +26,12 @@ import java.net.CookieManager;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.UserSettings;
 import quickbeer.android.data.stores.UserSettingsStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.LoginUtils;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -87,13 +87,12 @@ public class LoginFetcher extends FetcherBase<Uri> {
         Subscription subscription = networkApi
                 .login(username, password)
                 .subscribeOn(Schedulers.computation())
-                .switchMap(response -> userSettingsStore.getOnce(UserSettingsStore.DEFAULT_USER_ID))
-                .compose(RxUtils::pickValue)
-                .map(userSettings -> {
-                    userSettings.setUserId(LoginUtils.getUserId(cookieManager));
-                    userSettings.setIsLogged(LoginUtils.hasLoginCookie(cookieManager));
-                    return userSettings;
-                })
+                .map(userSettings -> UserSettings.builder()
+                        .username(username)
+                        .password(password)
+                        .userId(LoginUtils.getUserId(cookieManager))
+                        .isLogged(LoginUtils.hasLoginCookie(cookieManager))
+                        .build())
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
@@ -112,6 +111,6 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
     @NonNull
     public static String getUniqueUri() {
-        return UserSettings.class + "/" + UserSettingsStore.DEFAULT_USER_ID;
+        return UserSettings.class + "/" + Constants.DEFAULT_USER_ID;
     }
 }

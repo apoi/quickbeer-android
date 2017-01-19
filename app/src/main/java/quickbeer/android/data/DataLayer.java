@@ -30,6 +30,7 @@ import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
 import polanski.option.Option;
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.ItemList;
@@ -93,7 +94,7 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<Option<UserSettings>> getUserSettings() {
-        return userSettingsStore.getOnceAndStream(UserSettingsStore.DEFAULT_USER_ID);
+        return userSettingsStore.getOnceAndStream(Constants.DEFAULT_USER_ID);
     }
 
     public void setUserSettings(@NonNull final UserSettings userSettings) {
@@ -104,46 +105,22 @@ public class DataLayer extends DataLayerBase {
 
     public Observable<Boolean> login(@NonNull final String username,
                                      @NonNull final String password) {
-        checkNotNull(username);
-        checkNotNull(password);
-
         Log.v(TAG, "login");
 
-        Func0<Observable<Boolean>> doLogin = () -> {
-            Intent intent = new Intent(context, NetworkService.class);
-            intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
-            intent.putExtra("username", username);
-            intent.putExtra("password", password);
-            context.startService(intent);
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+        intent.putExtra("username", get(username));
+        intent.putExtra("password", get(password));
+        context.startService(intent);
 
-            // Observe the success of the network request. Completion means we logged in
-            // successfully, while on error the login wasn't successful.
-            return networkRequestStatusStore
-                    .getOnceAndStream(requestIdForUri(LoginFetcher.getUniqueUri()))
-                    .compose(RxUtils::pickValue)
-                    .filter(networkRequestStatus -> networkRequestStatus.isCompleted() || networkRequestStatus.isError())
-                    .first()
-                    .map(NetworkRequestStatus::isCompleted);
-        };
-
-        // Updates the settings if needed, and performs login if we're not already logged,
-        // or if the used credentials changed.
-        return getUserSettings()
+        // Observe the success of the network request. Completion means we logged in
+        // successfully, while on error the login wasn't successful.
+        return networkRequestStatusStore
+                .getOnceAndStream(requestIdForUri(LoginFetcher.getUniqueUri()))
                 .compose(RxUtils::pickValue)
-                .map(userSettings -> {
-                    if (!userSettings.credentialsEqual(username, password)) {
-                        userSettings.setUsername(username);
-                        userSettings.setPassword(password);
-                        userSettings.setIsLogged(false);
-                        userSettingsStore.put(userSettings);
-                    }
-                    return userSettings;
-                })
-                .flatMap(userSettings -> {
-                    return userSettings.isLogged()
-                            ? Observable.just(true)
-                            : doLogin.call();
-                });
+                .filter(networkRequestStatus -> networkRequestStatus.isCompleted() || networkRequestStatus.isError())
+                .first()
+                .map(NetworkRequestStatus::isCompleted);
     }
 
     //// GET BEER DETAILS

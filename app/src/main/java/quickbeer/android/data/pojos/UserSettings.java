@@ -18,101 +18,84 @@
 package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 import quickbeer.android.utils.StringUtils;
 
-public class UserSettings extends OverwritableBuilder<UserSettings> {
+import static io.reark.reark.utils.Preconditions.get;
+
+@AutoValue
+public abstract class UserSettings {
 
     @SerializedName("username")
-    private String username;
+    public abstract String username();
 
     @SerializedName("password")
-    private String password;
+    public abstract String password();
 
     @SerializedName("userId")
-    private String userId;
+    public abstract String userId();
 
+    @NonNull
     @SerializedName("isLogged")
-    private boolean isLogged;
+    public abstract Boolean isLogged();
 
-    @NonNull
-    @Override
-    protected Class<UserSettings> getTypeParameterClass() {
-        return UserSettings.class;
+    // Accessors
+
+    public boolean credentialsEqual(@Nullable final String username, @Nullable final String password) {
+        return StringUtils.equals(username, username())
+                && StringUtils.equals(password, password());
+    }
+
+    // Plumbing
+
+    @SuppressWarnings("ClassReferencesSubclass")
+    @AutoValue.Builder
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_UserSettings.Builder> {
+
+        public abstract Builder username(@Nullable final String username);
+
+        public abstract Builder password(@Nullable final String password);
+
+        public abstract Builder userId(@Nullable final String userId);
+
+        public abstract Builder isLogged(@NonNull final Boolean isLogged);
+
+        public abstract UserSettings build();
+
+        @NonNull
+        @Override
+        protected Class<AutoValue_UserSettings.Builder> getTypeParameterClass() {
+            return AutoValue_UserSettings.Builder.class;
+        }
     }
 
     @NonNull
-    public String getUsername() {
-        return StringUtils.value(username);
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public static TypeAdapter<UserSettings> typeAdapter(@NonNull final Gson gson) {
+        return new AutoValue_UserSettings.GsonTypeAdapter(get(gson));
     }
 
     @NonNull
-    public String getPassword() {
-        return StringUtils.value(password);
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public boolean isLogged() {
-        return isLogged;
-    }
-
-    public void setIsLogged(boolean isLogged) {
-        this.isLogged = isLogged;
+    public static Builder builder() {
+        return new AutoValue_UserSettings.Builder();
     }
 
     @NonNull
-    public String getUserId() {
-        return StringUtils.value(userId);
+    public static Builder builder(@NonNull final UserSettings userSettings) {
+        return new AutoValue_UserSettings.Builder(userSettings);
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
+    @NonNull
+    public static UserSettings merge(@NonNull final UserSettings v1, @NonNull final UserSettings v2) {
+        AutoValue_UserSettings.Builder builder1 = new AutoValue_UserSettings.Builder(get(v1));
+        AutoValue_UserSettings.Builder builder2 = new AutoValue_UserSettings.Builder(get(v2));
 
-    public boolean credentialsEqual(String username, String password) {
-        return StringUtils.equals(username, this.username)
-                && StringUtils.equals(password, this.password);
-    }
-
-    @Override
-    public String toString() {
-        return "UserSettings{" +
-                "username='" + username + '\'' +
-                ", userId='" + userId + '\'' +
-                ", isLogged=" + isLogged +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        UserSettings that = (UserSettings) o;
-
-        if (isLogged != that.isLogged) return false;
-        if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
-
-        return password != null ? password.equals(that.password) : that.password == null;
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = username != null ? username.hashCode() : 0;
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (isLogged ? 1 : 0);
-        return result;
+        return builder1.overwrite(builder2).build();
     }
 }

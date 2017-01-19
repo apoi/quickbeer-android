@@ -76,7 +76,7 @@ public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> 
     @Override
     protected ContentValues getContentValuesForItem(@NonNull final UserSettings item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(JsonIdColumns.ID, item.getUserId());
+        contentValues.put(JsonIdColumns.ID, item.userId());
         contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));
 
         return contentValues;
