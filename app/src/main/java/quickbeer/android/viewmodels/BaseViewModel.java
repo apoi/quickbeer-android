@@ -20,11 +20,12 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Preconditions;
 import io.reark.reark.viewmodels.AbstractViewModel;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public abstract class BaseViewModel extends AbstractViewModel {
 
@@ -40,9 +41,7 @@ public abstract class BaseViewModel extends AbstractViewModel {
     }
 
     void setNetworkStatusText(@NonNull final ProgressStatus status) {
-        Preconditions.checkNotNull(status, "ProgressStatus cannot be null.");
-
-        progressStatus.onNext(status);
+        progressStatus.onNext(get(status));
     }
 
     @NonNull

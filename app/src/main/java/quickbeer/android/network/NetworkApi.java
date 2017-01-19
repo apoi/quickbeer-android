@@ -26,10 +26,10 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
-import quickbeer.android.Constants;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;

@@ -19,12 +19,13 @@ package quickbeer.android.views.viewbinders;
 
 import android.support.annotation.NonNull;
 
-import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewholders.BeerViewHolder;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 /**
  * View binder between BeerViewModel and the view holder
@@ -34,11 +35,8 @@ public class BeerViewBinder extends RxViewBinder {
     private final BeerViewModel viewModel;
 
     public BeerViewBinder(@NonNull final BeerViewHolder viewHolder, @NonNull final BeerViewModel viewModel) {
-        Preconditions.checkNotNull(viewHolder, "ViewHolder cannot be null.");
-        Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
-        this.viewHolder = viewHolder;
-        this.viewModel = viewModel;
+        this.viewHolder = get(viewHolder);
+        this.viewModel = get(viewModel);
     }
 
     @Override

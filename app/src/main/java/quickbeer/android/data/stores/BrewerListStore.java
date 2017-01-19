@@ -23,8 +23,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import polanski.option.Option;
-import quickbeer.android.data.stores.cores.BrewerListStoreCore;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.stores.cores.BrewerListStoreCore;
 
 /**
  * Class storing brewer lists related to a string key, such as a search.

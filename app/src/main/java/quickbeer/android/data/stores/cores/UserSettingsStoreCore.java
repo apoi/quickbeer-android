@@ -25,11 +25,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.columns.JsonIdColumns;
-import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.UserSettingsColumns;
 import quickbeer.android.data.pojos.UserSettings;
+import quickbeer.android.data.providers.RateBeerProvider;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> {
 
@@ -40,9 +41,7 @@ public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> 
     @NonNull
     @Override
     protected Uri getUriForId(@NonNull final Integer id) {
-        Preconditions.checkNotNull(id, "Id cannot be null.");
-
-        return RateBeerProvider.UserSettings.withId(id);
+        return RateBeerProvider.UserSettings.withId(get(id));
     }
 
     @NonNull

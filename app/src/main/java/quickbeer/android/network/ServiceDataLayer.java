@@ -32,7 +32,6 @@ import android.support.annotation.NonNull;
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.DataLayerBase;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
@@ -43,6 +42,9 @@ import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
 
 public class ServiceDataLayer extends DataLayerBase {
     private static final String TAG = ServiceDataLayer.class.getSimpleName();
@@ -64,26 +66,27 @@ public class ServiceDataLayer extends DataLayerBase {
                 reviewStore, reviewListStore,
                 brewerStore, brewerListStore, brewerMetadataStore);
 
-        Preconditions.checkNotNull(fetcherManager, "FetcherManager cannot be null.");
-
-        this.fetcherManager = fetcherManager;
+        this.fetcherManager = get(fetcherManager);
     }
 
     public void processIntent(@NonNull final Intent intent) {
-        Preconditions.checkNotNull(intent, "Intent cannot be null.");
+        checkNotNull(intent);
 
         final String serviceUriString = intent.getStringExtra("serviceUriString");
-        if (serviceUriString != null) {
-            final Uri serviceUri = Uri.parse(serviceUriString);
-            Fetcher matchingFetcher = fetcherManager.findFetcher(serviceUri);
-            if (matchingFetcher != null) {
-                Log.v(TAG, "Fetcher found for " + serviceUri);
-                matchingFetcher.fetch(intent);
-            } else {
-                Log.e(TAG, "Unknown Uri " + serviceUri);
-            }
-        } else {
+
+        if (serviceUriString == null) {
             Log.e(TAG, "No Uri defined");
+            return;
+        }
+
+        final Uri serviceUri = Uri.parse(serviceUriString);
+        final Fetcher<Uri> matchingFetcher = fetcherManager.findFetcher(serviceUri);
+
+        if (matchingFetcher != null) {
+            Log.v(TAG, "Fetcher found for " + serviceUri);
+            matchingFetcher.fetch(intent);
+        } else {
+            Log.e(TAG, "Unknown Uri " + serviceUri);
         }
     }
 }

@@ -28,7 +28,6 @@ import com.google.gson.annotations.SerializedName;
 
 import org.joda.time.DateTime;
 
-import quickbeer.android.data.pojos.base.MetadataAware;
 import quickbeer.android.data.pojos.base.Overwriting;
 
 import static io.reark.reark.utils.Preconditions.get;

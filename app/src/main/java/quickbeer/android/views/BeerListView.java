@@ -29,7 +29,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerListAdapter;
@@ -41,6 +40,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerListView extends FrameLayout {
     private static final String TAG = BeerListView.class.getSimpleName();
@@ -77,11 +78,8 @@ public class BeerListView extends FrameLayout {
     }
 
     private void setBeers(@NonNull final List<BeerViewModel> beers) {
-        Preconditions.checkNotNull(beers, "Beer list cannot be null.");
-        Preconditions.checkState(beerListAdapter != null, "Beer list adapter cannot be null.");
-
         Log.v(TAG, "Setting " + beers.size() + " beers to adapter");
-        beerListAdapter.set(beers);
+        get(beerListAdapter).set(get(beers));
     }
 
     private void setProgressStatus(@NonNull final BaseViewModel.ProgressStatus progressStatus) {
@@ -107,11 +105,8 @@ public class BeerListView extends FrameLayout {
 
         public ViewBinder(@NonNull final BeerListView view,
                           @NonNull final BeerListViewModel viewModel) {
-            Preconditions.checkNotNull(view, "View cannot be null.");
-            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
-            this.view = view;
-            this.viewModel = viewModel;
+            this.view = get(view);
+            this.viewModel = get(viewModel);
         }
 
         @Override

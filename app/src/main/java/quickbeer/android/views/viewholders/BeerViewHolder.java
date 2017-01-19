@@ -22,12 +22,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.Score;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewbinders.BeerViewBinder;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 /**
  * View holder for beer list items
@@ -52,11 +53,9 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(BeerViewModel viewModel) {
-        Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
         clear();
 
-        this.viewModel = viewModel;
+        this.viewModel = get(viewModel);
         this.viewModel.subscribeToDataStore();
 
         this.viewBinder = new BeerViewBinder(this, viewModel);
@@ -77,9 +76,7 @@ public class BeerViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setBeer(@NonNull final Beer beer) {
-        Preconditions.checkNotNull(beer, "Beer cannot be null.");
-
-        String rating = beer.rating() >= 0
+        String rating = get(beer).rating() >= 0
                 ? String.valueOf(beer.rating())
                 : "?";
 

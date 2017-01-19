@@ -39,9 +39,6 @@ public class BeerListAdapter extends BaseListAdapter {
 
     private View.OnClickListener onClickListener;
 
-    public BeerListAdapter() {
-    }
-
     public void setHeader(Header header) {
         this.header = header;
 

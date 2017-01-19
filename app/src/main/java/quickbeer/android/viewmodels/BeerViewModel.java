@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
@@ -30,6 +29,8 @@ import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerViewModel extends BaseViewModel {
     private static final String TAG = BeerViewModel.class.getSimpleName();
@@ -41,9 +42,7 @@ public class BeerViewModel extends BaseViewModel {
     private final int beerId;
 
     public BeerViewModel(final int beerId, @NonNull final DataLayer.GetBeer getBeer) {
-        Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
-
-        this.getBeer = getBeer;
+        this.getBeer = get(getBeer);
         this.beerId = beerId;
     }
 

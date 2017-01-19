@@ -25,10 +25,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.fragments.MainFragment;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 public class MainActivity extends SearchActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -43,7 +44,7 @@ public class MainActivity extends SearchActivity {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        Preconditions.checkNotNull(drawerLayout, "DrawerLayout is required.");
+        checkNotNull(drawerLayout);
 
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();

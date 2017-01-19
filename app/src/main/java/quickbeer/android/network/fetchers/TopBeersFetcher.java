@@ -24,12 +24,12 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
 import rx.functions.Action1;
 

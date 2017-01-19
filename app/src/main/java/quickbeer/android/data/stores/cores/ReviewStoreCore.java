@@ -25,10 +25,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import io.reark.reark.utils.Preconditions;
-import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.providers.RateBeerProvider;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     private static final String TAG = ReviewStoreCore.class.getSimpleName();
@@ -40,17 +41,13 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     @NonNull
     @Override
     protected Uri getUriForId(@NonNull final Integer id) {
-        Preconditions.checkNotNull(id, "Id cannot be null.");
-
-        return RateBeerProvider.Reviews.withId(id);
+        return RateBeerProvider.Reviews.withId(get(id));
     }
 
     @NonNull
     @Override
     protected Integer getIdForUri(@NonNull final Uri uri) {
-        Preconditions.checkNotNull(uri, "Uri cannot be null.");
-
-        return RateBeerProvider.Reviews.fromUri(uri);
+        return RateBeerProvider.Reviews.fromUri(get(uri));
     }
 
     @NonNull

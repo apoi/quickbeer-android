@@ -23,8 +23,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import polanski.option.Option;
-import quickbeer.android.data.stores.cores.ReviewStoreCore;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.stores.cores.ReviewStoreCore;
 
 public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
 

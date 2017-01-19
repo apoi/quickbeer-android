@@ -31,8 +31,8 @@ import org.joda.time.DateTime;
 import java.lang.reflect.Type;
 
 import quickbeer.android.data.columns.BeerListColumns;
-import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.utils.DateUtils;
 
 import static io.reark.reark.utils.Preconditions.get;

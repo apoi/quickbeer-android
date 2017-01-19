@@ -24,7 +24,6 @@ import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
@@ -36,6 +35,8 @@ import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 
+import static io.reark.reark.utils.Preconditions.get;
+
 public class BeerListViewModel extends BaseViewModel {
     private static final String TAG = BeerListViewModel.class.getSimpleName();
 
@@ -46,9 +47,7 @@ public class BeerListViewModel extends BaseViewModel {
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
     public BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
-        Preconditions.checkNotNull(getBeer, "GetBeer cannot be null.");
-
-        this.getBeer = getBeer;
+        this.getBeer = get(getBeer);
     }
 
     @NonNull
@@ -72,12 +71,10 @@ public class BeerListViewModel extends BaseViewModel {
 
     @Override
     public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
-        Preconditions.checkNotNull(sourceObservable, "Source observable hasn't been setBeer.");
-
         Log.v(TAG, "subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<ItemList<String>>> beerSearchSource =
-                sourceObservable
+                get(sourceObservable)
                         .subscribeOn(Schedulers.computation())
                         .publish();
 

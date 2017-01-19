@@ -25,19 +25,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.reark.reark.data.stores.StoreItem;
 import quickbeer.android.data.columns.BrewerColumns;
-import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.pojos.Brewer;
-import quickbeer.android.utils.DateUtils;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
+import quickbeer.android.data.providers.RateBeerProvider;
 
 import static io.reark.reark.utils.Preconditions.get;
 

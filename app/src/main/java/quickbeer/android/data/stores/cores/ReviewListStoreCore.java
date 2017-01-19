@@ -30,11 +30,12 @@ import org.joda.time.DateTime;
 
 import java.lang.reflect.Type;
 
-import io.reark.reark.utils.Preconditions;
-import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.data.columns.ReviewListColumns;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.utils.DateUtils;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer>> {
 
@@ -45,17 +46,13 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
     @NonNull
     @Override
     protected Uri getUriForId(@NonNull final Integer id) {
-        Preconditions.checkNotNull(id, "Id cannot be null.");
-
-        return RateBeerProvider.ReviewLists.withBeerId(id);
+        return RateBeerProvider.ReviewLists.withBeerId(get(id));
     }
 
     @NonNull
     @Override
     protected Integer getIdForUri(@NonNull final Uri uri) {
-        Preconditions.checkNotNull(uri, "Uri cannot be null.");
-
-        return RateBeerProvider.ReviewLists.fromUri(uri);
+        return RateBeerProvider.ReviewLists.fromUri(get(uri));
     }
 
     @NonNull

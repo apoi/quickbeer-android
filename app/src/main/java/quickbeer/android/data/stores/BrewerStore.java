@@ -22,15 +22,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
-
-import java.util.List;
-
 import polanski.option.Option;
-import quickbeer.android.data.columns.BrewerColumns;
-import quickbeer.android.data.stores.cores.BrewerStoreCore;
 import quickbeer.android.data.pojos.Brewer;
-import rx.Observable;
+import quickbeer.android.data.stores.cores.BrewerStoreCore;
 
 public class BrewerStore  extends StoreBase<Integer, Brewer, Option<Brewer>> {
 

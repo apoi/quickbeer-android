@@ -23,8 +23,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import polanski.option.Option;
-import quickbeer.android.data.stores.cores.ReviewListStoreCore;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.stores.cores.ReviewListStoreCore;
 
 /**
  * Class storing lists of reviews related to a specific beer id.

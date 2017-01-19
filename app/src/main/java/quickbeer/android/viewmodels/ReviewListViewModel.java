@@ -23,7 +23,6 @@ import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.utils.Log;
-import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxUtils;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
@@ -33,6 +32,8 @@ import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewListViewModel extends BaseViewModel {
     private static final String TAG = ReviewListViewModel.class.getSimpleName();
@@ -46,11 +47,8 @@ public class ReviewListViewModel extends BaseViewModel {
     public ReviewListViewModel(final int beerId,
                                @NonNull final DataLayer.GetReviews getReviews,
                                @NonNull final DataLayer.GetReview getReview) {
-        Preconditions.checkNotNull(getReviews, "GetReviews cannot be null.");
-        Preconditions.checkNotNull(getReview, "GetReview cannot be null.");
-
-        this.getReviews = getReviews;
-        this.getReview = getReview;
+        this.getReviews = get(getReviews);
+        this.getReview = get(getReview);
         this.beerId = beerId;
     }
 
@@ -93,10 +91,8 @@ public class ReviewListViewModel extends BaseViewModel {
 
     @NonNull
     private Observable<Review> getReviewObservable(@NonNull final Integer reviewId) {
-        Preconditions.checkNotNull(reviewId, "Review id cannot be null.");
-
         return getReview
-                .call(reviewId)
+                .call(get(reviewId))
                 .compose(quickbeer.android.rx.RxUtils::pickValue)
                 .doOnNext((review) -> Log.v(TAG, "Received review " + review.id()));
     }

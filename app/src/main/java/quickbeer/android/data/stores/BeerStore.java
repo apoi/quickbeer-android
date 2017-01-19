@@ -22,15 +22,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import polanski.option.Option;
-import quickbeer.android.data.columns.BeerColumns;
-import quickbeer.android.data.stores.cores.BeerStoreCore;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.stores.cores.BeerStoreCore;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 

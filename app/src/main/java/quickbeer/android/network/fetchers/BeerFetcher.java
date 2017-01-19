@@ -20,20 +20,17 @@ package quickbeer.android.network.fetchers;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import javax.inject.Inject;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import io.reark.reark.utils.Log;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;

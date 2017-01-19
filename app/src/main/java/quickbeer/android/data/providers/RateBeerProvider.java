@@ -31,7 +31,6 @@ import quickbeer.android.data.columns.BeerMetadataColumns;
 import quickbeer.android.data.columns.BrewerColumns;
 import quickbeer.android.data.columns.BrewerListColumns;
 import quickbeer.android.data.columns.BrewerMetadataColumns;
-import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.columns.ReviewListColumns;

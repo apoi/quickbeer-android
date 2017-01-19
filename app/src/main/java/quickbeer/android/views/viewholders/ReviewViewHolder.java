@@ -24,9 +24,10 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Review;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 /**
  * View holder for reviews in list
@@ -47,7 +48,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setReview(@NonNull final Review review) {
-        Preconditions.checkNotNull(review, "Review cannot be null.");
+        checkNotNull(review);
 
         this.ratingTextView.setText(String.format(Locale.ROOT, "%.1f", review.totalScore()));
         this.descriptionTextView.setText(review.comments());

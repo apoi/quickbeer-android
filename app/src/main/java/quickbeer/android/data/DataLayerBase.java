@@ -19,7 +19,6 @@ package quickbeer.android.data;
 
 import android.support.annotation.NonNull;
 
-import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;

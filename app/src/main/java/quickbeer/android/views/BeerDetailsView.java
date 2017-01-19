@@ -26,7 +26,6 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import io.reark.reark.utils.Preconditions;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerDetailsAdapter;
@@ -36,6 +35,8 @@ import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsView extends FrameLayout {
     private BeerDetailsAdapter beerDetailsAdapter;
@@ -49,17 +50,11 @@ public class BeerDetailsView extends FrameLayout {
     }
 
     private void setBeer(@NonNull final Beer beer) {
-        Preconditions.checkNotNull(beer, "Beer cannot be null.");
-        Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
-
-        beerDetailsAdapter.setBeer(beer);
+        get(beerDetailsAdapter).setBeer(get(beer));
     }
 
     private void setReviews(@NonNull final List<Review> reviews) {
-        Preconditions.checkNotNull(reviews, "Reviews cannot be null.");
-        Preconditions.checkState(beerDetailsAdapter != null, "Beer details adapter cannot be null.");
-
-        beerDetailsAdapter.setReviews(reviews);
+        get(beerDetailsAdapter).setReviews(get(reviews));
     }
 
     @Override
@@ -83,11 +78,8 @@ public class BeerDetailsView extends FrameLayout {
 
         public BeerViewBinder(@NonNull final BeerDetailsView view,
                               @NonNull final BeerViewModel viewModel) {
-            Preconditions.checkNotNull(view, "View cannot be null.");
-            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
-            this.view = view;
-            this.viewModel = viewModel;
+            this.view = get(view);
+            this.viewModel = get(viewModel);
         }
 
         @Override
@@ -107,11 +99,8 @@ public class BeerDetailsView extends FrameLayout {
 
         public ReviewListViewBinder(@NonNull final BeerDetailsView view,
                                     @NonNull final ReviewListViewModel viewModel) {
-            Preconditions.checkNotNull(view, "View cannot be null.");
-            Preconditions.checkNotNull(viewModel, "ViewModel cannot be null.");
-
-            this.view = view;
-            this.viewModel = viewModel;
+            this.view = get(view);
+            this.viewModel = get(viewModel);
         }
 
         @Override

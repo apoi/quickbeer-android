@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.Locale;
 
 import io.reark.reark.utils.Log;
-import quickbeer.android.data.pojos.base.Overwriting;
 import quickbeer.android.Constants;
+import quickbeer.android.data.pojos.base.Overwriting;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
