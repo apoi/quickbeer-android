@@ -31,9 +31,9 @@ import org.joda.time.DateTime;
 import java.io.IOException;
 import java.util.Locale;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
@@ -43,8 +43,6 @@ import static quickbeer.android.utils.StringUtils.hasValue;
 @JsonAdapter(AutoValue_Beer.GsonTypeAdapter.class)
 @AutoValue
 public abstract class Beer {
-
-    private static final String TAG = Beer.class.getSimpleName();
 
     @NonNull
     @SerializedName("BeerID")
@@ -201,7 +199,7 @@ public abstract class Beer {
         try {
             return new AutoValue_Beer.GsonTypeAdapter(get(gson)).fromJson(get(json));
         } catch (IOException e) {
-            Log.e(TAG, "Failed parsing json!", e);
+            Timber.e(e, "Failed parsing json!");
             return builder().build();
         }
     }

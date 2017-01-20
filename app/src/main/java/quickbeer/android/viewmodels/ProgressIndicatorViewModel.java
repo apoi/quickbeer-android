@@ -23,14 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.activities.base.ProgressStatusAggregator;
 import rx.Observable;
 import rx.Subscription;
 import rx.subjects.BehaviorSubject;
+import timber.log.Timber;
 
 public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
-    private final static String TAG = ProgressIndicatorViewModel.class.getSimpleName();
 
     public enum Status {
         IDLE,
@@ -52,7 +51,7 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
         }
 
         subscription = sourceObservables.asObservable()
-                .doOnNext(observableList -> Log.d(TAG, "Aggregating " + observableList.size()))
+                .doOnNext(observableList -> Timber.d("Aggregating " + observableList.size()))
                 .flatMap(observableList -> {
                     return Observable.combineLatest(observableList, args -> {
                         float progress = 0.0f;
@@ -67,7 +66,7 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
                     });
                 })
                 .doOnNext(aggregate -> {
-                    Log.d(TAG, "Aggregate progress: " +
+                    Timber.d("Aggregate progress: " +
                             aggregate.first + " with " +
                             aggregate.second + " sources");
                 })
@@ -112,7 +111,7 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
 
     @Override
     public void addProgressObservable(Observable<? extends DataStreamNotification> observable) {
-        Log.d(TAG, "addDataStreamNotificationObservable");
+        Timber.d("addDataStreamNotificationObservable");
 
         List<Observable<Float>> list = sourceObservables.getValue();
         list.add(observable.map(this::toProgress));

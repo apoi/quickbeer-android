@@ -31,11 +31,10 @@ import android.os.IBinder;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.QuickBeer;
+import timber.log.Timber;
 
 public class NetworkService extends Service {
-    private static final String TAG = NetworkService.class.getSimpleName();
 
     @Inject
     ServiceDataLayer serviceDataLayer;
@@ -49,13 +48,13 @@ public class NetworkService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand");
+        Timber.d("onStartCommand");
         super.onStartCommand(intent, flags, startId);
 
         if (intent != null) {
             serviceDataLayer.processIntent(intent);
         } else {
-            Log.d(TAG, "Intent was null, no action taken");
+            Timber.d("Intent was null, no action taken");
         }
 
         return START_NOT_STICKY;

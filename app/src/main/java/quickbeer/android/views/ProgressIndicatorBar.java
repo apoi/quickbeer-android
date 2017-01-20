@@ -29,14 +29,13 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel.Status;
 import rx.android.schedulers.AndroidSchedulers;
+import timber.log.Timber;
 
 public class ProgressIndicatorBar extends FrameLayout {
-    private static final String TAG = ProgressIndicatorBar.class.getSimpleName();
 
     private static final int ANIMATION_SCROLL_DURATION = 1200;
     private static final int ANIMATION_PROGRESS_DURATION = 400;
@@ -94,7 +93,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     public void setProgress(Status status, float progress) {
-        Log.v(TAG, "New progress: " + status + ", " + progress);
+        Timber.v("New progress: " + status + ", " + progress);
 
         this.nextStatus = status;
         this.progress = progress;
@@ -127,7 +126,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateScroller() {
-        Log.v(TAG, "animateScroller()");
+        Timber.v("animateScroller()");
 
         int animEnd = getWidth() - progressBarWidth;
 
@@ -156,7 +155,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToProgress(float progress) {
-        Log.v(TAG, "animateToProgress(" + progress + ")");
+        Timber.v("animateToProgress(" + progress + ")");
 
         float newScale = (getWidth() * progress / progressBarWidth) + 1;
 
@@ -171,7 +170,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToEnd() {
-        Log.v(TAG, "animateToEnd()");
+        Timber.v("animateToEnd()");
 
         if (progressBar.getAnimation() == null) {
             // Non-active progress bar doesn't need end animation
@@ -198,7 +197,7 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToHidden() {
-        Log.v(TAG, "animateToHidden()");
+        Timber.v("animateToHidden()");
 
         AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
         animation.setStartOffset(ANIMATION_END_PAUSE_DURATION);

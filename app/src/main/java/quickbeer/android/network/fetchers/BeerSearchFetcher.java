@@ -27,7 +27,6 @@ import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.BeerListStore;
@@ -39,12 +38,12 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerSearchFetcher extends FetcherBase<Uri> {
-    private static final String TAG = BeerSearchFetcher.class.getSimpleName();
 
     @NonNull
     protected final NetworkApi networkApi;
@@ -60,10 +59,10 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
     public BeerSearchFetcher(@NonNull final NetworkApi networkApi,
                              @NonNull final NetworkUtils networkUtils,
-                             @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                             @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                              @NonNull final BeerStore beerStore,
                              @NonNull final BeerListStore beerListStore) {
-        super(updateNetworkRequestStatus);
+        super(updaterequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -78,18 +77,18 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         if (searchString != null) {
             fetchBeerSearch(searchString);
         } else {
-            Log.e(TAG, "No searchString provided in the intent extras");
+            Timber.e("No searchString provided in the intent extras");
         }
     }
 
     protected void fetchBeerSearch(@NonNull final String query) {
-        Log.d(TAG, "fetchBeerSearch(" + query + ")");
+        Timber.d("fetchBeerSearch(" + query + ")");
 
         final String queryId = getQueryId(getServiceUri(), get(query));
         final String uri = getUniqueUri(queryId);
 
         if (isOngoingRequest(uri.hashCode())) {
-            Log.d(TAG, "Found an ongoing request for search " + queryId);
+            Timber.d("Found an ongoing request for search " + queryId);
             return;
         }
 
@@ -104,7 +103,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(beerListStore::put,
-                           Log.onError(TAG, "Error fetching beer search for '" + uri + "'"));
+                           err -> Timber.e(err, "Error fetching beer search for '" + uri + "'"));
 
         addRequest(uri.hashCode(), subscription);
     }

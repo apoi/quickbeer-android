@@ -26,7 +26,6 @@ import android.support.v4.app.Fragment;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
@@ -36,11 +35,11 @@ import quickbeer.android.fragments.BeerDetailsFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsActivity extends SearchActivity {
-    private static final String TAG = BeerDetailsActivity.class.getSimpleName();
 
     private int beerId;
 
@@ -77,8 +76,7 @@ public class BeerDetailsActivity extends SearchActivity {
                 .map(DataStreamNotification::getValue)
                 .first()
                 .map(BeerMetadata::newAccess)
-                .subscribe(get(metadataStore)::put,
-                        Log.onError(TAG, "error updating access date")));
+                .subscribe(get(metadataStore)::put, Timber::e));
 
         // Set activity title
         compositeSubscription.add(sourceObservable
@@ -87,19 +85,18 @@ public class BeerDetailsActivity extends SearchActivity {
                 .first()
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(Beer::name)
-                .subscribe(this::setTitle,
-                        Log.onError(TAG, "error getting beer")));
+                .subscribe(this::setTitle, Timber::e));
 
         compositeSubscription.add(getQueryObservable()
                 .subscribe(
                         query -> {
-                            Log.d(TAG, "query(" + query + ")");
+                            Timber.d("query(" + query + ")");
 
                             Intent intent = new Intent(this, BeerSearchActivity.class);
                             intent.putExtra("query", query);
                             startActivity(intent);
                         },
-                        Log.onError(TAG, "error in query")));
+                        Timber::e));
 
         compositeSubscription.add(sourceObservable
                 .connect());

@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import io.reark.reark.utils.Log;
 import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerListAdapter;
@@ -40,11 +39,11 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerListView extends FrameLayout {
-    private static final String TAG = BeerListView.class.getSimpleName();
 
     private RecyclerView beersListView;
     private BeerListAdapter beerListAdapter;
@@ -78,7 +77,7 @@ public class BeerListView extends FrameLayout {
     }
 
     private void setBeers(@NonNull final List<BeerViewModel> beers) {
-        Log.v(TAG, "Setting " + beers.size() + " beers to adapter");
+        Timber.v("Setting " + beers.size() + " beers to adapter");
         get(beerListAdapter).set(get(beers));
     }
 

@@ -34,7 +34,6 @@ import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.adapters.SearchAdapter;
@@ -43,12 +42,11 @@ import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+import timber.log.Timber;
 
 import static polanski.option.Option.ofObj;
 
 public abstract class SearchBarActivity extends BaseActivity implements ProgressStatusAggregator {
-
-    private static final String TAG = SearchBarActivity.class.getSimpleName();
 
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
@@ -127,7 +125,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.d(TAG, "onQueryTextSubmit(" + query + ")");
+                Timber.d("onQueryTextSubmit(" + query + ")");
                 if (updateQueryText(query)) {
                     searchView.closeSearch();
                 }
@@ -136,7 +134,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
             @Override
             public boolean onQueryTextChange(String query) {
-                Log.v(TAG, "onQueryTextChange(" + query + ")");
+                Timber.v("onQueryTextChange(" + query + ")");
                 if (liveFilteringEnabled()) {
                     updateQueryText(query);
                 }
@@ -159,7 +157,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
             @Override
             public void onSearchViewAboutToShow() {
-                Log.d(TAG, "onSearchViewAboutToShow");
+                Timber.d("onSearchViewAboutToShow");
 
                 // TODO better subscription handling
                 activitySubscription.add(getQueryObservable()
@@ -178,14 +176,14 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
             @Override
             public void onSearchViewShown() {
-                Log.d(TAG, "onSearchViewShown");
+                Timber.d("onSearchViewShown");
 
                 searchView.setAdapter(adapter);
             }
 
             @Override
             public void onSearchViewClosed() {
-                Log.d(TAG, "onSearchViewClosed");
+                Timber.d("onSearchViewClosed");
 
                 searchView.setAdapter(null);
                 searchViewOverlay.clearAnimation();
@@ -219,7 +217,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "onOptionsItemSelected");
+        Timber.d("onOptionsItemSelected");
 
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -232,7 +230,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed");
+        Timber.d("onBackPressed");
 
         if (searchView.isSearchOpen()) {
             searchView.closeSearch();

@@ -26,55 +26,55 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import quickbeer.android.data.columns.JsonIdColumns;
-import quickbeer.android.data.columns.UserSettingsColumns;
-import quickbeer.android.data.pojos.UserSettings;
+import quickbeer.android.data.columns.UserColumns;
+import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.providers.RateBeerProvider;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class UserSettingsStoreCore extends StoreCoreBase<Integer, UserSettings> {
+public class UserStoreCore extends StoreCoreBase<Integer, User> {
 
-    public UserSettingsStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public UserStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
     protected Uri getUriForId(@NonNull final Integer id) {
-        return RateBeerProvider.UserSettings.withId(get(id));
+        return RateBeerProvider.Users.withId(get(id));
     }
 
     @NonNull
     @Override
     protected Integer getIdForUri(@NonNull final Uri uri) {
-        return RateBeerProvider.UserSettings.fromUri(uri);
+        return RateBeerProvider.Users.fromUri(uri);
     }
 
     @NonNull
     @Override
     protected Uri getContentUri() {
-        return RateBeerProvider.UserSettings.USER_SETTINGS;
+        return RateBeerProvider.Users.USERS;
     }
 
     @NonNull
     @Override
     protected String[] getProjection() {
         return new String[] {
-                UserSettingsColumns.ID,
-                UserSettingsColumns.JSON
+                UserColumns.ID,
+                UserColumns.JSON
         };
     }
 
     @NonNull
     @Override
-    protected UserSettings read(@NonNull final Cursor cursor) {
+    protected User read(@NonNull final Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
-        return getGson().fromJson(json, UserSettings.class);
+        return getGson().fromJson(json, User.class);
     }
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final UserSettings item) {
+    protected ContentValues getContentValuesForItem(@NonNull final User item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(JsonIdColumns.ID, item.userId());
         contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));

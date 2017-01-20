@@ -25,14 +25,13 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.net.HttpCookie;
 
-import io.reark.reark.utils.Log;
+import timber.log.Timber;
 
 /**
  * Based on the code from this stackoverflow answer http://stackoverflow.com/a/25462286/980387 by janoliver
  * Modifications in the structure of the class and addition of serialization of httpOnly attribute
  */
 public class SerializableHttpCookie implements Serializable {
-    private static final String TAG = SerializableHttpCookie.class.getSimpleName();
 
     private static final long serialVersionUID = 6374381323722046732L;
 
@@ -54,7 +53,7 @@ public class SerializableHttpCookie implements Serializable {
             ObjectOutputStream outputStream = new ObjectOutputStream(os);
             outputStream.writeObject(this);
         } catch (IOException e) {
-            Log.w(TAG, "IOException in encodeCookie", e);
+            Timber.w("IOException in encodeCookie", e);
             return null;
         }
 
@@ -70,9 +69,9 @@ public class SerializableHttpCookie implements Serializable {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
             cookie = ((SerializableHttpCookie) objectInputStream.readObject()).cookie;
         } catch (IOException e) {
-            Log.w(TAG, "IOException in decodeCookie", e);
+            Timber.w("IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
-            Log.w(TAG, "ClassNotFoundException in decodeCookie", e);
+            Timber.w("ClassNotFoundException in decodeCookie", e);
         }
 
         return cookie;
@@ -86,7 +85,7 @@ public class SerializableHttpCookie implements Serializable {
         } catch (Exception e) {
             // NoSuchFieldException || IllegalAccessException ||
             // IllegalArgumentException
-            Log.w(TAG, "error:", e);
+            Timber.w("error:", e);
         }
         return false;
     }
@@ -99,7 +98,7 @@ public class SerializableHttpCookie implements Serializable {
         } catch (Exception e) {
             // NoSuchFieldException || IllegalAccessException ||
             // IllegalArgumentException
-            Log.w(TAG, "error:", e);
+            Timber.w("error:", e);
         }
     }
 

@@ -20,17 +20,16 @@ package quickbeer.android.network.utils;
 import java.net.CookieManager;
 import java.net.HttpCookie;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.utils.StringUtils;
+import timber.log.Timber;
 
 public class LoginUtils {
-    private static final String TAG = LoginUtils.class.getSimpleName();
 
     private static final String USER_ID_KEY = "UserID";
     private static final String SESSION_ID_KEY = "SessionID";
 
     public static void clearLoginCredentials(CookieManager cookieManager) {
-        Log.d(TAG, "clearLoginCredentials");
+        Timber.d("clearLoginCredentials");
 
         cookieManager.getCookieStore().removeAll();
     }
@@ -40,7 +39,7 @@ public class LoginUtils {
         boolean sessionCookie = false;
 
         for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
-            Log.v(TAG, "Cookie: " + cookie);
+            Timber.v("Cookie: " + cookie);
 
             if (!StringUtils.hasValue(cookie.getValue())) {
                 continue;
@@ -53,7 +52,7 @@ public class LoginUtils {
             }
         }
 
-        Log.d(TAG, "Login status: userCookie: " + userCookie + ", sessionCookie: " + sessionCookie);
+        Timber.d("Login status: userCookie: " + userCookie + ", sessionCookie: " + sessionCookie);
         return userCookie && sessionCookie;
     }
 

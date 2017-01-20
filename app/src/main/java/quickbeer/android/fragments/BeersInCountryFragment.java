@@ -28,7 +28,6 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Countries;
 
 public class BeersInCountryFragment extends BeerListFragment {
-    private static final String TAG = BeersInCountryFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetBeersInCountry getBeersInCountry;

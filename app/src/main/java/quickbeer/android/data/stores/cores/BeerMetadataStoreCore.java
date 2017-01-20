@@ -43,14 +43,13 @@ import rx.schedulers.Schedulers;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> {
-    private static final String TAG = BeerMetadataStoreCore.class.getSimpleName();
 
     public BeerMetadataStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIds(@NonNull final String idColumn, @NonNull final String accessColumn) {
+    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull final String idColumn, @NonNull final String accessColumn) {
         return Observable
                 .fromCallable(() -> {
                     String[] projection = { idColumn };
@@ -76,7 +75,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     }
 
     @NonNull
-    public Observable<Integer> getNewlyAccessedItems(@NonNull final DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
         return getStream()
                 .map(StoreItem::item)
                 .filter(item -> DateUtils.isValidDate(item.accessed()))

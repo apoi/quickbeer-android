@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
@@ -34,11 +33,11 @@ import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerListViewModel extends BaseViewModel {
-    private static final String TAG = BeerListViewModel.class.getSimpleName();
 
     private final DataLayer.GetBeer getBeer;
     private Observable<DataStreamNotification<ItemList<String>>> sourceObservable;
@@ -71,7 +70,7 @@ public class BeerListViewModel extends BaseViewModel {
 
     @Override
     public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
-        Log.v(TAG, "subscribeToDataStoreInternal");
+        Timber.v("subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<ItemList<String>>> beerSearchSource =
                 get(sourceObservable)
@@ -86,10 +85,10 @@ public class BeerListViewModel extends BaseViewModel {
         compositeSubscription.add(beerSearchSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
-                .doOnNext(beerSearch -> Log.d(TAG, "Search finished"))
+                .doOnNext(beerSearch -> Timber.d("Search finished"))
                 .map(ItemList::getItems)
                 .flatMap(toBeerViewModelList())
-                .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " beers from the view model"))
+                .doOnNext(list -> Timber.d("Publishing " + list.size() + " beers from the view model"))
                 .subscribe(beers::onNext));
 
         compositeSubscription.add(beerSearchSource

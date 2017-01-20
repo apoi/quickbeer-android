@@ -39,7 +39,6 @@ import rx.Observable;
 import rx.Subscription;
 
 public class SearchAdapter extends BaseAdapter implements Filterable {
-    private static final String TAG = SearchAdapter.class.getSimpleName();
 
     private List<String> sourceList = new ArrayList<>();
     private List<String> adapterList = new ArrayList<>();

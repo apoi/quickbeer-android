@@ -27,7 +27,6 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
 import quickbeer.android.activities.BeerDetailsActivity;
 import quickbeer.android.activities.base.ProgressStatusAggregator;
@@ -37,9 +36,9 @@ import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;
 import rx.Observable;
 import rx.Subscription;
+import timber.log.Timber;
 
 public class BeerListFragment extends BaseFragment {
-    private static final String TAG = BeerListFragment.class.getSimpleName();
 
     private BeerListView.ViewBinder beersViewBinder;
     private Subscription selectBeerSubscription;
@@ -94,7 +93,7 @@ public class BeerListFragment extends BaseFragment {
         selectBeerSubscription = beerListViewModel
                 .getSelectBeer()
                 .subscribe(beerId -> {
-                    Log.d(TAG, "Selected beer " + beerId);
+                    Timber.d("Selected beer " + beerId);
 
                     Intent intent = new Intent(getActivity(), BeerDetailsActivity.class);
                     intent.putExtra("beerId", beerId);

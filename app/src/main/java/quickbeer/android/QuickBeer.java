@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import quickbeer.android.injections.ApplicationGraph;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -41,6 +42,10 @@ public class QuickBeer extends Application {
         super.onCreate();
 
         instance = this;
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
         JodaTimeAndroid.init(this);
 

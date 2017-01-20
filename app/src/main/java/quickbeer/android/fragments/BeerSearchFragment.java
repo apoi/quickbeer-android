@@ -22,21 +22,14 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
-import quickbeer.android.R;
-import quickbeer.android.activities.BeerSearchActivity;
+import quickbeer.android.activities.base.SearchBarActivity;
 import quickbeer.android.data.DataLayer;
+import timber.log.Timber;
 
 public class BeerSearchFragment extends BeerListFragment {
-    private static final String TAG = BeerSearchFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
-
-    @Override
-    public int getLayout() {
-        return R.layout.beer_list_fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,15 +41,9 @@ public class BeerSearchFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ((BeerSearchActivity) getActivity())
+        ((SearchBarActivity) getActivity())
                 .getQueryObservable()
-                .subscribe(
-                        query -> {
-                            Log.d(TAG, "query(" + query + ")");
-                            setProgressingSource(getBeerSearch.call(query));
-                        },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        });
+                .doOnNext(query -> Timber.d("query(" + query + ")"))
+                .subscribe(query -> setProgressingSource(getBeerSearch.call(query)), Timber::e);
     }
 }

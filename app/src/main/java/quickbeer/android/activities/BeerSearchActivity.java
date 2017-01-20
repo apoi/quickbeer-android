@@ -25,7 +25,6 @@ import quickbeer.android.fragments.BeerSearchFragment;
 import rx.Observable;
 
 public class BeerSearchActivity extends SearchActivity {
-    private static final String TAG = BeerSearchActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

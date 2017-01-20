@@ -22,8 +22,6 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.net.CookieManager;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -33,15 +31,15 @@ import dagger.Provides;
 public final class StoreModule {
     @Provides
     @Singleton
-    static UserSettingsStore provideUserSettingsStore(
+    static UserStore provideuserStore(
             @NonNull final ContentResolver contentResolver,
             @NonNull final Gson gson) {
-        return new UserSettingsStore(contentResolver, gson);
+        return new UserStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
-    static NetworkRequestStatusStore provideNetworkRequestStatusStore(
+    static NetworkRequestStatusStore providerequestStatusStore(
             @NonNull final ContentResolver contentResolver,
             @NonNull final Gson gson) {
         return new NetworkRequestStatusStore(contentResolver, gson);

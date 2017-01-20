@@ -30,18 +30,17 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.columns.BeerColumns;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.utils.DateUtils;
 import rx.Observable;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
-    private static final String TAG = BeerStoreCore.class.getSimpleName();
 
     public BeerStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);
@@ -70,7 +69,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
                     return idList;
                 })
-                .doOnNext(idList -> Log.d(TAG, "Ticked beers: " + idList.size()))
+                .doOnNext(idList -> Timber.d("Ticked beers: " + idList.size()))
                 .subscribeOn(Schedulers.io());
     }
 

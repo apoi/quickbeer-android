@@ -42,7 +42,6 @@ import rx.schedulers.Schedulers;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetadata> {
-    private static final String TAG = BrewerMetadataStoreCore.class.getSimpleName();
 
     public BrewerMetadataStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);

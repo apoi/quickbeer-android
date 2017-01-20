@@ -28,13 +28,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.SimpleItem;
 import quickbeer.android.views.viewholders.SimpleListItemViewHolder;
+import timber.log.Timber;
 
 public class SimpleListAdapter extends BaseListAdapter {
-    private static final String TAG = SimpleListAdapter.class.getSimpleName();
 
     private final List<SimpleItem> sourceList;
     private final List<SimpleItem> adapterList = new ArrayList<>();
@@ -47,7 +46,7 @@ public class SimpleListAdapter extends BaseListAdapter {
     }
 
     public void filterList(String filter) {
-        Log.v(TAG, "filter(" + filter + ")");
+        Timber.v("filter(" + filter + ")");
 
         adapterList.clear();
 

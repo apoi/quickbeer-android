@@ -30,9 +30,12 @@ import static io.reark.reark.utils.Preconditions.get;
 public abstract class BaseViewModel extends AbstractViewModel {
 
     public enum ProgressStatus {
-        LOADING, ERROR, IDLE
+        LOADING,
+        ERROR,
+        IDLE
     }
 
+    @NonNull
     private final BehaviorSubject<ProgressStatus> progressStatus = BehaviorSubject.create();
 
     @NonNull

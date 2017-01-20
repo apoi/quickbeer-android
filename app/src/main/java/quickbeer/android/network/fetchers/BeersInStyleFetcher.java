@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
@@ -33,16 +32,16 @@ import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import rx.Observable;
 import rx.functions.Action1;
+import timber.log.Timber;
 
 public class BeersInStyleFetcher extends BeerSearchFetcher {
-    private static final String TAG = BeersInStyleFetcher.class.getSimpleName();
 
     public BeersInStyleFetcher(@NonNull final NetworkApi networkApi,
                                @NonNull final NetworkUtils networkUtils,
-                               @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                               @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                                @NonNull final BeerStore beerStore,
                                @NonNull final BeerListStore beerListStore) {
-        super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
+        super(networkApi, networkUtils, updaterequestStatus, beerStore, beerListStore);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
         if (styleId != null) {
             fetchBeerSearch(styleId);
         } else {
-            Log.e(TAG, "No styleId provided in the intent extras");
+            Timber.e("No styleId provided in the intent extras");
         }
     }
 

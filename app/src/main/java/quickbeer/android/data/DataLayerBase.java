@@ -32,7 +32,7 @@ import quickbeer.android.data.stores.ReviewStore;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class DataLayerBase {
-    protected final NetworkRequestStatusStore networkRequestStatusStore;
+    protected final NetworkRequestStatusStore requestStatusStore;
 
     protected final BeerStore beerStore;
     protected final BeerListStore beerListStore;
@@ -45,7 +45,7 @@ public class DataLayerBase {
     protected final BrewerListStore brewerListStore;
     protected final BrewerMetadataStore brewerMetadataStore;
 
-    protected DataLayerBase(@NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+    protected DataLayerBase(@NonNull final NetworkRequestStatusStore requestStatusStore,
                             @NonNull final BeerStore beerStore,
                             @NonNull final BeerListStore beerListStore,
                             @NonNull final BeerMetadataStore beerMetadataStore,
@@ -54,7 +54,7 @@ public class DataLayerBase {
                             @NonNull final BrewerStore brewerStore,
                             @NonNull final BrewerListStore brewerListStore,
                             @NonNull final BrewerMetadataStore brewerMetadataStore) {
-        this.networkRequestStatusStore = get(networkRequestStatusStore);
+        this.requestStatusStore = get(requestStatusStore);
         this.beerStore = get(beerStore);
         this.beerListStore = get(beerListStore);
         this.beerMetadataStore = get(beerMetadataStore);

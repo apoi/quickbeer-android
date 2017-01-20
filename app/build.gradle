@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "quickbeer.android.next"
+        applicationId "quickbeer.android"
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
@@ -77,6 +77,9 @@ dependencies {
 
     // Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    // Timber
+    compile 'com.jakewharton.timber:timber:4.5.0'
 
     // Joda-Time
     compile 'net.danlew:android.joda:2.9.5.1'

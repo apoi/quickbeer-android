@@ -30,10 +30,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.reark.reark.utils.Log;
+import timber.log.Timber;
 
 public class PersistentCookieStore implements CookieStore {
-    private static final String TAG = PersistentCookieStore.class.getSimpleName();
 
     // Persistence
     private static final String SP_COOKIE_STORE = "cookieStore";
@@ -70,7 +69,7 @@ public class PersistentCookieStore implements CookieStore {
                 // targetCookies.remove(cookie)
                 targetCookies.add(cookie);
             } catch (URISyntaxException e) {
-                Log.w(TAG, "error: ", e);
+                Timber.w(e, "Error!");
             }
         }
     }
@@ -111,7 +110,7 @@ public class PersistentCookieStore implements CookieStore {
                         : uri.getScheme(), domain,
                         cookie.getPath() == null ? "/" : cookie.getPath(), null);
             } catch (URISyntaxException e) {
-                Log.w(TAG, "error:", e);
+                Timber.w(e, "Error!");
             }
         }
         return cookieUri;

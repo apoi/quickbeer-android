@@ -20,7 +20,7 @@ package quickbeer.android.data.columns;
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.PrimaryKey;
 
-public interface UserSettingsColumns {
+public interface UserColumns {
     @DataType(DataType.Type.INTEGER) @PrimaryKey String ID = "id";
     @DataType(DataType.Type.TEXT) String JSON = "json";
 }

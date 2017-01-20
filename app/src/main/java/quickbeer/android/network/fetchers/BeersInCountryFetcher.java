@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
@@ -34,16 +33,16 @@ import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import rx.Observable;
 import rx.functions.Action1;
+import timber.log.Timber;
 
 public class BeersInCountryFetcher extends BeerSearchFetcher {
-    private static final String TAG = BeersInCountryFetcher.class.getSimpleName();
 
     public BeersInCountryFetcher(@NonNull final NetworkApi networkApi,
                                  @NonNull final NetworkUtils networkUtils,
-                                 @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                                 @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                                  @NonNull final BeerStore beerStore,
                                  @NonNull final BeerListStore beerListStore) {
-        super(networkApi, networkUtils, updateNetworkRequestStatus, beerStore, beerListStore);
+        super(networkApi, networkUtils, updaterequestStatus, beerStore, beerListStore);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
         if (countryId != null) {
             fetchBeerSearch(countryId);
         } else {
-            Log.e(TAG, "No countryId provided in the intent extras");
+            Timber.e("No countryId provided in the intent extras");
         }
     }
 

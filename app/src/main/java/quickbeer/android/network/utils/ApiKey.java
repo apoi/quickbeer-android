@@ -25,11 +25,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
+import timber.log.Timber;
 
 public class ApiKey {
-    private static final String TAG = ApiKey.class.getSimpleName();
 
     public String getApiKey(@NonNull final Context context) {
         try {
@@ -40,7 +39,7 @@ public class ApiKey {
 
             String value = reader.readLine();
             if (value == null || value.trim().isEmpty()) {
-                Log.e(TAG, "Invalid API key!");
+                Timber.e("Invalid API key!");
             }
 
             return value;

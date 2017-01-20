@@ -31,7 +31,7 @@ import quickbeer.android.utils.StringUtils;
 import static io.reark.reark.utils.Preconditions.get;
 
 @AutoValue
-public abstract class UserSettings {
+public abstract class User {
 
     @SerializedName("username")
     public abstract String username();
@@ -57,7 +57,7 @@ public abstract class UserSettings {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends OverwritableBuilder<AutoValue_UserSettings.Builder> {
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_User.Builder> {
 
         public abstract Builder username(@Nullable final String username);
 
@@ -67,34 +67,34 @@ public abstract class UserSettings {
 
         public abstract Builder isLogged(@NonNull final Boolean isLogged);
 
-        public abstract UserSettings build();
+        public abstract User build();
 
         @NonNull
         @Override
-        protected Class<AutoValue_UserSettings.Builder> getTypeParameterClass() {
-            return AutoValue_UserSettings.Builder.class;
+        protected Class<AutoValue_User.Builder> getTypeParameterClass() {
+            return AutoValue_User.Builder.class;
         }
     }
 
     @NonNull
-    public static TypeAdapter<UserSettings> typeAdapter(@NonNull final Gson gson) {
-        return new AutoValue_UserSettings.GsonTypeAdapter(get(gson));
+    public static TypeAdapter<User> typeAdapter(@NonNull final Gson gson) {
+        return new AutoValue_User.GsonTypeAdapter(get(gson));
     }
 
     @NonNull
     public static Builder builder() {
-        return new AutoValue_UserSettings.Builder();
+        return new AutoValue_User.Builder();
     }
 
     @NonNull
-    public static Builder builder(@NonNull final UserSettings userSettings) {
-        return new AutoValue_UserSettings.Builder(userSettings);
+    public static Builder builder(@NonNull final User user) {
+        return new AutoValue_User.Builder(user);
     }
 
     @NonNull
-    public static UserSettings merge(@NonNull final UserSettings v1, @NonNull final UserSettings v2) {
-        AutoValue_UserSettings.Builder builder1 = new AutoValue_UserSettings.Builder(get(v1));
-        AutoValue_UserSettings.Builder builder2 = new AutoValue_UserSettings.Builder(get(v2));
+    public static User merge(@NonNull final User v1, @NonNull final User v2) {
+        AutoValue_User.Builder builder1 = new AutoValue_User.Builder(get(v1));
+        AutoValue_User.Builder builder2 = new AutoValue_User.Builder(get(v2));
 
         return builder1.overwrite(builder2).build();
     }

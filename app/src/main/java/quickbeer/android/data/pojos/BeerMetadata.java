@@ -32,8 +32,6 @@ import static io.reark.reark.utils.Preconditions.get;
 @AutoValue
 public abstract class BeerMetadata {
 
-    private static final String TAG = BeerMetadata.class.getSimpleName();
-
     @NonNull
     public abstract Integer beerId();
 

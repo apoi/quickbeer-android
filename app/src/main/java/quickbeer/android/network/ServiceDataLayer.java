@@ -31,7 +31,6 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.DataLayerBase;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
@@ -42,17 +41,17 @@ import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ServiceDataLayer extends DataLayerBase {
-    private static final String TAG = ServiceDataLayer.class.getSimpleName();
 
     private final UriFetcherManager fetcherManager;
 
     public ServiceDataLayer(@NonNull final UriFetcherManager fetcherManager,
-                            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+                            @NonNull final NetworkRequestStatusStore requestStatusStore,
                             @NonNull final BeerStore beerStore,
                             @NonNull final BeerListStore beerListStore,
                             @NonNull final BeerMetadataStore beerMetadataStore,
@@ -61,7 +60,7 @@ public class ServiceDataLayer extends DataLayerBase {
                             @NonNull final BrewerStore brewerStore,
                             @NonNull final BrewerListStore brewerListStore,
                             @NonNull final BrewerMetadataStore brewerMetadataStore) {
-        super(networkRequestStatusStore,
+        super(requestStatusStore,
                 beerStore, beerListStore, beerMetadataStore,
                 reviewStore, reviewListStore,
                 brewerStore, brewerListStore, brewerMetadataStore);
@@ -75,7 +74,7 @@ public class ServiceDataLayer extends DataLayerBase {
         final String serviceUriString = intent.getStringExtra("serviceUriString");
 
         if (serviceUriString == null) {
-            Log.e(TAG, "No Uri defined");
+            Timber.e("No Uri defined");
             return;
         }
 
@@ -83,10 +82,10 @@ public class ServiceDataLayer extends DataLayerBase {
         final Fetcher<Uri> matchingFetcher = fetcherManager.findFetcher(serviceUri);
 
         if (matchingFetcher != null) {
-            Log.v(TAG, "Fetcher found for " + serviceUri);
+            Timber.v("Fetcher found for " + serviceUri);
             matchingFetcher.fetch(intent);
         } else {
-            Log.e(TAG, "Unknown Uri " + serviceUri);
+            Timber.e("Unknown Uri " + serviceUri);
         }
     }
 }

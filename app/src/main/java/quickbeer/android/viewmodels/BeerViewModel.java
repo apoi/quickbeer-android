@@ -20,7 +20,6 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
@@ -29,11 +28,11 @@ import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerViewModel extends BaseViewModel {
-    private static final String TAG = BeerViewModel.class.getSimpleName();
 
     @NonNull
     private final DataLayer.GetBeer getBeer;
@@ -53,7 +52,7 @@ public class BeerViewModel extends BaseViewModel {
 
     @Override
     public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
-        Log.v(TAG, "subscribeToDataStoreInternal");
+        Timber.v("subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<Beer>> beerSource =
                 Observable.just(beerId)
@@ -69,7 +68,7 @@ public class BeerViewModel extends BaseViewModel {
         compositeSubscription.add(beerSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
-                .doOnNext(beerSearch -> Log.d(TAG, "Beer get finished"))
+                .doOnNext(beerSearch -> Timber.d("Beer get finished"))
                 .subscribe(beer::onNext));
 
         compositeSubscription.add(beerSource

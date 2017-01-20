@@ -33,7 +33,6 @@ import quickbeer.android.viewmodels.ReviewListViewModel;
 import quickbeer.android.views.BeerDetailsView;
 
 public class BeerDetailsFragment extends BaseFragment {
-    private static final String TAG = BeerDetailsFragment.class.getSimpleName();
 
     private BeerViewModel beerViewModel;
     private BeerDetailsView.BeerViewBinder beerViewBinder;

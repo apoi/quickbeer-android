@@ -36,7 +36,7 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
-import quickbeer.android.data.stores.UserSettingsStore;
+import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.NetworkModule;
 import quickbeer.android.network.utils.NetworkUtils;
@@ -49,12 +49,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideLoginFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final CookieManager cookieManager,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
-            @NonNull final UserSettingsStore userSettingsStore) {
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
+            @NonNull final UserStore userStore) {
         return new LoginFetcher(networkApi,
                 cookieManager,
-                networkRequestStatusStore::put,
-                userSettingsStore);
+                requestStatusStore::put,
+                userStore);
     }
 
     @Provides
@@ -62,12 +62,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideBeerFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerMetadataStore metadataStore) {
         return new BeerFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 metadataStore);
     }
@@ -77,12 +77,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideBeerSearchFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore) {
         return new BeerSearchFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 beerListStore);
     }
@@ -92,12 +92,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideTopBeersFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore) {
         return new TopBeersFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 beerListStore);
     }
@@ -107,12 +107,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideBeersInCountryFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore) {
         return new BeersInCountryFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 beerListStore);
     }
@@ -122,12 +122,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideBeersInStyleFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore) {
         return new BeersInStyleFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 beerListStore);
     }
@@ -137,12 +137,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideReviewFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             ReviewStore reviewStore,
             ReviewListStore reviewListStore) {
         return new ReviewFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 reviewStore,
                 reviewListStore);
     }
@@ -152,12 +152,12 @@ public final class FetcherModule {
     static Fetcher<Uri> provideTicksFetcher(
             @NonNull final NetworkApi networkApi,
             @NonNull final NetworkUtils networkUtils,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore) {
         return new TicksFetcher(networkApi,
                 networkUtils,
-                networkRequestStatusStore::put,
+                requestStatusStore::put,
                 beerStore,
                 beerListStore);
     }

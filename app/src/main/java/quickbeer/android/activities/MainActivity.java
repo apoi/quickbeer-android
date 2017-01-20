@@ -24,20 +24,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.fragments.MainFragment;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 public class MainActivity extends SearchActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate");
+        Timber.d("onCreate");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -52,15 +51,13 @@ public class MainActivity extends SearchActivity {
         activitySubscription.add(getQueryObservable()
                 .subscribe(
                         query -> {
-                            Log.d(TAG, "query(" + query + ")");
+                            Timber.d("query(" + query + ")");
 
                             Intent intent = new Intent(this, BeerSearchActivity.class);
                             intent.putExtra("query", query);
                             startActivity(intent);
                         },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        }));
+                        Timber::e));
     }
 
     @Override

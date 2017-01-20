@@ -42,12 +42,14 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIds() {
-        return ((BeerMetadataStoreCore) getCore()).getAccessedIds(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED);
+    public Observable<List<Integer>> getAccessedIdsOnce() {
+        BeerMetadataStoreCore core = (BeerMetadataStoreCore) getCore();
+
+        return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED);
     }
 
     @NonNull
-    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
-        return ((BeerMetadataStoreCore) getCore()).getNewlyAccessedItems(date);
+    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
+        return ((BeerMetadataStoreCore) getCore()).getAccessedIdsStream(date);
     }
 }

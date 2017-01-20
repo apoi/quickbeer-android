@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
@@ -35,11 +34,11 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerFetcher extends FetcherBase<Uri> {
-    private static final String TAG = BeerFetcher.class.getSimpleName();
 
     @NonNull
     private final NetworkApi networkApi;
@@ -55,10 +54,10 @@ public class BeerFetcher extends FetcherBase<Uri> {
 
     public BeerFetcher(@NonNull final NetworkApi networkApi,
                        @NonNull final NetworkUtils networkUtils,
-                       @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                       @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                        @NonNull final BeerStore beerStore,
                        @NonNull final BeerMetadataStore metadataStore) {
-        super(updateNetworkRequestStatus);
+        super(updaterequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -73,15 +72,15 @@ public class BeerFetcher extends FetcherBase<Uri> {
         if (beerId != -1) {
             fetchBeer(beerId);
         } else {
-            Log.e(TAG, "No id provided in the intent extras");
+            Timber.e("No id provided in the intent extras");
         }
     }
 
     private void fetchBeer(final int beerId) {
-        Log.d(TAG, "fetchBeer(" + beerId + ")");
+        Timber.d("fetchBeer(" + beerId + ")");
 
         if (isOngoingRequest(beerId)) {
-            Log.d(TAG, "Found an ongoing request for beer " + beerId);
+            Timber.d("Found an ongoing request for beer " + beerId);
             return;
         }
 
@@ -95,7 +94,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
                 .doOnNext(beerStore::put)
                 .map(BeerMetadata::newUpdate)
                 .subscribe(metadataStore::put,
-                           Log.onError(TAG, "Error fetching beer " + beerId));
+                           err -> Timber.e(err, "Error fetching beer " + beerId));
 
         addRequest(beerId, subscription);
     }

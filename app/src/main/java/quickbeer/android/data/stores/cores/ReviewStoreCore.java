@@ -32,7 +32,6 @@ import quickbeer.android.data.providers.RateBeerProvider;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
-    private static final String TAG = ReviewStoreCore.class.getSimpleName();
 
     public ReviewStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(contentResolver, gson);

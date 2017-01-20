@@ -35,7 +35,7 @@ import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.data.stores.StoreModule;
-import quickbeer.android.data.stores.UserSettingsStore;
+import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.injections.ForApplication;
 import quickbeer.android.network.ServiceDataLayer;
 import quickbeer.android.network.fetchers.FetcherModule;
@@ -50,15 +50,15 @@ public final class DataStoreModule {
     }
 
     @Provides
-    static DataLayer.GetUserSettings provideGetUserSettings(
+    static DataLayer.GetUsers provideGetuser(
             @NonNull final DataLayer dataLayer) {
-        return dataLayer::getUserSettings;
+        return dataLayer::getuser;
     }
 
     @Provides
-    static DataLayer.SetUserSettings provideSetUserSettings(
+    static DataLayer.Setuser provideSetuser(
             @NonNull final DataLayer dataLayer) {
-        return dataLayer::setUserSettings;
+        return dataLayer::setuser;
     }
 
     @Provides
@@ -126,8 +126,8 @@ public final class DataStoreModule {
     @Singleton
     static DataLayer provideApplicationDataLayer(
             @ForApplication @NonNull final Context context,
-            @NonNull final UserSettingsStore userSettingsStore,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final UserStore userStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore,
             @NonNull final BeerMetadataStore beerMetadataStore,
@@ -137,8 +137,8 @@ public final class DataStoreModule {
             @NonNull final BrewerListStore brewerListStore,
             @NonNull final BrewerMetadataStore brewerMetadataStore) {
         return new DataLayer(context,
-                userSettingsStore,
-                networkRequestStatusStore,
+                userStore,
+                requestStatusStore,
                 beerStore,
                 beerListStore,
                 beerMetadataStore,
@@ -153,7 +153,7 @@ public final class DataStoreModule {
     @Singleton
     static ServiceDataLayer provideServiceDataLayer(
             @NonNull final UriFetcherManager fetcherManager,
-            @NonNull final NetworkRequestStatusStore networkRequestStatusStore,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final BeerStore beerStore,
             @NonNull final BeerListStore beerListStore,
             @NonNull final BeerMetadataStore beerMetadataStore,
@@ -163,7 +163,7 @@ public final class DataStoreModule {
             @NonNull final BrewerListStore brewerListStore,
             @NonNull final BrewerMetadataStore brewerMetadataStore) {
         return new ServiceDataLayer(fetcherManager,
-                networkRequestStatusStore,
+                requestStatusStore,
                 beerStore,
                 beerListStore,
                 beerMetadataStore,

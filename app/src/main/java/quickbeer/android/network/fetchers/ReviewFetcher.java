@@ -27,7 +27,6 @@ import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.stores.ReviewListStore;
@@ -39,11 +38,11 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewFetcher extends FetcherBase<Uri> {
-    private static final String TAG = ReviewFetcher.class.getSimpleName();
 
     @NonNull
     private final NetworkApi networkApi;
@@ -59,10 +58,10 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
     public ReviewFetcher(@NonNull final NetworkApi networkApi,
                          @NonNull final NetworkUtils networkUtils,
-                         @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
+                         @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                          @NonNull final ReviewStore reviewStore,
                          @NonNull final ReviewListStore reviewListStore) {
-        super(updateNetworkRequestStatus);
+        super(updaterequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -77,15 +76,15 @@ public class ReviewFetcher extends FetcherBase<Uri> {
         if (beerId > 0) {
             fetchReviews(beerId);
         } else {
-            Log.e(TAG, "No beerId provided in the intent extras");
+            Timber.e("No beerId provided in the intent extras");
         }
     }
 
     private void fetchReviews(final int beerId) {
-        Log.d(TAG, "fetchReviews(" + beerId + ")");
+        Timber.d("fetchReviews(" + beerId + ")");
 
         if (isOngoingRequest(beerId)) {
-            Log.d(TAG, "Found an ongoing request for reviews for beer " + beerId);
+            Timber.d("Found an ongoing request for reviews for beer " + beerId);
             return;
         }
 
@@ -102,7 +101,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(reviewListStore::put,
-                        Log.onError(TAG, "Error fetching reviews for beer " + beerId));
+                        err -> Timber.e(err, "Error fetching reviews for beer " + beerId));
 
         addRequest(beerId, subscription);
     }

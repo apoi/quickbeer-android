@@ -29,7 +29,6 @@ import android.view.MenuItem;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.QuickBeer;
 import quickbeer.android.R;
 import quickbeer.android.activities.CountryListActivity;
@@ -41,15 +40,15 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.injections.ApplicationGraph;
 import quickbeer.android.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-public class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = BaseActivity.class.getSimpleName();
+public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     // Composite for subscriptions meant to stay alive for the activity's duration
     protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
     @Inject
-    DataLayer.GetUserSettings getUserSettings;
+    DataLayer.GetUsers getUsers;
 
     @Inject
     DataLayer.Login login;
@@ -79,12 +78,12 @@ public class BaseActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void login() {
-        getUserSettings.call()
+        getUsers.call()
                 .first()
                 .compose(RxUtils::pickValue)
-                .filter(userSettings -> !userSettings.isLogged())
+                .filter(user -> !user.isLogged())
                 .flatMap(s -> login.call(s.username(), s.password()))
-                .subscribe(s -> Log.d(TAG, "Settings: " + s));
+                .subscribe(s -> Timber.d("Settings: " + s));
     }
 
     @Override

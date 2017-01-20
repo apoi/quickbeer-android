@@ -21,12 +21,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import io.reark.reark.utils.Log;
 import quickbeer.android.activities.base.SearchActivity;
 import quickbeer.android.fragments.BeersInCountryFragment;
+import timber.log.Timber;
 
 public class BeersInCountryActivity extends SearchActivity {
-    private static final String TAG = BeersInCountryActivity.class.getSimpleName();
 
     private String countryId;
 
@@ -43,15 +42,13 @@ public class BeersInCountryActivity extends SearchActivity {
         activitySubscription.add(getQueryObservable()
                 .subscribe(
                         query -> {
-                            Log.d(TAG, "query(" + query + ")");
+                            Timber.d("query(" + query + ")");
 
                             Intent intent = new Intent(this, BeerSearchActivity.class);
                             intent.putExtra("query", query);
                             startActivity(intent);
                         },
-                        throwable -> {
-                            Log.e(TAG, "error", throwable);
-                        }));
+                        Timber::e));
     }
 
     @Override

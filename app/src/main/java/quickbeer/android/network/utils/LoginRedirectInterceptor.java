@@ -19,13 +19,12 @@ package quickbeer.android.network.utils;
 
 import java.io.IOException;
 
-import io.reark.reark.utils.Log;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import timber.log.Timber;
 
 public class LoginRedirectInterceptor implements Interceptor {
-    private static final String TAG = LoginRedirectInterceptor.class.getSimpleName();
 
     @Override
     public Response intercept(Chain chain) throws IOException {
@@ -33,7 +32,7 @@ public class LoginRedirectInterceptor implements Interceptor {
         Response response = chain.proceed(request);
 
         if (request.url().encodedPath().equals("/Signin_r.asp") && response.isRedirect()) {
-            Log.d(TAG, "Modifying response for login request");
+            Timber.d("Modifying response for login request");
 
             return new Response.Builder()
                     .request(request)

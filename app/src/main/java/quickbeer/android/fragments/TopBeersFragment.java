@@ -26,7 +26,6 @@ import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
 
 public class TopBeersFragment extends BeerListFragment {
-    private static final String TAG = TopBeersFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetTopBeers getTopBeers;

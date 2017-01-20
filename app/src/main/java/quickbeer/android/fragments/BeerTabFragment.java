@@ -23,7 +23,6 @@ import android.view.View;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Header;
@@ -52,7 +51,6 @@ public class BeerTabFragment extends BeerListFragment {
 
         // BeerTabFragment never goes away, so we can keep a perpetual subscription
         subscription = getAccessedBeers.call()
-                .doOnNext(notification -> Log.d("___", "accessed: " + notification))
                 .subscribe(accessedBeersSubject::onNext);
 
         setSource(accessedBeersSubject.asObservable());

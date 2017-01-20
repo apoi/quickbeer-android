@@ -32,17 +32,17 @@ import com.google.gson.Gson;
 
 import polanski.option.Option;
 import quickbeer.android.Constants;
-import quickbeer.android.data.pojos.UserSettings;
-import quickbeer.android.data.stores.cores.UserSettingsStoreCore;
+import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.cores.UserStoreCore;
 
 /**
- * Store to keep only single user settings.
+ * Store to keep user data.
  */
-public class UserSettingsStore extends StoreBase<Integer, UserSettings, Option<UserSettings>> {
+public class UserStore extends StoreBase<Integer, User, Option<User>> {
 
-    public UserSettingsStore(@NonNull final ContentResolver contentResolver,
-                             @NonNull final Gson gson) {
-        super(new UserSettingsStoreCore(contentResolver, gson),
+    public UserStore(@NonNull final ContentResolver contentResolver,
+                     @NonNull final Gson gson) {
+        super(new UserStoreCore(contentResolver, gson),
               item -> Constants.DEFAULT_USER_ID,
               Option::ofObj,
               Option::none);

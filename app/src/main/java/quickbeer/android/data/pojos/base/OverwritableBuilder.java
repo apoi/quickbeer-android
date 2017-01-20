@@ -24,15 +24,13 @@ import org.joda.time.DateTime;
 import java.lang.reflect.Field;
 
 import io.reark.reark.pojo.OverwritablePojo;
-import io.reark.reark.utils.Log;
+import timber.log.Timber;
 
 /**
  * Class to implement our specific json empty value definitions, to avoid overwriting
  * existing data with invalid values.
  */
 public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
-
-    private static final String TAG = OverwritableBuilder.class.getSimpleName();
 
     @Override
     protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {
@@ -47,7 +45,7 @@ public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends
                 return super.isEmpty(field, pojo);
             }
         } catch (IllegalAccessException e) {
-            Log.e(TAG, "Failed get at " + field.getName(), e);
+            Timber.e(e, "Failed get at " + field.getName());
         }
 
         return true;

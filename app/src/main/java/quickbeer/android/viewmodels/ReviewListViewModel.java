@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Log;
 import io.reark.reark.utils.RxUtils;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
@@ -32,11 +31,11 @@ import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewListViewModel extends BaseViewModel {
-    private static final String TAG = ReviewListViewModel.class.getSimpleName();
 
     private final DataLayer.GetReviews getReviews;
     private final DataLayer.GetReview getReview;
@@ -59,7 +58,7 @@ public class ReviewListViewModel extends BaseViewModel {
 
     @Override
     public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
-        Log.v(TAG, "subscribeToDataStoreInternal");
+        Timber.v("subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<ItemList<Integer>>> reviewSource =
                 getReviews.call(beerId).publish();
@@ -71,10 +70,10 @@ public class ReviewListViewModel extends BaseViewModel {
         compositeSubscription.add(reviewSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
-                .doOnNext(search -> Log.d(TAG, "Review get finished"))
+                .doOnNext(search -> Timber.d("Review get finished"))
                 .map(ItemList<Integer>::getItems)
                 .flatMap(toReviewList())
-                .doOnNext(list -> Log.d(TAG, "Publishing " + list.size() + " reviews from the view model"))
+                .doOnNext(list -> Timber.d("Publishing " + list.size() + " reviews from the view model"))
                 .subscribe(reviews::onNext));
 
         compositeSubscription.add(reviewSource
@@ -94,6 +93,6 @@ public class ReviewListViewModel extends BaseViewModel {
         return getReview
                 .call(get(reviewId))
                 .compose(quickbeer.android.rx.RxUtils::pickValue)
-                .doOnNext((review) -> Log.v(TAG, "Received review " + review.id()));
+                .doOnNext((review) -> Timber.v("Received review " + review.id()));
     }
 }

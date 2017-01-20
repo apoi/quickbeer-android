@@ -34,7 +34,7 @@ import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.columns.ReviewListColumns;
-import quickbeer.android.data.columns.UserSettingsColumns;
+import quickbeer.android.data.columns.UserColumns;
 
 @ContentProvider(authority = RateBeerProvider.AUTHORITY, database = RateBeerDatabase.class)
 public final class RateBeerProvider {
@@ -50,22 +50,22 @@ public final class RateBeerProvider {
         return builder.build();
     }
 
-    @TableEndpoint(table = RateBeerDatabase.USER_SETTINGS)
-    public static final class UserSettings {
+    @TableEndpoint(table = RateBeerDatabase.USERS)
+    public static final class Users {
         @ContentUri(
-                path = RateBeerDatabase.USER_SETTINGS,
-                type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
-                defaultSort = UserSettingsColumns.ID + " ASC")
-        public static final Uri USER_SETTINGS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.USER_SETTINGS);
+                path = RateBeerDatabase.USERS,
+                type = BASE_TYPE + RateBeerDatabase.USERS,
+                defaultSort = UserColumns.ID + " ASC")
+        public static final Uri USERS = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.USERS);
 
         @InexactContentUri(
-                path = RateBeerDatabase.USER_SETTINGS + "/*",
-                name = "USER_SETTINGS_ID",
-                type = BASE_TYPE + RateBeerDatabase.USER_SETTINGS,
-                whereColumn = UserSettingsColumns.ID,
+                path = RateBeerDatabase.USERS + "/*",
+                name = "USERS_ID",
+                type = BASE_TYPE + RateBeerDatabase.USERS,
+                whereColumn = UserColumns.ID,
                 pathSegment = 1)
         public static Uri withId(int id) {
-            return buildUri(RateBeerDatabase.USER_SETTINGS, String.valueOf(id));
+            return buildUri(RateBeerDatabase.USERS, String.valueOf(id));
         }
 
         public static int fromUri(Uri uri) {
@@ -73,22 +73,22 @@ public final class RateBeerProvider {
         }
     }
 
-    @TableEndpoint(table = RateBeerDatabase.NETWORK_REQUEST_STATUSES)
+    @TableEndpoint(table = RateBeerDatabase.REQUEST_STATUSES)
     public static final class NetworkRequestStatuses {
         @ContentUri(
-                path = RateBeerDatabase.NETWORK_REQUEST_STATUSES,
-                type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
+                path = RateBeerDatabase.REQUEST_STATUSES,
+                type = BASE_TYPE + RateBeerDatabase.REQUEST_STATUSES,
                 defaultSort = NetworkRequestStatusColumns.ID + " ASC")
-        public static final Uri NETWORK_REQUEST_STATUSES = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.NETWORK_REQUEST_STATUSES);
+        public static final Uri NETWORK_REQUEST_STATUSES = Uri.withAppendedPath(AUTHORITY_URI, RateBeerDatabase.REQUEST_STATUSES);
 
         @InexactContentUri(
-                path = RateBeerDatabase.NETWORK_REQUEST_STATUSES + "/*",
-                name = "NETWORK_REQUEST_STATUSES_ID",
-                type = BASE_TYPE + RateBeerDatabase.NETWORK_REQUEST_STATUSES,
+                path = RateBeerDatabase.REQUEST_STATUSES + "/*",
+                name = "REQUEST_STATUSES_ID",
+                type = BASE_TYPE + RateBeerDatabase.REQUEST_STATUSES,
                 whereColumn = NetworkRequestStatusColumns.ID,
                 pathSegment = 1)
         public static Uri withId(long id) {
-            return buildUri(RateBeerDatabase.NETWORK_REQUEST_STATUSES, String.valueOf(id));
+            return buildUri(RateBeerDatabase.REQUEST_STATUSES, String.valueOf(id));
         }
 
         public static long fromUri(Uri uri) {

@@ -25,10 +25,9 @@ import java.net.CookieManager;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import io.reark.reark.utils.Log;
 import quickbeer.android.Constants;
-import quickbeer.android.data.pojos.UserSettings;
-import quickbeer.android.data.stores.UserSettingsStore;
+import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.LoginUtils;
@@ -36,11 +35,11 @@ import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class LoginFetcher extends FetcherBase<Uri> {
-    private static final String TAG = LoginFetcher.class.getSimpleName();
 
     @NonNull
     private final NetworkApi networkApi;
@@ -49,17 +48,17 @@ public class LoginFetcher extends FetcherBase<Uri> {
     private final CookieManager cookieManager;
 
     @NonNull
-    private final UserSettingsStore userSettingsStore;
+    private final UserStore userStore;
 
     public LoginFetcher(@NonNull final NetworkApi networkApi,
                         @NonNull final CookieManager cookieManager,
-                        @NonNull final Action1<NetworkRequestStatus> updateNetworkRequestStatus,
-                        @NonNull final UserSettingsStore userSettingsStore) {
-        super(updateNetworkRequestStatus);
+                        @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
+                        @NonNull final UserStore userStore) {
+        super(updaterequestStatus);
 
         this.networkApi = get(networkApi);
         this.cookieManager = get(cookieManager);
-        this.userSettingsStore = get(userSettingsStore);
+        this.userStore = get(userStore);
     }
 
     @Override
@@ -68,7 +67,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
         final int id = uri.hashCode();
 
         if (isOngoingRequest(id)) {
-            Log.d(TAG, "Found an ongoing request for login");
+            Timber.d("Found an ongoing request for login");
             return;
         }
 
@@ -76,18 +75,18 @@ public class LoginFetcher extends FetcherBase<Uri> {
         final String password = intent.getStringExtra("password");
 
         if (!StringUtils.hasValue(username) || !StringUtils.hasValue(password)) {
-            Log.d(TAG, "Missing username or password");
+            Timber.d("Missing username or password");
             return;
         }
 
         LoginUtils.clearLoginCredentials(cookieManager);
 
-        Log.d(TAG, "Login with user " + username);
+        Timber.d("Login with user " + username);
 
         Subscription subscription = networkApi
                 .login(username, password)
                 .subscribeOn(Schedulers.computation())
-                .map(userSettings -> UserSettings.builder()
+                .map(user -> User.builder()
                         .username(username)
                         .password(password)
                         .userId(LoginUtils.getUserId(cookieManager))
@@ -96,9 +95,9 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
-                .doOnNext(userSettings -> Log.d(TAG, "Updating login status to " + userSettings.isLogged()))
-                .subscribe(userSettingsStore::put,
-                           Log.onError(TAG, "Error fetching user " + username));
+                .doOnNext(user -> Timber.d("Updating login status to " + user.isLogged()))
+                .subscribe(userStore::put,
+                           err -> Timber.e(err, "Error fetching user " + username));
 
         addRequest(id, subscription);
     }
@@ -111,6 +110,6 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
     @NonNull
     public static String getUniqueUri() {
-        return UserSettings.class + "/" + Constants.DEFAULT_USER_ID;
+        return User.class + "/" + Constants.DEFAULT_USER_ID;
     }
 }

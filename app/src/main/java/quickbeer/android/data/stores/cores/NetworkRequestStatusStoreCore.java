@@ -32,7 +32,7 @@ import java.util.List;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
-import quickbeer.android.data.providers.RateBeerProvider.NetworkRequestStatuses;
+import quickbeer.android.data.providers.RateBeerProvider;
 import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -53,7 +53,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
     @NonNull
     @Override
     public Uri getContentUri() {
-        return NetworkRequestStatuses.NETWORK_REQUEST_STATUSES;
+        return RateBeerProvider.NetworkRequestStatuses.NETWORK_REQUEST_STATUSES;
     }
 
     @NonNull
@@ -87,7 +87,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
     public Uri getUriForId(@NonNull final Integer id) {
         checkNotNull(id);
 
-        return NetworkRequestStatuses.withId(id);
+        return RateBeerProvider.NetworkRequestStatuses.withId(id);
     }
 
     @NonNull
@@ -95,6 +95,6 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
     protected Integer getIdForUri(@NonNull final Uri uri) {
         checkNotNull(uri);
 
-        return (int) NetworkRequestStatuses.fromUri(uri);
+        return (int) RateBeerProvider.NetworkRequestStatuses.fromUri(uri);
     }
 }

@@ -22,25 +22,18 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Log;
-import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.UserSettings;
+import quickbeer.android.data.pojos.User;
 import quickbeer.android.rx.RxUtils;
+import timber.log.Timber;
 
 public class TickedBeersFragment extends BeerListFragment {
-    private static final String TAG = TickedBeersFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetTickedBeers getTickedBeers;
 
     @Inject
-    DataLayer.GetUserSettings getUserSettings;
-
-    @Override
-    public int getLayout() {
-        return R.layout.beer_list_fragment;
-    }
+    DataLayer.GetUsers getUsers;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,12 +45,11 @@ public class TickedBeersFragment extends BeerListFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getUserSettings.call()
+        getUsers.call()
                 .compose(RxUtils::pickValue)
-                .filter(UserSettings::isLogged)
-                .filter(userSettings -> !userSettings.userId().isEmpty())
-                .subscribe(userSettings -> setProgressingSource(getTickedBeers.call(userSettings.userId())),
-                        error -> Log.e(TAG, "Error getting settings", error));
-
+                .filter(User::isLogged)
+                .filter(user -> !user.userId().isEmpty())
+                .subscribe(user -> setProgressingSource(getTickedBeers.call(user.userId())),
+                        err -> Timber.e(err, "Error getting settings"));
     }
 }

@@ -23,7 +23,6 @@ import quickbeer.android.activities.base.FilterActivity;
 import quickbeer.android.fragments.TickedBeersFragment;
 
 public class TickedBeersActivity extends FilterActivity {
-    private static final String TAG = TickedBeersActivity.class.getSimpleName();
 
     @Override
     protected String getSearchHint() {

@@ -28,7 +28,6 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Styles;
 
 public class BeersInStyleFragment extends BeerListFragment {
-    private static final String TAG = BeersInStyleFragment.class.getSimpleName();
 
     @Inject
     DataLayer.GetBeersInStyle getBeersInStyle;

@@ -29,15 +29,15 @@ import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.columns.ReviewListColumns;
-import quickbeer.android.data.columns.UserSettingsColumns;
+import quickbeer.android.data.columns.UserColumns;
 
 @Database(version = RateBeerDatabase.VERSION)
 final class RateBeerDatabase {
 
     static final int VERSION = 1;
 
-    @Table(NetworkRequestStatusColumns.class) static final String NETWORK_REQUEST_STATUSES = "networkRequestStatuses";
-    @Table(UserSettingsColumns.class) static final String USER_SETTINGS = "userSettings";
+    @Table(NetworkRequestStatusColumns.class) static final String REQUEST_STATUSES = "requestStatuses";
+    @Table(UserColumns.class) static final String USERS = "users";
 
     @Table(BeerColumns.class) static final String BEERS = "beers";
     @Table(BeerListColumns.class) static final String BEER_LISTS = "beerLists";
