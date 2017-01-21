@@ -103,16 +103,15 @@ public class BeerDetailsActivity extends SearchActivity {
     }
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     protected void onDestroy() {
         compositeSubscription.clear();
 
         super.onDestroy();
-    }
-
-    @Override
-    protected void inject() {
-        super.inject();
-        getGraph().inject(this);
     }
 
     @Override

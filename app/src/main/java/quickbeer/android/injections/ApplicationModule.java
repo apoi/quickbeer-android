@@ -29,10 +29,13 @@ import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
 
+import com.squareup.picasso.Picasso;
+
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import timber.log.Timber;
 
 @Module
 public final class ApplicationModule {
@@ -46,19 +49,31 @@ public final class ApplicationModule {
     @Provides
     @Singleton
     @ForApplication
-    public Context providesApplicationContext() {
+    Context providesApplicationContext() {
         return application;
     }
 
     @Provides
     @Singleton
-    public Application providesApplication() {
+    Application providesApplication() {
         return application;
     }
 
     @Provides
     @Singleton
-    public ContentResolver contentResolver(@ForApplication Context context) {
+    static ContentResolver providesContentResolver(@ForApplication Context context) {
         return context.getContentResolver();
+    }
+
+    @Provides
+    @Singleton
+    static Picasso providesPicasso(@ForApplication Context context) {
+        return Picasso.with(context);
+    }
+
+    @Provides
+    @Singleton
+    static Timber.Tree providesLoggingTree() {
+        return new Timber.DebugTree();
     }
 }

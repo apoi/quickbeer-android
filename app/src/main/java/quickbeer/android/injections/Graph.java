@@ -15,37 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
-
-import android.content.Context;
+package quickbeer.android.injections;
 
 import javax.inject.Singleton;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.utils.ApiKey;
-import quickbeer.android.network.utils.NetworkUtils;
+import dagger.Component;
+import quickbeer.android.QuickBeer;
+import quickbeer.android.data.DataStoreModule;
+import quickbeer.android.network.NetworkModule;
+import quickbeer.android.network.NetworkService;
+import quickbeer.android.utils.UtilsModule;
 
-@Module
-public final class UtilsModule {
+@Singleton
+@Component(modules = {
+        ApplicationModule.class,
+        NetworkModule.class,
+        UtilsModule.class,
+        DataStoreModule.class
+})
+public interface Graph {
 
-    @Provides
-    @Singleton
-    static NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
-    }
+    ActivityComponent plusActivity(ActivityModule activityModule);
 
-    @Provides
-    @Singleton
-    static Countries providesCountries() {
-        return new Countries();
-    }
+    void inject(QuickBeer application);
 
-    @Provides
-    @Singleton
-    static Styles providesStyles() {
-        return new Styles();
-    }
+    void inject(NetworkService networkService);
 
 }

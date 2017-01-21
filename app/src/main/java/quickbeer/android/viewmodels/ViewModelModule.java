@@ -23,8 +23,10 @@ import quickbeer.android.data.DataLayer.GetBeer;
 
 @Module
 public final class ViewModelModule {
+
     @Provides
     public BeerListViewModel provideBeersViewModel(GetBeer getBeer) {
         return new BeerListViewModel(getBeer);
     }
+
 }

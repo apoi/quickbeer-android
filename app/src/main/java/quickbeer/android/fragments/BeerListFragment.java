@@ -19,7 +19,6 @@ package quickbeer.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +45,11 @@ public class BeerListFragment extends BaseFragment {
     @Inject
     BeerListViewModel beerListViewModel;
 
+    @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
     public int getLayout() {
         return R.layout.beer_list_fragment;
     }
@@ -69,25 +73,15 @@ public class BeerListFragment extends BaseFragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(getLayout(), container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        beersViewBinder = new BeerListView.ViewBinder((BeerListView) view.findViewById(R.id.list_layout), beerListViewModel);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
+
+        beersViewBinder = new BeerListView.ViewBinder((BeerListView) getView().findViewById(R.id.list_layout), beerListViewModel);
         beersViewBinder.bind();
 
         selectBeerSubscription = beerListViewModel

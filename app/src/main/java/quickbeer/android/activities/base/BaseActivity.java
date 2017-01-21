@@ -27,8 +27,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
-import javax.inject.Inject;
-
 import quickbeer.android.QuickBeer;
 import quickbeer.android.R;
 import quickbeer.android.activities.CountryListActivity;
@@ -36,30 +34,23 @@ import quickbeer.android.activities.MainActivity;
 import quickbeer.android.activities.StyleListActivity;
 import quickbeer.android.activities.TickedBeersActivity;
 import quickbeer.android.activities.TopBeersActivity;
-import quickbeer.android.data.DataLayer;
-import quickbeer.android.injections.ApplicationGraph;
-import quickbeer.android.rx.RxUtils;
+import quickbeer.android.injections.ActivityComponent;
+import quickbeer.android.injections.ActivityModule;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    // Composite for subscriptions meant to stay alive for the activity's duration
+    @Nullable
+    protected ActivityComponent component;
+
+    // Composite for subscriptions meant to stay alive for the activity lifetime
     protected final CompositeSubscription activitySubscription = new CompositeSubscription();
-
-    @Inject
-    DataLayer.GetUsers getUsers;
-
-    @Inject
-    DataLayer.Login login;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         inject();
-
-        login();
     }
 
     @Override
@@ -69,22 +60,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         super.onDestroy();
     }
 
-    protected ApplicationGraph getGraph() {
-        return QuickBeer.getInstance().getGraph();
+    @NonNull
+    public ActivityComponent getComponent() {
+        if (component == null) {
+            component = ((QuickBeer) getApplication()).graph()
+                    .plusActivity(new ActivityModule(this));
+        }
+
+        return component;
     }
 
-    protected void inject() {
-        getGraph().inject(this);
-    }
-
-    private void login() {
-        getUsers.call()
-                .first()
-                .compose(RxUtils::pickValue)
-                .filter(user -> !user.isLogged())
-                .flatMap(s -> login.call(s.username(), s.password()))
-                .subscribe(s -> Timber.d("Settings: " + s));
-    }
+    protected abstract void inject();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {

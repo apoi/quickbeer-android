@@ -31,7 +31,7 @@ import dagger.Provides;
 public final class StoreModule {
     @Provides
     @Singleton
-    static UserStore provideuserStore(
+    static UserStore provideUserStore(
             @NonNull final ContentResolver contentResolver,
             @NonNull final Gson gson) {
         return new UserStore(contentResolver, gson);
@@ -39,7 +39,7 @@ public final class StoreModule {
 
     @Provides
     @Singleton
-    static NetworkRequestStatusStore providerequestStatusStore(
+    static NetworkRequestStatusStore provideRequestStatusStore(
             @NonNull final ContentResolver contentResolver,
             @NonNull final Gson gson) {
         return new NetworkRequestStatusStore(contentResolver, gson);

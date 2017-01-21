@@ -47,8 +47,7 @@ public abstract class SearchActivity extends SearchBarActivity {
 
     @Override
     protected void inject() {
-        super.inject();
-        getGraph().inject(this);
+        getComponent().inject(this);
     }
 
     @Override

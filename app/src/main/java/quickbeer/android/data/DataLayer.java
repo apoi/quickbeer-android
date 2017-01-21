@@ -50,7 +50,6 @@ import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.fetchers.BeerFetcher;
 import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.network.fetchers.BrewerFetcher;
-import quickbeer.android.network.fetchers.LoginFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
@@ -97,28 +96,6 @@ public class DataLayer extends DataLayerBase {
 
     public void setuser(@NonNull final User user) {
         userStore.put(get(user));
-    }
-
-    //// LOGIN
-
-    public Observable<Boolean> login(@NonNull final String username,
-                                     @NonNull final String password) {
-        Timber.v("login");
-
-        Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
-        intent.putExtra("username", get(username));
-        intent.putExtra("password", get(password));
-        context.startService(intent);
-
-        // Observe the success of the network request. Completion means we logged in
-        // successfully, while on error the login wasn't successful.
-        return requestStatusStore
-                .getOnceAndStream(requestIdForUri(LoginFetcher.getUniqueUri()))
-                .compose(RxUtils::pickValue)
-                .filter(requestStatus -> requestStatus.isCompleted() || requestStatus.isError())
-                .first()
-                .map(NetworkRequestStatus::isCompleted);
     }
 
     //// GET BEER DETAILS
@@ -562,11 +539,6 @@ public class DataLayer extends DataLayerBase {
                 .doOnNext(ids -> Timber.d("getAccessedBrewers: list now " + ids.size()))
                 .map(ids -> new ItemList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
-    }
-
-    public interface Login {
-        @NonNull
-        Observable<Boolean> call(@NonNull final String username, @NonNull final String password);
     }
 
     public interface GetUsers {

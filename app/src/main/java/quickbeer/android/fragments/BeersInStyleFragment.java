@@ -18,7 +18,7 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -41,14 +41,13 @@ public class BeersInStyleFragment extends BeerListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
+    protected void inject() {
+        getComponent().inject(this);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         String styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
         setProgressingSource(getBeersInStyle.call(styleId));

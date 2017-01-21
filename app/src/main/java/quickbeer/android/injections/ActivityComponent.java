@@ -15,37 +15,26 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
+package quickbeer.android.injections;
 
-import android.content.Context;
+import dagger.Subcomponent;
+import quickbeer.android.activities.BeerDetailsActivity;
+import quickbeer.android.activities.base.BaseActivity;
+import quickbeer.android.activities.base.SearchActivity;
+import quickbeer.android.activities.base.SearchBarActivity;
 
-import javax.inject.Singleton;
+@ActivityScope
+@Subcomponent(modules = ActivityModule.class)
+public interface ActivityComponent {
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.utils.ApiKey;
-import quickbeer.android.network.utils.NetworkUtils;
+    FragmentComponent plusFragment(FragmentModule fragmentModule);
 
-@Module
-public final class UtilsModule {
+    void inject(BaseActivity baseActivity);
 
-    @Provides
-    @Singleton
-    static NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
-    }
+    void inject(SearchBarActivity searchBarActivity);
 
-    @Provides
-    @Singleton
-    static Countries providesCountries() {
-        return new Countries();
-    }
+    void inject(SearchActivity searchActivity);
 
-    @Provides
-    @Singleton
-    static Styles providesStyles() {
-        return new Styles();
-    }
+    void inject(BeerDetailsActivity beerDetailsActivity);
 
 }

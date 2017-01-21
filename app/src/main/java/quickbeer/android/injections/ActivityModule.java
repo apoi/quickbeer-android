@@ -15,37 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
+package quickbeer.android.injections;
 
-import android.content.Context;
-
-import javax.inject.Singleton;
+import android.app.Activity;
+import android.support.annotation.NonNull;
 
 import dagger.Module;
 import dagger.Provides;
-import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.utils.ApiKey;
-import quickbeer.android.network.utils.NetworkUtils;
 
 @Module
-public final class UtilsModule {
+public class ActivityModule {
 
-    @Provides
-    @Singleton
-    static NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
+    private final Activity activity;
+
+    public ActivityModule(@NonNull final Activity activity) {
+        this.activity = activity;
     }
 
     @Provides
-    @Singleton
-    static Countries providesCountries() {
-        return new Countries();
-    }
-
-    @Provides
-    @Singleton
-    static Styles providesStyles() {
-        return new Styles();
+    @ActivityScope
+    Activity providesActivity() {
+        return activity;
     }
 
 }

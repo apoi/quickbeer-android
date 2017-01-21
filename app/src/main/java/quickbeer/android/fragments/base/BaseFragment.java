@@ -17,13 +17,37 @@
  */
 package quickbeer.android.fragments.base;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.QuickBeer;
-import quickbeer.android.injections.ApplicationGraph;
+import quickbeer.android.activities.base.BaseActivity;
+import quickbeer.android.injections.FragmentComponent;
+import quickbeer.android.injections.FragmentModule;
 
 public abstract class BaseFragment extends Fragment {
-    protected ApplicationGraph getGraph() {
-        return QuickBeer.getInstance().getGraph();
+
+    @Nullable
+    private FragmentComponent component;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        inject();
     }
+
+    @NonNull
+    public FragmentComponent getComponent() {
+        if (component == null) {
+            component = ((BaseActivity) getActivity()).getComponent()
+                    .plusFragment(new FragmentModule(this));
+        }
+
+        return component;
+    }
+
+    protected abstract void inject();
+
 }

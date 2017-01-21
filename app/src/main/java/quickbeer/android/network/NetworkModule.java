@@ -44,6 +44,7 @@ import okhttp3.OkHttpClient;
 import quickbeer.android.injections.ForApplication;
 import quickbeer.android.network.utils.DateDeserializer;
 import quickbeer.android.network.utils.NetworkInstrumentation;
+import quickbeer.android.network.utils.NullNetworkInstrumentation;
 import quickbeer.android.network.utils.PersistentCookieStore;
 import quickbeer.android.network.utils.StringDeserializer;
 
@@ -84,4 +85,11 @@ public final class NetworkModule {
     public static CookieManager provideCookieManager(@ForApplication Context context) {
         return new CookieManager(new PersistentCookieStore(context), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
     }
+
+    @Provides
+    @Singleton
+    static NetworkInstrumentation<OkHttpClient.Builder> providesNetworkInstrumentation() {
+        return new NullNetworkInstrumentation();
+    }
+
 }

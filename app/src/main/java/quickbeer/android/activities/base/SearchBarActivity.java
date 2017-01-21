@@ -83,16 +83,15 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     }
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     protected void onDestroy() {
         progressIndicatorViewModel.unsubscribe();
 
         super.onDestroy();
-    }
-
-    @Override
-    protected void inject() {
-        super.inject();
-        getGraph().inject(this);
     }
 
     @Override

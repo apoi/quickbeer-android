@@ -33,8 +33,14 @@ import quickbeer.android.views.SimpleListView;
 import rx.Observable;
 
 public class StyleListFragment extends BaseFragment {
+
     @Inject
     Styles styles;
+
+    @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,14 +48,12 @@ public class StyleListFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        getGraph().inject(this);
-
-        ((SimpleListView) view).setListSource(styles);
+        ((SimpleListView) getView()).setListSource(styles);
 
         Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
-        ((SimpleListView) view).setFilterObservable(filterObservable);
+        ((SimpleListView) getView()).setFilterObservable(filterObservable);
     }
 }

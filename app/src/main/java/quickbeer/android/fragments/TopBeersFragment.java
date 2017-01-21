@@ -18,7 +18,7 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
@@ -31,19 +31,19 @@ public class TopBeersFragment extends BeerListFragment {
     DataLayer.GetTopBeers getTopBeers;
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public int getLayout() {
         return R.layout.beer_list_fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
-    }
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         setProgressingSource(getTopBeers.call());
     }
 }

@@ -15,37 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
+package quickbeer.android.injections;
 
-import android.content.Context;
+import java.lang.annotation.Retention;
 
-import javax.inject.Singleton;
+import javax.inject.Scope;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.utils.ApiKey;
-import quickbeer.android.network.utils.NetworkUtils;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Module
-public final class UtilsModule {
-
-    @Provides
-    @Singleton
-    static NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
-    }
-
-    @Provides
-    @Singleton
-    static Countries providesCountries() {
-        return new Countries();
-    }
-
-    @Provides
-    @Singleton
-    static Styles providesStyles() {
-        return new Styles();
-    }
-
+@Scope
+@Retention(RUNTIME)
+public @interface FragmentScope {
 }

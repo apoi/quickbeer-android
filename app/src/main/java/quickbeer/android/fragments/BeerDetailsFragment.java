@@ -18,6 +18,7 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,9 +51,8 @@ public class BeerDetailsFragment extends BaseFragment {
     DataLayer.GetReview getReview;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
+    protected void inject() {
+        getComponent().inject(this);
     }
 
     @Override
@@ -61,11 +61,11 @@ public class BeerDetailsFragment extends BaseFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         int beerId = ((BeerDetailsActivity) getActivity()).getBeerId();
-        BeerDetailsView detailsView = (BeerDetailsView) view.findViewById(R.id.beer_details_view);
+        BeerDetailsView detailsView = (BeerDetailsView) getView().findViewById(R.id.beer_details_view);
 
         beerViewModel = new BeerViewModel(beerId, getBeer);
         beerViewModel.subscribeToDataStore();

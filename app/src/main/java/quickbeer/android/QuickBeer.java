@@ -21,45 +21,67 @@ import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.squareup.leakcanary.LeakCanary;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import quickbeer.android.injections.ApplicationGraph;
+import javax.inject.Inject;
+
+import quickbeer.android.injections.ApplicationModule;
+import quickbeer.android.injections.DaggerGraph;
+import quickbeer.android.injections.Graph;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-@SuppressWarnings({"StaticVariableUsedBeforeInitialization", "AssignmentToStaticFieldFromInstanceMethod"})
 public class QuickBeer extends Application {
 
     @Nullable
-    private static QuickBeer instance;
+    private Graph graph;
 
+    @Inject
     @Nullable
-    private ApplicationGraph applicationGraph;
+    Timber.Tree loggingTree;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        instance = this;
+        inject();
 
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
+        initLogging();
+
+        initLeakCanary();
+
+        initDateAndTime();
+    }
+
+    @NonNull
+    public Graph graph() {
+        return get(graph);
+    }
+
+    private void inject() {
+        if (graph == null) {
+            graph = DaggerGraph.builder()
+                    .applicationModule(new ApplicationModule(this))
+                    .build();
+            graph.inject(this);
         }
+    }
 
+    private void initLogging() {
+        Timber.uprootAll();
+        Timber.plant(get(loggingTree));
+    }
+
+    private void initLeakCanary() {
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            LeakCanary.install(this);
+        }
+    }
+
+    private void initDateAndTime() {
         JodaTimeAndroid.init(this);
-
-        applicationGraph = ApplicationGraph.Initializer.init(this);
-        applicationGraph.inject(this);
-    }
-
-    @NonNull
-    public static QuickBeer getInstance() {
-        return get(instance);
-    }
-
-    @NonNull
-    public ApplicationGraph getGraph() {
-        return get(applicationGraph);
     }
 }

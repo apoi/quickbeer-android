@@ -32,18 +32,23 @@ import quickbeer.android.fragments.base.BaseFragment;
 public class MainFragment extends BaseFragment {
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.main_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        ViewPager viewPager = (ViewPager) view.findViewById(R.id.view_pager);
+        ViewPager viewPager = (ViewPager) getView().findViewById(R.id.view_pager);
         viewPager.setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
 
-        TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
     }
 }

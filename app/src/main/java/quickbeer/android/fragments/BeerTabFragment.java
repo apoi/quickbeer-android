@@ -18,26 +18,19 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
-import android.view.View;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Header;
-import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.views.BeerListView;
-import rx.Subscription;
-import rx.subjects.BehaviorSubject;
 
 public class BeerTabFragment extends BeerListFragment {
+
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
-
-    private Subscription subscription;
-
-    private final BehaviorSubject<DataStreamNotification<ItemList<String>>> accessedBeersSubject = BehaviorSubject.create();
 
     @Override
     public int getLayout() {
@@ -45,28 +38,16 @@ public class BeerTabFragment extends BeerListFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getGraph().inject(this);
-
-        // BeerTabFragment never goes away, so we can keep a perpetual subscription
-        subscription = getAccessedBeers.call()
-                .subscribe(accessedBeersSubject::onNext);
-
-        setSource(accessedBeersSubject.asObservable());
+    protected void inject() {
+        getComponent().inject(this);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        ((BeerListView) view).setHeader(new Header(getContext().getString(R.string.recent_beers)));
-    }
+        ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_beers)));
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        subscription.unsubscribe();
+        setSource(getAccessedBeers.call());
     }
 }

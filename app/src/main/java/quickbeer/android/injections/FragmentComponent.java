@@ -17,18 +17,7 @@
  */
 package quickbeer.android.injections;
 
-import android.app.Application;
-
-import javax.inject.Singleton;
-
-import dagger.Component;
-import quickbeer.android.QuickBeer;
-import quickbeer.android.activities.BeerDetailsActivity;
-import quickbeer.android.activities.base.BaseActivity;
-import quickbeer.android.activities.base.SearchActivity;
-import quickbeer.android.activities.base.SearchBarActivity;
-import quickbeer.android.data.DataStoreModule;
-import quickbeer.android.data.stores.StoreModule;
+import dagger.Subcomponent;
 import quickbeer.android.fragments.BeerDetailsFragment;
 import quickbeer.android.fragments.BeerListFragment;
 import quickbeer.android.fragments.BeerSearchFragment;
@@ -36,49 +25,35 @@ import quickbeer.android.fragments.BeerTabFragment;
 import quickbeer.android.fragments.BeersInCountryFragment;
 import quickbeer.android.fragments.BeersInStyleFragment;
 import quickbeer.android.fragments.CountryListFragment;
+import quickbeer.android.fragments.MainFragment;
 import quickbeer.android.fragments.StyleListFragment;
 import quickbeer.android.fragments.TickedBeersFragment;
 import quickbeer.android.fragments.TopBeersFragment;
-import quickbeer.android.network.NetworkModule;
-import quickbeer.android.network.NetworkService;
-import quickbeer.android.utils.UtilsModule;
-import quickbeer.android.viewmodels.ViewModelModule;
 
-@Singleton
-@Component(modules = {
-        ApplicationModule.class,
-        NetworkModule.class,
-        InstrumentationModule.class,
-        UtilsModule.class,
-        ViewModelModule.class,
-        DataStoreModule.class,
-        StoreModule.class
-})
-public interface ApplicationGraph {
-    void inject(QuickBeer quickBeer);
-    void inject(NetworkService networkService);
+@FragmentScope
+@Subcomponent(modules = FragmentModule.class)
+public interface FragmentComponent {
 
-    void inject(BaseActivity baseActivity);
-    void inject(SearchBarActivity searchBarActivity);
-    void inject(SearchActivity searchActivity);
-    void inject(BeerDetailsActivity beerDetailsActivity);
+    void inject(MainFragment mainFragment);
 
     void inject(BeerTabFragment beerTabFragment);
+
     void inject(BeerListFragment beerListFragment);
+
     void inject(BeerSearchFragment beerSearchFragment);
+
     void inject(BeerDetailsFragment beerDetailsFragment);
+
     void inject(TickedBeersFragment tickedBeersFragment);
+
     void inject(TopBeersFragment topBeersFragment);
+
     void inject(BeersInCountryFragment beersInCountryFragment);
+
     void inject(BeersInStyleFragment beersInStyleFragment);
+
     void inject(CountryListFragment countryListFragment);
+
     void inject(StyleListFragment styleListFragment);
 
-    final class Initializer {
-        public static ApplicationGraph init(Application application) {
-            return DaggerApplicationGraph.builder()
-                    .applicationModule(new ApplicationModule(application))
-                    .build();
-        }
-    }
 }

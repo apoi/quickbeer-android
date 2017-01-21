@@ -43,7 +43,7 @@ public class NetworkService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        QuickBeer.getInstance().getGraph().inject(this);
+        ((QuickBeer) getApplication()).graph().inject(this);
     }
 
     @Override

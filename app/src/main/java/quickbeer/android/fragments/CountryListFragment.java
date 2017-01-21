@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activities.CountryListActivity;
+import quickbeer.android.activities.base.SearchBarActivity;
 import quickbeer.android.fragments.base.BaseFragment;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.views.SimpleListView;
@@ -37,19 +37,22 @@ public class CountryListFragment extends BaseFragment {
     Countries countries;
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.simple_list_fragment, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        getGraph().inject(this);
+        ((SimpleListView) getView()).setListSource(countries);
 
-        ((SimpleListView) view).setListSource(countries);
-
-        Observable<String> filterObservable = ((CountryListActivity) getActivity()).getQueryObservable();
-        ((SimpleListView) view).setFilterObservable(filterObservable);
+        Observable<String> filterObservable = ((SearchBarActivity) getActivity()).getQueryObservable();
+        ((SimpleListView) getView()).setFilterObservable(filterObservable);
     }
 }
