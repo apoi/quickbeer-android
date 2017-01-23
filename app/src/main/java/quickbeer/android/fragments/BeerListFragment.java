@@ -19,6 +19,9 @@ package quickbeer.android.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,24 +29,67 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
-import quickbeer.android.activities.BeerDetailsActivity;
-import quickbeer.android.activities.base.ProgressStatusAggregator;
+import quickbeer.android.activity.BeerDetailsActivity;
+import quickbeer.android.activity.base.ProgressStatusAggregator;
+import quickbeer.android.core.fragment.BindingBaseFragment;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
+import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
-import quickbeer.android.fragments.base.BaseFragment;
+import quickbeer.android.features.home.SearchViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;
+import quickbeer.android.views.SearchView;
 import rx.Observable;
-import rx.Subscription;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class BeerListFragment extends BaseFragment {
+import static io.reark.reark.utils.Preconditions.get;
 
-    private BeerListView.ViewBinder beersViewBinder;
-    private Subscription selectBeerSubscription;
+public abstract  class BeerListFragment extends BindingBaseFragment {
 
+    @Nullable
     @Inject
     BeerListViewModel beerListViewModel;
+
+    // TODO inject global ProgressViewModel?
+
+    private BeerListView.ViewBinder beersViewBinder;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(listViewModel()
+                    .selectedBeerStream()
+                    .doOnNext(beerId -> Timber.d("Selected beer " + beerId))
+                    .subscribe(beerId -> openBeerDetails(beerId), Timber::e));
+
+            beersViewBinder.bind();
+        }
+
+        @Override
+        public void unbind() {
+            beersViewBinder.unbind();
+        }
+    };
+
+    private void openBeerDetails(@NonNull final Integer beerId) {
+        Intent intent = new Intent(getActivity(), BeerDetailsActivity.class);
+        intent.putExtra("beerId", beerId);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        BeerListView beerListView = (BeerListView) getView().findViewById(R.id.list_layout);
+        beersViewBinder = new BeerListView.ViewBinder(beerListView, listViewModel());
+    }
 
     @Override
     protected void inject() {
@@ -54,64 +100,19 @@ public class BeerListFragment extends BaseFragment {
         return R.layout.beer_list_fragment;
     }
 
-    public void setSource(Observable<DataStreamNotification<ItemList<String>>> sourceObservable) {
-        // Unsubscribe old source before setting the new one, otherwise the subscribe
-        // call assumes the old subscription to still be valid.
-        beerListViewModel.unsubscribeFromDataStore();
-        beerListViewModel.setSourceObservable(sourceObservable);
-        beerListViewModel.subscribeToDataStore();
-    }
-
-    public void setProgressingSource(Observable<DataStreamNotification<ItemList<String>>> sourceObservable) {
-        Observable<DataStreamNotification<ItemList<String>>> observable =
-                sourceObservable.publish().refCount();
-
-        setSource(observable);
-
-        // Hook up the search observable status to progress indicator
-        ((ProgressStatusAggregator) getActivity()).addProgressObservable(observable);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(getLayout(), container, false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        beersViewBinder = new BeerListView.ViewBinder((BeerListView) getView().findViewById(R.id.list_layout), beerListViewModel);
-        beersViewBinder.bind();
-
-        selectBeerSubscription = beerListViewModel
-                .getSelectBeer()
-                .subscribe(beerId -> {
-                    Timber.d("Selected beer " + beerId);
-
-                    Intent intent = new Intent(getActivity(), BeerDetailsActivity.class);
-                    intent.putExtra("beerId", beerId);
-                    startActivity(intent);
-                });
+    @NonNull
+    protected DataBinder listDataBinder() {
+        return dataBinder;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        beersViewBinder.unbind();
-        selectBeerSubscription.unsubscribe();
+    @NonNull
+    protected BeerListViewModel listViewModel() {
+        return get(beerListViewModel);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        beerListViewModel.unsubscribeFromDataStore();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        beerListViewModel.dispose();
-        beerListViewModel = null;
-    }
 }

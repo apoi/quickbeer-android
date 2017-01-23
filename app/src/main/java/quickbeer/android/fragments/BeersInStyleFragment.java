@@ -18,14 +18,19 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
-import quickbeer.android.activities.BeersInStyleActivity;
+import quickbeer.android.activity.BeersInStyleActivity;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Styles;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class BeersInStyleFragment extends BeerListFragment {
 
@@ -35,10 +40,25 @@ public class BeersInStyleFragment extends BeerListFragment {
     @Inject
     Styles styles;
 
-    @Override
-    public int getLayout() {
-        return R.layout.beer_list_fragment;
-    }
+    private String styleId;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getBeersInStyle.call(styleId)
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
 
     @Override
     protected void inject() {
@@ -49,7 +69,18 @@ public class BeersInStyleFragment extends BeerListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
-        setProgressingSource(getBeersInStyle.call(styleId));
+        styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
+    }
+
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

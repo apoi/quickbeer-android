@@ -20,15 +20,13 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.viewmodels.AbstractViewModel;
-import quickbeer.android.core.viewmodel.ViewModel;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract class BaseViewModel extends AbstractViewModel {
+public abstract class NetworkViewModel extends quickbeer.android.core.viewmodel.BaseViewModel {
 
     public enum ProgressStatus {
         LOADING,
@@ -40,16 +38,22 @@ public abstract class BaseViewModel extends AbstractViewModel {
     private final BehaviorSubject<ProgressStatus> progressStatus = BehaviorSubject.create();
 
     @NonNull
-    public Observable<ProgressStatus> getNetworkRequestStatus() {
+    public Observable<ProgressStatus> getProgressStatus() {
         return progressStatus.asObservable();
     }
 
-    void setNetworkStatusText(@NonNull final ProgressStatus status) {
+    public void setNetworkStatusText(@NonNull final ProgressStatus status) {
         progressStatus.onNext(get(status));
     }
 
+    @SuppressWarnings("NoopMethodInAbstractClass")
+    @Override
+    protected void unbind() {
+        // No implementation
+    }
+
     @NonNull
-    static Func1<DataStreamNotification, ProgressStatus> toProgressStatus() {
+    static <T> Func1<DataStreamNotification<T>, ProgressStatus> toProgressStatus() {
         return notification -> {
             if (notification.isFetchingStart()) {
                 return ProgressStatus.LOADING;

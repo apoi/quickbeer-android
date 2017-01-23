@@ -15,11 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities.base;
+package quickbeer.android.activity;
 
-import io.reark.reark.data.DataStreamNotification;
-import rx.Observable;
+import android.support.v4.app.Fragment;
 
-public interface ProgressStatusAggregator {
-    void addProgressObservable(Observable<? extends DataStreamNotification> observable);
+import quickbeer.android.activity.base.FilterActivity;
+import quickbeer.android.fragments.TickedBeersFragment;
+
+public class TickedBeersActivity extends FilterActivity {
+
+    @Override
+    protected String getSearchHint() {
+        return "Filter ticked beers";
+    }
+
+    @Override
+    protected Fragment getFragment() {
+        return new TickedBeersFragment();
+    }
 }

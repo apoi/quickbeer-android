@@ -18,19 +18,43 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
 import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class BeerTabFragment extends BeerListFragment {
 
     @Inject
     DataLayer.GetAccessedBeers getAccessedBeers;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getAccessedBeers.call()
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
 
     @Override
     public int getLayout() {
@@ -47,7 +71,17 @@ public class BeerTabFragment extends BeerListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_beers)));
+    }
 
-        setSource(getAccessedBeers.call());
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

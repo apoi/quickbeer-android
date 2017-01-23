@@ -17,33 +17,54 @@
  */
 package quickbeer.android.fragments;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class TopBeersFragment extends BeerListFragment {
 
     @Inject
     DataLayer.GetTopBeers getTopBeers;
 
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getTopBeers.call()
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
+
     @Override
     protected void inject() {
         getComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public int getLayout() {
-        return R.layout.beer_list_fragment;
+    protected ViewModel viewModel() {
+        return listViewModel();
     }
 
+    @NonNull
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        setProgressingSource(getTopBeers.call());
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

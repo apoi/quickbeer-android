@@ -15,62 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities.base;
+package quickbeer.android.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import quickbeer.android.QuickBeer;
 import quickbeer.android.R;
-import quickbeer.android.activities.CountryListActivity;
-import quickbeer.android.activities.MainActivity;
-import quickbeer.android.activities.StyleListActivity;
-import quickbeer.android.activities.TickedBeersActivity;
-import quickbeer.android.activities.TopBeersActivity;
-import quickbeer.android.injections.ActivityComponent;
-import quickbeer.android.injections.ActivityModule;
-import rx.subscriptions.CompositeSubscription;
+import quickbeer.android.core.activity.BindingBaseActivity;
+import quickbeer.android.features.home.MainActivity;
 
-public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class DrawerActivity extends BindingBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    @Nullable
-    protected ActivityComponent component;
+    protected void setupDrawerLayout() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
 
-    // Composite for subscriptions meant to stay alive for the activity lifetime
-    protected final CompositeSubscription activitySubscription = new CompositeSubscription();
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        inject();
+        // Toolbar setup
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, (Toolbar) findViewById(R.id.toolbar),
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
     }
-
-    @Override
-    protected void onDestroy() {
-        activitySubscription.clear();
-
-        super.onDestroy();
-    }
-
-    @NonNull
-    public ActivityComponent getComponent() {
-        if (component == null) {
-            component = ((QuickBeer) getApplication()).graph()
-                    .plusActivity(new ActivityModule(this));
-        }
-
-        return component;
-    }
-
-    protected abstract void inject();
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {

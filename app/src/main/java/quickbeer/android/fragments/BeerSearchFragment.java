@@ -18,18 +18,59 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import quickbeer.android.activities.base.SearchBarActivity;
+import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.features.home.SearchViewModel;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerSearchFragment extends BeerListFragment {
 
+    @Nullable
+    @Inject
+    SearchViewModel searchViewModel;
+
+    @Nullable
     @Inject
     DataLayer.GetBeerSearch getBeerSearch;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(get(searchViewModel)
+                    .getQueryStream()
+                    .doOnNext(query -> Timber.d("query(%s)", query))
+                    .switchMap(query -> get(getBeerSearch).call(query))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.beer_list_fragment, container, false);
+    }
 
     @Override
     protected void inject() {
@@ -40,9 +81,18 @@ public class BeerSearchFragment extends BeerListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((SearchBarActivity) getActivity())
-                .getQueryObservable()
-                .doOnNext(query -> Timber.d("query(" + query + ")"))
-                .subscribe(query -> setProgressingSource(getBeerSearch.call(query)), Timber::e);
+        get(searchViewModel).setSearchHint(getResources().getString(R.string.search_box_hint_search_beers));
+    }
+
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

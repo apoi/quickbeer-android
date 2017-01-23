@@ -15,13 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.activities.base.SearchActivity;
+import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.fragments.BeersInStyleFragment;
 import timber.log.Timber;
 

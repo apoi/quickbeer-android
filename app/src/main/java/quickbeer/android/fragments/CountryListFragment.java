@@ -26,13 +26,14 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activities.base.SearchBarActivity;
-import quickbeer.android.fragments.base.BaseFragment;
+import quickbeer.android.activity.base.SearchBarActivity;
+import quickbeer.android.core.fragment.BaseFragment;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.views.SimpleListView;
 import rx.Observable;
 
 public class CountryListFragment extends BaseFragment {
+
     @Inject
     Countries countries;
 

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,7 +26,7 @@ import android.support.v4.app.Fragment;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
-import quickbeer.android.activities.base.SearchActivity;
+import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;

@@ -15,32 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities.base;
+package quickbeer.android.activity.base;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
+import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
 import rx.Observable;
 
+import static polanski.option.Option.ofObj;
+
 public abstract class SearchActivity extends SearchBarActivity {
-    private String query;
+
+    @NonNull
+    private Option<String> query = Option.none();
 
     @Inject
     DataLayer.GetBeerSearchQueries getBeerSearchQueries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            query = savedInstanceState.getString("query");
-        } else {
-            query = getIntent().getStringExtra("query");
-        }
+        query = ofObj(savedInstanceState != null
+                ? savedInstanceState.getString("query")
+                : getIntent().getStringExtra("query"));
 
         super.onCreate(savedInstanceState);
     }
@@ -53,14 +57,16 @@ public abstract class SearchActivity extends SearchBarActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("query", query);
+
+        outState.putString("query", query.orDefault(() -> null));
     }
 
-    public String getQuery() {
+    @NonNull
+    public Option<String> getQuery() {
         return query;
     }
 
-    public void setQuery(String query) {
+    public void setQuery(@NonNull final Option<String> query) {
         this.query = query;
     }
 

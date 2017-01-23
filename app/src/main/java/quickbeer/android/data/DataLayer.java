@@ -183,8 +183,8 @@ public class DataLayer extends DataLayerBase {
     //// SEARCH BEERS
 
     @NonNull
-    public Observable<List<String>> getBeerSearchQueries() {
-        Timber.v("getBeerSearchQueries");
+    public Observable<List<String>> getBeerSearchQueriesOnce() {
+        Timber.v("getBeerSearchQueriesOnce");
 
         return beerListStore.getAllOnce()
                 .flatMap(Observable::from)

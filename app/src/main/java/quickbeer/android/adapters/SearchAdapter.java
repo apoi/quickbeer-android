@@ -19,6 +19,8 @@ package quickbeer.android.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,48 +33,36 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import rx.Observable;
 import rx.Subscription;
+import timber.log.Timber;
 
 public class SearchAdapter extends BaseAdapter implements Filterable {
 
-    private List<String> sourceList = new ArrayList<>();
-    private List<String> adapterList = new ArrayList<>();
+    @NonNull
+    private final List<String> sourceList = new ArrayList<>(10);
 
+    @NonNull
+    private final List<String> adapterList = new ArrayList<>(10);
+
+    @Nullable
     private Drawable suggestionIcon;
+
+    @NonNull
     private final LayoutInflater inflater;
-    private final Observable<List<String>> initialQueriesObservable;
-    private final Observable<String> newQueriesObservable;
-    private Subscription searchesSubscription;
 
-    public SearchAdapter(Context context,
-                         Observable<List<String>> initialQueriesObservable,
-                         Observable<String> newQueriesObservable) {
+    public SearchAdapter(@NonNull final Context context) {
         this.inflater = LayoutInflater.from(context);
-
-        this.initialQueriesObservable = initialQueriesObservable
-                .filter(s -> s != null);
-
-        this.newQueriesObservable = newQueriesObservable
-                .filter(s -> s != null);
     }
 
-    public void refreshQueryList() {
-        if (searchesSubscription != null) {
-            searchesSubscription.unsubscribe();
-        }
-
-        searchesSubscription = Observable.combineLatest(initialQueriesObservable, newQueriesObservable,
-                (List<String> list, String query) -> {
-                    list.add(query);
-                    return list;
-                })
-                .startWith(initialQueriesObservable)
-                .subscribe(list -> sourceList = list);
+    public void updateSourceList(@NonNull final List<String> list) {
+        sourceList.clear();
+        sourceList.addAll(list);
     }
 
     @Override
@@ -116,14 +106,15 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
             @SuppressWarnings("unchecked")
             protected void publishResults(CharSequence filter, FilterResults results) {
                 if (results.count > 0) {
-                    adapterList = (List<String>) results.values;
+                    adapterList.clear();
+                    adapterList.addAll((Collection<String>) results.values);
                     notifyDataSetChanged();
                 }
             }
         };
     }
 
-    private boolean containsFilters(String value, List<String> filters) {
+    private static boolean containsFilters(String value, List<String> filters) {
         for (String filter : filters) {
             if (!value.contains(filter)) {
                 return false;
@@ -133,15 +124,17 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View view, ViewGroup parent) {
         MyViewHolder mViewHolder;
+        View convertView;
 
-        if (convertView == null) {
+        if (view != null) {
+            convertView = view;
+            mViewHolder = (MyViewHolder) convertView.getTag();
+        } else {
             convertView = inflater.inflate(com.miguelcatalan.materialsearchview.R.layout.suggest_item, parent, false);
             mViewHolder = new MyViewHolder(convertView);
             convertView.setTag(mViewHolder);
-        } else {
-            mViewHolder = (MyViewHolder) convertView.getTag();
         }
 
         String currentListData = getItem(position);
@@ -154,7 +147,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         final TextView textView;
         ImageView imageView;
 
-        public MyViewHolder(View convertView) {
+        MyViewHolder(View convertView) {
             textView = (TextView) convertView.findViewById(com.miguelcatalan.materialsearchview.R.id.suggestion_text);
             if (suggestionIcon != null) {
                 imageView = (ImageView) convertView.findViewById(com.miguelcatalan.materialsearchview.R.id.suggestion_icon);

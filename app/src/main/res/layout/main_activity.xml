@@ -11,17 +11,8 @@
 
     <include layout="@layout/main_app_bar" />
 
-    <View
-        android:id="@+id/search_view_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/black"
-        android:visibility="gone" />
-
-    <com.miguelcatalan.materialsearchview.MaterialSearchView
-        android:id="@+id/search_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <include layout="@layout/toolbar_search_view"
+        android:id="@+id/toolbar_search_view" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

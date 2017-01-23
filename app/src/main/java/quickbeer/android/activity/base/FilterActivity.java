@@ -15,22 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity.base;
 
-import android.support.v4.app.Fragment;
+import java.util.List;
 
-import quickbeer.android.R;
-import quickbeer.android.activities.base.FilterActivity;
-import quickbeer.android.fragments.StyleListFragment;
+import rx.Observable;
 
-public class StyleListActivity extends FilterActivity {
+public abstract class FilterActivity extends SearchBarActivity {
     @Override
-    protected Fragment getFragment() {
-        return new StyleListFragment();
+    protected void onResume() {
+        super.onResume();
+
+        closeSearch();
     }
 
     @Override
-    protected String getSearchHint() {
-        return getString(R.string.search_box_hint_filter_styles);
+    protected Observable<List<String>> getInitialQueriesObservable() {
+        return Observable.empty();
+    }
+
+    @Override
+    protected boolean liveFilteringEnabled() {
+        return true;
+    }
+
+    @Override
+    protected boolean contentOverlayEnabled() {
+        return false;
+    }
+
+    @Override
+    protected int minimumSearchLength() {
+        return -1;
+    }
+
+    @Override
+    protected void showTooShortSearchError() {
     }
 }

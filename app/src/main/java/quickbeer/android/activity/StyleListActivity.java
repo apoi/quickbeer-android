@@ -15,22 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.activities.base.FilterActivity;
-import quickbeer.android.fragments.TickedBeersFragment;
+import quickbeer.android.R;
+import quickbeer.android.activity.base.FilterActivity;
+import quickbeer.android.fragments.StyleListFragment;
 
-public class TickedBeersActivity extends FilterActivity {
-
+public class StyleListActivity extends FilterActivity {
     @Override
-    protected String getSearchHint() {
-        return "Filter ticked beers";
+    protected Fragment getFragment() {
+        return new StyleListFragment();
     }
 
     @Override
-    protected Fragment getFragment() {
-        return new TickedBeersFragment();
+    protected String getSearchHint() {
+        return getString(R.string.search_box_hint_filter_styles);
     }
 }

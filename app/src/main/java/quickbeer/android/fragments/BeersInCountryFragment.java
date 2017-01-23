@@ -18,14 +18,19 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
-import quickbeer.android.activities.BeersInCountryActivity;
+import quickbeer.android.activity.BeersInCountryActivity;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Countries;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 public class BeersInCountryFragment extends BeerListFragment {
 
@@ -35,10 +40,25 @@ public class BeersInCountryFragment extends BeerListFragment {
     @Inject
     Countries countries;
 
-    @Override
-    public int getLayout() {
-        return R.layout.beer_list_fragment;
-    }
+    private String countryId;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getBeersInCountry.call(countryId)
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
 
     @Override
     protected void inject() {
@@ -49,7 +69,18 @@ public class BeersInCountryFragment extends BeerListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        String countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
-        setProgressingSource(getBeersInCountry.call(countryId));
+        countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
+    }
+
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

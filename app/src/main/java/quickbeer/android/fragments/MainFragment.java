@@ -25,11 +25,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
+import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
-import quickbeer.android.adapters.MainViewAdapter;
-import quickbeer.android.fragments.base.BaseFragment;
+import quickbeer.android.core.fragment.BaseFragment;
+import quickbeer.android.features.home.MainViewAdapter;
+import quickbeer.android.features.home.SearchViewModel;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class MainFragment extends BaseFragment {
+
+    @Nullable
+    @Inject
+    SearchViewModel searchViewModel;
 
     @Override
     protected void inject() {
@@ -50,5 +60,7 @@ public class MainFragment extends BaseFragment {
 
         TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
+
+        get(searchViewModel).setSearchHint(getResources().getString(R.string.search_box_hint_search_beers));
     }
 }

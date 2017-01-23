@@ -70,7 +70,7 @@ public final class DataStoreModule {
     @Provides
     static DataLayer.GetBeerSearchQueries provideGetBeerSearchQueries(
             @NonNull final DataLayer dataLayer) {
-        return dataLayer::getBeerSearchQueries;
+        return dataLayer::getBeerSearchQueriesOnce;
     }
 
     @Provides

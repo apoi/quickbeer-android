@@ -26,9 +26,9 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activities.BeerDetailsActivity;
+import quickbeer.android.activity.BeerDetailsActivity;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.fragments.base.BaseFragment;
+import quickbeer.android.core.fragment.BaseFragment;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import quickbeer.android.views.BeerDetailsView;

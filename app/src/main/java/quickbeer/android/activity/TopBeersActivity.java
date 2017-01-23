@@ -15,38 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 
-import quickbeer.android.R;
-import quickbeer.android.activities.base.SearchActivity;
-import quickbeer.android.fragments.MainFragment;
+import quickbeer.android.activity.base.SearchActivity;
+import quickbeer.android.fragments.TopBeersFragment;
 import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
-
-public class MainActivity extends SearchActivity {
+public class TopBeersActivity extends SearchActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.d("onCreate");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        checkNotNull(drawerLayout);
-
-        drawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();
 
         activitySubscription.add(getQueryObservable()
                 .subscribe(
@@ -62,6 +45,6 @@ public class MainActivity extends SearchActivity {
 
     @Override
     protected Fragment getFragment() {
-        return new MainFragment();
+        return new TopBeersFragment();
     }
 }

@@ -35,6 +35,7 @@ import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BaseViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -81,7 +82,7 @@ public class BeerListView extends FrameLayout {
         get(beerListAdapter).set(get(beers));
     }
 
-    private void setProgressStatus(@NonNull final BaseViewModel.ProgressStatus progressStatus) {
+    private void setProgressStatus(@NonNull final NetworkViewModel.ProgressStatus progressStatus) {
         switch (progressStatus) {
             case LOADING:
                 searchStatusTextView.setText(R.string.search_status_loading);
@@ -122,7 +123,7 @@ public class BeerListView extends FrameLayout {
                     .subscribeOn(AndroidSchedulers.mainThread())
                     .subscribe());
 
-            subscription.add(viewModel.getNetworkRequestStatus()
+            subscription.add(viewModel.getProgressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(view::setProgressStatus));
         }

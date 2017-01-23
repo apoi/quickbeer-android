@@ -30,6 +30,7 @@ import javax.inject.Inject;
 import quickbeer.android.injections.ApplicationModule;
 import quickbeer.android.injections.DaggerGraph;
 import quickbeer.android.injections.Graph;
+import quickbeer.android.providers.UserProvider;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -84,4 +85,5 @@ public class QuickBeer extends Application {
     private void initDateAndTime() {
         JodaTimeAndroid.init(this);
     }
+
 }

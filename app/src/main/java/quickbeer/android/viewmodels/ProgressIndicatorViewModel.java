@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
-import quickbeer.android.activities.base.ProgressStatusAggregator;
+import quickbeer.android.activity.base.ProgressStatusAggregator;
 import rx.Observable;
 import rx.Subscription;
 import rx.subjects.BehaviorSubject;

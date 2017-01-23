@@ -19,7 +19,7 @@ package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
-import quickbeer.android.activities.BeersInCountryActivity;
+import quickbeer.android.activity.BeersInCountryActivity;
 
 public class Country extends SimpleItem {
     private final int id;

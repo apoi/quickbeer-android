@@ -15,11 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities.base;
+package quickbeer.android.activity.base;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,17 +40,27 @@ import java.util.List;
 import io.reark.reark.data.DataStreamNotification;
 import polanski.option.Option;
 import quickbeer.android.R;
+import quickbeer.android.activity.CountryListActivity;
+import quickbeer.android.activity.DrawerActivity;
+import quickbeer.android.activity.StyleListActivity;
+import quickbeer.android.activity.TickedBeersActivity;
+import quickbeer.android.activity.TopBeersActivity;
 import quickbeer.android.adapters.SearchAdapter;
+import quickbeer.android.core.activity.BaseActivity;
+import quickbeer.android.features.home.MainActivity;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static polanski.option.Option.ofObj;
 
 public abstract class SearchBarActivity extends BaseActivity implements ProgressStatusAggregator {
+
+    protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
     private SearchAdapter adapter;
     private MaterialSearchView searchView;
@@ -56,7 +70,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     private final ProgressIndicatorViewModel progressIndicatorViewModel = new ProgressIndicatorViewModel();
 
     @Override
-    protected void  onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity);
@@ -64,9 +78,6 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -90,6 +101,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     @Override
     protected void onDestroy() {
         progressIndicatorViewModel.unsubscribe();
+        activitySubscription.clear();
 
         super.onDestroy();
     }
@@ -100,7 +112,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
 
         // There may have been queries while this fragment was paused. Refresh the search
         // history list adapter to have the latest queries available.
-        adapter.refreshQueryList();
+        //adapter.updateSourceList();
     }
 
     public Observable<String> getQueryObservable() {
@@ -110,7 +122,7 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     }
 
     private void setupSearch() {
-        adapter = new SearchAdapter(this, getInitialQueriesObservable(), getQueryObservable());
+        adapter = new SearchAdapter(this);
         searchViewOverlay = findViewById(R.id.search_view_overlay);
         searchViewOverlay.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && searchView.isSearchOpen()) {
@@ -251,4 +263,5 @@ public abstract class SearchBarActivity extends BaseActivity implements Progress
     protected abstract void showTooShortSearchError();
 
     protected abstract Fragment getFragment();
+
 }

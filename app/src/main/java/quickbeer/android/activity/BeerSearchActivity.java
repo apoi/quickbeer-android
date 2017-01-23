@@ -15,12 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.activities.base.SearchActivity;
+import polanski.option.Option;
+import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.fragments.BeerSearchFragment;
 import rx.Observable;
 
@@ -33,6 +34,7 @@ public class BeerSearchActivity extends SearchActivity {
         // Set title to reflect the search, update query
         activitySubscription.add(getQueryObservable()
                 .doOnNext(this::setTitle)
+                .map(Option::ofObj)
                 .doOnNext(this::setQuery)
                 .subscribe());
     }
@@ -46,6 +48,6 @@ public class BeerSearchActivity extends SearchActivity {
     public Observable<String> getQueryObservable() {
         // Free search always starts with a submitted query
         return super.getQueryObservable()
-                .startWith(getQuery());
+                .startWith(getQuery().orDefault(() -> ""));
     }
 }

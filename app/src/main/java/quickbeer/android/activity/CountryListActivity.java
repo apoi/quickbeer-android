@@ -15,12 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activities;
+package quickbeer.android.activity;
 
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.R;
-import quickbeer.android.activities.base.FilterActivity;
+import quickbeer.android.activity.base.FilterActivity;
 import quickbeer.android.fragments.CountryListFragment;
 
 public class CountryListActivity extends FilterActivity {

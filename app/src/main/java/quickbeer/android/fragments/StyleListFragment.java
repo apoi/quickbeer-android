@@ -26,8 +26,8 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activities.StyleListActivity;
-import quickbeer.android.fragments.base.BaseFragment;
+import quickbeer.android.activity.StyleListActivity;
+import quickbeer.android.core.fragment.BaseFragment;
 import quickbeer.android.utils.Styles;
 import quickbeer.android.views.SimpleListView;
 import rx.Observable;

@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.data.DataLayer;
+import quickbeer.android.features.home.SearchViewModel;
 
 @Module
 public class ActivityModule {
@@ -38,4 +40,10 @@ public class ActivityModule {
         return activity;
     }
 
+    @Provides
+    @ActivityScope
+    static SearchViewModel providesSearchViewModel(
+            @NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
+        return new SearchViewModel(getBeerSearchQueries);
+    }
 }

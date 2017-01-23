@@ -17,15 +17,20 @@
  */
 package quickbeer.android.fragments;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
 
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.rx.RxUtils;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class TickedBeersFragment extends BeerListFragment {
 
@@ -35,20 +40,42 @@ public class TickedBeersFragment extends BeerListFragment {
     @Inject
     DataLayer.GetUsers getUsers;
 
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getUsers.call()
+                    .compose(RxUtils::pickValue)
+                    .filter(User::isLogged)
+                    .filter(user -> !user.userId().isEmpty())
+                    .map(User::userId)
+                    .switchMap(id -> get(getTickedBeers.call(id)))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
+
     @Override
     protected void inject() {
         getComponent().inject(this);
     }
 
+    @NonNull
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
 
-        getUsers.call()
-                .compose(RxUtils::pickValue)
-                .filter(User::isLogged)
-                .filter(user -> !user.userId().isEmpty())
-                .subscribe(user -> setProgressingSource(getTickedBeers.call(user.userId())),
-                        err -> Timber.e(err, "Error getting settings"));
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

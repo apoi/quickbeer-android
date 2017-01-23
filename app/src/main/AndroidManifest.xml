@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".features.home.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask">
@@ -25,42 +25,42 @@
         </activity>
 
         <activity
-            android:name=".activities.BeerSearchActivity"
+            android:name=".activity.BeerSearchActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.BeerDetailsActivity"
+            android:name=".activity.BeerDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.TickedBeersActivity"
+            android:name=".activity.TickedBeersActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.TopBeersActivity"
+            android:name=".activity.TopBeersActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.CountryListActivity"
+            android:name=".activity.CountryListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.BeersInCountryActivity"
+            android:name=".activity.BeersInCountryActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.StyleListActivity"
+            android:name=".activity.StyleListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activities.BeersInStyleActivity"
+            android:name=".activity.BeersInStyleActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 

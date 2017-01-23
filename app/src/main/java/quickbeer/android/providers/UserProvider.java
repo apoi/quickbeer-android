@@ -59,7 +59,7 @@ public class UserProvider {
         this.requestStatusStore = get(requestStatusStore);
     }
 
-    public Observable<Option<User>> getUser() {
+    public Observable<Option<User>> getUserOnce() {
         return userStore.getOnce(Constants.DEFAULT_USER_ID);
     }
 

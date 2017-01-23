@@ -18,13 +18,17 @@
 package quickbeer.android.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
 
 public class BrewerTabFragment extends BeerListFragment {
+
     @Override
     public int getLayout() {
         return R.layout.brewer_tab_fragment;
@@ -40,5 +44,17 @@ public class BrewerTabFragment extends BeerListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_brewers)));
+    }
+
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return listDataBinder();
     }
 }
