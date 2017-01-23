@@ -22,7 +22,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.activity.base.SearchActivity;
-import quickbeer.android.fragments.TopBeersFragment;
+import quickbeer.android.features.main.fragments.TopBeersFragment;
 import timber.log.Timber;
 
 public class TopBeersActivity extends SearchActivity {

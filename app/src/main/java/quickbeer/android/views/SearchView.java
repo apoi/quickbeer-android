@@ -36,7 +36,7 @@ import java.util.List;
 
 import quickbeer.android.R;
 import quickbeer.android.adapters.SearchAdapter;
-import quickbeer.android.features.home.SearchViewModel;
+import quickbeer.android.features.main.SearchViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;

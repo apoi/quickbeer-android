@@ -15,31 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
+import quickbeer.android.activity.StyleListActivity;
 import quickbeer.android.core.fragment.BaseFragment;
-import quickbeer.android.features.home.MainViewAdapter;
-import quickbeer.android.features.home.SearchViewModel;
+import quickbeer.android.utils.Styles;
+import quickbeer.android.views.SimpleListView;
+import rx.Observable;
 
-import static io.reark.reark.utils.Preconditions.get;
+public class StyleListFragment extends BaseFragment {
 
-public class MainFragment extends BaseFragment {
-
-    @Nullable
     @Inject
-    SearchViewModel searchViewModel;
+    Styles styles;
 
     @Override
     protected void inject() {
@@ -48,19 +44,16 @@ public class MainFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.main_fragment, container, false);
+        return inflater.inflate(R.layout.simple_list_fragment, container, false);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ViewPager viewPager = (ViewPager) getView().findViewById(R.id.view_pager);
-        viewPager.setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
+        ((SimpleListView) getView()).setListSource(styles);
 
-        TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        get(searchViewModel).setSearchHint(getResources().getString(R.string.search_box_hint_search_beers));
+        Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
+        ((SimpleListView) getView()).setFilterObservable(filterObservable);
     }
 }

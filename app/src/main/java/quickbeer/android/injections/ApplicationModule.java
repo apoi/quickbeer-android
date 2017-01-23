@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.features.navigation.NavigationViewModel;
 import timber.log.Timber;
 
 @Module
@@ -75,5 +76,11 @@ public final class ApplicationModule {
     @Singleton
     static Timber.Tree providesLoggingTree() {
         return new Timber.DebugTree();
+    }
+
+    @Provides
+    @Singleton
+    static NavigationViewModel providesNavigationViewModel() {
+        return new NavigationViewModel();
     }
 }

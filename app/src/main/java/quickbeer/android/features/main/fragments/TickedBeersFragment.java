@@ -15,28 +15,30 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.Header;
-import quickbeer.android.views.BeerListView;
+import quickbeer.android.data.pojos.User;
+import quickbeer.android.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class BeerTabFragment extends BeerListFragment {
+import static io.reark.reark.utils.Preconditions.get;
+
+public class TickedBeersFragment extends BeerListFragment {
 
     @Inject
-    DataLayer.GetAccessedBeers getAccessedBeers;
+    DataLayer.GetTickedBeers getTickedBeers;
+
+    @Inject
+    DataLayer.GetUsers getUsers;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -44,8 +46,12 @@ public class BeerTabFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
-            subscription.add(getAccessedBeers.call()
-                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+            subscription.add(getUsers.call()
+                    .compose(RxUtils::pickValue)
+                    .filter(User::isLogged)
+                    .filter(user -> !user.userId().isEmpty())
+                    .map(User::userId)
+                    .switchMap(id -> get(getTickedBeers.call(id)))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
         }
@@ -57,20 +63,8 @@ public class BeerTabFragment extends BeerListFragment {
     };
 
     @Override
-    public int getLayout() {
-        return R.layout.beer_tab_fragment;
-    }
-
-    @Override
     protected void inject() {
         getComponent().inject(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_beers)));
     }
 
     @NonNull

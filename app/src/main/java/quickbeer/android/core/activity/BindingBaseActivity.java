@@ -28,14 +28,14 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A base Activity which provides the binding mechanism hooks to a View Model.
  */
-public abstract class BindingBaseActivity extends BaseActivity {
+public abstract class BindingBaseActivity extends InjectingBaseActivity {
 
     @NonNull
     private final BaseLifecycleViewDataBinder lifecycleBinder = new BaseLifecycleViewDataBinder() {
 
         @Override
-        public void bind(@NonNull final CompositeSubscription disposables) {
-            dataBinder().bind(disposables);
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            dataBinder().bind(subscription);
         }
 
         @Override

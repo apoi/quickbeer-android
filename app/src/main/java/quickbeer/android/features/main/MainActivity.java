@@ -15,16 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.home;
+package quickbeer.android.features.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -33,19 +29,15 @@ import android.view.MenuItem;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.BeerSearchActivity;
-import quickbeer.android.activity.CountryListActivity;
 import quickbeer.android.activity.DrawerActivity;
-import quickbeer.android.activity.StyleListActivity;
-import quickbeer.android.activity.TickedBeersActivity;
-import quickbeer.android.activity.TopBeersActivity;
-import quickbeer.android.core.activity.BindingBaseActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
-import quickbeer.android.fragments.BeerSearchFragment;
-import quickbeer.android.fragments.MainFragment;
+import quickbeer.android.features.main.fragments.BeerSearchFragment;
+import quickbeer.android.features.main.fragments.MainFragment;
+import quickbeer.android.features.navigation.NavigationProvider;
+import quickbeer.android.features.navigation.NavigationViewModel;
 import quickbeer.android.views.SearchView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -58,6 +50,10 @@ public class MainActivity extends DrawerActivity {
     @Nullable
     @Inject
     SearchViewModel searchViewModel;
+
+    @Nullable
+    @Inject
+    NavigationViewModel navigationViewModel;
 
     @Nullable
     private SearchView searchView;

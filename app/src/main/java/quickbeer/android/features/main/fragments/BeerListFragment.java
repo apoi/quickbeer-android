@@ -15,11 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -28,22 +27,13 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import io.reark.reark.data.DataStreamNotification;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.R;
-import quickbeer.android.activity.BeerDetailsActivity;
-import quickbeer.android.activity.base.ProgressStatusAggregator;
+import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
-import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.ItemList;
-import quickbeer.android.features.home.SearchViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;
-import quickbeer.android.views.SearchView;
-import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 

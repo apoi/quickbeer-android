@@ -15,30 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.activity.BeersInCountryActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.User;
-import quickbeer.android.rx.RxUtils;
+import quickbeer.android.utils.Countries;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.get;
-
-public class TickedBeersFragment extends BeerListFragment {
+public class BeersInCountryFragment extends BeerListFragment {
 
     @Inject
-    DataLayer.GetTickedBeers getTickedBeers;
+    DataLayer.GetBeersInCountry getBeersInCountry;
 
     @Inject
-    DataLayer.GetUsers getUsers;
+    Countries countries;
+
+    private String countryId;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -46,12 +48,8 @@ public class TickedBeersFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
-            subscription.add(getUsers.call()
-                    .compose(RxUtils::pickValue)
-                    .filter(User::isLogged)
-                    .filter(user -> !user.userId().isEmpty())
-                    .map(User::userId)
-                    .switchMap(id -> get(getTickedBeers.call(id)))
+            subscription.add(getBeersInCountry.call(countryId)
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
         }
@@ -65,6 +63,13 @@ public class TickedBeersFragment extends BeerListFragment {
     @Override
     protected void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
     }
 
     @NonNull

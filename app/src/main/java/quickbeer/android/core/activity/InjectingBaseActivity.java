@@ -25,7 +25,7 @@ import quickbeer.android.injections.ActivityComponent;
 import quickbeer.android.injections.ActivityModule;
 
 @SuppressWarnings("AbstractClassExtendsConcreteClass")
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class InjectingBaseActivity extends AppCompatActivity {
 
     @Nullable
     private ActivityComponent component;

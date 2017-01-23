@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import quickbeer.android.core.activity.BaseActivity;
+import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.injections.FragmentComponent;
 import quickbeer.android.injections.FragmentModule;
 
@@ -39,7 +39,7 @@ public abstract class BaseFragment extends Fragment {
     @NonNull
     public FragmentComponent getComponent() {
         if (component == null) {
-            component = ((BaseActivity) getActivity()).getComponent()
+            component = ((InjectingBaseActivity) getActivity()).getComponent()
                     .plusFragment(new FragmentModule(this));
         }
 

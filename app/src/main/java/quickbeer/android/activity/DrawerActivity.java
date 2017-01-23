@@ -28,7 +28,7 @@ import android.view.MenuItem;
 
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingBaseActivity;
-import quickbeer.android.features.home.MainActivity;
+import quickbeer.android.features.main.MainActivity;
 
 public abstract class DrawerActivity extends BindingBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 

@@ -22,7 +22,7 @@ import android.support.v4.app.Fragment;
 
 import polanski.option.Option;
 import quickbeer.android.activity.base.SearchActivity;
-import quickbeer.android.fragments.BeerSearchFragment;
+import quickbeer.android.features.main.fragments.BeerSearchFragment;
 import rx.Observable;
 
 public class BeerSearchActivity extends SearchActivity {

@@ -23,7 +23,7 @@ import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.features.home.SearchViewModel;
+import quickbeer.android.features.main.SearchViewModel;
 
 @Module
 public class ActivityModule {

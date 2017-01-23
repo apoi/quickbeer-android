@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activity;
+package quickbeer.android.features.beer;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,12 +26,13 @@ import android.support.v4.app.Fragment;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.activity.BeerSearchActivity;
 import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
-import quickbeer.android.fragments.BeerDetailsFragment;
+import quickbeer.android.features.beer.BeerDetailsFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;

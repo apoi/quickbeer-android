@@ -15,27 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.StyleListActivity;
-import quickbeer.android.core.fragment.BaseFragment;
-import quickbeer.android.utils.Styles;
-import quickbeer.android.views.SimpleListView;
-import rx.Observable;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
+import quickbeer.android.data.pojos.Header;
+import quickbeer.android.views.BeerListView;
 
-public class StyleListFragment extends BaseFragment {
+public class BrewerTabFragment extends BeerListFragment {
 
-    @Inject
-    Styles styles;
+    @Override
+    public int getLayout() {
+        return R.layout.brewer_tab_fragment;
+    }
 
     @Override
     protected void inject() {
@@ -43,17 +40,21 @@ public class StyleListFragment extends BaseFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.simple_list_fragment, container, false);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((SimpleListView) getView()).setListSource(styles);
+        ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_brewers)));
+    }
 
-        Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
-        ((SimpleListView) getView()).setFilterObservable(filterObservable);
+    @NonNull
+    @Override
+    protected ViewModel viewModel() {
+        return listViewModel();
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return listDataBinder();
     }
 }

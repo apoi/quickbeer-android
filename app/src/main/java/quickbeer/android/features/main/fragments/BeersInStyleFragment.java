@@ -15,23 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.activity.BeersInStyleActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.utils.Styles;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class TopBeersFragment extends BeerListFragment {
+public class BeersInStyleFragment extends BeerListFragment {
 
     @Inject
-    DataLayer.GetTopBeers getTopBeers;
+    DataLayer.GetBeersInStyle getBeersInStyle;
+
+    @Inject
+    Styles styles;
+
+    private String styleId;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -39,7 +48,7 @@ public class TopBeersFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
-            subscription.add(getTopBeers.call()
+            subscription.add(getBeersInStyle.call(styleId)
                     .doOnNext(query -> Timber.d("getTopBeers finished"))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
@@ -54,6 +63,13 @@ public class TopBeersFragment extends BeerListFragment {
     @Override
     protected void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
     }
 
     @NonNull

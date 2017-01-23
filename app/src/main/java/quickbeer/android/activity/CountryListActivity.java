@@ -21,7 +21,7 @@ import android.support.v4.app.Fragment;
 
 import quickbeer.android.R;
 import quickbeer.android.activity.base.FilterActivity;
-import quickbeer.android.fragments.CountryListFragment;
+import quickbeer.android.features.main.fragments.CountryListFragment;
 
 public class CountryListActivity extends FilterActivity {
     @Override

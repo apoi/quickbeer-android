@@ -15,23 +15,50 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.main.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import javax.inject.Inject;
+
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
+import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-public class BrewerTabFragment extends BeerListFragment {
+public class BeerTabFragment extends BeerListFragment {
+
+    @Inject
+    DataLayer.GetAccessedBeers getAccessedBeers;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            listDataBinder().bind(subscription);
+
+            subscription.add(getAccessedBeers.call()
+                    .doOnNext(query -> Timber.d("getTopBeers finished"))
+                    .subscribe(notification -> listViewModel().setNotification(notification),
+                            Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            listDataBinder().unbind();
+        }
+    };
 
     @Override
     public int getLayout() {
-        return R.layout.brewer_tab_fragment;
+        return R.layout.beer_tab_fragment;
     }
 
     @Override
@@ -43,7 +70,7 @@ public class BrewerTabFragment extends BeerListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_brewers)));
+        ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_beers)));
     }
 
     @NonNull
@@ -55,6 +82,6 @@ public class BrewerTabFragment extends BeerListFragment {
     @NonNull
     @Override
     protected DataBinder dataBinder() {
-        return listDataBinder();
+        return dataBinder;
     }
 }

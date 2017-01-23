@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.fragments;
+package quickbeer.android.features.beer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.BeerDetailsActivity;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.core.fragment.BaseFragment;
 import quickbeer.android.viewmodels.BeerViewModel;

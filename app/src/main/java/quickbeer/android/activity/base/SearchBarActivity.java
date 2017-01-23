@@ -17,13 +17,8 @@
  */
 package quickbeer.android.activity.base;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,14 +35,8 @@ import java.util.List;
 import io.reark.reark.data.DataStreamNotification;
 import polanski.option.Option;
 import quickbeer.android.R;
-import quickbeer.android.activity.CountryListActivity;
-import quickbeer.android.activity.DrawerActivity;
-import quickbeer.android.activity.StyleListActivity;
-import quickbeer.android.activity.TickedBeersActivity;
-import quickbeer.android.activity.TopBeersActivity;
 import quickbeer.android.adapters.SearchAdapter;
-import quickbeer.android.core.activity.BaseActivity;
-import quickbeer.android.features.home.MainActivity;
+import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
@@ -58,7 +47,7 @@ import timber.log.Timber;
 
 import static polanski.option.Option.ofObj;
 
-public abstract class SearchBarActivity extends BaseActivity implements ProgressStatusAggregator {
+public abstract class SearchBarActivity extends InjectingBaseActivity implements ProgressStatusAggregator {
 
     protected final CompositeSubscription activitySubscription = new CompositeSubscription();
 
