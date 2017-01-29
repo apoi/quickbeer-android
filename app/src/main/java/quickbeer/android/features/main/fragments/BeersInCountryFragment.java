@@ -32,7 +32,7 @@ import quickbeer.android.utils.Countries;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class BeersInCountryFragment extends BeerListFragment {
+public class BeersInCountryFragment extends BeerSearchFragment {
 
     @Inject
     DataLayer.GetBeersInCountry getBeersInCountry;
@@ -48,10 +48,12 @@ public class BeersInCountryFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
+            /*
             subscription.add(getBeersInCountry.call(countryId)
                     .doOnNext(query -> Timber.d("getTopBeers finished"))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
+                            */
         }
 
         @Override
@@ -72,11 +74,13 @@ public class BeersInCountryFragment extends BeerListFragment {
         countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
     }
 
+    /*
     @NonNull
     @Override
     protected ViewModel viewModel() {
         return listViewModel();
     }
+    */
 
     @NonNull
     @Override

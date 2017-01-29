@@ -25,45 +25,53 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
+import butterknife.BindView;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
-import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
+import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract  class BeerListFragment extends BindingBaseFragment {
+public abstract class BeerListFragment extends BindingBaseFragment {
 
     @Nullable
-    @Inject
-    BeerListViewModel beerListViewModel;
+    @BindView(R.id.list_layout)
+    BeerListView view;
 
     // TODO inject global ProgressViewModel?
 
-    private BeerListView.ViewBinder beersViewBinder;
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            subscription.add(listViewModel()
+            subscription.add(viewModel()
                     .selectedBeerStream()
                     .doOnNext(beerId -> Timber.d("Selected beer " + beerId))
                     .subscribe(beerId -> openBeerDetails(beerId), Timber::e));
 
-            beersViewBinder.bind();
-        }
+            subscription.add(viewModel()
+                    .getBeers()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(get(view)::setBeers));
 
-        @Override
-        public void unbind() {
-            beersViewBinder.unbind();
+            subscription.add(viewModel()
+                    .getProgressStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(get(view)::setProgressStatus));
         }
     };
 
@@ -74,19 +82,19 @@ public abstract  class BeerListFragment extends BindingBaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        BeerListView beerListView = (BeerListView) getView().findViewById(R.id.list_layout);
-        beersViewBinder = new BeerListView.ViewBinder(beerListView, listViewModel());
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder.setIfNone(bind(this, view));
     }
 
     @Override
-    protected void inject() {
-        getComponent().inject(this);
+    public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
+        super.onDestroyView();
     }
 
-    public int getLayout() {
+    protected int getLayout() {
         return R.layout.beer_list_fragment;
     }
 
@@ -95,14 +103,20 @@ public abstract  class BeerListFragment extends BindingBaseFragment {
         return inflater.inflate(getLayout(), container, false);
     }
 
+    @Override
     @NonNull
-    protected DataBinder listDataBinder() {
+    protected abstract BeerListViewModel viewModel();
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
         return dataBinder;
     }
 
+    // TODO remove
     @NonNull
-    protected BeerListViewModel listViewModel() {
-        return get(beerListViewModel);
+    protected DataBinder listDataBinder() {
+        return dataBinder;
     }
 
 }

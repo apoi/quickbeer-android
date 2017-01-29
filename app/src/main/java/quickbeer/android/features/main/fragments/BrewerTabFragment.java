@@ -27,7 +27,7 @@ import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
 
-public class BrewerTabFragment extends BeerListFragment {
+public class BrewerTabFragment extends BeerSearchFragment {
 
     @Override
     public int getLayout() {
@@ -35,21 +35,10 @@ public class BrewerTabFragment extends BeerListFragment {
     }
 
     @Override
-    protected void inject() {
-        getComponent().inject(this);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         ((BeerListView) getView()).setHeader(new Header(getContext().getString(R.string.recent_brewers)));
-    }
-
-    @NonNull
-    @Override
-    protected ViewModel viewModel() {
-        return listViewModel();
     }
 
     @NonNull

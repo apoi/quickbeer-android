@@ -17,33 +17,34 @@
  */
 package quickbeer.android.injections;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.features.main.SearchViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel;
 
 @Module
 public class ActivityModule {
 
-    private final Activity activity;
+    private final AppCompatActivity activity;
 
-    public ActivityModule(@NonNull final Activity activity) {
+    public ActivityModule(@NonNull final AppCompatActivity activity) {
         this.activity = activity;
     }
 
     @Provides
     @ActivityScope
-    Activity providesActivity() {
+    AppCompatActivity providesActivity() {
         return activity;
     }
 
     @Provides
     @ActivityScope
-    static SearchViewModel providesSearchViewModel(
+    static SearchViewViewModel providesSearchViewViewModel(
             @NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
-        return new SearchViewModel(getBeerSearchQueries);
+        return new SearchViewViewModel(getBeerSearchQueries);
     }
+
 }

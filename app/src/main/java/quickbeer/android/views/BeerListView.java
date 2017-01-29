@@ -19,36 +19,40 @@ package quickbeer.android.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerListAdapter;
 import quickbeer.android.data.pojos.Header;
-import quickbeer.android.viewmodels.BaseViewModel;
-import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
-import rx.subscriptions.Subscriptions;
+import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerListView extends FrameLayout {
 
-    private RecyclerView beersListView;
+    @Nullable
     private BeerListAdapter beerListAdapter;
+
+    @Nullable
+    private RecyclerView beersListView;
+
+    @Nullable
     private TextView searchStatusTextView;
+
+    @NonNull
+    private final PublishSubject<Integer> selectBeerSubject = PublishSubject.create();
 
     public BeerListView(Context context) {
         super(context);
@@ -62,27 +66,40 @@ public class BeerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beersListView = (RecyclerView) findViewById(R.id.list_view);
+        beersListView = (RecyclerView) get(findViewById(R.id.list_view));
+        searchStatusTextView = (TextView) findViewById(R.id.search_status);
+
         beerListAdapter = new BeerListAdapter();
-        beersListView.setAdapter(beerListAdapter);
+        beerListAdapter.setOnClickListener(v -> {
+            final int itemPosition = beersListView.getChildAdapterPosition(v);
+            final int beerId = beerListAdapter.getBeerViewModel(itemPosition).getBeerId();
+            selectBeerSubject.onNext(beerId);
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
+
+        beersListView.setAdapter(beerListAdapter);
         beersListView.setLayoutManager(layoutManager);
-
-        searchStatusTextView = (TextView) findViewById(R.id.search_status);
     }
 
-    public void setHeader(Header header) {
-        beerListAdapter.setHeader(header);
+    @NonNull
+    public Observable<Integer> selectedBeerStream() {
+        return selectBeerSubject.asObservable();
     }
 
-    private void setBeers(@NonNull final List<BeerViewModel> beers) {
+    public void setHeader(@NonNull final Header header) {
+        get(beerListAdapter).setHeader(header);
+    }
+
+    public void setBeers(@NonNull final List<BeerViewModel> beers) {
         Timber.v("Setting " + beers.size() + " beers to adapter");
         get(beerListAdapter).set(get(beers));
     }
 
-    private void setProgressStatus(@NonNull final NetworkViewModel.ProgressStatus progressStatus) {
+    public void setProgressStatus(@NonNull final NetworkViewModel.ProgressStatus progressStatus) {
+        checkNotNull(searchStatusTextView);
+
         switch (progressStatus) {
             case LOADING:
                 searchStatusTextView.setText(R.string.search_status_loading);
@@ -93,51 +110,6 @@ public class BeerListView extends FrameLayout {
             case IDLE:
                 searchStatusTextView.setText("");
                 break;
-        }
-    }
-
-    /**
-     * View binder between BeerListViewModel and the BeerListView
-     */
-    public static class ViewBinder extends RxViewBinder {
-        private final BeerListView view;
-        private final BeerListViewModel viewModel;
-
-        public ViewBinder(@NonNull final BeerListView view,
-                          @NonNull final BeerListViewModel viewModel) {
-            this.view = get(view);
-            this.viewModel = get(viewModel);
-        }
-
-        @Override
-        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel.getBeers()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::setBeers));
-
-            subscription.add(Observable.create(
-                    subscriber -> {
-                        view.beerListAdapter.setOnClickListener(this::beerListAdapterOnClick);
-                        subscriber.add(Subscriptions.create(() -> view.beerListAdapter.setOnClickListener(null)));
-                    })
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .subscribe());
-
-            subscription.add(viewModel.getProgressStatus()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::setProgressStatus));
-        }
-
-        private void beerListAdapterOnClick(View clickedView) {
-            final int itemPosition = view.beersListView.getChildAdapterPosition(clickedView);
-
-            view.beerListAdapter
-                    .getBeerViewModel(itemPosition)
-                    .getBeer()
-                    .first()
-                    .subscribe(beer -> {
-                        viewModel.selectBeer(beer.id());
-                    });
         }
     }
 }

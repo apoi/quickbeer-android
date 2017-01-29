@@ -28,6 +28,7 @@ package quickbeer.android.injections;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +36,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import quickbeer.android.features.navigation.NavigationViewModel;
+import quickbeer.android.providers.ResourceProvider;
 import timber.log.Timber;
 
 @Module
@@ -62,6 +63,12 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
+    static ResourceProvider providesUserProvider(@ForApplication Context context) {
+        return new ResourceProvider(context);
+    }
+
+    @Provides
+    @Singleton
     static ContentResolver providesContentResolver(@ForApplication Context context) {
         return context.getContentResolver();
     }
@@ -78,9 +85,4 @@ public final class ApplicationModule {
         return new Timber.DebugTree();
     }
 
-    @Provides
-    @Singleton
-    static NavigationViewModel providesNavigationViewModel() {
-        return new NavigationViewModel();
-    }
 }

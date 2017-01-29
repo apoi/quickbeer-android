@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main;
+package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +25,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import polanski.option.Option;
-import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
@@ -34,7 +33,7 @@ import rx.subjects.BehaviorSubject;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.none;
 
-public class SearchViewModel extends SimpleViewModel {
+public class SearchViewViewModel {
 
     @Inject
     DataLayer.GetBeerSearchQueries getBeerSearchQueries;
@@ -49,7 +48,7 @@ public class SearchViewModel extends SimpleViewModel {
 
     private final BehaviorSubject<Option<String>> querySubject = BehaviorSubject.create(none());
 
-    public SearchViewModel(@NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
+    public SearchViewViewModel(@NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         this.getBeerSearchQueries = get(getBeerSearchQueries);
     }
 

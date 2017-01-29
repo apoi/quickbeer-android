@@ -18,6 +18,7 @@
 package quickbeer.android.features.main.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,20 +26,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import javax.inject.Inject;
-
+import butterknife.BindView;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BaseFragment;
 import quickbeer.android.features.main.MainViewAdapter;
-import quickbeer.android.features.main.SearchViewModel;
 
+import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class MainFragment extends BaseFragment {
 
     @Nullable
-    @Inject
-    SearchViewModel searchViewModel;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+
+    @Nullable
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
+
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     @Override
     protected void inject() {
@@ -51,15 +60,23 @@ public class MainFragment extends BaseFragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder.setIfNone(bind(this, view));
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ViewPager viewPager = (ViewPager) getView().findViewById(R.id.view_pager);
-        viewPager.setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
+        get(viewPager).setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
+        get(tabLayout).setupWithViewPager(viewPager);
+    }
 
-        TabLayout tabLayout = (TabLayout) getView().findViewById(R.id.tab_layout);
-        tabLayout.setupWithViewPager(viewPager);
-
-        get(searchViewModel).setSearchHint(getResources().getString(R.string.search_box_hint_search_beers));
+    @Override
+    public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
+        super.onDestroyView();
     }
 }

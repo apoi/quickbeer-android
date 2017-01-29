@@ -19,22 +19,22 @@ package quickbeer.android.providers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.data.stores.NetworkRequestStatusStore;
-import quickbeer.android.data.stores.UserStore;
-import quickbeer.android.injections.ForApplication;
+import static io.reark.reark.utils.Preconditions.get;
 
-@Module
-final class ProviderModule {
+public class ResourceProvider {
 
-    @Provides
-    static UserProvider providesUserProvider(
-            @NonNull @ForApplication final Context applicationContext,
-            @NonNull final UserStore userStore,
-            @NonNull final NetworkRequestStatusStore requestStatusStore) {
-        return new UserProvider(applicationContext, userStore, requestStatusStore);
+    @NonNull
+    private final Context context;
+
+    public ResourceProvider(@NonNull final Context context) {
+        this.context = get(context);
+    }
+
+    @NonNull
+    public String getString(@StringRes final int id) {
+        return context.getString(id);
     }
 
 }

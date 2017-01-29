@@ -32,7 +32,7 @@ import quickbeer.android.utils.Styles;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class BeersInStyleFragment extends BeerListFragment {
+public class BeersInStyleFragment extends BeerSearchFragment {
 
     @Inject
     DataLayer.GetBeersInStyle getBeersInStyle;
@@ -48,10 +48,12 @@ public class BeersInStyleFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
+            /*
             subscription.add(getBeersInStyle.call(styleId)
                     .doOnNext(query -> Timber.d("getTopBeers finished"))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
+                            */
         }
 
         @Override
@@ -72,11 +74,13 @@ public class BeersInStyleFragment extends BeerListFragment {
         styleId = ((BeersInStyleActivity) getActivity()).getStyleId();
     }
 
+    /*
     @NonNull
     @Override
     protected ViewModel viewModel() {
         return listViewModel();
     }
+    */
 
     @NonNull
     @Override

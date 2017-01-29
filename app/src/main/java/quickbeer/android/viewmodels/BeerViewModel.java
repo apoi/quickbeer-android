@@ -37,12 +37,18 @@ public class BeerViewModel extends BaseViewModel {
     @NonNull
     private final DataLayer.GetBeer getBeer;
 
+    @NonNull
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
+
     private final int beerId;
 
     public BeerViewModel(final int beerId, @NonNull final DataLayer.GetBeer getBeer) {
-        this.getBeer = get(getBeer);
         this.beerId = beerId;
+        this.getBeer = get(getBeer);
+    }
+
+    public int getBeerId() {
+        return beerId;
     }
 
     @NonNull

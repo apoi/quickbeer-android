@@ -32,7 +32,7 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class TickedBeersFragment extends BeerListFragment {
+public class TickedBeersFragment extends BeerSearchFragment {
 
     @Inject
     DataLayer.GetTickedBeers getTickedBeers;
@@ -46,6 +46,7 @@ public class TickedBeersFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
+            /*
             subscription.add(getUsers.call()
                     .compose(RxUtils::pickValue)
                     .filter(User::isLogged)
@@ -54,6 +55,7 @@ public class TickedBeersFragment extends BeerListFragment {
                     .switchMap(id -> get(getTickedBeers.call(id)))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
+                            */
         }
 
         @Override
@@ -67,11 +69,13 @@ public class TickedBeersFragment extends BeerListFragment {
         getComponent().inject(this);
     }
 
+    /*
     @NonNull
     @Override
     protected ViewModel viewModel() {
         return listViewModel();
     }
+    */
 
     @NonNull
     @Override

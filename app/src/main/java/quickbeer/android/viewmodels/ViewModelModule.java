@@ -17,16 +17,28 @@
  */
 package quickbeer.android.viewmodels;
 
+import android.support.annotation.NonNull;
+
 import dagger.Module;
 import dagger.Provides;
-import quickbeer.android.data.DataLayer.GetBeer;
+import quickbeer.android.data.DataLayer;
 
 @Module
 public final class ViewModelModule {
 
     @Provides
-    public BeerListViewModel provideBeersViewModel(GetBeer getBeer) {
-        return new BeerListViewModel(getBeer);
+    static RecentBeersViewModel providesRecentBeersViewModel(
+            @NonNull final DataLayer.GetBeer getBeer,
+            @NonNull final DataLayer.GetAccessedBeers getAccessedBeers) {
+        return new RecentBeersViewModel(getBeer, getAccessedBeers);
+    }
+
+    @Provides
+    static BeerSearchViewModel providesBeerSearchViewModel(
+            @NonNull final DataLayer.GetBeer getBeer,
+            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull final SearchViewViewModel searchViewViewModel) {
+        return new BeerSearchViewModel(getBeer, getBeerSearch, searchViewViewModel);
     }
 
 }

@@ -38,8 +38,6 @@ public interface FragmentComponent {
 
     void inject(BeerTabFragment beerTabFragment);
 
-    void inject(BeerListFragment beerListFragment);
-
     void inject(BeerSearchFragment beerSearchFragment);
 
     void inject(BeerDetailsFragment beerDetailsFragment);

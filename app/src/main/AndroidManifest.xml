@@ -25,11 +25,6 @@
         </activity>
 
         <activity
-            android:name=".activity.BeerSearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
-        <activity
             android:name=".features.beer.BeerDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

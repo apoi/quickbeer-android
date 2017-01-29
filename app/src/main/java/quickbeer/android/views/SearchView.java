@@ -36,7 +36,7 @@ import java.util.List;
 
 import quickbeer.android.R;
 import quickbeer.android.adapters.SearchAdapter;
-import quickbeer.android.features.main.SearchViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -54,7 +54,7 @@ public class SearchView extends FrameLayout {
     private View searchViewOverlay;
 
     @Nullable
-    private SearchViewModel viewModel;
+    private SearchViewViewModel viewModel;
 
     public SearchView(Context context) {
         super(context);
@@ -72,14 +72,14 @@ public class SearchView extends FrameLayout {
         searchViewOverlay = findViewById(R.id.search_view_overlay);
     }
 
-    public void setViewModel(@NonNull final SearchViewModel viewModel) {
+    public void setViewModel(@NonNull final SearchViewViewModel viewModel) {
         this.viewModel = get(viewModel);
 
         initialize();
     }
 
     @NonNull
-    private SearchViewModel getViewModel() {
+    private SearchViewViewModel getViewModel() {
         return get(viewModel);
     }
 

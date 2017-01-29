@@ -18,20 +18,14 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import java.util.Collections;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subjects.PublishSubject;
@@ -40,13 +34,10 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerListViewModel extends NetworkViewModel {
+public abstract class BeerListViewModel extends NetworkViewModel {
 
     @NonNull
     private final DataLayer.GetBeer getBeer;
-
-    @Nullable
-    private Observable<DataStreamNotification<ItemList<String>>> sourceObservable;
 
     @NonNull
     private final PublishSubject<Integer> selectBeer = PublishSubject.create();
@@ -54,13 +45,12 @@ public class BeerListViewModel extends NetworkViewModel {
     @NonNull
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
-    @NonNull
-    private final PublishSubject<DataStreamNotification<ItemList<String>>> notificationSubject = PublishSubject.create();
-
-    @Inject
-    BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
+    protected BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
         this.getBeer = get(getBeer);
     }
+
+    @NonNull
+    protected abstract Observable<DataStreamNotification<ItemList<String>>> sourceObservable();
 
     @NonNull
     public Observable<Integer> selectedBeerStream() {
@@ -68,7 +58,7 @@ public class BeerListViewModel extends NetworkViewModel {
     }
 
     public void selectBeer(final int beerId) {
-        this.selectBeer.onNext(beerId);
+        selectBeer.onNext(beerId);
     }
 
     @NonNull
@@ -76,21 +66,17 @@ public class BeerListViewModel extends NetworkViewModel {
         return beers.asObservable();
     }
 
-    public void setNotification(@NonNull final DataStreamNotification<ItemList<String>> notification) {
-        notificationSubject.onNext(notification);
-    }
-
     @Override
     protected void bind(@NonNull final CompositeSubscription subscription) {
         Timber.v("bind");
 
-        subscription.add(notificationSubject
-                .observeOn(Schedulers.computation())
+        subscription.add(sourceObservable()
+                .subscribeOn(Schedulers.computation())
                 .map(toProgressStatus())
                 .subscribe(this::setNetworkStatusText));
 
-        subscription.add(notificationSubject
-                .observeOn(Schedulers.computation())
+        subscription.add(sourceObservable()
+                .subscribeOn(Schedulers.computation())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Timber.d("Search finished"))

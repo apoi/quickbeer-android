@@ -15,38 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
-import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.RecentBeersViewModel;
+import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.data.DataLayer;
+import quickbeer.android.data.pojos.ItemList;
+import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerTabFragment extends BeerListFragment {
+public class RecentBeersViewModel extends BeerListViewModel {
 
-    @Nullable
+    @NonNull
+    private final DataLayer.GetAccessedBeers getAccessedBeers;
+
     @Inject
-    RecentBeersViewModel recentBeersViewModel;
+    RecentBeersViewModel(@NonNull final DataLayer.GetBeer getBeer,
+                         @NonNull final DataLayer.GetAccessedBeers getAccessedBeers) {
+        super(getBeer);
 
-    @Override
-    protected int getLayout() {
-        return R.layout.beer_tab_fragment;
+        this.getAccessedBeers = get(getAccessedBeers);
     }
 
     @NonNull
     @Override
-    protected BeerListViewModel viewModel() {
-        return get(recentBeersViewModel);
+    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
+        return getAccessedBeers.call();
     }
 
-    @Override
-    protected void inject() {
-        getComponent().inject(this);
-    }
 }

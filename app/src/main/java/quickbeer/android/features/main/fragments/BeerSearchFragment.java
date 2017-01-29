@@ -20,79 +20,45 @@ package quickbeer.android.features.main.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
-import quickbeer.android.core.viewmodel.DataBinder;
-import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
-import quickbeer.android.data.DataLayer;
-import quickbeer.android.features.main.SearchViewModel;
-import rx.subscriptions.CompositeSubscription;
+import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.BeerSearchViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 public class BeerSearchFragment extends BeerListFragment {
 
     @Nullable
     @Inject
-    SearchViewModel searchViewModel;
-
-    @Nullable
-    @Inject
-    DataLayer.GetBeerSearch getBeerSearch;
+    BeerSearchViewModel beerSearchViewModel;
 
     @NonNull
-    private final DataBinder dataBinder = new SimpleDataBinder() {
-        @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
-            listDataBinder().bind(subscription);
-
-            subscription.add(get(searchViewModel)
-                    .getQueryStream()
-                    .doOnNext(query -> Timber.d("query(%s)", query))
-                    .switchMap(query -> get(getBeerSearch).call(query))
-                    .subscribe(notification -> listViewModel().setNotification(notification),
-                            Timber::e));
-        }
-
-        @Override
-        public void unbind() {
-            listDataBinder().unbind();
-        }
-    };
+    private String initialQuery = "";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.beer_list_fragment, container, false);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        ofObj(savedInstanceState)
+                .ifSome(state -> initialQuery = get(state.getString("query")))
+                .ifNone(() -> Timber.w("Expected state for initializing!"));
+
+        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     protected void inject() {
         getComponent().inject(this);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        get(searchViewModel).setSearchHint(getResources().getString(R.string.search_box_hint_search_beers));
+        get(beerSearchViewModel).setInitialQuery(initialQuery);
     }
 
     @NonNull
     @Override
-    protected ViewModel viewModel() {
-        return listViewModel();
+    protected BeerListViewModel viewModel() {
+        return get(beerSearchViewModel);
     }
 
-    @NonNull
-    @Override
-    protected DataBinder dataBinder() {
-        return dataBinder;
-    }
 }

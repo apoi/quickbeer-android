@@ -28,7 +28,7 @@ import quickbeer.android.data.DataLayer;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-public class TopBeersFragment extends BeerListFragment {
+public class TopBeersFragment extends BeerSearchFragment {
 
     @Inject
     DataLayer.GetTopBeers getTopBeers;
@@ -39,10 +39,12 @@ public class TopBeersFragment extends BeerListFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             listDataBinder().bind(subscription);
 
+            /*
             subscription.add(getTopBeers.call()
                     .doOnNext(query -> Timber.d("getTopBeers finished"))
                     .subscribe(notification -> listViewModel().setNotification(notification),
                             Timber::e));
+                            */
         }
 
         @Override
@@ -56,11 +58,13 @@ public class TopBeersFragment extends BeerListFragment {
         getComponent().inject(this);
     }
 
+    /*
     @NonNull
     @Override
     protected ViewModel viewModel() {
         return listViewModel();
     }
+    */
 
     @NonNull
     @Override
