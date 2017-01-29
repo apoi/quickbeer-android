@@ -58,7 +58,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel()
+            subscription.add(get(view)
                     .selectedBeerStream()
                     .doOnNext(beerId -> Timber.d("Selected beer " + beerId))
                     .subscribe(beerId -> openBeerDetails(beerId), Timber::e));

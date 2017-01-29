@@ -52,7 +52,7 @@ public class BeerListView extends FrameLayout {
     private TextView searchStatusTextView;
 
     @NonNull
-    private final PublishSubject<Integer> selectBeerSubject = PublishSubject.create();
+    private final PublishSubject<Integer> selectedBeerSubject = PublishSubject.create();
 
     public BeerListView(Context context) {
         super(context);
@@ -73,7 +73,7 @@ public class BeerListView extends FrameLayout {
         beerListAdapter.setOnClickListener(v -> {
             final int itemPosition = beersListView.getChildAdapterPosition(v);
             final int beerId = beerListAdapter.getBeerViewModel(itemPosition).getBeerId();
-            selectBeerSubject.onNext(beerId);
+            selectedBeerSubject.onNext(beerId);
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
@@ -85,7 +85,7 @@ public class BeerListView extends FrameLayout {
 
     @NonNull
     public Observable<Integer> selectedBeerStream() {
-        return selectBeerSubject.asObservable();
+        return selectedBeerSubject.asObservable();
     }
 
     public void setHeader(@NonNull final Header header) {

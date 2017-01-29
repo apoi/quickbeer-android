@@ -46,5 +46,4 @@ public class RecentBeersViewModel extends BeerListViewModel {
     protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
         return getAccessedBeers.call();
     }
-
 }

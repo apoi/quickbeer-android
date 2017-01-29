@@ -28,7 +28,6 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
-import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -40,9 +39,6 @@ public abstract class BeerListViewModel extends NetworkViewModel {
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
-    private final PublishSubject<Integer> selectBeer = PublishSubject.create();
-
-    @NonNull
     private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
 
     protected BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
@@ -51,15 +47,6 @@ public abstract class BeerListViewModel extends NetworkViewModel {
 
     @NonNull
     protected abstract Observable<DataStreamNotification<ItemList<String>>> sourceObservable();
-
-    @NonNull
-    public Observable<Integer> selectedBeerStream() {
-        return selectBeer.asObservable();
-    }
-
-    public void selectBeer(final int beerId) {
-        selectBeer.onNext(beerId);
-    }
 
     @NonNull
     public Observable<List<BeerViewModel>> getBeers() {
