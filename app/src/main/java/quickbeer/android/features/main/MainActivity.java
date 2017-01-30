@@ -65,7 +65,7 @@ public class MainActivity extends DrawerActivity {
         public void bind(@NonNull final CompositeSubscription s) {
             s.add(get(searchViewViewModel).getQueryStream()
                     .doOnNext(query -> Timber.d("query(" + query + ")"))
-                    .subscribe(query -> tiggerSearch(query),
+                    .subscribe(query -> triggerSearch(query),
                             Timber::e));
 
             s.add(get(searchViewViewModel).getSearchQueriesOnceAndStream()
@@ -79,7 +79,7 @@ public class MainActivity extends DrawerActivity {
         }
     };
 
-    private void tiggerSearch(@NonNull final String query) {
+    private void triggerSearch(@NonNull final String query) {
         Bundle bundle = new Bundle();
         bundle.putString("query", query);
 

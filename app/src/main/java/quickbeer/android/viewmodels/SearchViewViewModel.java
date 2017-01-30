@@ -28,10 +28,11 @@ import polanski.option.Option;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.none;
+import static polanski.option.Option.ofObj;
 
 public class SearchViewViewModel {
 
@@ -46,14 +47,19 @@ public class SearchViewViewModel {
 
     private String searchHint = "Search beers";
 
-    private final BehaviorSubject<Option<String>> querySubject = BehaviorSubject.create(none());
+    @NonNull
+    private Option<String> lastQuery = none();
+
+    @NonNull
+    private final PublishSubject<Option<String>> querySubject = PublishSubject.create();
 
     public SearchViewViewModel(@NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         this.getBeerSearchQueries = get(getBeerSearchQueries);
     }
 
     public void setQuery(@Nullable final String query) {
-        querySubject.onNext(Option.ofObj(query));
+        lastQuery = ofObj(query);
+        querySubject.onNext(lastQuery);
     }
 
     @NonNull
@@ -79,8 +85,7 @@ public class SearchViewViewModel {
 
     @NonNull
     public String getQuery() {
-        return querySubject
-                .getValue()
+        return lastQuery
                 .orDefault(() -> "");
     }
 
