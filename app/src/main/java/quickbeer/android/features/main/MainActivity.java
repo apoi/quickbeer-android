@@ -20,8 +20,6 @@ package quickbeer.android.features.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -30,12 +28,11 @@ import android.view.MenuItem;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.DrawerActivity;
+import quickbeer.android.core.activity.DrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.main.fragments.BeerListFragment;
-import quickbeer.android.features.main.fragments.BeerSearchFragment;
-import quickbeer.android.features.main.fragments.MainFragment;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.SearchView;
 import rx.subscriptions.CompositeSubscription;
@@ -49,6 +46,10 @@ public class MainActivity extends DrawerActivity {
 
     @Nullable
     private SearchView searchView;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
 
     @Nullable
     @Inject
@@ -82,14 +83,7 @@ public class MainActivity extends DrawerActivity {
         Bundle bundle = new Bundle();
         bundle.putString("query", query);
 
-        Fragment fragment = new BeerSearchFragment();
-        fragment.setArguments(bundle);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, fragment)
-                .addToBackStack("search")
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+        get(navigationProvider).navigateTo(Page.BEER_SEARCH, bundle);
     }
 
     @Override
@@ -112,12 +106,7 @@ public class MainActivity extends DrawerActivity {
 
         ofObj(savedInstanceState)
                 .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))
-                .ifNone(() -> {
-                    getIntent().getStringExtra("query");
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.container, new MainFragment())
-                            .commit();
-                });
+                .ifNone(() -> get(navigationProvider).navigateTo(Page.HOME));
     }
 
     @Override
@@ -146,14 +135,8 @@ public class MainActivity extends DrawerActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Timber.d("onOptionsItemSelected");
-
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-
-        return super.onOptionsItemSelected(item);
+    protected void navigateTo(@NonNull final MenuItem menuItem) {
+        get(mainActivityViewModel).navigateTo(menuItem);
     }
 
     @Override
@@ -161,11 +144,12 @@ public class MainActivity extends DrawerActivity {
         Timber.d("onBackPressed");
 
         checkNotNull(searchView);
+        checkNotNull(navigationProvider);
 
         if (searchView.isSearchViewOpen()) {
             searchView.closeSearchView();
-        } else if (getSupportFragmentManager().getBackStackEntryCount() > 0){
-            getSupportFragmentManager().popBackStackImmediate();
+        } else if (navigationProvider.canNavigateBack()) {
+            navigationProvider.navigateBack();
         } else {
             super.onBackPressed();
         }

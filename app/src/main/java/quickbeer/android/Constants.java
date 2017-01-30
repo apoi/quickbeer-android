@@ -27,4 +27,6 @@ public interface Constants {
 
     String LOGIN_DEFAULT_SAVE_INFO = "on";
 
+    String META_QUERY_PREFIX = "__";
+
 }

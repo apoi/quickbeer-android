@@ -45,12 +45,13 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull final Intent intent) {
-        fetchBeerSearch(getServiceUri().toString());
+        fetchBeerSearch("");
     }
 
     @NonNull
     @Override
     protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
+        // Disregard search, the top beers query is static
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));
     }
 

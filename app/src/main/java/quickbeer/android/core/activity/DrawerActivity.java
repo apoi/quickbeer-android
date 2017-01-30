@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activity;
+package quickbeer.android.core.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -27,6 +27,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import quickbeer.android.R;
+import quickbeer.android.activity.CountryListActivity;
+import quickbeer.android.activity.StyleListActivity;
+import quickbeer.android.activity.TickedBeersActivity;
 import quickbeer.android.core.activity.BindingBaseActivity;
 import quickbeer.android.features.main.MainActivity;
 
@@ -48,30 +51,14 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
 
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_main:
-                startActivity(new Intent(this, MainActivity.class));
-                break;
-            case R.id.nav_ticks:
-                startActivity(new Intent(this, TickedBeersActivity.class));
-                break;
-            case R.id.nav_best:
-                startActivity(new Intent(this, TopBeersActivity.class));
-                break;
-            case R.id.nav_countries:
-                startActivity(new Intent(this, CountryListActivity.class));
-                break;
-            case R.id.nav_styles:
-                startActivity(new Intent(this, StyleListActivity.class));
-                break;
-            case R.id.nav_about:
-            default:
-                return true;
-        }
+        navigateTo(item);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
 
         return true;
     }
+
+    protected abstract void navigateTo(@NonNull final MenuItem item);
+
 }

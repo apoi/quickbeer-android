@@ -17,11 +17,15 @@
  */
 package quickbeer.android.injections;
 
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
+import javax.inject.Named;
+
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.R;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 
@@ -45,6 +49,13 @@ public class ActivityModule {
     static SearchViewViewModel providesSearchViewViewModel(
             @NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         return new SearchViewViewModel(getBeerSearchQueries);
+    }
+
+    @Provides
+    @IdRes
+    @Named("fragmentContainer")
+    static Integer providesNavigationContainerId() {
+        return R.id.container;
     }
 
 }

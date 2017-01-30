@@ -15,34 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.TopBeersViewModel;
+import quickbeer.android.data.pojos.ItemList;
+import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class TopBeersFragment extends BeerListFragment {
+public class TopBeersViewModel extends BeerListViewModel {
 
-    @Nullable
+    @NonNull
+    private final DataLayer.GetTopBeers getTopBeers;
+
     @Inject
-    TopBeersViewModel topBeersViewModel;
+    TopBeersViewModel(@NonNull final DataLayer.GetBeer getBeer,
+                      @NonNull final DataLayer.GetTopBeers getTopBeers) {
+        super(getBeer);
 
-    @Override
-    protected void inject() {
-        getComponent().inject(this);
+        this.getTopBeers = get(getTopBeers);
     }
 
     @NonNull
     @Override
-    protected BeerListViewModel viewModel() {
-        return get(topBeersViewModel);
+    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
+        return get(getTopBeers).call();
     }
-
 }

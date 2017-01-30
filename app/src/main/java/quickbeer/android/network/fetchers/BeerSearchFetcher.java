@@ -27,6 +27,7 @@ import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.BeerListStore;
@@ -103,7 +104,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .doOnCompleted(() -> completeRequest(uri))
                 .doOnError(doOnError(uri))
                 .subscribe(beerListStore::put,
-                           err -> Timber.e(err, "Error fetching beer search for '" + uri + "'"));
+                           err -> Timber.e(err, "Error fetching beer search for %s", uri));
 
         addRequest(uri.hashCode(), subscription);
     }

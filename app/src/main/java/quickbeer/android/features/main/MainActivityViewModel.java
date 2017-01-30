@@ -17,13 +17,18 @@
  */
 package quickbeer.android.features.main;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -61,10 +66,20 @@ public class MainActivityViewModel extends SimpleViewModel {
         return searchHintSubject.asObservable();
     }
 
-    private void updateSearchHint(@NonNull final NavigationProvider.Page page) {
+    public void navigateTo(@NonNull final MenuItem menuItem) {
+        navigationProvider.navigateTo(menuItem);
+    }
+
+    public void navigateTo(@NonNull final Page page,
+                              @Nullable final Bundle arguments) {
+        navigationProvider.navigateTo(page, arguments);
+    }
+
+    private void updateSearchHint(@NonNull final Page page) {
         switch (page) {
             case HOME:
             case BEER_SEARCH:
+            case TOP_BEERS:
                 searchHintSubject.onNext(resourceProvider.getString(R.string.search_box_hint_search_beers));
                 break;
         }
