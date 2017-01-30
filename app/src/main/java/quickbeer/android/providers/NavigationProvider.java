@@ -22,6 +22,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -105,6 +106,7 @@ public final class NavigationProvider {
                 .beginTransaction()
                 .addToBackStack(page.toString())
                 .add(container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .commit();
 
         pageSubject.onNext(page);
@@ -115,7 +117,7 @@ public final class NavigationProvider {
     }
 
     public void navigateBack() {
-        activity.getSupportFragmentManager().popBackStackImmediate();
+        activity.getSupportFragmentManager().popBackStack();
     }
 
     private static Fragment toFragment(@NonNull final Page page) {
