@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -60,6 +61,7 @@ public class BeerSearchViewModel extends BeerListViewModel {
         return get(searchViewViewModel)
                 .getQueryStream()
                 .startWith(initialQuery)
+                .filter(StringUtils::hasValue)
                 .doOnNext(query -> Timber.d("query(%s)", query))
                 .switchMap(query -> get(getBeerSearch).call(query));
     }

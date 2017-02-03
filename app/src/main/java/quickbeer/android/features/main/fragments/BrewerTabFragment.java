@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.views.BeerListView;
 

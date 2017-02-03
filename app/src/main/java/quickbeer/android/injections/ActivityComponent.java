@@ -18,10 +18,10 @@
 package quickbeer.android.injections;
 
 import dagger.Subcomponent;
-import quickbeer.android.features.beer.BeerDetailsActivity;
-import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
+import quickbeer.android.core.activity.InjectingBaseActivity;
+import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.features.main.MainActivity;
 
 @ActivityScope

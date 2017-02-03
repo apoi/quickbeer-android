@@ -23,14 +23,8 @@ import javax.inject.Inject;
 
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.User;
-import quickbeer.android.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
-
-import static io.reark.reark.utils.Preconditions.get;
 
 public class TickedBeersFragment extends BeerSearchFragment {
 

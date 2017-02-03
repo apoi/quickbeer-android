@@ -21,7 +21,6 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.viewmodels.AbstractViewModel;
-import quickbeer.android.core.viewmodel.ViewModel;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;

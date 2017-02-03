@@ -32,7 +32,6 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
-import quickbeer.android.features.beer.BeerDetailsFragment;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.subscriptions.CompositeSubscription;

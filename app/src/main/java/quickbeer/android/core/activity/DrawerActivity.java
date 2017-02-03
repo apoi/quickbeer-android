@@ -17,7 +17,6 @@
  */
 package quickbeer.android.core.activity;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,11 +26,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.CountryListActivity;
-import quickbeer.android.activity.StyleListActivity;
-import quickbeer.android.activity.TickedBeersActivity;
-import quickbeer.android.core.activity.BindingBaseActivity;
-import quickbeer.android.features.main.MainActivity;
 
 public abstract class DrawerActivity extends BindingBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 

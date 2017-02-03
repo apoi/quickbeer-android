@@ -18,7 +18,6 @@
 package quickbeer.android.providers;
 
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -69,16 +68,16 @@ public final class NavigationProvider {
                 .distinctUntilChanged();
     }
 
-    public void navigateTo(@NonNull final MenuItem menuItem) {
+    public void addPage(@NonNull final MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.nav_main:
-                navigateTo(Page.HOME);
+                addPage(Page.HOME);
                 break;
             case R.id.nav_ticks:
                 //startActivity(new Intent(this, TickedBeersActivity.class));
                 break;
             case R.id.nav_best:
-                navigateTo(Page.TOP_BEERS);
+                addPage(Page.TOP_BEERS);
                 break;
             case R.id.nav_countries:
                 //startActivity(new Intent(this, CountryListActivity.class));
@@ -92,28 +91,41 @@ public final class NavigationProvider {
         }
     }
 
-    public void navigateTo(@NonNull final Page page) {
-        navigateTo(page, null);
+    public void replacePage(@NonNull final Page page) {
+        transaction(page, null, false);
     }
 
-    public void navigateTo(@NonNull final Page page, @Nullable final Bundle arguments) {
+    public void addPage(@NonNull final Page page) {
+        transaction(page, null, true);
+    }
+
+    public void addPage(@NonNull final Page page, @Nullable final Bundle arguments) {
+        transaction(page, arguments, true);
+    }
+
+    private void transaction(@NonNull final Page page, @Nullable final Bundle arguments, boolean addToBackStack) {
         checkNotNull(page);
 
         final Fragment fragment = toFragment(page);
         fragment.setArguments(arguments);
 
-        activity.getSupportFragmentManager()
+        FragmentTransaction transition = activity
+                .getSupportFragmentManager()
                 .beginTransaction()
-                .addToBackStack(page.toString())
-                .add(container, fragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit();
+                .replace(container, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+        if (addToBackStack) {
+            transition = transition.addToBackStack(page.toString());
+        }
+
+        transition.commit();
 
         pageSubject.onNext(page);
     }
 
     public boolean canNavigateBack() {
-        return activity.getSupportFragmentManager().getBackStackEntryCount() > 0;
+        return activity.getSupportFragmentManager().getBackStackEntryCount() > 1;
     }
 
     public void navigateBack() {

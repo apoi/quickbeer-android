@@ -38,10 +38,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import rx.Observable;
-import rx.Subscription;
-import timber.log.Timber;
-
 public class SearchAdapter extends BaseAdapter implements Filterable {
 
     @NonNull

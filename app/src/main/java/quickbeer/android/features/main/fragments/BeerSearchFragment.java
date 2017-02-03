@@ -40,12 +40,12 @@ public class BeerSearchFragment extends BeerListFragment {
     private String initialQuery = "";
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        ofObj(savedInstanceState)
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ofObj(getArguments())
                 .ifSome(state -> initialQuery = get(state.getString("query")))
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
-
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

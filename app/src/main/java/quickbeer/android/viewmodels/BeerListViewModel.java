@@ -26,6 +26,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
 import rx.functions.Func1;
+import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
@@ -57,12 +58,15 @@ public abstract class BeerListViewModel extends NetworkViewModel {
     protected void bind(@NonNull final CompositeSubscription subscription) {
         Timber.v("bind");
 
-        subscription.add(sourceObservable()
+        ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
+                sourceObservable().publish();
+
+        subscription.add(sharedObservable
                 .subscribeOn(Schedulers.computation())
                 .map(toProgressStatus())
                 .subscribe(this::setNetworkStatusText));
 
-        subscription.add(sourceObservable()
+        subscription.add(sharedObservable
                 .subscribeOn(Schedulers.computation())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
@@ -71,6 +75,8 @@ public abstract class BeerListViewModel extends NetworkViewModel {
                 .flatMap(toBeerViewModelList())
                 .doOnNext(list -> Timber.d("Publishing " + list.size() + " beers"))
                 .subscribe(beers::onNext));
+
+        subscription.add(sharedObservable.connect());
     }
 
     @NonNull

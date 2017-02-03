@@ -32,7 +32,6 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.views.BeerListView;

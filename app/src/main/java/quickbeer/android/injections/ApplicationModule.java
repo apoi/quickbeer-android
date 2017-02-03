@@ -28,7 +28,6 @@ package quickbeer.android.injections;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.squareup.picasso.Picasso;
 

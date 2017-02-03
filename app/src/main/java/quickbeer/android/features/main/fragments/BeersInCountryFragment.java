@@ -26,11 +26,9 @@ import javax.inject.Inject;
 import quickbeer.android.activity.BeersInCountryActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Countries;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class BeersInCountryFragment extends BeerSearchFragment {
 

@@ -26,11 +26,9 @@ import javax.inject.Inject;
 import quickbeer.android.activity.BeersInStyleActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.utils.Styles;
 import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
 public class BeersInStyleFragment extends BeerSearchFragment {
 

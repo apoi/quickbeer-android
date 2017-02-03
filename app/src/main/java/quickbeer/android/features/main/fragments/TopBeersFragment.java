@@ -22,7 +22,6 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.data.DataLayer;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.TopBeersViewModel;
 

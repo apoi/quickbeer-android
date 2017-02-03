@@ -83,7 +83,7 @@ public class MainActivity extends DrawerActivity {
         Bundle bundle = new Bundle();
         bundle.putString("query", query);
 
-        get(navigationProvider).navigateTo(Page.BEER_SEARCH, bundle);
+        get(navigationProvider).addPage(Page.BEER_SEARCH, bundle);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class MainActivity extends DrawerActivity {
 
         ofObj(savedInstanceState)
                 .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))
-                .ifNone(() -> get(navigationProvider).navigateTo(Page.HOME));
+                .ifNone(() -> get(navigationProvider).replacePage(Page.HOME));
     }
 
     @Override

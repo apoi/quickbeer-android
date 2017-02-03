@@ -27,7 +27,6 @@ import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.BeerListStore;

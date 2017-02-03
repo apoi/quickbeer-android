@@ -69,7 +69,7 @@ public class MainFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        get(viewPager).setAdapter(new MainViewAdapter(getActivity().getSupportFragmentManager(), getContext()));
+        get(viewPager).setAdapter(new MainViewAdapter(getChildFragmentManager(), getContext()));
         get(tabLayout).setupWithViewPager(viewPager);
     }
 
