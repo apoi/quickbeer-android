@@ -25,6 +25,7 @@ import rx.subscriptions.CompositeSubscription;
  * The View should implement a concrete instance to allow it bind to the time-variant (Observable)
  * values provided by its associated {@link ViewModel}.
  */
+@SuppressWarnings("NoopMethodInAbstractClass")
 public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder {
 
     @NonNull
@@ -35,7 +36,6 @@ public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder
      */
     @Override
     public void onCreate() {
-        viewModel().bindToDataModel();
     }
 
     /**
@@ -43,6 +43,7 @@ public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder
      */
     @Override
     public void onResume() {
+        viewModel().bindToDataModel();
         bind(compositeSubscription);
     }
 
@@ -53,6 +54,7 @@ public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder
     public void onPause() {
         compositeSubscription.clear();
         unbind();
+        viewModel().unbindDataModel();
     }
 
     /**
@@ -60,7 +62,6 @@ public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder
      */
     @Override
     public void onDestroyView() {
-        viewModel().unbindDataModel();
     }
 
     /**
