@@ -17,56 +17,9 @@
  */
 package quickbeer.android.network.utils;
 
-import java.net.CookieManager;
-import java.net.HttpCookie;
-
-import quickbeer.android.utils.StringUtils;
-import timber.log.Timber;
-
-public class LoginUtils {
+public final class LoginUtils {
 
     private static final String USER_ID_KEY = "UserID";
     private static final String SESSION_ID_KEY = "SessionID";
 
-    public static void clearLoginCredentials(CookieManager cookieManager) {
-        Timber.d("clearLoginCredentials");
-
-        cookieManager.getCookieStore().removeAll();
-    }
-
-    public static boolean hasLoginCookie(CookieManager cookieManager) {
-        boolean userCookie = false;
-        boolean sessionCookie = false;
-
-        for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
-            Timber.v("Cookie: " + cookie);
-
-            if (!StringUtils.hasValue(cookie.getValue())) {
-                continue;
-            }
-
-            if (USER_ID_KEY.equals(cookie.getName())) {
-                userCookie = true;
-            } else if (SESSION_ID_KEY.equals(cookie.getName())) {
-                sessionCookie = true;
-            }
-        }
-
-        Timber.d("Login status: userCookie: " + userCookie + ", sessionCookie: " + sessionCookie);
-        return userCookie && sessionCookie;
-    }
-
-    public static String getUserId(CookieManager cookieManager) {
-        for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
-            if (!StringUtils.hasValue(cookie.getValue())) {
-                continue;
-            }
-
-            if (USER_ID_KEY.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return "";
-    }
 }

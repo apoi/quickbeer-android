@@ -20,7 +20,8 @@ package quickbeer.android.network.fetchers;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import java.net.CookieManager;
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,11 +49,11 @@ public final class FetcherModule {
     @Named("loginFetcher")
     static Fetcher<Uri> provideLoginFetcher(
             @NonNull final NetworkApi networkApi,
-            @NonNull final CookieManager cookieManager,
+            @NonNull final ClearableCookieJar cookieJar,
             @NonNull final NetworkRequestStatusStore requestStatusStore,
             @NonNull final UserStore userStore) {
         return new LoginFetcher(networkApi,
-                cookieManager,
+                cookieJar,
                 requestStatusStore::put,
                 userStore);
     }

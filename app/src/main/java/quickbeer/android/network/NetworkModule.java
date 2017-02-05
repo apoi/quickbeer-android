@@ -26,26 +26,26 @@
 package quickbeer.android.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import quickbeer.android.injections.ForApplication;
 import quickbeer.android.network.utils.DateDeserializer;
 import quickbeer.android.network.utils.NetworkInstrumentation;
 import quickbeer.android.network.utils.NullNetworkInstrumentation;
-import quickbeer.android.network.utils.PersistentCookieStore;
 import quickbeer.android.network.utils.StringDeserializer;
 
 @Module
@@ -53,17 +53,19 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public static NetworkApi provideNetworkApi(OkHttpClient client, Gson gson) {
+    public static NetworkApi provideNetworkApi(
+            @NonNull final OkHttpClient client,
+            @NonNull final Gson gson) {
         return new NetworkApi(client, gson);
     }
 
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(
-            NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
-            CookieManager cookieManager) {
+            @NonNull final NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
+            @NonNull final ClearableCookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                .cookieJar(new JavaNetCookieJar(cookieManager))
+                .cookieJar(cookieJar)
                 .followRedirects(false)
                 .followSslRedirects(false);
 
@@ -82,8 +84,8 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public static CookieManager provideCookieManager(@ForApplication Context context) {
-        return new CookieManager(new PersistentCookieStore(context), CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+    public static ClearableCookieJar provideCookieJar(@ForApplication @NonNull final Context context) {
+        return new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
 
     @Provides

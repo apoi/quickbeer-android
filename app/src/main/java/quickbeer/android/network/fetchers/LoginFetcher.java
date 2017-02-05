@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import java.net.CookieManager;
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
@@ -30,7 +30,6 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
-import quickbeer.android.network.utils.LoginUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -45,19 +44,19 @@ public class LoginFetcher extends FetcherBase<Uri> {
     private final NetworkApi networkApi;
 
     @NonNull
-    private final CookieManager cookieManager;
+    private final ClearableCookieJar cookieJar;
 
     @NonNull
     private final UserStore userStore;
 
     public LoginFetcher(@NonNull final NetworkApi networkApi,
-                        @NonNull final CookieManager cookieManager,
+                        @NonNull final ClearableCookieJar cookieJar,
                         @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
                         @NonNull final UserStore userStore) {
         super(updaterequestStatus);
 
         this.networkApi = get(networkApi);
-        this.cookieManager = get(cookieManager);
+        this.cookieJar = get(cookieJar);
         this.userStore = get(userStore);
     }
 
@@ -79,7 +78,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
             return;
         }
 
-        LoginUtils.clearLoginCredentials(cookieManager);
+        cookieJar.clear();
 
         Timber.d("Login with user " + username);
 
@@ -89,8 +88,6 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .map(user -> User.builder()
                         .username(username)
                         .password(password)
-                        .userId(LoginUtils.getUserId(cookieManager))
-                        .isLogged(LoginUtils.hasLoginCookie(cookieManager))
                         .build())
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnCompleted(() -> completeRequest(uri))
