@@ -29,7 +29,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
-import io.reark.reark.data.DataStreamNotification;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
@@ -40,7 +39,6 @@ import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.BeerListView;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;

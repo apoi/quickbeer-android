@@ -31,7 +31,6 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.DrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -84,6 +83,7 @@ public class MainActivity extends DrawerActivity {
         actionBar.setHomeButtonEnabled(true);
 
         setupDrawerLayout();
+        setupDrawerButton();
 
         ofObj(savedInstanceState)
                 .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))

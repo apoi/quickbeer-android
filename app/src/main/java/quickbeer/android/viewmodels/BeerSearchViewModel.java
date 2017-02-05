@@ -26,7 +26,6 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;

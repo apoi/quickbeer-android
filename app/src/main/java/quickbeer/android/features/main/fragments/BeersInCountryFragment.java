@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeersInCountryViewModel;
 import timber.log.Timber;

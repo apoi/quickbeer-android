@@ -26,7 +26,6 @@ import javax.inject.Inject;
 
 import polanski.option.Option;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
-import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
@@ -45,7 +44,7 @@ public class SearchViewViewModel extends SimpleViewModel {
 
     private boolean conventOverlayEnabled = true;
 
-    private int minimumSearchLength = 3;
+    private int minimumSearchLength = 4;
 
     private String searchHint = "Search beers";
 

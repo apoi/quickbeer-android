@@ -19,6 +19,7 @@ package quickbeer.android.activity.base;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +46,7 @@ import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
 public abstract class SearchBarActivity extends InjectingBaseActivity implements ProgressStatusAggregator {
@@ -63,10 +65,13 @@ public abstract class SearchBarActivity extends InjectingBaseActivity implements
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main_activity);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+
+        ActionBar supportBar = get(getSupportActionBar());
+        supportBar.setDisplayHomeAsUpEnabled(true);
+        supportBar.setHomeButtonEnabled(true);
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -93,15 +98,6 @@ public abstract class SearchBarActivity extends InjectingBaseActivity implements
         activitySubscription.clear();
 
         super.onDestroy();
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-
-        // There may have been queries while this fragment was paused. Refresh the search
-        // history list adapter to have the latest queries available.
-        //adapter.updateSourceList();
     }
 
     public Observable<String> getQueryObservable() {

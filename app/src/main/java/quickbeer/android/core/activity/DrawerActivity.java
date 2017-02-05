@@ -32,7 +32,9 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
     protected void setupDrawerLayout() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
 
+    protected void setupDrawerButton() {
         // Toolbar setup
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(

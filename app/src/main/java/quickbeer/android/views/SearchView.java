@@ -133,7 +133,7 @@ public class SearchView extends FrameLayout {
             }
 
             private boolean updateQueryText(String query) {
-                if (query.length() > getViewModel().minimumSearchLength()) {
+                if (query.length() >= getViewModel().minimumSearchLength()) {
                     getViewModel().setQuery(query);
                     return true;
                 } else {
