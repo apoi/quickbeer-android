@@ -21,8 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -76,15 +74,10 @@ public class MainActivity extends DrawerActivity {
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
         searchView.setViewModel(get(searchViewViewModel));
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ActionBar actionBar = get(getSupportActionBar());
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-
         setupDrawerLayout();
-        setupDrawerButton();
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() ->
+                setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
 
         ofObj(savedInstanceState)
                 .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))
@@ -123,6 +116,16 @@ public class MainActivity extends DrawerActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         get(searchView).setMenuItem(menu.findItem(R.id.action_search));
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

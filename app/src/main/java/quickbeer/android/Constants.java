@@ -29,4 +29,6 @@ public interface Constants {
 
     String META_QUERY_PREFIX = "__";
 
+    int NAV_ARROW_ANIMATION_DURATION = 350;
+
 }
