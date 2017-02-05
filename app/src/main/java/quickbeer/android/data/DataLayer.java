@@ -64,7 +64,10 @@ import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdF
 
 public class DataLayer extends DataLayerBase {
 
+    @NonNull
     private final Context context;
+
+    @NonNull
     private final UserStore userStore;
 
     public DataLayer(@NonNull final Context context,

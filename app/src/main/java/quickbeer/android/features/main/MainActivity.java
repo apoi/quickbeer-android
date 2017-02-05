@@ -117,6 +117,7 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
+        get(navigationProvider).clearToPage(menuItem);
     }
 
     @Override

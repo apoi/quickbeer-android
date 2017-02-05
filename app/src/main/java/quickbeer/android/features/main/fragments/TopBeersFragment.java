@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.TopBeersViewModel;
 
@@ -32,6 +33,10 @@ public class TopBeersFragment extends BeerListFragment {
     @Nullable
     @Inject
     TopBeersViewModel topBeersViewModel;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
 
     @Override
     protected void inject() {
@@ -48,7 +53,7 @@ public class TopBeersFragment extends BeerListFragment {
 
     @Override
     protected void onQuery(@NonNull String query) {
-        // TODO
+        get(navigationProvider).triggerSearch(query);
     }
 
 }

@@ -37,7 +37,6 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.data.stores.StoreModule;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.ServiceDataLayer;
 import quickbeer.android.network.fetchers.FetcherModule;
 
 @Module(includes = { FetcherModule.class, StoreModule.class })

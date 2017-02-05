@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -32,8 +33,6 @@ import quickbeer.android.R;
 import quickbeer.android.features.main.fragments.BeerSearchFragment;
 import quickbeer.android.features.main.fragments.MainFragment;
 import quickbeer.android.features.main.fragments.TopBeersFragment;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -53,20 +52,11 @@ public final class NavigationProvider {
     @NonNull
     private final Integer container;
 
-    @NonNull
-    private final PublishSubject<Page> pageSubject = PublishSubject.create();
-
     @Inject
     NavigationProvider(@NonNull final AppCompatActivity activity,
                        @NonNull @Named("fragmentContainer") final Integer container) {
         this.activity = get(activity);
         this.container = container;
-    }
-
-    @NonNull
-    public Observable<Page> navigationStream() {
-        return pageSubject.asObservable()
-                .distinctUntilChanged();
     }
 
     public void addPage(@NonNull final MenuItem menuItem) {
@@ -92,16 +82,23 @@ public final class NavigationProvider {
         }
     }
 
-    public void replacePage(@NonNull final Page page) {
-        transaction(page, null, false);
-    }
-
     public void addPage(@NonNull final Page page) {
         transaction(page, null, true);
     }
 
     public void addPage(@NonNull final Page page, @Nullable final Bundle arguments) {
         transaction(page, arguments, true);
+    }
+
+    public void replacePage(@NonNull final Page page) {
+        transaction(page, null, false);
+    }
+
+    public void clearToPage(@NonNull final MenuItem menuItem) {
+        activity.getSupportFragmentManager()
+                .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        addPage(menuItem);
     }
 
     private void transaction(@NonNull final Page page, @Nullable final Bundle arguments, boolean addToBackStack) {
@@ -113,7 +110,7 @@ public final class NavigationProvider {
         FragmentTransaction transition = activity
                 .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(container, fragment)
+                .replace(container, fragment, page.toString())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
         if (addToBackStack) {
@@ -121,8 +118,6 @@ public final class NavigationProvider {
         }
 
         transition.commit();
-
-        pageSubject.onNext(page);
     }
 
     public boolean canNavigateBack() {
