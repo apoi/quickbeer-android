@@ -67,8 +67,8 @@ public final class NavigationProvider {
         this.container = container;
     }
 
-    public void addPage(@NonNull final MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
+    public void addPage(int menuNavigationId) {
+        switch (menuNavigationId) {
             case R.id.nav_main:
                 addPage(Page.HOME);
                 break;
@@ -102,11 +102,11 @@ public final class NavigationProvider {
         transaction(page, null, false);
     }
 
-    public void clearToPage(@NonNull final MenuItem menuItem) {
+    public void clearToPage(int menuNavigationId) {
         activity.getSupportFragmentManager()
                 .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
-        addPage(menuItem);
+        addPage(menuNavigationId);
     }
 
     private void transaction(@NonNull final Page page, @Nullable final Bundle arguments, boolean addToBackStack) {

@@ -17,6 +17,7 @@
  */
 package quickbeer.android.features.beer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,6 +37,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
+import quickbeer.android.features.main.MainActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
@@ -150,7 +152,9 @@ public class BeerDetailsActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(navigationProvider).clearToPage(menuItem);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("menuNavigationId", menuItem.getItemId());
+        startActivity(intent);
     }
 
     @Override

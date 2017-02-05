@@ -17,6 +17,7 @@
  */
 package quickbeer.android.features.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -91,6 +92,15 @@ public class MainActivity extends DrawerActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent.hasExtra("menuNavigationId")) {
+            get(navigationProvider).clearToPage(intent.getIntExtra("menuNavigationId", 0));
+        }
+    }
+
+    @Override
     protected void inject() {
         getComponent().inject(this);
     }
@@ -117,7 +127,7 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(navigationProvider).clearToPage(menuItem);
+        get(navigationProvider).clearToPage(menuItem.getItemId());
     }
 
     @Override
