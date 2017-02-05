@@ -18,6 +18,7 @@
 package quickbeer.android.features.main.fragments;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,20 +27,78 @@ import android.view.ViewGroup;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.activity.StyleListActivity;
-import quickbeer.android.core.fragment.BaseFragment;
+import quickbeer.android.core.fragment.BindingBaseFragment;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.NavigationProvider.Page;
+import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.Styles;
+import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.SimpleListView;
-import rx.Observable;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-public class StyleListFragment extends BaseFragment {
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+
+public class StyleListFragment  extends BindingBaseFragment {
+
+    @Nullable
+    @Inject
+    ResourceProvider resourceProvider;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
+
+    @Nullable
+    @Inject
+    SearchViewViewModel searchViewViewModel;
 
     @Inject
     Styles styles;
 
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(viewModel()
+                    .getQueryStream()
+                    .subscribe(getView()::setFilter, Timber::e));
+
+            subscription.add(getView()
+                    .selectionStream()
+                    .subscribe(StyleListFragment.this::navigateToStyle, Timber::e));
+        }
+    };
+
+    private void navigateToStyle(@NonNull final Integer styleId) {
+        Timber.d("navigateToStyle(" + styleId + ")");
+
+        Bundle bundle = new Bundle();
+        bundle.putString("style", String.valueOf(styleId));
+
+        get(navigationProvider).addPage(Page.STYLE, bundle);
+    }
+
     @Override
     protected void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        checkNotNull(searchViewViewModel);
+
+        getView().setListSource(styles);
+
+        searchViewViewModel.setLiveFilteringEnabled(true);
+        searchViewViewModel.setConventOverlayEnabled(false);
+        searchViewViewModel.setMinimumSearchLength(-1);
+        searchViewViewModel.setSearchHint(get(resourceProvider).getString(R.string.search_box_hint_filter_styles));
     }
 
     @Override
@@ -48,14 +107,21 @@ public class StyleListFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        /*
-        ((SimpleListView) getView()).setListSource(styles);
-
-        Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
-        ((SimpleListView) getView()).setFilterObservable(filterObservable);
-        */
+    @NonNull
+    public SimpleListView getView() {
+        return (SimpleListView) get(super.getView());
     }
+
+    @NonNull
+    @Override
+    protected SearchViewViewModel viewModel() {
+        return get(searchViewViewModel);
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
+    }
+
 }

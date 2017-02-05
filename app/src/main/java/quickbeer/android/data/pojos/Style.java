@@ -19,8 +19,6 @@ package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
-import quickbeer.android.activity.BeersInStyleActivity;
-
 public class Style extends SimpleItem {
     private final int id;
     private final String name;

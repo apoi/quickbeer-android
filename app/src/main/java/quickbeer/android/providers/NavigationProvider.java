@@ -32,8 +32,10 @@ import javax.inject.Named;
 import quickbeer.android.R;
 import quickbeer.android.features.main.fragments.BeerSearchFragment;
 import quickbeer.android.features.main.fragments.BeersInCountryFragment;
+import quickbeer.android.features.main.fragments.BeersInStyleFragment;
 import quickbeer.android.features.main.fragments.CountryListFragment;
 import quickbeer.android.features.main.fragments.MainFragment;
+import quickbeer.android.features.main.fragments.StyleListFragment;
 import quickbeer.android.features.main.fragments.TopBeersFragment;
 import timber.log.Timber;
 
@@ -46,8 +48,10 @@ public final class NavigationProvider {
         HOME,
         BEER_SEARCH,
         TOP_BEERS,
-        COUNTRIES,
-        COUNTRY
+        COUNTRY_LIST,
+        COUNTRY,
+        STYLE_LIST,
+        STYLE
     }
 
     @NonNull
@@ -75,10 +79,10 @@ public final class NavigationProvider {
                 addPage(Page.TOP_BEERS);
                 break;
             case R.id.nav_countries:
-                addPage(Page.COUNTRIES);
+                addPage(Page.COUNTRY_LIST);
                 break;
             case R.id.nav_styles:
-                //startActivity(new Intent(this, StyleListActivity.class));
+                addPage(Page.STYLE_LIST);
                 break;
             case R.id.nav_about:
             default:
@@ -149,10 +153,14 @@ public final class NavigationProvider {
                 return new BeerSearchFragment();
             case TOP_BEERS:
                 return new TopBeersFragment();
-            case COUNTRIES:
+            case COUNTRY_LIST:
                 return new CountryListFragment();
             case COUNTRY:
                 return new BeersInCountryFragment();
+            case STYLE_LIST:
+                return new StyleListFragment();
+            case STYLE:
+                return new BeersInStyleFragment();
         }
 
         return new MainFragment();

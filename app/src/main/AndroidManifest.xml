@@ -34,16 +34,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>
 
-        <activity
-            android:name=".activity.StyleListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
-        <activity
-            android:name=".activity.BeersInStyleActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
         <provider
             android:name=".data.providers.generated.RateBeerProvider"
             android:authorities="quickbeer.android.providers.RateBeerProvider"
