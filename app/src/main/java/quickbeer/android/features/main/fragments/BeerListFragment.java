@@ -46,6 +46,7 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public abstract class BeerListFragment extends BindingBaseFragment {
@@ -113,7 +114,12 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        get(searchViewViewModel).setSearchHint(get(resourceProvider)
+        checkNotNull(searchViewViewModel);
+
+        searchViewViewModel.setLiveFilteringEnabled(false);
+        searchViewViewModel.setConventOverlayEnabled(true);
+        searchViewViewModel.setMinimumSearchLength(4);
+        searchViewViewModel.setSearchHint(get(resourceProvider)
                 .getString(R.string.search_box_hint_search_beers));
     }
 

@@ -51,9 +51,11 @@ public class StyleListFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        /*
         ((SimpleListView) getView()).setListSource(styles);
 
         Observable<String> filterObservable = ((StyleListActivity) getActivity()).getQueryObservable();
         ((SimpleListView) getView()).setFilterObservable(filterObservable);
+        */
     }
 }

@@ -35,21 +35,6 @@
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".activity.TopBeersActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
-        <activity
-            android:name=".activity.CountryListActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
-        <activity
-            android:name=".activity.BeersInCountryActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:launchMode="singleTask"/>
-
-        <activity
             android:name=".activity.StyleListActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

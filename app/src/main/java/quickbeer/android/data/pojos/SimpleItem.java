@@ -29,9 +29,6 @@ public abstract class SimpleItem implements Comparable<SimpleItem> {
     @NonNull
     public abstract String getCode();
 
-    @NonNull
-    public abstract Class getDisplayActivity();
-
     @Override
     public int compareTo(@NonNull final SimpleItem another) {
         return getName().compareTo(another.getName());

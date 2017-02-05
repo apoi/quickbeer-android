@@ -17,10 +17,13 @@
  */
 package quickbeer.android.adapters;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
@@ -28,21 +31,32 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.SimpleItem;
 import quickbeer.android.views.viewholders.SimpleListItemViewHolder;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.none;
+import static polanski.option.Option.ofObj;
+
 public class SimpleListAdapter extends BaseListAdapter {
 
+    @NonNull
     private final List<SimpleItem> sourceList;
-    private final List<SimpleItem> adapterList = new ArrayList<>();
 
-    public SimpleListAdapter(Collection<SimpleItem> countries) {
-        this.sourceList = new ArrayList<>(countries);
-        Collections.sort(this.sourceList);
+    @NonNull
+    private final List<SimpleItem> adapterList = new ArrayList<>(0);
 
-        this.adapterList.addAll(sourceList);
+    @Nullable
+    private View.OnClickListener onClickListener;
+
+    public SimpleListAdapter(@NonNull final Collection<SimpleItem> countries) {
+        sourceList = new ArrayList<>(get(countries));
+        Collections.sort(sourceList);
+
+        adapterList.addAll(sourceList);
     }
 
     public void filterList(String filter) {
@@ -63,15 +77,28 @@ public class SimpleListAdapter extends BaseListAdapter {
         notifyDataSetChanged();
     }
 
+    public void setOnClickListener(@Nullable final OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
+
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.simple_list_item, parent, false);
-        return new SimpleListItemViewHolder(v);
+        return new SimpleListItemViewHolder(v, onClickListener);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         ((SimpleListItemViewHolder) holder).setItem(adapterList.get(position));
+    }
+
+    @NonNull
+    public Option<SimpleItem> getItemAt(int index) {
+        if (index >= getItemCount() || index < 0) {
+            return none();
+        }
+
+        return ofObj(adapterList.get(index));
     }
 
     @Override

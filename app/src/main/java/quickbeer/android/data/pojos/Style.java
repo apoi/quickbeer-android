@@ -46,10 +46,4 @@ public class Style extends SimpleItem {
     public String getCode() {
         return name.substring(0, 2);
     }
-
-    @NonNull
-    @Override
-    public Class getDisplayActivity() {
-        return BeersInStyleActivity.class;
-    }
 }

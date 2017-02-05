@@ -23,66 +23,49 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.activity.BeersInCountryActivity;
-import quickbeer.android.core.viewmodel.DataBinder;
-import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.data.DataLayer;
-import quickbeer.android.utils.Countries;
-import rx.subscriptions.CompositeSubscription;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.BeersInCountryViewModel;
+import timber.log.Timber;
 
-public class BeersInCountryFragment extends BeerSearchFragment {
+import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
+public class BeersInCountryFragment extends BeerListFragment {
+
+    @Nullable
     @Inject
-    DataLayer.GetBeersInCountry getBeersInCountry;
-
-    @Inject
-    Countries countries;
-
-    private String countryId;
+    BeersInCountryViewModel beersInCountryViewModel;
 
     @NonNull
-    private final DataBinder dataBinder = new SimpleDataBinder() {
-        @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
-            listDataBinder().bind(subscription);
+    private String country = "";
 
-            /*
-            subscription.add(getBeersInCountry.call(countryId)
-                    .doOnNext(query -> Timber.d("getTopBeers finished"))
-                    .subscribe(notification -> listViewModel().setNotification(notification),
-                            Timber::e));
-                            */
-        }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        @Override
-        public void unbind() {
-            listDataBinder().unbind();
-        }
-    };
+        ofObj(getArguments())
+                .ifSome(state -> country = get(state.getString("country")))
+                .ifNone(() -> Timber.w("Expected state for initializing!"));
+    }
 
     @Override
     protected void inject() {
+        super.inject();
+
         getComponent().inject(this);
-    }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        countryId = ((BeersInCountryActivity) getActivity()).getCountryId();
+        get(beersInCountryViewModel).setCountry(country);
     }
-
-    /*
-    @NonNull
-    @Override
-    protected ViewModel viewModel() {
-        return listViewModel();
-    }
-    */
 
     @NonNull
     @Override
-    protected DataBinder dataBinder() {
-        return dataBinder;
+    protected BeerListViewModel viewModel() {
+        return get(beersInCountryViewModel);
+    }
+
+    @Override
+    protected void onQuery(@NonNull final String query) {
+        // No action, new search replaces old results.
     }
 }

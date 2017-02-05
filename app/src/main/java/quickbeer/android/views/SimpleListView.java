@@ -18,6 +18,8 @@
 package quickbeer.android.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
@@ -27,9 +29,18 @@ import quickbeer.android.R;
 import quickbeer.android.adapters.SimpleListAdapter;
 import quickbeer.android.utils.SimpleListSource;
 import rx.Observable;
+import rx.subjects.PublishSubject;
+import timber.log.Timber;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 public class SimpleListView extends FrameLayout {
+
+    @Nullable
     private SimpleListAdapter simpleListAdapter;
+
+    @NonNull
+    private final PublishSubject<Integer> selectedId = PublishSubject.create();
 
     public SimpleListView(Context context) {
         super(context);
@@ -39,16 +50,28 @@ public class SimpleListView extends FrameLayout {
         super(context, attrs);
     }
 
-    public void setListSource(SimpleListSource source) {
-        simpleListAdapter = new SimpleListAdapter(source.getList());
+    @NonNull
+    public Observable<Integer> selectionStream() {
+        return selectedId.asObservable();
+    }
 
+    public void setListSource(@NonNull final SimpleListSource source) {
         RecyclerView simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);
+
+        simpleListAdapter = new SimpleListAdapter(get(source).getList());
+        simpleListAdapter.setOnClickListener(v -> {
+            int index = simpleListView.getChildAdapterPosition(v);
+            simpleListAdapter.getItemAt(index)
+                    .ifSome(item -> selectedId.onNext(item.getId()))
+                    .ifNone(() -> Timber.e("No item at index %s!", index));
+        });
+
         simpleListView.setHasFixedSize(true);
         simpleListView.setLayoutManager(new LinearLayoutManager(getContext()));
         simpleListView.setAdapter(simpleListAdapter);
     }
 
-    public void setFilterObservable(Observable<String> filterObservable) {
-        filterObservable.subscribe(simpleListAdapter::filterList);
+    public void setFilter(@NonNull final String filter) {
+        get(simpleListAdapter).filterList(get(filter));
     }
 }

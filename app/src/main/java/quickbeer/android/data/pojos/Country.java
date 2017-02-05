@@ -19,8 +19,6 @@ package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
-import quickbeer.android.activity.BeersInCountryActivity;
-
 public class Country extends SimpleItem {
     private final int id;
     private final String name;
@@ -47,11 +45,5 @@ public class Country extends SimpleItem {
     @Override
     public String getCode() {
         return code;
-    }
-
-    @NonNull
-    @Override
-    public Class getDisplayActivity() {
-        return BeersInCountryActivity.class;
     }
 }

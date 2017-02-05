@@ -17,7 +17,7 @@
  */
 package quickbeer.android.views.viewholders;
 
-import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -26,29 +26,25 @@ import quickbeer.android.R;
 import quickbeer.android.data.pojos.SimpleItem;
 
 public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
-    private final TextView textView;
-    private final TextView iconView;
-    private SimpleItem simpleItem;
 
-    public SimpleListItemViewHolder(View view) {
+    @NonNull
+    private final TextView textView;
+
+    @NonNull
+    private final TextView iconView;
+
+    public SimpleListItemViewHolder(@NonNull final View view,
+                                    @NonNull final View.OnClickListener onClickListener) {
         super(view);
 
         iconView = (TextView) view.findViewById(R.id.list_item_icon);
         textView = (TextView) view.findViewById(R.id.list_item_name);
 
-        view.setOnClickListener(this::launchActivity);
+        view.setOnClickListener(onClickListener);
     }
 
     public void setItem(SimpleItem simpleItem) {
-        this.simpleItem = simpleItem;
         iconView.setText(simpleItem.getCode());
         textView.setText(simpleItem.getName());
-    }
-
-    private void launchActivity(View view) {
-        Intent intent = new Intent(view.getContext(), simpleItem.getDisplayActivity());
-        intent.putExtra("id", String.valueOf(simpleItem.getId()));
-
-        view.getContext().startActivity(intent);
     }
 }

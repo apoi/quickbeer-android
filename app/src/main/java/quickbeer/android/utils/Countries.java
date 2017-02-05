@@ -26,9 +26,9 @@ import quickbeer.android.data.pojos.SimpleItem;
 
 public class Countries implements SimpleListSource {
 
-    private final Map<Integer, SimpleItem> countries = new HashMap<>();
+    private final Map<Integer, SimpleItem> countries = new HashMap<>(255);
 
-    public Countries() {
+    Countries() {
         initCountries();
     }
 
