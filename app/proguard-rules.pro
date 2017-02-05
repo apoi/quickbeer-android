@@ -58,10 +58,23 @@
 -dontwarn javax.lang.model.element.Modifier
 
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-   long producerIndex;
-   long consumerIndex;
+    long producerIndex;
+    long consumerIndex;
 }
 
-# Remove logging
-#-assumenosideeffects class io.reark.reark.utils.Log { *; }
-#-assumenosideeffects class android.util.Log { *; }
+# Remove logging, except for errors
+-assumenosideeffects class timber.log.Timber {
+    public static *** v(...);
+    public static *** i(...);
+    public static *** d(...);
+}
+-assumenosideeffects class io.reark.reark.utils.Log {
+    public static *** v(...);
+    public static *** i(...);
+    public static *** d(...);
+}
+-assumenosideeffects class android.util.Log {
+    public static *** v(...);
+    public static *** i(...);
+    public static *** d(...);
+}
