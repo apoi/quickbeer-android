@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
+import ix.Ix;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
@@ -101,11 +102,9 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
 
     @NonNull
     private Func1<List<Integer>, List<BeerViewModel>> toBeerViewModelList() {
-        return beerIds -> Observable.from(beerIds)
+        return beerIds -> Ix.from(beerIds)
                 .map(integer -> new BeerViewModel(integer, getBeer))
-                .toList()
-                .toBlocking()
-                .first();
+                .toList();
     }
 
     @Override
