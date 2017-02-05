@@ -18,6 +18,7 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import io.reark.reark.data.DataStreamNotification;
 import rx.Observable;
@@ -26,12 +27,13 @@ import rx.subjects.BehaviorSubject;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract class NetworkViewModel extends quickbeer.android.core.viewmodel.BaseViewModel {
+public abstract class NetworkViewModel<T> extends quickbeer.android.core.viewmodel.BaseViewModel {
 
     public enum ProgressStatus {
         LOADING,
         ERROR,
-        IDLE
+        VALUE,
+        EMPTY
     }
 
     @NonNull
@@ -42,7 +44,7 @@ public abstract class NetworkViewModel extends quickbeer.android.core.viewmodel.
         return progressStatus.asObservable();
     }
 
-    public void setNetworkStatusText(@NonNull final ProgressStatus status) {
+    public void setProgressStatus(@NonNull final ProgressStatus status) {
         progressStatus.onNext(get(status));
     }
 
@@ -53,15 +55,20 @@ public abstract class NetworkViewModel extends quickbeer.android.core.viewmodel.
     }
 
     @NonNull
-    static <T> Func1<DataStreamNotification<T>, ProgressStatus> toProgressStatus() {
+    Func1<DataStreamNotification<T>, ProgressStatus> toProgressStatus() {
         return notification -> {
             if (notification.isFetchingStart()) {
                 return ProgressStatus.LOADING;
             } else if (notification.isFetchingError()) {
                 return ProgressStatus.ERROR;
+            } else if (notification.isOnNext() && hasValue(notification.getValue())) {
+                return ProgressStatus.VALUE;
             } else {
-                return ProgressStatus.IDLE;
+                return ProgressStatus.EMPTY;
             }
         };
     }
+
+    protected abstract boolean hasValue(@Nullable final T item);
+
 }

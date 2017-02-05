@@ -25,16 +25,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.Unbinder;
+import io.reark.reark.data.DataStreamNotification;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.features.beer.BeerDetailsActivity;
+import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.BeerListView;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -47,6 +53,14 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     @Nullable
     @BindView(R.id.list_layout)
     BeerListView view;
+
+    @Nullable
+    @Inject
+    ResourceProvider resourceProvider;
+
+    @Nullable
+    @Inject
+    SearchViewViewModel searchViewViewModel;
 
     // TODO inject global ProgressViewModel?
 
@@ -65,12 +79,16 @@ public abstract class BeerListFragment extends BindingBaseFragment {
             subscription.add(viewModel()
                     .getBeers()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(get(view)::setBeers));
+                    .subscribe(get(view)::setBeers, Timber::e));
 
             subscription.add(viewModel()
                     .getProgressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(get(view)::setProgressStatus));
+                    .subscribe(get(view)::setProgressStatus, Timber::e));
+
+            subscription.add(get(searchViewViewModel)
+                    .getQueryStream()
+                    .subscribe(BeerListFragment.this::onQuery, Timber::e));
         }
     };
 
@@ -81,9 +99,22 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     }
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        get(searchViewViewModel).setSearchHint(get(resourceProvider)
+                .getString(R.string.search_box_hint_search_beers));
     }
 
     @Override
@@ -105,6 +136,8 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     @Override
     @NonNull
     protected abstract BeerListViewModel viewModel();
+
+    protected abstract void onQuery(@NonNull final String query);
 
     @NonNull
     @Override

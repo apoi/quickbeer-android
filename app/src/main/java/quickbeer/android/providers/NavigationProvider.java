@@ -34,6 +34,7 @@ import quickbeer.android.features.main.fragments.MainFragment;
 import quickbeer.android.features.main.fragments.TopBeersFragment;
 import rx.Observable;
 import rx.subjects.PublishSubject;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
@@ -130,6 +131,15 @@ public final class NavigationProvider {
 
     public void navigateBack() {
         activity.getSupportFragmentManager().popBackStack();
+    }
+
+    public void triggerSearch(@NonNull final String query) {
+        Timber.d("query(" + query + ")");
+
+        Bundle bundle = new Bundle();
+        bundle.putString("query", query);
+
+        addPage(Page.BEER_SEARCH, bundle);
     }
 
     private static Fragment toFragment(@NonNull final Page page) {

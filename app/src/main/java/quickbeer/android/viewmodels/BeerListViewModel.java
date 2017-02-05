@@ -18,7 +18,9 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -28,19 +30,19 @@ import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract class BeerListViewModel extends NetworkViewModel {
+public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String>> {
 
     @NonNull
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
-    private final BehaviorSubject<List<BeerViewModel>> beers = BehaviorSubject.create();
+    private final PublishSubject<List<BeerViewModel>> beers = PublishSubject.create();
 
     protected BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
         this.getBeer = get(getBeer);
@@ -56,23 +58,41 @@ public abstract class BeerListViewModel extends NetworkViewModel {
 
     @Override
     protected void bind(@NonNull final CompositeSubscription subscription) {
-        Timber.v("bind");
 
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
-                sourceObservable().publish();
+                sourceObservable()
+                        .publish();
 
+        Observable<ProgressStatus> emptyResult = sharedObservable
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .map(ItemList::getItems)
+                .map(items -> items.isEmpty()
+                        ? ProgressStatus.EMPTY
+                        : ProgressStatus.VALUE);
+
+        // Construct progress status. Leave out completion and rely on value emitting instead
+        subscription.add(sharedObservable
+                .filter(notification -> !notification.isFetchingCompleted())
+                .map(toProgressStatus())
+                .mergeWith(emptyResult)
+                .subscribe(this::setProgressStatus));
+
+        // Clear list on fetching start
         subscription.add(sharedObservable
                 .subscribeOn(Schedulers.computation())
-                .map(toProgressStatus())
-                .subscribe(this::setNetworkStatusText));
+                .filter(DataStreamNotification::isFetchingStart)
+                .map(__ -> Collections.<BeerViewModel>emptyList())
+                .subscribe(beers::onNext));
 
+        // Actual update
         subscription.add(sharedObservable
                 .subscribeOn(Schedulers.computation())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Timber.d("Search finished"))
                 .map(ItemList::getItems)
-                .flatMap(toBeerViewModelList())
+                .map(toBeerViewModelList())
                 .doOnNext(list -> Timber.d("Publishing " + list.size() + " beers"))
                 .subscribe(beers::onNext));
 
@@ -80,9 +100,16 @@ public abstract class BeerListViewModel extends NetworkViewModel {
     }
 
     @NonNull
-    private Func1<List<Integer>, Observable<List<BeerViewModel>>> toBeerViewModelList() {
+    private Func1<List<Integer>, List<BeerViewModel>> toBeerViewModelList() {
         return beerIds -> Observable.from(beerIds)
                 .map(integer -> new BeerViewModel(integer, getBeer))
-                .toList();
+                .toList()
+                .toBlocking()
+                .first();
+    }
+
+    @Override
+    protected boolean hasValue(@Nullable final ItemList<String> item) {
+        return !get(item).getItems().isEmpty();
     }
 }

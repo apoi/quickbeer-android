@@ -35,6 +35,8 @@ public class TopBeersFragment extends BeerListFragment {
 
     @Override
     protected void inject() {
+        super.inject();
+
         getComponent().inject(this);
     }
 
@@ -42,6 +44,11 @@ public class TopBeersFragment extends BeerListFragment {
     @Override
     protected BeerListViewModel viewModel() {
         return get(topBeersViewModel);
+    }
+
+    @Override
+    protected void onQuery(@NonNull String query) {
+        // TODO
     }
 
 }

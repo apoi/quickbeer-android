@@ -19,6 +19,7 @@ package quickbeer.android.injections;
 
 import dagger.Subcomponent;
 import quickbeer.android.features.beer.BeerDetailsFragment;
+import quickbeer.android.features.main.fragments.BeerListFragment;
 import quickbeer.android.features.main.fragments.BeerSearchFragment;
 import quickbeer.android.features.main.fragments.BeerTabFragment;
 import quickbeer.android.features.main.fragments.BeersInCountryFragment;
@@ -36,6 +37,8 @@ public interface FragmentComponent {
     void inject(MainFragment mainFragment);
 
     void inject(BeerTabFragment beerTabFragment);
+
+    void inject(BeerListFragment beerListFragment);
 
     void inject(BeerSearchFragment beerSearchFragment);
 

@@ -26,6 +26,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -61,6 +62,7 @@ public class BeerSearchViewModel extends BeerListViewModel {
         return get(searchViewViewModel)
                 .getQueryStream()
                 .startWith(initialQuery)
+                .distinctUntilChanged()
                 .filter(StringUtils::hasValue)
                 .doOnNext(query -> Timber.d("query(%s)", query))
                 .switchMap(query -> get(getBeerSearch).call(query));

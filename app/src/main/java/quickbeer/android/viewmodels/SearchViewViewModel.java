@@ -25,6 +25,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import polanski.option.Option;
+import quickbeer.android.core.viewmodel.SimpleViewModel;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
@@ -34,7 +36,7 @@ import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.none;
 import static polanski.option.Option.ofObj;
 
-public class SearchViewViewModel {
+public class SearchViewViewModel extends SimpleViewModel {
 
     @Inject
     DataLayer.GetBeerSearchQueries getBeerSearchQueries;

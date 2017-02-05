@@ -26,17 +26,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BaseFragment;
+import quickbeer.android.core.fragment.BindingBaseFragment;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.features.main.MainViewAdapter;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.viewmodels.SearchViewViewModel;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BindingBaseFragment {
 
     @Nullable
     @BindView(R.id.view_pager)
@@ -46,8 +58,30 @@ public class MainFragment extends BaseFragment {
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
 
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
+
+    @Nullable
+    @Inject
+    ResourceProvider resourceProvider;
+
+    @Nullable
+    @Inject
+    SearchViewViewModel searchViewViewModel;
+
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(viewModel().getQueryStream()
+                    .subscribe(query -> get(navigationProvider).triggerSearch(query),
+                            Timber::e));
+        }
+    };
 
     @Override
     protected void inject() {
@@ -62,6 +96,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         unbinder.setIfNone(bind(this, view));
     }
 
@@ -71,6 +106,9 @@ public class MainFragment extends BaseFragment {
 
         get(viewPager).setAdapter(new MainViewAdapter(getChildFragmentManager(), getContext()));
         get(tabLayout).setupWithViewPager(viewPager);
+
+        viewModel().setSearchHint(get(resourceProvider)
+                .getString(R.string.search_box_hint_search_beers));
     }
 
     @Override
@@ -78,5 +116,17 @@ public class MainFragment extends BaseFragment {
         unbinder.getAndClear()
                 .ifSome(Unbinder::unbind);
         super.onDestroyView();
+    }
+
+    @NonNull
+    @Override
+    protected SearchViewViewModel viewModel() {
+        return get(searchViewViewModel);
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

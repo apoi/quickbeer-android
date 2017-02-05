@@ -31,6 +31,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.DrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -55,36 +56,16 @@ public class MainActivity extends DrawerActivity {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
-    @Nullable
-    @Inject
-    MainActivityViewModel mainActivityViewModel;
-
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription s) {
-            s.add(get(searchViewViewModel).getQueryStream()
-                    .doOnNext(query -> Timber.d("query(" + query + ")"))
-                    .subscribe(query -> triggerSearch(query),
-                            Timber::e));
-
-            s.add(get(searchViewViewModel).getSearchQueriesOnceAndStream()
+            s.add(viewModel().getSearchQueriesOnceAndStream()
                     .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
                     .subscribe(query -> get(searchView).updateQueryList(query),
                             Timber::e));
-
-            s.add(viewModel().searchHintStream()
-                    .subscribe(value -> get(searchViewViewModel).setSearchHint(value),
-                            Timber::e));
         }
     };
-
-    private void triggerSearch(@NonNull final String query) {
-        Bundle bundle = new Bundle();
-        bundle.putString("query", query);
-
-        get(navigationProvider).addPage(Page.BEER_SEARCH, bundle);
-    }
 
     @Override
     public void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -116,8 +97,8 @@ public class MainActivity extends DrawerActivity {
 
     @NonNull
     @Override
-    protected MainActivityViewModel viewModel() {
-        return get(mainActivityViewModel);
+    protected SearchViewViewModel viewModel() {
+        return get(searchViewViewModel);
     }
 
     @NonNull
@@ -136,7 +117,6 @@ public class MainActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(mainActivityViewModel).navigateTo(menuItem);
     }
 
     @Override

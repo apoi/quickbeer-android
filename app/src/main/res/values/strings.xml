@@ -10,8 +10,10 @@
     <string name="search_too_short">Query needs to be at least four characters</string>
 
     <string name="beer_details_reviews">Reviews</string>
+
     <string name="search_status_loading">Searching...</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>
+    <string name="search_no_beers">No results, how curious!</string>
 
     <string name="tab_beers">Beers</string>
     <string name="tab_brewers">Brewers</string>

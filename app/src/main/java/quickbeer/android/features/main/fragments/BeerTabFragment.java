@@ -39,6 +39,13 @@ public class BeerTabFragment extends BeerListFragment {
         return R.layout.beer_tab_fragment;
     }
 
+    @Override
+    protected void inject() {
+        super.inject();
+
+        getComponent().inject(this);
+    }
+
     @NonNull
     @Override
     protected BeerListViewModel viewModel() {
@@ -46,7 +53,7 @@ public class BeerTabFragment extends BeerListFragment {
     }
 
     @Override
-    protected void inject() {
-        getComponent().inject(this);
+    protected void onQuery(@NonNull String query) {
+        // Doesn't react to search view.
     }
 }

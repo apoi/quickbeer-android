@@ -32,7 +32,7 @@ import quickbeer.android.R;
 import quickbeer.android.adapters.BeerListAdapter;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BeerViewModel;
-import quickbeer.android.viewmodels.NetworkViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;
@@ -97,7 +97,7 @@ public class BeerListView extends FrameLayout {
         get(beerListAdapter).set(get(beers));
     }
 
-    public void setProgressStatus(@NonNull final NetworkViewModel.ProgressStatus progressStatus) {
+    public void setProgressStatus(@NonNull final ProgressStatus progressStatus) {
         checkNotNull(searchStatusTextView);
 
         switch (progressStatus) {
@@ -107,8 +107,11 @@ public class BeerListView extends FrameLayout {
             case ERROR:
                 searchStatusTextView.setText(R.string.search_status_error);
                 break;
-            case IDLE:
+            case VALUE:
                 searchStatusTextView.setText("");
+                break;
+            case EMPTY:
+                searchStatusTextView.setText(R.string.search_no_beers);
                 break;
         }
     }
