@@ -18,61 +18,62 @@
 package quickbeer.android.views.viewholders;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.core.viewmodel.viewholder.BaseBindingViewHolder;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.Score;
 import quickbeer.android.viewmodels.BeerViewModel;
-import quickbeer.android.views.viewbinders.BeerViewBinder;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-/**
- * View holder for beer list items
- */
-public class BeerViewHolder extends RecyclerView.ViewHolder {
-    private BeerViewModel viewModel;
-    private BeerViewBinder viewBinder;
-    private final TextView ratingTextView;
-    private final TextView nameTextView;
-    private final TextView styleTextView;
-    private final TextView brewerTextView;
+public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
 
-    public BeerViewHolder(View view, View.OnClickListener onClickListener) {
+    @BindView(R.id.beer_stars)
+    TextView ratingTextView;
+
+    @BindView(R.id.beer_name)
+    TextView nameTextView;
+
+    @BindView(R.id.beer_style)
+    TextView styleTextView;
+
+    @BindView(R.id.brewer_name)
+    TextView brewerTextView;
+
+    @NonNull
+    private final DataBinder viewDataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription disposables) {
+            disposables.add(get(getViewModel())
+                    .getBeer()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(BeerViewHolder.this::setBeer, Timber::e));
+
+        }
+    };
+
+    public BeerViewHolder(@NonNull View view,
+                          @NonNull View.OnClickListener onClickListener) {
         super(view);
 
-        this.ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
-        this.nameTextView = (TextView) view.findViewById(R.id.beer_name);
-        this.styleTextView = (TextView) view.findViewById(R.id.beer_style);
-        this.brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
-
+        ButterKnife.bind(this, view);
         view.setOnClickListener(onClickListener);
     }
 
-    public void bind(@NonNull final BeerViewModel viewModel) {
-        clear();
-
-        this.viewModel = get(viewModel);
-        this.viewModel.subscribeToDataStore();
-
-        this.viewBinder = new BeerViewBinder(this, viewModel);
-        this.viewBinder.bind();
-    }
-
-    public void unbind() {
-        if (this.viewBinder != null) {
-            this.viewBinder.unbind();
-            this.viewBinder = null;
-        }
-
-        if (this.viewModel != null) {
-            this.viewModel.unsubscribeFromDataStore();
-            this.viewModel.dispose();
-            this.viewModel = null;
-        }
+    @Override
+    @NonNull
+    public DataBinder getViewDataBinder() {
+        return viewDataBinder;
     }
 
     public void setBeer(@NonNull final Beer beer) {

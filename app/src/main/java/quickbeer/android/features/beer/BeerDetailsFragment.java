@@ -18,6 +18,7 @@
 package quickbeer.android.features.beer;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,29 +26,62 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import at.favre.lib.dali.Dali;
+import butterknife.BindView;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
-import quickbeer.android.core.fragment.BaseFragment;
-import quickbeer.android.data.DataLayer;
-import quickbeer.android.viewmodels.BeerViewModel;
-import quickbeer.android.viewmodels.ReviewListViewModel;
+import quickbeer.android.core.fragment.BindingBaseFragment;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.views.BeerDetailsView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
-public class BeerDetailsFragment extends BaseFragment {
+import static butterknife.ButterKnife.bind;
+import static io.reark.reark.utils.Preconditions.get;
 
-    private BeerViewModel beerViewModel;
-    private BeerDetailsView.BeerViewBinder beerViewBinder;
+public class BeerDetailsFragment extends BindingBaseFragment {
 
-    private ReviewListViewModel reviewListViewModel;
-    private BeerDetailsView.ReviewListViewBinder reviewListViewBinder;
+    @BindView(R.id.beer_details_view)
+    BeerDetailsView detailsView;
 
     @Inject
-    DataLayer.GetBeer getBeer;
+    Dali dali;
 
     @Inject
-    DataLayer.GetReviews getReviews;
+    @Nullable
+    BeerDetailsViewModel beerDetailsViewModel;
 
-    @Inject
-    DataLayer.GetReview getReview;
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            ConnectableObservable<Beer> beerObservable = viewModel()
+                    .getBeer()
+                    .subscribeOn(Schedulers.computation())
+                    .publish();
+
+            subscription.add(beerObservable
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(detailsView::setBeer, Timber::e));
+
+            subscription.add(beerObservable.connect());
+
+            subscription.add(viewModel()
+                    .getReviews()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(detailsView::setReviews, Timber::e));
+        }
+    };
 
     @Override
     protected void inject() {
@@ -60,49 +94,36 @@ public class BeerDetailsFragment extends BaseFragment {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder.setIfNone(bind(this, view));
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         int beerId = ((BeerDetailsActivity) getActivity()).getBeerId();
-        BeerDetailsView detailsView = (BeerDetailsView) getView().findViewById(R.id.beer_details_view);
 
-        beerViewModel = new BeerViewModel(beerId, getBeer);
-        beerViewModel.subscribeToDataStore();
-        beerViewBinder = new BeerDetailsView.BeerViewBinder(detailsView, beerViewModel);
-
-        reviewListViewModel = new ReviewListViewModel(beerId, getReviews, getReview);
-        reviewListViewModel.subscribeToDataStore();
-        reviewListViewBinder = new BeerDetailsView.ReviewListViewBinder(detailsView, reviewListViewModel);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        beerViewBinder.bind();
-        reviewListViewBinder.bind();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        beerViewBinder.unbind();
-        reviewListViewBinder.unbind();
+        viewModel().setBeerId(beerId);
     }
 
     @Override
     public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
         super.onDestroyView();
-        beerViewModel.unsubscribeFromDataStore();
-        reviewListViewModel.unsubscribeFromDataStore();
     }
 
+    @NonNull
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        beerViewModel.dispose();
-        beerViewModel = null;
+    protected BeerDetailsViewModel viewModel() {
+        return get(beerDetailsViewModel);
+    }
 
-        reviewListViewModel.dispose();
-        reviewListViewModel = null;
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }

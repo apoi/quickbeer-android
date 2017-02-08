@@ -59,7 +59,6 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
 
     @Override
     protected void bind(@NonNull final CompositeSubscription subscription) {
-
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
                 sourceObservable()
                         .publish();

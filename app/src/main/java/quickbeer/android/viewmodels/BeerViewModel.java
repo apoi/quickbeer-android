@@ -18,8 +18,10 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
@@ -32,7 +34,7 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerViewModel extends BaseViewModel {
+public class BeerViewModel extends NetworkViewModel<Beer> {
 
     @NonNull
     private final DataLayer.GetBeer getBeer;
@@ -40,9 +42,13 @@ public class BeerViewModel extends BaseViewModel {
     @NonNull
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
 
-    private final int beerId;
+    private int beerId;
 
-    public BeerViewModel(final int beerId, @NonNull final DataLayer.GetBeer getBeer) {
+    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer) {
+        this.getBeer = get(getBeer);
+    }
+
+    public BeerViewModel(int beerId, @NonNull DataLayer.GetBeer getBeer) {
         this.beerId = beerId;
         this.getBeer = get(getBeer);
     }
@@ -51,13 +57,17 @@ public class BeerViewModel extends BaseViewModel {
         return beerId;
     }
 
+    public void setBeerId(int beerId) {
+        this.beerId = beerId;
+    }
+
     @NonNull
     public Observable<Beer> getBeer() {
         return beer.asObservable();
     }
 
     @Override
-    public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
+    protected void bind(@NonNull CompositeSubscription subscription) {
         Timber.v("subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<Beer>> beerSource =
@@ -66,18 +76,22 @@ public class BeerViewModel extends BaseViewModel {
                         .flatMap(getBeer::call)
                         .publish();
 
-        compositeSubscription.add(beerSource
+        subscription.add(beerSource
                 .map(toProgressStatus())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::setNetworkStatusText));
+                .subscribe(this::setProgressStatus, Timber::e));
 
-        compositeSubscription.add(beerSource
+        subscription.add(beerSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Timber.d("Beer get finished"))
-                .subscribe(beer::onNext));
+                .subscribe(beer::onNext, Timber::e));
 
-        compositeSubscription.add(beerSource
+        subscription.add(beerSource
                 .connect());
+    }
+
+    @Override
+    protected boolean hasValue(@Nullable Beer item) {
+        return true;
     }
 }

@@ -18,6 +18,7 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,49 +36,36 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class ReviewListViewModel extends BaseViewModel {
+public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
 
+    @NonNull
     private final DataLayer.GetReviews getReviews;
+
+    @NonNull
     private final DataLayer.GetReview getReview;
 
+    @NonNull
     private final BehaviorSubject<List<Review>> reviews = BehaviorSubject.create();
-    private final int beerId;
 
-    public ReviewListViewModel(final int beerId,
-                               @NonNull final DataLayer.GetReviews getReviews,
+    private int beerId;
+
+    public ReviewListViewModel(@NonNull final DataLayer.GetReviews getReviews,
                                @NonNull final DataLayer.GetReview getReview) {
         this.getReviews = get(getReviews);
         this.getReview = get(getReview);
+    }
+
+    public int getBeerId() {
+        return beerId;
+    }
+
+    public void setBeerId(int beerId) {
         this.beerId = beerId;
     }
 
     @NonNull
     public Observable<List<Review>> getReviews() {
         return reviews.asObservable();
-    }
-
-    @Override
-    public void subscribeToDataStoreInternal(@NonNull final CompositeSubscription compositeSubscription) {
-        Timber.v("subscribeToDataStoreInternal");
-
-        ConnectableObservable<DataStreamNotification<ItemList<Integer>>> reviewSource =
-                getReviews.call(beerId).publish();
-
-        compositeSubscription.add(reviewSource
-                .map(toProgressStatus())
-                .subscribe(this::setNetworkStatusText));
-
-        compositeSubscription.add(reviewSource
-                .filter(DataStreamNotification::isOnNext)
-                .map(DataStreamNotification::getValue)
-                .doOnNext(search -> Timber.d("Review get finished"))
-                .map(ItemList<Integer>::getItems)
-                .flatMap(toReviewList())
-                .doOnNext(list -> Timber.d("Publishing " + list.size() + " reviews from the view model"))
-                .subscribe(reviews::onNext));
-
-        compositeSubscription.add(reviewSource
-                .connect());
     }
 
     @NonNull
@@ -94,5 +82,34 @@ public class ReviewListViewModel extends BaseViewModel {
                 .call(get(reviewId))
                 .compose(quickbeer.android.rx.RxUtils::pickValue)
                 .doOnNext((review) -> Timber.v("Received review " + review.id()));
+    }
+
+    @Override
+    protected void bind(@NonNull CompositeSubscription subscription) {
+        Timber.v("subscribeToDataStoreInternal");
+
+        ConnectableObservable<DataStreamNotification<ItemList<Integer>>> reviewSource =
+                getReviews.call(beerId).publish();
+
+        subscription.add(reviewSource
+                .map(toStaticProgressStatus())
+                .subscribe(this::setProgressStatus));
+
+        subscription.add(reviewSource
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .doOnNext(search -> Timber.d("Review get finished"))
+                .map(ItemList<Integer>::getItems)
+                .flatMap(toReviewList())
+                .doOnNext(list -> Timber.d("Publishing " + list.size() + " reviews from the view model"))
+                .subscribe(reviews::onNext));
+
+        subscription.add(reviewSource
+                .connect());
+    }
+
+    @Override
+    protected boolean hasValue(@Nullable ItemList<Review> item) {
+        return !get(item).getItems().isEmpty();
     }
 }

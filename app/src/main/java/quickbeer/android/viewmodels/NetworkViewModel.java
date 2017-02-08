@@ -69,6 +69,21 @@ public abstract class NetworkViewModel<T> extends quickbeer.android.core.viewmod
         };
     }
 
+    @NonNull
+    static <T> Func1<DataStreamNotification<T>, ProgressStatus> toStaticProgressStatus() {
+        return notification -> {
+            if (notification.isFetchingStart()) {
+                return ProgressStatus.LOADING;
+            } else if (notification.isFetchingError()) {
+                return ProgressStatus.ERROR;
+            } else if (notification.isOnNext()) {
+                return ProgressStatus.VALUE;
+            } else {
+                return ProgressStatus.EMPTY;
+            }
+        };
+    }
+
     protected abstract boolean hasValue(@Nullable final T item);
 
 }

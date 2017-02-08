@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
+package quickbeer.android.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -23,6 +23,8 @@ import android.graphics.Color;
 import android.graphics.Rect;
 
 import com.squareup.picasso.Transformation;
+
+import java.util.Locale;
 
 import rx.functions.Func1;
 
@@ -46,7 +48,7 @@ public class ContainerLabelExtractor implements Transformation {
 
     @Override
     public String key() {
-        return String.format("label-%d-%d", this.width, this.height);
+        return String.format(Locale.ROOT, "label-%d-%d", this.width, this.height);
     }
 
     private static Bitmap getLabel(final Bitmap source, int width, int height) {

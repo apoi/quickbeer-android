@@ -49,11 +49,11 @@ public class BeerDetailsView extends FrameLayout {
         super(context, attrs);
     }
 
-    private void setBeer(@NonNull final Beer beer) {
+    public void setBeer(@NonNull final Beer beer) {
         get(beerDetailsAdapter).setBeer(get(beer));
     }
 
-    private void setReviews(@NonNull final List<Review> reviews) {
+    public void setReviews(@NonNull final List<Review> reviews) {
         get(beerDetailsAdapter).setReviews(get(reviews));
     }
 
@@ -67,47 +67,5 @@ public class BeerDetailsView extends FrameLayout {
         beerDetailsListView.setHasFixedSize(true);
         beerDetailsListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beerDetailsListView.setAdapter(beerDetailsAdapter);
-    }
-
-    /**
-     * View binder between BeerViewModel and the BeerDetailsView
-     */
-    public static class BeerViewBinder extends RxViewBinder {
-        private final BeerDetailsView view;
-        private final BeerViewModel viewModel;
-
-        public BeerViewBinder(@NonNull final BeerDetailsView view,
-                              @NonNull final BeerViewModel viewModel) {
-            this.view = get(view);
-            this.viewModel = get(viewModel);
-        }
-
-        @Override
-        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel.getBeer()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::setBeer));
-        }
-    }
-
-    /**
-     * View binder between ReviewListViewModel and the BeerDetailsView
-     */
-    public static class ReviewListViewBinder extends RxViewBinder {
-        private final BeerDetailsView view;
-        private final ReviewListViewModel viewModel;
-
-        public ReviewListViewBinder(@NonNull final BeerDetailsView view,
-                                    @NonNull final ReviewListViewModel viewModel) {
-            this.view = get(view);
-            this.viewModel = get(viewModel);
-        }
-
-        @Override
-        protected void bindInternal(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel.getReviews()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::setReviews));
-        }
     }
 }

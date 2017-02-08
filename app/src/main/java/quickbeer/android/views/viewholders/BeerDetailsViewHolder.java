@@ -20,7 +20,7 @@ package quickbeer.android.views.viewholders;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,9 +28,11 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.utils.ContainerLabelExtractor;
+import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.utils.Score;
 import quickbeer.android.utils.StringUtils;
 
@@ -40,26 +42,34 @@ import static io.reark.reark.utils.Preconditions.checkNotNull;
  * View holder for all the beer details
  */
 public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
-    private final TextView ratingTextView;
-    private final TextView nameTextView;
-    private final TextView styleTextView;
-    private final TextView abvTextView;
-    private final TextView brewerTextView;
-    private final TextView locationTextView;
-    private final TextView descriptionTextView;
-    private final ImageView imageView;
 
-    public BeerDetailsViewHolder(View view) {
+    @BindView(R.id.beer_stars)
+    TextView ratingTextView;
+
+    @BindView(R.id.beer_name)
+    TextView nameTextView;
+
+    @BindView(R.id.beer_style)
+    TextView styleTextView;
+
+    @BindView(R.id.beer_abv)
+    TextView abvTextView;
+
+    @BindView(R.id.brewer_name)
+    TextView brewerTextView;
+
+    @BindView(R.id.brewer_location)
+    TextView locationTextView;
+
+    @BindView(R.id.beer_description)
+    TextView descriptionTextView;
+
+    @BindView(R.id.beer_details_image)
+    ImageView imageView;
+
+    public BeerDetailsViewHolder(@NonNull View view) {
         super(view);
-
-        ratingTextView = (TextView) view.findViewById(R.id.beer_stars);
-        nameTextView = (TextView) view.findViewById(R.id.beer_name);
-        styleTextView = (TextView) view.findViewById(R.id.beer_style);
-        abvTextView = (TextView) view.findViewById(R.id.beer_abv);
-        brewerTextView = (TextView) view.findViewById(R.id.brewer_name);
-        locationTextView = (TextView) view.findViewById(R.id.brewer_location);
-        descriptionTextView = (TextView) view.findViewById(R.id.beer_description);
-        imageView = (ImageView) view.findViewById(R.id.beer_details_image);
+        ButterKnife.bind(this, view);
     }
 
     public void setBeer(@NonNull final Beer beer) {
@@ -80,7 +90,8 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
         locationTextView.setText("TODO data from brewer");
         descriptionTextView.setText(StringUtils.value(beer.description(), "No description available."));
 
-        imageView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        imageView.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
+            @Override
             public boolean onPreDraw() {
                 imageView.getViewTreeObserver().removeOnPreDrawListener(this);
 

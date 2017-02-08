@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.features.beer.BeerDetailsViewModel;
 
 @Module
 public final class ViewModelModule {
@@ -46,6 +47,14 @@ public final class ViewModelModule {
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetTopBeers getTopBeers) {
         return new TopBeersViewModel(getBeer, getTopBeers);
+    }
+
+    @Provides
+    static BeerDetailsViewModel providesBeerDetailsViewModel(
+            @NonNull final DataLayer.GetBeer getBeer,
+            @NonNull final DataLayer.GetReviews getReviews,
+            @NonNull final DataLayer.GetReview getReview) {
+        return new BeerDetailsViewModel(getBeer, getReviews, getReview);
     }
 
 }

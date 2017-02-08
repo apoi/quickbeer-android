@@ -21,10 +21,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+
+import com.squareup.picasso.Callback.EmptyCallback;
+import com.squareup.picasso.Picasso;
+
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import javax.inject.Inject;
 
+import at.favre.lib.dali.Dali;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.DrawerActivity;
@@ -37,6 +49,8 @@ import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.features.main.MainActivity;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.transformations.BlurTransformation;
+import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
@@ -48,7 +62,11 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsActivity extends DrawerActivity {
 
-    private int beerId;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout collapsingToolbar;
+
+    @BindView(R.id.collapsing_toolbar_background)
+    ImageView imageView;
 
     @Inject
     @Nullable
@@ -66,29 +84,36 @@ public class BeerDetailsActivity extends DrawerActivity {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
+    @Nullable
+    @Inject
+    Picasso picasso;
+
+    @Nullable
+    @Inject
+    Dali dali;
+
+    private int beerId;
+
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            ConnectableObservable<DataStreamNotification<Beer>> sourceObservable =
-                    get(getBeer).call(beerId).publish();
+            ConnectableObservable<Beer> sourceObservable = get(getBeer)
+                    .call(beerId)
+                    .filter(DataStreamNotification::isOnNext)
+                    .map(DataStreamNotification::getValue)
+                    .first()
+                    .publish();
 
             // Update beer access date
             subscription.add(sourceObservable
-                    .filter(DataStreamNotification::isOnNext)
-                    .map(DataStreamNotification::getValue)
-                    .first()
                     .map(BeerMetadata::newAccess)
                     .subscribe(get(metadataStore)::put, Timber::e));
 
-            // Set activity title
+            // Set toolbar title
             subscription.add(sourceObservable
-                    .filter(DataStreamNotification::isOnNext)
-                    .map(DataStreamNotification::getValue)
-                    .first()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .map(Beer::name)
-                    .subscribe(BeerDetailsActivity.this::setTitle, Timber::e));
+                    .subscribe(BeerDetailsActivity.this::setToolbarDetails, Timber::e));
 
             subscription.add(sourceObservable
                     .connect());
@@ -101,7 +126,10 @@ public class BeerDetailsActivity extends DrawerActivity {
 
         setContentView(R.layout.beer_details_activity);
 
+        ButterKnife.bind(this);
+
         setupDrawerLayout();
+
         setBackNavigationEnabled(true);
 
         if (savedInstanceState != null) {
@@ -113,6 +141,23 @@ public class BeerDetailsActivity extends DrawerActivity {
                     .add(R.id.container, new BeerDetailsFragment())
                     .commit();
         }
+    }
+
+    private void setToolbarDetails(@NonNull Beer beer) {
+        collapsingToolbar.setTitle(beer.name());
+
+        get(picasso)
+                .load(beer.getImageUri())
+                .transform(new ContainerLabelExtractor(300, 300))
+                .transform(new BlurTransformation(getApplicationContext(), 15))
+                .into(imageView, new EmptyCallback() {
+                    @Override
+                    public void onSuccess() {
+                        findViewById(R.id.toolbar_overlay_gradient).setVisibility(View.VISIBLE);
+                        collapsingToolbar.setContentScrimColor(
+                                ContextCompat.getColor(BeerDetailsActivity.this, R.color.gray_900));
+                    }
+                });
     }
 
     @Override
