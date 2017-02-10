@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
-import at.favre.lib.dali.Dali;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
@@ -49,9 +48,6 @@ public class BeerDetailsFragment extends BindingBaseFragment {
 
     @BindView(R.id.beer_details_view)
     BeerDetailsView detailsView;
-
-    @Inject
-    Dali dali;
 
     @Inject
     @Nullable

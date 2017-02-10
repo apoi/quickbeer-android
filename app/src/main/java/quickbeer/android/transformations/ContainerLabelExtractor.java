@@ -40,7 +40,7 @@ public class ContainerLabelExtractor implements Transformation {
 
     @Override
     public Bitmap transform(final Bitmap source) {
-        Bitmap result = getLabel(source, this.width, this.height);
+        Bitmap result = getLabel(source, width, height);
         source.recycle();
 
         return result;
@@ -48,7 +48,7 @@ public class ContainerLabelExtractor implements Transformation {
 
     @Override
     public String key() {
-        return String.format(Locale.ROOT, "label-%d-%d", this.width, this.height);
+        return String.format(Locale.ROOT, "label-%d-%d", width, height);
     }
 
     private static Bitmap getLabel(final Bitmap source, int width, int height) {

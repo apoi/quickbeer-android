@@ -22,10 +22,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback.EmptyCallback;
 import com.squareup.picasso.Picasso;
@@ -34,7 +34,6 @@ import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
 import javax.inject.Inject;
 
-import at.favre.lib.dali.Dali;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reark.reark.data.DataStreamNotification;
@@ -47,6 +46,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
+import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.features.main.MainActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.transformations.BlurTransformation;
@@ -68,6 +68,9 @@ public class BeerDetailsActivity extends DrawerActivity {
     @BindView(R.id.collapsing_toolbar_background)
     ImageView imageView;
 
+    @BindView(R.id.toolbar_overlay_gradient)
+    View overlay;
+
     @Inject
     @Nullable
     DataLayer.GetBeer getBeer;
@@ -87,10 +90,6 @@ public class BeerDetailsActivity extends DrawerActivity {
     @Nullable
     @Inject
     Picasso picasso;
-
-    @Nullable
-    @Inject
-    Dali dali;
 
     private int beerId;
 
@@ -132,6 +131,9 @@ public class BeerDetailsActivity extends DrawerActivity {
 
         setBackNavigationEnabled(true);
 
+        imageView.setOnClickListener(__ ->
+                Toast.makeText(this, R.string.beer_details_no_photo, Toast.LENGTH_SHORT).show());
+
         if (savedInstanceState != null) {
             beerId = savedInstanceState.getInt("beerId");
         } else {
@@ -153,11 +155,16 @@ public class BeerDetailsActivity extends DrawerActivity {
                 .into(imageView, new EmptyCallback() {
                     @Override
                     public void onSuccess() {
-                        findViewById(R.id.toolbar_overlay_gradient).setVisibility(View.VISIBLE);
-                        collapsingToolbar.setContentScrimColor(
-                                ContextCompat.getColor(BeerDetailsActivity.this, R.color.gray_900));
+                        overlay.setVisibility(View.VISIBLE);
+                        imageView.setOnClickListener(__ -> openPhotoView(beer.getImageUri()));
                     }
                 });
+    }
+
+    private void openPhotoView(@NonNull String uri) {
+        Intent intent = new Intent(this, PhotoViewActivity.class);
+        intent.putExtra("source", uri);
+        startActivity(intent);
     }
 
     @Override

@@ -30,6 +30,11 @@
             android:launchMode="singleTask"/>
 
         <activity
+            android:name=".features.photoview.PhotoViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask"/>
+
+        <activity
             android:name=".activity.TickedBeersActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

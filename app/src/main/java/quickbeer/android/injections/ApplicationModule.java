@@ -33,7 +33,6 @@ import com.squareup.picasso.Picasso;
 
 import javax.inject.Singleton;
 
-import at.favre.lib.dali.Dali;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.providers.ResourceProvider;
@@ -77,12 +76,6 @@ public final class ApplicationModule {
     @Singleton
     static Picasso providesPicasso(@ForApplication Context context) {
         return Picasso.with(context);
-    }
-
-    @Provides
-    @Singleton
-    static Dali providesDali(@ForApplication Context context) {
-        return Dali.create(context);
     }
 
     @Provides
