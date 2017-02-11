@@ -139,7 +139,7 @@ public class BeerDetailsActivity extends DrawerActivity {
             beerId = getIntent().getIntExtra("beerId", 0);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BeerDetailsFragment())
+                    .add(R.id.container, new BeerPagerFragment())
                     .commit();
         }
     }

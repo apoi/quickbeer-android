@@ -65,12 +65,12 @@ public class BeerDetailsAdapter extends BaseListAdapter {
     }
 
     public Review getItem(int position) {
-        return reviews.get(position - 1);
+        return reviews.get(position - (beer == null ? 0 : 1));
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) {
+        if (position == 0 && beer != null) {
             return ItemType.BEER.ordinal();
         } else {
             return ItemType.REVIEW.ordinal();

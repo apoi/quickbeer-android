@@ -15,13 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.beer;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,37 +33,23 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.main.MainViewAdapter;
-import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.providers.ResourceProvider;
-import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.views.BeerDetailsView;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class MainFragment extends BindingBaseFragment {
+public class BeerReviewsFragment extends BindingBaseFragment {
 
-    @Nullable
-    @BindView(R.id.view_pager)
-    ViewPager viewPager;
+    @BindView(R.id.beer_details_view)
+    BeerDetailsView detailsView;
 
-    @Nullable
-    @BindView(R.id.tab_layout)
-    TabLayout tabLayout;
-
-    @Nullable
     @Inject
-    NavigationProvider navigationProvider;
-
     @Nullable
-    @Inject
-    ResourceProvider resourceProvider;
-
-    @Nullable
-    @Inject
-    SearchViewViewModel searchViewViewModel;
+    BeerDetailsViewModel beerDetailsViewModel;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -74,9 +58,11 @@ public class MainFragment extends BindingBaseFragment {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel().getQueryStream()
-                    .subscribe(query -> get(navigationProvider).triggerSearch(query),
-                            Timber::e));
+            subscription.add(viewModel()
+                    .getReviews()
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(detailsView::setReviews, Timber::e));
         }
     };
 
@@ -87,13 +73,12 @@ public class MainFragment extends BindingBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pager, container, false);
+        return inflater.inflate(R.layout.beer_details_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         unbinder.setIfNone(bind(this, view));
     }
 
@@ -101,11 +86,9 @@ public class MainFragment extends BindingBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        get(viewPager).setAdapter(new MainViewAdapter(getChildFragmentManager(), getContext()));
-        get(tabLayout).setupWithViewPager(viewPager);
+        int beerId = ((BeerDetailsActivity) getActivity()).getBeerId();
 
-        viewModel().setSearchHint(get(resourceProvider)
-                .getString(R.string.search_box_hint_search_beers));
+        viewModel().setBeerId(beerId);
     }
 
     @Override
@@ -117,8 +100,8 @@ public class MainFragment extends BindingBaseFragment {
 
     @NonNull
     @Override
-    protected SearchViewViewModel viewModel() {
-        return get(searchViewViewModel);
+    protected BeerDetailsViewModel viewModel() {
+        return get(beerDetailsViewModel);
     }
 
     @NonNull

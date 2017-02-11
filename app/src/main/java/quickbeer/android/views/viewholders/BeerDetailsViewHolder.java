@@ -63,9 +63,6 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.brewer_location)
     TextView locationTextView;
 
-    @BindView(R.id.brewer_country_flag)
-    ImageView countryFlag;
-
     @BindView(R.id.beer_rating_overall)
     TextView overallRatingTextView;
 
@@ -165,11 +162,5 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .map(value -> String.valueOf(Math.round(value)))
                 .orOption(() -> na)
                 .ifSome(ibuTextView::setText);
-
-        ofObj(beer.countryId())
-                .map(countries::getItem)
-                .map(Country::getFlagResourceName)
-                .map(resourceProvider::getDrawableIdentifier)
-                .ifSome(countryFlag::setImageResource);
     }
 }
