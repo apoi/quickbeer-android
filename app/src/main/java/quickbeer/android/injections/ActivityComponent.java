@@ -23,7 +23,9 @@ import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.features.beer.BeerDetailsActivity;
 import quickbeer.android.features.home.HomeActivity;
+import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
+import quickbeer.android.views.viewholders.BeerDetailsViewHolder;
 
 @ActivityScope
 @Subcomponent(modules = ActivityModule.class)
@@ -31,7 +33,7 @@ public interface ActivityComponent {
 
     FragmentComponent plusFragment(FragmentModule fragmentModule);
 
-    void inject(HomeActivity homeActivity);
+    void inject(ListActivity listActivity);
 
     void inject(InjectingBaseActivity baseActivity);
 
@@ -42,5 +44,7 @@ public interface ActivityComponent {
     void inject(BeerDetailsActivity beerDetailsActivity);
 
     void inject(PhotoViewActivity photoViewActivity);
+
+    void inject(BeerDetailsViewHolder view);
 
 }

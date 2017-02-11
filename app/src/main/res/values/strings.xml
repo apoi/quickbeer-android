@@ -10,7 +10,7 @@
     <string name="search_too_short">Search should be at least four characters</string>
 
     <string name="beer_details_reviews">Reviews</string>
-    <string name="beer_details_no_photo">No photo available for beer</string>
+    <string name="beer_details_no_photo">No photo available for this beer</string>
 
     <string name="search_status_loading">Searching…</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>

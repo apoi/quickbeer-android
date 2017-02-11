@@ -18,12 +18,12 @@
 package quickbeer.android.views.viewholders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,13 +34,17 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import polanski.option.Option;
-import quickbeer.android.QuickBeer;
 import quickbeer.android.R;
+import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Country;
+import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
@@ -57,11 +61,20 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.beer_style)
     TextView styleTextView;
 
+    @BindView(R.id.beer_style_row)
+    View styleRow;
+
     @BindView(R.id.brewer_name)
     TextView brewerTextView;
 
+    @BindView(R.id.brewer_name_row)
+    View brewerNameRow;
+
     @BindView(R.id.brewer_location)
     TextView locationTextView;
+
+    @BindView(R.id.brewer_location_row)
+    View brewerLocationRow;
 
     @BindView(R.id.beer_rating_overall)
     TextView overallRatingTextView;
@@ -105,8 +118,8 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
         context = view.getContext();
 
-        ((QuickBeer) context.getApplicationContext())
-                .graph()
+        ((InjectingBaseActivity) context)
+                .getComponent()
                 .inject(this);
 
         overallRatingColumn.setOnClickListener(__ ->
@@ -133,13 +146,20 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
         Option<String> na = ofObj(get(resourceProvider).getString(R.string.not_available));
 
-        descriptionTextView.setText(StringUtils.value(beer.description(),
+        descriptionTextView.setText(
+                StringUtils.value(beer.description(),
                 resourceProvider.getString(R.string.no_description)));
 
         styleTextView.setText(beer.styleName());
-
         brewerTextView.setText(beer.brewerName());
-        locationTextView.setText("Kerava, Finland");
+
+        ofObj(beer.countryId())
+                .map(countries::getItem)
+                .ifSome(country -> brewerLocationRow.setOnClickListener(
+                        __ -> navigateToCountry(country)))
+                .map(Country::getName)
+                .orOption(() -> na)
+                .ifSome(locationTextView::setText);
 
         ofObj(beer.overallRating())
                 .filter(value -> value > 0)
@@ -162,5 +182,26 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .map(value -> String.valueOf(Math.round(value)))
                 .orOption(() -> na)
                 .ifSome(ibuTextView::setText);
+
+        styleRow.setOnClickListener(__ -> navigateToStyle(beer.styleId()));
+        //brewerNameRow.setOnClickListener(__ -> navigateToStyle(beer.brewerId()));
+    }
+
+    private void navigateToStyle(@Nullable final Integer styleId) {
+        Timber.d("navigateToStyle(%s)", styleId);
+
+        Intent intent = new Intent(context, ListActivity.class);
+        intent.putExtra(NavigationProvider.PAGE_KEY, Page.STYLE.ordinal());
+        intent.putExtra("style", String.valueOf(styleId));
+        context.startActivity(intent);
+    }
+
+    private void navigateToCountry(@NonNull final Country country) {
+        Timber.d("navigateToCountry(%s)", country.getName());
+
+        Intent intent = new Intent(context, ListActivity.class);
+        intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
+        intent.putExtra("country", String.valueOf(country.getId()));
+        context.startActivity(intent);
     }
 }

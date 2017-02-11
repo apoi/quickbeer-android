@@ -17,6 +17,7 @@
  */
 package quickbeer.android.providers;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,11 +30,11 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import quickbeer.android.R;
+import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
 import quickbeer.android.features.list.fragments.BeersInStyleFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
-import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
 import timber.log.Timber;
@@ -43,6 +44,10 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public final class NavigationProvider {
 
+    public static final String NAVIGATION_KEY = "menuNavigationId";
+
+    public static final String PAGE_KEY = "pageNavigationId";
+
     public enum Page {
         HOME,
         BEER_SEARCH,
@@ -50,7 +55,11 @@ public final class NavigationProvider {
         COUNTRY_LIST,
         COUNTRY,
         STYLE_LIST,
-        STYLE
+        STYLE;
+
+        static Page from(int index) {
+            return Page.values()[index];
+        }
     }
 
     @NonNull
@@ -67,26 +76,11 @@ public final class NavigationProvider {
     }
 
     public void addPage(int menuNavigationId) {
-        switch (menuNavigationId) {
-            case R.id.nav_main:
-                addPage(Page.HOME);
-                break;
-            case R.id.nav_ticks:
-                //startActivity(new Intent(this, TickedBeersActivity.class));
-                break;
-            case R.id.nav_best:
-                addPage(Page.TOP_BEERS);
-                break;
-            case R.id.nav_countries:
-                addPage(Page.COUNTRY_LIST);
-                break;
-            case R.id.nav_styles:
-                addPage(Page.STYLE_LIST);
-                break;
-            case R.id.nav_about:
-            default:
-                break;
-        }
+        addPage(toPage(menuNavigationId), null);
+    }
+
+    public void addPage(int menuNavigationId, @Nullable Bundle arguments) {
+        addPage(toPage(menuNavigationId), arguments);
     }
 
     public void addPage(@NonNull final Page page) {
@@ -97,15 +91,40 @@ public final class NavigationProvider {
         transaction(page, arguments, true);
     }
 
-    public void replacePage(@NonNull final Page page) {
-        transaction(page, null, false);
-    }
-
     public void clearToPage(int menuNavigationId) {
         activity.getSupportFragmentManager()
                 .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         addPage(menuNavigationId);
+    }
+
+    public static boolean intentHasNavigationTarget(@NonNull Intent intent) {
+        return intent.hasExtra(NAVIGATION_KEY) || intent.hasExtra(PAGE_KEY);
+    }
+
+    public void navigateWithIntent(@NonNull Intent intent) {
+        Page page = intent.hasExtra(NAVIGATION_KEY)
+                ? toPage(intent.getIntExtra(NAVIGATION_KEY, 0))
+                : Page.from(intent.getIntExtra(PAGE_KEY, Page.HOME.ordinal()));
+
+        Bundle arguments = getArguments(intent);
+
+        addPage(page, arguments);
+    }
+
+    @NonNull
+    private static Bundle getArguments(@NonNull Intent intent) {
+        Bundle bundle = new Bundle();
+        setBundleValue(intent, bundle, "country");
+        setBundleValue(intent, bundle, "style");
+
+        return bundle;
+    }
+
+    private static void setBundleValue(@NonNull Intent intent, @NonNull Bundle bundle, @NonNull String key) {
+        if (intent.hasExtra(key)) {
+            bundle.putString(key, intent.getStringExtra(key));
+        }
     }
 
     private void transaction(@NonNull final Page page, @Nullable final Bundle arguments, boolean addToBackStack) {
@@ -120,11 +139,15 @@ public final class NavigationProvider {
                 .replace(container, fragment, page.toString())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
-        if (addToBackStack) {
+        if (hasFragment()) {
             transition = transition.addToBackStack(page.toString());
         }
 
         transition.commit();
+    }
+
+    private boolean hasFragment() {
+        return activity.getSupportFragmentManager().findFragmentById(container) != null;
     }
 
     public boolean canNavigateBack() {
@@ -142,6 +165,22 @@ public final class NavigationProvider {
         bundle.putString("query", query);
 
         addPage(Page.BEER_SEARCH, bundle);
+    }
+
+    @NonNull
+    private static Page toPage(int menuNavigationId) {
+        switch (menuNavigationId) {
+            case R.id.nav_main:
+                return Page.HOME;
+            case R.id.nav_best:
+                return Page.TOP_BEERS;
+            case R.id.nav_countries:
+                return Page.COUNTRY_LIST;
+            case R.id.nav_styles:
+                return Page.STYLE_LIST;
+            default:
+                return Page.HOME;
+        }
     }
 
     private static Fragment toFragment(@NonNull final Page page) {
@@ -164,5 +203,4 @@ public final class NavigationProvider {
 
         return new HomeFragment();
     }
-
 }

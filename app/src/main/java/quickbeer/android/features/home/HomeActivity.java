@@ -17,135 +17,16 @@
  */
 package quickbeer.android.features.home;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import javax.inject.Inject;
-
-import quickbeer.android.R;
-import quickbeer.android.core.activity.DrawerActivity;
-import quickbeer.android.core.viewmodel.DataBinder;
-import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider.Page;
-import quickbeer.android.viewmodels.SearchViewViewModel;
-import quickbeer.android.views.SearchView;
-import rx.subscriptions.CompositeSubscription;
-import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
-import static io.reark.reark.utils.Preconditions.get;
-import static polanski.option.Option.ofObj;
-
-public class HomeActivity extends DrawerActivity {
-
-    @Nullable
-    private SearchView searchView;
-
-    @Nullable
-    @Inject
-    NavigationProvider navigationProvider;
-
-    @Nullable
-    @Inject
-    SearchViewViewModel searchViewViewModel;
-
-    @NonNull
-    private final DataBinder dataBinder = new SimpleDataBinder() {
-        @Override
-        public void bind(@NonNull final CompositeSubscription s) {
-            s.add(viewModel().getSearchQueriesOnceAndStream()
-                    .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
-                    .subscribe(query -> get(searchView).updateQueryList(query),
-                            Timber::e));
-        }
-    };
-
-    @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.home_activity);
-
-        searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
-        searchView.setViewModel(get(searchViewViewModel));
-
-        setupDrawerLayout();
-
-        getSupportFragmentManager().addOnBackStackChangedListener(() ->
-                setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
-
-        ofObj(savedInstanceState)
-                .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))
-                .ifNone(() -> get(navigationProvider).replacePage(Page.HOME));
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        if (intent.hasExtra("menuNavigationId")) {
-            get(navigationProvider).clearToPage(intent.getIntExtra("menuNavigationId", 0));
-        }
-    }
-
-    @Override
-    protected void inject() {
-        getComponent().inject(this);
-    }
+public class HomeActivity extends ListActivity {
 
     @NonNull
     @Override
-    protected SearchViewViewModel viewModel() {
-        return get(searchViewViewModel);
-    }
-
-    @NonNull
-    @Override
-    protected DataBinder dataBinder() {
-        return dataBinder;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        get(searchView).setMenuItem(menu.findItem(R.id.action_search));
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(navigationProvider).clearToPage(menuItem.getItemId());
-    }
-
-    @Override
-    public void onBackPressed() {
-        Timber.d("onBackPressed");
-
-        checkNotNull(searchView);
-        checkNotNull(navigationProvider);
-
-        if (searchView.isSearchViewOpen()) {
-            searchView.closeSearchView();
-        } else if (navigationProvider.canNavigateBack()) {
-            navigationProvider.navigateBack();
-        } else {
-            super.onBackPressed();
-        }
+    protected Page defaultPage() {
+        return Page.HOME;
     }
 }

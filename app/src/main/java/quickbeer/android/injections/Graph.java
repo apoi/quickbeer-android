@@ -42,6 +42,4 @@ public interface Graph {
 
     void inject(NetworkService networkService);
 
-    void inject(BeerDetailsViewHolder view);
-
 }

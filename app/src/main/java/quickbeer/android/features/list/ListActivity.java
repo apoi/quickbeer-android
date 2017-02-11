@@ -39,7 +39,6 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
-import static polanski.option.Option.ofObj;
 
 public class ListActivity extends DrawerActivity {
 
@@ -69,6 +68,9 @@ public class ListActivity extends DrawerActivity {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        checkNotNull(navigationProvider);
+        checkNotNull(searchViewViewModel);
+
         setContentView(R.layout.home_activity);
 
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
@@ -79,17 +81,28 @@ public class ListActivity extends DrawerActivity {
         getSupportFragmentManager().addOnBackStackChangedListener(() ->
                 setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
 
-        ofObj(savedInstanceState)
-                .ifSome(state -> get(searchViewViewModel).setQuery(state.getString("query")))
-                .ifNone(() -> get(navigationProvider).replacePage(Page.HOME));
+        if (NavigationProvider.intentHasNavigationTarget(getIntent())) {
+            navigationProvider.navigateWithIntent(getIntent());
+        } else if (savedInstanceState != null) {
+            searchViewViewModel.setQuery(savedInstanceState.getString("query"));
+        } else {
+            navigationProvider.addPage(defaultPage());
+        }
+    }
+
+    @NonNull
+    protected Page defaultPage() {
+        return Page.BEER_SEARCH;
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        if (intent.hasExtra("menuNavigationId")) {
-            get(navigationProvider).clearToPage(intent.getIntExtra("menuNavigationId", 0));
+        checkNotNull(navigationProvider);
+
+        if (NavigationProvider.intentHasNavigationTarget(intent)) {
+            navigationProvider.navigateWithIntent(intent);
         }
     }
 

@@ -102,6 +102,7 @@
         <include layout="@layout/beer_details_separator_horizontal" />
 
         <LinearLayout
+            android:id="@+id/beer_style_row"
             style="@style/BeerDetailsRowLayout">
 
             <TextView
@@ -118,6 +119,7 @@
         <include layout="@layout/beer_details_separator_horizontal" />
 
         <LinearLayout
+            android:id="@+id/brewer_name_row"
             style="@style/BeerDetailsRowLayout">
 
             <TextView
@@ -134,6 +136,7 @@
         <include layout="@layout/beer_details_separator_horizontal" />
 
         <LinearLayout
+            android:id="@+id/brewer_location_row"
             style="@style/BeerDetailsRowLayout">
 
             <TextView
