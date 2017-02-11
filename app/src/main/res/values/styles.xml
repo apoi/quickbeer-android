@@ -45,7 +45,7 @@
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:fontFamily">sans-serif-smallcaps</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10.5sp</item>
         <item name="android:alpha">0.4</item>
     </style>
 
@@ -56,6 +56,12 @@
 
     <style name="BeerDetailsSubvalue" parent="BeerDetailsDescription">
         <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="BeerDetailsInfoValue" parent="BeerDetailsDescription">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BeerDetailsRowLayout">

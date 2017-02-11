@@ -22,45 +22,65 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.Locale;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static java.lang.String.format;
+import static java.lang.String.valueOf;
 
 /**
  * View holder for reviews in list
  */
 public class ReviewViewHolder extends RecyclerView.ViewHolder {
-    private final TextView ratingTextView;
-    private final TextView descriptionTextView;
-    private final TextView reviewerTextView;
-    private final TextView locationTextView;
+
+    @BindView(R.id.review_appearance)
+    TextView appearance;
+
+    @BindView(R.id.review_aroma)
+    TextView aroma;
+
+    @BindView(R.id.review_flavor)
+    TextView flavor;
+
+    @BindView(R.id.review_mouthfeel)
+    TextView mouthfeel;
+
+    @BindView(R.id.review_overall)
+    TextView overall;
+
+    @BindView(R.id.review_description)
+    TextView description;
+
+    @BindView(R.id.review_user)
+    TextView user;
+
+    @BindView(R.id.review_location)
+    TextView location;
 
     public ReviewViewHolder(View view) {
         super(view);
 
-        this.ratingTextView = (TextView) view.findViewById(R.id.review_rating);
-        this.descriptionTextView = (TextView) view.findViewById(R.id.review_description);
-        this.reviewerTextView = (TextView) view.findViewById(R.id.reviewer);
-        this.locationTextView = (TextView) view.findViewById(R.id.reviewer_location);
+        ButterKnife.bind(this, view);
     }
 
     public void setReview(@NonNull final Review review) {
         checkNotNull(review);
 
-        this.ratingTextView.setText(String.format(Locale.ROOT, "%.1f", review.totalScore()));
-        this.descriptionTextView.setText(review.comments());
-        this.reviewerTextView.setText(String.format("%s @ %s", review.userName(), review.getDate()));
-        this.locationTextView.setText(review.getLocation());
+        appearance.setText(valueOf(review.appearance()));
+        aroma.setText(valueOf(review.aroma()));
+        flavor.setText(valueOf(review.flavor()));
+        mouthfeel.setText(valueOf(review.mouthfeel()));
+        overall.setText(valueOf(review.overall()));
+        description.setText(review.comments());
+        user.setText(format("%s @ %s", review.userName(), review.getDate()));
+        location.setText(review.country());
 
-        if (review.getLocation().isEmpty()) {
-            this.locationTextView.setVisibility(View.GONE);
+        if (!StringUtils.hasValue(review.country())) {
+            location.setVisibility(View.GONE);
         }
-    }
-
-    public void clear() {
-        this.descriptionTextView.setText("");
     }
 }

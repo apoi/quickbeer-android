@@ -1,85 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="7dp"
-    android:paddingBottom="7dp"
-    android:paddingLeft="@dimen/list_item_padding"
-    android:paddingRight="@dimen/list_item_padding"
-    android:orientation="vertical">
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="@color/gray_850"
+    android:elevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/review_rating"
-            android:layout_width="@dimen/beer_list_item_icon_size"
-            android:layout_height="@dimen/beer_list_item_icon_size"
-            android:layout_marginRight="@dimen/list_item_icon_margin_right"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-thin"
-            android:textSize="@dimen/listitem_text_score"
-            android:background="@drawable/score_unrated" />
+        android:layout_margin="15dp"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/beer_details_data_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:gravity="start"
+            style="@style/BeerDetailsRowLayout">
 
-            <View
-                android:layout_width="1px"
-                android:layout_height="match_parent"
-                android:background="@color/gray_700"/>
+            <TextView
+                android:id="@+id/review_description"
+                tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this."
+                android:textAlignment="viewStart"
+                style="@style/BeerDetailsDescription"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            style="@style/BeerDetailsRowLayout">
 
             <LinearLayout
-                android:id="@+id/details_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingLeft="@dimen/beer_details_line_margin"
-                android:orientation="vertical">
+                android:id="@+id/review_appearance_column"
+                style="@style/BeerDetailsColumnLayout">
 
                 <TextView
-                    android:id="@+id/review_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/gray_300"
-                    android:fontFamily="sans-serif-thin"
-                    android:textSize="@dimen/beer_details_info_text" />
+                    style="@style/BeerDetailsTitle"
+                    android:text="Appear."/>
 
                 <TextView
-                    android:id="@+id/reviewer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="7dp"
-                    android:textColor="@color/white"
-                    android:fontFamily="sans-serif"
-                    android:textSize="@dimen/beer_details_info_text"
-                    android:textStyle="italic"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
+                    style="@style/BeerDetailsValue"
+                    android:id="@+id/review_appearance"
+                    tools:text="5"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_vertical" />
+
+            <LinearLayout
+                android:id="@+id/review_aroma_column"
+                style="@style/BeerDetailsColumnLayout">
 
                 <TextView
-                    android:id="@+id/reviewer_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:fontFamily="sans-serif"
-                    android:textSize="@dimen/beer_details_info_text"
-                    android:textStyle="italic"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
+                    style="@style/BeerDetailsTitle"
+                    android:text="Aroma"/>
+
+                <TextView
+                    style="@style/BeerDetailsValue"
+                    android:id="@+id/review_aroma"
+                    tools:text="3"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_vertical" />
+
+            <LinearLayout
+                android:id="@+id/review_flavor_column"
+                style="@style/BeerDetailsColumnLayout">
+
+                <TextView
+                    style="@style/BeerDetailsTitle"
+                    android:text="Flavor"/>
+
+                <TextView
+                    style="@style/BeerDetailsValue"
+                    android:id="@+id/review_flavor"
+                    tools:text="10"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_vertical" />
+
+            <LinearLayout
+                android:id="@+id/review_mouthfeel_column"
+                style="@style/BeerDetailsColumnLayout">
+
+                <TextView
+                    style="@style/BeerDetailsTitle"
+                    android:text="Mouthf."/>
+
+                <TextView
+                    style="@style/BeerDetailsValue"
+                    android:id="@+id/review_mouthfeel"
+                    tools:text="8"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_vertical" />
+
+            <LinearLayout
+                android:id="@+id/review_overall_column"
+                style="@style/BeerDetailsColumnLayout">
+
+                <TextView
+                    style="@style/BeerDetailsTitle"
+                    android:text="Overall"/>
+
+                <TextView
+                    style="@style/BeerDetailsValue"
+                    android:id="@+id/review_overall"
+                    tools:text="15"/>
 
             </LinearLayout>
 
         </LinearLayout>
 
+        <include layout="@layout/beer_details_separator_horizontal" />
+
+        <LinearLayout
+            android:gravity="end"
+            style="@style/BeerDetailsRowLayout">
+
+            <TextView
+                android:id="@+id/review_user"
+                tools:text="beerdude @ 2017-02-11"
+                style="@style/BeerDetailsInfoValue" />
+
+            <TextView
+                android:id="@+id/review_location"
+                tools:text="Berlin, Brandenburg, Germany"
+                style="@style/BeerDetailsInfoValue" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>
