@@ -64,7 +64,7 @@ public abstract class SearchBarActivity extends InjectingBaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.home_activity);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

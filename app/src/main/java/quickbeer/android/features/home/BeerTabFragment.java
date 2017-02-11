@@ -15,37 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.home;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.R;
+import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.BeersInCountryViewModel;
-import timber.log.Timber;
+import quickbeer.android.viewmodels.RecentBeersViewModel;
 
 import static io.reark.reark.utils.Preconditions.get;
-import static polanski.option.Option.ofObj;
 
-public class BeersInCountryFragment extends BeerListFragment {
+public class BeerTabFragment extends BeerListFragment {
 
     @Nullable
     @Inject
-    BeersInCountryViewModel beersInCountryViewModel;
-
-    @NonNull
-    private String country = "";
+    RecentBeersViewModel recentBeersViewModel;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        ofObj(getArguments())
-                .ifSome(state -> country = get(state.getString("country")))
-                .ifNone(() -> Timber.w("Expected state for initializing!"));
+    protected int getLayout() {
+        return R.layout.beer_tab_fragment;
     }
 
     @Override
@@ -53,18 +45,16 @@ public class BeersInCountryFragment extends BeerListFragment {
         super.inject();
 
         getComponent().inject(this);
-
-        get(beersInCountryViewModel).setCountry(country);
     }
 
     @NonNull
     @Override
     protected BeerListViewModel viewModel() {
-        return get(beersInCountryViewModel);
+        return get(recentBeersViewModel);
     }
 
     @Override
-    protected void onQuery(@NonNull final String query) {
-        // No action, new search replaces old results.
+    protected void onQuery(@NonNull String query) {
+        // Doesn't react to search view.
     }
 }

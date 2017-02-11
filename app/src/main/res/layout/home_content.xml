@@ -6,5 +6,5 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/main_activity"
-    tools:context="quickbeer.android.features.main.MainActivity" />
+    tools:showIn="@layout/home_activity"
+    tools:context="quickbeer.android.features.home.HomeActivity" />

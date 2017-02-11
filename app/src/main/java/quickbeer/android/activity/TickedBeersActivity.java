@@ -20,7 +20,7 @@ package quickbeer.android.activity;
 import android.support.v4.app.Fragment;
 
 import quickbeer.android.activity.base.FilterActivity;
-import quickbeer.android.features.main.fragments.TickedBeersFragment;
+import quickbeer.android.features.list.fragments.TickedBeersFragment;
 
 public class TickedBeersActivity extends FilterActivity {
 

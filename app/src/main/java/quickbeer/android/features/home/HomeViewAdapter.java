@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main;
+package quickbeer.android.features.home;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -23,13 +23,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import quickbeer.android.R;
-import quickbeer.android.features.main.fragments.BeerTabFragment;
-import quickbeer.android.features.main.fragments.BrewerTabFragment;
 
-public class MainViewAdapter extends FragmentPagerAdapter {
+public class HomeViewAdapter extends FragmentPagerAdapter {
     private final Context context;
     
-    public MainViewAdapter(FragmentManager manager, Context context) {
+    public HomeViewAdapter(FragmentManager manager, Context context) {
         super(manager);
 
         this.context = context;

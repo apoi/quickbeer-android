@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.list.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,28 +23,33 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.BeersInStyleViewModel;
+import quickbeer.android.viewmodels.BeerSearchViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeersInStyleFragment  extends BeerListFragment {
+public class BeerSearchFragment extends BeerListFragment {
 
     @Nullable
     @Inject
-    BeersInStyleViewModel beersInStyleViewModel;
+    BeerSearchViewModel beerSearchViewModel;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
 
     @NonNull
-    private String style = "";
+    private String initialQuery = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ofObj(getArguments())
-                .ifSome(state -> style = get(state.getString("style")))
+                .ifSome(state -> initialQuery = get(state.getString("query")))
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
 
@@ -54,13 +59,13 @@ public class BeersInStyleFragment  extends BeerListFragment {
 
         getComponent().inject(this);
 
-        get(beersInStyleViewModel).setStyle(style);
+        get(beerSearchViewModel).setInitialQuery(initialQuery);
     }
 
     @NonNull
     @Override
     protected BeerListViewModel viewModel() {
-        return get(beersInStyleViewModel);
+        return get(beerSearchViewModel);
     }
 
     @Override

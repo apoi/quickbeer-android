@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="quickbeer.android.features.main.MainActivity">
+    tools:context="quickbeer.android.features.home.HomeActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -53,6 +53,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/main_content" />
+    <include layout="@layout/home_content" />
 
 </android.support.design.widget.CoordinatorLayout>

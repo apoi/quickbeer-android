@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main;
+package quickbeer.android.features.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +41,7 @@ import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class MainActivity extends DrawerActivity {
+public class HomeActivity extends DrawerActivity {
 
     @Nullable
     private SearchView searchView;
@@ -69,7 +69,7 @@ public class MainActivity extends DrawerActivity {
     public void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.home_activity);
 
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
         searchView.setViewModel(get(searchViewViewModel));

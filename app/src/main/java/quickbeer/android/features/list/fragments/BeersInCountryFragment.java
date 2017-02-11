@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.list.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,33 +23,28 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.BeerSearchViewModel;
+import quickbeer.android.viewmodels.BeersInCountryViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeerSearchFragment extends BeerListFragment {
+public class BeersInCountryFragment extends BeerListFragment {
 
     @Nullable
     @Inject
-    BeerSearchViewModel beerSearchViewModel;
-
-    @Nullable
-    @Inject
-    NavigationProvider navigationProvider;
+    BeersInCountryViewModel beersInCountryViewModel;
 
     @NonNull
-    private String initialQuery = "";
+    private String country = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ofObj(getArguments())
-                .ifSome(state -> initialQuery = get(state.getString("query")))
+                .ifSome(state -> country = get(state.getString("country")))
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
 
@@ -59,13 +54,13 @@ public class BeerSearchFragment extends BeerListFragment {
 
         getComponent().inject(this);
 
-        get(beerSearchViewModel).setInitialQuery(initialQuery);
+        get(beersInCountryViewModel).setCountry(country);
     }
 
     @NonNull
     @Override
     protected BeerListViewModel viewModel() {
-        return get(beerSearchViewModel);
+        return get(beersInCountryViewModel);
     }
 
     @Override

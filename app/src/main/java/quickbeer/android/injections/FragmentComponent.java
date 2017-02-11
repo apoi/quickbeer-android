@@ -19,24 +19,23 @@ package quickbeer.android.injections;
 
 import dagger.Subcomponent;
 import quickbeer.android.features.beer.BeerDetailsFragment;
-import quickbeer.android.features.beer.BeerPagerFragment;
 import quickbeer.android.features.beer.BeerReviewsFragment;
-import quickbeer.android.features.main.fragments.BeerListFragment;
-import quickbeer.android.features.main.fragments.BeerSearchFragment;
-import quickbeer.android.features.main.fragments.BeerTabFragment;
-import quickbeer.android.features.main.fragments.BeersInCountryFragment;
-import quickbeer.android.features.main.fragments.BeersInStyleFragment;
-import quickbeer.android.features.main.fragments.CountryListFragment;
-import quickbeer.android.features.main.fragments.MainFragment;
-import quickbeer.android.features.main.fragments.StyleListFragment;
-import quickbeer.android.features.main.fragments.TickedBeersFragment;
-import quickbeer.android.features.main.fragments.TopBeersFragment;
+import quickbeer.android.features.list.fragments.BeerListFragment;
+import quickbeer.android.features.list.fragments.BeerSearchFragment;
+import quickbeer.android.features.home.BeerTabFragment;
+import quickbeer.android.features.list.fragments.BeersInCountryFragment;
+import quickbeer.android.features.list.fragments.BeersInStyleFragment;
+import quickbeer.android.features.list.fragments.CountryListFragment;
+import quickbeer.android.features.home.HomeFragment;
+import quickbeer.android.features.list.fragments.StyleListFragment;
+import quickbeer.android.features.list.fragments.TickedBeersFragment;
+import quickbeer.android.features.list.fragments.TopBeersFragment;
 
 @FragmentScope
 @Subcomponent(modules = FragmentModule.class)
 public interface FragmentComponent {
 
-    void inject(MainFragment mainFragment);
+    void inject(HomeFragment homeFragment);
 
     void inject(BeerTabFragment beerTabFragment);
 

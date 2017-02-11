@@ -22,7 +22,7 @@ import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.features.beer.BeerDetailsActivity;
-import quickbeer.android.features.main.MainActivity;
+import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 
 @ActivityScope
@@ -31,7 +31,7 @@ public interface ActivityComponent {
 
     FragmentComponent plusFragment(FragmentModule fragmentModule);
 
-    void inject(MainActivity mainActivity);
+    void inject(HomeActivity homeActivity);
 
     void inject(InjectingBaseActivity baseActivity);
 

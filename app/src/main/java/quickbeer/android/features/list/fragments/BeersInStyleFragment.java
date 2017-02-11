@@ -15,28 +15,37 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.list.fragments;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.R;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.RecentBeersViewModel;
+import quickbeer.android.viewmodels.BeersInStyleViewModel;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
-public class BeerTabFragment extends BeerListFragment {
+public class BeersInStyleFragment  extends BeerListFragment {
 
     @Nullable
     @Inject
-    RecentBeersViewModel recentBeersViewModel;
+    BeersInStyleViewModel beersInStyleViewModel;
+
+    @NonNull
+    private String style = "";
 
     @Override
-    protected int getLayout() {
-        return R.layout.beer_tab_fragment;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        ofObj(getArguments())
+                .ifSome(state -> style = get(state.getString("style")))
+                .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
 
     @Override
@@ -44,16 +53,18 @@ public class BeerTabFragment extends BeerListFragment {
         super.inject();
 
         getComponent().inject(this);
+
+        get(beersInStyleViewModel).setStyle(style);
     }
 
     @NonNull
     @Override
     protected BeerListViewModel viewModel() {
-        return get(recentBeersViewModel);
+        return get(beersInStyleViewModel);
     }
 
     @Override
-    protected void onQuery(@NonNull String query) {
-        // Doesn't react to search view.
+    protected void onQuery(@NonNull final String query) {
+        // No action, new search replaces old results.
     }
 }

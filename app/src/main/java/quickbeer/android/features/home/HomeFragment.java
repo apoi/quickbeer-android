@@ -15,38 +15,45 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.main.fragments;
+package quickbeer.android.features.home;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.features.home.HomeViewAdapter;
 import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
-import quickbeer.android.utils.Countries;
 import quickbeer.android.viewmodels.SearchViewViewModel;
-import quickbeer.android.views.SimpleListView;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class CountryListFragment extends BindingBaseFragment {
+public class HomeFragment extends BindingBaseFragment {
 
     @Nullable
-    @Inject
-    ResourceProvider resourceProvider;
+    @BindView(R.id.view_pager)
+    ViewPager viewPager;
+
+    @Nullable
+    @BindView(R.id.tab_layout)
+    TabLayout tabLayout;
 
     @Nullable
     @Inject
@@ -54,33 +61,24 @@ public class CountryListFragment extends BindingBaseFragment {
 
     @Nullable
     @Inject
+    ResourceProvider resourceProvider;
+
+    @Nullable
+    @Inject
     SearchViewViewModel searchViewViewModel;
 
-    @Inject
-    Countries countries;
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel()
-                    .getQueryStream()
-                    .subscribe(getView()::setFilter, Timber::e));
-
-            subscription.add(getView()
-                    .selectionStream()
-                    .subscribe(CountryListFragment.this::navigateToCountry, Timber::e));
+            subscription.add(viewModel().getQueryStream()
+                    .subscribe(query -> get(navigationProvider).triggerSearch(query),
+                            Timber::e));
         }
     };
-
-    private void navigateToCountry(@NonNull final Integer countryId) {
-        Timber.d("navigateToCountry(" + countryId + ")");
-
-        Bundle bundle = new Bundle();
-        bundle.putString("country", String.valueOf(countryId));
-
-        get(navigationProvider).addPage(Page.COUNTRY, bundle);
-    }
 
     @Override
     protected void inject() {
@@ -88,28 +86,33 @@ public class CountryListFragment extends BindingBaseFragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_pager, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        unbinder.setIfNone(bind(this, view));
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        checkNotNull(searchViewViewModel);
+        get(viewPager).setAdapter(new HomeViewAdapter(getChildFragmentManager(), getContext()));
+        get(tabLayout).setupWithViewPager(viewPager);
 
-        getView().setListSource(countries);
-
-        searchViewViewModel.setLiveFilteringEnabled(true);
-        searchViewViewModel.setConventOverlayEnabled(false);
-        searchViewViewModel.setMinimumSearchLength(-1);
-        searchViewViewModel.setSearchHint(get(resourceProvider).getString(R.string.search_box_hint_filter_countries));
+        viewModel().setSearchHint(get(resourceProvider)
+                .getString(R.string.search_box_hint_search_beers));
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.simple_list_fragment, container, false);
-    }
-
-    @Override
-    @NonNull
-    public SimpleListView getView() {
-        return (SimpleListView) get(super.getView());
+    public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
+        super.onDestroyView();
     }
 
     @NonNull
@@ -123,5 +126,4 @@ public class CountryListFragment extends BindingBaseFragment {
     protected DataBinder dataBinder() {
         return dataBinder;
     }
-
 }

@@ -29,13 +29,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import quickbeer.android.R;
-import quickbeer.android.features.main.fragments.BeerSearchFragment;
-import quickbeer.android.features.main.fragments.BeersInCountryFragment;
-import quickbeer.android.features.main.fragments.BeersInStyleFragment;
-import quickbeer.android.features.main.fragments.CountryListFragment;
-import quickbeer.android.features.main.fragments.MainFragment;
-import quickbeer.android.features.main.fragments.StyleListFragment;
-import quickbeer.android.features.main.fragments.TopBeersFragment;
+import quickbeer.android.features.list.fragments.BeerSearchFragment;
+import quickbeer.android.features.list.fragments.BeersInCountryFragment;
+import quickbeer.android.features.list.fragments.BeersInStyleFragment;
+import quickbeer.android.features.list.fragments.CountryListFragment;
+import quickbeer.android.features.home.HomeFragment;
+import quickbeer.android.features.list.fragments.StyleListFragment;
+import quickbeer.android.features.list.fragments.TopBeersFragment;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -147,7 +147,7 @@ public final class NavigationProvider {
     private static Fragment toFragment(@NonNull final Page page) {
         switch (page) {
             case HOME:
-                return new MainFragment();
+                return new HomeFragment();
             case BEER_SEARCH:
                 return new BeerSearchFragment();
             case TOP_BEERS:
@@ -162,7 +162,7 @@ public final class NavigationProvider {
                 return new BeersInStyleFragment();
         }
 
-        return new MainFragment();
+        return new HomeFragment();
     }
 
 }
