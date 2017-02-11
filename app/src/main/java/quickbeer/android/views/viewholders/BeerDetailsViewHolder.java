@@ -69,14 +69,26 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.beer_rating_overall)
     TextView overallRatingTextView;
 
+    @BindView(R.id.beer_rating_overall_column)
+    View overallRatingColumn;
+
     @BindView(R.id.beer_rating_style)
     TextView styleRatingTextView;
+
+    @BindView(R.id.beer_rating_style_column)
+    View styleRatingColumn;
 
     @BindView(R.id.beer_abv)
     TextView abvTextView;
 
+    @BindView(R.id.beer_abv_column)
+    View abvColumn;
+
     @BindView(R.id.beer_ibu)
     TextView ibuTextView;
+
+    @BindView(R.id.beer_ibu_column)
+    View ibuColumn;
 
     @Nullable
     @Inject
@@ -100,8 +112,17 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .graph()
                 .inject(this);
 
-        overallRatingTextView
-                .setOnClickListener(__ -> showToast(R.string.description_rating_overall));
+        overallRatingColumn.setOnClickListener(__ ->
+                showToast(R.string.description_rating_overall));
+
+        styleRatingColumn.setOnClickListener(__ ->
+                showToast(R.string.description_rating_style));
+
+        abvColumn.setOnClickListener(__ ->
+                showToast(R.string.description_abv));
+
+        ibuColumn.setOnClickListener(__ ->
+                showToast(R.string.description_ibu));
     }
 
     private void showToast(@StringRes int resource) {

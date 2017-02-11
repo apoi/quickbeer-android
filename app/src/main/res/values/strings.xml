@@ -33,9 +33,9 @@
     <string name="abv">ABV</string>
     <string name="ibu">IBU</string>
 
-    <string name="description_rating_overall">Overall percentile rating of the beer.</string>
-    <string name="description_rating_style">Percentile rating of the beer within the style category.</string>
-    <string name="description_abv">Alcohol by volume.</string>
-    <string name="description_ibu">International Bittering Units, a measure of bitterness.</string>
+    <string name="description_rating_overall">Beer\'s performance relative to all beers</string>
+    <string name="description_rating_style">Beer\'s performance relative to beers in the same style category</string>
+    <string name="description_abv">Alcohol by volume</string>
+    <string name="description_ibu">International Bittering Units, a measure of beer bitterness</string>
 
 </resources>
