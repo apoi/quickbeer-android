@@ -33,6 +33,7 @@ import quickbeer.android.views.viewholders.ReviewViewHolder;
 public class BeerDetailsAdapter extends BaseListAdapter {
 
     private Beer beer;
+
     private List<Review> reviews;
 
     public BeerDetailsAdapter() {

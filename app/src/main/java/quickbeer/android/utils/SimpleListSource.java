@@ -21,7 +21,10 @@ import java.util.Collection;
 
 import quickbeer.android.data.pojos.SimpleItem;
 
-public interface SimpleListSource {
-    SimpleItem getItem(int id);
-    Collection<SimpleItem> getList();
+public interface SimpleListSource<T extends SimpleItem> {
+
+    T getItem(int id);
+
+    Collection<T> getList();
+
 }

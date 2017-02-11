@@ -26,19 +26,15 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import io.reark.reark.utils.RxViewBinder;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BeerDetailsAdapter;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Review;
-import quickbeer.android.viewmodels.BeerViewModel;
-import quickbeer.android.viewmodels.ReviewListViewModel;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsView extends FrameLayout {
+
     private BeerDetailsAdapter beerDetailsAdapter;
 
     public BeerDetailsView(Context context) {

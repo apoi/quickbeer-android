@@ -37,4 +37,8 @@ public class ResourceProvider {
         return context.getString(id);
     }
 
+    public int getDrawableIdentifier(@NonNull String name) {
+        return context.getResources().getIdentifier(get(name), "drawable", context.getPackageName());
+    }
+
 }

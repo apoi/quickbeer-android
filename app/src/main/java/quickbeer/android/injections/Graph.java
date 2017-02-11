@@ -25,6 +25,7 @@ import quickbeer.android.data.DataStoreModule;
 import quickbeer.android.network.NetworkModule;
 import quickbeer.android.network.NetworkService;
 import quickbeer.android.utils.UtilsModule;
+import quickbeer.android.views.viewholders.BeerDetailsViewHolder;
 
 @Singleton
 @Component(modules = {
@@ -40,5 +41,7 @@ public interface Graph {
     void inject(QuickBeer application);
 
     void inject(NetworkService networkService);
+
+    void inject(BeerDetailsViewHolder view);
 
 }

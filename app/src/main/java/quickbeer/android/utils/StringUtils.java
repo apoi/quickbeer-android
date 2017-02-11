@@ -17,22 +17,26 @@
  */
 package quickbeer.android.utils;
 
-public class StringUtils {
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+public final class StringUtils {
+
     private StringUtils() {}
 
-    public static boolean hasValue(String value) {
+    public static boolean hasValue(@Nullable String value) {
         return value != null && !value.isEmpty();
     }
 
-    public static String value(String primary, String secondary) {
+    public static String value(@Nullable String primary, @NonNull String secondary) {
         return hasValue(primary) ? primary : secondary;
     }
 
-    public static String value(String value) {
+    public static String value(@Nullable String value) {
         return value != null ? value : "";
     }
 
-    public static boolean equals(String first, String second) {
+    public static boolean equals(@Nullable String first, @Nullable String second) {
         return first == null
                 ? second == null
                 : first.equals(second);

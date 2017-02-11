@@ -12,7 +12,7 @@
     <string name="beer_details_reviews">Reviews</string>
     <string name="beer_details_no_photo">No photo available for beer</string>
 
-    <string name="search_status_loading">Searching...</string>
+    <string name="search_status_loading">Searching…</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>
     <string name="search_no_beers">No results, how curious!</string>
 
@@ -21,4 +21,21 @@
 
     <string name="recent_beers">Recently seen beers</string>
     <string name="recent_brewers">Recently seen brewers</string>
+
+    <string name="not_available">N/A</string>
+    <string name="no_description">No description available.</string>
+
+    <string name="rating_overall">Overall</string>
+    <string name="rating_style">Style</string>
+
+    <string name="brewer">Brewer</string>
+    <string name="style">Beer style</string>
+    <string name="abv">ABV</string>
+    <string name="ibu">IBU</string>
+
+    <string name="description_rating_overall">Overall percentile rating of the beer.</string>
+    <string name="description_rating_style">Percentile rating of the beer within the style category.</string>
+    <string name="description_abv">Alcohol by volume.</string>
+    <string name="description_ibu">International Bittering Units, a measure of bitterness.</string>
+
 </resources>

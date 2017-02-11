@@ -46,4 +46,18 @@ public class Country extends SimpleItem {
     public String getCode() {
         return code;
     }
+
+    @NonNull
+    public String getFlagResourceName() {
+        switch (id) {
+            case 239:
+                return "flag_wales.png";
+            case 240:
+                return "flag_england.png";
+            case 241:
+                return "flag_scotland.png";
+            default:
+                return String.format("flag_%s.png", id);
+        }
+    }
 }

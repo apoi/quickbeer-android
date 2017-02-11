@@ -21,11 +21,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import io.reark.reark.data.DataStreamNotification;
-import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;

@@ -17,43 +17,45 @@
  */
 package quickbeer.android.views.viewholders;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
+import android.widget.Toast;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import polanski.option.Option;
+import quickbeer.android.QuickBeer;
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.transformations.ContainerLabelExtractor;
-import quickbeer.android.utils.Score;
+import quickbeer.android.data.pojos.Country;
+import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 /**
  * View holder for all the beer details
  */
 public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
-    @BindView(R.id.beer_stars)
-    TextView ratingTextView;
-
-    @BindView(R.id.beer_name)
-    TextView nameTextView;
+    @BindView(R.id.beer_description)
+    TextView descriptionTextView;
 
     @BindView(R.id.beer_style)
     TextView styleTextView;
-
-    @BindView(R.id.beer_abv)
-    TextView abvTextView;
 
     @BindView(R.id.brewer_name)
     TextView brewerTextView;
@@ -61,50 +63,92 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.brewer_location)
     TextView locationTextView;
 
-    @BindView(R.id.beer_description)
-    TextView descriptionTextView;
+    @BindView(R.id.brewer_country_flag)
+    ImageView countryFlag;
 
-    @BindView(R.id.beer_details_image)
-    ImageView imageView;
+    @BindView(R.id.beer_rating_overall)
+    TextView overallRatingTextView;
+
+    @BindView(R.id.beer_rating_style)
+    TextView styleRatingTextView;
+
+    @BindView(R.id.beer_abv)
+    TextView abvTextView;
+
+    @BindView(R.id.beer_ibu)
+    TextView ibuTextView;
+
+    @Nullable
+    @Inject
+    Countries countries;
+
+    @Nullable
+    @Inject
+    ResourceProvider resourceProvider;
+
+    @NonNull
+    private final Context context;
 
     public BeerDetailsViewHolder(@NonNull View view) {
         super(view);
+
         ButterKnife.bind(this, view);
+
+        context = view.getContext();
+
+        ((QuickBeer) context.getApplicationContext())
+                .graph()
+                .inject(this);
+
+        overallRatingTextView
+                .setOnClickListener(__ -> showToast(R.string.description_rating_overall));
+    }
+
+    private void showToast(@StringRes int resource) {
+        Toast.makeText(context, resource, Toast.LENGTH_LONG).show();
     }
 
     public void setBeer(@NonNull final Beer beer) {
         checkNotNull(beer);
+        checkNotNull(countries);
+        checkNotNull(resourceProvider);
 
-        if (beer.getTickValue() > 0) {
-            ratingTextView.setText("");
-            ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
-        } else {
-            ratingTextView.setText(Score.fromRating(beer.rating()));
-            ratingTextView.setBackgroundResource(R.drawable.score_unrated);
-        }
+        Option<String> na = ofObj(get(resourceProvider).getString(R.string.not_available));
 
-        nameTextView.setText(beer.name());
+        descriptionTextView.setText(StringUtils.value(beer.description(),
+                resourceProvider.getString(R.string.no_description)));
+
         styleTextView.setText(beer.styleName());
-        abvTextView.setText(String.format(Locale.ROOT, "ABV: %.1f%%", beer.getAbv()));
+
         brewerTextView.setText(beer.brewerName());
-        locationTextView.setText("TODO data from brewer");
-        descriptionTextView.setText(StringUtils.value(beer.description(), "No description available."));
+        locationTextView.setText("Kerava, Finland");
 
-        imageView.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
-            @Override
-            public boolean onPreDraw() {
-                imageView.getViewTreeObserver().removeOnPreDrawListener(this);
+        ofObj(beer.overallRating())
+                .filter(value -> value > 0)
+                .map(value -> String.valueOf(Math.round(value)))
+                .orOption(() -> na)
+                .ifSome(overallRatingTextView::setText);
 
-                final int width = imageView.getMeasuredWidth();
-                final int height = imageView.getMeasuredHeight();
+        ofObj(beer.styleRating())
+                .filter(value -> value > 0)
+                .map(value -> String.valueOf(Math.round(value)))
+                .orOption(() -> na)
+                .ifSome(styleRatingTextView::setText);
 
-                Picasso.with(imageView.getContext())
-                        .load(beer.getImageUri())
-                        .transform(new ContainerLabelExtractor(width, height))
-                        .into(imageView);
+        ofObj(beer.alcohol())
+                .map(value -> String.format(Locale.ROOT, "%.1f%%", value))
+                .orOption(() -> na)
+                .ifSome(abvTextView::setText);
 
-                return true;
-            }
-        });
+        ofObj(beer.ibu())
+                .map(value -> String.valueOf(Math.round(value)))
+                .orOption(() -> na)
+                .ifSome(ibuTextView::setText);
+
+        ofObj(beer.countryId())
+                .map(countries::getItem)
+                .map(Country::getFlagResourceName)
+                .map(resourceProvider::getDrawableIdentifier)
+                .ifSome(countryFlag::setImageResource);
     }
 }

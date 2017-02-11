@@ -21,24 +21,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import quickbeer.android.data.pojos.SimpleItem;
 import quickbeer.android.data.pojos.Style;
 
-public class Styles implements SimpleListSource {
+public class Styles implements SimpleListSource<Style> {
 
-    private final Map<Integer, SimpleItem> styles = new HashMap<>();
+    private final Map<Integer, Style> styles = new HashMap<>(114);
 
     public Styles() {
         initStyles();
     }
 
     @Override
-    public SimpleItem getItem(int id) {
+    public Style getItem(int id) {
         return styles.get(id);
     }
 
     @Override
-    public Collection<SimpleItem> getList() {
+    public Collection<Style> getList() {
         return styles.values();
     }
 

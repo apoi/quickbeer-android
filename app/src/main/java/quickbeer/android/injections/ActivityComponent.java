@@ -22,8 +22,8 @@ import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.features.beer.BeerDetailsActivity;
-import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.features.main.MainActivity;
+import quickbeer.android.features.photoview.PhotoViewActivity;
 
 @ActivityScope
 @Subcomponent(modules = ActivityModule.class)

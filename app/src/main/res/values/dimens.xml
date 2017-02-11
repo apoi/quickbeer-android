@@ -27,4 +27,5 @@
     <dimen name="beer_details_left_margin_with_line">65dp</dimen>
     <dimen name="beer_details_line_margin">7dp</dimen>
     <dimen name="beer_details_image_size">80dp</dimen>
+
 </resources>
