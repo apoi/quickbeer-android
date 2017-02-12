@@ -40,7 +40,7 @@
 
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
-    <string name="no_camera_permission">Scanner cannot run because it does not have the camera permission.</string>
-    <string name="low_storage_error">Scanner dependencies cannot be downloaded due to low device storage</string>
+    <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>
+    <string name="low_storage_error">Barcode scanner dependencies cannot be downloaded due to low device storage</string>
 
 </resources>
