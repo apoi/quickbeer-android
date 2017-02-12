@@ -17,9 +17,11 @@
  */
 package quickbeer.android.features.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -35,6 +37,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.features.barcodescanner.BarcodeScanner;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -46,13 +49,14 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class HomeFragment extends BindingBaseFragment {
 
-    @Nullable
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
-    @Nullable
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+
+    @BindView(R.id.barcode_scan_fab)
+    FloatingActionButton barcodeScanButton;
 
     @Nullable
     @Inject
@@ -100,8 +104,13 @@ public class HomeFragment extends BindingBaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        get(viewPager).setAdapter(new HomeViewAdapter(getChildFragmentManager(), getContext()));
-        get(tabLayout).setupWithViewPager(viewPager);
+        viewPager.setAdapter(new HomeViewAdapter(getChildFragmentManager(), getContext()));
+        tabLayout.setupWithViewPager(viewPager);
+
+        barcodeScanButton.setOnClickListener(__ -> {
+            Intent intent = new Intent(getActivity(), BarcodeScanner.class);
+            startActivity(intent);
+        });
 
         viewModel().setSearchHint(get(resourceProvider)
                 .getString(R.string.search_box_hint_search_beers));
