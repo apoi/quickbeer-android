@@ -31,15 +31,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
@@ -47,22 +48,25 @@ import java.io.IOException;
 import quickbeer.android.R;
 import quickbeer.android.features.barcodescanner.ui.camera.CameraSourcePreview;
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
+import timber.log.Timber;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and ID of each barcode.
  */
-public final class BarcodeScanActivity extends AppCompatActivity {
-    private static final String TAG = "Barcode-reader";
+public final class BarcodeScanActivity extends AppCompatActivity implements BarcodeResultListener {
+
+    public static final String BARCODE_RESULT = "BarcodeResult";
 
     // intent request code to handle updating play services if needed.
     private static final int RC_HANDLE_GMS = 9001;
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
-    public static final int PREVIEW_HEIGHT = 1800;
-    public static final float REQUESTED_FPS = 30.0f;
+
+    private static final int PREVIEW_HEIGHT = 1800;
+    private static final float REQUESTED_FPS = 30.0f;
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
@@ -113,7 +117,7 @@ public final class BarcodeScanActivity extends AppCompatActivity {
      * sending the request.
      */
     private void requestCameraPermission() {
-        Log.w(TAG, "Camera permission is not granted. Requesting permission");
+        Timber.e("Camera permission is not granted. Requesting permission");
 
         final String[] permissions = {Manifest.permission.CAMERA};
 
@@ -152,9 +156,8 @@ public final class BarcodeScanActivity extends AppCompatActivity {
         // graphics for each barcode on screen.  The factory is used by the multi-processor to
         // create a separate tracker instance for each barcode.
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(context).build();
-        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(mGraphicOverlay);
-        barcodeDetector.setProcessor(
-                new MultiProcessor.Builder<>(barcodeFactory).build());
+        BarcodeTrackerFactory barcodeFactory = new BarcodeTrackerFactory(this, mGraphicOverlay);
+        barcodeDetector.setProcessor(new MultiProcessor.Builder<>(barcodeFactory).build());
 
         if (!barcodeDetector.isOperational()) {
             // Note: The first time that an app using the barcode or face API is installed on a
@@ -166,7 +169,7 @@ public final class BarcodeScanActivity extends AppCompatActivity {
             // isOperational() can be used to check if the required native libraries are currently
             // available.  The detectors will automatically become operational once the library
             // downloads complete on device.
-            Log.w(TAG, "Detector dependencies are not yet available.");
+            Timber.w("Detector dependencies are not yet available.");
 
             // Check for low storage.  If there is low storage, the native library will not be
             // downloaded, so detection will not become operational.
@@ -175,7 +178,7 @@ public final class BarcodeScanActivity extends AppCompatActivity {
 
             if (hasLowStorage) {
                 Toast.makeText(this, R.string.low_storage_error, Toast.LENGTH_LONG).show();
-                Log.w(TAG, getString(R.string.low_storage_error));
+                Timber.w(getString(R.string.low_storage_error));
             }
         }
 
@@ -245,19 +248,19 @@ public final class BarcodeScanActivity extends AppCompatActivity {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode != RC_HANDLE_CAMERA_PERM) {
-            Log.d(TAG, "Got unexpected permission result: " + requestCode);
+            Timber.d("Got unexpected permission result: " + requestCode);
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 
         if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "Camera permission granted - initialize the camera source");
+            Timber.d("Camera permission granted - initialize the camera source");
             // we have permission, so create the camerasource
             createCameraSource();
             return;
         }
 
-        Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
+        Timber.e("Permission not granted: results len = " + grantResults.length +
                 " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
         DialogInterface.OnClickListener listener = (dialog, id) -> finish();
@@ -287,10 +290,18 @@ public final class BarcodeScanActivity extends AppCompatActivity {
             try {
                 mPreview.start(mCameraSource, mGraphicOverlay);
             } catch (IOException e) {
-                Log.e(TAG, "Unable to start camera source.", e);
+                Timber.e("Unable to start camera source.", e);
                 mCameraSource.release();
                 mCameraSource = null;
             }
         }
+    }
+
+    @Override
+    public void onBarcodeDetected(@NonNull Barcode barcode) {
+        Intent data = new Intent();
+        data.putExtra(BARCODE_RESULT, barcode);
+        setResult(CommonStatusCodes.SUCCESS, data);
+        finish();
     }
 }

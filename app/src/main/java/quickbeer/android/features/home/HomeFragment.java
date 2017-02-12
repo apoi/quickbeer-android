@@ -24,9 +24,13 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 import javax.inject.Inject;
 
@@ -48,6 +52,8 @@ import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class HomeFragment extends BindingBaseFragment {
+
+    private static final int CODE_CAPTURE_BARCODE = 9876;
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -109,7 +115,7 @@ public class HomeFragment extends BindingBaseFragment {
 
         barcodeScanButton.setOnClickListener(__ -> {
             Intent intent = new Intent(getActivity(), BarcodeScanActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, CODE_CAPTURE_BARCODE);
         });
 
         viewModel().setSearchHint(get(resourceProvider)
@@ -133,5 +139,23 @@ public class HomeFragment extends BindingBaseFragment {
     @Override
     protected DataBinder dataBinder() {
         return dataBinder;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CODE_CAPTURE_BARCODE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeScanActivity.BARCODE_RESULT);
+                    Timber.d("Barcode found: " + barcode.displayValue);
+                } else {
+                    Timber.w("No barcode captured, intent data is null");
+                }
+            } else {
+                Timber.e("Failure capturing barcode: %s", CommonStatusCodes.getStatusCodeString(resultCode));
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

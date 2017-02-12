@@ -15,27 +15,40 @@
  */
 package quickbeer.android.features.barcodescanner;
 
+import android.support.annotation.NonNull;
+
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
 
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 
+import static io.reark.reark.utils.Preconditions.get;
+
 /**
  * Factory for creating a tracker and associated graphic to be associated with a new barcode.  The
  * multi-processor uses this factory to create barcode trackers as needed -- one for each barcode.
  */
 class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
-    private final GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
 
-    BarcodeTrackerFactory(GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay) {
-        mGraphicOverlay = barcodeGraphicOverlay;
+    @NonNull
+    private final BarcodeResultListener barcodeResultListener;
+
+    @NonNull
+    private final GraphicOverlay<BarcodeGraphic> graphicOverlay;
+
+    BarcodeTrackerFactory(@NonNull BarcodeResultListener barcodeResultListener,
+                          @NonNull GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay) {
+        this.graphicOverlay = get(barcodeGraphicOverlay);
+        this.barcodeResultListener = get(barcodeResultListener);
     }
 
     @Override
     public Tracker<Barcode> create(Barcode barcode) {
-        BarcodeGraphic graphic = new BarcodeGraphic(mGraphicOverlay);
-        return new BarcodeGraphicTracker(mGraphicOverlay, graphic);
+        barcodeResultListener.onBarcodeDetected(barcode);
+
+        BarcodeGraphic graphic = new BarcodeGraphic(graphicOverlay);
+        return new BarcodeGraphicTracker(graphicOverlay, graphic);
     }
 }
 
