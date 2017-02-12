@@ -32,23 +32,14 @@ public class BarcodeGraphic extends GraphicOverlay.Graphic {
 
     private int mId;
 
-    private static final int COLOR_CHOICES[] = {
-            Color.BLUE,
-            Color.CYAN,
-            Color.GREEN
-    };
-
-    private static int mCurrentColorIndex = 0;
-
-    private Paint mRectPaint;
-    private Paint mTextPaint;
+    private final Paint mRectPaint;
+    private final Paint mTextPaint;
     private volatile Barcode mBarcode;
 
-    BarcodeGraphic(GraphicOverlay overlay) {
+    BarcodeGraphic(GraphicOverlay<BarcodeGraphic> overlay) {
         super(overlay);
 
-        mCurrentColorIndex = (mCurrentColorIndex + 1) % COLOR_CHOICES.length;
-        final int selectedColor = COLOR_CHOICES[mCurrentColorIndex];
+        final int selectedColor = Color.RED;
 
         mRectPaint = new Paint();
         mRectPaint.setColor(selectedColor);

@@ -26,19 +26,22 @@ import android.view.SurfaceView;
 import android.view.ViewGroup;
 
 import com.google.android.gms.common.images.Size;
+import com.google.android.gms.vision.CameraSource;
 
 import java.io.IOException;
+
+import quickbeer.android.features.barcodescanner.BarcodeGraphic;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";
 
-    private Context mContext;
-    private SurfaceView mSurfaceView;
+    private final Context mContext;
+    private final SurfaceView mSurfaceView;
     private boolean mStartRequested;
     private boolean mSurfaceAvailable;
     private CameraSource mCameraSource;
 
-    private GraphicOverlay mOverlay;
+    private GraphicOverlay<BarcodeGraphic> mOverlay;
 
     public CameraSourcePreview(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -132,6 +135,7 @@ public class CameraSourcePreview extends ViewGroup {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         int width = 320;
         int height = 240;
+
         if (mCameraSource != null) {
             Size size = mCameraSource.getPreviewSize();
             if (size != null) {

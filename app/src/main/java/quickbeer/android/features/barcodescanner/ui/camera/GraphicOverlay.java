@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import quickbeer.android.features.barcodescanner.BarcodeGraphic;
+
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
  * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
@@ -46,23 +48,24 @@ import java.util.Vector;
  * </ol>
  */
 public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
-    private final Object mLock = new Object();
     private int mPreviewWidth;
     private float mWidthScaleFactor = 1.0f;
     private int mPreviewHeight;
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
-    private Set<T> mGraphics = new HashSet<>();
+
+    private final Object mLock = new Object();
+    private final Set<T> mGraphics = new HashSet<>(1);
 
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
      * this and implement the {@link Graphic#draw(Canvas)} method to define the
      * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
      */
-    public static abstract class Graphic {
-        private GraphicOverlay mOverlay;
+    public abstract static class Graphic {
+        private final GraphicOverlay<BarcodeGraphic> mOverlay;
 
-        public Graphic(GraphicOverlay overlay) {
+        protected Graphic(GraphicOverlay<BarcodeGraphic> overlay) {
             mOverlay = overlay;
         }
 
