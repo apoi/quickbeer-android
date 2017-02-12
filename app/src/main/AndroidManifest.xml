@@ -54,7 +54,7 @@
             android:launchMode="singleTask"/>
 
         <activity
-            android:name=".features.barcodescanner.BarcodeCaptureActivity"
+            android:name=".features.barcodescanner.BarcodeScanActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"
             android:label="Read Barcode"/>

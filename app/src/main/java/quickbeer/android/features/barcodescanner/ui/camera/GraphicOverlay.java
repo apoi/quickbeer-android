@@ -48,14 +48,13 @@ import quickbeer.android.features.barcodescanner.BarcodeGraphic;
  * </ol>
  */
 public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
+    private final Object mLock = new Object();
     private int mPreviewWidth;
     private float mWidthScaleFactor = 1.0f;
     private int mPreviewHeight;
     private float mHeightScaleFactor = 1.0f;
     private int mFacing = CameraSource.CAMERA_FACING_BACK;
-
-    private final Object mLock = new Object();
-    private final Set<T> mGraphics = new HashSet<>(1);
+    private Set<T> mGraphics = new HashSet<>();
 
     /**
      * Base class for a custom graphics object to be rendered within the graphic overlay.  Subclass
@@ -63,9 +62,9 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      * graphics element.  Add instances to the overlay using {@link GraphicOverlay#add(Graphic)}.
      */
     public abstract static class Graphic {
-        private final GraphicOverlay<BarcodeGraphic> mOverlay;
+        private GraphicOverlay<BarcodeGraphic> mOverlay;
 
-        protected Graphic(GraphicOverlay<BarcodeGraphic> overlay) {
+        public Graphic(GraphicOverlay<BarcodeGraphic> overlay) {
             mOverlay = overlay;
         }
 

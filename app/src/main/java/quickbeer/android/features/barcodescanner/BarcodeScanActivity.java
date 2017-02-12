@@ -33,6 +33,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -52,7 +53,7 @@ import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
  * size, and ID of each barcode.
  */
-public final class BarcodeCaptureActivity extends AppCompatActivity {
+public final class BarcodeScanActivity extends AppCompatActivity {
     private static final String TAG = "Barcode-reader";
 
     // intent request code to handle updating play services if needed.
@@ -60,10 +61,15 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
 
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
+    public static final int PREVIEW_HEIGHT = 1800;
+    public static final float REQUESTED_FPS = 30.0f;
 
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
+
+    private int viewWidth;
+    private int viewHeight;
 
     /**
      * Initializes the UI and creates the detector pipeline.
@@ -72,23 +78,33 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-        setContentView(R.layout.barcode_capture);
+        setContentView(R.layout.barcode_scan_activity);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
 
-        // Check for the camera permission before accessing the camera.  If the
-        // permission is not granted yet, request permission.
-        int rc = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            createCameraSource();
-        } else {
-            requestCameraPermission();
-        }
+        ViewTreeObserver viewTreeObserver = mPreview.getViewTreeObserver();
 
-        Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
-                Snackbar.LENGTH_LONG)
-                .show();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    mPreview.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    viewWidth = mPreview.getWidth();
+                    viewHeight = mPreview.getHeight();
+
+                    // Check for the camera permission before accessing the camera.  If the
+                    // permission is not granted yet, request permission.
+                    int rc = ContextCompat.checkSelfPermission(BarcodeScanActivity.this, Manifest.permission.CAMERA);
+                    if (rc == PackageManager.PERMISSION_GRANTED) {
+                        createCameraSource();
+                        startCameraSource();
+                    } else {
+                        requestCameraPermission();
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -112,6 +128,7 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(thisActivity, permissions, RC_HANDLE_CAMERA_PERM);
 
         findViewById(R.id.topLayout).setOnClickListener(listener);
+
         Snackbar.make(mGraphicOverlay, R.string.permission_camera_rationale,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok, listener)
@@ -162,13 +179,15 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
             }
         }
 
+        float ratio = viewHeight / (float) viewWidth;
+
         // Creates and starts the camera.  Note that this uses a higher resolution in comparison
         // to other detection examples to enable the barcode detector to detect small barcodes
         // at long distances.
         mCameraSource = new CameraSource.Builder(getApplicationContext(), barcodeDetector)
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
-                .setRequestedPreviewSize(1600, 1024)
-                .setRequestedFps(15.0f)
+                .setRequestedPreviewSize(PREVIEW_HEIGHT, (int) (PREVIEW_HEIGHT / ratio))
+                .setRequestedFps(REQUESTED_FPS)
                 .setAutoFocusEnabled(true)
                 .build();
     }
@@ -257,11 +276,10 @@ public final class BarcodeCaptureActivity extends AppCompatActivity {
      */
     private void startCameraSource() throws SecurityException {
         // check that the device has play services available.
-        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(
-                getApplicationContext());
+        int code = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getApplicationContext());
+
         if (code != ConnectionResult.SUCCESS) {
-            Dialog dlg =
-                    GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
+            Dialog dlg = GoogleApiAvailability.getInstance().getErrorDialog(this, code, RC_HANDLE_GMS);
             dlg.show();
         }
 

@@ -37,7 +37,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.barcodescanner.BarcodeCaptureActivity;
+import quickbeer.android.features.barcodescanner.BarcodeScanActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -108,7 +108,7 @@ public class HomeFragment extends BindingBaseFragment {
         tabLayout.setupWithViewPager(viewPager);
 
         barcodeScanButton.setOnClickListener(__ -> {
-            Intent intent = new Intent(getActivity(), BarcodeCaptureActivity.class);
+            Intent intent = new Intent(getActivity(), BarcodeScanActivity.class);
             startActivity(intent);
         });
 
