@@ -158,6 +158,10 @@ public final class NavigationProvider {
         activity.getSupportFragmentManager().popBackStack();
     }
 
+    public void navigateAllBack() {
+        activity.getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+    }
+
     public void triggerSearch(@NonNull final String query) {
         Timber.d("query(" + query + ")");
 
@@ -170,7 +174,7 @@ public final class NavigationProvider {
     @NonNull
     private static Page toPage(int menuNavigationId) {
         switch (menuNavigationId) {
-            case R.id.nav_main:
+            case R.id.nav_home:
                 return Page.HOME;
             case R.id.nav_best:
                 return Page.TOP_BEERS;

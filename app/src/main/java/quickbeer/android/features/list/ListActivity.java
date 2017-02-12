@@ -30,6 +30,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.DrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -140,7 +141,13 @@ public class ListActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(navigationProvider).clearToPage(menuItem.getItemId());
+        if (menuItem.getItemId() == R.id.nav_home) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } else {
+            get(navigationProvider).clearToPage(menuItem.getItemId());
+        }
     }
 
     @Override

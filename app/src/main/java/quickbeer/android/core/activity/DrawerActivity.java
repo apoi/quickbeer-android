@@ -53,6 +53,11 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
                 this, drawerLayout, (Toolbar) findViewById(R.id.toolbar),
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
+
+        ActionBar actionBar = get(getSupportActionBar());
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
         drawerToggle.syncState();
 
         backNavigationEnabled = initialBackNavigationEnabled();
@@ -61,10 +66,6 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
         if (!backNavigationEnabled) {
             drawerLayout.addDrawerListener(drawerToggle);
         }
-
-        ActionBar actionBar = get(getSupportActionBar());
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
 
         toolbar.setNavigationOnClickListener(v -> {
             if (backNavigationEnabled) {
@@ -129,5 +130,7 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
     }
 
     protected abstract void navigateTo(@NonNull final MenuItem item);
+
+
 
 }

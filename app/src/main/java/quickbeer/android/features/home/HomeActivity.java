@@ -19,9 +19,11 @@ package quickbeer.android.features.home;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import quickbeer.android.R;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
@@ -51,5 +53,14 @@ public class HomeActivity extends ListActivity {
     @Override
     protected void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    protected void navigateTo(@NonNull final MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_home) {
+            get(navigationProvider).navigateAllBack();
+        } else {
+            super.navigateTo(menuItem);
+        }
     }
 }

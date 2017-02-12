@@ -45,6 +45,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.BeerMetadataStore;
+import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
@@ -195,7 +196,15 @@ public class BeerDetailsActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        Intent intent = new Intent(this, ListActivity.class);
+        Intent intent;
+
+        if (menuItem.getItemId() == R.id.nav_home) {
+            intent = new Intent(this, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        } else {
+            intent = new Intent(this, ListActivity.class);
+        }
+
         intent.putExtra("menuNavigationId", menuItem.getItemId());
         startActivity(intent);
     }
