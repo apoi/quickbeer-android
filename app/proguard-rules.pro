@@ -51,6 +51,9 @@
     @retrofit2.http.* <methods>;
 }
 
+# Renderscript
+-keep class android.support.v8.renderscript.** { *; }
+
 # AutoValue
 -dontwarn com.google.auto.**
 -dontwarn autovalue.shaded.com.**
@@ -67,14 +70,17 @@
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
+    public static *** w(...);
 }
 -assumenosideeffects class io.reark.reark.utils.Log {
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
+    public static *** w(...);
 }
 -assumenosideeffects class android.util.Log {
     public static *** v(...);
     public static *** i(...);
     public static *** d(...);
+    public static *** w(...);
 }

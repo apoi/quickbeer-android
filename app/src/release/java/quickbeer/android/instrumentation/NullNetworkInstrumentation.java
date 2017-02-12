@@ -23,57 +23,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package quickbeer.android.injections;
+package quickbeer.android.instrumentation;
 
-import android.app.Application;
-import android.content.ContentResolver;
-import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.squareup.picasso.Picasso;
+import okhttp3.OkHttpClient;
 
-import javax.inject.Singleton;
+public class NullNetworkInstrumentation implements NetworkInstrumentation {
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.providers.ResourceProvider;
-
-@Module
-public final class ApplicationModule {
-
-    private final Application application;
-
-    public ApplicationModule(Application application) {
-        this.application = application;
+    @NonNull
+    @Override
+    public OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder) {
+        return clientBuilder;
     }
 
-    @Provides
-    @Singleton
-    @ForApplication
-    Context providesApplicationContext() {
-        return application;
-    }
-
-    @Provides
-    @Singleton
-    Application providesApplication() {
-        return application;
-    }
-
-    @Provides
-    @Singleton
-    static ResourceProvider providesUserProvider(@ForApplication Context context) {
-        return new ResourceProvider(context);
-    }
-
-    @Provides
-    @Singleton
-    static ContentResolver providesContentResolver(@ForApplication Context context) {
-        return context.getContentResolver();
-    }
-
-    @Provides
-    @Singleton
-    static Picasso providesPicasso(@ForApplication Context context) {
-        return Picasso.with(context);
-    }
+    @Override
+    public void init() { }
 }

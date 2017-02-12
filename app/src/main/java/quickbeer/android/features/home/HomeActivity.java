@@ -18,15 +18,38 @@
 package quickbeer.android.features.home;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import javax.inject.Inject;
 
 import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 
+import static io.reark.reark.utils.Preconditions.get;
+
 public class HomeActivity extends ListActivity {
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
 
     @NonNull
     @Override
     protected Page defaultPage() {
         return Page.HOME;
+    }
+
+    @Override
+    protected boolean initialBackNavigationEnabled() {
+        getSupportFragmentManager().addOnBackStackChangedListener(() ->
+                setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
+
+        return false;
+    }
+
+    @Override
+    protected void inject() {
+        getComponent().inject(this);
     }
 }

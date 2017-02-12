@@ -33,6 +33,8 @@ public interface ActivityComponent {
 
     FragmentComponent plusFragment(FragmentModule fragmentModule);
 
+    void inject(HomeActivity homeActivity);
+
     void inject(ListActivity listActivity);
 
     void inject(InjectingBaseActivity baseActivity);

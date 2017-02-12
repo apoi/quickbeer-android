@@ -39,7 +39,7 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
 
     private DrawerLayout drawerLayout;
 
-    private boolean backNavigationEnabled;
+    private boolean backNavigationEnabled = true;
 
     protected void setupDrawerLayout() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -53,13 +53,18 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
                 this, drawerLayout, (Toolbar) findViewById(R.id.toolbar),
                 R.string.navigation_drawer_open,
                 R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        backNavigationEnabled = initialBackNavigationEnabled();
+        drawerToggle.onDrawerSlide(drawerLayout, backNavigationEnabled ? 1.0f : 0.0f);
+
+        if (!backNavigationEnabled) {
+            drawerLayout.addDrawerListener(drawerToggle);
+        }
 
         ActionBar actionBar = get(getSupportActionBar());
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-
-        drawerToggle.syncState();
 
         toolbar.setNavigationOnClickListener(v -> {
             if (backNavigationEnabled) {
@@ -68,6 +73,10 @@ public abstract class DrawerActivity extends BindingBaseActivity implements Navi
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+    }
+
+    protected boolean initialBackNavigationEnabled() {
+        return true;
     }
 
     @Override

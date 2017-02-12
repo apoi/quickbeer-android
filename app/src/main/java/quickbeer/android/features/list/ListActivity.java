@@ -65,7 +65,7 @@ public class ListActivity extends DrawerActivity {
     };
 
     @Override
-    public void onCreate(@Nullable final Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         checkNotNull(navigationProvider);
@@ -73,13 +73,10 @@ public class ListActivity extends DrawerActivity {
 
         setContentView(R.layout.home_activity);
 
-        searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
-        searchView.setViewModel(get(searchViewViewModel));
-
         setupDrawerLayout();
 
-        getSupportFragmentManager().addOnBackStackChangedListener(() ->
-                setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
+        searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
+        searchView.setViewModel(get(searchViewViewModel));
 
         if (NavigationProvider.intentHasNavigationTarget(getIntent())) {
             navigationProvider.navigateWithIntent(getIntent());

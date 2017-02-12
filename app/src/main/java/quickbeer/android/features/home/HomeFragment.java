@@ -35,7 +35,6 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.home.HomeViewAdapter;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;

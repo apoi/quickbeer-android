@@ -22,15 +22,16 @@ import javax.inject.Singleton;
 import dagger.Component;
 import quickbeer.android.QuickBeer;
 import quickbeer.android.data.DataStoreModule;
+import quickbeer.android.instrumentation.InstrumentationModule;
 import quickbeer.android.network.NetworkModule;
 import quickbeer.android.network.NetworkService;
 import quickbeer.android.utils.UtilsModule;
-import quickbeer.android.views.viewholders.BeerDetailsViewHolder;
 
 @Singleton
 @Component(modules = {
         ApplicationModule.class,
         NetworkModule.class,
+        InstrumentationModule.class,
         UtilsModule.class,
         DataStoreModule.class
 })

@@ -15,21 +15,27 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.injections;
+package quickbeer.android.instrumentation;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.utils.ProductionTree;
 import timber.log.Timber;
 
 @Module
-public final class LoggingModule {
+public final class InstrumentationModule {
 
     @Provides
     @Singleton
     static Timber.Tree providesLoggingTree() {
-        return new Timber.DebugTree();
+        return new ProductionTree();
     }
 
+    @Provides
+    @Singleton
+    static NetworkInstrumentation providesNetworkInstrumentation() {
+        return new NullNetworkInstrumentation();
+    }
 }

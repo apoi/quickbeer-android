@@ -23,20 +23,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package quickbeer.android.network.utils;
+package quickbeer.android.instrumentation;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
-public class NullNetworkInstrumentation implements NetworkInstrumentation<OkHttpClient.Builder> {
+import static com.facebook.stetho.Stetho.defaultDumperPluginsProvider;
+import static com.facebook.stetho.Stetho.defaultInspectorModulesProvider;
+import static com.facebook.stetho.Stetho.initialize;
+import static com.facebook.stetho.Stetho.newInitializerBuilder;
+import static io.reark.reark.utils.Preconditions.get;
+
+public class StethoInstrumentation implements NetworkInstrumentation {
 
     @NonNull
-    @Override
-    public OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder) {
-        return clientBuilder;
+    private final Context context;
+
+    @NonNull
+    private final Interceptor interceptor;
+
+    StethoInstrumentation(@NonNull final Context context,
+                                 @NonNull final Interceptor interceptor) {
+        this.context = get(context);
+        this.interceptor = get(interceptor);
     }
 
     @Override
-    public void init() { }
+    public void init() {
+        initialize(newInitializerBuilder(context)
+                .enableDumpapp(defaultDumperPluginsProvider(context))
+                .enableWebKitInspector(defaultInspectorModulesProvider(context))
+                .build());
+    }
+
+    @Override
+    @NonNull
+    public OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder) {
+        return get(clientBuilder).addNetworkInterceptor(interceptor);
+    }
 }

@@ -23,13 +23,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package quickbeer.android.network.utils;
+package quickbeer.android.instrumentation;
 
-import android.support.annotation.NonNull;
-
-import quickbeer.android.utils.Instrumentation;
-
-public interface NetworkInstrumentation<T> extends Instrumentation {
-    @NonNull
-    T decorateNetwork(@NonNull final T httpClient);
+public interface Instrumentation {
+    void init();
 }

@@ -43,9 +43,8 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import quickbeer.android.injections.ForApplication;
+import quickbeer.android.instrumentation.NetworkInstrumentation;
 import quickbeer.android.network.utils.DateDeserializer;
-import quickbeer.android.network.utils.NetworkInstrumentation;
-import quickbeer.android.network.utils.NullNetworkInstrumentation;
 import quickbeer.android.network.utils.StringDeserializer;
 
 @Module
@@ -62,7 +61,7 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(
-            @NonNull final NetworkInstrumentation<OkHttpClient.Builder> networkInstrumentation,
+            @NonNull final NetworkInstrumentation networkInstrumentation,
             @NonNull final ClearableCookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
@@ -87,11 +86,4 @@ public final class NetworkModule {
     public static ClearableCookieJar provideCookieJar(@ForApplication @NonNull final Context context) {
         return new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
-
-    @Provides
-    @Singleton
-    static NetworkInstrumentation<OkHttpClient.Builder> providesNetworkInstrumentation() {
-        return new NullNetworkInstrumentation();
-    }
-
 }
