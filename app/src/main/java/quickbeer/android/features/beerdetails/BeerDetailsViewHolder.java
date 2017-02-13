@@ -38,12 +38,14 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Country;
+import quickbeer.android.data.pojos.Style;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
+import quickbeer.android.utils.Styles;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -102,6 +104,10 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
     @Nullable
     @Inject
+    Styles styles;
+
+    @Nullable
+    @Inject
     Countries countries;
 
     @Nullable
@@ -141,6 +147,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
     public void setBeer(@NonNull final Beer beer) {
         checkNotNull(beer);
+        checkNotNull(styles);
         checkNotNull(countries);
         checkNotNull(resourceProvider);
 
@@ -150,13 +157,19 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 StringUtils.value(beer.description(),
                 resourceProvider.getString(R.string.no_description)));
 
-        styleTextView.setText(beer.styleName());
         brewerTextView.setText(beer.brewerName());
+
+        ofObj(beer.styleId())
+                .map(styles::getItem)
+                .orOption(() -> ofObj(beer.styleName()).flatMap(styles::getStyle))
+                .ifSome(style -> styleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
+                .map(Style::getName)
+                .orOption(() -> na)
+                .ifSome(styleTextView::setText);
 
         ofObj(beer.countryId())
                 .map(countries::getItem)
-                .ifSome(country -> brewerLocationRow.setOnClickListener(
-                        __ -> navigateToCountry(country)))
+                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
                 .map(Country::getName)
                 .orOption(() -> na)
                 .ifSome(locationTextView::setText);
@@ -182,9 +195,6 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .map(value -> String.valueOf(Math.round(value)))
                 .orOption(() -> na)
                 .ifSome(ibuTextView::setText);
-
-        styleRow.setOnClickListener(__ -> navigateToStyle(beer.styleId()));
-        //brewerNameRow.setOnClickListener(__ -> navigateToStyle(beer.brewerId()));
     }
 
     private void navigateToStyle(@Nullable final Integer styleId) {

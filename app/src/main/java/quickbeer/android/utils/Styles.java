@@ -17,10 +17,15 @@
  */
 package quickbeer.android.utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import ix.Ix;
+import polanski.option.Option;
 import quickbeer.android.data.pojos.Style;
 
 public class Styles implements SimpleListSource<Style> {
@@ -39,6 +44,14 @@ public class Styles implements SimpleListSource<Style> {
     @Override
     public Collection<Style> getList() {
         return styles.values();
+    }
+
+    @NonNull
+    public Option<Style> getStyle(@NonNull String styleName) {
+        return Ix.from(styles.values())
+                .filter(value -> value.getName().equals(styleName))
+                .map(Option::ofObj)
+                .first(Option.none());
     }
 
     private void initStyles() {

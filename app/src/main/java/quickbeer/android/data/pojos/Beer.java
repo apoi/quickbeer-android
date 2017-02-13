@@ -115,7 +115,8 @@ public abstract class Beer {
     // Accessors
 
     public boolean hasDetails() {
-        return brewerId() != null && hasValue(styleName());
+        return brewerId() != null
+                && hasValue(styleName());
     }
 
     public int rating() {

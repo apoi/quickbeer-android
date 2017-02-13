@@ -25,6 +25,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -32,11 +33,18 @@ import java.lang.reflect.Type;
 
 public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
 
-    private static final DateTimeFormatter ISO_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+    private static final DateTimeFormatter ISO_FORMAT =
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 
-    private static final DateTimeFormatter US_TIME_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss aa");
+    private static final DateTimeFormatter US_TIME_FORMAT =
+            DateTimeFormat
+                    .forPattern("MM/dd/yyyy HH:mm:ss aa")
+                    .withZone(DateTimeZone.forID("US/Pacific"));
 
-    private static final DateTimeFormatter US_DATE_FORMAT = DateTimeFormat.forPattern("MM/dd/yyyy");
+    private static final DateTimeFormatter US_DATE_FORMAT =
+            DateTimeFormat
+                    .forPattern("MM/dd/yyyy")
+                    .withZone(DateTimeZone.forID("US/Pacific"));;
 
     @Override
     public JsonElement serialize(DateTime date, Type typeOfSrc, JsonSerializationContext context) {
