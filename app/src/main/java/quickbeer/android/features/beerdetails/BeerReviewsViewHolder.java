@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.views.viewholders;
+package quickbeer.android.features.beerdetails;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -35,7 +35,7 @@ import static java.lang.String.valueOf;
 /**
  * View holder for reviews in list
  */
-public class ReviewViewHolder extends RecyclerView.ViewHolder {
+public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.review_appearance)
     TextView appearance;
@@ -61,7 +61,7 @@ public class ReviewViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.review_location)
     TextView location;
 
-    public ReviewViewHolder(View view) {
+    public BeerReviewsViewHolder(View view) {
         super(view);
 
         ButterKnife.bind(this, view);

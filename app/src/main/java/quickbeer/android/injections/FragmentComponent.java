@@ -18,8 +18,8 @@
 package quickbeer.android.injections;
 
 import dagger.Subcomponent;
-import quickbeer.android.features.beer.BeerDetailsFragment;
-import quickbeer.android.features.beer.BeerReviewsFragment;
+import quickbeer.android.features.beerdetails.BeerDetailsFragment;
+import quickbeer.android.features.beerdetails.BeerReviewsFragment;
 import quickbeer.android.features.home.BeerTabFragment;
 import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.fragments.BeerListFragment;

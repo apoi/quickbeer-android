@@ -34,7 +34,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.beer.BeerDetailsActivity;
+import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;

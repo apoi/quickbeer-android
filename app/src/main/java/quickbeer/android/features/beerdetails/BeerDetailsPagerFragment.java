@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beer;
+package quickbeer.android.features.beerdetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,7 +34,7 @@ import quickbeer.android.R;
 
 import static butterknife.ButterKnife.bind;
 
-public class BeerPagerFragment extends Fragment {
+public class BeerDetailsPagerFragment extends Fragment {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -47,7 +47,7 @@ public class BeerPagerFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_pager, container, false);
+        return inflater.inflate(R.layout.home_fragment_pager, container, false);
     }
 
     @Override

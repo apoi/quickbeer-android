@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.views;
+package quickbeer.android.features.beerdetails;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -27,41 +27,35 @@ import android.widget.FrameLayout;
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.adapters.BeerDetailsAdapter;
-import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Review;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerDetailsView extends FrameLayout {
+public class BeerReviewsView extends FrameLayout {
 
-    private BeerDetailsAdapter beerDetailsAdapter;
+    private BeerReviewsAdapter beerReviewsAdapter;
 
-    public BeerDetailsView(Context context) {
+    public BeerReviewsView(Context context) {
         super(context);
     }
 
-    public BeerDetailsView(Context context, AttributeSet attrs) {
+    public BeerReviewsView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public void setBeer(@NonNull final Beer beer) {
-        get(beerDetailsAdapter).setBeer(get(beer));
-    }
-
     public void setReviews(@NonNull final List<Review> reviews) {
-        get(beerDetailsAdapter).setReviews(get(reviews));
+        get(beerReviewsAdapter).setReviews(get(reviews));
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beerDetailsAdapter = new BeerDetailsAdapter();
+        beerReviewsAdapter = new BeerReviewsAdapter();
 
-        RecyclerView beerDetailsListView = (RecyclerView) findViewById(R.id.beers_details_list_view);
-        beerDetailsListView.setHasFixedSize(true);
-        beerDetailsListView.setLayoutManager(new LinearLayoutManager(getContext()));
-        beerDetailsListView.setAdapter(beerDetailsAdapter);
+        RecyclerView beerReviewsListView = (RecyclerView) findViewById(R.id.beers_reviews_list_view);
+        beerReviewsListView.setHasFixedSize(true);
+        beerReviewsListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        beerReviewsListView.setAdapter(beerReviewsAdapter);
     }
 }

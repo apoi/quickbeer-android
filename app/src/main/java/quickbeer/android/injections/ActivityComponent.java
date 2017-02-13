@@ -21,11 +21,11 @@ import dagger.Subcomponent;
 import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingBaseActivity;
-import quickbeer.android.features.beer.BeerDetailsActivity;
+import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
-import quickbeer.android.views.viewholders.BeerDetailsViewHolder;
+import quickbeer.android.features.beerdetails.BeerDetailsViewHolder;
 
 @ActivityScope
 @Subcomponent(modules = ActivityModule.class)

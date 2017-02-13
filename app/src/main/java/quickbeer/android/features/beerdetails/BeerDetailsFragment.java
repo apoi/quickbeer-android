@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beer;
+package quickbeer.android.features.beerdetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,16 +33,14 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.views.BeerDetailsView;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerReviewsFragment extends BindingBaseFragment {
+public class BeerDetailsFragment extends BindingBaseFragment {
 
     @BindView(R.id.beer_details_view)
     BeerDetailsView detailsView;
@@ -59,10 +57,9 @@ public class BeerReviewsFragment extends BindingBaseFragment {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel()
-                    .getReviews()
-                    .subscribeOn(Schedulers.computation())
+                    .getBeer()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(detailsView::setReviews, Timber::e));
+                    .subscribe(detailsView::setBeer, Timber::e));
         }
     };
 

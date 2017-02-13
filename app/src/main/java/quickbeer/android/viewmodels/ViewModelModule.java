@@ -22,7 +22,7 @@ import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.features.beer.BeerDetailsViewModel;
+import quickbeer.android.features.beerdetails.BeerDetailsViewModel;
 
 @Module
 public final class ViewModelModule {

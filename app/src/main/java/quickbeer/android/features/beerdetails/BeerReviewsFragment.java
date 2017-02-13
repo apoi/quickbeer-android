@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beer;
+package quickbeer.android.features.beerdetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,10 +33,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.views.BeerDetailsView;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -44,10 +41,10 @@ import timber.log.Timber;
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerDetailsFragment extends BindingBaseFragment {
+public class BeerReviewsFragment extends BindingBaseFragment {
 
-    @BindView(R.id.beer_details_view)
-    BeerDetailsView detailsView;
+    @BindView(R.id.beer_reviews_view)
+    BeerReviewsView reviewsView;
 
     @Inject
     @Nullable
@@ -60,16 +57,11 @@ public class BeerDetailsFragment extends BindingBaseFragment {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            ConnectableObservable<Beer> beerObservable = viewModel()
-                    .getBeer()
+            subscription.add(viewModel()
+                    .getReviews()
                     .subscribeOn(Schedulers.computation())
-                    .publish();
-
-            subscription.add(beerObservable
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(detailsView::setBeer, Timber::e));
-
-            subscription.add(beerObservable.connect());
+                    .subscribe(reviewsView::setReviews, Timber::e));
         }
     };
 
@@ -80,7 +72,7 @@ public class BeerDetailsFragment extends BindingBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.beer_details_fragment, container, false);
+        return inflater.inflate(R.layout.beer_details_fragment_reviews, container, false);
     }
 
     @Override

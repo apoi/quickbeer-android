@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.adapters;
+package quickbeer.android.features.list;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import quickbeer.android.R;
+import quickbeer.android.adapters.BaseListAdapter;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewholders.BeerViewHolder;

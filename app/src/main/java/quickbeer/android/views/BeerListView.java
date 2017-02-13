@@ -29,7 +29,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.adapters.BeerListAdapter;
+import quickbeer.android.features.list.BeerListAdapter;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;

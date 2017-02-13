@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beer;
+package quickbeer.android.features.beerdetails;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -140,7 +140,7 @@ public class BeerDetailsActivity extends DrawerActivity {
             beerId = getIntent().getIntExtra("beerId", 0);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BeerPagerFragment())
+                    .add(R.id.container, new BeerDetailsPagerFragment())
                     .commit();
         }
     }

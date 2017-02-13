@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.views.viewholders;
+package quickbeer.android.features.beerdetails;
 
 import android.content.Context;
 import android.content.Intent;

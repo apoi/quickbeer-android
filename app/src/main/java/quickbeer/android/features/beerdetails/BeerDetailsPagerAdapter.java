@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beer;
+package quickbeer.android.features.beerdetails;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

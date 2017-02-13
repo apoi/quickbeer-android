@@ -40,7 +40,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".features.beer.BeerDetailsActivity"
+            android:name=".features.beerdetails.BeerDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
