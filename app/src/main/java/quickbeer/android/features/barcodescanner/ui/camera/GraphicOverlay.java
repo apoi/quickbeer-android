@@ -141,7 +141,9 @@ public class GraphicOverlay<T extends GraphicOverlay.Graphic> extends View {
      */
     public void add(T graphic) {
         synchronized (mLock) {
-            mGraphics.add(graphic);
+            if (mGraphics.isEmpty()) {
+                mGraphics.add(graphic);
+            }
         }
         postInvalidate();
     }
