@@ -3,6 +3,10 @@ apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'com.getkeepsafe.dexcount'
 
+apply from: 'app-config.gradle'
+
+def STRING = "String"
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -16,6 +20,8 @@ android {
         targetSdkVersion 25
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
+
+        buildConfigField(STRING, "RATEBEER_API_KEY", ratebeer_api_key)
     }
     dexOptions {
         preDexLibraries false

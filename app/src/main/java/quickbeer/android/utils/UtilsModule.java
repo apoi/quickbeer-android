@@ -19,12 +19,13 @@ package quickbeer.android.utils;
 
 import android.content.Context;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.Constants;
 import quickbeer.android.injections.ForApplication;
-import quickbeer.android.network.utils.ApiKey;
 import quickbeer.android.network.utils.NetworkUtils;
 
 @Module
@@ -32,8 +33,9 @@ public final class UtilsModule {
 
     @Provides
     @Singleton
-    static NetworkUtils providesNetworkUtils(@ForApplication Context context) {
-        return new NetworkUtils(new ApiKey().getApiKey(context));
+    static NetworkUtils providesNetworkUtils(@ForApplication Context context,
+                                             @Named(Constants.API_KEY_NAME) String apiKey) {
+        return new NetworkUtils(apiKey);
     }
 
     @Provides

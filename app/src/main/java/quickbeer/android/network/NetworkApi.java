@@ -46,7 +46,7 @@ public class NetworkApi {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(get(gson)))
-                .baseUrl(Constants.BASE_URL)
+                .baseUrl(Constants.API_URL)
                 .client(get(client))
                 .build();
 

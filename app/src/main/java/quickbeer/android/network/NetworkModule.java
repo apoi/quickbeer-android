@@ -37,11 +37,14 @@ import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import quickbeer.android.BuildConfig;
+import quickbeer.android.Constants;
 import quickbeer.android.injections.ForApplication;
 import quickbeer.android.instrumentation.NetworkInstrumentation;
 import quickbeer.android.network.utils.DateDeserializer;
@@ -56,6 +59,13 @@ public final class NetworkModule {
             @NonNull final OkHttpClient client,
             @NonNull final Gson gson) {
         return new NetworkApi(client, gson);
+    }
+
+    @Provides
+    @Singleton
+    @Named(Constants.API_KEY_NAME)
+    static String provideApiKey() {
+        return BuildConfig.RATEBEER_API_KEY;
     }
 
     @Provides

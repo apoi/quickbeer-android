@@ -32,6 +32,8 @@ proguard/
 .DS_Store
 
 # Project
+/examples
 /app/src/main/res/raw/
+/app/ratebeer-api.properties
 gradle.properties
 *.jks

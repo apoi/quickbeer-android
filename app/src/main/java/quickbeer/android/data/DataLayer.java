@@ -192,7 +192,7 @@ public class DataLayer extends DataLayerBase {
         return beerListStore.getAllOnce()
                 .flatMap(Observable::from)
                 .map(ItemList::getKey)
-                .filter(search -> !search.startsWith("__"))
+                .filter(search -> !search.startsWith(Constants.META_QUERY_PREFIX))
                 .toList();
     }
 

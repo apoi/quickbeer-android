@@ -21,14 +21,16 @@ public interface Constants {
 
     int DEFAULT_USER_ID = 0;
 
-    String BASE_URL = "https://www.ratebeer.com";
+    int NAV_ARROW_ANIMATION_DURATION = 350;
+
+    String API_URL = "https://www.ratebeer.com";
+
+    String API_KEY_NAME = "apiKey";
 
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
 
     String LOGIN_DEFAULT_SAVE_INFO = "on";
 
     String META_QUERY_PREFIX = "__";
-
-    int NAV_ARROW_ANIMATION_DURATION = 350;
 
 }
