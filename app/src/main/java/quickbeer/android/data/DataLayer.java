@@ -241,6 +241,51 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    //// BARCODE SEARCH
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getBarcodeSearchResultStream(@NonNull final String barcode) {
+        Timber.v("getBeersInCountryResultStream");
+
+        final String queryId = BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode);
+        final String uri = BeerSearchFetcher.getUniqueUri(queryId);
+
+        final Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore
+                        .getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue);
+
+        final Observable<ItemList<String>> barcodeSearchObservable = beerListStore
+                .getOnceAndStream(queryId)
+                .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, barcodeSearchObservable);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getBarcodeSearch(@NonNull final String barcode) {
+        Timber.v("getBarcodeSearch");
+
+        // Trigger a fetch only if there was no cached result
+        // TODO this subscription leaks really need to be fixed
+        beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
+                .filter(RxUtils::isNoneOrEmpty)
+                .doOnNext(results -> Timber.v("Search not cached, fetching"))
+                .subscribe(results -> fetchBarcodeSearch(barcode));
+
+        return getBarcodeSearchResultStream(barcode);
+    }
+
+    private void fetchBarcodeSearch(@NonNull final String barcode) {
+        Timber.v("fetchBarcodeSearch");
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.BARCODE.toString());
+        intent.putExtra("barcode", barcode);
+        context.startService(intent);
+    }
+
     //// TOP BEERS
 
     @NonNull
@@ -576,6 +621,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetBeerSearch {
         @NonNull
         Observable<DataStreamNotification<ItemList<String>>> call(@NonNull final String search);
+    }
+
+    public interface GetBarcodeSearch {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull final String barcode);
     }
 
     public interface GetTopBeers {

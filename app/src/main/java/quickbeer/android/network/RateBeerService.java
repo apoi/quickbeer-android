@@ -37,6 +37,7 @@ public interface RateBeerService {
     Uri LOGIN   = Uri.parse("__login");
     Uri BEER    = Uri.parse("__beer");
     Uri SEARCH  = Uri.parse("__search");
+    Uri BARCODE = Uri.parse("__barcode");
     Uri TOP50   = Uri.parse("__top50");
     Uri COUNTRY = Uri.parse("__country");
     Uri STYLE   = Uri.parse("__style");
@@ -55,6 +56,9 @@ public interface RateBeerService {
 
     @GET("/json/bff.asp")
     Observable<List<Beer>> search(@QueryMap Map<String, String> params);
+
+    @GET("/json/upc.asp")
+    Observable<List<Beer>> barcode(@QueryMap Map<String, String> params);
 
     @GET("/json/tb.asp")
     Observable<List<Beer>> topBeers(@QueryMap Map<String, String> params);

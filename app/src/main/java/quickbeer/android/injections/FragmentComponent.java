@@ -22,6 +22,7 @@ import quickbeer.android.features.beerdetails.BeerDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerReviewsFragment;
 import quickbeer.android.features.home.BeerTabFragment;
 import quickbeer.android.features.home.HomeFragment;
+import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
@@ -42,6 +43,8 @@ public interface FragmentComponent {
     void inject(BeerListFragment beerListFragment);
 
     void inject(BeerSearchFragment beerSearchFragment);
+
+    void inject(BarcodeSearchFragment barcodeSearchFragment);
 
     void inject(BeerDetailsFragment beerDetailsFragment);
 

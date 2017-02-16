@@ -42,6 +42,7 @@ import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.features.barcodescanner.BarcodeScanActivity;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.subscriptions.CompositeSubscription;
@@ -142,19 +143,27 @@ public class HomeFragment extends BindingBaseFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CODE_CAPTURE_BARCODE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Barcode barcode = data.getParcelableExtra(BarcodeScanActivity.BARCODE_RESULT);
-                    Timber.d("Barcode found: " + barcode.displayValue);
-                } else {
-                    Timber.w("No barcode captured, intent data is null");
-                }
-            } else {
-                Timber.e("Failure capturing barcode: %s", CommonStatusCodes.getStatusCodeString(resultCode));
-            }
-        } else {
+        if (requestCode != CODE_CAPTURE_BARCODE) {
             super.onActivityResult(requestCode, resultCode, data);
         }
+
+        if (resultCode != CommonStatusCodes.SUCCESS) {
+            Timber.e("Failure capturing barcode: %s", CommonStatusCodes.getStatusCodeString(resultCode));
+            return;
+        }
+
+        if (data == null) {
+            Timber.e("No barcode captured, intent data is null");
+            return;
+        }
+
+        Barcode barcode = data.getParcelableExtra(BarcodeScanActivity.BARCODE_RESULT);
+        Timber.d("Barcode found: " + barcode.displayValue);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("barcode", barcode.displayValue);
+
+        get(navigationProvider).addPage(Page.BARCODE_SEARCH, bundle);
     }
 }
+

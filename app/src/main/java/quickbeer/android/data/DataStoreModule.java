@@ -79,6 +79,12 @@ public final class DataStoreModule {
     }
 
     @Provides
+    static DataLayer.GetBarcodeSearch provideGetBarcodeSearch(
+            @NonNull final DataLayer dataLayer) {
+        return dataLayer::getBarcodeSearch;
+    }
+
+    @Provides
     static DataLayer.GetTopBeers provideGetTopBeers(
             @NonNull final DataLayer dataLayer) {
         return dataLayer::getTopBeers;

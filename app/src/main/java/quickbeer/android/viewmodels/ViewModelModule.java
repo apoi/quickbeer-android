@@ -43,6 +43,15 @@ public final class ViewModelModule {
     }
 
     @Provides
+    static BarcodeSearchViewModel providesBarcodeSearchViewModel(
+            @NonNull final DataLayer.GetBeer getBeer,
+            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull final DataLayer.GetBarcodeSearch getBarcodeSearch,
+            @NonNull final SearchViewViewModel searchViewViewModel) {
+        return new BarcodeSearchViewModel(getBeer, getBeerSearch, getBarcodeSearch, searchViewViewModel);
+    }
+
+    @Provides
     static TopBeersViewModel providesTopBeersViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetTopBeers getTopBeers) {

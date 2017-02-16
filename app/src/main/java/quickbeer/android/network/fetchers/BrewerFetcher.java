@@ -54,10 +54,10 @@ public class BrewerFetcher extends FetcherBase<Uri> {
 
     public BrewerFetcher(@NonNull final NetworkApi networkApi,
                          @NonNull final NetworkUtils networkUtils,
-                         @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
+                         @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
                          @NonNull final BrewerStore brewerStore,
                          @NonNull final BrewerMetadataStore metadataStore) {
-        super(updaterequestStatus);
+        super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);

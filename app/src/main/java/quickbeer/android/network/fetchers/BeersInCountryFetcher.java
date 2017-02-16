@@ -39,10 +39,10 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
 
     public BeersInCountryFetcher(@NonNull final NetworkApi networkApi,
                                  @NonNull final NetworkUtils networkUtils,
-                                 @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
+                                 @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
                                  @NonNull final BeerStore beerStore,
                                  @NonNull final BeerListStore beerListStore) {
-        super(networkApi, networkUtils, updaterequestStatus, beerStore, beerListStore);
+        super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
     @Override

@@ -34,36 +34,36 @@ import rx.Observable;
 import rx.functions.Action1;
 import timber.log.Timber;
 
-public class BeersInStyleFetcher extends BeerSearchFetcher {
+public class BarcodeSearchFetcher extends BeerSearchFetcher {
 
-    public BeersInStyleFetcher(@NonNull final NetworkApi networkApi,
-                               @NonNull final NetworkUtils networkUtils,
-                               @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                               @NonNull final BeerStore beerStore,
-                               @NonNull final BeerListStore beerListStore) {
-        super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
+    public BarcodeSearchFetcher(@NonNull final NetworkApi networkApi,
+                                @NonNull final NetworkUtils networkUtils,
+                                @NonNull final Action1<NetworkRequestStatus> requestStatus,
+                                @NonNull final BeerStore beerStore,
+                                @NonNull final BeerListStore beerListStore) {
+        super(networkApi, networkUtils, requestStatus, beerStore, beerListStore);
     }
 
     @Override
     public void fetch(@NonNull final Intent intent) {
-        final String styleId = intent.getStringExtra("styleId");
+        final String barcode = intent.getStringExtra("barcode");
 
-        if (styleId != null) {
-            fetchBeerSearch(styleId);
+        if (barcode != null) {
+            fetchBeerSearch(barcode);
         } else {
-            Timber.e("No styleId provided in the intent extras");
+            Timber.e("No barcode provided in the intent extras");
         }
     }
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String styleId) {
-        return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId));
+    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String barcode) {
+        return networkApi.barcode(networkUtils.createRequestParams("upc", barcode));
     }
 
     @NonNull
     @Override
     public Uri getServiceUri() {
-        return RateBeerService.STYLE;
+        return RateBeerService.BARCODE;
     }
 }

@@ -89,6 +89,21 @@ public final class FetcherModule {
     }
 
     @Provides
+    @Named("barcodeSearchFetcher")
+    static Fetcher<Uri> provideBarcodeSearchFetcher(
+            @NonNull final NetworkApi networkApi,
+            @NonNull final NetworkUtils networkUtils,
+            @NonNull final NetworkRequestStatusStore requestStatusStore,
+            @NonNull final BeerStore beerStore,
+            @NonNull final BeerListStore beerListStore) {
+        return new BarcodeSearchFetcher(networkApi,
+                networkUtils,
+                requestStatusStore::put,
+                beerStore,
+                beerListStore);
+    }
+
+    @Provides
     @Named("topBeersFetcher")
     static Fetcher<Uri> provideTopBeersFetcher(
             @NonNull final NetworkApi networkApi,
@@ -168,6 +183,7 @@ public final class FetcherModule {
             @Named("loginFetcher") @NonNull final Fetcher<Uri> loginFetcher,
             @Named("beerFetcher") @NonNull final Fetcher<Uri> beerFetcher,
             @Named("beerSearchFetcher") @NonNull final Fetcher<Uri> beerSearchFetcher,
+            @Named("barcodeSearchFetcher") @NonNull final Fetcher<Uri> barcodeSearchFetcher,
             @Named("topBeersFetcher") @NonNull final Fetcher<Uri> topBeersFetcher,
             @Named("beersInCountryFetcher") @NonNull final Fetcher<Uri> beersInCountryFetcher,
             @Named("beersInStyleFetcher") @NonNull final Fetcher<Uri> beersInStyleFetcher,
@@ -177,6 +193,7 @@ public final class FetcherModule {
                 loginFetcher,
                 beerFetcher,
                 beerSearchFetcher,
+                barcodeSearchFetcher,
                 topBeersFetcher,
                 beersInCountryFetcher,
                 beersInStyleFetcher,

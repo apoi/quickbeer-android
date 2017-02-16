@@ -31,6 +31,7 @@ import javax.inject.Named;
 
 import quickbeer.android.R;
 import quickbeer.android.features.home.HomeFragment;
+import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
 import quickbeer.android.features.list.fragments.BeersInStyleFragment;
@@ -51,6 +52,7 @@ public final class NavigationProvider {
     public enum Page {
         HOME,
         BEER_SEARCH,
+        BARCODE_SEARCH,
         TOP_BEERS,
         COUNTRY_LIST,
         COUNTRY,
@@ -193,6 +195,8 @@ public final class NavigationProvider {
                 return new HomeFragment();
             case BEER_SEARCH:
                 return new BeerSearchFragment();
+            case BARCODE_SEARCH:
+                return new BarcodeSearchFragment();
             case TOP_BEERS:
                 return new TopBeersFragment();
             case COUNTRY_LIST:

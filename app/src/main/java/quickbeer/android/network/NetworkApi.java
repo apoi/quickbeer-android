@@ -69,6 +69,11 @@ public class NetworkApi {
                 .search(params);
     }
 
+    public Observable<List<Beer>> barcode(Map<String, String> params) {
+        return rateBeerService
+                .barcode(params);
+    }
+
     public Observable<List<Beer>> getBeersInCountry(Map<String, String> params) {
         return rateBeerService
                 .topBeers(params);

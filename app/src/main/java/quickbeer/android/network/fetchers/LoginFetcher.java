@@ -51,9 +51,9 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
     public LoginFetcher(@NonNull final NetworkApi networkApi,
                         @NonNull final ClearableCookieJar cookieJar,
-                        @NonNull final Action1<NetworkRequestStatus> updaterequestStatus,
+                        @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
                         @NonNull final UserStore userStore) {
-        super(updaterequestStatus);
+        super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.cookieJar = get(cookieJar);
