@@ -33,4 +33,26 @@ public interface Constants {
 
     String META_QUERY_PREFIX = "__";
 
+    interface Fetchers {
+
+        String LOGIN = "loginFetcher";
+
+        String BEER = "beerFetcher";
+
+        String BEER_SEARCH = "beerSearchFetcher";
+
+        String BARCODE_SEARCH = "barcodeSearchFetcher";
+
+        String TOP_BEERS = "topBeersFetcher";
+
+        String BEERS_IN_COUNTRY = "beersInCountryFetcher";
+
+        String BEERS_IN_STYLE = "beersInStyleFetcher";
+
+        String REVIEW = "reviewFetcher";
+
+        String TICKS = "ticksFetcher";
+
+    }
+
 }
