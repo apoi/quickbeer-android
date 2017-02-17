@@ -33,7 +33,8 @@ import quickbeer.android.R;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract class DrawerActivity extends BindingBaseActivity implements NavigationView.OnNavigationItemSelectedListener {
+public abstract class DrawerActivity extends BindingBaseActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private ActionBarDrawerToggle drawerToggle;
 

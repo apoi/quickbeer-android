@@ -24,7 +24,9 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -33,17 +35,36 @@ public class TopBeersViewModel extends BeerListViewModel {
     @NonNull
     private final DataLayer.GetTopBeers getTopBeers;
 
+    @NonNull
+    private final DataLayer.GetBeerSearch getBeerSearch;
+
+    @NonNull
+    private final SearchViewViewModel searchViewViewModel;
+
     @Inject
     TopBeersViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                      @NonNull final DataLayer.GetTopBeers getTopBeers) {
+                      @NonNull final DataLayer.GetBeerSearch getBeerSearch,
+                      @NonNull final DataLayer.GetTopBeers getTopBeers,
+                      @NonNull final SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getTopBeers = get(getTopBeers);
+        this.getBeerSearch = get(getBeerSearch);
+        this.searchViewViewModel = get(searchViewViewModel);
     }
 
     @NonNull
     @Override
     protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        return get(getTopBeers).call();
+        Observable<DataStreamNotification<ItemList<String>>> searchObservable =
+                get(searchViewViewModel)
+                        .getQueryStream()
+                        .distinctUntilChanged()
+                        .filter(StringUtils::hasValue)
+                        .doOnNext(query -> Timber.d("query(%s)", query))
+                        .switchMap(query -> get(getBeerSearch).call(query));
+
+        return get(getTopBeers).call()
+                .mergeWith(searchObservable);
     }
 }

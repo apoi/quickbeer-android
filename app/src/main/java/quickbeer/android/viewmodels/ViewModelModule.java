@@ -54,8 +54,10 @@ public final class ViewModelModule {
     @Provides
     static TopBeersViewModel providesTopBeersViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetTopBeers getTopBeers) {
-        return new TopBeersViewModel(getBeer, getTopBeers);
+            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull final DataLayer.GetTopBeers getTopBeers,
+            @NonNull final SearchViewViewModel searchViewViewModel) {
+        return new TopBeersViewModel(getBeer, getBeerSearch, getTopBeers, searchViewViewModel);
     }
 
     @Provides

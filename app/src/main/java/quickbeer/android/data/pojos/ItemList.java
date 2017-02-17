@@ -79,7 +79,7 @@ public class ItemList<T> {
     @Override
     public String toString() {
         return "ItemList{key=" + key
-                + ", items='" + items.size()
+                + ", items=" + items.size()
                 + ", updated='" + updateDate
                 + "'}";
     }

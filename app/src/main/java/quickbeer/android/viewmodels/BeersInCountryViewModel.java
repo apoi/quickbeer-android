@@ -72,6 +72,6 @@ public class BeersInCountryViewModel extends BeerListViewModel {
                         .switchMap(query -> get(getBeerSearch).call(query));
 
         return getBeersInCountry.call(country)
-                .concatWith(searchObservable);
+                .mergeWith(searchObservable);
     }
 }

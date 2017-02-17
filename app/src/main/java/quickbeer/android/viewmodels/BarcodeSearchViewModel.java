@@ -72,6 +72,6 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
                         .switchMap(query -> get(getBeerSearch).call(query));
 
         return getBarcodeSearch.call(barcode)
-                .concatWith(searchObservable);
+                .mergeWith(searchObservable);
     }
 }

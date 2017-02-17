@@ -72,6 +72,6 @@ public class BeersInStyleViewModel extends BeerListViewModel {
                         .switchMap(query -> get(getBeerSearch).call(query));
 
         return getBeersInStyle.call(style)
-                .concatWith(searchObservable);
+                .mergeWith(searchObservable);
     }
 }
