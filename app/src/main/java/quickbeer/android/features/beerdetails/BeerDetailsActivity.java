@@ -43,8 +43,6 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.data.pojos.BeerMetadata;
-import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;

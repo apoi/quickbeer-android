@@ -150,12 +150,10 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BREWER
 
-    public Observable<Unit> accessBeer(@NonNull final Integer beerId) {
+    public void accessBeer(@NonNull final Integer beerId) {
         Timber.v("accessBeer(%s)", get(beerId));
 
-        return Observable.fromCallable(() -> BeerMetadata.newAccess(beerId))
-                .doOnNext(beerMetadataStore::put)
-                .map(Unit::asUnit);
+        beerMetadataStore.put(BeerMetadata.newAccess(beerId));
     }
 
     //// ACCESSED BEERS
@@ -548,12 +546,10 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BREWER
 
-    public Observable<Unit> accessBrewer(@NonNull final Integer brewerId) {
+    public void accessBrewer(@NonNull final Integer brewerId) {
         Timber.v("accessBrewer(%s)", get(brewerId));
 
-        return Observable.fromCallable(() -> BrewerMetadata.newAccess(brewerId))
-                .doOnNext(brewerMetadataStore::put)
-                .map(Unit::asUnit);
+        brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId));
     }
 
     //// ACCESSED BREWERS
@@ -582,7 +578,6 @@ public class DataLayer extends DataLayerBase {
     }
 
     public interface AccessBeer {
-
         void call(int beerId);
     }
 
