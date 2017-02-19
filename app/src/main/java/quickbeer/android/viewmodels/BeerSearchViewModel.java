@@ -63,6 +63,7 @@ public class BeerSearchViewModel extends BeerListViewModel {
                 .startWith(initialQuery)
                 .distinctUntilChanged()
                 .filter(StringUtils::hasValue)
+                .doOnNext(this::setInitialQuery)
                 .doOnNext(query -> Timber.d("query(%s)", query))
                 .switchMap(query -> get(getBeerSearch).call(query));
     }
