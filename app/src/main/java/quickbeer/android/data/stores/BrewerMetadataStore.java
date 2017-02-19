@@ -27,9 +27,11 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 import polanski.option.Option;
+import quickbeer.android.data.columns.BeerMetadataColumns;
 import quickbeer.android.data.columns.BrewerColumns;
 import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.pojos.BrewerMetadata;
+import quickbeer.android.data.stores.cores.BeerMetadataStoreCore;
 import quickbeer.android.data.stores.cores.BrewerMetadataStoreCore;
 import rx.Observable;
 
@@ -43,11 +45,9 @@ public class BrewerMetadataStore extends StoreBase<Integer, BrewerMetadata, Opti
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIds() {
-        return ((BrewerMetadataStoreCore) getCore()).getAccessedIds(BrewerColumns.ID, BrewerMetadataColumns.ACCESSED);
-    }
+    public Observable<List<Integer>> getAccessedIdsOnce() {
+        BrewerMetadataStoreCore core = (BrewerMetadataStoreCore) getCore();
 
-    public Observable<Integer> getNewlyAccessedIds(@NonNull final DateTime date) {
-        return ((BrewerMetadataStoreCore) getCore()).getNewlyAccessedItems(date);
+        return core.getAccessedIdsOnce(BrewerMetadataColumns.ID, BrewerMetadataColumns.ACCESSED);
     }
 }

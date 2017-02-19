@@ -48,7 +48,7 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIds(@NonNull final String idColumn, @NonNull final String accessColumn) {
+    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull final String idColumn, @NonNull final String accessColumn) {
         return Observable
                 .fromCallable(() -> {
                     String[] projection = { idColumn };
@@ -74,10 +74,10 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     }
 
     @NonNull
-    public Observable<Integer> getNewlyAccessedItems(@NonNull final DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
         return getStream()
                 .map(StoreItem::item)
-                .filter(item -> item.accessed().isAfter(0))
+                .filter(item -> DateUtils.isValidDate(item.accessed()))
                 .distinctUntilChanged(new Func1<BrewerMetadata, Object>() {
                     // Access date as key object indicating distinction
                     private DateTime latestAccess = date;

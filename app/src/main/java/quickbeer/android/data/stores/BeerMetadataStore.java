@@ -47,9 +47,4 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
 
         return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED);
     }
-
-    @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
-        return ((BeerMetadataStoreCore) getCore()).getAccessedIdsStream(date);
-    }
 }

@@ -71,17 +71,17 @@ public abstract class BrewerMetadata {
     }
 
     @NonNull
-    public static BrewerMetadata newUpdate(@NonNull final Brewer brewer) {
+    public static BrewerMetadata newUpdate(int brewerId) {
         return builder()
-                .brewerId(brewer.id())
+                .brewerId(brewerId)
                 .updated(DateTime.now())
                 .build();
     }
 
     @NonNull
-    public static BrewerMetadata newAccess(@NonNull final Brewer brewer) {
+    public static BrewerMetadata newAccess(int brewerId) {
         return builder()
-                .brewerId(brewer.id())
+                .brewerId(brewerId)
                 .accessed(DateTime.now())
                 .build();
     }

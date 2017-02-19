@@ -21,10 +21,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import quickbeer.android.viewmodels.BarcodeSearchViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.BeerViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -38,6 +41,8 @@ public class BarcodeSearchFragment extends BeerListFragment {
 
     @NonNull
     private String barcode = "";
+
+    private boolean detailsWasOpened = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +60,25 @@ public class BarcodeSearchFragment extends BeerListFragment {
         getComponent().inject(this);
 
         get(barcodeSearchViewModel).setBarcode(barcode);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (detailsWasOpened) {
+            getActivity().onBackPressed();
+        }
+    }
+
+    @Override
+    protected boolean singleResultShouldOpenDetails() {
+        if (!detailsWasOpened) {
+            detailsWasOpened = true;
+            return true;
+        }
+
+        return false;
     }
 
     @NonNull

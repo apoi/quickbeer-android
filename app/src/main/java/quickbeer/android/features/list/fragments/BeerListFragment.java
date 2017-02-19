@@ -25,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -35,8 +37,10 @@ import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
+import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.BeerListView;
 import rx.android.schedulers.AndroidSchedulers;
@@ -78,7 +82,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
             subscription.add(viewModel()
                     .getBeers()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(get(view)::setBeers, Timber::e));
+                    .subscribe(BeerListFragment.this::handleResultList, Timber::e));
 
             subscription.add(viewModel()
                     .getProgressStatus()
@@ -91,7 +95,19 @@ public abstract class BeerListFragment extends BindingBaseFragment {
         }
     };
 
-    private void openBeerDetails(@NonNull final Integer beerId) {
+    private void handleResultList(@NonNull List<BeerViewModel> beerList) {
+        if (beerList.size() == 1 && singleResultShouldOpenDetails()) {
+            openBeerDetails(beerList.get(0).getBeerId());
+        } else {
+            get(view).setBeers(beerList);
+        }
+    }
+
+    protected boolean singleResultShouldOpenDetails() {
+        return false;
+    }
+
+    protected void openBeerDetails(@NonNull final Integer beerId) {
         Intent intent = new Intent(getActivity(), BeerDetailsActivity.class);
         intent.putExtra("beerId", beerId);
         startActivity(intent);

@@ -77,7 +77,7 @@ public class BeerDetailsActivity extends DrawerActivity {
 
     @Inject
     @Nullable
-    BeerMetadataStore metadataStore;
+    DataLayer.AccessBeer accessBeer;
 
     @Nullable
     @Inject
@@ -106,8 +106,8 @@ public class BeerDetailsActivity extends DrawerActivity {
 
             // Update beer access date
             subscription.add(sourceObservable
-                    .map(BeerMetadata::newAccess)
-                    .subscribe(get(metadataStore)::put, Timber::e));
+                    .map(Beer::id)
+                    .subscribe(get(accessBeer)::call, Timber::e));
 
             // Set toolbar title
             subscription.add(sourceObservable

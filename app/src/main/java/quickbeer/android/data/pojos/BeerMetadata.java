@@ -81,17 +81,17 @@ public abstract class BeerMetadata {
     }
 
     @NonNull
-    public static BeerMetadata newUpdate(@NonNull final Beer beer) {
+    public static BeerMetadata newUpdate(int beerId) {
         return builder()
-                .beerId(beer.id())
+                .beerId(beerId)
                 .updated(DateTime.now())
                 .build();
     }
 
     @NonNull
-    public static BeerMetadata newAccess(@NonNull final Beer beer) {
+    public static BeerMetadata newAccess(int beerId) {
         return builder()
-                .beerId(beer.id())
+                .beerId(beerId)
                 .accessed(DateTime.now())
                 .build();
     }
