@@ -33,8 +33,8 @@ public abstract class BindingBaseFragment extends BaseFragment {
     private final BaseLifecycleViewDataBinder lifecycleBinder = new BaseLifecycleViewDataBinder() {
 
         @Override
-        public void bind(@NonNull final CompositeSubscription disposables) {
-            dataBinder().bind(disposables);
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            dataBinder().bind(subscription);
         }
 
         @Override

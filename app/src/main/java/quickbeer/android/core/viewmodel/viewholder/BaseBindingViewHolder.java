@@ -38,7 +38,7 @@ public abstract class BaseBindingViewHolder<T extends ViewModel>
     private T viewModel;
 
     @NonNull
-    private final CompositeSubscription disposables = new CompositeSubscription();
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     protected BaseBindingViewHolder(@NonNull final View view) {
         super(get(view));
@@ -65,7 +65,7 @@ public abstract class BaseBindingViewHolder<T extends ViewModel>
     }
 
     private void bindViewToViewModel() {
-        getViewDataBinder().bind(disposables);
+        getViewDataBinder().bind(subscription);
     }
 
     private void setAndBindDataModel(@NonNull final T viewModel) {
@@ -75,7 +75,7 @@ public abstract class BaseBindingViewHolder<T extends ViewModel>
 
     private void unbindViewFromViewModel() {
         // Don't dispose - we need to reuse it when recycling!
-        disposables.clear();
+        subscription.clear();
         getViewDataBinder().unbind();
     }
 

@@ -27,9 +27,9 @@ public interface DataBinder {
     /**
      * Bind to the data source.
      *
-     * @param disposables a {@link CompositeSubscription} to hold the bindings.
+     * @param subscription a {@link CompositeSubscription} to hold the bindings.
      */
-    void bind(@NonNull CompositeSubscription disposables);
+    void bind(@NonNull CompositeSubscription subscription);
 
     /**
      * Unbind from the data source.

@@ -57,8 +57,8 @@ public class ListActivity extends DrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription s) {
-            s.add(viewModel().getSearchQueriesOnceAndStream()
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(viewModel().getSearchQueriesOnceAndStream()
                     .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
                     .subscribe(query -> get(searchView).updateQueryList(query),
                             Timber::e));

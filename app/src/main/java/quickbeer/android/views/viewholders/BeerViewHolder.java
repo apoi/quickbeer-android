@@ -53,8 +53,8 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     @NonNull
     private final DataBinder viewDataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription disposables) {
-            disposables.add(get(getViewModel())
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(get(getViewModel())
                     .getBeer()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(BeerViewHolder.this::setBeer, Timber::e));
