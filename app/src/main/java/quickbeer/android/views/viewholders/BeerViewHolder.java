@@ -60,6 +60,11 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
                     .subscribe(BeerViewHolder.this::setBeer, Timber::e));
 
         }
+
+        @Override
+        public void unbind() {
+            clear();
+        }
     };
 
     public BeerViewHolder(@NonNull View view,
@@ -77,10 +82,6 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     }
 
     public void setBeer(@NonNull final Beer beer) {
-        String rating = get(beer).rating() >= 0
-                ? String.valueOf(beer.rating())
-                : "?";
-
         if (beer.getTickValue() > 0) {
             ratingTextView.setText("");
             ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
