@@ -30,6 +30,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
+import java.util.Locale;
 
 public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
 
@@ -39,11 +40,13 @@ public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSeriali
     private static final DateTimeFormatter US_TIME_FORMAT =
             DateTimeFormat
                     .forPattern("MM/dd/yyyy HH:mm:ss aa")
+                    .withLocale(Locale.US)
                     .withZone(DateTimeZone.forID("US/Pacific"));
 
     private static final DateTimeFormatter US_DATE_FORMAT =
             DateTimeFormat
                     .forPattern("MM/dd/yyyy")
+                    .withLocale(Locale.US)
                     .withZone(DateTimeZone.forID("US/Pacific"));;
 
     @Override
