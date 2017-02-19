@@ -30,11 +30,12 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.stores.DefaultStore;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import polanski.option.Option;
 import quickbeer.android.data.stores.cores.NetworkRequestStatusStoreCore;
 
-public class NetworkRequestStatusStore extends StoreBase<Integer, NetworkRequestStatus, Option<NetworkRequestStatus>> {
+public class NetworkRequestStatusStore extends DefaultStore<Integer, NetworkRequestStatus, Option<NetworkRequestStatus>> {
 
     public NetworkRequestStatusStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new NetworkRequestStatusStoreCore(contentResolver, gson),

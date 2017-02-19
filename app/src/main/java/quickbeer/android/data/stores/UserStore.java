@@ -30,9 +30,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.UserStoreCore;
 
 /**
@@ -42,9 +44,12 @@ public class UserStore extends StoreBase<Integer, User, Option<User>> {
 
     public UserStore(@NonNull final ContentResolver contentResolver,
                      @NonNull final Gson gson) {
-        super(new UserStoreCore(contentResolver, gson),
-              item -> Constants.DEFAULT_USER_ID,
-              Option::ofObj,
-              Option::none);
+        super(new CachingStoreCore<>(
+                        new UserStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>(User::merge),
+                        __ -> Constants.DEFAULT_USER_ID),
+                __ -> Constants.DEFAULT_USER_ID,
+                Option::ofObj,
+                Option::none);
     }
 }

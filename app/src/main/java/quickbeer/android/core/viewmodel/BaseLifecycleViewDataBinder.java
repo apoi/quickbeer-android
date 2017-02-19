@@ -43,8 +43,8 @@ public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder
      */
     @Override
     public void onResume() {
-        viewModel().bindToDataModel();
         bind(compositeSubscription);
+        viewModel().bindToDataModel();
     }
 
     /**

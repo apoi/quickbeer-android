@@ -25,16 +25,21 @@ import com.google.gson.Gson;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.cores.BeerStoreCore;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import rx.Observable;
 import rx.schedulers.Schedulers;
 
 public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
     public BeerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new BeerStoreCore(contentResolver, gson),
+        super(new CachingStoreCore<>(
+                        new BeerStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>(Beer::merge),
+                        Beer::id),
               Beer::id,
               Option::ofObj,
               Option::none);
@@ -43,7 +48,7 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
     @NonNull
     public Observable<List<Integer>> getTickedIds() {
         // Simplistic strategy of refreshing ticks list always on stream updates
-        return ((BeerStoreCore) getCore())
+        return ((BeerStoreCore) getProviderCore())
                 .getAllStream()
                 .filter(beer -> beer.tickDate() != null)
                 .debounce(1000, TimeUnit.MILLISECONDS)
@@ -54,6 +59,6 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
     }
 
     private Observable<List<Integer>> queryTicks() {
-        return ((BeerStoreCore) getCore()).queryTicks();
+        return ((BeerStoreCore) getProviderCore()).queryTicks();
     }
 }

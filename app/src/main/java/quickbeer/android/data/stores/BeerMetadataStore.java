@@ -22,20 +22,23 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.columns.BeerMetadataColumns;
 import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.stores.cores.BeerMetadataStoreCore;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import rx.Observable;
 
 public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<BeerMetadata>> {
 
     public BeerMetadataStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new BeerMetadataStoreCore(contentResolver, gson),
+        super(new CachingStoreCore<>(
+                new BeerMetadataStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>(BeerMetadata::merge),
+                        BeerMetadata::beerId),
                 BeerMetadata::beerId,
                 Option::ofObj,
                 Option::none);
@@ -43,7 +46,7 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
 
     @NonNull
     public Observable<List<Integer>> getAccessedIdsOnce() {
-        BeerMetadataStoreCore core = (BeerMetadataStoreCore) getCore();
+        BeerMetadataStoreCore core = (BeerMetadataStoreCore) getProviderCore();
 
         return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED);
     }

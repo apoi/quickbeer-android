@@ -22,8 +22,10 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.ReviewListStoreCore;
 
 /**
@@ -32,9 +34,12 @@ import quickbeer.android.data.stores.cores.ReviewListStoreCore;
 public class ReviewListStore extends StoreBase<Integer, ItemList<Integer>, Option<ItemList<Integer>>> {
 
     public ReviewListStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new ReviewListStoreCore(contentResolver, gson),
-              ItemList::getKey,
-              Option::ofObj,
-              Option::none);
+        super(new CachingStoreCore<>(
+                        new ReviewListStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>((o1, o2) -> o2),
+                        ItemList::getKey),
+                ItemList::getKey,
+                Option::ofObj,
+                Option::none);
     }
 }

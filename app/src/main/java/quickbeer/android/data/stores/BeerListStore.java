@@ -22,9 +22,11 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.cores.BeerListStoreCore;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 
 /**
  * Class storing beer lists related to a string key, such as a search.
@@ -33,7 +35,10 @@ public class BeerListStore extends StoreBase<String, ItemList<String>, Option<It
 
     public BeerListStore(@NonNull final ContentResolver contentResolver,
                          @NonNull final Gson gson) {
-        super(new BeerListStoreCore(contentResolver, gson),
+        super(new CachingStoreCore<>(
+                new BeerListStoreCore(contentResolver, gson),
+                new MemoryStoreCore<>((o1, o2) -> o2),
+                ItemList::getKey),
               ItemList::getKey,
               Option::ofObj,
               Option::none);

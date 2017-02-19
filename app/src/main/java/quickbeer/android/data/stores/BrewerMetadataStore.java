@@ -22,23 +22,23 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
-
 import java.util.List;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
-import quickbeer.android.data.columns.BeerMetadataColumns;
-import quickbeer.android.data.columns.BrewerColumns;
 import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.pojos.BrewerMetadata;
-import quickbeer.android.data.stores.cores.BeerMetadataStoreCore;
 import quickbeer.android.data.stores.cores.BrewerMetadataStoreCore;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import rx.Observable;
 
 public class BrewerMetadataStore extends StoreBase<Integer, BrewerMetadata, Option<BrewerMetadata>> {
 
     public BrewerMetadataStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new BrewerMetadataStoreCore(contentResolver, gson),
+        super(new CachingStoreCore<>(
+                        new BrewerMetadataStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>(BrewerMetadata::merge),
+                        BrewerMetadata::brewerId),
                 BrewerMetadata::brewerId,
                 Option::ofObj,
                 Option::none);
@@ -46,7 +46,7 @@ public class BrewerMetadataStore extends StoreBase<Integer, BrewerMetadata, Opti
 
     @NonNull
     public Observable<List<Integer>> getAccessedIdsOnce() {
-        BrewerMetadataStoreCore core = (BrewerMetadataStoreCore) getCore();
+        BrewerMetadataStoreCore core = (BrewerMetadataStoreCore) getProviderCore();
 
         return core.getAccessedIdsOnce(BrewerMetadataColumns.ID, BrewerMetadataColumns.ACCESSED);
     }

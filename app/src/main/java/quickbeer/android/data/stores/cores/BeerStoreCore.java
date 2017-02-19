@@ -131,7 +131,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     @Override
-    protected Beer mergeValues(@NonNull final Beer v1, @NonNull final Beer v2) {
+    public Beer mergeValues(@NonNull final Beer v1, @NonNull final Beer v2) {
         return Beer.merge(v1, v2);
     }
 }

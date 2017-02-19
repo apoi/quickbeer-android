@@ -23,43 +23,48 @@ import java.util.List;
 
 import io.reark.reark.data.stores.DefaultStore;
 import io.reark.reark.utils.Preconditions;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.StoreCoreBase;
 import rx.Observable;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
 
     @NonNull
-    private final StoreCoreBase<T, U> core;
+    private final CachingStoreCore<T, U> core;
 
     @NonNull
     private final GetNullSafe<U, R> getNullSafe;
 
-    StoreBase(@NonNull final StoreCoreBase<T, U> core,
+    StoreBase(@NonNull final CachingStoreCore<T, U> core,
               @NonNull final GetIdForItem<T, U> getIdForItem,
               @NonNull final GetNullSafe<U, R> getNullSafe,
               @NonNull final GetEmptyValue<R> getEmptyValue) {
-        super(Preconditions.get(core),
-                Preconditions.get(getIdForItem),
-                Preconditions.get(getNullSafe),
-                Preconditions.get(getEmptyValue));
+        super(get(core),
+                get(getIdForItem),
+                get(getNullSafe),
+                get(getEmptyValue));
 
         this.core = core;
         this.getNullSafe = getNullSafe;
     }
 
     @NonNull
-    StoreCoreBase<T, U> getCore() {
-        return core;
+    StoreCoreBase<T, U> getProviderCore() {
+        return core.getProviderCore();
     }
 
     @NonNull
     public Observable<List<U>> getAllOnce() {
-        return core.getAllOnce();
+        return getProviderCore()
+                .getAllOnce();
     }
 
     @NonNull
     public Observable<R> getAllStream() {
-        return core.getAllStream()
+        return getProviderCore()
+                .getAllStream()
                 .map(getNullSafe::call);
     }
 }

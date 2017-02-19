@@ -22,16 +22,21 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.ReviewStoreCore;
 
 public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
 
     public ReviewStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
-        super(new ReviewStoreCore(contentResolver, gson),
-              Review::id,
-              Option::ofObj,
-              Option::none);
+        super(new CachingStoreCore<>(
+                        new ReviewStoreCore(contentResolver, gson),
+                        new MemoryStoreCore<>(Review::merge),
+                        Review::id),
+                Review::id,
+                Option::ofObj,
+                Option::none);
     }
 }
