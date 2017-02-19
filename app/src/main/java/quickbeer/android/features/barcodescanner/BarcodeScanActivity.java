@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -38,7 +39,6 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
@@ -46,6 +46,7 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 import java.io.IOException;
 
 import quickbeer.android.R;
+import quickbeer.android.features.barcodescanner.ui.camera.CameraSource;
 import quickbeer.android.features.barcodescanner.ui.camera.CameraSourcePreview;
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 import timber.log.Timber;
@@ -191,7 +192,7 @@ public final class BarcodeScanActivity extends AppCompatActivity implements Barc
                 .setFacing(CameraSource.CAMERA_FACING_BACK)
                 .setRequestedPreviewSize(PREVIEW_HEIGHT, (int) (PREVIEW_HEIGHT / ratio))
                 .setRequestedFps(REQUESTED_FPS)
-                .setAutoFocusEnabled(true)
+                .setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE)
                 .build();
     }
 
