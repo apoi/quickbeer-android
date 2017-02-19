@@ -31,6 +31,7 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.Score;
 import quickbeer.android.viewmodels.BeerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -58,6 +59,7 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
 
             subscription.add(get(getViewModel())
                     .getBeer()
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(BeerViewHolder.this::setBeer, Timber::e));
         }

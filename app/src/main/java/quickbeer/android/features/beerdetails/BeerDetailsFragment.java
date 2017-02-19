@@ -34,6 +34,7 @@ import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -58,6 +59,7 @@ public class BeerDetailsFragment extends BindingBaseFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .getBeer()
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(detailsView::setBeer, Timber::e));
         }

@@ -52,6 +52,7 @@ import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -97,6 +98,7 @@ public class BeerDetailsActivity extends DrawerActivity {
         public void bind(@NonNull final CompositeSubscription subscription) {
             ConnectableObservable<Beer> sourceObservable = get(getBeer)
                     .call(beerId)
+                    .subscribeOn(Schedulers.io())
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)
                     .first()

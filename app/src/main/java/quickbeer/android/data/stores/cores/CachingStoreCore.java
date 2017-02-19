@@ -43,8 +43,8 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
 
         // Subscribe to all updates to keep cache up-to-date
         providerCore.getAllStream()
-                .onBackpressureBuffer()
                 .subscribeOn(Schedulers.io())
+                .onBackpressureBuffer()
                 .subscribe(item -> memoryCore.put(getIdForItem.call(item), item));
     }
 
@@ -62,7 +62,6 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
     @Override
     public Observable<U> getCached(@NonNull T id) {
         return memoryCore.getCached(id)
-                .subscribeOn(Schedulers.io())
                 .switchIfEmpty(providerCore
                         .getCached(id)
                         .doOnNext(item -> memoryCore.put(id, item)));

@@ -230,7 +230,7 @@ public class DataLayer extends DataLayerBase {
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getBarcodeSearchResultStream(@NonNull final String barcode) {
-        Timber.v("getBeersInCountryResultStream(%s)", get(barcode));
+        Timber.v("getBarcodeSearchResultStream(%s)", get(barcode));
 
         final String queryId = BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode);
         final String uri = BeerSearchFetcher.getUniqueUri(queryId);

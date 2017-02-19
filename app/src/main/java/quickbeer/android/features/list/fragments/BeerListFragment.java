@@ -44,6 +44,7 @@ import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.BeerListView;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -81,6 +82,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
 
             subscription.add(viewModel()
                     .getBeers()
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(BeerListFragment.this::handleResultList, Timber::e));
 

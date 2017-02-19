@@ -59,7 +59,7 @@ public class BeerReviewsFragment extends BindingBaseFragment {
         public void bind(@NonNull final CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .getReviews()
-                    .subscribeOn(Schedulers.computation())
+                    .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(reviewsView::setReviews, Timber::e));
         }
