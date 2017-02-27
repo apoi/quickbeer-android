@@ -48,6 +48,7 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
     public Observable<List<Integer>> getAccessedIdsOnce() {
         BeerMetadataStoreCore core = (BeerMetadataStoreCore) getProviderCore();
 
+        // This isn't a result set but rather a custom query. Thus, no caching.
         return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED);
     }
 }
