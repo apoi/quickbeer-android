@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.data.stores.DefaultStore;
-import io.reark.reark.utils.Preconditions;
 import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.StoreCoreBase;
 import rx.Observable;

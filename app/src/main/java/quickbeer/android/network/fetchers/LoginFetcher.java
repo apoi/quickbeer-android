@@ -89,12 +89,15 @@ public class LoginFetcher extends FetcherBase<Uri> {
                         .username(username)
                         .password(password)
                         .build())
+                .toSingle()
+                .doOnSuccess(user -> Timber.d("Updating login status to " + user.isLogged()))
+                .flatMap(userStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .doOnCompleted(() -> completeRequest(uri))
-                .doOnError(doOnError(uri))
-                .doOnNext(user -> Timber.d("Updating login status to " + user.isLogged()))
-                .subscribe(userStore::put,
-                           err -> Timber.e(err, "Error fetching user " + username));
+                .subscribe(updated -> completeRequest(uri, updated),
+                        err -> {
+                            Timber.e(err, "Error fetching user " + username);
+                            doOnError(uri);
+                        });
 
         addRequest(id, subscription);
     }

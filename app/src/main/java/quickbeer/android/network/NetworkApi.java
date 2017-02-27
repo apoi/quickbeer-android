@@ -34,6 +34,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
+import rx.Single;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -58,7 +59,7 @@ public class NetworkApi {
                 .login(username, password, Constants.LOGIN_DEFAULT_SAVE_INFO);
     }
 
-    public Observable<Beer> getBeer(Map<String, String> params) {
+    public Single<Beer> getBeer(Map<String, String> params) {
         return rateBeerService
                 .getBeer(params)
                 .map(list -> list.get(0)); // API returns a list of one beer

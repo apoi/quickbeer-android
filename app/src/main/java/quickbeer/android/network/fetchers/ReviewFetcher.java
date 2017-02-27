@@ -96,12 +96,15 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .doOnNext(reviewStore::put)
                 .map(Review::id)
                 .toList()
+                .toSingle()
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, DateTime.now()))
+                .flatMap(reviewListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .doOnCompleted(() -> completeRequest(uri))
-                .doOnError(doOnError(uri))
-                .subscribe(reviewListStore::put,
-                        err -> Timber.e(err, "Error fetching reviews for beer " + beerId));
+                .subscribe(updated -> completeRequest(uri, updated),
+                        error -> {
+                            Timber.e(error, "Error fetching reviews for beer " + beerId);
+                            doOnError(uri);
+                        });
 
         addRequest(beerId, subscription);
     }

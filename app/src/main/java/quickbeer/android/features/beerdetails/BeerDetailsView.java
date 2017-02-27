@@ -24,12 +24,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import java.util.List;
-
 import quickbeer.android.R;
-import quickbeer.android.features.beerdetails.BeerDetailsAdapter;
 import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.data.pojos.Review;
 
 import static io.reark.reark.utils.Preconditions.get;
 

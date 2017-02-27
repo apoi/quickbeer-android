@@ -17,7 +17,6 @@
  */
 package quickbeer.android.data.stores.cores;
 
-import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -29,6 +28,7 @@ import com.google.gson.Gson;
 import java.util.Collections;
 import java.util.List;
 
+import io.reark.reark.data.stores.cores.UpdateOperation;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.columns.NetworkRequestStatusColumns;
@@ -45,7 +45,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    protected Observable<List<ContentProviderOperation>> groupOperations(@NonNull final Observable<ContentProviderOperation> source) {
+    protected Observable<List<UpdateOperation>> groupOperations(@NonNull final Observable<UpdateOperation> source) {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.
         return source.map(Collections::singletonList);
     }

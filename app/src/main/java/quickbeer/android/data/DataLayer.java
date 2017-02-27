@@ -52,7 +52,6 @@ import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.network.fetchers.BrewerFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.rx.RxUtils;
-import quickbeer.android.rx.Unit;
 import rx.Observable;
 import timber.log.Timber;
 

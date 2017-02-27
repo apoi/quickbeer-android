@@ -21,13 +21,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.List;
-
 import javax.inject.Inject;
 
 import quickbeer.android.viewmodels.BarcodeSearchViewModel;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.BeerViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;

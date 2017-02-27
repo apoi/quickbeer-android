@@ -88,13 +88,17 @@ public class BrewerFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(brewerId)
                 .subscribeOn(Schedulers.computation())
+                .toSingle()
+                .flatMap(brewerStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .doOnCompleted(() -> completeRequest(uri))
-                .doOnError(doOnError(uri))
-                .doOnNext(brewerStore::put)
-                .map(brewer -> BrewerMetadata.newUpdate(brewer.id()))
-                .subscribe(metadataStore::put,
-                        err -> Timber.e(err, "Error fetching brewer " + brewerId));
+                .subscribe(updated -> {
+                            metadataStore.put(BrewerMetadata.newUpdate(brewerId));
+                            completeRequest(uri, updated);
+                        },
+                        error -> {
+                            Timber.e(error, "Error fetching brewer " + brewerId);
+                            doOnError(uri);
+                        });
 
         addRequest(brewerId, subscription);
     }

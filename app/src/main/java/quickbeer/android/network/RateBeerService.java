@@ -32,6 +32,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 import rx.Observable;
+import rx.Single;
 
 public interface RateBeerService {
     Uri LOGIN   = Uri.parse("__login");
@@ -52,7 +53,7 @@ public interface RateBeerService {
                                @Field("saveinfo") String saveinfo);
 
     @GET("/json/bff.asp")
-    Observable<List<Beer>> getBeer(@QueryMap Map<String, String> params);
+    Single<List<Beer>> getBeer(@QueryMap Map<String, String> params);
 
     @GET("/json/bff.asp")
     Observable<List<Beer>> search(@QueryMap Map<String, String> params);

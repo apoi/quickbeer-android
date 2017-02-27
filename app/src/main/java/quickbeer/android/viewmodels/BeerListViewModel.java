@@ -63,19 +63,12 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
                 sourceObservable()
                         .publish();
 
-        Observable<ProgressStatus> emptyResult = sharedObservable
-                .filter(DataStreamNotification::isOnNext)
-                .map(DataStreamNotification::getValue)
-                .map(ItemList::getItems)
-                .map(items -> items.isEmpty()
-                        ? ProgressStatus.EMPTY
-                        : ProgressStatus.VALUE);
-
-        // Construct progress status. Leave out completion and rely on value emitting instead
+        // Construct progress status. Completed with value means we'll receive onNext.
         subscription.add(sharedObservable
-                .filter(notification -> !notification.isFetchingCompleted())
+                .filter(notification -> !notification.isFetchingCompletedWithValue())
                 .map(toProgressStatus())
-                .mergeWith(emptyResult)
+                .startWith(ProgressStatus.LOADING)
+                .distinctUntilChanged()
                 .subscribe(this::setProgressStatus));
 
         // Clear list on fetching start

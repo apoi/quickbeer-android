@@ -98,12 +98,15 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .doOnNext(beerStore::put)
                 .map(Beer::id)
                 .toList()
+                .toSingle()
                 .map(beerIds -> ItemList.create(queryId, beerIds, DateTime.now()))
+                .flatMap(beerListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .doOnCompleted(() -> completeRequest(uri))
-                .doOnError(doOnError(uri))
-                .subscribe(beerListStore::put,
-                           err -> Timber.e(err, "Error fetching beer search for %s", uri));
+                .subscribe(updated -> completeRequest(uri, updated),
+                           error -> {
+                               Timber.e(error, "Error fetching beer search for %s", uri);
+                               doOnError(uri);
+                           });
 
         addRequest(uri.hashCode(), subscription);
     }

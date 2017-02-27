@@ -29,8 +29,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.features.list.BeerListAdapter;
 import quickbeer.android.data.pojos.Header;
+import quickbeer.android.features.list.BeerListAdapter;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
@@ -101,17 +101,20 @@ public class BeerListView extends FrameLayout {
         checkNotNull(searchStatusTextView);
 
         switch (progressStatus) {
+            case VALUE:
+                searchStatusTextView.setVisibility(GONE);
+                break;
             case LOADING:
                 searchStatusTextView.setText(R.string.search_status_loading);
+                searchStatusTextView.setVisibility(VISIBLE);
                 break;
             case ERROR:
                 searchStatusTextView.setText(R.string.search_status_error);
-                break;
-            case VALUE:
-                searchStatusTextView.setText("");
+                searchStatusTextView.setVisibility(VISIBLE);
                 break;
             case EMPTY:
                 searchStatusTextView.setText(R.string.search_no_beers);
+                searchStatusTextView.setVisibility(VISIBLE);
                 break;
         }
     }
