@@ -309,7 +309,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getTopBeersResultStream()
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.never()));
+                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     private void fetchTopBeers() {
