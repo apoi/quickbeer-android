@@ -31,6 +31,7 @@ import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import rx.Observable;
+import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;
 
@@ -57,7 +58,7 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String styleId) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull final String styleId) {
         return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId));
     }
 

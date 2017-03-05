@@ -30,7 +30,7 @@ import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
+import rx.Single;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -88,23 +88,18 @@ public class BrewerFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(brewerId)
                 .subscribeOn(Schedulers.computation())
-                .toSingle()
                 .flatMap(brewerStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .subscribe(updated -> {
-                            metadataStore.put(BrewerMetadata.newUpdate(brewerId));
-                            completeRequest(uri, updated);
-                        },
-                        error -> {
-                            Timber.e(error, "Error fetching brewer " + brewerId);
-                            doOnError(uri);
-                        });
+                .doOnSuccess(updated -> completeRequest(uri, updated))
+                .doOnError(doOnError(uri))
+                .subscribe(__ -> metadataStore.put(BrewerMetadata.newUpdate(brewerId)),
+                        error -> Timber.e(error, "Error fetching brewer " + brewerId));
 
         addRequest(brewerId, subscription);
     }
 
     @NonNull
-    private Observable<Brewer> createNetworkObservable(int brewerId) {
+    private Single<Brewer> createNetworkObservable(int brewerId) {
         return networkApi.getBrewer(networkUtils.createRequestParams("b", String.valueOf(brewerId)));
     }
 

@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import io.reark.reark.data.stores.interfaces.StoreCoreInterface;
+import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
@@ -58,6 +59,12 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
     @Override
     public Single<Boolean> put(@NonNull T id, @NonNull U item) {
         return providerCore.put(id, item);
+    }
+
+    @NonNull
+    @Override
+    public Completable delete(@NonNull T id) {
+        return providerCore.delete(id);
     }
 
     @NonNull

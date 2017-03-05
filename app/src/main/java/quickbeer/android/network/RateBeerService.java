@@ -56,23 +56,23 @@ public interface RateBeerService {
     Single<List<Beer>> getBeer(@QueryMap Map<String, String> params);
 
     @GET("/json/bff.asp")
-    Observable<List<Beer>> search(@QueryMap Map<String, String> params);
+    Single<List<Beer>> search(@QueryMap Map<String, String> params);
 
     @GET("/json/upc.asp")
-    Observable<List<Beer>> barcode(@QueryMap Map<String, String> params);
+    Single<List<Beer>> barcode(@QueryMap Map<String, String> params);
 
     @GET("/json/tb.asp")
-    Observable<List<Beer>> topBeers(@QueryMap Map<String, String> params);
+    Single<List<Beer>> topBeers(@QueryMap Map<String, String> params);
 
     @GET("/json/style.asp")
-    Observable<List<Beer>> beersInStyle(@QueryMap Map<String, String> params);
+    Single<List<Beer>> beersInStyle(@QueryMap Map<String, String> params);
 
     @GET("/json/gr.asp")
-    Observable<List<Review>> getReviews(@QueryMap Map<String, String> params);
+    Single<List<Review>> getReviews(@QueryMap Map<String, String> params);
 
     @GET("/json/bt.asp")
-    Observable<List<Beer>> getTicks(@QueryMap Map<String, String> params);
+    Single<List<Beer>> getTicks(@QueryMap Map<String, String> params);
 
     @GET("/json/bi.asp")
-    Observable<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);
+    Single<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);
 }

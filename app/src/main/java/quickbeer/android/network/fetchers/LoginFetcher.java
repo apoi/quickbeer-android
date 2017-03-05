@@ -30,6 +30,7 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -93,11 +94,10 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .doOnSuccess(user -> Timber.d("Updating login status to " + user.isLogged()))
                 .flatMap(userStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .subscribe(updated -> completeRequest(uri, updated),
-                        err -> {
-                            Timber.e(err, "Error fetching user " + username);
-                            doOnError(uri);
-                        });
+                .doOnSuccess(updated -> completeRequest(uri, updated))
+                .doOnError(doOnError(uri))
+                .subscribe(RxUtils::nothing,
+                        error -> Timber.e(error, "Error fetching user " + username));
 
         addRequest(id, subscription);
     }

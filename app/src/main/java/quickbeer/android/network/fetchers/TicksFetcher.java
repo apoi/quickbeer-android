@@ -31,7 +31,7 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
+import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;
 
@@ -58,7 +58,7 @@ public class TicksFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String userId) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull final String userId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "1");
         params.put("u", userId);
 

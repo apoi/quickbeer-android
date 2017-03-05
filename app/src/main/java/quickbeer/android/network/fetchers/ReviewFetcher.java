@@ -34,7 +34,9 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
+import quickbeer.android.rx.RxUtils;
 import rx.Observable;
+import rx.Single;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -92,6 +94,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(beerId)
                 .subscribeOn(Schedulers.computation())
+                .toObservable()
                 .flatMap(Observable::from)
                 .doOnNext(reviewStore::put)
                 .map(Review::id)
@@ -100,17 +103,16 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, DateTime.now()))
                 .flatMap(reviewListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .subscribe(updated -> completeRequest(uri, updated),
-                        error -> {
-                            Timber.e(error, "Error fetching reviews for beer " + beerId);
-                            doOnError(uri);
-                        });
+                .doOnSuccess(updated -> completeRequest(uri, updated))
+                .doOnError(doOnError(uri))
+                .subscribe(RxUtils::nothing,
+                        error -> Timber.e(error, "Error fetching reviews for beer " + beerId));
 
         addRequest(beerId, subscription);
     }
 
     @NonNull
-    private Observable<List<Review>> createNetworkObservable(final int beerId) {
+    private Single<List<Review>> createNetworkObservable(final int beerId) {
         return networkApi.getReviews(networkUtils.createRequestParams("bid", String.valueOf(beerId)));
     }
 

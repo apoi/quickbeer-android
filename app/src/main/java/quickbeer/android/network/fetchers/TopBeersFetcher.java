@@ -30,7 +30,7 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
+import rx.Single;
 import rx.functions.Action1;
 
 public class TopBeersFetcher extends BeerSearchFetcher {
@@ -50,7 +50,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
         // Disregard search, the top beers query is static
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));
     }

@@ -34,7 +34,9 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
+import quickbeer.android.rx.RxUtils;
 import rx.Observable;
+import rx.Single;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -94,6 +96,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = createNetworkObservable(query)
                 .subscribeOn(Schedulers.computation())
+                .toObservable()
                 .flatMap(Observable::from)
                 .doOnNext(beerStore::put)
                 .map(Beer::id)
@@ -102,17 +105,16 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .map(beerIds -> ItemList.create(queryId, beerIds, DateTime.now()))
                 .flatMap(beerListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
-                .subscribe(updated -> completeRequest(uri, updated),
-                           error -> {
-                               Timber.e(error, "Error fetching beer search for %s", uri);
-                               doOnError(uri);
-                           });
+                .doOnSuccess(updated -> completeRequest(uri, updated))
+                .doOnError(doOnError(uri))
+                .subscribe(RxUtils::nothing,
+                        error -> Timber.e(error, "Error fetching beer search for %s", uri));
 
         addRequest(uri.hashCode(), subscription);
     }
 
     @NonNull
-    protected Observable<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
         return networkApi.search(networkUtils.createRequestParams("bn", get(searchString)));
     }
 

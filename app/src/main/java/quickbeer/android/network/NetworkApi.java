@@ -65,37 +65,37 @@ public class NetworkApi {
                 .map(list -> list.get(0)); // API returns a list of one beer
     }
 
-    public Observable<List<Beer>> search(Map<String, String> params) {
+    public Single<List<Beer>> search(Map<String, String> params) {
         return rateBeerService
                 .search(params);
     }
 
-    public Observable<List<Beer>> barcode(Map<String, String> params) {
+    public Single<List<Beer>> barcode(Map<String, String> params) {
         return rateBeerService
                 .barcode(params);
     }
 
-    public Observable<List<Beer>> getBeersInCountry(Map<String, String> params) {
+    public Single<List<Beer>> getBeersInCountry(Map<String, String> params) {
         return rateBeerService
                 .topBeers(params);
     }
 
-    public Observable<List<Beer>> getBeersInStyle(Map<String, String> params) {
+    public Single<List<Beer>> getBeersInStyle(Map<String, String> params) {
         return rateBeerService
                 .beersInStyle(params);
     }
 
-    public Observable<List<Review>> getReviews(Map<String, String> params) {
+    public Single<List<Review>> getReviews(Map<String, String> params) {
         return rateBeerService
                 .getReviews(params);
     }
 
-    public Observable<List<Beer>> getTicks(Map<String, String> params) {
+    public Single<List<Beer>> getTicks(Map<String, String> params) {
         return rateBeerService
                 .getTicks(params);
     }
 
-    public Observable<Brewer> getBrewer(Map<String, String> params) {
+    public Single<Brewer> getBrewer(Map<String, String> params) {
         return rateBeerService
                 .getBrewer(params)
                 .map(list -> list.get(0)); // API returns a list of one brewer
