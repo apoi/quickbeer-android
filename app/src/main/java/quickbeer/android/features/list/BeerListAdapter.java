@@ -17,6 +17,8 @@
  */
 package quickbeer.android.features.list;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,16 +34,25 @@ import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewholders.BeerViewHolder;
 import quickbeer.android.views.viewholders.HeaderViewHolder;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+
 public class BeerListAdapter extends BaseListAdapter {
 
+    @Nullable
     private Header header;
-    private final List<BeerViewModel> beers = new ArrayList<>();
-    private final List<Object> items = new ArrayList<>();
 
+    @NonNull
+    private final List<BeerViewModel> beers = new ArrayList<>(10);
+
+    @NonNull
+    private final List<Object> items = new ArrayList<>(10);
+
+    @Nullable
     private View.OnClickListener onClickListener;
 
-    public void setHeader(Header header) {
-        this.header = header;
+    public void setHeader(@NonNull Header header) {
+        this.header = get(header);
 
         recreateList();
     }
@@ -58,8 +69,8 @@ public class BeerListAdapter extends BaseListAdapter {
         notifyDataSetChanged();
     }
 
-    public void setOnClickListener(View.OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
+    public void setOnClickListener(@NonNull View.OnClickListener onClickListener) {
+        this.onClickListener = get(onClickListener);
     }
 
     public BeerViewModel getBeerViewModel(int position) {
@@ -73,7 +84,7 @@ public class BeerListAdapter extends BaseListAdapter {
             return new HeaderViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_list_item, parent, false);
-            return new BeerViewHolder(v, onClickListener);
+            return new BeerViewHolder(v, get(onClickListener));
         }
     }
 
@@ -113,7 +124,9 @@ public class BeerListAdapter extends BaseListAdapter {
         return items.size();
     }
 
-    public void set(List<BeerViewModel> beers) {
+    public void set(@NonNull List<BeerViewModel> beers) {
+        checkNotNull(beers);
+
         if (!beers.equals(this.beers)) {
             this.beers.clear();
             this.beers.addAll(beers);
