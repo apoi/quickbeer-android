@@ -12,11 +12,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:orientation="horizontal"
+            android:padding="15dp"
             style="@style/BeerDetailsRowLayout">
 
             <LinearLayout
@@ -25,11 +25,13 @@
 
                 <TextView
                     style="@style/BeerDetailsTitle"
+                    android:textColor="@color/orange"
                     android:text="@string/rating_overall"/>
 
                 <TextView
                     style="@style/BeerDetailsValue"
                     android:id="@+id/beer_rating_overall"
+                    android:textColor="@color/orange"
                     tools:text="100"/>
 
             </LinearLayout>
@@ -42,11 +44,13 @@
 
                 <TextView
                     style="@style/BeerDetailsTitle"
+                    android:textColor="@color/orange"
                     android:text="@string/rating_style"/>
 
                 <TextView
                     style="@style/BeerDetailsValue"
                     android:id="@+id/beer_rating_style"
+                    android:textColor="@color/orange"
                     tools:text="98"/>
 
             </LinearLayout>
@@ -90,7 +94,9 @@
         <include layout="@layout/beer_details_separator_horizontal" />
 
         <LinearLayout
-            style="@style/BeerDetailsRowLayout">
+            style="@style/BeerDetailsRowLayout"
+            android:layout_margin="5dp"
+            android:clickable="false">
 
             <TextView
                 android:id="@+id/beer_description"
