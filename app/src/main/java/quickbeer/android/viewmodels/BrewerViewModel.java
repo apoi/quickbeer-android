@@ -22,6 +22,7 @@ import android.support.annotation.Nullable;
 
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
@@ -35,6 +36,9 @@ import static io.reark.reark.utils.Preconditions.get;
 public class BrewerViewModel extends NetworkViewModel<Brewer> {
 
     @NonNull
+    private final DataLayer.GetBeer getBeer;
+
+    @NonNull
     private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
@@ -42,12 +46,19 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
 
     private int brewerId;
 
-    public BrewerViewModel(@NonNull DataLayer.GetBrewer getBrewer) {
+    private int beerId;
+
+    public BrewerViewModel(@NonNull DataLayer.GetBeer getBeer,
+                           @NonNull DataLayer.GetBrewer getBrewer) {
+        this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
     }
 
-    public BrewerViewModel(int brewerId, @NonNull DataLayer.GetBrewer getBrewer) {
+    public BrewerViewModel(int brewerId,
+                           @NonNull DataLayer.GetBeer getBeer,
+                           @NonNull DataLayer.GetBrewer getBrewer) {
         this.brewerId = brewerId;
+        this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
     }
 
@@ -59,6 +70,10 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
         this.brewerId = brewerId;
     }
 
+    public void setBeerId(int beerId) {
+        this.beerId = beerId;
+    }
+
     @NonNull
     public Observable<Brewer> getBrewer() {
         return brewer.asObservable();
@@ -67,7 +82,7 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
         ConnectableObservable<DataStreamNotification<Brewer>> brewerSource =
-                getBrewer.call(brewerId)
+                brewerSource()
                         .subscribeOn(Schedulers.computation())
                         .publish();
 
@@ -82,6 +97,21 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
 
         subscription.add(brewerSource
                 .connect());
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<Brewer>> brewerSource() {
+        if (brewerId > 0) {
+            return getBrewer.call(brewerId);
+        } else if (beerId > 0) {
+            return getBeer.call(beerId)
+                    .filter(DataStreamNotification::isOnNext)
+                    .map(DataStreamNotification::getValue)
+                    .map(Beer::brewerId)
+                    .flatMap(getBrewer::call);
+        } else {
+            throw new IllegalStateException("No source id!");
+        }
     }
 
     @Override

@@ -17,6 +17,8 @@
  */
 package quickbeer.android.features.beerdetails;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,10 +27,15 @@ import android.view.ViewGroup;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BaseListAdapter;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
 
 public class BeerDetailsAdapter extends BaseListAdapter {
 
+    @Nullable
     private Beer beer;
+
+    @Nullable
+    private Brewer brewer;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,7 +45,12 @@ public class BeerDetailsAdapter extends BaseListAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ((BeerDetailsViewHolder) holder).setBeer(beer);
+        if (beer != null) {
+            ((BeerDetailsViewHolder) holder).setBeer(beer);
+        }
+        if (brewer != null) {
+            ((BeerDetailsViewHolder) holder).setBrewer(brewer);
+        }
     }
 
     @Override
@@ -51,9 +63,17 @@ public class BeerDetailsAdapter extends BaseListAdapter {
         return beer != null ? 1 : 0;
     }
 
-    public void setBeer(Beer beer) {
+    public void setBeer(@NonNull Beer beer) {
         if (!beer.equals(this.beer)) {
             this.beer = beer;
+
+            notifyDataSetChanged();
+        }
+    }
+
+    public void setBrewer(@NonNull Brewer brewer) {
+        if (!brewer.equals(this.brewer)) {
+            this.brewer = brewer;
 
             notifyDataSetChanged();
         }

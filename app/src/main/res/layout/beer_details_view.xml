@@ -141,7 +141,7 @@
 
             <TextView
                 style="@style/BeerDetailsTitle"
-                android:text="Origin"/>
+                android:text="@string/origin"/>
 
             <TextView
                 style="@style/BeerDetailsValue"

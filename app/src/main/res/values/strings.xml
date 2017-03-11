@@ -30,6 +30,7 @@
     <string name="rating_style">Style</string>
 
     <string name="brewer">Brewer</string>
+    <string name="origin">Origin</string>
     <string name="style">Beer style</string>
     <string name="abv">ABV</string>
     <string name="ibu">IBU</string>

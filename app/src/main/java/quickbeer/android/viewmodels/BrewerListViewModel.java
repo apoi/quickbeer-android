@@ -40,12 +40,17 @@ import static io.reark.reark.utils.Preconditions.get;
 public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<String>> {
 
     @NonNull
+    private final DataLayer.GetBeer getBeer;
+
+    @NonNull
     private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
     private final PublishSubject<List<BrewerViewModel>> brewers = PublishSubject.create();
 
-    protected BrewerListViewModel(@NonNull final DataLayer.GetBrewer getBrewer) {
+    protected BrewerListViewModel(@NonNull final DataLayer.GetBeer getBeer,
+                                  @NonNull final DataLayer.GetBrewer getBrewer) {
+        this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
     }
 
@@ -95,7 +100,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     @NonNull
     private Func1<List<Integer>, List<BrewerViewModel>> toBrewerViewModelList() {
         return brewerIds -> Ix.from(brewerIds)
-                .map(integer -> new BrewerViewModel(integer, getBrewer))
+                .map(integer -> new BrewerViewModel(integer, getBeer, getBrewer))
                 .toList();
     }
 

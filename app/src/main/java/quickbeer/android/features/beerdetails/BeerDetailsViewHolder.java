@@ -37,6 +37,7 @@ import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingBaseActivity;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.Style;
 import quickbeer.android.features.list.ListActivity;
@@ -148,10 +149,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
     public void setBeer(@NonNull final Beer beer) {
         checkNotNull(beer);
         checkNotNull(styles);
-        checkNotNull(countries);
         checkNotNull(resourceProvider);
-
-        Option<String> na = ofObj(get(resourceProvider).getString(R.string.not_available));
 
         descriptionTextView.setText(
                 StringUtils.value(beer.description(),
@@ -164,37 +162,47 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .orOption(() -> ofObj(beer.styleName()).flatMap(styles::getStyle))
                 .ifSome(style -> styleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
                 .map(Style::getName)
-                .orOption(() -> na)
+                .orOption(this::notAvailableString)
                 .ifSome(styleTextView::setText);
-
-        ofObj(beer.countryId())
-                .map(countries::getItem)
-                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
-                .map(Country::getName)
-                .orOption(() -> na)
-                .ifSome(locationTextView::setText);
 
         ofObj(beer.overallRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
-                .orOption(() -> na)
+                .orOption(this::notAvailableString)
                 .ifSome(overallRatingTextView::setText);
 
         ofObj(beer.styleRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
-                .orOption(() -> na)
+                .orOption(this::notAvailableString)
                 .ifSome(styleRatingTextView::setText);
 
         ofObj(beer.alcohol())
                 .map(value -> String.format(Locale.ROOT, "%.1f%%", value))
-                .orOption(() -> na)
+                .orOption(this::notAvailableString)
                 .ifSome(abvTextView::setText);
 
         ofObj(beer.ibu())
                 .map(value -> String.valueOf(Math.round(value)))
-                .orOption(() -> na)
+                .orOption(this::notAvailableString)
                 .ifSome(ibuTextView::setText);
+    }
+
+    public void setBrewer(@NonNull final Brewer brewer) {
+        checkNotNull(countries);
+
+        ofObj(brewer.countryId())
+                .map(countries::getItem)
+                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
+                .map(Country::getName)
+                .map(country -> String.format("%s, %s", brewer.city(), country))
+                .orOption(this::notAvailableString)
+                .ifSome(locationTextView::setText);
+    }
+
+    @NonNull
+    private Option<String> notAvailableString() {
+        return ofObj(get(resourceProvider).getString(R.string.not_available));
     }
 
     private void navigateToStyle(@Nullable final Integer styleId) {

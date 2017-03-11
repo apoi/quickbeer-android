@@ -36,9 +36,10 @@ public final class ViewModelModule {
 
     @Provides
     static RecentBrewersViewModel provideRecentBrewersViewModel(
+            @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetBrewer getBrewer,
             @NonNull final DataLayer.GetAccessedBrewers getAccessedBrewers) {
-        return new RecentBrewersViewModel(getBrewer, getAccessedBrewers);
+        return new RecentBrewersViewModel(getBeer, getBrewer, getAccessedBrewers);
     }
 
     @Provides
@@ -70,9 +71,10 @@ public final class ViewModelModule {
     @Provides
     static BeerDetailsViewModel provideBeerDetailsViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
+            @NonNull final DataLayer.GetBrewer getBrewer,
             @NonNull final DataLayer.GetReviews getReviews,
             @NonNull final DataLayer.GetReview getReview) {
-        return new BeerDetailsViewModel(getBeer, getReviews, getReview);
+        return new BeerDetailsViewModel(getBeer, getBrewer, getReviews, getReview);
     }
 
 }

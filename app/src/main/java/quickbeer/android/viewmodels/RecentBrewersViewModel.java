@@ -34,9 +34,10 @@ public class RecentBrewersViewModel extends BrewerListViewModel {
     private final DataLayer.GetAccessedBrewers getAccessedBrewers;
 
     @Inject
-    RecentBrewersViewModel(@NonNull final DataLayer.GetBrewer getBrewer,
+    RecentBrewersViewModel(@NonNull final DataLayer.GetBeer getBeer,
+                           @NonNull final DataLayer.GetBrewer getBrewer,
                            @NonNull final DataLayer.GetAccessedBrewers getAccessedBrewers) {
-        super(getBrewer);
+        super(getBeer, getBrewer);
 
         this.getAccessedBrewers = get(getAccessedBrewers);
     }

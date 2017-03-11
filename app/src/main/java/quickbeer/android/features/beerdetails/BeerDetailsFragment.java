@@ -62,6 +62,12 @@ public class BeerDetailsFragment extends BindingBaseFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(detailsView::setBeer, Timber::e));
+
+            subscription.add(viewModel()
+                    .getBrewer()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(detailsView::setBrewer, Timber::e));
         }
     };
 

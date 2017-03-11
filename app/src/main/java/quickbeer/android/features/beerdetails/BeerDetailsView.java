@@ -26,6 +26,7 @@ import android.widget.FrameLayout;
 
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -43,6 +44,10 @@ public class BeerDetailsView extends FrameLayout {
 
     public void setBeer(@NonNull final Beer beer) {
         get(beerDetailsAdapter).setBeer(get(beer));
+    }
+
+    public void setBrewer(@NonNull final Brewer brewer) {
+        get(beerDetailsAdapter).setBrewer(get(brewer));
     }
 
     @Override

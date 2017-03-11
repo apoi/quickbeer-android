@@ -24,8 +24,10 @@ import java.util.List;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.viewmodels.BeerViewModel;
+import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import rx.Observable;
 import rx.subscriptions.CompositeSubscription;
@@ -38,23 +40,34 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     private final BeerViewModel beerViewModel;
 
     @NonNull
+    private final BrewerViewModel brewerViewModel;
+
+    @NonNull
     private final ReviewListViewModel reviewListViewModel;
 
     public BeerDetailsViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                @NonNull DataLayer.GetBrewer getBrewer,
                                 @NonNull DataLayer.GetReviews getReviews,
                                 @NonNull DataLayer.GetReview getReview) {
         beerViewModel = new BeerViewModel(get(getBeer));
+        brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
     }
 
     public void setBeerId(int beerId) {
         beerViewModel.setBeerId(beerId);
+        brewerViewModel.setBeerId(beerId);
         reviewListViewModel.setBeerId(beerId);
     }
 
     @NonNull
     public Observable<Beer> getBeer() {
         return beerViewModel.getBeer();
+    }
+
+    @NonNull
+    public Observable<Brewer> getBrewer() {
+        return brewerViewModel.getBrewer();
     }
 
     @NonNull
@@ -65,12 +78,14 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
         beerViewModel.bindToDataModel();
+        brewerViewModel.bindToDataModel();
         reviewListViewModel.bindToDataModel();
     }
 
     @Override
     protected void unbind() {
         beerViewModel.unbindDataModel();
+        brewerViewModel.unbindDataModel();
         reviewListViewModel.unbindDataModel();
     }
 }
