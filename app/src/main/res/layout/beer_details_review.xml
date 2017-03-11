@@ -12,11 +12,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:clipChildren="false">
 
         <LinearLayout
             android:gravity="start"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             style="@style/BeerDetailsRowLayout">
 
             <TextView
@@ -28,7 +31,6 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:orientation="horizontal"
             style="@style/BeerDetailsRowLayout">
 
@@ -121,6 +123,7 @@
 
         <LinearLayout
             android:gravity="end"
+            android:layout_marginEnd="5dp"
             style="@style/BeerDetailsRowLayout">
 
             <TextView
