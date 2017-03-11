@@ -49,6 +49,8 @@ public interface Constants {
 
         String BEERS_IN_STYLE = "beersInStyleFetcher";
 
+        String BREWER = "brewerFetcher";
+
         String REVIEW = "reviewFetcher";
 
         String TICKS = "ticksFetcher";

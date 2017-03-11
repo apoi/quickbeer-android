@@ -28,7 +28,7 @@ import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.stores.cores.BrewerStoreCore;
 import quickbeer.android.data.stores.cores.CachingStoreCore;
 
-public class BrewerStore  extends StoreBase<Integer, Brewer, Option<Brewer>> {
+public class BrewerStore extends StoreBase<Integer, Brewer, Option<Brewer>> {
 
     public BrewerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
         super(new CachingStoreCore<>(

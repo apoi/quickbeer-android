@@ -24,6 +24,7 @@ public abstract class BaseListAdapter extends RecyclerView.Adapter<RecyclerView.
         MENU,
         HEADER,
         BEER,
+        BREWER,
         RATING,
         REVIEW
     }

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--~
+  ~ This file is part of QuickBeer.
+  ~ Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/beer_list_item_height"
+    android:paddingLeft="@dimen/list_item_padding"
+    android:paddingRight="@dimen/list_item_padding"
+    android:background="@drawable/listitem_ripple">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/brewer_origin"
+            android:layout_width="@dimen/beer_list_item_icon_size"
+            android:layout_height="@dimen/beer_list_item_icon_size"
+            android:layout_marginTop="@dimen/list_item_icon_margin"
+            android:layout_marginBottom="@dimen/list_item_icon_margin"
+            android:layout_marginRight="@dimen/list_item_icon_margin_right"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="@dimen/listitem_text_score"
+            android:background="@drawable/score_unrated" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/brewer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="@dimen/listitem_text_primary"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/brewer_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_300"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="@dimen/listitem_text_secondary"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:background="@color/gray_800" />
+
+</FrameLayout>

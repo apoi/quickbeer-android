@@ -31,6 +31,7 @@ import org.joda.time.DateTime;
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
 import static io.reark.reark.utils.Preconditions.get;
+import static quickbeer.android.utils.StringUtils.hasValue;
 
 @SuppressWarnings("InnerClassReferencedViaSubclass")
 @JsonAdapter(AutoValue_Brewer.GsonTypeAdapter.class)
@@ -158,6 +159,10 @@ public abstract class Brewer {
     public abstract String regionId();
 
     // Accessors
+
+    public boolean hasDetails() {
+        return hasValue(name());
+    }
 
     // Equality
 

@@ -40,9 +40,9 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
                         new BeerStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(Beer::merge),
                         Beer::id),
-              Beer::id,
-              Option::ofObj,
-              Option::none);
+                Beer::id,
+                Option::ofObj,
+                Option::none);
     }
 
     @NonNull

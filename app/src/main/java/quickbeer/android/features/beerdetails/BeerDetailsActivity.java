@@ -78,6 +78,10 @@ public class BeerDetailsActivity extends DrawerActivity {
     @Nullable
     DataLayer.AccessBeer accessBeer;
 
+    @Inject
+    @Nullable
+    DataLayer.AccessBrewer accessBrewer;
+
     @Nullable
     @Inject
     NavigationProvider navigationProvider;
@@ -108,6 +112,11 @@ public class BeerDetailsActivity extends DrawerActivity {
             subscription.add(sourceObservable
                     .map(Beer::id)
                     .subscribe(get(accessBeer)::call, Timber::e));
+
+            // Update brewer access date
+            subscription.add(sourceObservable
+                    .map(Beer::brewerId)
+                    .subscribe(get(accessBrewer)::call, Timber::e));
 
             // Set toolbar title
             subscription.add(sourceObservable

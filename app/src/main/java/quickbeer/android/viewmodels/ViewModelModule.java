@@ -28,14 +28,21 @@ import quickbeer.android.features.beerdetails.BeerDetailsViewModel;
 public final class ViewModelModule {
 
     @Provides
-    static RecentBeersViewModel providesRecentBeersViewModel(
+    static RecentBeersViewModel provideRecentBeersViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetAccessedBeers getAccessedBeers) {
         return new RecentBeersViewModel(getBeer, getAccessedBeers);
     }
 
     @Provides
-    static BeerSearchViewModel providesBeerSearchViewModel(
+    static RecentBrewersViewModel provideRecentBrewersViewModel(
+            @NonNull final DataLayer.GetBrewer getBrewer,
+            @NonNull final DataLayer.GetAccessedBrewers getAccessedBrewers) {
+        return new RecentBrewersViewModel(getBrewer, getAccessedBrewers);
+    }
+
+    @Provides
+    static BeerSearchViewModel provideBeerSearchViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetBeerSearch getBeerSearch,
             @NonNull final SearchViewViewModel searchViewViewModel) {
@@ -43,7 +50,7 @@ public final class ViewModelModule {
     }
 
     @Provides
-    static BarcodeSearchViewModel providesBarcodeSearchViewModel(
+    static BarcodeSearchViewModel provideBarcodeSearchViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetBeerSearch getBeerSearch,
             @NonNull final DataLayer.GetBarcodeSearch getBarcodeSearch,
@@ -52,7 +59,7 @@ public final class ViewModelModule {
     }
 
     @Provides
-    static TopBeersViewModel providesTopBeersViewModel(
+    static TopBeersViewModel provideTopBeersViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetBeerSearch getBeerSearch,
             @NonNull final DataLayer.GetTopBeers getTopBeers,
@@ -61,7 +68,7 @@ public final class ViewModelModule {
     }
 
     @Provides
-    static BeerDetailsViewModel providesBeerDetailsViewModel(
+    static BeerDetailsViewModel provideBeerDetailsViewModel(
             @NonNull final DataLayer.GetBeer getBeer,
             @NonNull final DataLayer.GetReviews getReviews,
             @NonNull final DataLayer.GetReview getReview) {

@@ -21,12 +21,14 @@ import dagger.Subcomponent;
 import quickbeer.android.features.beerdetails.BeerDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerReviewsFragment;
 import quickbeer.android.features.home.BeerTabFragment;
+import quickbeer.android.features.home.BrewerTabFragment;
 import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
 import quickbeer.android.features.list.fragments.BeersInStyleFragment;
+import quickbeer.android.features.list.fragments.BrewerListFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
 import quickbeer.android.features.list.fragments.TickedBeersFragment;
@@ -40,7 +42,11 @@ public interface FragmentComponent {
 
     void inject(BeerTabFragment beerTabFragment);
 
+    void inject(BrewerTabFragment brewerTabFragment);
+
     void inject(BeerListFragment beerListFragment);
+
+    void inject(BrewerListFragment brewerListFragment);
 
     void inject(BeerSearchFragment beerSearchFragment);
 

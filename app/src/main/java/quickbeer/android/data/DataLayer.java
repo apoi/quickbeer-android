@@ -100,24 +100,6 @@ public class DataLayer extends DataLayerBase {
     //// GET BEER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
-        Timber.v("getBeerResultStream(%s)", get(beerId));
-
-        String uri = BeerFetcher.getUniqueUri(beerId);
-
-        Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
-
-        Observable<Beer> beerObservable =
-                beerStore.getOnceAndStream(beerId)
-                        .compose(RxUtils::pickValue);
-
-        return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerObservable);
-    }
-
-    @NonNull
     public Observable<DataStreamNotification<Beer>> getBeer(@NonNull Integer beerId) {
         Timber.v("getBeer(%s)", get(beerId));
 
@@ -135,6 +117,24 @@ public class DataLayer extends DataLayerBase {
         return getBeerResultStream(beerId)
                 .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
                 .distinctUntilChanged();
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
+        Timber.v("getBeerResultStream(%s)", get(beerId));
+
+        String uri = BeerFetcher.getUniqueUri(beerId);
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue);
+
+        Observable<Beer> beerObservable =
+                beerStore.getOnceAndStream(beerId)
+                        .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, beerObservable);
     }
 
     private void fetchBeer(@NonNull Integer beerId) {
@@ -494,15 +494,13 @@ public class DataLayer extends DataLayerBase {
 
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Brewer>> triggerFetchIfEmpty =
-                brewerStore.getOnceAndStream(brewerId)
-                        .filter(option -> option.match(brewer -> brewer.name().isEmpty(), () -> true))
+                brewerStore.getOnce(brewerId)
+                        .filter(option -> option.match(brewer -> !brewer.hasDetails(), () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Brewer not cached, fetching");
                             fetchBrewer(brewerId);
                         });
 
-        // Does not emit a new notification when only beer metadata changes.
-        // This avoids unnecessary view redraws.
         return getBrewerResultStream(brewerId)
                 .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
                 .distinctUntilChanged();
@@ -579,6 +577,15 @@ public class DataLayer extends DataLayerBase {
         Observable<DataStreamNotification<ItemList<String>>> call();
     }
 
+    public interface AccessBrewer {
+        void call(int brewerId);
+    }
+
+    public interface GetAccessedBrewers {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call();
+    }
+
     public interface GetBeerSearchQueries {
         @NonNull
         Observable<List<String>> call();
@@ -629,12 +636,4 @@ public class DataLayer extends DataLayerBase {
         Observable<DataStreamNotification<Brewer>> call(int brewerId);
     }
 
-    public interface AccessBrewer {
-        void call(int beerId);
-    }
-
-    public interface GetAccessedBrewers {
-        @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call();
-    }
 }

@@ -17,6 +17,44 @@
  */
 package quickbeer.android.features.home;
 
-public class BrewerTabFragment extends BeerTabFragment {
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import javax.inject.Inject;
+
+import quickbeer.android.R;
+import quickbeer.android.features.list.fragments.BrewerListFragment;
+import quickbeer.android.viewmodels.BrewerListViewModel;
+import quickbeer.android.viewmodels.RecentBrewersViewModel;
+
+import static io.reark.reark.utils.Preconditions.get;
+
+public class BrewerTabFragment extends BrewerListFragment {
+
+    @Nullable
+    @Inject
+    RecentBrewersViewModel recentBrewersViewModel;
+
+    @Override
+    protected int getLayout() {
+        return R.layout.brewer_tab_fragment;
+    }
+
+    @Override
+    protected void inject() {
+        super.inject();
+
+        getComponent().inject(this);
+    }
+
+    @NonNull
+    @Override
+    protected BrewerListViewModel viewModel() {
+        return get(recentBrewersViewModel);
+    }
+
+    @Override
+    protected void onQuery(@NonNull String query) {
+        // Doesn't react to search view.
+    }
 }

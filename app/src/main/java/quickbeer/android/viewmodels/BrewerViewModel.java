@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@ import android.support.annotation.Nullable;
 
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.Brewer;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -32,60 +32,60 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerViewModel extends NetworkViewModel<Beer> {
+public class BrewerViewModel extends NetworkViewModel<Brewer> {
 
     @NonNull
-    private final DataLayer.GetBeer getBeer;
+    private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
-    private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
+    private final BehaviorSubject<Brewer> brewer = BehaviorSubject.create();
 
-    private int beerId;
+    private int brewerId;
 
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer) {
-        this.getBeer = get(getBeer);
+    public BrewerViewModel(@NonNull DataLayer.GetBrewer getBrewer) {
+        this.getBrewer = get(getBrewer);
     }
 
-    public BeerViewModel(int beerId, @NonNull DataLayer.GetBeer getBeer) {
-        this.beerId = beerId;
-        this.getBeer = get(getBeer);
+    public BrewerViewModel(int brewerId, @NonNull DataLayer.GetBrewer getBrewer) {
+        this.brewerId = brewerId;
+        this.getBrewer = get(getBrewer);
     }
 
-    public int getBeerId() {
-        return beerId;
+    public int getBrewerId() {
+        return brewerId;
     }
 
-    public void setBeerId(int beerId) {
-        this.beerId = beerId;
+    public void setBrewerId(int brewerId) {
+        this.brewerId = brewerId;
     }
 
     @NonNull
-    public Observable<Beer> getBeer() {
-        return beer.asObservable();
+    public Observable<Brewer> getBrewer() {
+        return brewer.asObservable();
     }
 
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
-        ConnectableObservable<DataStreamNotification<Beer>> beerSource =
-                getBeer.call(beerId)
+        ConnectableObservable<DataStreamNotification<Brewer>> brewerSource =
+                getBrewer.call(brewerId)
                         .subscribeOn(Schedulers.computation())
                         .publish();
 
-        subscription.add(beerSource
+        subscription.add(brewerSource
                 .map(toProgressStatus())
                 .subscribe(this::setProgressStatus, Timber::e));
 
-        subscription.add(beerSource
+        subscription.add(brewerSource
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
-                .subscribe(beer::onNext, Timber::e));
+                .subscribe(brewer::onNext, Timber::e));
 
-        subscription.add(beerSource
+        subscription.add(brewerSource
                 .connect());
     }
 
     @Override
-    protected boolean hasValue(@Nullable Beer item) {
+    protected boolean hasValue(@Nullable Brewer item) {
         return true;
     }
 }

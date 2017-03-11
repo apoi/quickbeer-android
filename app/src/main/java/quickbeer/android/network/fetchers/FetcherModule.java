@@ -35,6 +35,8 @@ import quickbeer.android.Constants.Fetchers;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
+import quickbeer.android.data.stores.BrewerMetadataStore;
+import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
@@ -150,6 +152,21 @@ public final class FetcherModule {
     }
 
     @Provides
+    @Named(Fetchers.BREWER)
+    static Fetcher<Uri> provideBrewerFetcher(
+            @NonNull NetworkApi networkApi,
+            @NonNull NetworkUtils networkUtils,
+            @NonNull NetworkRequestStatusStore requestStatusStore,
+            @NonNull BrewerStore brewerStore,
+            @NonNull BrewerMetadataStore metadataStore) {
+        return new BrewerFetcher(networkApi,
+                networkUtils,
+                requestStatusStore::put,
+                brewerStore,
+                metadataStore);
+    }
+
+    @Provides
     @Named(Fetchers.REVIEW)
     static Fetcher<Uri> provideReviewFetcher(
             @NonNull NetworkApi networkApi,
@@ -188,6 +205,7 @@ public final class FetcherModule {
             @Named(Fetchers.TOP_BEERS) @NonNull Fetcher<Uri> topBeersFetcher,
             @Named(Fetchers.BEERS_IN_COUNTRY) @NonNull Fetcher<Uri> beersInCountryFetcher,
             @Named(Fetchers.BEERS_IN_STYLE) @NonNull Fetcher<Uri> beersInStyleFetcher,
+            @Named(Fetchers.BREWER) @NonNull Fetcher<Uri> brewerFetcher,
             @Named(Fetchers.REVIEW) @NonNull Fetcher<Uri> reviewFetcher,
             @Named(Fetchers.TICKS) @NonNull Fetcher<Uri> ticksFetcher) {
         List<Fetcher<Uri>> fetchers = Arrays.asList(
@@ -198,6 +216,7 @@ public final class FetcherModule {
                 topBeersFetcher,
                 beersInCountryFetcher,
                 beersInStyleFetcher,
+                brewerFetcher,
                 reviewFetcher,
                 ticksFetcher
         );

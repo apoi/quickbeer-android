@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@ import java.util.List;
 
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Header;
-import quickbeer.android.features.list.BeerListAdapter;
-import quickbeer.android.viewmodels.BeerViewModel;
+import quickbeer.android.features.list.BrewerListAdapter;
+import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
 import rx.subjects.PublishSubject;
@@ -40,25 +40,25 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerListView extends FrameLayout {
+public class BrewerListView extends FrameLayout {
 
     @Nullable
-    private BeerListAdapter beerListAdapter;
+    private BrewerListAdapter brewerListAdapter;
 
     @Nullable
-    private RecyclerView beersListView;
+    private RecyclerView brewersListView;
 
     @Nullable
     private TextView searchStatusTextView;
 
     @NonNull
-    private final PublishSubject<Integer> selectedBeerSubject = PublishSubject.create();
+    private final PublishSubject<Integer> selectedBrewerSubject = PublishSubject.create();
 
-    public BeerListView(Context context) {
+    public BrewerListView(Context context) {
         super(context);
     }
 
-    public BeerListView(Context context, AttributeSet attrs) {
+    public BrewerListView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -66,35 +66,35 @@ public class BeerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beersListView = (RecyclerView) get(findViewById(R.id.list_view));
+        brewersListView = (RecyclerView) get(findViewById(R.id.list_view));
         searchStatusTextView = (TextView) findViewById(R.id.search_status);
 
-        beerListAdapter = new BeerListAdapter();
-        beerListAdapter.setOnClickListener(v -> {
-            final int itemPosition = beersListView.getChildAdapterPosition(v);
-            final int beerId = beerListAdapter.getBeerViewModel(itemPosition).getBeerId();
-            selectedBeerSubject.onNext(beerId);
+        brewerListAdapter = new BrewerListAdapter();
+        brewerListAdapter.setOnClickListener(v -> {
+            final int itemPosition = brewersListView.getChildAdapterPosition(v);
+            final int brewerId = brewerListAdapter.getBrewerViewModel(itemPosition).getBrewerId();
+            selectedBrewerSubject.onNext(brewerId);
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
 
-        beersListView.setAdapter(beerListAdapter);
-        beersListView.setLayoutManager(layoutManager);
+        brewersListView.setAdapter(brewerListAdapter);
+        brewersListView.setLayoutManager(layoutManager);
     }
 
     @NonNull
-    public Observable<Integer> selectedBeerStream() {
-        return selectedBeerSubject.asObservable();
+    public Observable<Integer> selectedBrewerStream() {
+        return selectedBrewerSubject.asObservable();
     }
 
     public void setHeader(@NonNull final Header header) {
-        get(beerListAdapter).setHeader(header);
+        get(brewerListAdapter).setHeader(header);
     }
 
-    public void setBeers(@NonNull final List<BeerViewModel> beers) {
-        Timber.v("Setting " + beers.size() + " beers to adapter");
-        get(beerListAdapter).set(get(beers));
+    public void setBrewers(@NonNull final List<BrewerViewModel> brewers) {
+        Timber.v("Setting " + brewers.size() + " brewers to adapter");
+        get(brewerListAdapter).set(get(brewers));
     }
 
     public void setProgressStatus(@NonNull final ProgressStatus progressStatus) {
