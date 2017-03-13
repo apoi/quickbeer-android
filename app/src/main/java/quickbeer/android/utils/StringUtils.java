@@ -28,6 +28,10 @@ public final class StringUtils {
         return value != null && !value.isEmpty();
     }
 
+    public static boolean isEmpty(@Nullable String value) {
+        return value == null || value.isEmpty();
+    }
+
     public static String value(@Nullable String primary, @NonNull String secondary) {
         return hasValue(primary) ? primary : secondary;
     }

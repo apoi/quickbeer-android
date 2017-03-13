@@ -43,7 +43,13 @@ import quickbeer.android.network.fetchers.FetcherModule;
 public final class DataStoreModule {
 
     @Provides
-    static DataLayer.GetUsers provideGetUser(
+    static DataLayer.Login provideLogin(
+            @NonNull final DataLayer dataLayer) {
+        return dataLayer::login;
+    }
+
+    @Provides
+    static DataLayer.GetUser provideGetUser(
             @NonNull final DataLayer dataLayer) {
         return dataLayer::getUser;
     }

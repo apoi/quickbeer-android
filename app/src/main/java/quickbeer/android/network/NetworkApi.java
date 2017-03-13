@@ -26,6 +26,7 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
@@ -54,7 +55,7 @@ public class NetworkApi {
         rateBeerService = retrofit.create(RateBeerService.class);
     }
 
-    public Observable<Response> login(String username, String password) {
+    public Single<ResponseBody> login(String username, String password) {
         return rateBeerService
                 .login(username, password, Constants.LOGIN_DEFAULT_SAVE_INFO);
     }

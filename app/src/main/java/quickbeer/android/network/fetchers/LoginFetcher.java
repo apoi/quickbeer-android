@@ -86,11 +86,11 @@ public class LoginFetcher extends FetcherBase<Uri> {
         Subscription subscription = networkApi
                 .login(username, password)
                 .subscribeOn(Schedulers.computation())
+                .doOnSuccess(responseBody -> Timber.w("RESPONSE " + responseBody))
                 .map(user -> User.builder()
                         .username(username)
                         .password(password)
                         .build())
-                .toSingle()
                 .doOnSuccess(user -> Timber.d("Updating login status to " + user.isLogged()))
                 .flatMap(userStore::put)
                 .doOnSubscribe(() -> startRequest(uri))

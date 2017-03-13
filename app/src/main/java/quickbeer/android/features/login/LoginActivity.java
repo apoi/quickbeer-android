@@ -20,45 +20,69 @@ package quickbeer.android.features.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reark.reark.utils.RxUtils;
 import quickbeer.android.R;
-import quickbeer.android.core.activity.InjectingDrawerActivity;
+import quickbeer.android.core.activity.BindingDrawerActivity;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.utils.StringUtils;
+import quickbeer.android.utils.ViewUtils;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class LoginActivity extends InjectingDrawerActivity {
+public class LoginActivity extends BindingDrawerActivity {
 
-    @Nullable
-    @Inject
-    NavigationProvider navigationProvider;
-
-    @BindView(R.id.login_email)
+    @BindView(R.id.login_username)
     AutoCompleteTextView usernameView;
 
     @BindView(R.id.login_password)
     EditText passwordView;
+
+    @BindView(R.id.login_progress_layout)
+    View progressLayout;
 
     @BindView(R.id.login_progress)
     View progressView;
 
     @BindView(R.id.login_form)
     View loginFormView;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
+
+    @Nullable
+    @Inject
+    LoginViewModel viewModel;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull final CompositeSubscription subscription) {
+            subscription.add(viewModel().getUser()
+                    .doOnNext(user -> Timber.d("User logged in: %s", user))
+                    .subscribe(RxUtils::nothing, Timber::e));
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +104,20 @@ public class LoginActivity extends InjectingDrawerActivity {
             return false;
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.sign_in_button);
-        mEmailSignInButton.setOnClickListener(view -> attemptLogin());
+        ViewUtils.findView(getDelegate(), R.id.sign_in_button)
+                .ifSome(view -> view.setOnClickListener(__ -> attemptLogin()));
+    }
+
+    @NonNull
+    @Override
+    protected LoginViewModel viewModel() {
+        return get(viewModel);
+    }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 
     @Override
@@ -100,21 +136,21 @@ public class LoginActivity extends InjectingDrawerActivity {
         passwordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = usernameView.getText().toString();
+        String username = usernameView.getText().toString();
         String password = passwordView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password)) {
+        if (StringUtils.isEmpty(password)) {
             passwordView.setError(getString(R.string.error_field_required));
             focusView = passwordView;
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
+        // Check for a valid username address.
+        if (StringUtils.isEmpty(username)) {
             usernameView.setError(getString(R.string.error_field_required));
             focusView = usernameView;
             cancel = true;
@@ -129,7 +165,13 @@ public class LoginActivity extends InjectingDrawerActivity {
             // perform the user login attempt.
             showProgress(true);
 
-            // LOGIN TASK
+            InputMethodManager inputManager = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
+
+            inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
+
+            viewModel().login(username, password);
         }
     }
 
@@ -153,18 +195,20 @@ public class LoginActivity extends InjectingDrawerActivity {
                 }
             });
 
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    progressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
+            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressView.animate()
+                    .setDuration(shortAnimTime)
+                    .alpha(show ? 1 : 0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
+                    });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            progressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }

@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
@@ -48,7 +49,7 @@ public interface RateBeerService {
 
     @FormUrlEncoded
     @POST("/Signin_r.asp")
-    Observable<Response> login(@Field("username") String username,
+    Single<ResponseBody> login(@Field("username") String username,
                                @Field("pwd") String password,
                                @Field("saveinfo") String saveinfo);
 

@@ -50,6 +50,7 @@ import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.fetchers.BeerFetcher;
 import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.network.fetchers.BrewerFetcher;
+import quickbeer.android.network.fetchers.LoginFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
@@ -87,6 +88,37 @@ public class DataLayer extends DataLayerBase {
     }
 
     //// GET USER SETTINGS
+
+    @NonNull
+    public Observable<DataStreamNotification<User>> login(@NonNull String username, @NonNull String password) {
+        Timber.v("login(%s)", get(username));
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+        intent.putExtra("username", username);
+        intent.putExtra("password", password);
+        context.startService(intent);
+
+        return getLoginResultStream();
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<User>> getLoginResultStream() {
+        Timber.v("getLoginResultStream()");
+
+        String uri = LoginFetcher.getUniqueUri();
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue);
+
+        Observable<User> userObservable =
+                userStore.getOnceAndStream(Constants.DEFAULT_USER_ID)
+                        .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, userObservable);
+    }
 
     @NonNull
     public Observable<Option<User>> getUser() {
@@ -554,7 +586,12 @@ public class DataLayer extends DataLayerBase {
 
     //// INTERFACES
 
-    public interface GetUsers {
+    public interface Login {
+        @NonNull
+        Observable<DataStreamNotification<User>> call(@NonNull String username, @NonNull String password);
+    }
+
+    public interface GetUser {
         @NonNull
         Observable<Option<User>> call();
     }

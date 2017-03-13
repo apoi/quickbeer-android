@@ -32,7 +32,7 @@ public class TickedBeersFragment extends BeerSearchFragment {
     DataLayer.GetTickedBeers getTickedBeers;
 
     @Inject
-    DataLayer.GetUsers getUsers;
+    DataLayer.GetUser getUser;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -41,7 +41,7 @@ public class TickedBeersFragment extends BeerSearchFragment {
             listDataBinder().bind(subscription);
 
             /*
-            subscription.add(getUsers.call()
+            subscription.add(getUser.call()
                     .compose(RxUtils::pickValue)
                     .filter(User::isLogged)
                     .filter(user -> !user.userId().isEmpty())

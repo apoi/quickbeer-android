@@ -39,13 +39,6 @@ public abstract class User {
     @SerializedName("password")
     public abstract String password();
 
-    @SerializedName("userId")
-    public abstract String userId();
-
-    @NonNull
-    @SerializedName("isLogged")
-    public abstract Boolean isLogged();
-
     // Accessors
 
     public boolean credentialsEqual(@Nullable final String username, @Nullable final String password) {
@@ -62,10 +55,6 @@ public abstract class User {
         public abstract Builder username(@Nullable final String username);
 
         public abstract Builder password(@Nullable final String password);
-
-        public abstract Builder userId(@Nullable final String userId);
-
-        public abstract Builder isLogged(@NonNull final Boolean isLogged);
 
         public abstract User build();
 
