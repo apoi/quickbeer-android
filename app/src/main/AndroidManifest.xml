@@ -36,6 +36,10 @@
         </activity>
 
         <activity
+            android:name=".features.login.LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
             android:name=".features.list.ListActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
 

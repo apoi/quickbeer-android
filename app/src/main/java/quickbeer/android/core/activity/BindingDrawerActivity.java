@@ -28,7 +28,7 @@ import rx.subscriptions.CompositeSubscription;
 /**
  * A base Activity which provides the binding mechanism hooks to a View Model.
  */
-public abstract class BindingBaseActivity extends InjectingBaseActivity {
+public abstract class BindingDrawerActivity extends InjectingDrawerActivity {
 
     @NonNull
     private final BaseLifecycleViewDataBinder lifecycleBinder = new BaseLifecycleViewDataBinder() {
@@ -46,7 +46,7 @@ public abstract class BindingBaseActivity extends InjectingBaseActivity {
         @NonNull
         @Override
         public ViewModel viewModel() {
-            return BindingBaseActivity.this.viewModel();
+            return BindingDrawerActivity.this.viewModel();
         }
 
     };

@@ -35,7 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import polanski.option.Option;
 import quickbeer.android.R;
-import quickbeer.android.core.activity.InjectingBaseActivity;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
@@ -125,7 +125,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
         context = view.getContext();
 
-        ((InjectingBaseActivity) context)
+        ((InjectingDrawerActivity) context)
                 .getComponent()
                 .inject(this);
 

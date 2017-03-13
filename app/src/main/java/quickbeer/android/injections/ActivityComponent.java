@@ -20,11 +20,12 @@ package quickbeer.android.injections;
 import dagger.Subcomponent;
 import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
-import quickbeer.android.core.activity.InjectingBaseActivity;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsViewHolder;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.features.login.LoginActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 
 @ActivityScope
@@ -35,9 +36,11 @@ public interface ActivityComponent {
 
     void inject(HomeActivity homeActivity);
 
+    void inject(LoginActivity homeActivity);
+
     void inject(ListActivity listActivity);
 
-    void inject(InjectingBaseActivity baseActivity);
+    void inject(InjectingDrawerActivity baseActivity);
 
     void inject(SearchBarActivity searchBarActivity);
 

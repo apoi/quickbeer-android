@@ -37,14 +37,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.R;
-import quickbeer.android.core.activity.DrawerActivity;
+import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.features.home.HomeActivity;
-import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.transformations.BlurTransformation;
@@ -59,7 +57,7 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerDetailsActivity extends DrawerActivity {
+public class BeerDetailsActivity extends BindingDrawerActivity {
 
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -205,17 +203,7 @@ public class BeerDetailsActivity extends DrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull final MenuItem menuItem) {
-        Intent intent;
-
-        if (menuItem.getItemId() == R.id.nav_home) {
-            intent = new Intent(this, HomeActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        } else {
-            intent = new Intent(this, ListActivity.class);
-        }
-
-        intent.putExtra("menuNavigationId", menuItem.getItemId());
-        startActivity(intent);
+        get(navigationProvider).navigateWithNewActivity(menuItem);
     }
 
     @Override

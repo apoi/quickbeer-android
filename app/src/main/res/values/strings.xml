@@ -45,4 +45,11 @@
     <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>
     <string name="low_storage_error">Barcode scanner dependencies cannot be downloaded due to low device storage</string>
 
+    <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="create_account">New to RateBeer?\nCreate an account at ratebeer.com!</string>
+
 </resources>

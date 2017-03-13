@@ -38,6 +38,7 @@ import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.adapters.SearchAdapter;
 import quickbeer.android.core.activity.InjectingBaseActivity;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;

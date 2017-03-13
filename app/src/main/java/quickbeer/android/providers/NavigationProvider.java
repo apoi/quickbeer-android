@@ -25,12 +25,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import quickbeer.android.R;
+import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.home.HomeFragment;
+import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
@@ -171,6 +174,30 @@ public final class NavigationProvider {
         bundle.putString("query", query);
 
         addPage(Page.BEER_SEARCH, bundle);
+    }
+
+    public void navigateWithNewActivity(@NonNull final MenuItem menuItem) {
+        Intent intent;
+
+        if (menuItem.getItemId() == R.id.nav_home) {
+            intent = new Intent(activity, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        } else {
+            intent = new Intent(activity, ListActivity.class);
+        }
+
+        intent.putExtra("menuNavigationId", menuItem.getItemId());
+        activity.startActivity(intent);
+    }
+
+    public void navigateWithCurrentActivity(@NonNull final MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_home) {
+            Intent intent = new Intent(activity, HomeActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            activity.startActivity(intent);
+        } else {
+            clearToPage(menuItem.getItemId());
+        }
     }
 
     @NonNull
