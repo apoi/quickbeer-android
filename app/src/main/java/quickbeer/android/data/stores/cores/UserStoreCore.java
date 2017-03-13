@@ -25,6 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import quickbeer.android.Constants;
 import quickbeer.android.data.columns.JsonIdColumns;
 import quickbeer.android.data.columns.UserColumns;
 import quickbeer.android.data.pojos.User;
@@ -76,7 +77,7 @@ public class UserStoreCore extends StoreCoreBase<Integer, User> {
     @Override
     protected ContentValues getContentValuesForItem(@NonNull final User item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(JsonIdColumns.ID, item.userId());
+        contentValues.put(JsonIdColumns.ID, Constants.DEFAULT_USER_ID);
         contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));
 
         return contentValues;

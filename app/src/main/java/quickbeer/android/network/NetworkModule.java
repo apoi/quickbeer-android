@@ -37,17 +37,20 @@ import com.google.gson.GsonBuilder;
 
 import org.joda.time.DateTime;
 
+import java.util.List;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import quickbeer.android.BuildConfig;
 import quickbeer.android.Constants;
 import quickbeer.android.injections.ForApplication;
-import quickbeer.android.instrumentation.NetworkInstrumentation;
 import quickbeer.android.network.utils.DateDeserializer;
+import quickbeer.android.network.utils.LoginRedirectInterceptor;
 import quickbeer.android.network.utils.StringDeserializer;
 
 @Module
@@ -56,8 +59,8 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public static NetworkApi provideNetworkApi(
-            @NonNull final OkHttpClient client,
-            @NonNull final Gson gson) {
+            @NonNull OkHttpClient client,
+            @NonNull Gson gson) {
         return new NetworkApi(client, gson);
     }
 
@@ -71,14 +74,17 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public static OkHttpClient provideOkHttpClient(
-            @NonNull final NetworkInstrumentation networkInstrumentation,
-            @NonNull final ClearableCookieJar cookieJar) {
+            @Named("networkInterceptors") List<Interceptor> networkInterceptors,
+            @NonNull ClearableCookieJar cookieJar) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
                 .followRedirects(false)
-                .followSslRedirects(false);
+                .followSslRedirects(false)
+                .addInterceptor(new LoginRedirectInterceptor());
 
-        return networkInstrumentation.decorateNetwork(builder).build();
+        builder.networkInterceptors().addAll(networkInterceptors);
+
+        return builder.build();
     }
 
     @Provides
@@ -93,7 +99,7 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public static ClearableCookieJar provideCookieJar(@ForApplication @NonNull final Context context) {
+    public static ClearableCookieJar provideCookieJar(@ForApplication @NonNull Context context) {
         return new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
 }

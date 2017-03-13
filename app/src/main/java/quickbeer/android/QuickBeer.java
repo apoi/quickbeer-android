@@ -30,7 +30,7 @@ import javax.inject.Inject;
 import quickbeer.android.injections.ApplicationModule;
 import quickbeer.android.injections.DaggerGraph;
 import quickbeer.android.injections.Graph;
-import quickbeer.android.instrumentation.NetworkInstrumentation;
+import quickbeer.android.instrumentation.ApplicationInstrumentation;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -46,7 +46,7 @@ public class QuickBeer extends Application {
 
     @Inject
     @Nullable
-    NetworkInstrumentation networkInstrumentation;
+    ApplicationInstrumentation instrumentation;
 
     @Override
     public void onCreate() {
@@ -58,7 +58,7 @@ public class QuickBeer extends Application {
 
         initLeakCanary();
 
-        initNetworkInstrumentation();
+        initInstrumentation();
 
         initDateAndTime();
     }
@@ -88,8 +88,8 @@ public class QuickBeer extends Application {
         }
     }
 
-    private void initNetworkInstrumentation() {
-        get(networkInstrumentation).init();
+    private void initInstrumentation() {
+        get(instrumentation).init();
     }
 
     private void initDateAndTime() {

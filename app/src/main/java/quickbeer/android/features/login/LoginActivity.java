@@ -36,12 +36,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reark.reark.utils.RxUtils;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.utils.ViewUtils;
 import rx.subscriptions.CompositeSubscription;

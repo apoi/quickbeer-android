@@ -17,10 +17,15 @@
  */
 package quickbeer.android.instrumentation;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Interceptor;
 import quickbeer.android.utils.ProductionTree;
 import timber.log.Timber;
 
@@ -35,7 +40,21 @@ public final class InstrumentationModule {
 
     @Provides
     @Singleton
-    static NetworkInstrumentation providesNetworkInstrumentation() {
-        return new NullNetworkInstrumentation();
+    public static ApplicationInstrumentation provideApplicationInstrumentation() {
+        return new NullApplicationInstrumentation();
+    }
+
+    @Provides
+    @Singleton
+    @Named("networkInstrumentation")
+    public static Instrumentation provideNetworkInstrumentation() {
+        return new NullInstrumentation();
+    }
+
+    @Provides
+    @Singleton
+    @Named("networkInterceptors")
+    public static List<Interceptor> provideNetworkInterceptors() {
+        return Collections.emptyList();
     }
 }

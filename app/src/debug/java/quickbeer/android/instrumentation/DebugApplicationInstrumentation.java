@@ -27,16 +27,31 @@ package quickbeer.android.instrumentation;
 
 import android.support.annotation.NonNull;
 
-import okhttp3.OkHttpClient;
+import static io.reark.reark.utils.Preconditions.get;
 
-public class NullNetworkInstrumentation implements NetworkInstrumentation {
+public class DebugApplicationInstrumentation implements ApplicationInstrumentation {
 
     @NonNull
-    @Override
-    public OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder) {
-        return clientBuilder;
+    private final LeakTracing leakTracing;
+
+    @NonNull
+    private final Instrumentation instrumentation;
+
+    public DebugApplicationInstrumentation(@NonNull LeakTracing leakTracing,
+                                           @NonNull Instrumentation networkInstrumentation) {
+        this.leakTracing = get(leakTracing);
+        this.instrumentation = get(networkInstrumentation);
     }
 
     @Override
-    public void init() { }
+    public void init() {
+        leakTracing.init();
+        instrumentation.init();
+    }
+
+    @NonNull
+    @Override
+    public LeakTracing getLeakTracing() {
+        return leakTracing;
+    }
 }

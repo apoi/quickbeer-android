@@ -25,32 +25,6 @@
  */
 package quickbeer.android.instrumentation;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-
-import static com.facebook.stetho.Stetho.defaultDumperPluginsProvider;
-import static com.facebook.stetho.Stetho.defaultInspectorModulesProvider;
-import static com.facebook.stetho.Stetho.initialize;
-import static com.facebook.stetho.Stetho.newInitializerBuilder;
-import static io.reark.reark.utils.Preconditions.get;
-
-public class StethoInstrumentation implements Instrumentation {
-
-    @NonNull
-    private final Context context;
-
-    StethoInstrumentation(@NonNull final Context context) {
-        this.context = get(context);
-    }
-
-    @Override
-    public void init() {
-        initialize(newInitializerBuilder(context)
-                .enableDumpapp(defaultDumperPluginsProvider(context))
-                .enableWebKitInspector(defaultInspectorModulesProvider(context))
-                .build());
-    }
+public interface LeakTracing extends Instrumentation {
+    void traceLeakage(Object reference);
 }

@@ -17,11 +17,15 @@
  */
 package quickbeer.android.instrumentation;
 
+import android.app.Application;
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -41,22 +45,29 @@ public final class InstrumentationModule {
 
     @Provides
     @Singleton
-    static NetworkInstrumentation providesNetworkInstrumentation(
-            @NonNull StethoInstrumentation instrumentation) {
-        return instrumentation;
+    public static ApplicationInstrumentation provideInstrumentation(
+            LeakTracing leakTracing,
+            @Named("networkInstrumentation") Instrumentation networkInstrumentation) {
+        return new DebugApplicationInstrumentation(leakTracing, networkInstrumentation);
     }
 
     @Provides
     @Singleton
-    static StethoInstrumentation providesStethoInstrumentation(
-            @ForApplication @NonNull Context context,
-            @NonNull Interceptor interceptor) {
-        return new StethoInstrumentation(context, interceptor);
+    public static LeakTracing provideLeakTracing(Application application) {
+        return new LeakCanaryTracing(application);
     }
 
     @Provides
     @Singleton
-    static Interceptor providesInterceptor() {
-        return new StethoInterceptor();
+    @Named("networkInstrumentation")
+    public static Instrumentation provideStethoInstrumentation(@ForApplication Context context) {
+        return new StethoInstrumentation(context);
+    }
+
+    @Provides
+    @Singleton
+    @Named("networkInterceptors")
+    public static List<Interceptor> provideNetworkInterceptors() {
+        return Collections.singletonList(new StethoInterceptor());
     }
 }

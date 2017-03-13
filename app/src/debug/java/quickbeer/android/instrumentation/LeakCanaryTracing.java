@@ -25,11 +25,28 @@
  */
 package quickbeer.android.instrumentation;
 
-import android.support.annotation.NonNull;
+import android.app.Application;
 
-import okhttp3.OkHttpClient;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
-public interface NetworkInstrumentation extends Instrumentation {
-    @NonNull
-    OkHttpClient.Builder decorateNetwork(@NonNull final OkHttpClient.Builder clientBuilder);
+public class LeakCanaryTracing implements LeakTracing {
+
+    private RefWatcher refWatcher;
+
+    private final Application application;
+
+    public LeakCanaryTracing(Application application) {
+        this.application = application;
+    }
+
+    @Override
+    public void init() {
+        refWatcher = LeakCanary.install(application);
+    }
+
+    @Override
+    public void traceLeakage(Object reference) {
+        refWatcher.watch(reference);
+    }
 }
