@@ -88,16 +88,16 @@ public class BeerListView extends FrameLayout {
         return selectedBeerSubject.asObservable();
     }
 
-    public void setHeader(@NonNull final Header header) {
+    public void setHeader(@NonNull Header header) {
         get(beerListAdapter).setHeader(header);
     }
 
-    public void setBeers(@NonNull final List<BeerViewModel> beers) {
+    public void setBeers(@NonNull List<BeerViewModel> beers) {
         Timber.v("Setting " + beers.size() + " beers to adapter");
         get(beerListAdapter).set(get(beers));
     }
 
-    public void setProgressStatus(@NonNull final ProgressStatus progressStatus) {
+    public void setProgressStatus(@NonNull ProgressStatus progressStatus) {
         checkNotNull(searchStatusTextView);
 
         switch (progressStatus) {

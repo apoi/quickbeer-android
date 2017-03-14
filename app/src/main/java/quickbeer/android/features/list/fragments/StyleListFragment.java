@@ -62,7 +62,7 @@ public class StyleListFragment  extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .getQueryStream()
                     .subscribe(getView()::setFilter, Timber::e));
@@ -73,7 +73,7 @@ public class StyleListFragment  extends BindingBaseFragment {
         }
     };
 
-    private void navigateToStyle(@NonNull final Integer styleId) {
+    private void navigateToStyle(@NonNull Integer styleId) {
         Timber.d("navigateToStyle(" + styleId + ")");
 
         Bundle bundle = new Bundle();

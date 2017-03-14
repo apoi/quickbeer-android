@@ -35,22 +35,22 @@ import rx.functions.Action1;
 
 public class TopBeersFetcher extends BeerSearchFetcher {
 
-    public TopBeersFetcher(@NonNull final NetworkApi networkApi,
-                           @NonNull final NetworkUtils networkUtils,
-                           @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                           @NonNull final BeerStore beerStore,
-                           @NonNull final BeerListStore beerListStore) {
+    public TopBeersFetcher(@NonNull NetworkApi networkApi,
+                           @NonNull NetworkUtils networkUtils,
+                           @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                           @NonNull BeerStore beerStore,
+                           @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         fetchBeerSearch("");
     }
 
     @NonNull
     @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String searchString) {
         // Disregard search, the top beers query is static
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));
     }

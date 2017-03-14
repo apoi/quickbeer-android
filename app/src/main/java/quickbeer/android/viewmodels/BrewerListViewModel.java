@@ -48,8 +48,8 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     @NonNull
     private final PublishSubject<List<BrewerViewModel>> brewers = PublishSubject.create();
 
-    protected BrewerListViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                                  @NonNull final DataLayer.GetBrewer getBrewer) {
+    protected BrewerListViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                  @NonNull DataLayer.GetBrewer getBrewer) {
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
     }
@@ -63,7 +63,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     }
 
     @Override
-    protected void bind(@NonNull final CompositeSubscription subscription) {
+    protected void bind(@NonNull CompositeSubscription subscription) {
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
                 sourceObservable()
                         .publish();
@@ -105,7 +105,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     }
 
     @Override
-    protected boolean hasValue(@Nullable final ItemList<String> item) {
+    protected boolean hasValue(@Nullable ItemList<String> item) {
         return !get(item).getItems().isEmpty();
     }
 }

@@ -29,51 +29,51 @@ public final class ViewModelModule {
 
     @Provides
     static RecentBeersViewModel provideRecentBeersViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetAccessedBeers getAccessedBeers) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetAccessedBeers getAccessedBeers) {
         return new RecentBeersViewModel(getBeer, getAccessedBeers);
     }
 
     @Provides
     static RecentBrewersViewModel provideRecentBrewersViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetBrewer getBrewer,
-            @NonNull final DataLayer.GetAccessedBrewers getAccessedBrewers) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBrewer getBrewer,
+            @NonNull DataLayer.GetAccessedBrewers getAccessedBrewers) {
         return new RecentBrewersViewModel(getBeer, getBrewer, getAccessedBrewers);
     }
 
     @Provides
     static BeerSearchViewModel provideBeerSearchViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-            @NonNull final SearchViewViewModel searchViewViewModel) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull SearchViewViewModel searchViewViewModel) {
         return new BeerSearchViewModel(getBeer, getBeerSearch, searchViewViewModel);
     }
 
     @Provides
     static BarcodeSearchViewModel provideBarcodeSearchViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-            @NonNull final DataLayer.GetBarcodeSearch getBarcodeSearch,
-            @NonNull final SearchViewViewModel searchViewViewModel) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull DataLayer.GetBarcodeSearch getBarcodeSearch,
+            @NonNull SearchViewViewModel searchViewViewModel) {
         return new BarcodeSearchViewModel(getBeer, getBeerSearch, getBarcodeSearch, searchViewViewModel);
     }
 
     @Provides
     static TopBeersViewModel provideTopBeersViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-            @NonNull final DataLayer.GetTopBeers getTopBeers,
-            @NonNull final SearchViewViewModel searchViewViewModel) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBeerSearch getBeerSearch,
+            @NonNull DataLayer.GetTopBeers getTopBeers,
+            @NonNull SearchViewViewModel searchViewViewModel) {
         return new TopBeersViewModel(getBeer, getBeerSearch, getTopBeers, searchViewViewModel);
     }
 
     @Provides
     static BeerDetailsViewModel provideBeerDetailsViewModel(
-            @NonNull final DataLayer.GetBeer getBeer,
-            @NonNull final DataLayer.GetBrewer getBrewer,
-            @NonNull final DataLayer.GetReviews getReviews,
-            @NonNull final DataLayer.GetReview getReview) {
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBrewer getBrewer,
+            @NonNull DataLayer.GetReviews getReviews,
+            @NonNull DataLayer.GetReview getReview) {
         return new BeerDetailsViewModel(getBeer, getBrewer, getReviews, getReview);
     }
 

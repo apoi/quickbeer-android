@@ -127,7 +127,7 @@ public abstract class Review {
     // Plumbing
 
     @NonNull
-    public static TypeAdapter<Review> typeAdapter(@NonNull final Gson gson) {
+    public static TypeAdapter<Review> typeAdapter(@NonNull Gson gson) {
         return new AutoValue_Review.GsonTypeAdapter(get(gson));
     }
 
@@ -137,39 +137,39 @@ public abstract class Review {
 
         public abstract Builder id(final Integer id);
 
-        public abstract Builder appearance(@Nullable final Integer appearance);
+        public abstract Builder appearance(@Nullable Integer appearance);
 
-        public abstract Builder aroma(@Nullable final Integer aroma);
+        public abstract Builder aroma(@Nullable Integer aroma);
 
-        public abstract Builder flavor(@Nullable final Integer flavor);
+        public abstract Builder flavor(@Nullable Integer flavor);
 
-        public abstract Builder mouthfeel(@Nullable final Integer mouthfeel);
+        public abstract Builder mouthfeel(@Nullable Integer mouthfeel);
 
-        public abstract Builder overall(@Nullable final Integer overall);
+        public abstract Builder overall(@Nullable Integer overall);
 
-        public abstract Builder totalScore(@Nullable final Float totalScore);
+        public abstract Builder totalScore(@Nullable Float totalScore);
 
-        public abstract Builder comments(@Nullable final String comments);
+        public abstract Builder comments(@Nullable String comments);
 
-        public abstract Builder timeEntered(@Nullable final DateTime timeEntered);
+        public abstract Builder timeEntered(@Nullable DateTime timeEntered);
 
-        public abstract Builder timeUpdated(@Nullable final DateTime timeUpdated);
+        public abstract Builder timeUpdated(@Nullable DateTime timeUpdated);
 
-        public abstract Builder userID(@Nullable final Integer userID);
+        public abstract Builder userID(@Nullable Integer userID);
 
-        public abstract Builder userName(@Nullable final String userName);
+        public abstract Builder userName(@Nullable String userName);
 
-        public abstract Builder city(@Nullable final String city);
+        public abstract Builder city(@Nullable String city);
 
-        public abstract Builder stateID(@Nullable final Integer stateID);
+        public abstract Builder stateID(@Nullable Integer stateID);
 
-        public abstract Builder state(@Nullable final String state);
+        public abstract Builder state(@Nullable String state);
 
-        public abstract Builder countryID(@Nullable final Integer countryID);
+        public abstract Builder countryID(@Nullable Integer countryID);
 
-        public abstract Builder country(@Nullable final String country);
+        public abstract Builder country(@Nullable String country);
 
-        public abstract Builder rateCount(@Nullable final Integer rateCount);
+        public abstract Builder rateCount(@Nullable Integer rateCount);
 
         public abstract Review build();
 
@@ -191,12 +191,12 @@ public abstract class Review {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final Review beer) {
+    public static Builder builder(@NonNull Review beer) {
         return new AutoValue_Review.Builder(beer);
     }
 
     @NonNull
-    public static Review merge(@NonNull final Review v1, @NonNull final Review v2) {
+    public static Review merge(@NonNull Review v1, @NonNull Review v2) {
         AutoValue_Review.Builder builder1 = new AutoValue_Review.Builder(get(v1));
         AutoValue_Review.Builder builder2 = new AutoValue_Review.Builder(get(v2));
 

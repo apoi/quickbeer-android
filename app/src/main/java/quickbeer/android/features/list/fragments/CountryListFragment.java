@@ -62,7 +62,7 @@ public class CountryListFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .getQueryStream()
                     .subscribe(getView()::setFilter, Timber::e));
@@ -73,7 +73,7 @@ public class CountryListFragment extends BindingBaseFragment {
         }
     };
 
-    private void navigateToCountry(@NonNull final Integer countryId) {
+    private void navigateToCountry(@NonNull Integer countryId) {
         Timber.d("navigateToCountry(" + countryId + ")");
 
         Bundle bundle = new Bundle();

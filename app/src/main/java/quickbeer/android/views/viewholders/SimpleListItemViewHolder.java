@@ -33,8 +33,8 @@ public class SimpleListItemViewHolder extends RecyclerView.ViewHolder {
     @NonNull
     private final TextView iconView;
 
-    public SimpleListItemViewHolder(@NonNull final View view,
-                                    @NonNull final View.OnClickListener onClickListener) {
+    public SimpleListItemViewHolder(@NonNull View view,
+                                    @NonNull View.OnClickListener onClickListener) {
         super(view);
 
         iconView = (TextView) view.findViewById(R.id.list_item_icon);

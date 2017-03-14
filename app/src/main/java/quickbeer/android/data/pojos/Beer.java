@@ -149,37 +149,37 @@ public abstract class Beer {
 
         public abstract Builder id(final Integer id);
 
-        public abstract Builder name(@Nullable final String name);
+        public abstract Builder name(@Nullable String name);
 
-        public abstract Builder averageRating(@Nullable final Float averageRating);
+        public abstract Builder averageRating(@Nullable Float averageRating);
 
-        public abstract Builder overallRating(@Nullable final Float overallRating);
+        public abstract Builder overallRating(@Nullable Float overallRating);
 
-        public abstract Builder styleRating(@Nullable final Float styleRating);
+        public abstract Builder styleRating(@Nullable Float styleRating);
 
-        public abstract Builder rateCount(@Nullable final Float rateCount);
+        public abstract Builder rateCount(@Nullable Float rateCount);
 
-        public abstract Builder styleId(@Nullable final Integer styleId);
+        public abstract Builder styleId(@Nullable Integer styleId);
 
-        public abstract Builder styleName(@Nullable final String styleName);
+        public abstract Builder styleName(@Nullable String styleName);
 
-        public abstract Builder alcohol(@Nullable final Float alcohol);
+        public abstract Builder alcohol(@Nullable Float alcohol);
 
-        public abstract Builder ibu(@Nullable final Float ibu);
+        public abstract Builder ibu(@Nullable Float ibu);
 
-        public abstract Builder description(@Nullable final String description);
+        public abstract Builder description(@Nullable String description);
 
-        public abstract Builder isAlias(@Nullable final Boolean isAlias);
+        public abstract Builder isAlias(@Nullable Boolean isAlias);
 
-        public abstract Builder brewerId(@Nullable final Integer brewerId);
+        public abstract Builder brewerId(@Nullable Integer brewerId);
 
-        public abstract Builder brewerName(@Nullable final String brewerName);
+        public abstract Builder brewerName(@Nullable String brewerName);
 
-        public abstract Builder countryId(@Nullable final Integer countryId);
+        public abstract Builder countryId(@Nullable Integer countryId);
 
-        public abstract Builder tickValue(@Nullable final Integer tickValue);
+        public abstract Builder tickValue(@Nullable Integer tickValue);
 
-        public abstract Builder tickDate(@Nullable final DateTime tickDate);
+        public abstract Builder tickDate(@Nullable DateTime tickDate);
 
         public abstract Beer build();
 
@@ -191,12 +191,12 @@ public abstract class Beer {
     }
 
     @NonNull
-    public static TypeAdapter<Beer> typeAdapter(@NonNull final Gson gson) {
+    public static TypeAdapter<Beer> typeAdapter(@NonNull Gson gson) {
         return new AutoValue_Beer.GsonTypeAdapter(get(gson));
     }
 
     @NonNull
-    public static Beer fromJson(@NonNull final String json, @NonNull final Gson gson) {
+    public static Beer fromJson(@NonNull String json, @NonNull Gson gson) {
         try {
             return new AutoValue_Beer.GsonTypeAdapter(get(gson)).fromJson(get(json));
         } catch (IOException e) {
@@ -211,12 +211,12 @@ public abstract class Beer {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final Beer beer) {
+    public static Builder builder(@NonNull Beer beer) {
         return new AutoValue_Beer.Builder(beer);
     }
 
     @NonNull
-    public static Beer merge(@NonNull final Beer v1, @NonNull final Beer v2) {
+    public static Beer merge(@NonNull Beer v1, @NonNull Beer v2) {
         AutoValue_Beer.Builder builder1 = new AutoValue_Beer.Builder(get(v1));
         AutoValue_Beer.Builder builder2 = new AutoValue_Beer.Builder(get(v2));
 

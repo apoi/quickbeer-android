@@ -73,7 +73,7 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(get(view)
                     .selectedBrewerStream()
                     .doOnNext(brewerId -> Timber.d("Selected brewer " + brewerId))
@@ -108,7 +108,7 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
         return false;
     }
 
-    protected void openBrewerDetails(@NonNull final Integer brewerId) {
+    protected void openBrewerDetails(@NonNull Integer brewerId) {
         Intent intent = new Intent(getActivity(), BeerDetailsActivity.class); // TODO
         intent.putExtra("brewerId", brewerId);
         startActivity(intent);
@@ -158,7 +158,7 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
     @NonNull
     protected abstract BrewerListViewModel viewModel();
 
-    protected abstract void onQuery(@NonNull final String query);
+    protected abstract void onQuery(@NonNull String query);
 
     @NonNull
     @Override

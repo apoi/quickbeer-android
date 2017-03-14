@@ -36,10 +36,10 @@ class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
     @NonNull
     private final GetNullSafe<U, R> getNullSafe;
 
-    StoreBase(@NonNull final CachingStoreCore<T, U> core,
-              @NonNull final GetIdForItem<T, U> getIdForItem,
-              @NonNull final GetNullSafe<U, R> getNullSafe,
-              @NonNull final GetEmptyValue<R> getEmptyValue) {
+    StoreBase(@NonNull CachingStoreCore<T, U> core,
+              @NonNull GetIdForItem<T, U> getIdForItem,
+              @NonNull GetNullSafe<U, R> getNullSafe,
+              @NonNull GetEmptyValue<R> getEmptyValue) {
         super(get(core),
                 get(getIdForItem),
                 get(getNullSafe),

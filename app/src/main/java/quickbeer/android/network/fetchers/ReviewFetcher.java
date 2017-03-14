@@ -58,11 +58,11 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     @NonNull
     private final ReviewListStore reviewListStore;
 
-    public ReviewFetcher(@NonNull final NetworkApi networkApi,
-                         @NonNull final NetworkUtils networkUtils,
-                         @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                         @NonNull final ReviewStore reviewStore,
-                         @NonNull final ReviewListStore reviewListStore) {
+    public ReviewFetcher(@NonNull NetworkApi networkApi,
+                         @NonNull NetworkUtils networkUtils,
+                         @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                         @NonNull ReviewStore reviewStore,
+                         @NonNull ReviewListStore reviewListStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
@@ -72,7 +72,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final int beerId = intent.getIntExtra("beerId", -1);
 
         if (beerId > 0) {

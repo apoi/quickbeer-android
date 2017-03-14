@@ -85,7 +85,7 @@ public class BarcodeSearchFragment extends BeerListFragment {
     }
 
     @Override
-    protected void onQuery(@NonNull final String query) {
+    protected void onQuery(@NonNull String query) {
         // No action, new search replaces old results.
     }
 }

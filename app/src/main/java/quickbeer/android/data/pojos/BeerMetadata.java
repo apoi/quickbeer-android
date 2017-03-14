@@ -53,13 +53,13 @@ public abstract class BeerMetadata {
 
         public abstract Builder beerId(final Integer beerId);
 
-        public abstract Builder updated(@Nullable final DateTime updated);
+        public abstract Builder updated(@Nullable DateTime updated);
 
-        public abstract Builder accessed(@Nullable final DateTime accessed);
+        public abstract Builder accessed(@Nullable DateTime accessed);
 
-        public abstract Builder reviewId(@Nullable final Integer reviewId);
+        public abstract Builder reviewId(@Nullable Integer reviewId);
 
-        public abstract Builder isModified(@Nullable final Boolean isModified);
+        public abstract Builder isModified(@Nullable Boolean isModified);
 
         public abstract BeerMetadata build();
 
@@ -76,7 +76,7 @@ public abstract class BeerMetadata {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final BeerMetadata metadata) {
+    public static Builder builder(@NonNull BeerMetadata metadata) {
         return new AutoValue_BeerMetadata.Builder(metadata);
     }
 
@@ -97,7 +97,7 @@ public abstract class BeerMetadata {
     }
 
     @NonNull
-    public static BeerMetadata merge(@NonNull final BeerMetadata v1, @NonNull final BeerMetadata v2) {
+    public static BeerMetadata merge(@NonNull BeerMetadata v1, @NonNull BeerMetadata v2) {
         AutoValue_BeerMetadata.Builder builder1 = new AutoValue_BeerMetadata.Builder(get(v1));
         AutoValue_BeerMetadata.Builder builder2 = new AutoValue_BeerMetadata.Builder(get(v2));
 

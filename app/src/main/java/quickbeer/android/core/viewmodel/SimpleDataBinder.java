@@ -25,7 +25,7 @@ import rx.subscriptions.CompositeSubscription;
 public class SimpleDataBinder implements DataBinder {
 
     @Override
-    public void bind(@NonNull final CompositeSubscription subscription) {
+    public void bind(@NonNull CompositeSubscription subscription) {
         // Override this when required.
     }
 

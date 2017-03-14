@@ -44,7 +44,7 @@ public abstract class NetworkViewModel<T> extends quickbeer.android.core.viewmod
         return progressStatus.asObservable();
     }
 
-    public void setProgressStatus(@NonNull final ProgressStatus status) {
+    public void setProgressStatus(@NonNull ProgressStatus status) {
         progressStatus.onNext(get(status));
     }
 
@@ -84,6 +84,6 @@ public abstract class NetworkViewModel<T> extends quickbeer.android.core.viewmod
         };
     }
 
-    protected abstract boolean hasValue(@Nullable final T item);
+    protected abstract boolean hasValue(@Nullable T item);
 
 }

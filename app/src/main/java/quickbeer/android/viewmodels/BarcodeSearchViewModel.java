@@ -45,10 +45,10 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
     private String barcode = "";
 
     @Inject
-    BarcodeSearchViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                           @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-                           @NonNull final DataLayer.GetBarcodeSearch getBarcodeSearch,
-                           @NonNull final SearchViewViewModel searchViewViewModel) {
+    BarcodeSearchViewModel(@NonNull DataLayer.GetBeer getBeer,
+                           @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                           @NonNull DataLayer.GetBarcodeSearch getBarcodeSearch,
+                           @NonNull SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getBeerSearch = get(getBeerSearch);
@@ -56,7 +56,7 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
         this.searchViewViewModel = get(searchViewViewModel);
     }
 
-    public void setBarcode(@NonNull final String barcode) {
+    public void setBarcode(@NonNull String barcode) {
         this.barcode = get(barcode);
     }
 

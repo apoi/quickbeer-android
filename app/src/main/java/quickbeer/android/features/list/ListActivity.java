@@ -56,7 +56,7 @@ public class ListActivity extends BindingDrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel().getSearchQueriesOnceAndStream()
                     .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
                     .subscribe(query -> get(searchView).updateQueryList(query),
@@ -139,7 +139,7 @@ public class ListActivity extends BindingDrawerActivity {
     }
 
     @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
+    protected void navigateTo(@NonNull MenuItem menuItem) {
         get(navigationProvider).navigateWithCurrentActivity(menuItem);
     }
 

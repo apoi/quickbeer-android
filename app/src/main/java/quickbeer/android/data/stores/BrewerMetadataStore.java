@@ -34,7 +34,7 @@ import rx.Observable;
 
 public class BrewerMetadataStore extends StoreBase<Integer, BrewerMetadata, Option<BrewerMetadata>> {
 
-    public BrewerMetadataStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BrewerMetadataStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new BrewerMetadataStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(BrewerMetadata::merge),

@@ -25,7 +25,7 @@ public enum Unit {
     DEFAULT;
 
     @NonNull
-    public static Unit asUnit(@Nullable final Object object) {
+    public static Unit asUnit(@Nullable Object object) {
         return DEFAULT;
     }
 

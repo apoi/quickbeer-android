@@ -48,7 +48,7 @@ public class ProfileActivity extends BindingDrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .isLoggedIn()
                     .map(isLoggedIn -> isLoggedIn ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
@@ -85,7 +85,7 @@ public class ProfileActivity extends BindingDrawerActivity {
     }
 
     @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
+    protected void navigateTo(@NonNull MenuItem menuItem) {
         get(navigationProvider).navigateWithNewActivity(menuItem);
     }
 }

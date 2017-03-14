@@ -30,7 +30,7 @@ import quickbeer.android.data.stores.cores.CachingStoreCore;
 
 public class BrewerStore extends StoreBase<Integer, Brewer, Option<Brewer>> {
 
-    public BrewerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BrewerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new BrewerStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(Brewer::merge),

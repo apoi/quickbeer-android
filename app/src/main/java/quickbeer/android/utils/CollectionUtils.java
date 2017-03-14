@@ -32,8 +32,8 @@ public final class CollectionUtils {
      * @param second Collection
      * @return True if the content and the order of the collection are equal, otherwise false
      */
-    public static <T> boolean areEqual(@Nullable final Collection<T> first,
-                                       @Nullable final Collection<T> second) {
+    public static <T> boolean areEqual(@Nullable Collection<T> first,
+                                       @Nullable Collection<T> second) {
         if (first == null || second == null || first.size() != second.size()) {
             return false;
         }

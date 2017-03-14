@@ -54,11 +54,11 @@ public class SearchViewViewModel extends SimpleViewModel {
     @NonNull
     private final PublishSubject<Option<String>> querySubject = PublishSubject.create();
 
-    public SearchViewViewModel(@NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
+    public SearchViewViewModel(@NonNull DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         this.getBeerSearchQueries = get(getBeerSearchQueries);
     }
 
-    public void setQuery(@Nullable final String query) {
+    public void setQuery(@Nullable String query) {
         lastQuery = ofObj(query);
         querySubject.onNext(lastQuery);
     }

@@ -38,16 +38,16 @@ import timber.log.Timber;
 
 public class BeersInCountryFetcher extends BeerSearchFetcher {
 
-    public BeersInCountryFetcher(@NonNull final NetworkApi networkApi,
-                                 @NonNull final NetworkUtils networkUtils,
-                                 @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                                 @NonNull final BeerStore beerStore,
-                                 @NonNull final BeerListStore beerListStore) {
+    public BeersInCountryFetcher(@NonNull NetworkApi networkApi,
+                                 @NonNull NetworkUtils networkUtils,
+                                 @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                                 @NonNull BeerStore beerStore,
+                                 @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String countryId = intent.getStringExtra("countryId");
 
         if (countryId != null) {
@@ -59,7 +59,7 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String countryId) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String countryId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "country");
         params.put("c", countryId);
 

@@ -32,80 +32,80 @@ public final class StoreModule {
     @Provides
     @Singleton
     static UserStore provideUserStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new UserStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static NetworkRequestStatusStore provideRequestStatusStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new NetworkRequestStatusStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BeerStore provideBeerStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BeerStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BeerListStore provideBeerListStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BeerListStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BeerMetadataStore provideBeerMetadataStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BeerMetadataStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static ReviewStore provideReviewStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new ReviewStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static ReviewListStore provideReviewListStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new ReviewListStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BrewerStore provideBrewerStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BrewerStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BrewerListStore provideBrewerListStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BrewerListStore(contentResolver, gson);
     }
 
     @Provides
     @Singleton
     static BrewerMetadataStore provideBrewerMetadataStore(
-            @NonNull final ContentResolver contentResolver,
-            @NonNull final Gson gson) {
+            @NonNull ContentResolver contentResolver,
+            @NonNull Gson gson) {
         return new BrewerMetadataStore(contentResolver, gson);
     }
 }

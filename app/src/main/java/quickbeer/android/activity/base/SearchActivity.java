@@ -66,7 +66,7 @@ public abstract class SearchActivity extends SearchBarActivity {
         return query;
     }
 
-    public void setQuery(@NonNull final Option<String> query) {
+    public void setQuery(@NonNull Option<String> query) {
         this.query = query;
     }
 

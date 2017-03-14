@@ -33,7 +33,7 @@ public abstract class BindingBaseFragment extends BaseFragment {
     private final BaseLifecycleViewDataBinder lifecycleBinder = new BaseLifecycleViewDataBinder() {
 
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             dataBinder().bind(subscription);
         }
 
@@ -51,7 +51,7 @@ public abstract class BindingBaseFragment extends BaseFragment {
     };
 
     @Override
-    public void onActivityCreated(@Nullable final Bundle savedInstanceState) {
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         lifecycleBinder.onCreate();
     }

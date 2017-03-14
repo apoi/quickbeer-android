@@ -42,16 +42,16 @@ public class ServiceDataLayer extends DataLayerBase {
     @NonNull
     private final UriFetcherManager fetcherManager;
 
-    public ServiceDataLayer(@NonNull final UriFetcherManager fetcherManager,
-                            @NonNull final NetworkRequestStatusStore requestStatusStore,
-                            @NonNull final BeerStore beerStore,
-                            @NonNull final BeerListStore beerListStore,
-                            @NonNull final BeerMetadataStore beerMetadataStore,
-                            @NonNull final ReviewStore reviewStore,
-                            @NonNull final ReviewListStore reviewListStore,
-                            @NonNull final BrewerStore brewerStore,
-                            @NonNull final BrewerListStore brewerListStore,
-                            @NonNull final BrewerMetadataStore brewerMetadataStore) {
+    public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager,
+                            @NonNull NetworkRequestStatusStore requestStatusStore,
+                            @NonNull BeerStore beerStore,
+                            @NonNull BeerListStore beerListStore,
+                            @NonNull BeerMetadataStore beerMetadataStore,
+                            @NonNull ReviewStore reviewStore,
+                            @NonNull ReviewListStore reviewListStore,
+                            @NonNull BrewerStore brewerStore,
+                            @NonNull BrewerListStore brewerListStore,
+                            @NonNull BrewerMetadataStore brewerMetadataStore) {
         super(requestStatusStore,
                 beerStore, beerListStore, beerMetadataStore,
                 reviewStore, reviewListStore,
@@ -60,7 +60,7 @@ public class ServiceDataLayer extends DataLayerBase {
         this.fetcherManager = get(fetcherManager);
     }
 
-    public void processIntent(@NonNull final Intent intent) {
+    public void processIntent(@NonNull Intent intent) {
         checkNotNull(intent);
 
         final String serviceUriString = intent.getStringExtra("serviceUriString");

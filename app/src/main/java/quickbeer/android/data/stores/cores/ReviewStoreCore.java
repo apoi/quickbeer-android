@@ -33,19 +33,19 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
-    public ReviewStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public ReviewStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.Reviews.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.Reviews.fromUri(get(uri));
     }
 
@@ -68,7 +68,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
     @NonNull
     @Override
-    protected Review read(@NonNull final Cursor cursor) {
+    protected Review read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewColumns.JSON));
         final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
@@ -79,7 +79,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final Review item) {
+    protected ContentValues getContentValuesForItem(@NonNull Review item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewColumns.ID, item.id());
         contentValues.put(ReviewColumns.JSON, getGson().toJson(item));
@@ -89,7 +89,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
 
     @NonNull
     @Override
-    protected Review mergeValues(@NonNull final Review v1, @NonNull final Review v2) {
+    protected Review mergeValues(@NonNull Review v1, @NonNull Review v2) {
         return Review.merge(v1, v2);
     }
 }

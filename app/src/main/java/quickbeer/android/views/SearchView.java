@@ -72,7 +72,7 @@ public class SearchView extends FrameLayout {
         searchViewOverlay = findViewById(R.id.search_view_overlay);
     }
 
-    public void setViewModel(@NonNull final SearchViewViewModel viewModel) {
+    public void setViewModel(@NonNull SearchViewViewModel viewModel) {
         this.viewModel = get(viewModel);
 
         initialize();
@@ -83,7 +83,7 @@ public class SearchView extends FrameLayout {
         return get(viewModel);
     }
 
-    public void setMenuItem(@NonNull final MenuItem menuItem) {
+    public void setMenuItem(@NonNull MenuItem menuItem) {
         get(searchView).setMenuItem(get(menuItem));
     }
 
@@ -95,7 +95,7 @@ public class SearchView extends FrameLayout {
         get(searchView).closeSearch();
     }
 
-    public void updateQueryList(@NonNull final List<String> queries) {
+    public void updateQueryList(@NonNull List<String> queries) {
         get(adapter).updateSourceList(queries);
     }
 

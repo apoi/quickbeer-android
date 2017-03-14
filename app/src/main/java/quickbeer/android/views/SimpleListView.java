@@ -55,7 +55,7 @@ public class SimpleListView extends FrameLayout {
         return selectedId.asObservable();
     }
 
-    public void setListSource(@NonNull final SimpleListSource source) {
+    public void setListSource(@NonNull SimpleListSource source) {
         RecyclerView simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);
 
         simpleListAdapter = new SimpleListAdapter(get(source).getList());
@@ -71,7 +71,7 @@ public class SimpleListView extends FrameLayout {
         simpleListView.setAdapter(simpleListAdapter);
     }
 
-    public void setFilter(@NonNull final String filter) {
+    public void setFilter(@NonNull String filter) {
         get(simpleListAdapter).filterList(get(filter));
     }
 }

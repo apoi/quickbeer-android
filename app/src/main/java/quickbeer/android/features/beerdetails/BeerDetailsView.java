@@ -42,11 +42,11 @@ public class BeerDetailsView extends FrameLayout {
         super(context, attrs);
     }
 
-    public void setBeer(@NonNull final Beer beer) {
+    public void setBeer(@NonNull Beer beer) {
         get(beerDetailsAdapter).setBeer(get(beer));
     }
 
-    public void setBrewer(@NonNull final Brewer brewer) {
+    public void setBrewer(@NonNull Brewer brewer) {
         get(beerDetailsAdapter).setBrewer(get(brewer));
     }
 

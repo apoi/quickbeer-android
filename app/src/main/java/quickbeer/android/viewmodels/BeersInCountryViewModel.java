@@ -45,10 +45,10 @@ public class BeersInCountryViewModel extends BeerListViewModel {
     private String country = "";
 
     @Inject
-    BeersInCountryViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                            @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-                            @NonNull final DataLayer.GetBeersInCountry getBeersInCountry,
-                            @NonNull final SearchViewViewModel searchViewViewModel) {
+    BeersInCountryViewModel(@NonNull DataLayer.GetBeer getBeer,
+                            @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                            @NonNull DataLayer.GetBeersInCountry getBeersInCountry,
+                            @NonNull SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getBeerSearch = get(getBeerSearch);
@@ -56,7 +56,7 @@ public class BeersInCountryViewModel extends BeerListViewModel {
         this.searchViewViewModel = get(searchViewViewModel);
     }
 
-    public void setCountry(@NonNull final String country) {
+    public void setCountry(@NonNull String country) {
         this.country = get(country);
     }
 

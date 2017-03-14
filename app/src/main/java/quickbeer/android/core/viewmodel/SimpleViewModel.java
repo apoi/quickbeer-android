@@ -25,7 +25,7 @@ import rx.subscriptions.CompositeSubscription;
 public class SimpleViewModel extends BaseViewModel {
 
     @Override
-    protected void bind(@NonNull final CompositeSubscription subscription) {
+    protected void bind(@NonNull CompositeSubscription subscription) {
         // Nothing - has no data source to bind to.
     }
 

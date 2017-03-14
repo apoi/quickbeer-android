@@ -35,19 +35,19 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class UserStoreCore extends StoreCoreBase<Integer, User> {
 
-    public UserStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public UserStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.Users.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.Users.fromUri(uri);
     }
 
@@ -68,14 +68,14 @@ public class UserStoreCore extends StoreCoreBase<Integer, User> {
 
     @NonNull
     @Override
-    protected User read(@NonNull final Cursor cursor) {
+    protected User read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
         return getGson().fromJson(json, User.class);
     }
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final User item) {
+    protected ContentValues getContentValuesForItem(@NonNull User item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(JsonIdColumns.ID, Constants.DEFAULT_USER_ID);
         contentValues.put(JsonIdColumns.JSON, getGson().toJson(item));

@@ -45,10 +45,10 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     private String style = "";
 
     @Inject
-    BeersInStyleViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                          @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-                          @NonNull final DataLayer.GetBeersInStyle getBeersInStyle,
-                          @NonNull final SearchViewViewModel searchViewViewModel) {
+    BeersInStyleViewModel(@NonNull DataLayer.GetBeer getBeer,
+                          @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                          @NonNull DataLayer.GetBeersInStyle getBeersInStyle,
+                          @NonNull SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getBeerSearch = get(getBeerSearch);
@@ -56,7 +56,7 @@ public class BeersInStyleViewModel extends BeerListViewModel {
         this.searchViewViewModel = get(searchViewViewModel);
     }
 
-    public void setStyle(@NonNull final String style) {
+    public void setStyle(@NonNull String style) {
         this.style = get(style);
     }
 

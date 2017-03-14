@@ -52,11 +52,11 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
     @NonNull
     private final LayoutInflater inflater;
 
-    public SearchAdapter(@NonNull final Context context) {
+    public SearchAdapter(@NonNull Context context) {
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void updateSourceList(@NonNull final List<String> list) {
+    public void updateSourceList(@NonNull List<String> list) {
         sourceList.clear();
         sourceList.addAll(list);
     }

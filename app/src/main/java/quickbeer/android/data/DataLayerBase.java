@@ -45,15 +45,15 @@ public class DataLayerBase {
     protected final BrewerListStore brewerListStore;
     protected final BrewerMetadataStore brewerMetadataStore;
 
-    protected DataLayerBase(@NonNull final NetworkRequestStatusStore requestStatusStore,
-                            @NonNull final BeerStore beerStore,
-                            @NonNull final BeerListStore beerListStore,
-                            @NonNull final BeerMetadataStore beerMetadataStore,
-                            @NonNull final ReviewStore reviewStore,
-                            @NonNull final ReviewListStore reviewListStore,
-                            @NonNull final BrewerStore brewerStore,
-                            @NonNull final BrewerListStore brewerListStore,
-                            @NonNull final BrewerMetadataStore brewerMetadataStore) {
+    protected DataLayerBase(@NonNull NetworkRequestStatusStore requestStatusStore,
+                            @NonNull BeerStore beerStore,
+                            @NonNull BeerListStore beerListStore,
+                            @NonNull BeerMetadataStore beerMetadataStore,
+                            @NonNull ReviewStore reviewStore,
+                            @NonNull ReviewListStore reviewListStore,
+                            @NonNull BrewerStore brewerStore,
+                            @NonNull BrewerListStore brewerListStore,
+                            @NonNull BrewerMetadataStore brewerMetadataStore) {
         this.requestStatusStore = get(requestStatusStore);
         this.beerStore = get(beerStore);
         this.beerListStore = get(beerListStore);

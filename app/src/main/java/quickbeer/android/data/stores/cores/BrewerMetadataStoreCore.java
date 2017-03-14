@@ -43,12 +43,12 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetadata> {
 
-    public BrewerMetadataStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BrewerMetadataStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull final String idColumn, @NonNull final String accessColumn) {
+    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull String idColumn, @NonNull String accessColumn) {
         return Observable
                 .fromCallable(() -> {
                     String[] projection = { idColumn };
@@ -74,7 +74,7 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     }
 
     @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull DateTime date) {
         return getStream()
                 .map(StoreItem::item)
                 .filter(item -> DateUtils.isValidDate(item.accessed()))
@@ -95,13 +95,13 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.BrewerMetadata.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.BrewerMetadata.fromUri(get(uri));
     }
 
@@ -123,7 +123,7 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
 
     @NonNull
     @Override
-    protected BrewerMetadata read(@NonNull final Cursor cursor) {
+    protected BrewerMetadata read(@NonNull Cursor cursor) {
         final int brewerId = cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ID));
         final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)));
         final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)));
@@ -137,7 +137,7 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final BrewerMetadata item) {
+    protected ContentValues getContentValuesForItem(@NonNull BrewerMetadata item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BrewerMetadataColumns.ID, item.brewerId());
         contentValues.put(BrewerMetadataColumns.UPDATED, DateUtils.toDbValue(item.updated()));
@@ -148,7 +148,7 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
 
     @NonNull
     @Override
-    protected BrewerMetadata mergeValues(@NonNull final BrewerMetadata v1, @NonNull final BrewerMetadata v2) {
+    protected BrewerMetadata mergeValues(@NonNull BrewerMetadata v1, @NonNull BrewerMetadata v2) {
         return BrewerMetadata.merge(v1, v2);
     }
 }

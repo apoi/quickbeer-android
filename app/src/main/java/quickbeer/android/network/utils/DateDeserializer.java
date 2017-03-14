@@ -37,10 +37,12 @@ import java.util.Locale;
 
 public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
 
-    private static final DateTimeZone PACIFIC_ZONE = DateTimeZone.forID("US/Pacific");
+    private static final DateTimeZone PACIFIC_ZONE =
+            DateTimeZone.forID("US/Pacific");
 
     private static final DateTimeFormatter ISO_FORMAT =
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
+            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+                    .withZone(DateTimeZone.UTC);
 
     private static final DateTimeFormatter US_TIME_FORMAT =
             DateTimeFormat

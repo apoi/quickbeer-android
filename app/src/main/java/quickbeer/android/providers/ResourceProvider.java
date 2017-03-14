@@ -28,7 +28,7 @@ public class ResourceProvider {
     @NonNull
     private final Context context;
 
-    public ResourceProvider(@NonNull final Context context) {
+    public ResourceProvider(@NonNull Context context) {
         this.context = get(context);
     }
 

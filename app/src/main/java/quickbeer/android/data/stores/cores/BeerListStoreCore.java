@@ -39,19 +39,19 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerListStoreCore extends StoreCoreBase<String, ItemList<String>> {
 
-    public BeerListStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BeerListStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final String id) {
+    protected Uri getUriForId(@NonNull String id) {
         return RateBeerProvider.BeerLists.withKey(get(id));
     }
 
     @NonNull
     @Override
-    protected String getIdForUri(@NonNull final Uri uri) {
+    protected String getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.BeerLists.fromUri(get(uri));
     }
 
@@ -74,7 +74,7 @@ public class BeerListStoreCore extends StoreCoreBase<String, ItemList<String>> {
     @SuppressWarnings("EmptyClass")
     @NonNull
     @Override
-    protected ItemList<String> read(@NonNull final Cursor cursor) {
+    protected ItemList<String> read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerListColumns.JSON));
         final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)));
 
@@ -87,7 +87,7 @@ public class BeerListStoreCore extends StoreCoreBase<String, ItemList<String>> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final ItemList<String> item) {
+    protected ContentValues getContentValuesForItem(@NonNull ItemList<String> item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerListColumns.KEY, item.getKey());
         contentValues.put(BeerListColumns.JSON, getGson().toJson(item));

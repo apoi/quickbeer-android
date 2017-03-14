@@ -54,7 +54,7 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     @NonNull
     private final DataBinder viewDataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             clear();
 
             subscription.add(get(getViewModel())
@@ -79,7 +79,7 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
         return viewDataBinder;
     }
 
-    public void setBeer(@NonNull final Beer beer) {
+    public void setBeer(@NonNull Beer beer) {
         if (beer.getTickValue() > 0) {
             ratingTextView.setText("");
             ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());

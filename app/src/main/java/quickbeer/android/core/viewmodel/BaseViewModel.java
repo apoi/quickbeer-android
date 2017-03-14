@@ -46,7 +46,7 @@ public abstract class BaseViewModel implements ViewModel {
         }
     }
 
-    protected abstract void bind(@NonNull final CompositeSubscription subscription);
+    protected abstract void bind(@NonNull CompositeSubscription subscription);
 
     protected abstract void unbind();
 

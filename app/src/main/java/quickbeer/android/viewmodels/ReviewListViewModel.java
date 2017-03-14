@@ -49,8 +49,8 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
 
     private int beerId;
 
-    public ReviewListViewModel(@NonNull final DataLayer.GetReviews getReviews,
-                               @NonNull final DataLayer.GetReview getReview) {
+    public ReviewListViewModel(@NonNull DataLayer.GetReviews getReviews,
+                               @NonNull DataLayer.GetReview getReview) {
         this.getReviews = get(getReviews);
         this.getReview = get(getReview);
     }
@@ -77,7 +77,7 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     }
 
     @NonNull
-    private Observable<Review> getReviewObservable(@NonNull final Integer reviewId) {
+    private Observable<Review> getReviewObservable(@NonNull Integer reviewId) {
         return getReview
                 .call(get(reviewId))
                 .compose(quickbeer.android.rx.RxUtils::pickValue)

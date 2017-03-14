@@ -37,16 +37,16 @@ import timber.log.Timber;
 
 public class BarcodeSearchFetcher extends BeerSearchFetcher {
 
-    public BarcodeSearchFetcher(@NonNull final NetworkApi networkApi,
-                                @NonNull final NetworkUtils networkUtils,
-                                @NonNull final Action1<NetworkRequestStatus> requestStatus,
-                                @NonNull final BeerStore beerStore,
-                                @NonNull final BeerListStore beerListStore) {
+    public BarcodeSearchFetcher(@NonNull NetworkApi networkApi,
+                                @NonNull NetworkUtils networkUtils,
+                                @NonNull Action1<NetworkRequestStatus> requestStatus,
+                                @NonNull BeerStore beerStore,
+                                @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, requestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String barcode = intent.getStringExtra("barcode");
 
         if (barcode != null) {
@@ -58,7 +58,7 @@ public class BarcodeSearchFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String barcode) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String barcode) {
         return networkApi.barcode(networkUtils.createRequestParams("upc", barcode));
     }
 

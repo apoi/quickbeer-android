@@ -37,23 +37,23 @@ public class ItemList<T> {
     @Nullable
     private DateTime updateDate;
 
-    public ItemList(@Nullable final T key,
-                    @NonNull final List<Integer> items,
-                    @Nullable final DateTime updateDate) {
+    public ItemList(@Nullable T key,
+                    @NonNull List<Integer> items,
+                    @Nullable DateTime updateDate) {
         this.key = key;
         this.items = new ArrayList<>(items);
         this.updateDate = updateDate;
     }
 
     @NonNull
-    public static <T> ItemList<T> create(@Nullable final T key,
-                                         @NonNull final List<Integer> items,
-                                         @Nullable final DateTime updateDate) {
+    public static <T> ItemList<T> create(@Nullable T key,
+                                         @NonNull List<Integer> items,
+                                         @Nullable DateTime updateDate) {
         return new ItemList<>(key, items, updateDate);
     }
 
     @NonNull
-    public static <T> ItemList<T> create(@NonNull final List<Integer> items) {
+    public static <T> ItemList<T> create(@NonNull List<Integer> items) {
         return new ItemList<>(null, items, null);
     }
 
@@ -72,7 +72,7 @@ public class ItemList<T> {
         return updateDate;
     }
 
-    public void setUpdateDate(@Nullable final DateTime value) {
+    public void setUpdateDate(@Nullable DateTime value) {
         updateDate = value;
     }
 

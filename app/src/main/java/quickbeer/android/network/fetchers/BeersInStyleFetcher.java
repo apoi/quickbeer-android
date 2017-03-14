@@ -37,16 +37,16 @@ import timber.log.Timber;
 
 public class BeersInStyleFetcher extends BeerSearchFetcher {
 
-    public BeersInStyleFetcher(@NonNull final NetworkApi networkApi,
-                               @NonNull final NetworkUtils networkUtils,
-                               @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                               @NonNull final BeerStore beerStore,
-                               @NonNull final BeerListStore beerListStore) {
+    public BeersInStyleFetcher(@NonNull NetworkApi networkApi,
+                               @NonNull NetworkUtils networkUtils,
+                               @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                               @NonNull BeerStore beerStore,
+                               @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String styleId = intent.getStringExtra("styleId");
 
         if (styleId != null) {
@@ -58,7 +58,7 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String styleId) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String styleId) {
         return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId));
     }
 

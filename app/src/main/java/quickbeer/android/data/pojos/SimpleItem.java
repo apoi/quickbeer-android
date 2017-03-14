@@ -30,7 +30,7 @@ public abstract class SimpleItem implements Comparable<SimpleItem> {
     public abstract String getCode();
 
     @Override
-    public int compareTo(@NonNull final SimpleItem another) {
+    public int compareTo(@NonNull SimpleItem another) {
         return getName().compareTo(another.getName());
     }
 }

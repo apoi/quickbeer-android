@@ -42,7 +42,7 @@ public class StethoInstrumentation implements Instrumentation {
     @NonNull
     private final Context context;
 
-    StethoInstrumentation(@NonNull final Context context) {
+    StethoInstrumentation(@NonNull Context context) {
         this.context = get(context);
     }
 

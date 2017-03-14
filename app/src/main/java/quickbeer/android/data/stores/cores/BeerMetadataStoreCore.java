@@ -44,12 +44,12 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> {
 
-    public BeerMetadataStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BeerMetadataStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
-    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull final String idColumn, @NonNull final String accessColumn) {
+    public Observable<List<Integer>> getAccessedIdsOnce(@NonNull String idColumn, @NonNull String accessColumn) {
         return Observable
                 .fromCallable(() -> {
                     String[] projection = { idColumn };
@@ -75,7 +75,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     }
 
     @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull final DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull DateTime date) {
         return getStream()
                 .map(StoreItem::item)
                 .filter(item -> DateUtils.isValidDate(item.accessed()))
@@ -96,13 +96,13 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.BeerMetadata.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.BeerMetadata.fromUri(get(uri));
     }
 
@@ -126,7 +126,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
 
     @NonNull
     @Override
-    protected BeerMetadata read(@NonNull final Cursor cursor) {
+    protected BeerMetadata read(@NonNull Cursor cursor) {
         final int beerId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ID));
         final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)));
         final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)));
@@ -144,7 +144,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final BeerMetadata item) {
+    protected ContentValues getContentValuesForItem(@NonNull BeerMetadata item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerMetadataColumns.ID, item.beerId());
         contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toDbValue(item.updated()));
@@ -157,7 +157,7 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
 
     @NonNull
     @Override
-    protected BeerMetadata mergeValues(@NonNull final BeerMetadata v1, @NonNull final BeerMetadata v2) {
+    protected BeerMetadata mergeValues(@NonNull BeerMetadata v1, @NonNull BeerMetadata v2) {
         return BeerMetadata.merge(v1, v2);
     }
 }

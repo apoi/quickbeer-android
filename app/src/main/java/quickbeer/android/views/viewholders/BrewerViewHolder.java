@@ -50,7 +50,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     @NonNull
     private final DataBinder viewDataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             clear();
 
             subscription.add(get(getViewModel())
@@ -75,7 +75,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
         return viewDataBinder;
     }
 
-    public void setBrewer(@NonNull final Brewer brewer) {
+    public void setBrewer(@NonNull Brewer brewer) {
         brewerCircle.setText(brewer.city().substring(0, 2));
         brewerName.setText(brewer.name());
         brewerCountry.setText(String.format("%s, %s", brewer.city(), brewer.countryId()));

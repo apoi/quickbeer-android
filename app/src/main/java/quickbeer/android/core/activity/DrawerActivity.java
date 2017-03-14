@@ -98,7 +98,7 @@ public abstract class DrawerActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         navigateTo(item);
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -146,6 +146,6 @@ public abstract class DrawerActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(drawerToggle);
     }
 
-    protected abstract void navigateTo(@NonNull final MenuItem item);
+    protected abstract void navigateTo(@NonNull MenuItem item);
 
 }

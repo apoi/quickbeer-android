@@ -42,7 +42,7 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
-    public BeerStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BeerStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
@@ -75,13 +75,13 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.Beers.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.Beers.fromUri(get(uri));
     }
 
@@ -105,7 +105,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     @Override
-    protected Beer read(@NonNull final Cursor cursor) {
+    protected Beer read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
         final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
         final DateTime tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
@@ -118,7 +118,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final Beer item) {
+    protected ContentValues getContentValuesForItem(@NonNull Beer item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerColumns.ID, item.id());
         contentValues.put(BeerColumns.JSON, getGson().toJson(item));
@@ -131,7 +131,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
 
     @NonNull
     @Override
-    protected Beer mergeValues(@NonNull final Beer v1, @NonNull final Beer v2) {
+    protected Beer mergeValues(@NonNull Beer v1, @NonNull Beer v2) {
         return Beer.merge(v1, v2);
     }
 }

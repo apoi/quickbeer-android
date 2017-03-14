@@ -34,8 +34,8 @@ public class RecentBeersViewModel extends BeerListViewModel {
     private final DataLayer.GetAccessedBeers getAccessedBeers;
 
     @Inject
-    RecentBeersViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                         @NonNull final DataLayer.GetAccessedBeers getAccessedBeers) {
+    RecentBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
+                         @NonNull DataLayer.GetAccessedBeers getAccessedBeers) {
         super(getBeer);
 
         this.getAccessedBeers = get(getAccessedBeers);

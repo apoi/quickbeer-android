@@ -47,9 +47,9 @@ public abstract class BrewerMetadata {
 
         public abstract Builder brewerId(final Integer brewerId);
 
-        public abstract Builder updated(@Nullable final DateTime updated);
+        public abstract Builder updated(@Nullable DateTime updated);
 
-        public abstract Builder accessed(@Nullable final DateTime accessed);
+        public abstract Builder accessed(@Nullable DateTime accessed);
 
         public abstract BrewerMetadata build();
 
@@ -66,7 +66,7 @@ public abstract class BrewerMetadata {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final BrewerMetadata metadata) {
+    public static Builder builder(@NonNull BrewerMetadata metadata) {
         return new AutoValue_BrewerMetadata.Builder(metadata);
     }
 
@@ -87,7 +87,7 @@ public abstract class BrewerMetadata {
     }
 
     @NonNull
-    public static BrewerMetadata merge(@NonNull final BrewerMetadata v1, @NonNull final BrewerMetadata v2) {
+    public static BrewerMetadata merge(@NonNull BrewerMetadata v1, @NonNull BrewerMetadata v2) {
         AutoValue_BrewerMetadata.Builder builder1 = new AutoValue_BrewerMetadata.Builder(get(v1));
         AutoValue_BrewerMetadata.Builder builder2 = new AutoValue_BrewerMetadata.Builder(get(v2));
 

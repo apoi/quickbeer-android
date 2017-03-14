@@ -34,7 +34,7 @@ public class ActivityModule {
 
     private final AppCompatActivity activity;
 
-    public ActivityModule(@NonNull final AppCompatActivity activity) {
+    public ActivityModule(@NonNull AppCompatActivity activity) {
         this.activity = activity;
     }
 
@@ -47,7 +47,7 @@ public class ActivityModule {
     @Provides
     @ActivityScope
     static SearchViewViewModel providesSearchViewViewModel(
-            @NonNull final DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
+            @NonNull DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         return new SearchViewViewModel(getBeerSearchQueries);
     }
 

@@ -37,7 +37,7 @@ import quickbeer.android.data.stores.cores.NetworkRequestStatusStoreCore;
 
 public class NetworkRequestStatusStore extends DefaultStore<Integer, NetworkRequestStatus, Option<NetworkRequestStatus>> {
 
-    public NetworkRequestStatusStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public NetworkRequestStatusStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new NetworkRequestStatusStoreCore(contentResolver, gson),
               status -> requestIdForUri(status.getUri()),
               Option::ofObj,
@@ -45,7 +45,7 @@ public class NetworkRequestStatusStore extends DefaultStore<Integer, NetworkRequ
     }
 
     @NonNull
-    public static Integer requestIdForUri(@NonNull final String uri) {
+    public static Integer requestIdForUri(@NonNull String uri) {
         return uri.hashCode();
     }
 }

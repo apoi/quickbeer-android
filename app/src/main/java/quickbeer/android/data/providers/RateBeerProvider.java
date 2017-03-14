@@ -42,7 +42,7 @@ public final class RateBeerProvider {
     private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
     private static final String BASE_TYPE = "vnd.android.cursor.item/";
 
-    private static Uri buildUri(@NonNull final String... paths) {
+    private static Uri buildUri(@NonNull String... paths) {
         Uri.Builder builder = AUTHORITY_URI.buildUpon();
         for (String path : paths) {
             builder.appendPath(path);

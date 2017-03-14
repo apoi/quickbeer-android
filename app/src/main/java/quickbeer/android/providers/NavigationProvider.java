@@ -78,8 +78,8 @@ public final class NavigationProvider {
     private final Integer container;
 
     @Inject
-    NavigationProvider(@NonNull final AppCompatActivity activity,
-                       @NonNull @Named("fragmentContainer") final Integer container) {
+    NavigationProvider(@NonNull AppCompatActivity activity,
+                       @NonNull @Named("fragmentContainer") Integer container) {
         this.activity = get(activity);
         this.container = container;
     }
@@ -92,11 +92,11 @@ public final class NavigationProvider {
         addPage(toPage(menuNavigationId), arguments);
     }
 
-    public void addPage(@NonNull final Page page) {
+    public void addPage(@NonNull Page page) {
         transaction(page, null, true);
     }
 
-    public void addPage(@NonNull final Page page, @Nullable final Bundle arguments) {
+    public void addPage(@NonNull Page page, @Nullable Bundle arguments) {
         transaction(page, arguments, true);
     }
 
@@ -136,7 +136,7 @@ public final class NavigationProvider {
         }
     }
 
-    private void transaction(@NonNull final Page page, @Nullable final Bundle arguments, boolean addToBackStack) {
+    private void transaction(@NonNull Page page, @Nullable Bundle arguments, boolean addToBackStack) {
         checkNotNull(page);
 
         final Fragment fragment = toFragment(page);
@@ -171,7 +171,7 @@ public final class NavigationProvider {
         activity.getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
-    public void triggerSearch(@NonNull final String query) {
+    public void triggerSearch(@NonNull String query) {
         Timber.d("query(" + query + ")");
 
         Bundle bundle = new Bundle();
@@ -180,7 +180,7 @@ public final class NavigationProvider {
         addPage(Page.BEER_SEARCH, bundle);
     }
 
-    public void navigateWithNewActivity(@NonNull final MenuItem menuItem) {
+    public void navigateWithNewActivity(@NonNull MenuItem menuItem) {
         Intent intent;
 
         if (menuItem.getItemId() == R.id.nav_home) {
@@ -194,7 +194,7 @@ public final class NavigationProvider {
         activity.startActivity(intent);
     }
 
-    public void navigateWithCurrentActivity(@NonNull final MenuItem menuItem) {
+    public void navigateWithCurrentActivity(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.nav_home) {
             Intent intent = new Intent(activity, HomeActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -220,7 +220,7 @@ public final class NavigationProvider {
         }
     }
 
-    private static Fragment toFragment(@NonNull final Page page) {
+    private static Fragment toFragment(@NonNull Page page) {
         switch (page) {
             case HOME:
                 return new HomeFragment();

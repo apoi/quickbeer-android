@@ -31,12 +31,12 @@ public final class DateUtils {
     private DateUtils() {}
 
     @NonNull
-    public static DateTime value(@Nullable final DateTime date) {
+    public static DateTime value(@Nullable DateTime date) {
         return isValidDate(date) ? date : new DateTime(0);
     }
 
     @NonNull
-    public static String format(@Nullable final DateTime date) {
+    public static String format(@Nullable DateTime date) {
         return value(date).toString(DATE_FORMAT);
     }
 
@@ -47,13 +47,13 @@ public final class DateUtils {
                 : null;
     }
 
-    public static int toDbValue(@Nullable final DateTime date) {
+    public static int toDbValue(@Nullable DateTime date) {
         return isValidDate(date)
                 ? (int) (date.getMillis() / 1000)
                 : 0;
     }
 
-    public static boolean isValidDate(@Nullable final DateTime date) {
+    public static boolean isValidDate(@Nullable DateTime date) {
         return date != null && date.isAfter(0);
     }
 }

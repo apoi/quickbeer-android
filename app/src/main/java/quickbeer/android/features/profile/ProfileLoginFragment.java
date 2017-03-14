@@ -81,7 +81,7 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             // Progress indicator during login
             subscription.add(viewModel()
                     .isLoginInProgress()
@@ -95,11 +95,13 @@ public class ProfileLoginFragment extends BindingBaseFragment {
                     .subscribe(ProfileLoginFragment.this::showError, Timber::e));
 
             // Trigger fetching of ticked beers after user has logged in
+            /*
             subscription.add(viewModel()
                     .isLoginInProgress()
                     .filter(RxUtils::isTrue)
                     .switchMap(__ -> viewModel().getUser())
                     .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
+                    */
         }
     };
 

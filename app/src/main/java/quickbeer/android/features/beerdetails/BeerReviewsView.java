@@ -43,7 +43,7 @@ public class BeerReviewsView extends FrameLayout {
         super(context, attrs);
     }
 
-    public void setReviews(@NonNull final List<Review> reviews) {
+    public void setReviews(@NonNull List<Review> reviews) {
         get(beerReviewsAdapter).setReviews(get(reviews));
     }
 

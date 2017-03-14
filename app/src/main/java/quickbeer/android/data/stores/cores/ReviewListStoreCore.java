@@ -39,19 +39,19 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer>> {
 
-    public ReviewListStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public ReviewListStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.ReviewLists.withBeerId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.ReviewLists.fromUri(get(uri));
     }
 
@@ -74,7 +74,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
     @SuppressWarnings("EmptyClass")
     @NonNull
     @Override
-    protected ItemList<Integer> read(@NonNull final Cursor cursor) {
+    protected ItemList<Integer> read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
         final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
@@ -87,7 +87,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final ItemList<Integer> item) {
+    protected ContentValues getContentValuesForItem(@NonNull ItemList<Integer> item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewListColumns.BEER_ID, item.getKey());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));

@@ -33,19 +33,19 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
 
-    public BrewerStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BrewerStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Uri getUriForId(@NonNull final Integer id) {
+    protected Uri getUriForId(@NonNull Integer id) {
         return RateBeerProvider.Brewers.withId(get(id));
     }
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         return RateBeerProvider.Brewers.fromUri(get(uri));
     }
 
@@ -67,7 +67,7 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
 
     @NonNull
     @Override
-    protected Brewer read(@NonNull final Cursor cursor) {
+    protected Brewer read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BrewerColumns.JSON));
         return Brewer.builder(getGson().fromJson(json, Brewer.class))
                 .build();
@@ -75,7 +75,7 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final Brewer item) {
+    protected ContentValues getContentValuesForItem(@NonNull Brewer item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BrewerColumns.ID, item.id());
         contentValues.put(BrewerColumns.JSON, getGson().toJson(item));
@@ -86,7 +86,7 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
 
     @NonNull
     @Override
-    protected Brewer mergeValues(@NonNull final Brewer v1, @NonNull final Brewer v2) {
+    protected Brewer mergeValues(@NonNull Brewer v1, @NonNull Brewer v2) {
         return Brewer.merge(v1, v2);
     }
 }

@@ -34,7 +34,7 @@ public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U>
     @NonNull
     private final Gson gson;
 
-    protected StoreCoreBase(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    protected StoreCoreBase(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver);
 
         this.gson = gson;

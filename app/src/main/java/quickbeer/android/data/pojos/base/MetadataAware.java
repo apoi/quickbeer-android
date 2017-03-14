@@ -20,6 +20,6 @@ package quickbeer.android.data.pojos.base;
 import android.support.annotation.NonNull;
 
 public interface MetadataAware<T> {
-    boolean dataEquals(@NonNull final T other);
-    boolean metadataEquals(@NonNull final T other);
+    boolean dataEquals(@NonNull T other);
+    boolean metadataEquals(@NonNull T other);
 }

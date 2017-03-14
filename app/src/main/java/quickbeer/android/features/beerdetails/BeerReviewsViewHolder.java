@@ -67,7 +67,7 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, view);
     }
 
-    public void setReview(@NonNull final Review review) {
+    public void setReview(@NonNull Review review) {
         checkNotNull(review);
 
         appearance.setText(valueOf(review.appearance()));

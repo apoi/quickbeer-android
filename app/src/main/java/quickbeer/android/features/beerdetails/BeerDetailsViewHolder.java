@@ -146,7 +146,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
         Toast.makeText(context, resource, Toast.LENGTH_LONG).show();
     }
 
-    public void setBeer(@NonNull final Beer beer) {
+    public void setBeer(@NonNull Beer beer) {
         checkNotNull(beer);
         checkNotNull(styles);
         checkNotNull(resourceProvider);
@@ -188,7 +188,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .ifSome(ibuTextView::setText);
     }
 
-    public void setBrewer(@NonNull final Brewer brewer) {
+    public void setBrewer(@NonNull Brewer brewer) {
         checkNotNull(countries);
 
         ofObj(brewer.countryId())
@@ -205,7 +205,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
         return ofObj(get(resourceProvider).getString(R.string.not_available));
     }
 
-    private void navigateToStyle(@Nullable final Integer styleId) {
+    private void navigateToStyle(@Nullable Integer styleId) {
         Timber.d("navigateToStyle(%s)", styleId);
 
         Intent intent = new Intent(context, ListActivity.class);
@@ -214,7 +214,7 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
         context.startActivity(intent);
     }
 
-    private void navigateToCountry(@NonNull final Country country) {
+    private void navigateToCountry(@NonNull Country country) {
         Timber.d("navigateToCountry(%s)", country.getName());
 
         Intent intent = new Intent(context, ListActivity.class);

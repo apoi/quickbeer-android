@@ -97,7 +97,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             ConnectableObservable<Beer> sourceObservable = get(getBeer)
                     .call(beerId)
                     .subscribeOn(Schedulers.io())
@@ -202,7 +202,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     }
 
     @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
+    protected void navigateTo(@NonNull MenuItem menuItem) {
         get(navigationProvider).navigateWithNewActivity(menuItem);
     }
 

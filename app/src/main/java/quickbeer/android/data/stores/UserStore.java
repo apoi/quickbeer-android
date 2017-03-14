@@ -42,8 +42,8 @@ import quickbeer.android.data.stores.cores.UserStoreCore;
  */
 public class UserStore extends StoreBase<Integer, User, Option<User>> {
 
-    public UserStore(@NonNull final ContentResolver contentResolver,
-                     @NonNull final Gson gson) {
+    public UserStore(@NonNull ContentResolver contentResolver,
+                     @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new UserStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(User::merge),

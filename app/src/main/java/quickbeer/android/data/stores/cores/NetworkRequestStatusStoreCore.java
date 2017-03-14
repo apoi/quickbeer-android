@@ -39,13 +39,13 @@ import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, NetworkRequestStatus> {
 
-    public NetworkRequestStatusStoreCore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public NetworkRequestStatusStoreCore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(contentResolver, gson);
     }
 
     @NonNull
     @Override
-    protected Observable<List<CoreOperation>> groupOperations(@NonNull final Observable<CoreOperation> source) {
+    protected Observable<List<CoreOperation>> groupOperations(@NonNull Observable<CoreOperation> source) {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.
         return source.map(Collections::singletonList);
     }
@@ -64,7 +64,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    protected ContentValues getContentValuesForItem(@NonNull final NetworkRequestStatus item) {
+    protected ContentValues getContentValuesForItem(@NonNull NetworkRequestStatus item) {
         checkNotNull(item);
 
         ContentValues contentValues = new ContentValues();
@@ -75,7 +75,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    protected NetworkRequestStatus read(@NonNull final Cursor cursor) {
+    protected NetworkRequestStatus read(@NonNull Cursor cursor) {
         checkNotNull(cursor);
 
         final String json = cursor.getString(cursor.getColumnIndex(JsonIdColumns.JSON));
@@ -84,7 +84,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    public Uri getUriForId(@NonNull final Integer id) {
+    public Uri getUriForId(@NonNull Integer id) {
         checkNotNull(id);
 
         return RateBeerProvider.NetworkRequestStatuses.withId(id);
@@ -92,7 +92,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    protected Integer getIdForUri(@NonNull final Uri uri) {
+    protected Integer getIdForUri(@NonNull Uri uri) {
         checkNotNull(uri);
 
         return (int) RateBeerProvider.NetworkRequestStatuses.fromUri(uri);

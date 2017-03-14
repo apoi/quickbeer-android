@@ -34,7 +34,7 @@ public abstract class BindingDrawerActivity extends InjectingDrawerActivity {
     private final BaseLifecycleViewDataBinder lifecycleBinder = new BaseLifecycleViewDataBinder() {
 
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             dataBinder().bind(subscription);
         }
 
@@ -53,7 +53,7 @@ public abstract class BindingDrawerActivity extends InjectingDrawerActivity {
 
     @CallSuper
     @Override
-    protected void onCreate(@Nullable final Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lifecycleBinder.onCreate();
     }

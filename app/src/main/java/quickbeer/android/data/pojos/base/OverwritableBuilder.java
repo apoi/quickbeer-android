@@ -33,7 +33,7 @@ import timber.log.Timber;
 public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends OverwritablePojo<T> {
 
     @Override
-    protected boolean isEmpty(@NonNull final Field field, @NonNull final OverwritablePojo<T> pojo) {
+    protected boolean isEmpty(@NonNull Field field, @NonNull OverwritablePojo<T> pojo) {
         try {
             Object value = field.get(pojo);
 

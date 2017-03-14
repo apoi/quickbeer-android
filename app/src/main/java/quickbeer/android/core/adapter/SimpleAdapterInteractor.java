@@ -46,7 +46,7 @@ public class SimpleAdapterInteractor<T> implements AdapterInteractor<T> {
     }
 
     @Override
-    public boolean update(@NonNull final Collection<T> items) {
+    public boolean update(@NonNull Collection<T> items) {
         boolean changed = !CollectionUtils.areEqual(models, items);
         if (changed) {
             models.clear();
@@ -56,7 +56,7 @@ public class SimpleAdapterInteractor<T> implements AdapterInteractor<T> {
     }
 
     @Override
-    public boolean append(@NonNull final Collection<T> items) {
+    public boolean append(@NonNull Collection<T> items) {
         if (!items.isEmpty()) {
             models.addAll(items);
             return true;
@@ -65,7 +65,7 @@ public class SimpleAdapterInteractor<T> implements AdapterInteractor<T> {
     }
 
     @Override
-    public boolean insert(@NonNull final T item, @IntRange(from = 0) final int position) {
+    public boolean insert(@NonNull T item, @IntRange(from = 0) final int position) {
         assertValidPosition(position);
         models.add(position, item);
         return true;
@@ -79,12 +79,12 @@ public class SimpleAdapterInteractor<T> implements AdapterInteractor<T> {
     }
 
     @Override
-    public boolean remove(@NonNull final T item) {
+    public boolean remove(@NonNull T item) {
         return models.remove(item);
     }
 
     @Override
-    public boolean removeAll(@NonNull final Collection<T> items) {
+    public boolean removeAll(@NonNull Collection<T> items) {
         return models.removeAll(items);
     }
 
@@ -102,7 +102,7 @@ public class SimpleAdapterInteractor<T> implements AdapterInteractor<T> {
 
     @NonNull
     @Override
-    public Option<Integer> getItemPosition(@NonNull final T item) {
+    public Option<Integer> getItemPosition(@NonNull T item) {
         int position = models.indexOf(item);
         return position < 0 ? Option.NONE : ofObj(position);
     }

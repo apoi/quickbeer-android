@@ -37,16 +37,16 @@ import timber.log.Timber;
 
 public class TicksFetcher extends BeerSearchFetcher {
 
-    public TicksFetcher(@NonNull final NetworkApi networkApi,
-                        @NonNull final NetworkUtils networkUtils,
-                        @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                        @NonNull final BeerStore beerStore,
-                        @NonNull final BeerListStore beerListStore) {
+    public TicksFetcher(@NonNull NetworkApi networkApi,
+                        @NonNull NetworkUtils networkUtils,
+                        @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                        @NonNull BeerStore beerStore,
+                        @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String userId = intent.getStringExtra("userId");
 
         if (userId != null) {
@@ -58,7 +58,7 @@ public class TicksFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String userId) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String userId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "1");
         params.put("u", userId);
 

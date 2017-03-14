@@ -52,11 +52,11 @@ public class BeerFetcher extends FetcherBase<Uri> {
     @NonNull
     private final BeerMetadataStore metadataStore;
 
-    public BeerFetcher(@NonNull final NetworkApi networkApi,
-                       @NonNull final NetworkUtils networkUtils,
-                       @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                       @NonNull final BeerStore beerStore,
-                       @NonNull final BeerMetadataStore metadataStore) {
+    public BeerFetcher(@NonNull NetworkApi networkApi,
+                       @NonNull NetworkUtils networkUtils,
+                       @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                       @NonNull BeerStore beerStore,
+                       @NonNull BeerMetadataStore metadataStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
@@ -66,7 +66,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final int beerId = get(intent).getIntExtra("id", -1);
 
         if (beerId != -1) {

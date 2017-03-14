@@ -30,7 +30,7 @@ import quickbeer.android.data.stores.cores.ReviewStoreCore;
 
 public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
 
-    public ReviewStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new ReviewStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(Review::merge),

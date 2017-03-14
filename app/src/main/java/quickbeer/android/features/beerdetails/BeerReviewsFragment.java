@@ -56,7 +56,7 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull final CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel()
                     .getReviews()
                     .subscribeOn(Schedulers.io())

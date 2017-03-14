@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
 
 public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
 
-    public BeerStore(@NonNull final ContentResolver contentResolver, @NonNull final Gson gson) {
+    public BeerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new BeerStoreCore(contentResolver, gson),
                         new MemoryStoreCore<>(Beer::merge),

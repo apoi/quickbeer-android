@@ -42,16 +42,16 @@ public class BeerSearchViewModel extends BeerListViewModel {
     private String initialQuery = "";
 
     @Inject
-    BeerSearchViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                        @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-                        @NonNull final SearchViewViewModel searchViewViewModel) {
+    BeerSearchViewModel(@NonNull DataLayer.GetBeer getBeer,
+                        @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                        @NonNull SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getBeerSearch = get(getBeerSearch);
         this.searchViewViewModel = get(searchViewViewModel);
     }
 
-    public void setInitialQuery(@NonNull final String query) {
+    public void setInitialQuery(@NonNull String query) {
         initialQuery = get(query);
     }
 

@@ -44,7 +44,7 @@ public abstract class User {
 
     // Accessors
 
-    public boolean credentialsEqual(@Nullable final String username, @Nullable final String password) {
+    public boolean credentialsEqual(@Nullable String username, @Nullable String password) {
         return StringUtils.equals(username, username())
                 && StringUtils.equals(password, password());
     }
@@ -55,11 +55,11 @@ public abstract class User {
     @AutoValue.Builder
     public abstract static class Builder extends OverwritableBuilder<AutoValue_User.Builder> {
 
-        public abstract Builder id(@Nullable final Integer id);
+        public abstract Builder id(@Nullable Integer id);
 
-        public abstract Builder username(@Nullable final String username);
+        public abstract Builder username(@Nullable String username);
 
-        public abstract Builder password(@Nullable final String password);
+        public abstract Builder password(@Nullable String password);
 
         public abstract User build();
 
@@ -71,7 +71,7 @@ public abstract class User {
     }
 
     @NonNull
-    public static TypeAdapter<User> typeAdapter(@NonNull final Gson gson) {
+    public static TypeAdapter<User> typeAdapter(@NonNull Gson gson) {
         return new AutoValue_User.GsonTypeAdapter(get(gson));
     }
 
@@ -81,12 +81,12 @@ public abstract class User {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final User user) {
+    public static Builder builder(@NonNull User user) {
         return new AutoValue_User.Builder(user);
     }
 
     @NonNull
-    public static User merge(@NonNull final User v1, @NonNull final User v2) {
+    public static User merge(@NonNull User v1, @NonNull User v2) {
         AutoValue_User.Builder builder1 = new AutoValue_User.Builder(get(v1));
         AutoValue_User.Builder builder2 = new AutoValue_User.Builder(get(v2));
 

@@ -33,7 +33,7 @@ abstract class AbstractBindingViewHolder<T extends ViewModel> extends RecyclerVi
         super(itemView);
     }
 
-    public abstract void bind(@NonNull final T viewModel);
+    public abstract void bind(@NonNull T viewModel);
 
     public abstract void unbind();
 }

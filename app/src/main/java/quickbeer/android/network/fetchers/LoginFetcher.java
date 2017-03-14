@@ -51,10 +51,10 @@ public class LoginFetcher extends FetcherBase<Uri> {
     @NonNull
     private final UserStore userStore;
 
-    public LoginFetcher(@NonNull final NetworkApi networkApi,
-                        @NonNull final ClearableCookieJar cookieJar,
-                        @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                        @NonNull final UserStore userStore) {
+    public LoginFetcher(@NonNull NetworkApi networkApi,
+                        @NonNull ClearableCookieJar cookieJar,
+                        @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                        @NonNull UserStore userStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
@@ -63,7 +63,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String uri = getUniqueUri();
         final int requestId = uri.hashCode();
 

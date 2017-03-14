@@ -29,7 +29,7 @@ public class FragmentModule {
 
     private final Fragment fragment;
 
-    public FragmentModule(@NonNull final Fragment fragment) {
+    public FragmentModule(@NonNull Fragment fragment) {
         this.fragment = fragment;
     }
 

@@ -59,11 +59,11 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     @NonNull
     private final BeerListStore beerListStore;
 
-    public BeerSearchFetcher(@NonNull final NetworkApi networkApi,
-                             @NonNull final NetworkUtils networkUtils,
-                             @NonNull final Action1<NetworkRequestStatus> networkRequestStatus,
-                             @NonNull final BeerStore beerStore,
-                             @NonNull final BeerListStore beerListStore) {
+    public BeerSearchFetcher(@NonNull NetworkApi networkApi,
+                             @NonNull NetworkUtils networkUtils,
+                             @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                             @NonNull BeerStore beerStore,
+                             @NonNull BeerListStore beerListStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
@@ -73,7 +73,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull final Intent intent) {
+    public void fetch(@NonNull Intent intent) {
         final String searchString = get(intent).getStringExtra("searchString");
 
         if (searchString != null) {
@@ -83,7 +83,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         }
     }
 
-    protected void fetchBeerSearch(@NonNull final String query) {
+    protected void fetchBeerSearch(@NonNull String query) {
         Timber.d("fetchBeerSearch(" + query + ")");
 
         final String queryId = getQueryId(getServiceUri(), get(query));
@@ -114,7 +114,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     }
 
     @NonNull
-    protected Single<List<Beer>> createNetworkObservable(@NonNull final String searchString) {
+    protected Single<List<Beer>> createNetworkObservable(@NonNull String searchString) {
         return networkApi.search(networkUtils.createRequestParams("bn", get(searchString)));
     }
 
@@ -127,7 +127,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     // Brewer search store needs separate query identifiers for normal searches and fixed searches
     // (top50, top in country, top in style). Fixed searches come attached with a service uri
     // identifier to make sure they stand apart from the normal searches.
-    public static String getQueryId(@NonNull final Uri serviceUri, @NonNull final String query) {
+    public static String getQueryId(@NonNull Uri serviceUri, @NonNull String query) {
         checkNotNull(serviceUri);
         checkNotNull(query);
 
@@ -140,12 +140,12 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         }
     }
 
-    public static String getQueryId(@NonNull final Uri serviceUri) {
+    public static String getQueryId(@NonNull Uri serviceUri) {
         return getQueryId(serviceUri, "");
     }
 
     @NonNull
-    public static String getUniqueUri(@NonNull final String id) {
+    public static String getUniqueUri(@NonNull String id) {
         return ItemList.class + "/beerSearch/" + id;
     }
 }

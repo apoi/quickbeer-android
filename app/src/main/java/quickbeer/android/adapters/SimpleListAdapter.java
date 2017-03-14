@@ -52,7 +52,7 @@ public class SimpleListAdapter extends BaseListAdapter {
     @Nullable
     private View.OnClickListener onClickListener;
 
-    public SimpleListAdapter(@NonNull final Collection<SimpleItem> countries) {
+    public SimpleListAdapter(@NonNull Collection<SimpleItem> countries) {
         sourceList = new ArrayList<>(get(countries));
         Collections.sort(sourceList);
 
@@ -77,7 +77,7 @@ public class SimpleListAdapter extends BaseListAdapter {
         notifyDataSetChanged();
     }
 
-    public void setOnClickListener(@Nullable final OnClickListener onClickListener) {
+    public void setOnClickListener(@Nullable OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
 

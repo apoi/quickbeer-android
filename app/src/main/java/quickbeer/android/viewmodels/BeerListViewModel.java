@@ -45,7 +45,7 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     @NonNull
     private final PublishSubject<List<BeerViewModel>> beers = PublishSubject.create();
 
-    protected BeerListViewModel(@NonNull final DataLayer.GetBeer getBeer) {
+    protected BeerListViewModel(@NonNull DataLayer.GetBeer getBeer) {
         this.getBeer = get(getBeer);
     }
 
@@ -58,7 +58,7 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     }
 
     @Override
-    protected void bind(@NonNull final CompositeSubscription subscription) {
+    protected void bind(@NonNull CompositeSubscription subscription) {
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
                 sourceObservable()
                         .publish();
@@ -100,7 +100,7 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     }
 
     @Override
-    protected boolean hasValue(@Nullable final ItemList<String> item) {
+    protected boolean hasValue(@Nullable ItemList<String> item) {
         return !get(item).getItems().isEmpty();
     }
 }

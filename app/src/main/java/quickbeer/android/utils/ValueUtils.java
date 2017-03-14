@@ -21,7 +21,7 @@ import android.support.annotation.Nullable;
 
 public final class ValueUtils {
 
-    public static int asInt(@Nullable final Boolean value) {
+    public static int asInt(@Nullable Boolean value) {
         return value != null && value ? 1 : 0;
     }
 }

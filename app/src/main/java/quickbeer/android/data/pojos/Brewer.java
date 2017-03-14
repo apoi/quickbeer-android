@@ -169,7 +169,7 @@ public abstract class Brewer {
     // Plumbing
 
     @NonNull
-    public static TypeAdapter<Brewer> typeAdapter(@NonNull final Gson gson) {
+    public static TypeAdapter<Brewer> typeAdapter(@NonNull Gson gson) {
         return new AutoValue_Brewer.GsonTypeAdapter(get(gson));
     }
 
@@ -179,63 +179,63 @@ public abstract class Brewer {
 
         public abstract Builder id(final Integer id);
 
-        public abstract Builder name(@Nullable final String id);
+        public abstract Builder name(@Nullable String id);
         
-        public abstract Builder description(@Nullable final String description);
+        public abstract Builder description(@Nullable String description);
 
-        public abstract Builder address(@Nullable final String address);
+        public abstract Builder address(@Nullable String address);
 
-        public abstract Builder city(@Nullable final String city);
+        public abstract Builder city(@Nullable String city);
 
-        public abstract Builder stateId(@Nullable final Integer stateId);
+        public abstract Builder stateId(@Nullable Integer stateId);
 
-        public abstract Builder countryId(@Nullable final Integer countryId);
+        public abstract Builder countryId(@Nullable Integer countryId);
 
-        public abstract Builder zipCode(@Nullable final String zipCode);
+        public abstract Builder zipCode(@Nullable String zipCode);
 
-        public abstract Builder typeId(@Nullable final Integer typeId);
+        public abstract Builder typeId(@Nullable Integer typeId);
 
-        public abstract Builder type(@Nullable final String type);
+        public abstract Builder type(@Nullable String type);
 
-        public abstract Builder website(@Nullable final String website);
+        public abstract Builder website(@Nullable String website);
 
-        public abstract Builder facebook(@Nullable final String facebook);
+        public abstract Builder facebook(@Nullable String facebook);
 
-        public abstract Builder twitter(@Nullable final String twitter);
+        public abstract Builder twitter(@Nullable String twitter);
 
-        public abstract Builder email(@Nullable final String email);
+        public abstract Builder email(@Nullable String email);
 
-        public abstract Builder phone(@Nullable final String phone);
+        public abstract Builder phone(@Nullable String phone);
 
-        public abstract Builder barrels(@Nullable final Integer barrels);
+        public abstract Builder barrels(@Nullable Integer barrels);
 
-        public abstract Builder opened(@Nullable final DateTime opened);
+        public abstract Builder opened(@Nullable DateTime opened);
 
-        public abstract Builder enteredOn(@Nullable final DateTime enteredOn);
+        public abstract Builder enteredOn(@Nullable DateTime enteredOn);
 
-        public abstract Builder enteredBy(@Nullable final Integer enteredBy);
+        public abstract Builder enteredBy(@Nullable Integer enteredBy);
 
-        public abstract Builder logo(@Nullable final String logo);
+        public abstract Builder logo(@Nullable String logo);
 
-        public abstract Builder viewCount(@Nullable final String viewCount);
+        public abstract Builder viewCount(@Nullable String viewCount);
 
-        public abstract Builder score(@Nullable final Integer score);
+        public abstract Builder score(@Nullable Integer score);
 
-        public abstract Builder outOfBusiness(@Nullable final Boolean outOfBusiness);
+        public abstract Builder outOfBusiness(@Nullable Boolean outOfBusiness);
 
-        public abstract Builder retired(@Nullable final Boolean retired);
+        public abstract Builder retired(@Nullable Boolean retired);
 
-        public abstract Builder areaCode(@Nullable final String areaCode);
+        public abstract Builder areaCode(@Nullable String areaCode);
 
-        public abstract Builder hours(@Nullable final String hours);
+        public abstract Builder hours(@Nullable String hours);
 
-        public abstract Builder headBrewer(@Nullable final String headBrewer);
+        public abstract Builder headBrewer(@Nullable String headBrewer);
 
-        public abstract Builder metroId(@Nullable final String metroId);
+        public abstract Builder metroId(@Nullable String metroId);
 
-        public abstract Builder msa(@Nullable final String msa);
+        public abstract Builder msa(@Nullable String msa);
 
-        public abstract Builder regionId(@Nullable final String regionId);
+        public abstract Builder regionId(@Nullable String regionId);
 
         public abstract Brewer build();
 
@@ -252,12 +252,12 @@ public abstract class Brewer {
     }
 
     @NonNull
-    public static Builder builder(@NonNull final Brewer brewer) {
+    public static Builder builder(@NonNull Brewer brewer) {
         return new AutoValue_Brewer.Builder(brewer);
     }
 
     @NonNull
-    public static Brewer merge(@NonNull final Brewer v1, @NonNull final Brewer v2) {
+    public static Brewer merge(@NonNull Brewer v1, @NonNull Brewer v2) {
         AutoValue_Brewer.Builder builder1 = new AutoValue_Brewer.Builder(get(v1));
         AutoValue_Brewer.Builder builder2 = new AutoValue_Brewer.Builder(get(v2));
 

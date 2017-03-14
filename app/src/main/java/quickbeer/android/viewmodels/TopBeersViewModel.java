@@ -42,10 +42,10 @@ public class TopBeersViewModel extends BeerListViewModel {
     private final SearchViewViewModel searchViewViewModel;
 
     @Inject
-    TopBeersViewModel(@NonNull final DataLayer.GetBeer getBeer,
-                      @NonNull final DataLayer.GetBeerSearch getBeerSearch,
-                      @NonNull final DataLayer.GetTopBeers getTopBeers,
-                      @NonNull final SearchViewViewModel searchViewViewModel) {
+    TopBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
+                      @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                      @NonNull DataLayer.GetTopBeers getTopBeers,
+                      @NonNull SearchViewViewModel searchViewViewModel) {
         super(getBeer);
 
         this.getTopBeers = get(getTopBeers);

@@ -56,7 +56,7 @@ public class HomeActivity extends ListActivity {
     }
 
     @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
+    protected void navigateTo(@NonNull MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.nav_home) {
             get(navigationProvider).navigateAllBack();
         } else {
