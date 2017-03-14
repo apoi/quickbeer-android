@@ -89,8 +89,7 @@ public class DataLayer extends DataLayerBase {
 
     //// GET USER SETTINGS
 
-    @NonNull
-    public Observable<DataStreamNotification<User>> login(@NonNull String username, @NonNull String password) {
+    public void login(@NonNull String username, @NonNull String password) {
         Timber.v("login(%s)", get(username));
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -98,8 +97,6 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("username", username);
         intent.putExtra("password", password);
         context.startService(intent);
-
-        return getLoginResultStream();
     }
 
     @NonNull
@@ -587,8 +584,12 @@ public class DataLayer extends DataLayerBase {
     //// INTERFACES
 
     public interface Login {
+        void call(@NonNull String username, @NonNull String password);
+    }
+
+    public interface GetLoginStatus {
         @NonNull
-        Observable<DataStreamNotification<User>> call(@NonNull String username, @NonNull String password);
+        Observable<DataStreamNotification<User>> call();
     }
 
     public interface GetUser {

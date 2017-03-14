@@ -51,5 +51,7 @@
     <string name="action_sign_in">Sign in</string>
     <string name="error_field_required">This field is required</string>
     <string name="create_account">New to RateBeer?\nCreate an account at <a href="https://www.ratebeer.com/newuser/">ratebeer.com</a>!</string>
+    <string name="login_failed">Login failed. Check your username and password.</string>
+    <string name="login_error">Error logging in, please try again later!</string>
 
 </resources>

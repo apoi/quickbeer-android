@@ -15,41 +15,42 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.login;
+package quickbeer.android.features.profile;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
-import quickbeer.android.core.activity.BindingDrawerActivity;
+import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
-import quickbeer.android.utils.ViewUtils;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class LoginActivity extends BindingDrawerActivity {
+public class ProfileLoginFragment extends BindingBaseFragment {
 
     @BindView(R.id.login_username)
     AutoCompleteTextView usernameView;
@@ -66,35 +67,47 @@ public class LoginActivity extends BindingDrawerActivity {
     @BindView(R.id.login_form)
     View loginFormView;
 
-    @Nullable
-    @Inject
-    NavigationProvider navigationProvider;
+    @BindView(R.id.sign_in_button)
+    Button signInButton;
 
     @Nullable
     @Inject
-    LoginViewModel viewModel;
+    ProfileViewModel profileViewModel;
+
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
-            subscription.add(viewModel().getUser()
-                    .doOnNext(user -> Timber.d("User logged in: %s", user))
-                    .subscribe(RxUtils::nothing, Timber::e));
+            subscription.add(viewModel()
+                    .isLoginInProgress()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(ProfileLoginFragment.this::showProgress, Timber::e));
+
+            subscription.add(viewModel()
+                    .errorStream()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(ProfileLoginFragment.this::showError, Timber::e));
         }
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void inject() {
+        getComponent().inject(this);
+    }
 
-        setContentView(R.layout.login_activity);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.profile_login_fragment, container, false);
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        setupDrawerLayout();
-
-        setBackNavigationEnabled(true);
+        unbinder.setIfNone(bind(this, view));
 
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == R.id.login || id == EditorInfo.IME_NULL) {
@@ -104,25 +117,14 @@ public class LoginActivity extends BindingDrawerActivity {
             return false;
         });
 
-        ViewUtils.findView(getDelegate(), R.id.sign_in_button)
-                .ifSome(view -> view.setOnClickListener(__ -> attemptLogin()));
-    }
-
-    @NonNull
-    @Override
-    protected LoginViewModel viewModel() {
-        return get(viewModel);
-    }
-
-    @NonNull
-    @Override
-    protected DataBinder dataBinder() {
-        return dataBinder;
+        signInButton.setOnClickListener(__ -> attemptLogin());
     }
 
     @Override
-    protected void inject() {
-        getComponent().inject(this);
+    public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
+        super.onDestroyView();
     }
 
     /**
@@ -163,58 +165,56 @@ public class LoginActivity extends BindingDrawerActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-
             InputMethodManager inputManager = (InputMethodManager)
-                    getSystemService(Context.INPUT_METHOD_SERVICE);
+                    getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
 
-            inputManager.hideSoftInputFromWindow((null == getCurrentFocus()) ? null : getCurrentFocus().getWindowToken(),
+            inputManager.hideSoftInputFromWindow((null == getActivity().getCurrentFocus())
+                    ? null
+                    : getActivity().getCurrentFocus().getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
 
             viewModel().login(username, password);
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            loginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
+        loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        loginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
 
-            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
-            progressView.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha(show ? 1 : 0)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
-                        }
-                    });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
-            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
+        progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+        progressView.animate()
+                .setDuration(shortAnimTime)
+                .alpha(show ? 1 : 0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+                    }
+                });
     }
 
+    private void showError(@NonNull String error) {
+        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+    }
+
+    @NonNull
     @Override
-    protected void navigateTo(@NonNull final MenuItem menuItem) {
-        get(navigationProvider).navigateWithNewActivity(menuItem);
+    protected ProfileViewModel viewModel() {
+        return get(profileViewModel);
     }
+
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
+    }
+
 }

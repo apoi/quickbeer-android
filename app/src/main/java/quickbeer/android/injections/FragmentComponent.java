@@ -33,12 +33,15 @@ import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
 import quickbeer.android.features.list.fragments.TickedBeersFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
+import quickbeer.android.features.profile.ProfileLoginFragment;
 
 @FragmentScope
 @Subcomponent(modules = FragmentModule.class)
 public interface FragmentComponent {
 
     void inject(HomeFragment homeFragment);
+
+    void inject(ProfileLoginFragment profileLoginFragment);
 
     void inject(BeerTabFragment beerTabFragment);
 

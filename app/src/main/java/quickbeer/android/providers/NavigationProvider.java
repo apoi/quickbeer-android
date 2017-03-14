@@ -41,6 +41,8 @@ import quickbeer.android.features.list.fragments.BeersInStyleFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
+import quickbeer.android.features.profile.ProfileLoginFragment;
+import quickbeer.android.features.profile.ProfileViewFragment;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -60,7 +62,9 @@ public final class NavigationProvider {
         COUNTRY_LIST,
         COUNTRY,
         STYLE_LIST,
-        STYLE;
+        STYLE,
+        PROFILE_LOGIN,
+        PROFILE_VIEW;
 
         static Page from(int index) {
             return Page.values()[index];
@@ -234,6 +238,10 @@ public final class NavigationProvider {
                 return new StyleListFragment();
             case STYLE:
                 return new BeersInStyleFragment();
+            case PROFILE_LOGIN:
+                return new ProfileLoginFragment();
+            case PROFILE_VIEW:
+                return new ProfileViewFragment();
         }
 
         return new HomeFragment();

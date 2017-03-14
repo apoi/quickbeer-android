@@ -34,7 +34,7 @@ import android.view.animation.DecelerateInterpolator;
 import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.R;
-import quickbeer.android.features.login.LoginActivity;
+import quickbeer.android.features.profile.ProfileActivity;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -88,7 +88,7 @@ public abstract class DrawerActivity extends AppCompatActivity
     private void setHeaderClickListener(@NonNull View view) {
         view.setOnClickListener(__ -> {
             drawerLayout.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, LoginActivity.class);
+            Intent intent = new Intent(this, ProfileActivity.class);
             startActivity(intent);
         });
     }
