@@ -52,7 +52,7 @@ public class ProfileActivity extends BindingDrawerActivity {
             subscription.add(viewModel()
                     .isLoggedIn()
                     .map(isLoggedIn -> isLoggedIn ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
-                    .subscribe(get(navigationProvider)::addPage, Timber::e));
+                    .subscribe(get(navigationProvider)::replacePage, Timber::e));
         }
     };
 

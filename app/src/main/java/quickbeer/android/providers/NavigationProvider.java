@@ -100,6 +100,10 @@ public final class NavigationProvider {
         transaction(page, arguments, true);
     }
 
+    public void replacePage(@NonNull Page page) {
+        transaction(page, null, false);
+    }
+
     public void clearToPage(int menuNavigationId) {
         activity.getSupportFragmentManager()
                 .popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
@@ -148,7 +152,7 @@ public final class NavigationProvider {
                 .replace(container, fragment, page.toString())
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 
-        if (hasFragment()) {
+        if (addToBackStack && hasFragment()) {
             transition = transition.addToBackStack(page.toString());
         }
 
