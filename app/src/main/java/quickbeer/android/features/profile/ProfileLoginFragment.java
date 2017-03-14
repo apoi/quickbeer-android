@@ -72,7 +72,7 @@ public class ProfileLoginFragment extends BindingBaseFragment {
 
     @Nullable
     @Inject
-    ProfileViewModel profileViewModel;
+    ProfileLoginViewModel profileLoginViewModel;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -207,8 +207,8 @@ public class ProfileLoginFragment extends BindingBaseFragment {
 
     @NonNull
     @Override
-    protected ProfileViewModel viewModel() {
-        return get(profileViewModel);
+    protected ProfileLoginViewModel viewModel() {
+        return get(profileLoginViewModel);
     }
 
     @NonNull

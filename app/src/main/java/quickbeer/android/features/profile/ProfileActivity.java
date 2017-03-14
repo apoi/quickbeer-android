@@ -43,7 +43,7 @@ public class ProfileActivity extends BindingDrawerActivity {
 
     @Nullable
     @Inject
-    ProfileViewModel viewModel;
+    ProfileLoginViewModel viewModel;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -74,7 +74,7 @@ public class ProfileActivity extends BindingDrawerActivity {
 
     @NonNull
     @Override
-    protected ProfileViewModel viewModel() {
+    protected ProfileLoginViewModel viewModel() {
         return get(viewModel);
     }
 

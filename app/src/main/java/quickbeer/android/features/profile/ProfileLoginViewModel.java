@@ -35,7 +35,7 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class ProfileViewModel extends SimpleViewModel {
+public class ProfileLoginViewModel extends SimpleViewModel {
 
     @NonNull
     private final DataLayer.Login login;
@@ -53,10 +53,10 @@ public class ProfileViewModel extends SimpleViewModel {
     private final ResourceProvider resourceProvider;
 
     @Inject
-    public ProfileViewModel(@NonNull DataLayer.Login login,
-                            @NonNull DataLayer.GetLoginStatus getLoginStatus,
-                            @NonNull DataLayer.GetUser getUser,
-                            @NonNull ResourceProvider resourceProvider) {
+    public ProfileLoginViewModel(@NonNull DataLayer.Login login,
+                                 @NonNull DataLayer.GetLoginStatus getLoginStatus,
+                                 @NonNull DataLayer.GetUser getUser,
+                                 @NonNull ResourceProvider resourceProvider) {
         this.login = get(login);
         this.getLoginStatus = get(getLoginStatus);
         this.getUser = get(getUser);
