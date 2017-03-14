@@ -17,9 +17,34 @@
  */
 package quickbeer.android.network.utils;
 
+import android.support.annotation.NonNull;
+
+import java.util.List;
+
+import ix.Ix;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+import polanski.option.Option;
+import quickbeer.android.Constants;
+
 public final class LoginUtils {
 
     private static final String USER_ID_KEY = "UserID";
-    private static final String SESSION_ID_KEY = "SessionID";
+
+    public static Option<Integer> getUserId(@NonNull CookieJar cookieJar) {
+        return Option.ofObj(cookieJar)
+                .map(jar -> jar.loadForRequest(HttpUrl.parse(Constants.API_URL)))
+                .flatMap(LoginUtils::idFromCookieList)
+                .map(Integer::parseInt);
+    }
+
+    private static Option<String> idFromCookieList(@NonNull List<Cookie> cookies) {
+        return Ix.from(cookies)
+                .filter(cookie -> cookie.name().equals(USER_ID_KEY))
+                .map(Cookie::value)
+                .map(Option::ofObj)
+                .first(Option.none());
+    }
 
 }

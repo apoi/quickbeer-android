@@ -33,6 +33,9 @@ import static io.reark.reark.utils.Preconditions.get;
 @AutoValue
 public abstract class User {
 
+    @SerializedName("id")
+    public abstract Integer id();
+
     @SerializedName("username")
     public abstract String username();
 
@@ -51,6 +54,8 @@ public abstract class User {
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
     public abstract static class Builder extends OverwritableBuilder<AutoValue_User.Builder> {
+
+        public abstract Builder id(@Nullable final Integer id);
 
         public abstract Builder username(@Nullable final String username);
 

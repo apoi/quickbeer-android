@@ -50,6 +50,6 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="error_field_required">This field is required</string>
-    <string name="create_account">New to RateBeer?\nCreate an account at ratebeer.com!</string>
+    <string name="create_account">New to RateBeer?\nCreate an account at <a href="https://www.ratebeer.com/newuser/">ratebeer.com</a>!</string>
 
 </resources>

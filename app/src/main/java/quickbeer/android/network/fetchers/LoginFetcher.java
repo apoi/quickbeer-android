@@ -30,6 +30,7 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.utils.LoginUtils;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
@@ -64,9 +65,9 @@ public class LoginFetcher extends FetcherBase<Uri> {
     @Override
     public void fetch(@NonNull final Intent intent) {
         final String uri = getUniqueUri();
-        final int id = uri.hashCode();
+        final int requestId = uri.hashCode();
 
-        if (isOngoingRequest(id)) {
+        if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for login");
             return;
         }
@@ -86,12 +87,13 @@ public class LoginFetcher extends FetcherBase<Uri> {
         Subscription subscription = networkApi
                 .login(username, password)
                 .subscribeOn(Schedulers.computation())
-                .doOnSuccess(responseBody -> Timber.w("RESPONSE " + responseBody))
-                .map(user -> User.builder()
+                .map(__ -> LoginUtils.getUserId(cookieJar))
+                .doOnSuccess(id -> id.ifNone(() -> Timber.e("No user id found in login response!")))
+                .map(userId -> User.builder()
+                        .id(userId.orDefault(() -> -1))
                         .username(username)
                         .password(password)
                         .build())
-                //.doOnSuccess(user -> Timber.d("Updating login status to " + user.isLogged()))
                 .flatMap(userStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnSuccess(updated -> completeRequest(uri, updated))
@@ -99,7 +101,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .subscribe(RxUtils::nothing,
                         error -> Timber.e(error, "Error fetching user " + username));
 
-        addRequest(id, subscription);
+        addRequest(requestId, subscription);
     }
 
     @NonNull

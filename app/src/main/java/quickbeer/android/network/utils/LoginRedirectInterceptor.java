@@ -17,6 +17,8 @@
  */
 package quickbeer.android.network.utils;
 
+import android.support.annotation.NonNull;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -26,18 +28,51 @@ import timber.log.Timber;
 
 public class LoginRedirectInterceptor implements Interceptor {
 
+    private static final String SIGN_IN_PAGE = "/Signin_r.asp";
+
+    private static final int HTTP_OK = 200;
+
+    private static final int HTTP_FORBIDDEN = 403;
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         Response response = chain.proceed(request);
 
-        if (request.url().encodedPath().equals("/Signin_r.asp") && response.isRedirect()) {
-            Timber.d("Modifying response for login request");
+        if (isLoginRequest(request)) {
+            return handleLoginResponse(request, response);
+        }
+
+        return response;
+    }
+
+    private static boolean isLoginRequest(@NonNull Request request) {
+        return request.url().encodedPath().equals(SIGN_IN_PAGE);
+    }
+
+    private static Response handleLoginResponse(@NonNull Request request, @NonNull Response response) {
+        if (isSuccessfulLogin(response)) {
+            Timber.d("Modifying response for successful login");
 
             return new Response.Builder()
                     .request(request)
                     .protocol(response.protocol())
-                    .code(200)
+                    .code(HTTP_OK)
+                    .message(response.message())
+                    .handshake(response.handshake())
+                    .headers(response.headers())
+                    .body(response.body())
+                    .networkResponse(response.networkResponse())
+                    .build();
+        }
+
+        if (isKnownLoginFailure(response)) {
+            Timber.d("Interpreting response as failed login");
+
+            return new Response.Builder()
+                    .request(request)
+                    .protocol(response.protocol())
+                    .code(HTTP_FORBIDDEN)
                     .message(response.message())
                     .handshake(response.handshake())
                     .headers(response.headers())
@@ -47,5 +82,17 @@ public class LoginRedirectInterceptor implements Interceptor {
         }
 
         return response;
+    }
+
+    private static boolean isSuccessfulLogin(@NonNull Response response) {
+        return response.isRedirect() && response.header("location").contains("uid");
+    }
+
+    private static boolean isKnownLoginFailure(@NonNull Response response) {
+        try {
+            return response.body().string().contains("failed login");
+        } catch (IOException ignored) {
+            return false;
+        }
     }
 }
