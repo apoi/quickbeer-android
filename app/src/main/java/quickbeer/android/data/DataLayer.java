@@ -506,7 +506,7 @@ public class DataLayer extends DataLayerBase {
                 .map(DataStreamNotification::onNext);
     }
 
-    private void fetchTickedBeers(@NonNull String userId) {
+    public void fetchTickedBeers(@NonNull String userId) {
         Timber.v("fetchTickedBeers(%s)", get(userId));
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -662,6 +662,10 @@ public class DataLayer extends DataLayerBase {
     public interface GetReviews {
         @NonNull
         Observable<DataStreamNotification<ItemList<Integer>>> call(int beerId);
+    }
+
+    public interface FetchTickedBeers {
+        void call(String userId);
     }
 
     public interface GetTickedBeers {

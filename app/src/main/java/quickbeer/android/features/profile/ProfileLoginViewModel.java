@@ -47,6 +47,9 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     private final DataLayer.GetLoginStatus getLoginStatus;
 
     @NonNull
+    private final DataLayer.FetchTickedBeers fetchTickedBeers;
+
+    @NonNull
     private final PublishSubject<String> errorSubject = PublishSubject.create();
 
     @NonNull
@@ -56,15 +59,21 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     public ProfileLoginViewModel(@NonNull DataLayer.Login login,
                                  @NonNull DataLayer.GetLoginStatus getLoginStatus,
                                  @NonNull DataLayer.GetUser getUser,
+                                 @NonNull DataLayer.FetchTickedBeers fetchTickedBeers,
                                  @NonNull ResourceProvider resourceProvider) {
         this.login = get(login);
         this.getLoginStatus = get(getLoginStatus);
         this.getUser = get(getUser);
+        this.fetchTickedBeers = get(fetchTickedBeers);
         this.resourceProvider = get(resourceProvider);
     }
 
     public void login(@NonNull String username, @NonNull String password) {
-        login.call(username, password);
+        login.call(get(username), get(password));
+    }
+
+    public void fetchTicks(@NonNull Integer userId) {
+        fetchTickedBeers.call(String.valueOf(userId));
     }
 
     @NonNull

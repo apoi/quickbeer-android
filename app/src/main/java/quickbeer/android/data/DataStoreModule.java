@@ -158,6 +158,12 @@ public final class DataStoreModule {
     }
 
     @Provides
+    static DataLayer.FetchTickedBeers provideFetchTickedBeers(
+            @NonNull final DataLayer dataLayer) {
+        return dataLayer::fetchTickedBeers;
+    }
+
+    @Provides
     @Singleton
     static DataLayer provideApplicationDataLayer(
             @ForApplication @NonNull final Context context,

@@ -42,6 +42,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -81,15 +82,24 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull final CompositeSubscription subscription) {
+            // Progress indicator during login
             subscription.add(viewModel()
                     .isLoginInProgress()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showProgress, Timber::e));
 
+            // Error toasts
             subscription.add(viewModel()
                     .errorStream()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showError, Timber::e));
+
+            // Trigger fetching of ticked beers after user has logged in
+            subscription.add(viewModel()
+                    .isLoginInProgress()
+                    .filter(RxUtils::isTrue)
+                    .switchMap(__ -> viewModel().getUser())
+                    .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
         }
     };
 
