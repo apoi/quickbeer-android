@@ -25,6 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -65,6 +67,13 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
                     .getUser()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileDetailsFragment.this::setUser, Timber::e));
+
+            subscription.add(viewModel()
+                    .getUser()
+                    .map(User::id)
+                    .switchMap(viewModel()::getTicks)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(ProfileDetailsFragment.this::setTickedBeers, Timber::e));
         }
     };
 
@@ -83,8 +92,6 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         unbinder.setIfNone(bind(this, view));
-
-        setTickedBeers();
     }
 
     @Override
@@ -98,8 +105,8 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
         welcomeTextView.setText(String.format(getString(R.string.welcome_text), user.username()));
     }
 
-    private void setTickedBeers() {
-        tickedBeersTextView.setText(String.format(getString(R.string.ticked_beers), "123"));
+    private void setTickedBeers(@NonNull List<Integer> tickedBeers) {
+        tickedBeersTextView.setText(String.format(getString(R.string.ticked_beers), tickedBeers.size()));
     }
 
     @NonNull

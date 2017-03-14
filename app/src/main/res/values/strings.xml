@@ -56,6 +56,6 @@
 
     <!-- Profile details -->
     <string name="welcome_text">Welcome, %s!</string>
-    <string name="ticked_beers">You have %s ticked beers.</string>
+    <string name="ticked_beers">You have %d ticked beers.</string>
 
 </resources>

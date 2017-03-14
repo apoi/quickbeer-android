@@ -93,15 +93,6 @@ public class ProfileLoginFragment extends BindingBaseFragment {
                     .errorStream()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showError, Timber::e));
-
-            // Trigger fetching of ticked beers after user has logged in
-            /*
-            subscription.add(viewModel()
-                    .isLoginInProgress()
-                    .filter(RxUtils::isTrue)
-                    .switchMap(__ -> viewModel().getUser())
-                    .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
-                    */
         }
     };
 

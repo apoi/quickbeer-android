@@ -501,7 +501,6 @@ public class DataLayer extends DataLayerBase {
         Timber.v("getTickedBeers(%s)", get(userId));
 
         return beerStore.getTickedIds()
-                .doOnNext(ids -> Timber.d("Ticked ids: " + ids))
                 .map(ItemList::<String>create)
                 .map(DataStreamNotification::onNext);
     }

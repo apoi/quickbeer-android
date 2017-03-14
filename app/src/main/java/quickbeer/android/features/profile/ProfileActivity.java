@@ -30,6 +30,7 @@ import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
+import quickbeer.android.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -53,6 +54,13 @@ public class ProfileActivity extends BindingDrawerActivity {
                     .isLoggedIn()
                     .map(isLoggedIn -> isLoggedIn ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
                     .subscribe(get(navigationProvider)::replacePage, Timber::e));
+
+            // Trigger refresh of ticked beers after user has logged in
+            subscription.add(viewModel()
+                    .isLoginInProgress()
+                    .filter(RxUtils::isTrue)
+                    .switchMap(__ -> viewModel().getUser())
+                    .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
         }
     };
 

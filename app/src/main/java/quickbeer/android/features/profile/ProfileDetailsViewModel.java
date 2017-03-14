@@ -19,10 +19,14 @@ package quickbeer.android.features.profile;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
@@ -36,12 +40,17 @@ public class ProfileDetailsViewModel extends SimpleViewModel {
     private final DataLayer.GetUser getUser;
 
     @NonNull
+    private final DataLayer.GetTickedBeers getTickedBeers;
+
+    @NonNull
     private final ResourceProvider resourceProvider;
 
     @Inject
     public ProfileDetailsViewModel(@NonNull DataLayer.GetUser getUser,
-                                 @NonNull ResourceProvider resourceProvider) {
+                                   @NonNull DataLayer.GetTickedBeers getTickedBeers,
+                                   @NonNull ResourceProvider resourceProvider) {
         this.getUser = get(getUser);
+        this.getTickedBeers = get(getTickedBeers);
         this.resourceProvider = get(resourceProvider);
     }
 
@@ -49,6 +58,14 @@ public class ProfileDetailsViewModel extends SimpleViewModel {
     public Observable<User> getUser() {
         return getUser.call()
                 .compose(RxUtils::pickValue);
+    }
+
+    @NonNull
+    public Observable<List<Integer>> getTicks(@NonNull Integer userId) {
+        return getTickedBeers.call(String.valueOf(userId))
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .map(ItemList::getItems);
     }
 
 }
