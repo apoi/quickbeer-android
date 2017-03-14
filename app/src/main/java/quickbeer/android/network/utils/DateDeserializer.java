@@ -17,6 +17,8 @@
  */
 package quickbeer.android.network.utils;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -26,6 +28,7 @@ import com.google.gson.JsonSerializer;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -34,6 +37,8 @@ import java.util.Locale;
 
 public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
 
+    private static final DateTimeZone PACIFIC_ZONE = DateTimeZone.forID("US/Pacific");
+
     private static final DateTimeFormatter ISO_FORMAT =
             DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ");
 
@@ -41,13 +46,13 @@ public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSeriali
             DateTimeFormat
                     .forPattern("MM/dd/yyyy HH:mm:ss aa")
                     .withLocale(Locale.US)
-                    .withZone(DateTimeZone.forID("US/Pacific"));
+                    .withZone(PACIFIC_ZONE);
 
     private static final DateTimeFormatter US_DATE_FORMAT =
             DateTimeFormat
                     .forPattern("MM/dd/yyyy")
                     .withLocale(Locale.US)
-                    .withZone(DateTimeZone.forID("US/Pacific"));;
+                    .withZone(PACIFIC_ZONE);
 
     @Override
     public JsonElement serialize(DateTime date, Type typeOfSrc, JsonSerializationContext context) {
@@ -61,9 +66,20 @@ public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSeriali
         if (date.contains("T")) {
             return DateTime.parse(date, ISO_FORMAT);
         } else if (date.contains(" ")) {
-            return DateTime.parse(date, US_TIME_FORMAT);
+            return parsePacificDateTime(date, US_TIME_FORMAT);
         } else {
             return DateTime.parse(date, US_DATE_FORMAT);
         }
+    }
+
+    @NonNull
+    private static DateTime parsePacificDateTime(@NonNull String str, @NonNull DateTimeFormatter formatter) {
+        LocalDateTime localTime = LocalDateTime.parse(str, formatter);
+
+        if (PACIFIC_ZONE.isLocalDateTimeGap(localTime)) {
+            localTime.plusHours(1);
+        }
+
+        return localTime.toDateTime();
     }
 }
