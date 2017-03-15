@@ -18,6 +18,7 @@
 package quickbeer.android.utils;
 
 import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
@@ -39,7 +40,9 @@ public final class DateUtils {
 
     @NonNull
     public static String format(@Nullable ZonedDateTime date) {
-        return value(date).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return value(date)
+                .withZoneSameInstant(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ISO_LOCAL_DATE);
     }
 
     @Nullable
