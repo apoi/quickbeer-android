@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,16 +74,16 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     }
 
     @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull ZonedDateTime date) {
         return getStream()
                 .map(StoreItem::item)
                 .filter(item -> DateUtils.isValidDate(item.accessed()))
                 .distinctUntilChanged(new Func1<BrewerMetadata, Object>() {
                     // Access date as key object indicating distinction
-                    private DateTime latestAccess = date;
+                    private ZonedDateTime latestAccess = date;
 
                     @Override
-                    public DateTime call(BrewerMetadata item) {
+                    public ZonedDateTime call(BrewerMetadata item) {
                         if (item.accessed().isAfter(latestAccess)) {
                             latestAccess = item.accessed();
                         }
@@ -125,8 +125,8 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     @Override
     protected BrewerMetadata read(@NonNull Cursor cursor) {
         final int brewerId = cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ID));
-        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)));
-        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)));
+        final ZonedDateTime updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)));
+        final ZonedDateTime accessed = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)));
 
         return BrewerMetadata.builder()
                 .brewerId(brewerId)
@@ -140,8 +140,8 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
     protected ContentValues getContentValuesForItem(@NonNull BrewerMetadata item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BrewerMetadataColumns.ID, item.brewerId());
-        contentValues.put(BrewerMetadataColumns.UPDATED, DateUtils.toDbValue(item.updated()));
-        contentValues.put(BrewerMetadataColumns.ACCESSED, DateUtils.toDbValue(item.accessed()));
+        contentValues.put(BrewerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.updated()));
+        contentValues.put(BrewerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.accessed()));
 
         return contentValues;
     }

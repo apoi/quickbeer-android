@@ -17,13 +17,12 @@
  */
 package quickbeer.android;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.squareup.leakcanary.LeakCanary;
+
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
-import com.squareup.leakcanary.LeakCanary;
-
-import net.danlew.android.joda.JodaTimeAndroid;
 
 import javax.inject.Inject;
 
@@ -93,7 +92,7 @@ public class QuickBeer extends Application {
     }
 
     private void initDateAndTime() {
-        JodaTimeAndroid.init(this);
+        AndroidThreeTen.init(this);
     }
 
 }

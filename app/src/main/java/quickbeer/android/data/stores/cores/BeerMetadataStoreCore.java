@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,16 +75,16 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     }
 
     @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull DateTime date) {
+    public Observable<Integer> getAccessedIdsStream(@NonNull ZonedDateTime date) {
         return getStream()
                 .map(StoreItem::item)
                 .filter(item -> DateUtils.isValidDate(item.accessed()))
                 .distinctUntilChanged(new Func1<BeerMetadata, Object>() {
                     // Access date as key object indicating distinction
-                    private DateTime latestAccess = date;
+                    private ZonedDateTime latestAccess = date;
 
                     @Override
-                    public DateTime call(BeerMetadata item) {
+                    public ZonedDateTime call(BeerMetadata item) {
                         if (item.accessed().isAfter(latestAccess)) {
                             latestAccess = item.accessed();
                         }
@@ -128,8 +128,8 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     @Override
     protected BeerMetadata read(@NonNull Cursor cursor) {
         final int beerId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ID));
-        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)));
-        final DateTime accessed = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)));
+        final ZonedDateTime updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)));
+        final ZonedDateTime accessed = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)));
         final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.REVIEW_ID));
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.MODIFIED)) > 0;
 
@@ -147,8 +147,8 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     protected ContentValues getContentValuesForItem(@NonNull BeerMetadata item) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(BeerMetadataColumns.ID, item.beerId());
-        contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toDbValue(item.updated()));
-        contentValues.put(BeerMetadataColumns.ACCESSED, DateUtils.toDbValue(item.accessed()));
+        contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.updated()));
+        contentValues.put(BeerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.accessed()));
         contentValues.put(BeerMetadataColumns.REVIEW_ID, item.reviewId());
         contentValues.put(BeerMetadataColumns.MODIFIED, ValueUtils.asInt(item.isModified()));
 

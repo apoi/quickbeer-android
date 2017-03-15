@@ -35,7 +35,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
@@ -92,7 +92,7 @@ public final class NetworkModule {
     public static Gson provideUnescapingGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new StringDeserializer())
-                .registerTypeAdapter(DateTime.class, new DateDeserializer())
+                .registerTypeAdapter(ZonedDateTime.class, new DateDeserializer())
                 .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
                 .create();
     }

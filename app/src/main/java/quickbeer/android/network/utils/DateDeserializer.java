@@ -17,8 +17,6 @@
  */
 package quickbeer.android.network.utils;
 
-import android.support.annotation.NonNull;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -26,62 +24,49 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.ZoneId;
+import org.threeten.bp.ZoneOffset;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-public class DateDeserializer implements JsonDeserializer<DateTime>, JsonSerializer<DateTime> {
+public class DateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSerializer<ZonedDateTime> {
 
-    private static final DateTimeZone PACIFIC_ZONE =
-            DateTimeZone.forID("US/Pacific");
+    private static final ZoneId PACIFIC_ZONE =
+            ZoneId.of("America/Los_Angeles");
 
     private static final DateTimeFormatter ISO_FORMAT =
-            DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ssZ")
-                    .withZone(DateTimeZone.UTC);
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
+                    .withZone(ZoneOffset.UTC);
 
-    private static final DateTimeFormatter US_TIME_FORMAT =
-            DateTimeFormat
-                    .forPattern("MM/dd/yyyy HH:mm:ss aa")
+    private static final DateTimeFormatter US_DATETIME_FORMAT =
+            DateTimeFormatter.ofPattern("M/d/yyyy K:mm:ss a")
                     .withLocale(Locale.US)
                     .withZone(PACIFIC_ZONE);
 
     private static final DateTimeFormatter US_DATE_FORMAT =
-            DateTimeFormat
-                    .forPattern("MM/dd/yyyy")
-                    .withLocale(Locale.US)
-                    .withZone(PACIFIC_ZONE);
+            DateTimeFormatter.ofPattern("M/d/yyyy");
 
     @Override
-    public JsonElement serialize(DateTime date, Type typeOfSrc, JsonSerializationContext context) {
-        return new JsonPrimitive(date.toString(ISO_FORMAT));
+    public JsonElement serialize(ZonedDateTime date, Type typeOfSrc, JsonSerializationContext context) {
+        return new JsonPrimitive(date.format(ISO_FORMAT));
     }
 
     @Override
-    public DateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+    public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         final String date = json.getAsString();
 
         if (date.contains("T")) {
-            return DateTime.parse(date, ISO_FORMAT);
+            return ZonedDateTime.parse(date, ISO_FORMAT);
         } else if (date.contains(" ")) {
-            return parsePacificDateTime(date, US_TIME_FORMAT);
+            return ZonedDateTime.parse(date, US_DATETIME_FORMAT);
         } else {
-            return DateTime.parse(date, US_DATE_FORMAT);
+            return LocalDate.parse(date, US_DATE_FORMAT)
+                            .atStartOfDay(ZoneOffset.UTC);
         }
     }
 
-    @NonNull
-    private static DateTime parsePacificDateTime(@NonNull String str, @NonNull DateTimeFormatter formatter) {
-        LocalDateTime localTime = LocalDateTime.parse(str, formatter);
-
-        if (PACIFIC_ZONE.isLocalDateTimeGap(localTime)) {
-            localTime.plusHours(1);
-        }
-
-        return localTime.toDateTime();
-    }
 }

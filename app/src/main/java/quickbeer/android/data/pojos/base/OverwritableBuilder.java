@@ -17,13 +17,14 @@
  */
 package quickbeer.android.data.pojos.base;
 
-import android.support.annotation.NonNull;
+import org.threeten.bp.ZonedDateTime;
 
-import org.joda.time.DateTime;
+import android.support.annotation.NonNull;
 
 import java.lang.reflect.Field;
 
 import io.reark.reark.pojo.OverwritablePojo;
+import quickbeer.android.utils.DateUtils;
 import timber.log.Timber;
 
 /**
@@ -39,8 +40,8 @@ public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends
 
             if (value == null) {
                 return true;
-            } else if (value instanceof DateTime) {
-                return isEmpty((DateTime) value);
+            } else if (value instanceof ZonedDateTime) {
+                return isEmpty((ZonedDateTime) value);
             } else {
                 return super.isEmpty(field, pojo);
             }
@@ -51,8 +52,8 @@ public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends
         return true;
     }
 
-    protected boolean isEmpty(DateTime value) {
-        return value.getMillis() <= 0;
+    protected boolean isEmpty(ZonedDateTime value) {
+        return !DateUtils.isValidDate(value);
     }
 
     @Override

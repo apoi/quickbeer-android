@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +108,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
     protected Beer read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON));
         final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
-        final DateTime tickDate = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
+        final ZonedDateTime tickDate = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
 
         return Beer.builder(Beer.fromJson(json, getGson()))
                 .tickValue(tickValue)
@@ -124,7 +124,7 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         contentValues.put(BeerColumns.JSON, getGson().toJson(item));
         contentValues.put(BeerColumns.NAME, item.name());
         contentValues.put(BeerColumns.TICK_VALUE, item.tickValue());
-        contentValues.put(BeerColumns.TICK_DATE, DateUtils.toDbValue(item.tickDate()));
+        contentValues.put(BeerColumns.TICK_DATE, DateUtils.toEpochSecond(item.tickDate()));
 
         return contentValues;
     }

@@ -26,7 +26,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.lang.reflect.Type;
 
@@ -76,7 +76,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
     @Override
     protected ItemList<Integer> read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON));
-        final DateTime updated = DateUtils.fromDbValue(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
+        final ZonedDateTime updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)));
 
         Type listType = new TypeToken<ItemList<Integer>>(){}.getType();
         ItemList<Integer> reviewList = getGson().fromJson(json, listType);
@@ -91,7 +91,7 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
         ContentValues contentValues = new ContentValues();
         contentValues.put(ReviewListColumns.BEER_ID, item.getKey());
         contentValues.put(ReviewListColumns.JSON, getGson().toJson(item));
-        contentValues.put(ReviewListColumns.UPDATED, DateUtils.toDbValue(item.getUpdateDate()));
+        contentValues.put(ReviewListColumns.UPDATED, DateUtils.toEpochSecond(item.getUpdateDate()));
 
         return contentValues;
     }

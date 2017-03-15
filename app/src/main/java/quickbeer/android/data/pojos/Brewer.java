@@ -26,7 +26,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
@@ -104,11 +104,11 @@ public abstract class Brewer {
 
     @Nullable
     @SerializedName("Opened")
-    public abstract DateTime opened();
+    public abstract ZonedDateTime opened();
 
     @Nullable
     @SerializedName("EnteredOn")
-    public abstract DateTime enteredOn();
+    public abstract ZonedDateTime enteredOn();
 
     @Nullable
     @SerializedName("EnteredBy")
@@ -209,9 +209,9 @@ public abstract class Brewer {
 
         public abstract Builder barrels(@Nullable Integer barrels);
 
-        public abstract Builder opened(@Nullable DateTime opened);
+        public abstract Builder opened(@Nullable ZonedDateTime opened);
 
-        public abstract Builder enteredOn(@Nullable DateTime enteredOn);
+        public abstract Builder enteredOn(@Nullable ZonedDateTime enteredOn);
 
         public abstract Builder enteredBy(@Nullable Integer enteredBy);
 

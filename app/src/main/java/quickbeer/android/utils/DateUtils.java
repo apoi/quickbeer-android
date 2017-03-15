@@ -17,43 +17,45 @@
  */
 package quickbeer.android.utils;
 
+import org.threeten.bp.Instant;
+import org.threeten.bp.ZoneOffset;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 public final class DateUtils {
 
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("yyyy-MM-dd");
+    private static final ZonedDateTime EPOCH =
+            ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC);
 
     private DateUtils() {}
 
     @NonNull
-    public static DateTime value(@Nullable DateTime date) {
-        return isValidDate(date) ? date : new DateTime(0);
+    public static ZonedDateTime value(@Nullable ZonedDateTime date) {
+        return isValidDate(date) ? date : EPOCH;
     }
 
     @NonNull
-    public static String format(@Nullable DateTime date) {
-        return value(date).toString(DATE_FORMAT);
+    public static String format(@Nullable ZonedDateTime date) {
+        return value(date).format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
     @Nullable
-    public static DateTime fromDbValue(int value) {
+    public static ZonedDateTime fromEpochSecond(int value) {
         return value > 0
-                ? new DateTime((long) value * 1000)
+                ? ZonedDateTime.ofInstant(Instant.ofEpochSecond(value), ZoneOffset.UTC)
                 : null;
     }
 
-    public static int toDbValue(@Nullable DateTime date) {
+    public static int toEpochSecond(@Nullable ZonedDateTime date) {
         return isValidDate(date)
-                ? (int) (date.getMillis() / 1000)
+                ? (int) date.toEpochSecond()
                 : 0;
     }
 
-    public static boolean isValidDate(@Nullable DateTime date) {
-        return date != null && date.isAfter(0);
+    public static boolean isValidDate(@Nullable ZonedDateTime date) {
+        return date != null && date.isAfter(EPOCH);
     }
 }

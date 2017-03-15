@@ -17,12 +17,12 @@
  */
 package quickbeer.android.data.pojos;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.google.auto.value.AutoValue;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
@@ -36,10 +36,10 @@ public abstract class BeerMetadata {
     public abstract Integer beerId();
 
     @Nullable
-    public abstract DateTime updated();
+    public abstract ZonedDateTime updated();
 
     @Nullable
-    public abstract DateTime accessed();
+    public abstract ZonedDateTime accessed();
 
     @Nullable
     public abstract Integer reviewId();
@@ -53,9 +53,9 @@ public abstract class BeerMetadata {
 
         public abstract Builder beerId(final Integer beerId);
 
-        public abstract Builder updated(@Nullable DateTime updated);
+        public abstract Builder updated(@Nullable ZonedDateTime updated);
 
-        public abstract Builder accessed(@Nullable DateTime accessed);
+        public abstract Builder accessed(@Nullable ZonedDateTime accessed);
 
         public abstract Builder reviewId(@Nullable Integer reviewId);
 
@@ -84,7 +84,7 @@ public abstract class BeerMetadata {
     public static BeerMetadata newUpdate(int beerId) {
         return builder()
                 .beerId(beerId)
-                .updated(DateTime.now())
+                .updated(ZonedDateTime.now())
                 .build();
     }
 
@@ -92,7 +92,7 @@ public abstract class BeerMetadata {
     public static BeerMetadata newAccess(int beerId) {
         return builder()
                 .beerId(beerId)
-                .accessed(DateTime.now())
+                .accessed(ZonedDateTime.now())
                 .build();
     }
 

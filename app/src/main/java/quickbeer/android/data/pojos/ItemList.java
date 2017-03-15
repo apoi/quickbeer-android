@@ -20,7 +20,7 @@ package quickbeer.android.data.pojos;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -35,11 +35,11 @@ public class ItemList<T> {
     private final List<Integer> items;
 
     @Nullable
-    private DateTime updateDate;
+    private ZonedDateTime updateDate;
 
     public ItemList(@Nullable T key,
                     @NonNull List<Integer> items,
-                    @Nullable DateTime updateDate) {
+                    @Nullable ZonedDateTime updateDate) {
         this.key = key;
         this.items = new ArrayList<>(items);
         this.updateDate = updateDate;
@@ -48,7 +48,7 @@ public class ItemList<T> {
     @NonNull
     public static <T> ItemList<T> create(@Nullable T key,
                                          @NonNull List<Integer> items,
-                                         @Nullable DateTime updateDate) {
+                                         @Nullable ZonedDateTime updateDate) {
         return new ItemList<>(key, items, updateDate);
     }
 
@@ -68,11 +68,11 @@ public class ItemList<T> {
     }
 
     @Nullable
-    public DateTime getUpdateDate() {
+    public ZonedDateTime getUpdateDate() {
         return updateDate;
     }
 
-    public void setUpdateDate(@Nullable DateTime value) {
+    public void setUpdateDate(@Nullable ZonedDateTime value) {
         updateDate = value;
     }
 

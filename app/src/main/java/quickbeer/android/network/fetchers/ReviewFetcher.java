@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
@@ -100,7 +100,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .map(Review::id)
                 .toList()
                 .toSingle()
-                .map(reviewIds -> ItemList.create(beerId, reviewIds, DateTime.now()))
+                .map(reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnSuccess(updated -> completeRequest(uri, updated))

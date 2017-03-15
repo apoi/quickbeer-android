@@ -26,7 +26,7 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 import quickbeer.android.utils.DateUtils;
@@ -73,11 +73,11 @@ public abstract class Review {
 
     @Nullable
     @SerializedName("TimeEntered")
-    public abstract DateTime timeEntered();
+    public abstract ZonedDateTime timeEntered();
 
     @Nullable
     @SerializedName("TimeUpdated")
-    public abstract DateTime timeUpdated();
+    public abstract ZonedDateTime timeUpdated();
 
     @Nullable
     @SerializedName("UserID")
@@ -151,9 +151,9 @@ public abstract class Review {
 
         public abstract Builder comments(@Nullable String comments);
 
-        public abstract Builder timeEntered(@Nullable DateTime timeEntered);
+        public abstract Builder timeEntered(@Nullable ZonedDateTime timeEntered);
 
-        public abstract Builder timeUpdated(@Nullable DateTime timeUpdated);
+        public abstract Builder timeUpdated(@Nullable ZonedDateTime timeUpdated);
 
         public abstract Builder userID(@Nullable Integer userID);
 

@@ -22,7 +22,7 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
@@ -36,10 +36,10 @@ public abstract class BrewerMetadata {
     public abstract Integer brewerId();
 
     @Nullable
-    public abstract DateTime updated();
+    public abstract ZonedDateTime updated();
 
     @Nullable
-    public abstract DateTime accessed();
+    public abstract ZonedDateTime accessed();
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
@@ -47,9 +47,9 @@ public abstract class BrewerMetadata {
 
         public abstract Builder brewerId(final Integer brewerId);
 
-        public abstract Builder updated(@Nullable DateTime updated);
+        public abstract Builder updated(@Nullable ZonedDateTime updated);
 
-        public abstract Builder accessed(@Nullable DateTime accessed);
+        public abstract Builder accessed(@Nullable ZonedDateTime accessed);
 
         public abstract BrewerMetadata build();
 
@@ -74,7 +74,7 @@ public abstract class BrewerMetadata {
     public static BrewerMetadata newUpdate(int brewerId) {
         return builder()
                 .brewerId(brewerId)
-                .updated(DateTime.now())
+                .updated(ZonedDateTime.now())
                 .build();
     }
 
@@ -82,7 +82,7 @@ public abstract class BrewerMetadata {
     public static BrewerMetadata newAccess(int brewerId) {
         return builder()
                 .brewerId(brewerId)
-                .accessed(DateTime.now())
+                .accessed(ZonedDateTime.now())
                 .build();
     }
 

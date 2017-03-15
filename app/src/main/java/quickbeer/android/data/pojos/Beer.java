@@ -26,7 +26,8 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import org.joda.time.DateTime;
+import org.threeten.bp.ZonedDateTime;
+import org.threeten.bp.ZonedDateTime;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -110,7 +111,7 @@ public abstract class Beer {
 
     @Nullable
     @SerializedName("TimeEntered")
-    public abstract DateTime tickDate();
+    public abstract ZonedDateTime tickDate();
 
     // Accessors
 
@@ -179,7 +180,7 @@ public abstract class Beer {
 
         public abstract Builder tickValue(@Nullable Integer tickValue);
 
-        public abstract Builder tickDate(@Nullable DateTime tickDate);
+        public abstract Builder tickDate(@Nullable ZonedDateTime tickDate);
 
         public abstract Beer build();
 

@@ -17,11 +17,11 @@
  */
 package quickbeer.android.network.fetchers;
 
+import org.threeten.bp.ZonedDateTime;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-
-import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -102,7 +102,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .map(Beer::id)
                 .toList()
                 .toSingle()
-                .map(beerIds -> ItemList.create(queryId, beerIds, DateTime.now()))
+                .map(beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()))
                 .flatMap(beerListStore::put)
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnSuccess(updated -> completeRequest(uri, updated))
