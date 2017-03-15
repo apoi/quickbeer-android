@@ -43,7 +43,7 @@ public class DateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSe
                     .withZone(ZoneOffset.UTC);
 
     private static final DateTimeFormatter US_DATETIME_FORMAT =
-            DateTimeFormatter.ofPattern("M/d/yyyy K:mm:ss a")
+            DateTimeFormatter.ofPattern("M/d/yyyy h:mm:ss a")
                     .withLocale(Locale.US)
                     .withZone(PACIFIC_ZONE);
 
