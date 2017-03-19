@@ -156,10 +156,6 @@ public class BeerDetailsView extends NestedScrollView {
                 showToast(R.string.description_ibu));
     }
 
-    private void showToast(@StringRes int resource) {
-        Toast.makeText(getContext(), resource, Toast.LENGTH_LONG).show();
-    }
-
     public void setBeer(@NonNull Beer beer) {
         checkNotNull(beer);
         checkNotNull(styles);
@@ -173,7 +169,7 @@ public class BeerDetailsView extends NestedScrollView {
 
         ratingBar.setOnRatingBarChangeListener((view, rating, fromUser) -> {
             if (fromUser) {
-                get(tickBeer).call(beer.id(), (int) rating);
+                setTick(beer, (int) rating);
             }
         });
 
@@ -219,6 +215,34 @@ public class BeerDetailsView extends NestedScrollView {
                 });
     }
 
+    private void setTick(@NonNull Beer beer, int value) {
+        get(tickBeer).call(beer.id(), value)
+                .subscribe(notification -> {
+                    switch (notification.getType()) {
+                        case FETCHING_COMPLETED_WITH_VALUE:
+                        case FETCHING_COMPLETED_WITHOUT_VALUE:
+                            tickSuccess(String.valueOf(beer.name()));
+                            break;
+                        case FETCHING_COMPLETED_WITH_ERROR:
+                            tickFailed(beer);
+                            break;
+                        case FETCHING_START:
+                        case ON_NEXT:
+                            break;
+                    }
+                }, error -> Timber.w(error, "Error ticking beer"));
+    }
+
+    private void tickSuccess(@NonNull String beerName) {
+        String text = String.format(get(resourceProvider).getString(R.string.tick_success), beerName);
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void tickFailed(@NonNull Beer beer) {
+        Toast.makeText(getContext(), R.string.tick_failure, Toast.LENGTH_SHORT).show();
+        ratingBar.setRating(ofObj(beer.tickValue()).orDefault(() -> 0));
+    }
+
     public void setBrewer(@NonNull Brewer brewer) {
         checkNotNull(countries);
 
@@ -253,4 +277,9 @@ public class BeerDetailsView extends NestedScrollView {
         intent.putExtra("country", String.valueOf(country.getId()));
         getContext().startActivity(intent);
     }
+
+    private void showToast(@StringRes int resource) {
+        Toast.makeText(getContext(), resource, Toast.LENGTH_LONG).show();
+    }
+
 }

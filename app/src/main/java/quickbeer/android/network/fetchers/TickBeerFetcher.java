@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.Map;
 
@@ -31,6 +31,7 @@ import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
@@ -53,16 +54,21 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     private final NetworkUtils networkUtils;
 
     @NonNull
+    private final BeerStore beerStore;
+
+    @NonNull
     private final UserStore userStore;
 
     public TickBeerFetcher(@NonNull NetworkApi networkApi,
                            @NonNull NetworkUtils networkUtils,
                            @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                           @NonNull BeerStore beerStore,
                            @NonNull UserStore userStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
+        this.beerStore = get(beerStore);
         this.userStore = get(userStore);
     }
 
@@ -92,24 +98,52 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .map(User::id)
                 .toSingle()
                 .flatMap(userId -> createNetworkObservable(beerId, rating, userId))
+                .doOnSuccess(__ -> Timber.w("success 1"))
+                .flatMap(__ -> beerStore.getOnce(beerId).toSingle())
+                .doOnSuccess(__ -> Timber.w("success 2"))
+                .compose(RxUtils::valueOrError)
+                .map(beer -> withRating(beer, rating))
+                .doOnSuccess(beer -> Timber.w("put beer " + beer))
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnSuccess(updated -> completeRequest(uri, false))
                 .doOnError(doOnError(uri))
-                .subscribe(RxUtils::nothing,
+                .subscribe(beerStore::put,
                         error -> Timber.e(error, "Error ticking beer"));
 
         addRequest(requestId, subscription);
     }
 
     @NonNull
-    private Single<ResponseBody> createNetworkObservable(int beerId, int rating, int userId) {
+    private static Beer withRating(@NonNull Beer beer, int rating) {
+        return Beer.builder(beer)
+                .tickValue(rating)
+                .tickDate(ZonedDateTime.now())
+                .build();
+    }
+
+    @NonNull
+    private Single<Boolean> createNetworkObservable(int beerId, int rating, int userId) {
         Map<String, String> requestParams = networkUtils.createRequestParams("m", "2");
         requestParams.put("b", String.valueOf(beerId));
         requestParams.put("l", String.valueOf(rating));
         requestParams.put("u", String.valueOf(userId));
 
-        return networkApi.tickBeer(requestParams);
+        return networkApi.tickBeer(requestParams)
+                .flatMap(TickBeerFetcher::wasSuccessful);
+    }
+
+    @NonNull
+    private static Single<Boolean> wasSuccessful(@NonNull ResponseBody responseBody) {
+        return Single.fromCallable(() -> {
+            String value = responseBody.string();
+
+            if (value.contains("added") || value.contains("updated")) {
+                return true;
+            } else {
+                throw new Exception("Unexpected response: " + value);
+            }
+        });
     }
 
     @NonNull

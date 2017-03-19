@@ -202,10 +202,12 @@ public final class FetcherModule {
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
+            @NonNull BeerStore beerStore,
             @NonNull UserStore userStore) {
         return new TickBeerFetcher(networkApi,
                 networkUtils,
                 requestStatusStore::put,
+                beerStore,
                 userStore);
     }
 

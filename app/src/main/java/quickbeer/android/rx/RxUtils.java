@@ -23,6 +23,7 @@ import polanski.option.Option;
 import polanski.option.OptionUnsafe;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
+import rx.Single;
 
 public final class RxUtils<T> {
 
@@ -35,6 +36,11 @@ public final class RxUtils<T> {
     @NonNull
     public static <T> Observable<T> valueOrError(@NonNull Observable<Option<T>> observable) {
         return observable.map(OptionUnsafe::getUnsafe);
+    }
+
+    @NonNull
+    public static <T> Single<T> valueOrError(@NonNull Single<Option<T>> single) {
+        return single.map(OptionUnsafe::getUnsafe);
     }
 
     @NonNull

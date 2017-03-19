@@ -52,6 +52,7 @@ import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.network.fetchers.BrewerFetcher;
 import quickbeer.android.network.fetchers.LoginFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
+import quickbeer.android.network.fetchers.TickBeerFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import timber.log.Timber;
@@ -514,7 +515,7 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
-    public void tickBeer(int beerId, int rating) {
+    public Observable<DataStreamNotification<Void>> tickBeer(int beerId, int rating) {
         Timber.v("tickBeer(%s, %s)", beerId, rating);
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -522,6 +523,15 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("beerId", beerId);
         intent.putExtra("rating", rating);
         context.startService(intent);
+
+        String uri = TickBeerFetcher.getUniqueUri(beerId);
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, Observable.never());
     }
 
     //// GET BREWER DETAILS
@@ -678,7 +688,8 @@ public class DataLayer extends DataLayerBase {
     }
 
     public interface TickBeer {
-        void call(int beerId, int rating);
+        @NonNull
+        Observable<DataStreamNotification<Void>> call(int beerId, int rating);
     }
 
     public interface GetTickedBeers {
