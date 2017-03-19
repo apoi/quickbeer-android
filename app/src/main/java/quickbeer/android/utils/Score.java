@@ -17,6 +17,8 @@
  */
 package quickbeer.android.utils;
 
+import android.support.annotation.Nullable;
+
 import quickbeer.android.R;
 
 public class Score {
@@ -40,7 +42,11 @@ public class Score {
         }
     }
 
-    public static Stars fromTick(int score) {
+    public static Stars fromTick(@Nullable Integer score) {
+        if (score == null) {
+            return Stars.UNRATED;
+        }
+
         switch (score) {
             case 1:
                 return Stars.SCORE_1;

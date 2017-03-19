@@ -17,9 +17,9 @@
  */
 package quickbeer.android.data.pojos.base;
 
-import org.threeten.bp.ZonedDateTime;
-
 import android.support.annotation.NonNull;
+
+import org.threeten.bp.ZonedDateTime;
 
 import java.lang.reflect.Field;
 
@@ -58,22 +58,22 @@ public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends
 
     @Override
     protected boolean isEmpty(int value) {
-        return value == 0;
+        return value < 0;
     }
 
     @Override
     protected boolean isEmpty(long value) {
-        return value == 0;
+        return value < 0;
     }
 
     @Override
     protected boolean isEmpty(double value) {
-        return value == 0;
+        return value < 0;
     }
 
     @Override
     protected boolean isEmpty(float value) {
-        return value == 0;
+        return value < 0;
     }
 
     /**

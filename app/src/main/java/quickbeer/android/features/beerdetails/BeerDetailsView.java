@@ -204,15 +204,18 @@ public class BeerDetailsView extends NestedScrollView {
                 .ifSome(ibuTextView::setText);
 
         ofObj(beer.tickValue())
+                .filter(__ -> beer.isTicked())
                 .ifSome(ratingBar::setRating);
 
         ofObj(beer.tickDate())
+                .filter(__ -> beer.isTicked())
                 .map(DateUtils::formatDateTime)
                 .map(date -> String.format(resourceProvider.getString(R.string.beer_tick_date), date))
                 .ifSome(value -> {
                     tickedDate.setText(value);
                     tickedDate.setVisibility(View.VISIBLE);
-                });
+                })
+                .ifNone(() -> tickedDate.setVisibility(GONE));
     }
 
     private void setTick(@NonNull Beer beer, int value) {
@@ -221,7 +224,7 @@ public class BeerDetailsView extends NestedScrollView {
                     switch (notification.getType()) {
                         case FETCHING_COMPLETED_WITH_VALUE:
                         case FETCHING_COMPLETED_WITHOUT_VALUE:
-                            tickSuccess(String.valueOf(beer.name()));
+                            tickSuccess(beer, value);
                             break;
                         case FETCHING_COMPLETED_WITH_ERROR:
                             tickFailed(beer);
@@ -233,9 +236,14 @@ public class BeerDetailsView extends NestedScrollView {
                 }, error -> Timber.w(error, "Error ticking beer"));
     }
 
-    private void tickSuccess(@NonNull String beerName) {
-        String text = String.format(get(resourceProvider).getString(R.string.tick_success), beerName);
-        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+    private void tickSuccess(@NonNull Beer beer, int value) {
+        checkNotNull(resourceProvider);
+
+        String toastText = value > 0
+                ? String.format(resourceProvider.getString(R.string.tick_success), beer.name())
+                : resourceProvider.getString(R.string.tick_removed);
+
+        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     private void tickFailed(@NonNull Beer beer) {

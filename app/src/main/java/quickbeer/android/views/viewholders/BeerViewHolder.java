@@ -80,9 +80,9 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     }
 
     public void setBeer(@NonNull Beer beer) {
-        if (beer.getTickValue() > 0) {
+        if (beer.isTicked()) {
             ratingTextView.setText("");
-            ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
+            ratingTextView.setBackgroundResource(Score.fromTick(beer.tickValue()).getResource());
         } else {
             ratingTextView.setText(Score.fromRating(beer.rating()));
             ratingTextView.setBackgroundResource(R.drawable.score_unrated);

@@ -19,14 +19,19 @@ package quickbeer.android.network.fetchers;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import ix.Ix;
 import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
@@ -46,6 +51,10 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class TickBeerFetcher extends FetcherBase<Uri> {
+
+    @NonNull
+    private static final List<String> SUCCESS_RESPONSES =
+            Arrays.asList("added", "updated", "removed", "deleted");
 
     @NonNull
     private final NetworkApi networkApi;
@@ -98,12 +107,9 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .map(User::id)
                 .toSingle()
                 .flatMap(userId -> createNetworkObservable(beerId, rating, userId))
-                .doOnSuccess(__ -> Timber.w("success 1"))
                 .flatMap(__ -> beerStore.getOnce(beerId).toSingle())
-                .doOnSuccess(__ -> Timber.w("success 2"))
                 .compose(RxUtils::valueOrError)
                 .map(beer -> withRating(beer, rating))
-                .doOnSuccess(beer -> Timber.w("put beer " + beer))
                 .subscribeOn(Schedulers.computation())
                 .doOnSubscribe(() -> startRequest(uri))
                 .doOnSuccess(updated -> completeRequest(uri, false))
@@ -123,26 +129,36 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     }
 
     @NonNull
-    private Single<Boolean> createNetworkObservable(int beerId, int rating, int userId) {
-        Map<String, String> requestParams = networkUtils.createRequestParams("m", "2");
-        requestParams.put("b", String.valueOf(beerId));
-        requestParams.put("l", String.valueOf(rating));
+    private Single<Boolean> createNetworkObservable(int beerId, @IntRange(from=0,to=5) int rating, int userId) {
+        Map<String, String> requestParams = networkUtils.createRequestParams("b", String.valueOf(beerId));
         requestParams.put("u", String.valueOf(userId));
 
+        if (rating == 0) {
+            requestParams.put("m", "3");
+        } else {
+            requestParams.put("m", "2");
+            requestParams.put("l", String.valueOf(rating));
+        }
+
         return networkApi.tickBeer(requestParams)
-                .flatMap(TickBeerFetcher::wasSuccessful);
+                .flatMap(TickBeerFetcher::requestSuccessful);
     }
 
     @NonNull
-    private static Single<Boolean> wasSuccessful(@NonNull ResponseBody responseBody) {
+    private static Single<Boolean> requestSuccessful(@NonNull ResponseBody responseBody) {
         return Single.fromCallable(() -> {
-            String value = responseBody.string();
+            String value = responseBody.string().toLowerCase(Locale.ROOT);
 
-            if (value.contains("added") || value.contains("updated")) {
-                return true;
-            } else {
+            //noinspection BooleanVariableAlwaysNegated
+            boolean success = Ix.from(SUCCESS_RESPONSES)
+                    .any(value::contains)
+                    .first();
+
+            if (!success) {
                 throw new Exception("Unexpected response: " + value);
             }
+
+            return true;
         });
     }
 

@@ -59,7 +59,8 @@
     <!-- Ticking -->
     <string name="beer_tick_date">You ticked this beer at %s</string>
     <string name="tick_success">%s ticked!</string>
-    <string name="tick_failure">Tick failed! Try again later.</string>
+    <string name="tick_removed">Tick removed!</string>
+    <string name="tick_failure">Ticking failed! Try again later.</string>
 
     <!-- Barcode scanner -->
     <string name="ok">OK</string>

@@ -126,20 +126,12 @@ public abstract class Beer {
                 .orDefault(() -> -1);
     }
 
-    public float getAbv() {
-        return ofObj(alcohol()).orDefault(() -> -1.0f);
-    }
-
     public String getImageUri() {
         return String.format(Locale.ROOT, Constants.BEER_IMAGE_PATH, id());
     }
 
     public boolean isTicked() {
-        return getTickValue() > 0;
-    }
-
-    public int getTickValue() {
-        return ofObj(tickValue()).orDefault(() -> -1);
+        return ofObj(tickValue()).orDefault(() -> -1) > 0;
     }
 
     // Plumbing
