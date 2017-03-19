@@ -107,19 +107,19 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
         }
 
         appearanceColumn.setOnClickListener(__ ->
-                showToast(R.string.review_appearance));
+                showToast(R.string.review_appearance_hint));
 
         aromaColumn.setOnClickListener(__ ->
-                showToast(R.string.review_aroma));
+                showToast(R.string.review_aroma_hint));
 
         flavorColumn.setOnClickListener(__ ->
-                showToast(R.string.review_flavor));
+                showToast(R.string.review_flavor_hint));
 
         mouthfeelColumn.setOnClickListener(__ ->
-                showToast(R.string.review_mouthfeel));
+                showToast(R.string.review_mouthfeel_hint));
 
         overallColumn.setOnClickListener(__ ->
-                showToast(R.string.review_overall));
+                showToast(R.string.review_overall_hint));
     }
 
     private void showToast(@StringRes int resource) {

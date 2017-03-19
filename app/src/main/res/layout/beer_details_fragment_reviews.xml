@@ -6,15 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <quickbeer.android.views.BeerDetailsRatingView
-        android:id="@+id/rating_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/beers_reviews_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="@dimen/card_view_margin"
+        android:clipToPadding="false"
         android:scrollbars="vertical" />
 
 </quickbeer.android.features.beerdetails.BeerReviewsView>

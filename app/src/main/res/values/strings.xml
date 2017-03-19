@@ -45,11 +45,17 @@
     <string name="description_ibu">International Bittering Units, a measure of beer bitterness</string>
 
     <!-- Reviews -->
-    <string name="review_appearance">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
-    <string name="review_aroma">Hop character, malts, sweetness, fruitiness and other aromas.</string>
-    <string name="review_flavor">How the beer tastes. How does the initial flavour vary from the start, the middle, finish and aftertaste of the beer?</string>
-    <string name="review_mouthfeel">The \"feel\" of the beer inside your mouth and as you swallow it.</string>
-    <string name="review_overall">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
+    <string name="review_appearance">Appear.</string>
+    <string name="review_aroma">Aroma</string>
+    <string name="review_flavor">Flavor</string>
+    <string name="review_mouthfeel">Mouthf.</string>
+    <string name="review_overall">Overall</string>
+
+    <string name="review_appearance_hint">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
+    <string name="review_aroma_hint">Hop character, malts, sweetness, fruitiness and other aromas.</string>
+    <string name="review_flavor_hint">How the beer tastes. How does the initial flavour vary from the start, the middle, finish and aftertaste of the beer?</string>
+    <string name="review_mouthfeel_hint">The \"feel\" of the beer inside your mouth and as you swallow it.</string>
+    <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
     <!-- Barcode scanner -->
     <string name="ok">OK</string>
