@@ -38,6 +38,7 @@ import butterknife.ButterKnife;
 import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
+import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
@@ -124,6 +125,10 @@ public class BeerDetailsView extends NestedScrollView {
     @Inject
     ResourceProvider resourceProvider;
 
+    @Nullable
+    @Inject
+    DataLayer.TickBeer tickBeer;
+
     public BeerDetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -149,10 +154,8 @@ public class BeerDetailsView extends NestedScrollView {
 
         ibuColumn.setOnClickListener(__ ->
                 showToast(R.string.description_ibu));
-    }
 
-    public void setRatingChangeListener(@NonNull RatingBar.OnRatingBarChangeListener listener) {
-        ratingBar.setOnRatingBarChangeListener(listener);
+        ratingBar.setOnRatingBarChangeListener(BeerDetailsView::setRating);
     }
 
     private void showToast(@StringRes int resource) {
@@ -224,7 +227,8 @@ public class BeerDetailsView extends NestedScrollView {
                 .ifSome(locationTextView::setText);
     }
 
-    private void setRating(@NonNull RatingBar ratingBar, float value, boolean user) {
+    private static void setRating(@NonNull RatingBar ratingBar, float value, boolean user) {
+        Timber.w("Gonna tick %s", value);
     }
 
     @NonNull

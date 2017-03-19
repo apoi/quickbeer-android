@@ -164,6 +164,12 @@ public final class DataStoreModule {
     }
 
     @Provides
+    static DataLayer.TickBeer provideTickBeer(
+            @NonNull DataLayer dataLayer) {
+        return dataLayer::tickBeer;
+    }
+
+    @Provides
     @Singleton
     static DataLayer provideApplicationDataLayer(
             @ForApplication @NonNull Context context,

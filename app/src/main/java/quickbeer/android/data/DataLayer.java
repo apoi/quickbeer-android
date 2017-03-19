@@ -129,7 +129,7 @@ public class DataLayer extends DataLayerBase {
     //// GET BEER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeer(@NonNull Integer beerId) {
+    public Observable<DataStreamNotification<Beer>> getBeer(int beerId) {
         Timber.v("getBeer(%s)", get(beerId));
 
         // Trigger a fetch only if full details haven't been fetched
@@ -149,7 +149,7 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeerResultStream(@NonNull Integer beerId) {
+    public Observable<DataStreamNotification<Beer>> getBeerResultStream(int beerId) {
         Timber.v("getBeerResultStream(%s)", get(beerId));
 
         String uri = BeerFetcher.getUniqueUri(beerId);
@@ -166,7 +166,7 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerObservable);
     }
 
-    private void fetchBeer(@NonNull Integer beerId) {
+    private void fetchBeer(int beerId) {
         Timber.v("fetchBeer(%s)", get(beerId));
 
         Intent intent = new Intent(context, NetworkService.class);
@@ -177,7 +177,7 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BREWER
 
-    public void accessBeer(@NonNull Integer beerId) {
+    public void accessBeer(int beerId) {
         Timber.v("accessBeer(%s)", get(beerId));
 
         beerMetadataStore.put(BeerMetadata.newAccess(beerId));
@@ -514,11 +514,21 @@ public class DataLayer extends DataLayerBase {
         context.startService(intent);
     }
 
+    public void tickBeer(int beerId, int rating) {
+        Timber.v("tickBeer(%s, %s)", beerId, rating);
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.TICK.toString());
+        intent.putExtra("beerId", beerId);
+        intent.putExtra("rating", rating);
+        context.startService(intent);
+    }
+
     //// GET BREWER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Brewer>> getBrewer(@NonNull Integer brewerId) {
-        Timber.v("getBrewer(%s)", get(brewerId));
+    public Observable<DataStreamNotification<Brewer>> getBrewer(int brewerId) {
+        Timber.v("getBrewer(%s)", brewerId);
 
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Brewer>> triggerFetchIfEmpty =
@@ -535,8 +545,8 @@ public class DataLayer extends DataLayerBase {
     }
 
     @NonNull
-    private Observable<DataStreamNotification<Brewer>> getBrewerResultStream(@NonNull Integer brewerId) {
-        Timber.v("getBrewerResultStream(%s)", get(brewerId));
+    private Observable<DataStreamNotification<Brewer>> getBrewerResultStream(int brewerId) {
+        Timber.v("getBrewerResultStream(%s)", brewerId);
 
         String uri = BrewerFetcher.getUniqueUri(get(brewerId));
 
@@ -552,8 +562,8 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, brewerObservable);
     }
 
-    private void fetchBrewer(@NonNull Integer brewerId) {
-        Timber.v("fetchBrewer(%s)", get(brewerId));
+    private void fetchBrewer(int brewerId) {
+        Timber.v("fetchBrewer(%s)", brewerId);
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.BREWER.toString());
@@ -563,8 +573,8 @@ public class DataLayer extends DataLayerBase {
 
     //// ACCESS BREWER
 
-    public void accessBrewer(@NonNull Integer brewerId) {
-        Timber.v("accessBrewer(%s)", get(brewerId));
+    public void accessBrewer(int brewerId) {
+        Timber.v("accessBrewer(%s)", brewerId);
 
         brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId));
     }
@@ -665,6 +675,10 @@ public class DataLayer extends DataLayerBase {
 
     public interface FetchTickedBeers {
         void call(String userId);
+    }
+
+    public interface TickBeer {
+        void call(int beerId, int rating);
     }
 
     public interface GetTickedBeers {

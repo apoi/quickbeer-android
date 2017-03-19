@@ -55,6 +55,8 @@ public interface Constants {
 
         String TICKS = "ticksFetcher";
 
+        String TICK = "tickBeerFetcher";
+
     }
 
 }

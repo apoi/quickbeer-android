@@ -45,6 +45,7 @@ public interface RateBeerService {
     Uri STYLE   = Uri.parse("__style");
     Uri REVIEWS = Uri.parse("__reviews");
     Uri TICKS   = Uri.parse("__ticks");
+    Uri TICK    = Uri.parse("__tick");
     Uri BREWER  = Uri.parse("__brewer");
 
     @FormUrlEncoded
@@ -73,6 +74,9 @@ public interface RateBeerService {
 
     @GET("/json/bt.asp")
     Single<List<Beer>> getTicks(@QueryMap Map<String, String> params);
+
+    @GET("/json/bt.asp")
+    Single<ResponseBody> tickBeer(@QueryMap Map<String, String> params);
 
     @GET("/json/bi.asp")
     Single<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);

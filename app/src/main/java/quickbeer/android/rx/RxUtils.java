@@ -33,6 +33,11 @@ public final class RxUtils<T> {
     }
 
     @NonNull
+    public static <T> Observable<T> valueOrError(@NonNull Observable<Option<T>> observable) {
+        return observable.map(OptionUnsafe::getUnsafe);
+    }
+
+    @NonNull
     public static <T> Boolean isNoneOrEmpty(@NonNull Option<ItemList<T>> option) {
         return option.match(list -> list.getItems().isEmpty(), () -> true);
     }

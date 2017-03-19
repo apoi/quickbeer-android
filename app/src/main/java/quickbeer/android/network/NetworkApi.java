@@ -96,6 +96,11 @@ public class NetworkApi {
                 .getTicks(params);
     }
 
+    public Single<ResponseBody> tickBeer(Map<String, String> params) {
+        return rateBeerService
+                .tickBeer(params);
+    }
+
     public Single<Brewer> getBrewer(Map<String, String> params) {
         return rateBeerService
                 .getBrewer(params)
