@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.ResourceProvider;
 
 @Module
@@ -63,6 +64,12 @@ public final class ApplicationModule {
     @Singleton
     static ResourceProvider providesUserProvider(@ForApplication Context context) {
         return new ResourceProvider(context);
+    }
+
+    @Provides
+    @Singleton
+    static GlobalNotificationProvider provideGlobalNotificationProvider(@ForApplication Context context) {
+        return new GlobalNotificationProvider(context);
     }
 
     @Provides

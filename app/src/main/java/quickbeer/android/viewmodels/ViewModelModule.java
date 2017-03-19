@@ -23,6 +23,8 @@ import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.features.beerdetails.BeerDetailsViewModel;
+import quickbeer.android.providers.GlobalNotificationProvider;
+import quickbeer.android.providers.ResourceProvider;
 
 @Module
 public final class ViewModelModule {
@@ -71,10 +73,13 @@ public final class ViewModelModule {
     @Provides
     static BeerDetailsViewModel provideBeerDetailsViewModel(
             @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.TickBeer tickBeer,
             @NonNull DataLayer.GetBrewer getBrewer,
             @NonNull DataLayer.GetReviews getReviews,
-            @NonNull DataLayer.GetReview getReview) {
-        return new BeerDetailsViewModel(getBeer, getBrewer, getReviews, getReview);
+            @NonNull DataLayer.GetReview getReview,
+            @NonNull ResourceProvider resourceProvider,
+            @NonNull GlobalNotificationProvider notificationProvider) {
+        return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getReviews, getReview, resourceProvider, notificationProvider);
     }
 
 }

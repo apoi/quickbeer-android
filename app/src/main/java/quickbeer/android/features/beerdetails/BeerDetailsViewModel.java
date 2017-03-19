@@ -18,19 +18,28 @@
 package quickbeer.android.features.beerdetails;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
+import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.providers.GlobalNotificationProvider;
+import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.utils.DataModelUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import rx.Observable;
+import rx.Subscription;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -45,13 +54,35 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     @NonNull
     private final ReviewListViewModel reviewListViewModel;
 
+    @NonNull
+    private final PublishSubject<Boolean> tickSuccessSubject = PublishSubject.create();
+
+    @NonNull
+    private final ResourceProvider resourceProvider;
+
+    @NonNull
+    private final GlobalNotificationProvider notificationProvider;
+
+    @NonNull
+    private final DataLayer.TickBeer tickBeer;
+
+    @Nullable
+    private Subscription tickSubscription;
+
     public BeerDetailsViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                @NonNull DataLayer.TickBeer tickBeer,
                                 @NonNull DataLayer.GetBrewer getBrewer,
                                 @NonNull DataLayer.GetReviews getReviews,
-                                @NonNull DataLayer.GetReview getReview) {
+                                @NonNull DataLayer.GetReview getReview,
+                                @NonNull ResourceProvider resourceProvider,
+                                @NonNull GlobalNotificationProvider notificationProvider) {
         beerViewModel = new BeerViewModel(get(getBeer));
         brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
+
+        this.tickBeer = get(tickBeer);
+        this.resourceProvider = get(resourceProvider);
+        this.notificationProvider = get(notificationProvider);
     }
 
     public void setBeerId(int beerId) {
@@ -75,6 +106,45 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         return reviewListViewModel.getReviews();
     }
 
+    @NonNull
+    public Observable<Boolean> tickSuccessStatus() {
+        return tickSuccessSubject.asObservable();
+    }
+
+    public void tickBeer(@NonNull Beer beer, int rating) {
+        Observable<DataStreamNotification<Void>> observable =
+                get(tickBeer).call(beer.id(), rating)
+                        .share();
+
+        notificationProvider.addNetworkSuccessListener(observable,
+                chooseSuccessString(beer, rating),
+                resourceProvider.getString(R.string.tick_failure));
+
+        tickSubscription = observable
+                .takeUntil(DataModelUtils::isRequestFinishedNotification)
+                .subscribe(notification -> {
+                    switch (notification.getType()) {
+                        case FETCHING_COMPLETED_WITH_VALUE:
+                        case FETCHING_COMPLETED_WITHOUT_VALUE:
+                            tickSuccessSubject.onNext(true);
+                            break;
+                        case FETCHING_COMPLETED_WITH_ERROR:
+                            tickSuccessSubject.onNext(false);
+                            break;
+                        case FETCHING_START:
+                        case ON_NEXT:
+                            break;
+                    }
+                }, error -> Timber.w(error, "Error ticking beer"));
+    }
+
+    @NonNull
+    private String chooseSuccessString(@NonNull Beer beer, int rating) {
+        return rating == 0
+                ? resourceProvider.getString(R.string.tick_removed)
+                : String.format(resourceProvider.getString(R.string.tick_success), beer.name());
+    }
+
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
         beerViewModel.bindToDataModel();
@@ -87,5 +157,10 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         beerViewModel.unbindDataModel();
         brewerViewModel.unbindDataModel();
         reviewListViewModel.unbindDataModel();
+
+        if (tickSubscription != null) {
+            tickSubscription.unsubscribe();
+            tickSubscription = null;
+        }
     }
 }

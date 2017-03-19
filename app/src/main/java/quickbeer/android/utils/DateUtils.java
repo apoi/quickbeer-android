@@ -17,15 +17,15 @@
  */
 package quickbeer.android.utils;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.threeten.bp.Instant;
 import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 import org.threeten.bp.format.FormatStyle;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 public final class DateUtils {
 
@@ -51,6 +51,14 @@ public final class DateUtils {
         return value(date)
                 .withZoneSameInstant(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT));
+    }
+
+    @NonNull
+    public static String formatDateTime(@NonNull String template, @Nullable ZonedDateTime date) {
+        ZonedDateTime localTime = value(date).withZoneSameInstant(ZoneId.systemDefault());
+        return String.format(template,
+                localTime.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+                localTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)));
     }
 
     @Nullable

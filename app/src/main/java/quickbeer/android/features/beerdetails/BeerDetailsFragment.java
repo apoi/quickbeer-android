@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -33,15 +35,18 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.data.pojos.Beer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
-public class BeerDetailsFragment extends BindingBaseFragment {
+public class BeerDetailsFragment extends BindingBaseFragment implements RatingBar.OnRatingBarChangeListener {
 
     @BindView(R.id.beer_details_view)
     BeerDetailsView detailsView;
@@ -49,6 +54,9 @@ public class BeerDetailsFragment extends BindingBaseFragment {
     @Inject
     @Nullable
     BeerDetailsViewModel beerDetailsViewModel;
+
+    @Nullable
+    private Beer beer;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -61,6 +69,7 @@ public class BeerDetailsFragment extends BindingBaseFragment {
                     .getBeer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(beer -> BeerDetailsFragment.this.beer = beer)
                     .subscribe(detailsView::setBeer, Timber::e));
 
             subscription.add(viewModel()
@@ -68,6 +77,14 @@ public class BeerDetailsFragment extends BindingBaseFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(detailsView::setBrewer, Timber::e));
+
+            // Re-emit beer on tick failure to reset rating bar
+            subscription.add(viewModel()
+                    .tickSuccessStatus()
+                    .filter(success -> !success)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(__ -> detailsView.setBeer(get(beer)), Timber::e));
         }
     };
 
@@ -85,6 +102,7 @@ public class BeerDetailsFragment extends BindingBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
+        detailsView.setRatingBarChangeListener(this);
     }
 
     @Override
@@ -113,5 +131,12 @@ public class BeerDetailsFragment extends BindingBaseFragment {
     @Override
     protected DataBinder dataBinder() {
         return dataBinder;
+    }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        if (fromUser) {
+            viewModel().tickBeer(get(beer), (int) rating);
+        }
     }
 }

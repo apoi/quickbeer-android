@@ -57,7 +57,7 @@
     <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
     <!-- Ticking -->
-    <string name="beer_tick_date">You ticked this beer at %s</string>
+    <string name="beer_tick_date">You ticked this beer on %1$s at %2$s</string>
     <string name="tick_success">%s ticked!</string>
     <string name="tick_removed">Tick removed!</string>
     <string name="tick_failure">Ticking failed! Try again later.</string>

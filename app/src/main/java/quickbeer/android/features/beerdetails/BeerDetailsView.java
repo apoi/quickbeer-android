@@ -38,7 +38,6 @@ import butterknife.ButterKnife;
 import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
-import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
@@ -125,10 +124,6 @@ public class BeerDetailsView extends NestedScrollView {
     @Inject
     ResourceProvider resourceProvider;
 
-    @Nullable
-    @Inject
-    DataLayer.TickBeer tickBeer;
-
     public BeerDetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -167,12 +162,6 @@ public class BeerDetailsView extends NestedScrollView {
 
         brewerTextView.setText(beer.brewerName());
 
-        ratingBar.setOnRatingBarChangeListener((view, rating, fromUser) -> {
-            if (fromUser) {
-                setTick(beer, (int) rating);
-            }
-        });
-
         ofObj(beer.styleId())
                 .map(styles::getItem)
                 .orOption(() -> ofObj(beer.styleName()).flatMap(styles::getStyle))
@@ -209,46 +198,12 @@ public class BeerDetailsView extends NestedScrollView {
 
         ofObj(beer.tickDate())
                 .filter(__ -> beer.isTicked())
-                .map(DateUtils::formatDateTime)
-                .map(date -> String.format(resourceProvider.getString(R.string.beer_tick_date), date))
+                .map(date -> DateUtils.formatDateTime(resourceProvider.getString(R.string.beer_tick_date), date))
                 .ifSome(value -> {
                     tickedDate.setText(value);
                     tickedDate.setVisibility(View.VISIBLE);
                 })
                 .ifNone(() -> tickedDate.setVisibility(GONE));
-    }
-
-    private void setTick(@NonNull Beer beer, int value) {
-        get(tickBeer).call(beer.id(), value)
-                .subscribe(notification -> {
-                    switch (notification.getType()) {
-                        case FETCHING_COMPLETED_WITH_VALUE:
-                        case FETCHING_COMPLETED_WITHOUT_VALUE:
-                            tickSuccess(beer, value);
-                            break;
-                        case FETCHING_COMPLETED_WITH_ERROR:
-                            tickFailed(beer);
-                            break;
-                        case FETCHING_START:
-                        case ON_NEXT:
-                            break;
-                    }
-                }, error -> Timber.w(error, "Error ticking beer"));
-    }
-
-    private void tickSuccess(@NonNull Beer beer, int value) {
-        checkNotNull(resourceProvider);
-
-        String toastText = value > 0
-                ? String.format(resourceProvider.getString(R.string.tick_success), beer.name())
-                : resourceProvider.getString(R.string.tick_removed);
-
-        Toast.makeText(getContext(), toastText, Toast.LENGTH_SHORT).show();
-    }
-
-    private void tickFailed(@NonNull Beer beer) {
-        Toast.makeText(getContext(), R.string.tick_failure, Toast.LENGTH_SHORT).show();
-        ratingBar.setRating(ofObj(beer.tickValue()).orDefault(() -> 0));
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
@@ -261,6 +216,10 @@ public class BeerDetailsView extends NestedScrollView {
                 .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableString)
                 .ifSome(locationTextView::setText);
+    }
+
+    public void setRatingBarChangeListener(@NonNull RatingBar.OnRatingBarChangeListener listener) {
+        ratingBar.setOnRatingBarChangeListener(listener);
     }
 
     @NonNull
