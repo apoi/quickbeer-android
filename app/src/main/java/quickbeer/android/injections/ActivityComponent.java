@@ -22,7 +22,7 @@ import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
-import quickbeer.android.features.beerdetails.BeerDetailsViewHolder;
+import quickbeer.android.features.beerdetails.BeerDetailsView;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.profile.ProfileActivity;
@@ -50,6 +50,6 @@ public interface ActivityComponent {
 
     void inject(PhotoViewActivity photoViewActivity);
 
-    void inject(BeerDetailsViewHolder view);
+    void inject(BeerDetailsView view);
 
 }
