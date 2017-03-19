@@ -154,8 +154,6 @@ public class BeerDetailsView extends NestedScrollView {
 
         ibuColumn.setOnClickListener(__ ->
                 showToast(R.string.description_ibu));
-
-        ratingBar.setOnRatingBarChangeListener(BeerDetailsView::setRating);
     }
 
     private void showToast(@StringRes int resource) {
@@ -172,6 +170,12 @@ public class BeerDetailsView extends NestedScrollView {
                 resourceProvider.getString(R.string.no_description)));
 
         brewerTextView.setText(beer.brewerName());
+
+        ratingBar.setOnRatingBarChangeListener((view, rating, fromUser) -> {
+            if (fromUser) {
+                get(tickBeer).call(beer.id(), (int) rating);
+            }
+        });
 
         ofObj(beer.styleId())
                 .map(styles::getItem)
@@ -225,10 +229,6 @@ public class BeerDetailsView extends NestedScrollView {
                 .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableString)
                 .ifSome(locationTextView::setText);
-    }
-
-    private static void setRating(@NonNull RatingBar ratingBar, float value, boolean user) {
-        Timber.w("Gonna tick %s", value);
     }
 
     @NonNull
