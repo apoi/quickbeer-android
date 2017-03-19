@@ -17,11 +17,11 @@
  */
 package quickbeer.android.network.fetchers;
 
-import org.threeten.bp.ZonedDateTime;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
@@ -35,6 +35,7 @@ import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;
 import rx.Subscription;
@@ -77,7 +78,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         final String searchString = get(intent).getStringExtra("searchString");
 
         if (searchString != null) {
-            fetchBeerSearch(searchString);
+            fetchBeerSearch(StringUtils.normalize(searchString));
         } else {
             Timber.e("No searchString provided in the intent extras");
         }

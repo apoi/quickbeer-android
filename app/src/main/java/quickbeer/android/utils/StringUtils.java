@@ -20,7 +20,12 @@ package quickbeer.android.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.text.Normalizer;
+import java.util.regex.Pattern;
+
 public final class StringUtils {
+
+    private static final Pattern BASE_GLYPH = Pattern.compile("\\p{M}");
 
     private StringUtils() {}
 
@@ -45,4 +50,16 @@ public final class StringUtils {
                 ? second == null
                 : first.equals(second);
     }
+
+    public static String normalize(@Nullable String value) {
+        if (value == null) {
+            return "";
+        }
+
+        String normalized = Normalizer.normalize(value, Normalizer.Form.NFD);
+        normalized = BASE_GLYPH.matcher(normalized).replaceAll("");
+
+        return normalized;
+    }
+
 }
