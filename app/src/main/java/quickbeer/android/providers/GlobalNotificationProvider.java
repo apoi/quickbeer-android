@@ -19,7 +19,6 @@ package quickbeer.android.providers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,10 +39,15 @@ public class GlobalNotificationProvider {
     private final Context context;
 
     @NonNull
+    private final ToastProvider toastProvider;
+
+    @NonNull
     private final Map<Integer, Subscription> subscriptionList = new HashMap<>(10);
 
-    public GlobalNotificationProvider(@NonNull Context context) {
+    public GlobalNotificationProvider(@NonNull Context context,
+                                      @NonNull ToastProvider toastProvider) {
         this.context = get(context);
+        this.toastProvider = get(toastProvider);
     }
 
     public void addNetworkSuccessListener(@NonNull Observable<DataStreamNotification<Void>> observable,
@@ -73,7 +77,7 @@ public class GlobalNotificationProvider {
     }
 
     private void showToast(@NonNull String text) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+        toastProvider.showToast(text);
     }
 
 }

@@ -23,10 +23,11 @@ import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsView;
+import quickbeer.android.features.beerdetails.BeerReviewsViewHolder;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
-import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
+import quickbeer.android.features.profile.ProfileActivity;
 
 @ActivityScope
 @Subcomponent(modules = ActivityModule.class)
@@ -50,6 +51,10 @@ public interface ActivityComponent {
 
     void inject(PhotoViewActivity photoViewActivity);
 
+    // Views. TODO should be some other for injecting to views
+
     void inject(BeerDetailsView view);
+
+    void inject(BeerReviewsViewHolder view);
 
 }

@@ -46,6 +46,7 @@ import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
@@ -123,6 +124,10 @@ public class BeerDetailsView extends NestedScrollView {
     @Nullable
     @Inject
     ResourceProvider resourceProvider;
+
+    @Nullable
+    @Inject
+    ToastProvider toastProvider;
 
     public BeerDetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -246,7 +251,7 @@ public class BeerDetailsView extends NestedScrollView {
     }
 
     private void showToast(@StringRes int resource) {
-        Toast.makeText(getContext(), resource, Toast.LENGTH_LONG).show();
+        get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG);
     }
 
 }

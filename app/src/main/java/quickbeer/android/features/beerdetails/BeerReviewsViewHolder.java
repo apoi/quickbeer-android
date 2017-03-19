@@ -19,19 +19,25 @@ package quickbeer.android.features.beerdetails;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import quickbeer.android.R;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
 import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
@@ -79,15 +85,22 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.review_location)
     TextView location;
 
-    @NonNull
-    private final Context context;
+    @Nullable
+    @Inject
+    ToastProvider toastProvider;
 
     public BeerReviewsViewHolder(View view) {
         super(view);
 
-        context = view.getContext();
+        init(view);
+    }
 
+    private void init(View view) {
         ButterKnife.bind(this, view);
+
+        ((InjectingDrawerActivity) view.getContext())
+                .getComponent()
+                .inject(this);
     }
 
     public void setReview(@NonNull Review review) {
@@ -123,6 +136,6 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void showToast(@StringRes int resource) {
-        Toast.makeText(context, resource, Toast.LENGTH_LONG).show();
+        get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG);
     }
 }

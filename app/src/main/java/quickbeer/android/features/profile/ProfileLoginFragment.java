@@ -42,6 +42,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.android.schedulers.AndroidSchedulers;
@@ -74,6 +75,10 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     @Nullable
     @Inject
     ProfileLoginViewModel profileLoginViewModel;
+
+    @Nullable
+    @Inject
+    ToastProvider toastProvider;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -205,7 +210,7 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     }
 
     private void showError(@NonNull String error) {
-        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+        get(toastProvider).showToast(error, Toast.LENGTH_LONG);
     }
 
     @NonNull

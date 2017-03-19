@@ -37,6 +37,7 @@ import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.providers.ToastProvider;
 
 @Module
 public final class ApplicationModule {
@@ -68,8 +69,16 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
-    static GlobalNotificationProvider provideGlobalNotificationProvider(@ForApplication Context context) {
-        return new GlobalNotificationProvider(context);
+    static ToastProvider provideToastProvider(@ForApplication Context context) {
+        return new ToastProvider(context);
+    }
+
+    @Provides
+    @Singleton
+    static GlobalNotificationProvider provideGlobalNotificationProvider(
+            @ForApplication Context context,
+            ToastProvider toastProvider) {
+        return new GlobalNotificationProvider(context, toastProvider);
     }
 
     @Provides

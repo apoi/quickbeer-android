@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Callback.EmptyCallback;
 import com.squareup.picasso.Picasso;
@@ -45,6 +44,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.transformations.BlurTransformation;
 import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -83,6 +83,10 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @Nullable
     @Inject
     NavigationProvider navigationProvider;
+
+    @Nullable
+    @Inject
+    ToastProvider toastProvider;
 
     @Nullable
     @Inject
@@ -138,8 +142,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
 
         setBackNavigationEnabled(true);
 
-        imageView.setOnClickListener(__ ->
-                Toast.makeText(this, R.string.beer_details_no_photo, Toast.LENGTH_SHORT).show());
+        imageView.setOnClickListener(__ -> get(toastProvider).showToast(R.string.beer_details_no_photo));
 
         if (savedInstanceState != null) {
             beerId = savedInstanceState.getInt("beerId");
