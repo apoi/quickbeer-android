@@ -17,10 +17,13 @@
  */
 package quickbeer.android.features.beerdetails;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -40,17 +43,32 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.review_appearance)
     TextView appearance;
 
+    @BindView(R.id.review_appearance_column)
+    View appearanceColumn;
+
     @BindView(R.id.review_aroma)
     TextView aroma;
+
+    @BindView(R.id.review_aroma_column)
+    View aromaColumn;
 
     @BindView(R.id.review_flavor)
     TextView flavor;
 
+    @BindView(R.id.review_flavor_column)
+    View flavorColumn;
+
     @BindView(R.id.review_mouthfeel)
     TextView mouthfeel;
 
+    @BindView(R.id.review_mouthfeel_column)
+    View mouthfeelColumn;
+
     @BindView(R.id.review_overall)
     TextView overall;
+
+    @BindView(R.id.review_overall_column)
+    View overallColumn;
 
     @BindView(R.id.review_description)
     TextView description;
@@ -61,8 +79,13 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.review_location)
     TextView location;
 
+    @NonNull
+    private final Context context;
+
     public BeerReviewsViewHolder(View view) {
         super(view);
+
+        context = view.getContext();
 
         ButterKnife.bind(this, view);
     }
@@ -82,5 +105,24 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
         if (!StringUtils.hasValue(review.country())) {
             location.setVisibility(View.GONE);
         }
+
+        appearanceColumn.setOnClickListener(__ ->
+                showToast(R.string.review_appearance));
+
+        aromaColumn.setOnClickListener(__ ->
+                showToast(R.string.review_aroma));
+
+        flavorColumn.setOnClickListener(__ ->
+                showToast(R.string.review_flavor));
+
+        mouthfeelColumn.setOnClickListener(__ ->
+                showToast(R.string.review_mouthfeel));
+
+        overallColumn.setOnClickListener(__ ->
+                showToast(R.string.review_overall));
+    }
+
+    private void showToast(@StringRes int resource) {
+        Toast.makeText(context, resource, Toast.LENGTH_LONG).show();
     }
 }
