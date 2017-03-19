@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.Countries;
+import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.utils.Styles;
 import timber.log.Timber;
@@ -102,6 +104,12 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.beer_ibu_column)
     View ibuColumn;
+
+    @BindView(R.id.rating_bar)
+    RatingBar ratingBar;
+
+    @BindView(R.id.ticked_date)
+    TextView tickedDate;
 
     @Nullable
     @Inject
@@ -186,6 +194,17 @@ public class BeerDetailsViewHolder extends RecyclerView.ViewHolder {
                 .map(value -> String.valueOf(Math.round(value)))
                 .orOption(this::notAvailableString)
                 .ifSome(ibuTextView::setText);
+
+        ofObj(beer.tickValue())
+                .ifSome(ratingBar::setRating);
+
+        ofObj(beer.tickDate())
+                .map(DateUtils::formatDateTime)
+                .map(date -> String.format(resourceProvider.getString(R.string.beer_tick_date), date))
+                .ifSome(value -> {
+                    tickedDate.setText(value);
+                    tickedDate.setVisibility(View.VISIBLE);
+                });
     }
 
     public void setBrewer(@NonNull Brewer brewer) {

@@ -271,7 +271,7 @@ public class CameraSource {
      */
     public interface PictureCallback {
         /**
-         * Called when image data is available after a picture is taken.  The format of the data
+         * Called when image data is available after a picture is taken.  The formatDate of the data
          * is a jpeg binary.
          */
         void onPictureTaken(byte[] data);
@@ -1023,7 +1023,7 @@ public class CameraSource {
 
     /**
      * Creates one buffer for the camera preview callback.  The size of the buffer is based off of
-     * the camera preview size and the format of the camera image.
+     * the camera preview size and the formatDate of the camera image.
      *
      * @return a new preview buffer of the appropriate size for the current camera settings
      */

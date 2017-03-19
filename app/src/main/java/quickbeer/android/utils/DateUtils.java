@@ -22,6 +22,7 @@ import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.FormatStyle;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,10 +40,17 @@ public final class DateUtils {
     }
 
     @NonNull
-    public static String format(@Nullable ZonedDateTime date) {
+    public static String formatDate(@Nullable ZonedDateTime date) {
         return value(date)
                 .withZoneSameInstant(ZoneId.systemDefault())
-                .format(DateTimeFormatter.ISO_LOCAL_DATE);
+                .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM));
+    }
+
+    @NonNull
+    public static String formatDateTime(@Nullable ZonedDateTime date) {
+        return value(date)
+                .withZoneSameInstant(ZoneId.systemDefault())
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT, FormatStyle.SHORT));
     }
 
     @Nullable

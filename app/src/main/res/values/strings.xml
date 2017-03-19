@@ -1,33 +1,37 @@
 <resources>
     <string name="app_name">QuickBeer</string>
 
+    <!-- Search bar -->
     <string name="search_box_hint_search_beers">Search beers</string>
     <string name="search_box_hint_search_brewers">Search brewers</string>
     <string name="search_box_hint_filter_countries">Filter countries</string>
     <string name="search_box_hint_filter_styles">Filter styles</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="search_too_short">Search should be at least four characters</string>
 
-    <string name="beer_details_reviews">Reviews</string>
-    <string name="beer_details_no_photo">No photo available for this beer</string>
+    <!-- Navigation drawer -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 
+    <!-- Search -->
     <string name="search_status_loading">Searching…</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>
     <string name="search_no_results">No results, how curious!</string>
 
+    <!-- Home view -->
     <string name="tab_beers">Beers</string>
     <string name="tab_brewers">Brewers</string>
-
     <string name="recent_beers">Recently seen beers</string>
     <string name="recent_brewers">Recently seen brewers</string>
 
-    <string name="not_available">N/A</string>
-    <string name="no_description">No description available.</string>
-
+    <!-- Beer details -->
     <string name="rating_overall">Overall</string>
     <string name="rating_style">Style</string>
+    <string name="beer_tick_date">You rated this beer at %s</string>
+
+    <string name="beer_details_reviews">Reviews</string>
+    <string name="beer_details_no_photo">No photo available for this beer</string>
+    <string name="no_description">No description available.</string>
+    <string name="not_available">N/A</string>
 
     <string name="brewer">Brewer</string>
     <string name="origin">Origin</string>
@@ -40,6 +44,7 @@
     <string name="description_abv">Alcohol by volume</string>
     <string name="description_ibu">International Bittering Units, a measure of beer bitterness</string>
 
+    <!-- Barcode scanner -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
     <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>
