@@ -29,6 +29,7 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.viewholder.BaseBindingViewHolder;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.utils.Score;
+import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -80,6 +81,12 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     }
 
     public void setBeer(@NonNull Beer beer) {
+        // Don't show anything if the name isn't loaded yet.
+        // This prevents the rating label to be shown with empty details.
+        if (StringUtils.isEmpty(beer.name())) {
+            return;
+        }
+
         if (beer.isTicked()) {
             ratingTextView.setText("");
             ratingTextView.setBackgroundResource(Score.fromTick(beer.tickValue()).getResource());

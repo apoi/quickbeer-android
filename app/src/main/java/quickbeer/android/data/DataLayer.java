@@ -145,7 +145,7 @@ public class DataLayer extends DataLayerBase {
         // Does not emit a new notification when only beer metadata changes.
         // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
                 .distinctUntilChanged();
     }
 
@@ -222,7 +222,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getBeerSearchResultStream(searchString)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -269,7 +269,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getBarcodeSearchResultStream(barcode)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -316,7 +316,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getTopBeersResultStream()
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -362,7 +362,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getBeersInCountryResultStream(countryId)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -409,7 +409,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getBeersInStyleResultStream(styleId)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -465,7 +465,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getReviewsResultStream(beerId)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
     @NonNull
@@ -550,7 +550,7 @@ public class DataLayer extends DataLayerBase {
                         });
 
         return getBrewerResultStream(brewerId)
-                .startWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
                 .distinctUntilChanged();
     }
 
