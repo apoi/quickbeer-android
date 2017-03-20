@@ -28,6 +28,8 @@ import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.features.profile.ProfileActivity;
+import quickbeer.android.views.BrewerListView;
+import quickbeer.android.views.viewholders.BrewerViewHolder;
 
 @ActivityScope
 @Subcomponent(modules = ActivityModule.class)
@@ -56,5 +58,7 @@ public interface ActivityComponent {
     void inject(BeerDetailsView view);
 
     void inject(BeerReviewsViewHolder view);
+
+    void inject(BrewerListView view);
 
 }

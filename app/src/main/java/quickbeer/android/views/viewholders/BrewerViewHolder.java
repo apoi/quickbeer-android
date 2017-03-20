@@ -23,11 +23,14 @@ import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.viewholder.BaseBindingViewHolder;
 import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.Country;
+import quickbeer.android.utils.Countries;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -35,6 +38,7 @@ import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
 
@@ -46,6 +50,9 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
 
     @BindView(R.id.brewer_country)
     TextView brewerCountry;
+
+    @NonNull
+    private final Countries countries;
 
     @NonNull
     private final DataBinder viewDataBinder = new SimpleDataBinder() {
@@ -62,8 +69,11 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     };
 
     public BrewerViewHolder(@NonNull View view,
+                            @NonNull Countries countries,
                             @NonNull View.OnClickListener onClickListener) {
         super(view);
+
+        this.countries = countries;
 
         ButterKnife.bind(this, view);
         view.setOnClickListener(onClickListener);
@@ -76,9 +86,18 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
-        brewerCircle.setText(brewer.city().substring(0, 2));
         brewerName.setText(brewer.name());
-        brewerCountry.setText(String.format("%s, %s", brewer.city(), brewer.countryId()));
+
+        Option<Country> countryOption = ofObj(brewer.countryId())
+                .map(countries::getItem);
+
+        countryOption.ifSome(c -> brewerCircle.setText(c.getCode()));
+
+        ofObj(brewer.city())
+                .lift(countryOption, (city, country) -> String.format("%s, %s", city, country.getName()))
+                .orOption(() -> countryOption.map(Country::getName))
+                .orOption(() -> ofObj("Unknown"))
+                .ifSome(origin -> brewerCountry.setText(origin));
     }
 
     public void clear() {

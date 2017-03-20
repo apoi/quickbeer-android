@@ -17,15 +17,19 @@
  */
 package quickbeer.android.utils;
 
+import android.util.SparseArray;
+
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 import quickbeer.android.data.pojos.Country;
 
 public class Countries implements SimpleListSource<Country> {
 
-    private final Map<Integer, Country> countries = new HashMap<>(255);
+    private final SparseArray<Country> countries = new SparseArray<>(260);
+
+    private Collection<Country> values;
 
     Countries() {
         initCountries();
@@ -38,9 +42,18 @@ public class Countries implements SimpleListSource<Country> {
 
     @Override
     public Collection<Country> getList() {
-        return countries.values();
+        if (values == null) {
+            values = new ArrayList<>(countries.size());
+
+            for (int i = 0; i < countries.size(); i++) {
+                values.add(countries.valueAt(i));
+            }
+        }
+
+        return Collections.unmodifiableCollection(values);
     }
 
+    @SuppressWarnings({"MagicNumber", "OverlyLongMethod"})
     private void initCountries() {
         countries.put(1, new Country(1, "Afghanistan", "AF"));
         countries.put(2, new Country(2, "Albania", "AL"));

@@ -18,10 +18,11 @@
 package quickbeer.android.utils;
 
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collections;
 
 import ix.Ix;
 import polanski.option.Option;
@@ -29,7 +30,9 @@ import quickbeer.android.data.pojos.Style;
 
 public class Styles implements SimpleListSource<Style> {
 
-    private final Map<Integer, Style> styles = new HashMap<>(114);
+    private final SparseArray<Style> styles = new SparseArray<>(114);
+
+    private Collection<Style> values;
 
     public Styles() {
         initStyles();
@@ -42,17 +45,26 @@ public class Styles implements SimpleListSource<Style> {
 
     @Override
     public Collection<Style> getList() {
-        return styles.values();
+        if (values == null) {
+            values = new ArrayList<>(styles.size());
+
+            for (int i = 0; i < styles.size(); i++) {
+                values.add(styles.valueAt(i));
+            }
+        }
+
+        return Collections.unmodifiableCollection(values);
     }
 
     @NonNull
     public Option<Style> getStyle(@NonNull String styleName) {
-        return Ix.from(styles.values())
+        return Ix.from(getList())
                 .filter(value -> value.getName().equals(styleName))
                 .map(Option::ofObj)
                 .first(Option.none());
     }
 
+    @SuppressWarnings({"MagicNumber", "OverlyLongMethod"})
     private void initStyles() {
         styles.put(2, new Style(2, "Altbier"));
         styles.put(3, new Style(3, "Pale Lager"));

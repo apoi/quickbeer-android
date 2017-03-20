@@ -28,9 +28,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.features.list.BrewerListAdapter;
+import quickbeer.android.utils.Countries;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
@@ -42,17 +48,21 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class BrewerListView extends FrameLayout {
 
+    @BindView(R.id.list_view)
+    RecyclerView brewersListView;
+
+    @BindView(R.id.search_status)
+    TextView searchStatusTextView;
+
     @Nullable
     private BrewerListAdapter brewerListAdapter;
 
-    @Nullable
-    private RecyclerView brewersListView;
-
-    @Nullable
-    private TextView searchStatusTextView;
-
     @NonNull
     private final PublishSubject<Integer> selectedBrewerSubject = PublishSubject.create();
+
+    @Inject
+    @Nullable
+    Countries countries;
 
     public BrewerListView(Context context) {
         super(context);
@@ -66,10 +76,13 @@ public class BrewerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        brewersListView = (RecyclerView) get(findViewById(R.id.list_view));
-        searchStatusTextView = (TextView) findViewById(R.id.search_status);
+        ButterKnife.bind(this, this);
 
-        brewerListAdapter = new BrewerListAdapter();
+        ((InjectingDrawerActivity) getContext())
+                .getComponent()
+                .inject(this);
+
+        brewerListAdapter = new BrewerListAdapter(get(countries));
         brewerListAdapter.setOnClickListener(v -> {
             final int itemPosition = brewersListView.getChildAdapterPosition(v);
             final int brewerId = brewerListAdapter.getBrewerViewModel(itemPosition).getBrewerId();

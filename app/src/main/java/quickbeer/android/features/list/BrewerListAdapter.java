@@ -30,6 +30,7 @@ import java.util.List;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BaseListAdapter;
 import quickbeer.android.data.pojos.Header;
+import quickbeer.android.utils.Countries;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.views.viewholders.BrewerViewHolder;
 import quickbeer.android.views.viewholders.HeaderViewHolder;
@@ -48,8 +49,15 @@ public class BrewerListAdapter extends BaseListAdapter {
     @NonNull
     private final List<Object> items = new ArrayList<>(10);
 
+    @NonNull
+    private final Countries countries;
+
     @Nullable
     private View.OnClickListener onClickListener;
+
+    public BrewerListAdapter(@NonNull Countries countries) {
+        this.countries = get(countries);
+    }
 
     public void setHeader(@NonNull Header header) {
         this.header = get(header);
@@ -84,7 +92,7 @@ public class BrewerListAdapter extends BaseListAdapter {
             return new HeaderViewHolder(v);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.brewer_list_item, parent, false);
-            return new BrewerViewHolder(v, get(onClickListener));
+            return new BrewerViewHolder(v, countries, get(onClickListener));
         }
     }
 
