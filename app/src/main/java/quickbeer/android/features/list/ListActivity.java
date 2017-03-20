@@ -91,6 +91,13 @@ public class ListActivity extends BindingDrawerActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        get(searchView).closeSearchView();
+
+        super.onPause();
+    }
+
     @NonNull
     protected Page defaultPage() {
         return Page.BEER_SEARCH;
