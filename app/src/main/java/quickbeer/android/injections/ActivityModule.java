@@ -40,13 +40,13 @@ public class ActivityModule {
 
     @Provides
     @ActivityScope
-    AppCompatActivity providesActivity() {
+    AppCompatActivity provideActivity() {
         return activity;
     }
 
     @Provides
     @ActivityScope
-    static SearchViewViewModel providesSearchViewViewModel(
+    static SearchViewViewModel provideSearchViewViewModel(
             @NonNull DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         return new SearchViewViewModel(getBeerSearchQueries);
     }
@@ -54,7 +54,7 @@ public class ActivityModule {
     @Provides
     @IdRes
     @Named("fragmentContainer")
-    static Integer providesNavigationContainerId() {
+    static Integer provideNavigationContainerId() {
         return R.id.container;
     }
 

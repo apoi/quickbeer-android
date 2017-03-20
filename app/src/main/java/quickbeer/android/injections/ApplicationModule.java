@@ -51,19 +51,19 @@ public final class ApplicationModule {
     @Provides
     @Singleton
     @ForApplication
-    Context providesApplicationContext() {
+    Context provideApplicationContext() {
         return application;
     }
 
     @Provides
     @Singleton
-    Application providesApplication() {
+    Application provideApplication() {
         return application;
     }
 
     @Provides
     @Singleton
-    static ResourceProvider providesUserProvider(@ForApplication Context context) {
+    static ResourceProvider provideUserProvider(@ForApplication Context context) {
         return new ResourceProvider(context);
     }
 
@@ -83,13 +83,13 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
-    static ContentResolver providesContentResolver(@ForApplication Context context) {
+    static ContentResolver provideContentResolver(@ForApplication Context context) {
         return context.getContentResolver();
     }
 
     @Provides
     @Singleton
-    static Picasso providesPicasso(@ForApplication Context context) {
+    static Picasso providePicasso(@ForApplication Context context) {
         return Picasso.with(context);
     }
 }

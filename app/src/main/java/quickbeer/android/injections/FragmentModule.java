@@ -35,7 +35,7 @@ public class FragmentModule {
 
     @Provides
     @FragmentScope
-    Fragment providesFragment() {
+    Fragment provideFragment() {
         return fragment;
     }
 

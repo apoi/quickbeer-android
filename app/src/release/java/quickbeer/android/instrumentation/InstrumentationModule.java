@@ -34,7 +34,7 @@ public final class InstrumentationModule {
 
     @Provides
     @Singleton
-    static Timber.Tree providesLoggingTree() {
+    static Timber.Tree provideLoggingTree() {
         return new ProductionTree();
     }
 
