@@ -24,6 +24,8 @@ import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsView;
 import quickbeer.android.features.beerdetails.BeerReviewsViewHolder;
+import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
+import quickbeer.android.features.brewerdetails.BrewerDetailsView;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
@@ -51,6 +53,8 @@ public interface ActivityComponent {
 
     void inject(BeerDetailsActivity beerDetailsActivity);
 
+    void inject(BrewerDetailsActivity brewerDetailsActivity);
+
     void inject(PhotoViewActivity photoViewActivity);
 
     // Views. TODO should be some other for injecting to views
@@ -60,5 +64,7 @@ public interface ActivityComponent {
     void inject(BeerReviewsViewHolder view);
 
     void inject(BrewerListView view);
+
+    void inject(BrewerDetailsView view);
 
 }

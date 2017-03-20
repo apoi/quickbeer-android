@@ -36,7 +36,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.features.beerdetails.BeerDetailsActivity;
+import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BrewerListViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
@@ -110,7 +110,7 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
     }
 
     protected void openBrewerDetails(@NonNull Integer brewerId) {
-        Intent intent = new Intent(getActivity(), BeerDetailsActivity.class); // TODO
+        Intent intent = new Intent(getActivity(), BrewerDetailsActivity.class);
         intent.putExtra("brewerId", brewerId);
         startActivity(intent);
     }

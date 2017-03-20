@@ -82,4 +82,11 @@ public final class ViewModelModule {
         return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getReviews, getReview, resourceProvider, notificationProvider);
     }
 
+    @Provides
+    static BrewerViewModel providerBrewerViewModel(
+            @NonNull DataLayer.GetBeer getBeer,
+            @NonNull DataLayer.GetBrewer getBrewer) {
+        return new BrewerViewModel(getBeer, getBrewer);
+    }
+
 }

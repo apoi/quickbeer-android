@@ -48,6 +48,10 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
+            android:name=".features.brewerdetails.BrewerDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
             android:name=".features.photoview.PhotoViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

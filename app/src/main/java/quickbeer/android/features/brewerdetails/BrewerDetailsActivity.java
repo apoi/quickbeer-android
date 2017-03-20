@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +15,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.beerdetails;
+package quickbeer.android.features.brewerdetails;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback.EmptyCallback;
 import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
@@ -41,12 +39,9 @@ import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
-import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.features.photoview.PhotoViewActivity;
+import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ToastProvider;
-import quickbeer.android.transformations.BlurTransformation;
-import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
@@ -57,7 +52,7 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerDetailsActivity extends BindingDrawerActivity {
+public class BrewerDetailsActivity extends BindingDrawerActivity {
 
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
@@ -70,11 +65,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
 
     @Inject
     @Nullable
-    DataLayer.GetBeer getBeer;
-
-    @Inject
-    @Nullable
-    DataLayer.AccessBeer accessBeer;
+    DataLayer.GetBrewer getBrewer;
 
     @Inject
     @Nullable
@@ -96,34 +87,29 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @Inject
     Picasso picasso;
 
-    private int beerId;
+    private int brewerId;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
-            ConnectableObservable<Beer> sourceObservable = get(getBeer)
-                    .call(beerId)
+            ConnectableObservable<Brewer> sourceObservable = get(getBrewer)
+                    .call(brewerId)
                     .subscribeOn(Schedulers.io())
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)
                     .first()
                     .publish();
 
-            // Update beer access date
-            subscription.add(sourceObservable
-                    .map(Beer::id)
-                    .subscribe(get(accessBeer)::call, Timber::e));
-
             // Update brewer access date
             subscription.add(sourceObservable
-                    .map(Beer::brewerId)
+                    .map(Brewer::id)
                     .subscribe(get(accessBrewer)::call, Timber::e));
 
             // Set toolbar title
             subscription.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(BeerDetailsActivity.this::setToolbarDetails, Timber::e));
+                    .subscribe(BrewerDetailsActivity.this::setToolbarDetails, Timber::e));
 
             subscription.add(sourceObservable
                     .connect());
@@ -142,39 +128,19 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
 
         setBackNavigationEnabled(true);
 
-        imageView.setOnClickListener(__ -> get(toastProvider).showToast(R.string.beer_details_no_photo));
-
         if (savedInstanceState != null) {
-            beerId = savedInstanceState.getInt("beerId");
+            brewerId = savedInstanceState.getInt("brewerId");
         } else {
-            beerId = getIntent().getIntExtra("beerId", 0);
+            brewerId = getIntent().getIntExtra("brewerId", 0);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BeerDetailsPagerFragment())
+                    .add(R.id.container, new BrewerDetailsPagerFragment())
                     .commit();
         }
     }
 
-    private void setToolbarDetails(@NonNull Beer beer) {
-        collapsingToolbar.setTitle(beer.name());
-
-        get(picasso)
-                .load(beer.getImageUri())
-                .transform(new ContainerLabelExtractor(300, 300))
-                .transform(new BlurTransformation(getApplicationContext(), 15))
-                .into(imageView, new EmptyCallback() {
-                    @Override
-                    public void onSuccess() {
-                        overlay.setVisibility(View.VISIBLE);
-                        imageView.setOnClickListener(__ -> openPhotoView(beer.getImageUri()));
-                    }
-                });
-    }
-
-    private void openPhotoView(@NonNull String uri) {
-        Intent intent = new Intent(this, PhotoViewActivity.class);
-        intent.putExtra("source", uri);
-        startActivity(intent);
+    private void setToolbarDetails(@NonNull Brewer brewer) {
+        collapsingToolbar.setTitle(brewer.name());
     }
 
     @Override
@@ -197,11 +163,11 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("beerId", beerId);
+        outState.putInt("brewerId", brewerId);
     }
 
-    public int getBeerId() {
-        return beerId;
+    public int getBrewerId() {
+        return brewerId;
     }
 
     @Override
