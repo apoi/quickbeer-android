@@ -80,6 +80,7 @@ public class SearchView extends FrameLayout {
     }
 
     public void updateOptions() {
+        closeSearchView();
         get(searchView).setHint(getViewModel().getSearchHint());
     }
 
