@@ -57,10 +57,14 @@ public class ListActivity extends BindingDrawerActivity {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
-            subscription.add(viewModel().getSearchQueriesOnceAndStream()
+            subscription.add(viewModel()
+                    .getSearchQueriesOnceAndStream()
                     .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
-                    .subscribe(query -> get(searchView).updateQueryList(query),
-                            Timber::e));
+                    .subscribe(query -> get(searchView).updateQueryList(query), Timber::e));
+
+            subscription.add(viewModel()
+                    .modeChangedStream()
+                    .subscribe(__ -> get(searchView).updateOptions(), Timber::e));
         }
     };
 

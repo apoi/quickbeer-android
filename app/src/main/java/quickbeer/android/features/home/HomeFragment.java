@@ -45,6 +45,7 @@ import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -118,8 +119,8 @@ public class HomeFragment extends BindingBaseFragment {
             startActivityForResult(intent, CODE_CAPTURE_BARCODE);
         });
 
-        viewModel().setSearchHint(get(resourceProvider)
-                .getString(R.string.search_box_hint_search_beers));
+        viewModel().setMode(Mode.SEARCH,
+                get(resourceProvider).getString(R.string.search_box_hint_search_beers));
     }
 
     @Override

@@ -35,6 +35,7 @@ import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.Styles;
 import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import quickbeer.android.views.SimpleListView;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -95,10 +96,8 @@ public class StyleListFragment  extends BindingBaseFragment {
 
         getView().setListSource(styles);
 
-        searchViewViewModel.setLiveFilteringEnabled(true);
-        searchViewViewModel.setConventOverlayEnabled(false);
-        searchViewViewModel.setMinimumSearchLength(-1);
-        searchViewViewModel.setSearchHint(get(resourceProvider).getString(R.string.search_box_hint_filter_styles));
+        searchViewViewModel.setMode(Mode.FILTER,
+                get(resourceProvider).getString(R.string.search_box_hint_filter_styles));
     }
 
     @Override

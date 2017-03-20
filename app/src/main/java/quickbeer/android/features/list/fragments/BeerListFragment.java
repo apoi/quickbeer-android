@@ -41,6 +41,7 @@ import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import quickbeer.android.views.BeerListView;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -131,11 +132,8 @@ public abstract class BeerListFragment extends BindingBaseFragment {
 
         checkNotNull(searchViewViewModel);
 
-        searchViewViewModel.setLiveFilteringEnabled(false);
-        searchViewViewModel.setConventOverlayEnabled(true);
-        searchViewViewModel.setMinimumSearchLength(4);
-        searchViewViewModel.setSearchHint(get(resourceProvider)
-                .getString(R.string.search_box_hint_search_beers));
+        searchViewViewModel.setMode(Mode.SEARCH,
+                get(resourceProvider).getString(R.string.search_box_hint_search_beers));
     }
 
     @Override

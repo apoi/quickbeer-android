@@ -45,7 +45,7 @@ import static io.reark.reark.utils.Preconditions.get;
 public class SearchView extends FrameLayout {
 
     @Nullable
-    private SearchAdapter adapter;
+    private SearchAdapter searchAdapter;
 
     @Nullable
     private MaterialSearchView searchView;
@@ -76,6 +76,11 @@ public class SearchView extends FrameLayout {
         this.viewModel = get(viewModel);
 
         initialize();
+        updateOptions();
+    }
+
+    public void updateOptions() {
+        get(searchView).setHint(getViewModel().getSearchHint());
     }
 
     @NonNull
@@ -96,14 +101,14 @@ public class SearchView extends FrameLayout {
     }
 
     public void updateQueryList(@NonNull List<String> queries) {
-        get(adapter).updateSourceList(queries);
+        get(searchAdapter).updateSourceList(queries);
     }
 
     private void initialize() {
         checkNotNull(searchView);
         checkNotNull(searchViewOverlay);
 
-        adapter = new SearchAdapter(getContext());
+        searchAdapter = new SearchAdapter(getContext());
 
         searchViewOverlay.setOnTouchListener((view, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP && searchView.isSearchOpen()) {
@@ -112,7 +117,6 @@ public class SearchView extends FrameLayout {
             return true;
         });
 
-        searchView.setHint(getViewModel().getSearchHint());
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -166,7 +170,7 @@ public class SearchView extends FrameLayout {
             public void onSearchViewShown() {
                 Timber.d("onSearchViewShown");
 
-                searchView.setAdapter(adapter);
+                searchView.setAdapter(searchAdapter);
             }
 
             @Override
@@ -181,7 +185,7 @@ public class SearchView extends FrameLayout {
 
         searchView.setOnItemClickListener((parent, view, position, id) -> {
             searchView.closeSearch();
-            getViewModel().setQuery(adapter.getItem(position));
+            getViewModel().setQuery(searchAdapter.getItem(position));
         });
     }
 

@@ -20,14 +20,14 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import polanski.option.Option;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.rx.Unit;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 
@@ -37,15 +37,21 @@ import static polanski.option.Option.ofObj;
 
 public class SearchViewViewModel extends SimpleViewModel {
 
-    @Inject
-    DataLayer.GetBeerSearchQueries getBeerSearchQueries;
+    public enum Mode {
+        SEARCH,
+        FILTER
+    }
 
-    private boolean liveFilteringEnabled = false;
+    @NonNull
+    private final DataLayer.GetBeerSearchQueries getBeerSearchQueries;
+
+    private boolean liveFilteringEnabled;
 
     private boolean conventOverlayEnabled = true;
 
     private int minimumSearchLength = 4;
 
+    @NonNull
     private String searchHint = "Search beers";
 
     @NonNull
@@ -53,6 +59,9 @@ public class SearchViewViewModel extends SimpleViewModel {
 
     @NonNull
     private final PublishSubject<Option<String>> querySubject = PublishSubject.create();
+
+    @NonNull
+    private final PublishSubject<Unit> modeChangedSubject = PublishSubject.create();
 
     public SearchViewViewModel(@NonNull DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         this.getBeerSearchQueries = get(getBeerSearchQueries);
@@ -65,16 +74,35 @@ public class SearchViewViewModel extends SimpleViewModel {
 
     @NonNull
     public Observable<List<String>> getSearchQueriesOnceAndStream() {
+        return modeChangedSubject.asObservable()
+                .map(__ -> liveFilteringEnabled)
+                .distinctUntilChanged()
+                .switchMap(live -> live
+                        ? Observable.concat(
+                            Observable.just(Collections.emptyList()),
+                            Observable.never())
+                        : oldSearchesObservable());
+    }
+
+    @NonNull
+    private Observable<List<String>> oldSearchesObservable() {
         Observable<List<String>> oldQueries = getBeerSearchQueries.call().share();
 
         return Observable.combineLatest(
                 oldQueries,
-                getQueryStream().distinctUntilChanged(),
+                searchQueries(),
                 (List<String> list, String query) -> {
                     list.add(query);
                     return list;
                 })
                 .startWith(oldQueries);
+    }
+
+    @NonNull
+    private Observable<String> searchQueries() {
+        return getQueryStream()
+                .filter(__ -> !liveFilteringEnabled)
+                .distinctUntilChanged();
     }
 
     @NonNull
@@ -90,35 +118,43 @@ public class SearchViewViewModel extends SimpleViewModel {
                 .orDefault(() -> "");
     }
 
-    public boolean liveFilteringEnabled() {
-        return liveFilteringEnabled;
+    public void setMode(@NonNull Mode mode, @NonNull String searchHint) {
+        if (mode == Mode.SEARCH) {
+            liveFilteringEnabled = false;
+            conventOverlayEnabled = true;
+            minimumSearchLength = 4;
+        } else {
+            liveFilteringEnabled = true;
+            conventOverlayEnabled = false;
+            minimumSearchLength = -1;
+        }
+
+        this.searchHint = get(searchHint);
+        lastQuery = Option.none();
+
+        modeChangedSubject.onNext(Unit.DEFAULT);
     }
 
-    public void setLiveFilteringEnabled(boolean liveFilteringEnabled) {
-        this.liveFilteringEnabled = liveFilteringEnabled;
+    @NonNull
+    public Observable<Unit> modeChangedStream() {
+        return modeChangedSubject.asObservable();
+    }
+
+    public boolean liveFilteringEnabled() {
+        return liveFilteringEnabled;
     }
 
     public boolean contentOverlayEnabled() {
         return conventOverlayEnabled;
     }
 
-    public void setConventOverlayEnabled(boolean conventOverlayEnabled) {
-        this.conventOverlayEnabled = conventOverlayEnabled;
-    }
-
-    public String getSearchHint() {
-        return searchHint;
-    }
-
-    public void setSearchHint(String searchHint) {
-        this.searchHint = searchHint;
-    }
-
     public int minimumSearchLength() {
         return minimumSearchLength;
     }
 
-    public void setMinimumSearchLength(int minimumSearchLength) {
-        this.minimumSearchLength = minimumSearchLength;
+    @NonNull
+    public String getSearchHint() {
+        return searchHint;
     }
+
 }
