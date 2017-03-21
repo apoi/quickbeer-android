@@ -42,6 +42,7 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.Style;
+import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
@@ -65,47 +66,47 @@ public class BeerDetailsView extends NestedScrollView {
     @BindView(R.id.beer_description)
     TextView descriptionTextView;
 
-    @BindView(R.id.beer_style)
-    TextView styleTextView;
-
     @BindView(R.id.beer_style_row)
-    View styleRow;
+    View beerStyleRow;
 
-    @BindView(R.id.brewer_name)
-    TextView brewerTextView;
+    @BindView(R.id.beer_style)
+    TextView beerStyle;
 
     @BindView(R.id.brewer_name_row)
     View brewerNameRow;
 
-    @BindView(R.id.brewer_country)
-    TextView locationTextView;
+    @BindView(R.id.brewer_name)
+    TextView brewerName;
 
     @BindView(R.id.brewer_country_row)
     View brewerLocationRow;
 
-    @BindView(R.id.beer_rating_overall)
-    TextView overallRatingTextView;
+    @BindView(R.id.brewer_country)
+    TextView brewerLocation;
 
     @BindView(R.id.beer_rating_overall_column)
     View overallRatingColumn;
 
-    @BindView(R.id.beer_rating_style)
-    TextView styleRatingTextView;
+    @BindView(R.id.beer_rating_overall)
+    TextView overallRatingTextView;
 
     @BindView(R.id.beer_rating_style_column)
     View styleRatingColumn;
 
-    @BindView(R.id.beer_abv)
-    TextView abvTextView;
+    @BindView(R.id.beer_rating_style)
+    TextView styleRatingTextView;
 
     @BindView(R.id.beer_abv_column)
     View abvColumn;
 
-    @BindView(R.id.beer_ibu)
-    TextView ibuTextView;
+    @BindView(R.id.beer_abv)
+    TextView abvTextView;
 
     @BindView(R.id.beer_ibu_column)
     View ibuColumn;
+
+    @BindView(R.id.beer_ibu)
+    TextView ibuTextView;
 
     @BindView(R.id.rating_bar)
     RatingBar ratingBar;
@@ -165,15 +166,19 @@ public class BeerDetailsView extends NestedScrollView {
                 StringUtils.value(beer.description(),
                 resourceProvider.getString(R.string.no_description)));
 
-        brewerTextView.setText(beer.brewerName());
+        ofObj(beer.brewerName())
+                .ifSome(brewerName::setText);
+
+        ofObj(beer.brewerId())
+                .ifSome(brewerId -> brewerNameRow.setOnClickListener(__ -> navigateToBrewer(brewerId)));
 
         ofObj(beer.styleId())
                 .map(styles::getItem)
                 .orOption(() -> ofObj(beer.styleName()).flatMap(styles::getStyle))
-                .ifSome(style -> styleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
+                .ifSome(style -> beerStyleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
                 .map(Style::getName)
                 .orOption(this::notAvailableString)
-                .ifSome(styleTextView::setText);
+                .ifSome(beerStyle::setText);
 
         ofObj(beer.overallRating())
                 .filter(value -> value > 0)
@@ -221,7 +226,7 @@ public class BeerDetailsView extends NestedScrollView {
                 .map(Country::getName)
                 .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableString)
-                .ifSome(locationTextView::setText);
+                .ifSome(brewerLocation::setText);
     }
 
     public void setRatingBarChangeListener(@NonNull RatingBar.OnRatingBarChangeListener listener) {
@@ -248,6 +253,14 @@ public class BeerDetailsView extends NestedScrollView {
         Intent intent = new Intent(getContext(), ListActivity.class);
         intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
         intent.putExtra("country", String.valueOf(country.getId()));
+        getContext().startActivity(intent);
+    }
+
+    private void navigateToBrewer(int brewerId) {
+        Timber.d("navigateToBrewer(%s)", brewerId);
+
+        Intent intent = new Intent(getContext(), BrewerDetailsActivity.class);
+        intent.putExtra("brewerId", brewerId);
         getContext().startActivity(intent);
     }
 
