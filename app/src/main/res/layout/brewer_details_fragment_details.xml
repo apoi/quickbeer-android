@@ -122,11 +122,11 @@
                 style="@style/BeerDetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/BeerDetailsTitle"
                     android:text="Address"/>
 
                 <TextView
-                    style="@style/BeerDetailsDescription"
+                    style="@style/BeerDetailsValue"
                     android:id="@+id/brewer_address"
                     tools:text="Olutkuja 5"/>
 

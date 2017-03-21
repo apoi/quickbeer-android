@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import polanski.option.Option;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Brewer;
@@ -144,6 +145,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 });
 
         ofObj(brewer.facebook())
+                .map(handle -> String.format(Constants.FACEBOOK_PATH, handle))
                 .ifSome(facebook -> {
                     brewerFacebook.setAlpha(1.0f);
                     brewerFacebookColumn.setOnClickListener(__ -> openUri(facebook));
@@ -154,6 +156,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 });
 
         ofObj(brewer.twitter())
+                .map(handle -> String.format(Constants.TWITTER_PATH, handle))
                 .ifSome(twitter -> {
                     brewerTwitter.setAlpha(1.0f);
                     brewerTwitterColumn.setOnClickListener(__ -> openUri(twitter));

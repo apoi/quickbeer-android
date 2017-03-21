@@ -29,6 +29,10 @@ public interface Constants {
 
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
 
+    String FACEBOOK_PATH = "https://m.facebook.com/%s";
+
+    String TWITTER_PATH = "https://www.twitter.com/%s";
+
     String LOGIN_DEFAULT_SAVE_INFO = "on";
 
     String META_QUERY_PREFIX = "__";
