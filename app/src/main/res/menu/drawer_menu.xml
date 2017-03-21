@@ -4,6 +4,7 @@
     <group android:id="@+id/drawer_group_main">
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_home"
             android:title="Home" />
     </group>
 
@@ -12,7 +13,7 @@
             <group android:id="@+id/drawer_group_reviews">
                 <item
                     android:id="@+id/nav_ticks"
-                    android:icon="@drawable/ic_icon_check"
+                    android:icon="@drawable/ic_menu_ticked"
                     android:title="Ticked beers" />
             </group>
         </menu>
@@ -23,22 +24,25 @@
             <group android:id="@+id/drawer_group_charts">
                 <item
                     android:id="@+id/nav_best"
-                    android:icon="@drawable/ic_icon_globe"
+                    android:icon="@drawable/ic_menu_stars"
                     android:title="Best of all" />
                 <item
                     android:id="@+id/nav_countries"
-                    android:icon="@drawable/ic_icon_number_1"
+                    android:icon="@drawable/ic_menu_globe"
                     android:title="By country" />
                 <item
                     android:id="@+id/nav_styles"
-                    android:icon="@drawable/ic_icon_number_2"
+                    android:icon="@drawable/ic_menu_style"
                     android:title="By beer style" />
             </group>
         </menu>
     </item>
 
     <group android:id="@+id/drawer_group_general">
-        <item android:id="@+id/nav_about" android:title="About QuickBeer" />
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_menu_about"
+            android:title="About QuickBeer" />
     </group>
 
 </menu>

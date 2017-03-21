@@ -32,6 +32,6 @@
         android:layout_margin="20dp"
         android:elevation="6dp"
         android:scaleType="center"
-        android:src="@drawable/icon_barcode" />
+        android:src="@drawable/ic_action_barcode" />
 
 </FrameLayout>
