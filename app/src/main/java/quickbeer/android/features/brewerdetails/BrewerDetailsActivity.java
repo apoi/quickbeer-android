@@ -46,8 +46,6 @@ import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.transformations.BlurTransformation;
-import quickbeer.android.transformations.ContainerLabelExtractor;
-import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
@@ -150,20 +148,16 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
     private void setToolbarDetails(@NonNull Brewer brewer) {
         collapsingToolbar.setTitle(brewer.name());
 
-        String logoUrl = brewer.logo();
-
-        if (StringUtils.hasValue(logoUrl)) {
-            get(picasso)
-                    .load(brewer.logo())
-                    .transform(new BlurTransformation(getApplicationContext(), 15))
-                    .into(imageView, new Callback.EmptyCallback() {
-                        @Override
-                        public void onSuccess() {
-                            overlay.setVisibility(View.VISIBLE);
-                            imageView.setOnClickListener(__ -> openPhotoView(logoUrl));
-                        }
-                    });
-        }
+        get(picasso)
+                .load(brewer.getImageUri())
+                .transform(new BlurTransformation(getApplicationContext(), 15))
+                .into(imageView, new Callback.EmptyCallback() {
+                    @Override
+                    public void onSuccess() {
+                        overlay.setVisibility(View.VISIBLE);
+                        imageView.setOnClickListener(__ -> openPhotoView(brewer.getImageUri()));
+                    }
+                });
     }
 
     private void openPhotoView(@NonNull String uri) {

@@ -28,6 +28,9 @@ import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.Locale;
+
+import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -162,6 +165,10 @@ public abstract class Brewer {
 
     public boolean hasDetails() {
         return hasValue(name());
+    }
+
+    public String getImageUri() {
+        return String.format(Locale.ROOT, Constants.BREWER_IMAGE_PATH, id());
     }
 
     // Equality
