@@ -13,8 +13,8 @@ android {
 
     defaultConfig {
         applicationId "quickbeer.android"
-        versionCode 1
-        versionName "1.0"
+        versionCode version_code
+        versionName "3.0.${version_code}"
 
         minSdkVersion 19
         targetSdkVersion 25

@@ -97,5 +97,6 @@
     <string name="about_privacy_policy">Privacy policy</string>
     <string name="about_source_code">Source code</string>
     <string name="about_quickbeer_license">QuickBeer License</string>
+    <string name="about_version">Version %s</string>
 
 </resources>

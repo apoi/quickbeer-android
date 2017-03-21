@@ -34,7 +34,8 @@
                 android:layout_margin="5dp">
 
                 <TextView
-                    android:text="Version 3.0.0"
+                    android:id="@+id/about_version"
+                    android:text="@string/about_version"
                     android:paddingBottom="30dp"
                     style="@style/BeerDetailsDescription" />
 

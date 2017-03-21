@@ -26,15 +26,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
+import quickbeer.android.BuildConfig;
 import quickbeer.android.R;
 
 import static butterknife.ButterKnife.bind;
 
 public class AboutDetailsFragment extends Fragment {
+
+    @BindView(R.id.about_version)
+    TextView aboutVersion;
 
     @BindView(R.id.about_source_row)
     View sourceRow;
@@ -64,6 +69,8 @@ public class AboutDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         unbinder.setIfNone(bind(this, view));
+
+        aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
 
         sourceRow.setOnClickListener(__ -> openUri("https://github.com/apoi/quickbeer-next"));
         applicationLicenseRow.setOnClickListener(__ -> openUri("https://ztesch.fi/quickbeer/license"));
