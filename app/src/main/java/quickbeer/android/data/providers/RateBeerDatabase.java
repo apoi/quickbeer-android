@@ -17,7 +17,11 @@
  */
 package quickbeer.android.data.providers;
 
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+
 import net.simonvt.schematic.annotation.Database;
+import net.simonvt.schematic.annotation.OnUpgrade;
 import net.simonvt.schematic.annotation.Table;
 
 import quickbeer.android.data.columns.BeerColumns;
@@ -30,11 +34,12 @@ import quickbeer.android.data.columns.NetworkRequestStatusColumns;
 import quickbeer.android.data.columns.ReviewColumns;
 import quickbeer.android.data.columns.ReviewListColumns;
 import quickbeer.android.data.columns.UserColumns;
+import timber.log.Timber;
 
 @Database(version = RateBeerDatabase.VERSION)
-final class RateBeerDatabase {
+public final class RateBeerDatabase {
 
-    static final int VERSION = 1;
+    public static final int VERSION = 2;
 
     @Table(NetworkRequestStatusColumns.class) static final String REQUEST_STATUSES = "requestStatuses";
     @Table(UserColumns.class) static final String USERS = "users";
@@ -49,4 +54,27 @@ final class RateBeerDatabase {
 
     @Table(ReviewColumns.class) static final String REVIEWS = "reviews";
     @Table(ReviewListColumns.class) static final String REVIEW_LISTS = "reviewsLists";
+
+    private static final String[] MIGRATIONS = {
+            // Version 1 -> 2: request format was changed
+            "DELETE FROM " + REQUEST_STATUSES + ";"
+    };
+
+    @OnUpgrade
+    public static void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        for (int i = oldVersion; i < newVersion; i++) {
+            String migration = MIGRATIONS[i - 1];
+            db.beginTransaction();
+
+            try {
+                db.execSQL(migration);
+                db.setTransactionSuccessful();
+            } catch (SQLException e) {
+                Timber.e(e, "Error executing database migration: %s", migration);
+            } finally {
+                db.endTransaction();
+            }
+        }
+    }
+
 }
