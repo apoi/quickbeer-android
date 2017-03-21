@@ -26,6 +26,8 @@ import java.util.Map;
 import io.reark.reark.data.DataStreamNotification;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -56,6 +58,7 @@ public class GlobalNotificationProvider {
 
         Subscription subscription = observable
                 .takeUntil(DataStreamNotification::isCompleted)
+                .observeOn(AndroidSchedulers.mainThread())
                 .doOnCompleted(() -> subscriptionList.remove(index))
                 .subscribe(notification -> {
                     switch (notification.getType()) {

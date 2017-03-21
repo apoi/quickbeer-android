@@ -199,7 +199,8 @@ public class BeerDetailsView extends NestedScrollView {
 
         ofObj(beer.tickValue())
                 .filter(__ -> beer.isTicked())
-                .ifSome(ratingBar::setRating);
+                .ifSome(ratingBar::setRating)
+                .ifNone(() -> ratingBar.setRating(0));
 
         ofObj(beer.tickDate())
                 .filter(__ -> beer.isTicked())
