@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.network.fetchers.FetcherBase;
@@ -102,6 +103,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         Subscription subscription = createNetworkObservable(query)
                 .subscribeOn(Schedulers.computation())
                 .toObservable()
+                .map(this::sort)
                 .flatMap(Observable::from)
                 .doOnNext(beerStore::put)
                 .map(Beer::id)
@@ -116,6 +118,31 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                         error -> Timber.e(error, "Error fetching beer search for %s", uri));
 
         addRequest(requestId, listenerId, subscription);
+    }
+
+    @SuppressWarnings({"CallToStringCompareTo", "IfMayBeConditional"})
+    @NonNull
+    protected List<Beer> sort(@NonNull List<Beer> list) {
+        Collections.sort(list, (first, second) -> {
+            String firstName = first.name();
+            String secondName = second.name();
+
+            if (firstName == null) {
+                if (secondName == null) {
+                    return first.id().compareTo(second.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondName == null) {
+                    return 1;
+                } else {
+                    return firstName.compareTo(secondName);
+                }
+            }
+        });
+
+        return list;
     }
 
     @NonNull

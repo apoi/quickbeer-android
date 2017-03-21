@@ -62,6 +62,12 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
+    protected List<Beer> sort(@NonNull List<Beer> list) {
+        return list;
+    }
+
+    @NonNull
+    @Override
     protected Single<List<Beer>> createNetworkObservable(@NonNull String styleId) {
         return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId));
     }

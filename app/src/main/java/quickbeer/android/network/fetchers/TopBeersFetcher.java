@@ -50,6 +50,12 @@ public class TopBeersFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
+    protected List<Beer> sort(@NonNull List<Beer> list) {
+        return list;
+    }
+
+    @NonNull
+    @Override
     protected Single<List<Beer>> createNetworkObservable(@NonNull String searchString) {
         // Disregard search, the top beers query is static
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"));

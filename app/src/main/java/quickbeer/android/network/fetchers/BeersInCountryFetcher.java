@@ -65,6 +65,12 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
+    protected List<Beer> sort(@NonNull List<Beer> list) {
+        return list;
+    }
+
+    @NonNull
+    @Override
     protected Single<List<Beer>> createNetworkObservable(@NonNull String countryId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "country");
         params.put("c", countryId);
