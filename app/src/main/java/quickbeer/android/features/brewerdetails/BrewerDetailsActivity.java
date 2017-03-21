@@ -17,6 +17,7 @@
  */
 package quickbeer.android.features.brewerdetails;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
@@ -40,8 +42,12 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.ViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.ToastProvider;
+import quickbeer.android.transformations.BlurTransformation;
+import quickbeer.android.transformations.ContainerLabelExtractor;
+import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
@@ -128,6 +134,8 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
 
         setBackNavigationEnabled(true);
 
+        imageView.setOnClickListener(__ -> get(toastProvider).showToast(R.string.brewer_details_no_photo));
+
         if (savedInstanceState != null) {
             brewerId = savedInstanceState.getInt("brewerId");
         } else {
@@ -141,6 +149,27 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
 
     private void setToolbarDetails(@NonNull Brewer brewer) {
         collapsingToolbar.setTitle(brewer.name());
+
+        String logoUrl = brewer.logo();
+
+        if (StringUtils.hasValue(logoUrl)) {
+            get(picasso)
+                    .load(brewer.logo())
+                    .transform(new BlurTransformation(getApplicationContext(), 15))
+                    .into(imageView, new Callback.EmptyCallback() {
+                        @Override
+                        public void onSuccess() {
+                            overlay.setVisibility(View.VISIBLE);
+                            imageView.setOnClickListener(__ -> openPhotoView(logoUrl));
+                        }
+                    });
+        }
+    }
+
+    private void openPhotoView(@NonNull String uri) {
+        Intent intent = new Intent(this, PhotoViewActivity.class);
+        intent.putExtra("source", uri);
+        startActivity(intent);
     }
 
     @Override

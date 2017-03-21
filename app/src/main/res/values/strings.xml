@@ -62,6 +62,9 @@
     <string name="tick_removed">Tick removed!</string>
     <string name="tick_failure">Ticking failed! Try again later.</string>
 
+    <!-- Brewer details -->
+    <string name="brewer_details_no_photo">No logo available for this brewer</string>
+
     <!-- Barcode scanner -->
     <string name="ok">OK</string>
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>

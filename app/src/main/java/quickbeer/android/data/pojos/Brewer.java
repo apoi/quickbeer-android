@@ -104,7 +104,7 @@ public abstract class Brewer {
 
     @Nullable
     @SerializedName("Opened")
-    public abstract ZonedDateTime opened();
+    public abstract ZonedDateTime founded();
 
     @Nullable
     @SerializedName("EnteredOn")
@@ -209,7 +209,7 @@ public abstract class Brewer {
 
         public abstract Builder barrels(@Nullable Integer barrels);
 
-        public abstract Builder opened(@Nullable ZonedDateTime opened);
+        public abstract Builder founded(@Nullable ZonedDateTime founded);
 
         public abstract Builder enteredOn(@Nullable ZonedDateTime enteredOn);
 

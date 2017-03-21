@@ -51,6 +51,7 @@ public final class StringUtils {
                 : first.equals(second);
     }
 
+    @NonNull
     public static String normalize(@Nullable String value) {
         if (value == null) {
             return "";
@@ -60,6 +61,19 @@ public final class StringUtils {
         normalized = BASE_GLYPH.matcher(normalized).replaceAll("");
 
         return normalized;
+    }
+
+    @NonNull
+    public static String removeTrailingSlash(@Nullable String value) {
+        if (value == null) {
+            return "";
+        }
+
+        if (value.endsWith("/")) {
+            return value.substring(0, value.length() - 1);
+        }
+
+        return value;
     }
 
 }

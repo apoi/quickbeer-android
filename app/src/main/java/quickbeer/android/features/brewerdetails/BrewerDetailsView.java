@@ -19,13 +19,14 @@ package quickbeer.android.features.brewerdetails;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,17 +62,47 @@ public class BrewerDetailsView extends NestedScrollView {
     @BindView(R.id.brewer_description)
     TextView brewerDescription;
 
+    @BindView(R.id.brewer_rating_column)
+    View brewerRatingColumn;
+
+    @BindView(R.id.brewer_rating)
+    TextView brewerRating;
+
     @BindView(R.id.brewer_founded_column)
     View brewerFoundedColumn;
 
     @BindView(R.id.brewer_founded)
     TextView brewerFounded;
 
-    @BindView(R.id.brewer_location)
-    TextView locationTextView;
+    @BindView(R.id.brewer_facebook_column)
+    View brewerFacebookColumn;
+
+    @BindView(R.id.brewer_facebook)
+    ImageView brewerFacebook;
+
+    @BindView(R.id.brewer_twitter_column)
+    View brewerTwitterColumn;
+
+    @BindView(R.id.brewer_twitter)
+    ImageView brewerTwitter;
 
     @BindView(R.id.brewer_location_row)
     View brewerLocationRow;
+
+    @BindView(R.id.brewer_location)
+    TextView brewerLocation;
+
+    @BindView(R.id.brewer_address_row)
+    View brewerAddressRow;
+
+    @BindView(R.id.brewer_address)
+    TextView brewerAddress;
+
+    @BindView(R.id.brewer_website_row)
+    View brewerWebsiteRow;
+
+    @BindView(R.id.brewer_website)
+    TextView brewerWebsite;
 
     @Nullable
     @Inject
@@ -108,22 +139,60 @@ public class BrewerDetailsView extends NestedScrollView {
                 StringUtils.value(brewer.description(),
                         resourceProvider.getString(R.string.no_description)));
 
-        ofObj(brewer.opened())
+        ofObj(brewer.score())
+                .map(__ -> notAvailableString())
+                .ifSome(brewerRating::setText);
+
+        ofObj(brewer.founded())
                 .map(ZonedDateTime::getYear)
+                .map(String::valueOf)
+                .orOption(this::notAvailableOption)
                 .ifSome(brewerFounded::setText);
+
+        ofObj(brewer.facebook())
+                .ifSome(facebook -> {
+                })
+                .ifNone(() -> {
+                });
+
+        ofObj(brewer.twitter())
+                .ifSome(twitter -> {
+                })
+                .ifNone(() -> {
+                });
 
         ofObj(brewer.countryId())
                 .map(countries::getItem)
                 .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
                 .map(Country::getName)
                 .map(country -> String.format("%s, %s", brewer.city(), country))
-                .orOption(this::notAvailableString)
-                .ifSome(locationTextView::setText);
+                .orOption(this::notAvailableOption)
+                .ifSome(brewerLocation::setText);
+
+        ofObj(brewer.address())
+                .orOption(this::notAvailableOption)
+                .ifSome(brewerAddress::setText);
+
+        ofObj(brewer.website())
+                .map(StringUtils::removeTrailingSlash)
+                .ifSome(website -> brewerWebsite.setOnClickListener(__ -> openWebsite(website)))
+                .orOption(this::notAvailableOption)
+                .ifSome(brewerWebsite::setText);
     }
 
     @NonNull
-    private Option<String> notAvailableString() {
-        return ofObj(get(resourceProvider).getString(R.string.not_available));
+    private Option<String> notAvailableOption() {
+        return ofObj(notAvailableString());
+    }
+
+    @NonNull
+    private String notAvailableString() {
+        return get(resourceProvider).getString(R.string.not_available);
+    }
+
+    private void openWebsite(@NonNull String uri) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+        getContext().startActivity(intent);
     }
 
     private void navigateToCountry(@NonNull Country country) {
