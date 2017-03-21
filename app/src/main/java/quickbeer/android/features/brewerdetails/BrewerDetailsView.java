@@ -59,20 +59,17 @@ import static polanski.option.Option.ofObj;
  */
 public class BrewerDetailsView extends NestedScrollView {
 
-    @BindView(R.id.brewer_description)
-    TextView brewerDescription;
-
-    @BindView(R.id.brewer_rating_column)
-    View brewerRatingColumn;
-
-    @BindView(R.id.brewer_rating)
-    TextView brewerRating;
-
     @BindView(R.id.brewer_founded_column)
     View brewerFoundedColumn;
 
     @BindView(R.id.brewer_founded)
     TextView brewerFounded;
+
+    @BindView(R.id.brewer_website_column)
+    View brewerWebsiteColumn;
+
+    @BindView(R.id.brewer_website)
+    ImageView brewerWebsite;
 
     @BindView(R.id.brewer_facebook_column)
     View brewerFacebookColumn;
@@ -97,12 +94,6 @@ public class BrewerDetailsView extends NestedScrollView {
 
     @BindView(R.id.brewer_address)
     TextView brewerAddress;
-
-    @BindView(R.id.brewer_website_row)
-    View brewerWebsiteRow;
-
-    @BindView(R.id.brewer_website)
-    TextView brewerWebsite;
 
     @Nullable
     @Inject
@@ -135,30 +126,41 @@ public class BrewerDetailsView extends NestedScrollView {
         checkNotNull(countries);
         checkNotNull(resourceProvider);
 
-        brewerDescription.setText(
-                StringUtils.value(brewer.description(),
-                        resourceProvider.getString(R.string.no_description)));
-
-        ofObj(brewer.score())
-                .map(__ -> notAvailableString())
-                .ifSome(brewerRating::setText);
-
         ofObj(brewer.founded())
                 .map(ZonedDateTime::getYear)
                 .map(String::valueOf)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerFounded::setText);
 
-        ofObj(brewer.facebook())
-                .ifSome(facebook -> {
+        ofObj(brewer.website())
+                .map(StringUtils::removeTrailingSlash)
+                .ifSome(website -> {
+                    brewerWebsite.setAlpha(1.0f);
+                    brewerWebsiteColumn.setOnClickListener(__ -> openUri(website));
                 })
                 .ifNone(() -> {
+                    brewerWebsite.setAlpha(0.2f);
+                    brewerWebsiteColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_website));
+                });
+
+        ofObj(brewer.facebook())
+                .ifSome(facebook -> {
+                    brewerFacebook.setAlpha(1.0f);
+                    brewerFacebookColumn.setOnClickListener(__ -> openUri(facebook));
+                })
+                .ifNone(() -> {
+                    brewerFacebook.setAlpha(0.2f);
+                    brewerFacebookColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_facebook));
                 });
 
         ofObj(brewer.twitter())
                 .ifSome(twitter -> {
+                    brewerTwitter.setAlpha(1.0f);
+                    brewerTwitterColumn.setOnClickListener(__ -> openUri(twitter));
                 })
                 .ifNone(() -> {
+                    brewerTwitter.setAlpha(0.2f);
+                    brewerTwitterColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_twitter));
                 });
 
         ofObj(brewer.countryId())
@@ -172,12 +174,6 @@ public class BrewerDetailsView extends NestedScrollView {
         ofObj(brewer.address())
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerAddress::setText);
-
-        ofObj(brewer.website())
-                .map(StringUtils::removeTrailingSlash)
-                .ifSome(website -> brewerWebsite.setOnClickListener(__ -> openWebsite(website)))
-                .orOption(this::notAvailableOption)
-                .ifSome(brewerWebsite::setText);
     }
 
     @NonNull
@@ -190,7 +186,7 @@ public class BrewerDetailsView extends NestedScrollView {
         return get(resourceProvider).getString(R.string.not_available);
     }
 
-    private void openWebsite(@NonNull String uri) {
+    private void openUri(@NonNull String uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         getContext().startActivity(intent);
     }

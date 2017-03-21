@@ -64,6 +64,9 @@
 
     <!-- Brewer details -->
     <string name="brewer_details_no_photo">No logo available for this brewer</string>
+    <string name="brewer_details_no_website">No website available</string>
+    <string name="brewer_details_no_facebook">Facebook page not available</string>
+    <string name="brewer_details_no_twitter">Twitter feed not available</string>
 
     <!-- Barcode scanner -->
     <string name="ok">OK</string>

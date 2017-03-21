@@ -31,23 +31,6 @@
                 style="@style/BeerDetailsRowLayout">
 
                 <LinearLayout
-                    android:id="@+id/brewer_rating_column"
-                    style="@style/BeerDetailsColumnLayout">
-
-                    <TextView
-                        style="@style/BeerDetailsTitle"
-                        android:text="Rating"/>
-
-                    <TextView
-                        style="@style/BeerDetailsValue"
-                        android:id="@+id/brewer_rating"
-                        tools:text="100/100"/>
-
-                </LinearLayout>
-
-                <include layout="@layout/beer_details_separator_vertical" />
-
-                <LinearLayout
                     android:id="@+id/brewer_founded_column"
                     style="@style/BeerDetailsColumnLayout">
 
@@ -61,6 +44,22 @@
                         tools:text="1882"/>
 
                 </LinearLayout>
+
+                <include layout="@layout/beer_details_separator_vertical" />
+
+                <RelativeLayout
+                    android:id="@+id/brewer_website_column"
+                    android:layout_gravity="center_vertical"
+                    style="@style/BeerDetailsColumnLayout">
+
+                    <ImageView
+                        android:id="@+id/brewer_website"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/logo_web"/>
+
+                </RelativeLayout>
 
                 <include layout="@layout/beer_details_separator_vertical" />
 
@@ -99,19 +98,6 @@
             <include layout="@layout/beer_details_separator_horizontal" />
 
             <LinearLayout
-                style="@style/BeerDetailsRowLayout"
-                android:layout_margin="5dp">
-
-                <TextView
-                    android:id="@+id/brewer_description"
-                    tools:text="This is brewer description."
-                    style="@style/BeerDetailsDescription" />
-
-            </LinearLayout>
-
-            <include layout="@layout/beer_details_separator_horizontal" />
-
-            <LinearLayout
                 android:id="@+id/brewer_location_row"
                 android:clickable="true"
                 style="@style/BeerDetailsRowLayout">
@@ -131,6 +117,7 @@
 
             <LinearLayout
                 android:id="@+id/brewer_address_row"
+                android:layout_marginBottom="5dp"
                 android:clickable="true"
                 style="@style/BeerDetailsRowLayout">
 
@@ -142,25 +129,6 @@
                     style="@style/BeerDetailsDescription"
                     android:id="@+id/brewer_address"
                     tools:text="Olutkuja 5"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/beer_details_separator_horizontal" />
-
-            <LinearLayout
-                android:id="@+id/brewer_website_row"
-                android:layout_marginBottom="5dp"
-                android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
-
-                <TextView
-                    style="@style/BeerDetailsTitle"
-                    android:text="Website"/>
-
-                <TextView
-                    style="@style/BeerDetailsValue"
-                    android:id="@+id/brewer_website"
-                    tools:text="http://some.brewer.website"/>
 
             </LinearLayout>
 
