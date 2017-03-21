@@ -42,6 +42,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:fontFamily="sans-serif"
+                android:visibility="gone"
                 android:textSize="@dimen/drawer_text_header"
                 android:text="BeerDrinker" />
 
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_800"
                 android:fontFamily="sans-serif"
+                android:visibility="gone"
                 android:textSize="@dimen/drawer_text_details"
                 android:text="3 reviewed beers" />
 
@@ -61,6 +63,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_800"
                 android:fontFamily="sans-serif"
+                android:visibility="gone"
                 android:textSize="@dimen/drawer_text_details"
                 android:text="1252 ticked beers" />
 
