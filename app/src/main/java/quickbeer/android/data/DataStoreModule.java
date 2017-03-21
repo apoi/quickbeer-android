@@ -51,19 +51,13 @@ public final class DataStoreModule {
     @Provides
     static DataLayer.GetLoginStatus provideLoginStatus(
             @NonNull DataLayer dataLayer) {
-        return dataLayer::getLoginResultStream;
+        return dataLayer::getLoginStatus;
     }
 
     @Provides
     static DataLayer.GetUser provideGetUser(
             @NonNull DataLayer dataLayer) {
         return dataLayer::getUser;
-    }
-
-    @Provides
-    static DataLayer.SetUser provideSetUser(
-            @NonNull DataLayer dataLayer) {
-        return dataLayer::setUser;
     }
 
     @Provides

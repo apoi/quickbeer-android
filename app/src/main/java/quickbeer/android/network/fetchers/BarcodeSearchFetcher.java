@@ -35,6 +35,8 @@ import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+
 public class BarcodeSearchFetcher extends BeerSearchFetcher {
 
     public BarcodeSearchFetcher(@NonNull NetworkApi networkApi,
@@ -46,14 +48,16 @@ public class BarcodeSearchFetcher extends BeerSearchFetcher {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
-        final String barcode = intent.getStringExtra("barcode");
+    public void fetch(@NonNull Intent intent, int listenerId) {
+        checkNotNull(intent);
 
-        if (barcode != null) {
-            fetchBeerSearch(barcode);
-        } else {
-            Timber.e("No barcode provided in the intent extras");
+        if (!intent.hasExtra("barcode")) {
+            Timber.e("Missing required fetch parameters!");
+            return;
         }
+
+        String barcode = intent.getStringExtra("barcode");
+        fetchBeerSearch(barcode, listenerId);
     }
 
     @NonNull

@@ -19,6 +19,8 @@ package quickbeer.android.data;
 
 import android.support.annotation.NonNull;
 
+import java.util.UUID;
+
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
@@ -64,4 +66,9 @@ public class DataLayerBase {
         this.brewerListStore = get(brewerListStore);
         this.brewerMetadataStore = get(brewerMetadataStore);
     }
+
+    protected static int createListenerId() {
+        return UUID.randomUUID().hashCode();
+    }
+
 }

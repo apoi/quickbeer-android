@@ -51,17 +51,15 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("countryId") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("countryId")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         String countryId = get(intent).getStringExtra("countryId");
-        int listenerId = intent.getIntExtra("listenerId", 0);
-
         fetchBeerSearch(countryId, listenerId);
     }
 

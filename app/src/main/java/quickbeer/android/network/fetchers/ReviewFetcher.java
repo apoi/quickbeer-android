@@ -73,16 +73,15 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("beerId") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("beerId")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         int beerId = intent.getIntExtra("beerId", 0);
-        int listenerId = intent.getIntExtra("listenerId", 0);
         String uri = getUniqueUri(beerId);
 
         if (isOngoingRequest(beerId)) {

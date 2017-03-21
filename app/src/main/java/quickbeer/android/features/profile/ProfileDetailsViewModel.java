@@ -23,7 +23,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
@@ -61,10 +60,9 @@ public class ProfileDetailsViewModel extends SimpleViewModel {
     }
 
     @NonNull
-    public Observable<List<Integer>> getTicks(@NonNull Integer userId) {
+    public Observable<List<Integer>> getTicksOnce(@NonNull Integer userId) {
         return getTickedBeers.call(String.valueOf(userId))
-                .filter(DataStreamNotification::isOnNext)
-                .map(DataStreamNotification::getValue)
+                .toObservable()
                 .map(ItemList::getItems);
     }
 

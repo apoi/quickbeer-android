@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
+import io.reark.reark.utils.Log;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
@@ -63,19 +64,25 @@ public class ServiceDataLayer extends DataLayerBase {
     public void processIntent(@NonNull Intent intent) {
         checkNotNull(intent);
 
-        final String serviceUriString = intent.getStringExtra("serviceUriString");
-
-        if (serviceUriString == null) {
-            Timber.e("No Uri defined");
+        if (!intent.hasExtra("serviceUriString")) {
+            Timber.e("No service uri defined");
             return;
         }
 
-        final Uri serviceUri = Uri.parse(serviceUriString);
-        final Fetcher<Uri> matchingFetcher = fetcherManager.findFetcher(serviceUri);
+        if (!intent.hasExtra("listenerId")) {
+            Timber.e("No listener id defined");
+            return;
+        }
+
+        String serviceUriString = intent.getStringExtra("serviceUriString");
+        int listenerId = intent.getIntExtra("listenerId", 0);
+
+        Uri serviceUri = Uri.parse(serviceUriString);
+        Fetcher<Uri> matchingFetcher = fetcherManager.findFetcher(serviceUri);
 
         if (matchingFetcher != null) {
             Timber.v("Fetcher found for " + serviceUri);
-            matchingFetcher.fetch(intent);
+            matchingFetcher.fetch(intent, listenerId);
         } else {
             Timber.e("Unknown Uri " + serviceUri);
         }

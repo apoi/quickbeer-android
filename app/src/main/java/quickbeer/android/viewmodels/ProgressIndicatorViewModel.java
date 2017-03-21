@@ -120,7 +120,7 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
     }
 
     private float toProgress(DataStreamNotification notification) {
-        if (notification.isFetchingStart()) {
+        if (notification.isOngoing()) {
             return 0.5f;
         } else {
             return 1.0f;

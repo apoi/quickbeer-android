@@ -31,7 +31,6 @@ import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import rx.subjects.PublishSubject;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -85,13 +84,12 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     @NonNull
     public Observable<Boolean> isLoginInProgress() {
         return getLoginStatus.call()
-                .doOnEach(status -> Timber.w("NOTIF " + status))
                 .doOnNext(this::handleErrors)
-                .map(DataStreamNotification::isFetchingStart);
+                .map(DataStreamNotification::isOngoing);
     }
 
     private void handleErrors(@NonNull DataStreamNotification<User> notification) {
-        if (notification.isFetchingError()) {
+        if (notification.isCompletedWithError()) {
             errorSubject.onNext(notification.getError());
         }
     }

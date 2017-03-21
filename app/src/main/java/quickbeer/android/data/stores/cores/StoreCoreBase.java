@@ -22,12 +22,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import java.util.List;
-
-import io.reark.reark.data.stores.StoreItem;
 import io.reark.reark.data.stores.cores.ContentProviderStoreCore;
 import quickbeer.android.data.providers.RateBeerProvider;
-import rx.Observable;
 
 public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U> {
 
@@ -38,16 +34,6 @@ public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U>
         super(contentResolver);
 
         this.gson = gson;
-    }
-
-    @NonNull
-    public Observable<List<U>> getAllOnce() {
-        return getAllOnce(getContentUri());
-    }
-
-    @NonNull
-    public Observable<U> getAllStream() {
-        return getStream().map(StoreItem::item);
     }
 
     @Override

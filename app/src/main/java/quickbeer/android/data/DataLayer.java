@@ -20,6 +20,7 @@ package quickbeer.android.data;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -55,8 +56,10 @@ import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.network.fetchers.TickBeerFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
+import rx.Single;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
 
@@ -90,25 +93,41 @@ public class DataLayer extends DataLayerBase {
 
     //// GET USER SETTINGS
 
-    public void login(@NonNull String username, @NonNull String password) {
+    @NonNull
+    public Observable<DataStreamNotification<User>> login(@NonNull String username, @NonNull String password) {
         Timber.v("login(%s)", get(username));
+        checkNotNull(password);
+
+        String uri = LoginFetcher.getUniqueUri();
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.LOGIN.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("username", username);
         intent.putExtra("password", password);
         context.startService(intent);
+
+        return getLoginStatus(listenerId);
     }
 
     @NonNull
-    public Observable<DataStreamNotification<User>> getLoginResultStream() {
-        Timber.v("getLoginResultStream()");
+    public Observable<DataStreamNotification<User>> getLoginStatus() {
+        // Note -- returns old and new statuses alike
+        return getLoginStatus(null);
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<User>> getLoginStatus(@Nullable Integer listenerId) {
+        Timber.v("getLoginStatus()");
 
         String uri = LoginFetcher.getUniqueUri();
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue)
+                        .filter(status -> status.forListener(listenerId));
 
         Observable<User> userObservable =
                 userStore.getOnceAndStream(Constants.DEFAULT_USER_ID)
@@ -123,10 +142,6 @@ public class DataLayer extends DataLayerBase {
         return userStore.getOnceAndStream(Constants.DEFAULT_USER_ID);
     }
 
-    public void setUser(@NonNull User user) {
-        userStore.put(get(user));
-    }
-
     //// GET BEER DETAILS
 
     @NonNull
@@ -136,14 +151,13 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Beer>> triggerFetchIfEmpty =
                 beerStore.getOnce(beerId)
+                        .toObservable()
                         .filter(option -> option.match(beer -> !beer.hasDetails(), () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Beer not cached, fetching");
                             fetchBeer(beerId);
                         });
 
-        // Does not emit a new notification when only beer metadata changes.
-        // This avoids unnecessary view redraws.
         return getBeerResultStream(beerId)
                 .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()))
                 .distinctUntilChanged();
@@ -157,7 +171,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses
 
         Observable<Beer> beerObservable =
                 beerStore.getOnceAndStream(beerId)
@@ -167,13 +181,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerObservable);
     }
 
-    private void fetchBeer(int beerId) {
+    private int fetchBeer(int beerId) {
         Timber.v("fetchBeer(%s)", get(beerId));
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.BEER.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("id", beerId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// ACCESS BREWER
@@ -201,7 +220,8 @@ public class DataLayer extends DataLayerBase {
     public Observable<List<String>> getBeerSearchQueriesOnce() {
         Timber.v("getBeerSearchQueriesOnce");
 
-        return beerListStore.getAllOnce()
+        return beerListStore.getOnce()
+                .toObservable()
                 .flatMap(Observable::from)
                 .map(ItemList::getKey)
                 .filter(search -> !search.startsWith(Constants.META_QUERY_PREFIX))
@@ -215,6 +235,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, searchString))
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
@@ -234,7 +255,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> beerSearchObservable =
                 beerListStore.getOnceAndStream(queryId)
@@ -244,13 +265,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerSearchObservable);
     }
 
-    private void fetchBeerSearch(@NonNull String searchString) {
+    private int fetchBeerSearch(@NonNull String searchString) {
         Timber.v("fetchBeerSearch(%s)", get(searchString));
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.SEARCH.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("searchString", searchString);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// BARCODE SEARCH
@@ -262,6 +288,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
@@ -281,7 +308,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> barcodeSearchObservable =
                 beerListStore.getOnceAndStream(queryId)
@@ -291,13 +318,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, barcodeSearchObservable);
     }
 
-    private void fetchBarcodeSearch(@NonNull String barcode) {
+    private int fetchBarcodeSearch(@NonNull String barcode) {
         Timber.v("fetchBarcodeSearch(%s)", get(barcode));
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.BARCODE.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("barcode", barcode);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// TOP BEERS
@@ -309,6 +341,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.TOP50))
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
@@ -328,7 +361,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> beerSearchObservable =
                 beerListStore.getOnceAndStream(queryId)
@@ -338,12 +371,17 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerSearchObservable);
     }
 
-    private void fetchTopBeers() {
+    private int fetchTopBeers() {
         Timber.v("fetchTopBeers");
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.TOP50.toString());
+        intent.putExtra("listenerId", listenerId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// BEERS IN COUNTRY
@@ -355,6 +393,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, countryId))
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
@@ -374,7 +413,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> beerSearchObservable =
                 beerListStore.getOnceAndStream(queryId)
@@ -384,13 +423,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerSearchObservable);
     }
 
-    private void fetchBeersInCountry(@NonNull String countryId) {
+    private int fetchBeersInCountry(@NonNull String countryId) {
         Timber.v("fetchBeersInCountry");
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.COUNTRY.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("countryId", countryId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// BEERS IN STYLE
@@ -402,6 +446,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.STYLE, styleId))
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
@@ -421,7 +466,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> beerSearchObservable =
                 beerListStore.getOnceAndStream(queryId)
@@ -431,13 +476,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, beerSearchObservable);
     }
 
-    private void fetchBeersInStyle(@NonNull String styleId) {
+    private int fetchBeersInStyle(@NonNull String styleId) {
         Timber.v("fetchBeersInStyle(%s)", get(styleId));
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.STYLE.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("styleId", styleId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// REVIEWS
@@ -458,6 +508,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<Integer>>> triggerFetchIfEmpty =
                 reviewListStore.getOnce(beerId)
+                        .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Reviews not cached, fetching");
@@ -476,7 +527,7 @@ public class DataLayer extends DataLayerBase {
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<Integer>> reviewListObservable =
                 reviewListStore.getOnceAndStream(beerId)
@@ -486,49 +537,62 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, reviewListObservable);
     }
 
-    private void fetchReviews(int beerId) {
+    private int fetchReviews(int beerId) {
         Timber.v("fetchReviews(%s)", beerId);
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("beerId", beerId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// TICKS
 
     @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull String userId) {
+    public Single<ItemList<Integer>> getTickedBeers(@NonNull String userId) {
         Timber.v("getTickedBeers(%s)", get(userId));
 
-        return beerStore.getTickedIds()
-                .map(ItemList::<String>create)
-                .map(DataStreamNotification::onNext);
+        return beerStore.getTickedIdsOnce()
+                .map(ItemList::<Integer>create);
     }
 
-    public void fetchTickedBeers(@NonNull String userId) {
+    public int fetchTickedBeers(@NonNull String userId) {
         Timber.v("fetchTickedBeers(%s)", get(userId));
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.TICKS.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("userId", userId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     public Observable<DataStreamNotification<Void>> tickBeer(int beerId, int rating) {
         Timber.v("tickBeer(%s, %s)", beerId, rating);
 
+        int listenerId = createListenerId();
+
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.TICK.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("beerId", beerId);
         intent.putExtra("rating", rating);
         context.startService(intent);
 
-        String uri = TickBeerFetcher.getUniqueUri(beerId);
+        String uri = TickBeerFetcher.getUniqueUri(beerId, rating);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))
-                        .compose(RxUtils::pickValue);
+                        .compose(RxUtils::pickValue)
+                        .filter(status -> status.forListener(listenerId));
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, Observable.never());
@@ -543,6 +607,7 @@ public class DataLayer extends DataLayerBase {
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Brewer>> triggerFetchIfEmpty =
                 brewerStore.getOnce(brewerId)
+                        .toObservable()
                         .filter(option -> option.match(brewer -> !brewer.hasDetails(), () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Brewer not cached, fetching");
@@ -572,13 +637,18 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, brewerObservable);
     }
 
-    private void fetchBrewer(int brewerId) {
+    private int fetchBrewer(int brewerId) {
         Timber.v("fetchBrewer(%s)", brewerId);
+
+        int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.BREWER.toString());
+        intent.putExtra("listenerId", listenerId);
         intent.putExtra("id", brewerId);
         context.startService(intent);
+
+        return listenerId;
     }
 
     //// ACCESS BREWER
@@ -603,7 +673,7 @@ public class DataLayer extends DataLayerBase {
     //// INTERFACES
 
     public interface Login {
-        void call(@NonNull String username, @NonNull String password);
+        Observable<DataStreamNotification<User>> call(@NonNull String username, @NonNull String password);
     }
 
     public interface GetLoginStatus {
@@ -694,7 +764,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetTickedBeers {
         @NonNull
-        Observable<DataStreamNotification<ItemList<String>>> call(String userId);
+        Single<ItemList<Integer>> call(String userId);
     }
 
     public interface GetBrewer {

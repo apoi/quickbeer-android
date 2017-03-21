@@ -70,7 +70,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
 
         // Construct progress status. Completed with value means we'll receive onNext.
         subscription.add(sharedObservable
-                .filter(notification -> !notification.isFetchingCompletedWithValue())
+                .filter(notification -> !notification.isCompletedWithValue())
                 .map(toProgressStatus())
                 .startWith(ProgressStatus.LOADING)
                 .distinctUntilChanged()
@@ -79,7 +79,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
         // Clear list on fetching start
         subscription.add(sharedObservable
                 .subscribeOn(Schedulers.computation())
-                .filter(DataStreamNotification::isFetchingStart)
+                .filter(DataStreamNotification::isOngoing)
                 .map(__ -> Collections.<BrewerViewModel>emptyList())
                 .subscribe(brewers::onNext));
 

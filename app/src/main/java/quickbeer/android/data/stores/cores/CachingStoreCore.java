@@ -19,9 +19,10 @@ package quickbeer.android.data.stores.cores;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import io.reark.reark.data.stores.interfaces.StoreCoreInterface;
-import rx.Completable;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
@@ -44,7 +45,7 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
         this.memoryCore = get(memoryCore);
 
         // Subscribe to all updates to keep cache up-to-date
-        providerCore.getAllStream()
+        providerCore.getStream()
                 .subscribeOn(Schedulers.io())
                 .onBackpressureBuffer()
                 .subscribe(item -> memoryCore.put(getIdForItem.call(item), item));
@@ -63,7 +64,7 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
 
     @NonNull
     @Override
-    public Completable delete(@NonNull T id) {
+    public Single<Boolean> delete(@NonNull T id) {
         return providerCore.delete(id);
     }
 
@@ -78,7 +79,20 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
 
     @NonNull
     @Override
+    public Observable<List<U>> getCached() {
+        // This could also cache the results?
+        return providerCore.getCached();
+    }
+
+    @NonNull
+    @Override
     public Observable<U> getStream(@NonNull T id) {
         return providerCore.getStream(id);
+    }
+
+    @NonNull
+    @Override
+    public Observable<U> getStream() {
+        return providerCore.getStream();
     }
 }

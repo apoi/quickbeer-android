@@ -74,17 +74,15 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("searchString") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("searchString")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         String searchString = get(intent).getStringExtra("searchString");
-        int listenerId = intent.getIntExtra("listenerId", 0);
-
         fetchBeerSearch(StringUtils.normalize(searchString), listenerId);
     }
 

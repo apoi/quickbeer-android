@@ -19,12 +19,9 @@ package quickbeer.android.data.stores;
 
 import android.support.annotation.NonNull;
 
-import java.util.List;
-
 import io.reark.reark.data.stores.DefaultStore;
 import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.StoreCoreBase;
-import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -32,9 +29,6 @@ class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
 
     @NonNull
     private final CachingStoreCore<T, U> core;
-
-    @NonNull
-    private final GetNullSafe<U, R> getNullSafe;
 
     StoreBase(@NonNull CachingStoreCore<T, U> core,
               @NonNull GetIdForItem<T, U> getIdForItem,
@@ -46,7 +40,6 @@ class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
                 get(getEmptyValue));
 
         this.core = core;
-        this.getNullSafe = getNullSafe;
     }
 
     @NonNull
@@ -54,16 +47,4 @@ class StoreBase<T, U, R> extends DefaultStore<T, U, R> {
         return core.getProviderCore();
     }
 
-    @NonNull
-    public Observable<List<U>> getAllOnce() {
-        return getProviderCore()
-                .getAllOnce();
-    }
-
-    @NonNull
-    public Observable<R> getAllStream() {
-        return getProviderCore()
-                .getAllStream()
-                .map(getNullSafe::call);
-    }
 }

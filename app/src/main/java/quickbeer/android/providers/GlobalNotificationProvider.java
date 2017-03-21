@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.reark.reark.data.DataStreamNotification;
-import quickbeer.android.utils.DataModelUtils;
 import rx.Observable;
 import rx.Subscription;
 import timber.log.Timber;
@@ -56,18 +55,18 @@ public class GlobalNotificationProvider {
         int index = ++counter;
 
         Subscription subscription = observable
-                .takeUntil(DataModelUtils::isRequestFinishedNotification)
+                .takeUntil(DataStreamNotification::isCompleted)
                 .doOnCompleted(() -> subscriptionList.remove(index))
                 .subscribe(notification -> {
                     switch (notification.getType()) {
-                        case FETCHING_COMPLETED_WITH_VALUE:
-                        case FETCHING_COMPLETED_WITHOUT_VALUE:
+                        case COMPLETED_WITH_VALUE:
+                        case COMPLETED_WITHOUT_VALUE:
                             showToast(successToast);
                             break;
-                        case FETCHING_COMPLETED_WITH_ERROR:
+                        case COMPLETED_WITH_ERROR:
                             showToast(failureToast);
                             break;
-                        case FETCHING_START:
+                        case ONGOING:
                         case ON_NEXT:
                             break;
                     }

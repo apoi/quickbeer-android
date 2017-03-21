@@ -28,8 +28,10 @@ import rx.subscriptions.CompositeSubscription;
 
 public class TickedBeersFragment extends BeerSearchFragment {
 
+    /*
     @Inject
     DataLayer.GetTickedBeers getTickedBeers;
+    */
 
     @Inject
     DataLayer.GetUser getUser;

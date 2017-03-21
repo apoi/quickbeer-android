@@ -32,9 +32,6 @@ import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import rx.Single;
 import rx.functions.Action1;
-import timber.log.Timber;
-
-import static io.reark.reark.utils.Preconditions.checkNotNull;
 
 public class TopBeersFetcher extends BeerSearchFetcher {
 
@@ -47,16 +44,7 @@ public class TopBeersFetcher extends BeerSearchFetcher {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
-        checkNotNull(intent);
-
-        if (!intent.hasExtra("listenerId")) {
-            Timber.e("Missing required fetch parameters!");
-            return;
-        }
-
-        int listenerId = intent.getIntExtra("listenerId", 0);
-
+    public void fetch(@NonNull Intent intent, int listenerId) {
         fetchBeerSearch("", listenerId);
     }
 

@@ -50,9 +50,9 @@ public abstract class BaseViewModel extends AbstractViewModel {
     @NonNull
     static Func1<DataStreamNotification, ProgressStatus> toProgressStatus() {
         return notification -> {
-            if (notification.isFetchingStart()) {
+            if (notification.isOngoing()) {
                 return ProgressStatus.LOADING;
-            } else if (notification.isFetchingError()) {
+            } else if (notification.isCompletedWithError()) {
                 return ProgressStatus.ERROR;
             } else {
                 return ProgressStatus.IDLE;

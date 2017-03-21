@@ -30,7 +30,6 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reark.reark.data.stores.StoreItem;
 import quickbeer.android.data.columns.BrewerMetadataColumns;
 import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.providers.RateBeerProvider;
@@ -71,26 +70,6 @@ public class BrewerMetadataStoreCore extends StoreCoreBase<Integer, BrewerMetada
                     return idList;
                 })
                 .subscribeOn(Schedulers.io());
-    }
-
-    @NonNull
-    public Observable<Integer> getAccessedIdsStream(@NonNull ZonedDateTime date) {
-        return getStream()
-                .map(StoreItem::item)
-                .filter(item -> DateUtils.isValidDate(item.accessed()))
-                .distinctUntilChanged(new Func1<BrewerMetadata, Object>() {
-                    // Access date as key object indicating distinction
-                    private ZonedDateTime latestAccess = date;
-
-                    @Override
-                    public ZonedDateTime call(BrewerMetadata item) {
-                        if (item.accessed().isAfter(latestAccess)) {
-                            latestAccess = item.accessed();
-                        }
-                        return latestAccess;
-                    }
-                })
-                .map(BrewerMetadata::brewerId);
     }
 
     @NonNull

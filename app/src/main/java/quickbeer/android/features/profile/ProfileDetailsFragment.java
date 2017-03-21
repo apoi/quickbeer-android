@@ -71,7 +71,7 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
             subscription.add(viewModel()
                     .getUser()
                     .map(User::id)
-                    .switchMap(viewModel()::getTicks)
+                    .switchMap(viewModel()::getTicksOnce)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileDetailsFragment.this::setTickedBeers, Timber::e));
         }

@@ -83,17 +83,16 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("beerId") || !intent.hasExtra("rating") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("beerId") || !intent.hasExtra("rating")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         int beerId = intent.getIntExtra("beerId", 0);
         int rating = intent.getIntExtra("rating", 0);
-        int listenerId = intent.getIntExtra("listenerId", 0);
         String uri = getUniqueUri(beerId, rating);
         int requestId = uri.hashCode();
 

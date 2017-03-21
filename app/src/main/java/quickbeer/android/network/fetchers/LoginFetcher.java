@@ -64,17 +64,16 @@ public class LoginFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("username") || !intent.hasExtra("password")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         String uri = getUniqueUri();
         int requestId = uri.hashCode();
-        int listenerId = intent.getIntExtra("listenerId", 0);
 
         if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for login");

@@ -31,7 +31,6 @@ import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.ResourceProvider;
-import quickbeer.android.utils.DataModelUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
@@ -121,17 +120,17 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                 resourceProvider.getString(R.string.tick_failure));
 
         tickSubscription = observable
-                .takeUntil(DataModelUtils::isRequestFinishedNotification)
+                .takeUntil(DataStreamNotification::isCompleted)
                 .subscribe(notification -> {
                     switch (notification.getType()) {
-                        case FETCHING_COMPLETED_WITH_VALUE:
-                        case FETCHING_COMPLETED_WITHOUT_VALUE:
+                        case COMPLETED_WITH_VALUE:
+                        case COMPLETED_WITHOUT_VALUE:
                             tickSuccessSubject.onNext(true);
                             break;
-                        case FETCHING_COMPLETED_WITH_ERROR:
+                        case COMPLETED_WITH_ERROR:
                             tickSuccessSubject.onNext(false);
                             break;
-                        case FETCHING_START:
+                        case ONGOING:
                         case ON_NEXT:
                             break;
                     }

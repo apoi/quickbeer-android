@@ -67,16 +67,15 @@ public class BrewerFetcher extends FetcherBase<Uri> {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("id") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("id")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         int brewerId = get(intent).getIntExtra("id", 0);
-        int listenerId = intent.getIntExtra("listenerId", 0);
         String uri = getUniqueUri(brewerId);
 
         if (isOngoingRequest(brewerId)) {

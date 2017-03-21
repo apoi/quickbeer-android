@@ -49,17 +49,15 @@ public class TicksFetcher extends BeerSearchFetcher {
     }
 
     @Override
-    public void fetch(@NonNull Intent intent) {
+    public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("userId") || !intent.hasExtra("listenerId")) {
+        if (!intent.hasExtra("userId")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         String userId = get(intent).getStringExtra("userId");
-        int listenerId = intent.getIntExtra("listenerId", 0);
-
         fetchBeerSearch(userId, listenerId);
     }
 
