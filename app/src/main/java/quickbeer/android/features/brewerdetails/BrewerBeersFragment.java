@@ -17,16 +17,19 @@
  */
 package quickbeer.android.features.brewerdetails;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
 
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import timber.log.Timber;
 
-import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 public class BrewerBeersFragment  extends BeerListFragment {
 
@@ -34,11 +37,25 @@ public class BrewerBeersFragment  extends BeerListFragment {
     @Inject
     BrewerBeersViewModel brewerBeersViewModel;
 
+    private int brewerId;
+
+    public static Fragment newInstance(int brewerId) {
+        BrewerBeersFragment fragment = new BrewerBeersFragment();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        fragment.brewerId = brewerId;
+        return fragment;
+    }
+
     @Override
     protected void inject() {
-        super.inject();
-
         getComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        get(brewerBeersViewModel).setBrewerId(brewerId);
     }
 
     @NonNull
@@ -51,4 +68,5 @@ public class BrewerBeersFragment  extends BeerListFragment {
     protected void onQuery(@NonNull String query) {
         // Doesn't react to search view.
     }
+
 }

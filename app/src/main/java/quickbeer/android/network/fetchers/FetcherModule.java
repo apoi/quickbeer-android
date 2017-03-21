@@ -167,6 +167,21 @@ public final class FetcherModule {
     }
 
     @Provides
+    @Named(Fetchers.BREWER_BEERS)
+    static Fetcher<Uri> provideBrewerBeersFetcher(
+            @NonNull NetworkApi networkApi,
+            @NonNull NetworkUtils networkUtils,
+            @NonNull NetworkRequestStatusStore requestStatusStore,
+            @NonNull BeerStore beerStore,
+            @NonNull BeerListStore beerListStore) {
+        return new BrewerBeersFetcher(networkApi,
+                networkUtils,
+                requestStatusStore::put,
+                beerStore,
+                beerListStore);
+    }
+
+    @Provides
     @Named(Fetchers.REVIEW)
     static Fetcher<Uri> provideReviewFetcher(
             @NonNull NetworkApi networkApi,
@@ -221,6 +236,7 @@ public final class FetcherModule {
             @Named(Fetchers.BEERS_IN_COUNTRY) @NonNull Fetcher<Uri> beersInCountryFetcher,
             @Named(Fetchers.BEERS_IN_STYLE) @NonNull Fetcher<Uri> beersInStyleFetcher,
             @Named(Fetchers.BREWER) @NonNull Fetcher<Uri> brewerFetcher,
+            @Named(Fetchers.BREWER_BEERS) @NonNull Fetcher<Uri> brewerBeersFetcher,
             @Named(Fetchers.REVIEW) @NonNull Fetcher<Uri> reviewFetcher,
             @Named(Fetchers.TICKS) @NonNull Fetcher<Uri> ticksFetcher,
             @Named(Fetchers.TICK) @NonNull Fetcher<Uri> tickBeerFetcher) {
@@ -233,6 +249,7 @@ public final class FetcherModule {
                 beersInCountryFetcher,
                 beersInStyleFetcher,
                 brewerFetcher,
+                brewerBeersFetcher,
                 reviewFetcher,
                 ticksFetcher,
                 tickBeerFetcher

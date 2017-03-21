@@ -42,8 +42,6 @@ public class BeerTabFragment extends BeerListFragment {
 
     @Override
     protected void inject() {
-        super.inject();
-
         getComponent().inject(this);
     }
 

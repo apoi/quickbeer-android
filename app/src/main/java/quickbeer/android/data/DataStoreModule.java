@@ -79,12 +79,6 @@ public final class DataStoreModule {
     }
 
     @Provides
-    static DataLayer.GetBrewer provideGetBrewer(
-            @NonNull DataLayer dataLayer) {
-        return dataLayer::getBrewer;
-    }
-
-    @Provides
     static DataLayer.AccessBrewer provideAccessBrewer(
             @NonNull DataLayer dataLayer) {
         return dataLayer::accessBrewer;
@@ -161,6 +155,18 @@ public final class DataStoreModule {
     static DataLayer.TickBeer provideTickBeer(
             @NonNull DataLayer dataLayer) {
         return dataLayer::tickBeer;
+    }
+
+    @Provides
+    static DataLayer.GetBrewer provideGetBrewer(
+            @NonNull DataLayer dataLayer) {
+        return dataLayer::getBrewer;
+    }
+
+    @Provides
+    static DataLayer.GetBrewerBeers provideGetBrewerBeers(
+            @NonNull DataLayer dataLayer) {
+        return dataLayer::getBrewerBeers;
     }
 
     @Provides

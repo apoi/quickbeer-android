@@ -45,6 +45,15 @@ public class BrewerDetailsPagerFragment extends Fragment {
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
+    private int brewerId;
+
+    public static Fragment newInstance(int brewerId) {
+        BrewerDetailsPagerFragment fragment = new BrewerDetailsPagerFragment();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        fragment.brewerId = brewerId;
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.brewer_details_fragment_pager, container, false);
@@ -61,7 +70,7 @@ public class BrewerDetailsPagerFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewPager.setAdapter(new BrewerDetailsPagerAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new BrewerDetailsPagerAdapter(getChildFragmentManager(), brewerId));
         tabLayout.setupWithViewPager(viewPager);
     }
 
@@ -71,4 +80,5 @@ public class BrewerDetailsPagerFragment extends Fragment {
                 .ifSome(Unbinder::unbind);
         super.onDestroyView();
     }
+
 }

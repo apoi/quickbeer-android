@@ -20,6 +20,7 @@ package quickbeer.android.features.brewerdetails;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 public class BrewerDetailsFragment extends BindingBaseFragment {
 
@@ -54,6 +56,8 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
+    private int brewerId;
+
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
@@ -65,6 +69,13 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
                     .subscribe(detailsView::setBrewer, Timber::e));
         }
     };
+
+    public static Fragment newInstance(int brewerId) {
+        BrewerDetailsFragment fragment = new BrewerDetailsFragment();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        fragment.brewerId = brewerId;
+        return fragment;
+    }
 
     @Override
     protected void inject() {
@@ -85,8 +96,6 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        int brewerId = ((BrewerDetailsActivity) getActivity()).getBrewerId();
 
         viewModel().setBrewerId(brewerId);
     }

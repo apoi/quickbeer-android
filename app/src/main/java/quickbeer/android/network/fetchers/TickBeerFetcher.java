@@ -167,7 +167,7 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     @NonNull
     @Override
     public Uri getServiceUri() {
-        return RateBeerService.TICK;
+        return RateBeerService.TICK_BEER;
     }
 
     @NonNull

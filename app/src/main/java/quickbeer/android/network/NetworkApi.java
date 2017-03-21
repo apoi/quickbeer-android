@@ -106,4 +106,9 @@ public class NetworkApi {
                 .getBrewer(params)
                 .map(list -> list.get(0)); // API returns a list of one brewer
     }
+
+    public Single<List<Beer>> getBrewerBeers(Map<String, String> params) {
+        return rateBeerService
+                .getBrewerBeers(params);
+    }
 }

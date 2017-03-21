@@ -27,16 +27,30 @@ import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import rx.Observable;
 
+import static io.reark.reark.utils.Preconditions.get;
+
 public class BrewerBeersViewModel extends BeerListViewModel {
 
+    @NonNull
+    private final DataLayer.GetBrewerBeers getBrewerBeers;
+
+    private int brewerId;
+
     @Inject
-    public BrewerBeersViewModel(@NonNull DataLayer.GetBeer getBeer) {
+    public BrewerBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                @NonNull DataLayer.GetBrewerBeers getBrewerBeers) {
         super(getBeer);
+
+        this.getBrewerBeers = get(getBrewerBeers);
+    }
+
+    public void setBrewerId(int brewerId) {
+        this.brewerId = brewerId;
     }
 
     @NonNull
     @Override
     protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        return Observable.empty();
+        return get(getBrewerBeers).call(String.valueOf(brewerId));
     }
 }

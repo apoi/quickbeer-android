@@ -55,6 +55,8 @@ public interface Constants {
 
         String BREWER = "brewerFetcher";
 
+        String BREWER_BEERS = "brewerBeersFetcher";
+
         String REVIEW = "reviewFetcher";
 
         String TICKS = "ticksFetcher";

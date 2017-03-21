@@ -142,7 +142,7 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
             brewerId = getIntent().getIntExtra("brewerId", 0);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BrewerDetailsPagerFragment())
+                    .add(R.id.container, BrewerDetailsPagerFragment.newInstance(brewerId))
                     .commit();
         }
     }
@@ -193,10 +193,6 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("brewerId", brewerId);
-    }
-
-    public int getBrewerId() {
-        return brewerId;
     }
 
     @Override

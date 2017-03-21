@@ -36,17 +36,18 @@ import rx.Observable;
 import rx.Single;
 
 public interface RateBeerService {
-    Uri LOGIN   = Uri.parse("__login");
-    Uri BEER    = Uri.parse("__beer");
-    Uri SEARCH  = Uri.parse("__search");
-    Uri BARCODE = Uri.parse("__barcode");
-    Uri TOP50   = Uri.parse("__top50");
-    Uri COUNTRY = Uri.parse("__country");
-    Uri STYLE   = Uri.parse("__style");
-    Uri REVIEWS = Uri.parse("__reviews");
-    Uri TICKS   = Uri.parse("__ticks");
-    Uri TICK    = Uri.parse("__tick");
-    Uri BREWER  = Uri.parse("__brewer");
+    Uri LOGIN        = Uri.parse("__login");
+    Uri BEER         = Uri.parse("__beer");
+    Uri SEARCH       = Uri.parse("__search");
+    Uri BARCODE      = Uri.parse("__barcode");
+    Uri TOP50        = Uri.parse("__top50");
+    Uri COUNTRY      = Uri.parse("__country");
+    Uri STYLE        = Uri.parse("__style");
+    Uri REVIEWS      = Uri.parse("__reviews");
+    Uri TICKS        = Uri.parse("__ticks");
+    Uri TICK_BEER    = Uri.parse("__tick_beer");
+    Uri BREWER       = Uri.parse("__brewer");
+    Uri BREWER_BEERS = Uri.parse("__brewer_beers");
 
     @FormUrlEncoded
     @POST("/Signin_r.asp")
@@ -80,4 +81,7 @@ public interface RateBeerService {
 
     @GET("/json/bi.asp")
     Single<List<Brewer>> getBrewer(@QueryMap Map<String, String> params);
+
+    @GET("/json/bw.asp")
+    Single<List<Beer>> getBrewerBeers(@QueryMap Map<String, String> params);
 }

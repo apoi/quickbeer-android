@@ -581,7 +581,7 @@ public class DataLayer extends DataLayerBase {
         int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("serviceUriString", RateBeerService.TICK.toString());
+        intent.putExtra("serviceUriString", RateBeerService.TICK_BEER.toString());
         intent.putExtra("listenerId", listenerId);
         intent.putExtra("beerId", beerId);
         intent.putExtra("rating", rating);
@@ -646,6 +646,59 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.BREWER.toString());
         intent.putExtra("listenerId", listenerId);
         intent.putExtra("id", brewerId);
+        context.startService(intent);
+
+        return listenerId;
+    }
+
+    //// BREWER'S BEERS
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getBrewerBeers(@NonNull String brewerId) {
+        Timber.v("getBrewerBeers(%s)", get(brewerId));
+
+        // Trigger a fetch only if there was no cached result
+        Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
+                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BREWER_BEERS, brewerId))
+                        .toObservable()
+                        .filter(RxUtils::isNoneOrEmpty)
+                        .doOnNext(__ -> {
+                            Timber.v("Search not cached, fetching");
+                            fetchBrewerBeers(brewerId);
+                        });
+
+        return getBrewerBeersResultStream(brewerId)
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> getBrewerBeersResultStream(@NonNull String brewerId) {
+        Timber.v("getBrewerBeersResultStream(%s)", get(brewerId));
+
+        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.BREWER_BEERS, brewerId);
+        String uri = BeerSearchFetcher.getUniqueUri(queryId);
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue);
+
+        Observable<ItemList<String>> beerSearchObservable =
+                beerListStore.getOnceAndStream(queryId)
+                        .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, beerSearchObservable);
+    }
+
+    private int fetchBrewerBeers(@NonNull String brewerId) {
+        Timber.v("fetchBrewerBeers(%s)", brewerId);
+
+        int listenerId = createListenerId();
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.BREWER_BEERS.toString());
+        intent.putExtra("listenerId", listenerId);
+        intent.putExtra("brewerId", brewerId);
         context.startService(intent);
 
         return listenerId;
@@ -770,6 +823,11 @@ public class DataLayer extends DataLayerBase {
     public interface GetBrewer {
         @NonNull
         Observable<DataStreamNotification<Brewer>> call(int brewerId);
+    }
+
+    public interface GetBrewerBeers {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call(@NonNull String brewerId);
     }
 
 }
