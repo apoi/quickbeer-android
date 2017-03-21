@@ -24,6 +24,7 @@ import android.view.MenuItem;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
+import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
@@ -62,8 +63,6 @@ public class HomeActivity extends ListActivity {
 
         if (menuItem.getItemId() == R.id.nav_home) {
             navigationProvider.navigateAllBack();
-        } else if (menuItem.getItemId() == R.id.nav_about) {
-            navigationProvider.navigateWithNewActivity(menuItem);
         } else {
             super.navigateTo(menuItem);
         }

@@ -37,6 +37,12 @@
 
         <activity
             android:name=".features.profile.ProfileActivity"
+            android:label="@string/profile"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".features.about.AboutActivity"
+            android:label="@string/about"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity

@@ -30,6 +30,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.viewmodels.SearchViewViewModel;
@@ -151,7 +152,13 @@ public class ListActivity extends BindingDrawerActivity {
 
     @Override
     protected void navigateTo(@NonNull MenuItem menuItem) {
-        get(navigationProvider).navigateWithCurrentActivity(menuItem);
+        checkNotNull(navigationProvider);
+
+        if (menuItem.getItemId() == R.id.nav_about) {
+            navigationProvider.launchActivity(AboutActivity.class);
+        } else {
+            navigationProvider.navigateWithCurrentActivity(menuItem);
+        }
     }
 
     @Override

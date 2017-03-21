@@ -21,6 +21,7 @@ import dagger.Subcomponent;
 import quickbeer.android.activity.base.SearchActivity;
 import quickbeer.android.activity.base.SearchBarActivity;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
+import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.features.beerdetails.BeerDetailsView;
 import quickbeer.android.features.beerdetails.BeerReviewsViewHolder;
@@ -41,7 +42,9 @@ public interface ActivityComponent {
 
     void inject(HomeActivity homeActivity);
 
-    void inject(ProfileActivity homeActivity);
+    void inject(ProfileActivity profileActivity);
+
+    void inject(AboutActivity aboutActivity);
 
     void inject(ListActivity listActivity);
 

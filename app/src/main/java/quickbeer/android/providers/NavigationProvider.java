@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import quickbeer.android.R;
+import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.about.AboutDetailsFragment;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.home.HomeFragment;
@@ -42,8 +43,8 @@ import quickbeer.android.features.list.fragments.BeersInStyleFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
-import quickbeer.android.features.profile.ProfileLoginFragment;
 import quickbeer.android.features.profile.ProfileDetailsFragment;
+import quickbeer.android.features.profile.ProfileLoginFragment;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -187,6 +188,11 @@ public final class NavigationProvider {
     }
 
     public void navigateWithNewActivity(@NonNull MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.nav_about) {
+            launchActivity(AboutActivity.class);
+            return;
+        }
+
         Intent intent;
 
         if (menuItem.getItemId() == R.id.nav_home) {
@@ -208,6 +214,11 @@ public final class NavigationProvider {
         } else {
             clearToPage(menuItem.getItemId());
         }
+    }
+
+    public void launchActivity(Class<?> activityClass) {
+        Intent intent = new Intent(activity, activityClass);
+        activity.startActivity(intent);
     }
 
     @NonNull
