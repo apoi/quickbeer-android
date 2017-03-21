@@ -84,11 +84,17 @@ public class BrewerDetailsView extends NestedScrollView {
     @BindView(R.id.brewer_twitter)
     ImageView brewerTwitter;
 
-    @BindView(R.id.brewer_location_row)
-    View brewerLocationRow;
+    @BindView(R.id.brewer_country_row)
+    View brewerCountryRow;
 
-    @BindView(R.id.brewer_location)
-    TextView brewerLocation;
+    @BindView(R.id.brewer_country)
+    TextView brewerCountry;
+
+    @BindView(R.id.brewer_city_row)
+    View brewerCityRow;
+
+    @BindView(R.id.brewer_city)
+    TextView brewerCity;
 
     @BindView(R.id.brewer_address_row)
     View brewerAddressRow;
@@ -134,6 +140,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 .ifSome(brewerFounded::setText);
 
         ofObj(brewer.website())
+                .filter(StringUtils::hasValue)
                 .map(StringUtils::removeTrailingSlash)
                 .ifSome(website -> {
                     brewerWebsite.setAlpha(1.0f);
@@ -145,6 +152,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 });
 
         ofObj(brewer.facebook())
+                .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.FACEBOOK_PATH, handle))
                 .ifSome(facebook -> {
                     brewerFacebook.setAlpha(1.0f);
@@ -156,6 +164,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 });
 
         ofObj(brewer.twitter())
+                .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.TWITTER_PATH, handle))
                 .ifSome(twitter -> {
                     brewerTwitter.setAlpha(1.0f);
@@ -168,13 +177,18 @@ public class BrewerDetailsView extends NestedScrollView {
 
         ofObj(brewer.countryId())
                 .map(countries::getItem)
-                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
+                .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country)))
                 .map(Country::getName)
-                .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableOption)
-                .ifSome(brewerLocation::setText);
+                .ifSome(brewerCountry::setText);
+
+        ofObj(brewer.city())
+                .filter(StringUtils::hasValue)
+                .orOption(this::notAvailableOption)
+                .ifSome(brewerCity::setText);
 
         ofObj(brewer.address())
+                .filter(StringUtils::hasValue)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerAddress::setText);
     }

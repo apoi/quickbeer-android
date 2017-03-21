@@ -77,10 +77,10 @@ public class BeerDetailsView extends NestedScrollView {
     @BindView(R.id.brewer_name_row)
     View brewerNameRow;
 
-    @BindView(R.id.brewer_location)
+    @BindView(R.id.brewer_country)
     TextView locationTextView;
 
-    @BindView(R.id.brewer_location_row)
+    @BindView(R.id.brewer_country_row)
     View brewerLocationRow;
 
     @BindView(R.id.beer_rating_overall)

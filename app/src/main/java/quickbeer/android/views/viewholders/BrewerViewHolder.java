@@ -31,6 +31,7 @@ import quickbeer.android.core.viewmodel.viewholder.BaseBindingViewHolder;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.utils.Countries;
+import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -94,6 +95,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
         countryOption.ifSome(c -> brewerCircle.setText(c.getCode()));
 
         ofObj(brewer.city())
+                .filter(StringUtils::hasValue)
                 .lift(countryOption, (city, country) -> String.format("%s, %s", city, country.getName()))
                 .orOption(() -> countryOption.map(Country::getName))
                 .orOption(() -> ofObj("Unknown"))

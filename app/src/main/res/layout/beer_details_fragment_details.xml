@@ -195,7 +195,7 @@
                 <include layout="@layout/beer_details_separator_horizontal" />
 
                 <LinearLayout
-                    android:id="@+id/brewer_location_row"
+                    android:id="@+id/brewer_country_row"
                     android:layout_marginBottom="5dp"
                     android:clickable="true"
                     style="@style/BeerDetailsRowLayout">
@@ -206,7 +206,7 @@
 
                     <TextView
                         style="@style/BeerDetailsValue"
-                        android:id="@+id/brewer_location"
+                        android:id="@+id/brewer_country"
                         tools:text="Kerava, Finland"/>
 
                 </LinearLayout>

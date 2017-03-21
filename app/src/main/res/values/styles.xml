@@ -47,6 +47,7 @@
 
     <style name="BeerDetailsTitle" parent="BeerDetailsDescription">
         <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">sans-serif-smallcaps</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">10.5sp</item>
@@ -55,6 +56,7 @@
 
     <style name="BeerDetailsValue" parent="BeerDetailsDescription">
         <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
     </style>
 
