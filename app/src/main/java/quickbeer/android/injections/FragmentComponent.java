@@ -18,6 +18,7 @@
 package quickbeer.android.injections;
 
 import dagger.Subcomponent;
+import quickbeer.android.features.about.AboutDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerReviewsFragment;
 import quickbeer.android.features.brewerdetails.BrewerBeersFragment;
@@ -79,5 +80,7 @@ public interface FragmentComponent {
     void inject(CountryListFragment countryListFragment);
 
     void inject(StyleListFragment styleListFragment);
+
+    void inject(AboutDetailsFragment aboutDetailsFragment);
 
 }

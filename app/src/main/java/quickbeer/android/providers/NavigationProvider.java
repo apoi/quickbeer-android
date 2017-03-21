@@ -31,6 +31,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import quickbeer.android.R;
+import quickbeer.android.features.about.AboutDetailsFragment;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.ListActivity;
@@ -64,7 +65,8 @@ public final class NavigationProvider {
         STYLE_LIST,
         STYLE,
         PROFILE_LOGIN,
-        PROFILE_VIEW;
+        PROFILE_VIEW,
+        ABOUT;
 
         static Page from(int index) {
             return Page.values()[index];
@@ -219,6 +221,8 @@ public final class NavigationProvider {
                 return Page.COUNTRY_LIST;
             case R.id.nav_styles:
                 return Page.STYLE_LIST;
+            case R.id.nav_about:
+                return Page.ABOUT;
             default:
                 return Page.HOME;
         }
@@ -246,6 +250,8 @@ public final class NavigationProvider {
                 return new ProfileLoginFragment();
             case PROFILE_VIEW:
                 return new ProfileDetailsFragment();
+            case ABOUT:
+                return new AboutDetailsFragment();
         }
 
         return new HomeFragment();

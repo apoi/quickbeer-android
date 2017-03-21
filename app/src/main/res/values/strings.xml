@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">QuickBeer</string>
 
     <!-- Search bar -->
@@ -84,7 +85,17 @@
     <string name="login_error">Error logging in, please try again later!</string>
 
     <!-- Profile details -->
+    <string name="profile">Profile</string>
     <string name="welcome_text">Welcome, %s!</string>
     <string name="ticked_beers">You have %d ticked beers.</string>
+
+    <!-- About application -->
+    <string name="about">About</string>
+    <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it in Play Store if you like the app. Thanks!</string>
+    <string name="about_open_source_licenses">Open source licenses</string>
+    <string name="about_graphic_asset_licenses">Graphic asset licenses</string>
+    <string name="about_privacy_policy">Privacy policy</string>
+    <string name="about_source_code">Source code</string>
+    <string name="about_quickbeer_license">QuickBeer License</string>
 
 </resources>

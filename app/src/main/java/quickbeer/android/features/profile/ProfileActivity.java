@@ -20,10 +20,13 @@ package quickbeer.android.features.profile;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
@@ -37,6 +40,9 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ProfileActivity extends BindingDrawerActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Nullable
     @Inject
@@ -68,11 +74,15 @@ public class ProfileActivity extends BindingDrawerActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.profile_activity);
+        setContentView(R.layout.basic_activity);
+
+        ButterKnife.bind(this);
 
         setupDrawerLayout();
 
         setBackNavigationEnabled(true);
+
+        toolbar.setTitle(getString(R.string.profile));
     }
 
     @Override

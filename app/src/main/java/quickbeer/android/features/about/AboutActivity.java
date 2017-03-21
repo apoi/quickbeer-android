@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,40 +15,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.home;
+package quickbeer.android.features.about;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
-import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class HomeActivity extends ListActivity {
+public class AboutActivity extends InjectingDrawerActivity {
+
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     @Nullable
     @Inject
     NavigationProvider navigationProvider;
 
-    @NonNull
     @Override
-    protected Page defaultPage() {
-        return Page.HOME;
-    }
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    @Override
-    protected boolean initialBackNavigationEnabled() {
-        getSupportFragmentManager().addOnBackStackChangedListener(() ->
-                setBackNavigationEnabled(get(navigationProvider).canNavigateBack()));
+        checkNotNull(navigationProvider);
 
-        return false;
+        setContentView(R.layout.basic_activity);
+
+        ButterKnife.bind(this);
+
+        setupDrawerLayout();
+
+        setBackNavigationEnabled(true);
+
+        toolbar.setTitle(getString(R.string.about));
+
+        if (savedInstanceState == null) {
+            navigationProvider.addPage(Page.ABOUT);
+        }
     }
 
     @Override
@@ -58,14 +72,10 @@ public class HomeActivity extends ListActivity {
 
     @Override
     protected void navigateTo(@NonNull MenuItem menuItem) {
-        checkNotNull(navigationProvider);
-
-        if (menuItem.getItemId() == R.id.nav_home) {
-            navigationProvider.navigateAllBack();
-        } else if (menuItem.getItemId() == R.id.nav_about) {
-            navigationProvider.navigateWithNewActivity(menuItem);
-        } else {
-            super.navigateTo(menuItem);
+        if (menuItem.getItemId() == R.id.nav_about) {
+            return;
         }
+
+        get(navigationProvider).navigateWithNewActivity(menuItem);
     }
 }
