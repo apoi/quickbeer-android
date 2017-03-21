@@ -24,12 +24,11 @@ import android.support.v4.app.Fragment;
 
 import javax.inject.Inject;
 
+import quickbeer.android.R;
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
-import static polanski.option.Option.ofObj;
 
 public class BrewerBeersFragment  extends BeerListFragment {
 
@@ -49,6 +48,11 @@ public class BrewerBeersFragment  extends BeerListFragment {
     @Override
     protected void inject() {
         getComponent().inject(this);
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.brewer_details_fragment_beers;
     }
 
     @Override
