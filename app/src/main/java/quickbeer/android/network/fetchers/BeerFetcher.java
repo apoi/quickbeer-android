@@ -36,6 +36,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerFetcher extends FetcherBase<Uri> {
@@ -67,35 +68,35 @@ public class BeerFetcher extends FetcherBase<Uri> {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final int beerId = get(intent).getIntExtra("id", -1);
+        checkNotNull(intent);
 
-        if (beerId != -1) {
-            fetchBeer(beerId);
-        } else {
-            Timber.e("No id provided in the intent extras");
-        }
-    }
-
-    private void fetchBeer(final int beerId) {
-        Timber.d("fetchBeer(" + beerId + ")");
-
-        if (isOngoingRequest(beerId)) {
-            Timber.d("Found an ongoing request for beer " + beerId);
+        if (!intent.hasExtra("id") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
             return;
         }
 
-        final String uri = getUniqueUri(beerId);
+        int beerId = get(intent).getIntExtra("id", 0);
+        int listenerId = intent.getIntExtra("listenerId", 0);
+        String uri = getUniqueUri(beerId);
+
+        if (isOngoingRequest(beerId)) {
+            Timber.d("Found an ongoing request for beer " + beerId);
+            addListener(beerId, listenerId);
+            return;
+        }
+
+        Timber.d("fetchBeer(" + beerId + ")");
 
         Subscription subscription = createNetworkObservable(beerId)
                 .subscribeOn(Schedulers.computation())
                 .flatMap(beerStore::put)
-                .doOnSubscribe(() -> startRequest(uri))
-                .doOnSuccess(updated -> completeRequest(uri, updated))
-                .doOnError(doOnError(uri))
+                .doOnSubscribe(() -> startRequest(beerId, listenerId, uri))
+                .doOnSuccess(updated -> completeRequest(listenerId, uri, updated))
+                .doOnError(doOnError(beerId, uri))
                 .subscribe(__ -> metadataStore.put(BeerMetadata.newUpdate(beerId)),
                         error -> Timber.e(error, "Error fetching beer " + beerId));
 
-        addRequest(beerId, subscription);
+        addRequest(beerId, listenerId, subscription);
     }
 
     @NonNull

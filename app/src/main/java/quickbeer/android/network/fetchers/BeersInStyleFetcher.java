@@ -30,10 +30,14 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;
+
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeersInStyleFetcher extends BeerSearchFetcher {
 
@@ -47,13 +51,17 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final String styleId = intent.getStringExtra("styleId");
+        checkNotNull(intent);
 
-        if (styleId != null) {
-            fetchBeerSearch(styleId);
-        } else {
-            Timber.e("No styleId provided in the intent extras");
+        if (!intent.hasExtra("styleId") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
+            return;
         }
+
+        String styleId = get(intent).getStringExtra("styleId");
+        int listenerId = intent.getIntExtra("listenerId", 0);
+
+        fetchBeerSearch(styleId, listenerId);
     }
 
     @NonNull

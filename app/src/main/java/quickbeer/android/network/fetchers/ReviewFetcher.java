@@ -42,6 +42,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ReviewFetcher extends FetcherBase<Uri> {
@@ -73,24 +74,24 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final int beerId = intent.getIntExtra("beerId", -1);
+        checkNotNull(intent);
 
-        if (beerId > 0) {
-            fetchReviews(beerId);
-        } else {
-            Timber.e("No beerId provided in the intent extras");
-        }
-    }
-
-    private void fetchReviews(final int beerId) {
-        Timber.d("fetchReviews(" + beerId + ")");
-
-        if (isOngoingRequest(beerId)) {
-            Timber.d("Found an ongoing request for reviews for beer " + beerId);
+        if (!intent.hasExtra("beerId") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
             return;
         }
 
-        final String uri = getUniqueUri(beerId);
+        int beerId = intent.getIntExtra("beerId", 0);
+        int listenerId = intent.getIntExtra("listenerId", 0);
+        String uri = getUniqueUri(beerId);
+
+        if (isOngoingRequest(beerId)) {
+            Timber.d("Found an ongoing request for reviews for beer " + beerId);
+            addListener(beerId, listenerId);
+            return;
+        }
+
+        Timber.d("fetchReviews(" + beerId + ")");
 
         Subscription subscription = createNetworkObservable(beerId)
                 .subscribeOn(Schedulers.computation())
@@ -102,13 +103,13 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .toSingle()
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
-                .doOnSubscribe(() -> startRequest(uri))
-                .doOnSuccess(updated -> completeRequest(uri, updated))
-                .doOnError(doOnError(uri))
+                .doOnSubscribe(() -> startRequest(beerId, listenerId, uri))
+                .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
+                .doOnError(doOnError(beerId, uri))
                 .subscribe(RxUtils::nothing,
                         error -> Timber.e(error, "Error fetching reviews for beer " + beerId));
 
-        addRequest(beerId, subscription);
+        addRequest(beerId, listenerId, subscription);
     }
 
     @NonNull

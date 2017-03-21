@@ -48,6 +48,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class TickBeerFetcher extends FetcherBase<Uri> {
@@ -83,19 +84,22 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        int beerId = get(intent).getIntExtra("beerId", -1);
-        int rating = get(intent).getIntExtra("rating", -1);
+        checkNotNull(intent);
 
-        if (beerId < 0 || rating < 0) {
-            Timber.e("Invalid extras: beerId(%s), rating(%s)", beerId, rating);
+        if (!intent.hasExtra("beerId") || !intent.hasExtra("rating") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
             return;
         }
 
-        final String uri = getUniqueUri(beerId);
-        final int requestId = uri.hashCode();
+        int beerId = intent.getIntExtra("beerId", 0);
+        int rating = intent.getIntExtra("rating", 0);
+        int listenerId = intent.getIntExtra("listenerId", 0);
+        String uri = getUniqueUri(beerId, rating);
+        int requestId = uri.hashCode();
 
         if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for beer tick");
+            addListener(requestId, listenerId);
             return;
         }
 
@@ -105,19 +109,18 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .getOnce(Constants.DEFAULT_USER_ID)
                 .compose(RxUtils::valueOrError)
                 .map(User::id)
-                .toSingle()
                 .flatMap(userId -> createNetworkObservable(beerId, rating, userId))
-                .flatMap(__ -> beerStore.getOnce(beerId).toSingle())
+                .flatMap(__ -> beerStore.getOnce(beerId))
                 .compose(RxUtils::valueOrError)
                 .map(beer -> withRating(beer, rating))
                 .subscribeOn(Schedulers.computation())
-                .doOnSubscribe(() -> startRequest(uri))
-                .doOnSuccess(updated -> completeRequest(uri, false))
-                .doOnError(doOnError(uri))
+                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSuccess(updated -> completeRequest(requestId, uri, false))
+                .doOnError(doOnError(requestId, uri))
                 .subscribe(beerStore::put,
                         error -> Timber.e(error, "Error ticking beer"));
 
-        addRequest(requestId, subscription);
+        addRequest(requestId, listenerId, subscription);
     }
 
     @NonNull
@@ -169,7 +172,7 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     }
 
     @NonNull
-    public static String getUniqueUri(int id) {
-        return Beer.class + "/" + id + "/rate";
+    public static String getUniqueUri(int id, int rating) {
+        return Beer.class + "/" + id + "/rate/" + rating;
     }
 }

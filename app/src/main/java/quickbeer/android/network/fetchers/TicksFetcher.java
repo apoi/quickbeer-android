@@ -35,6 +35,9 @@ import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
+import static io.reark.reark.utils.Preconditions.get;
+
 public class TicksFetcher extends BeerSearchFetcher {
 
     public TicksFetcher(@NonNull NetworkApi networkApi,
@@ -47,13 +50,17 @@ public class TicksFetcher extends BeerSearchFetcher {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final String userId = intent.getStringExtra("userId");
+        checkNotNull(intent);
 
-        if (userId != null) {
-            fetchBeerSearch(userId);
-        } else {
-            Timber.e("No userId provided in the intent extras");
+        if (!intent.hasExtra("userId") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
+            return;
         }
+
+        String userId = get(intent).getStringExtra("userId");
+        int listenerId = intent.getIntExtra("listenerId", 0);
+
+        fetchBeerSearch(userId, listenerId);
     }
 
     @NonNull

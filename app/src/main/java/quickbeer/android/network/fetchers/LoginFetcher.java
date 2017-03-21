@@ -38,6 +38,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class LoginFetcher extends FetcherBase<Uri> {
@@ -64,16 +65,25 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final String uri = getUniqueUri();
-        final int requestId = uri.hashCode();
+        checkNotNull(intent);
 
-        if (isOngoingRequest(requestId)) {
-            Timber.d("Found an ongoing request for login");
+        if (!intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
             return;
         }
 
-        final String username = intent.getStringExtra("username");
-        final String password = intent.getStringExtra("password");
+        String uri = getUniqueUri();
+        int requestId = uri.hashCode();
+        int listenerId = intent.getIntExtra("listenerId", 0);
+
+        if (isOngoingRequest(requestId)) {
+            Timber.d("Found an ongoing request for login");
+            addListener(requestId, listenerId);
+            return;
+        }
+
+        String username = intent.getStringExtra("username");
+        String password = intent.getStringExtra("password");
 
         if (!StringUtils.hasValue(username) || !StringUtils.hasValue(password)) {
             Timber.d("Missing username or password");
@@ -95,13 +105,13 @@ public class LoginFetcher extends FetcherBase<Uri> {
                         .password(password)
                         .build())
                 .flatMap(userStore::put)
-                .doOnSubscribe(() -> startRequest(uri))
-                .doOnSuccess(updated -> completeRequest(uri, updated))
-                .doOnError(doOnError(uri))
+                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
+                .doOnError(doOnError(requestId, uri))
                 .subscribe(RxUtils::nothing,
                         error -> Timber.e(error, "Error fetching user " + username));
 
-        addRequest(requestId, subscription);
+        addRequest(requestId, listenerId, subscription);
     }
 
     @NonNull

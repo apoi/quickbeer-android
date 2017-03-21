@@ -75,23 +75,29 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
     @Override
     public void fetch(@NonNull Intent intent) {
-        final String searchString = get(intent).getStringExtra("searchString");
+        checkNotNull(intent);
 
-        if (searchString != null) {
-            fetchBeerSearch(StringUtils.normalize(searchString));
-        } else {
-            Timber.e("No searchString provided in the intent extras");
+        if (!intent.hasExtra("searchString") || !intent.hasExtra("listenerId")) {
+            Timber.e("Missing required fetch parameters!");
+            return;
         }
+
+        String searchString = get(intent).getStringExtra("searchString");
+        int listenerId = intent.getIntExtra("listenerId", 0);
+
+        fetchBeerSearch(StringUtils.normalize(searchString), listenerId);
     }
 
-    protected void fetchBeerSearch(@NonNull String query) {
+    protected void fetchBeerSearch(@NonNull String query, int listenerId) {
         Timber.d("fetchBeerSearch(" + query + ")");
 
         final String queryId = getQueryId(getServiceUri(), get(query));
         final String uri = getUniqueUri(queryId);
+        int requestId = uri.hashCode();
 
-        if (isOngoingRequest(uri.hashCode())) {
+        if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for search " + queryId);
+            addListener(requestId, listenerId);
             return;
         }
 
@@ -105,13 +111,13 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .toSingle()
                 .map(beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()))
                 .flatMap(beerListStore::put)
-                .doOnSubscribe(() -> startRequest(uri))
-                .doOnSuccess(updated -> completeRequest(uri, updated))
-                .doOnError(doOnError(uri))
+                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
+                .doOnError(doOnError(requestId, uri))
                 .subscribe(RxUtils::nothing,
                         error -> Timber.e(error, "Error fetching beer search for %s", uri));
 
-        addRequest(uri.hashCode(), subscription);
+        addRequest(requestId, listenerId, subscription);
     }
 
     @NonNull
