@@ -148,6 +148,7 @@ public class BrewerDetailsView extends NestedScrollView {
         ofObj(brewer.website())
                 .filter(StringUtils::hasValue)
                 .map(StringUtils::removeTrailingSlash)
+                .map(StringUtils::addMissingProtocol)
                 .ifSome(website -> {
                     brewerWebsite.setAlpha(1.0f);
                     brewerWebsiteColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_WEBSITE, website));

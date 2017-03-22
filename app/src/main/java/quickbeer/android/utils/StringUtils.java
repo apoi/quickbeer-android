@@ -64,6 +64,19 @@ public final class StringUtils {
     }
 
     @NonNull
+    public static String addMissingProtocol(@Nullable String value) {
+        if (value == null) {
+            return "";
+        }
+
+        if (!value.startsWith("http")) {
+            return "http://" + value;
+        }
+
+        return value;
+    }
+
+    @NonNull
     public static String removeTrailingSlash(@Nullable String value) {
         if (value == null) {
             return "";
