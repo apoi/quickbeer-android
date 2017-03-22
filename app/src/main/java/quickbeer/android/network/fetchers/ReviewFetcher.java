@@ -17,11 +17,11 @@
  */
 package quickbeer.android.network.fetchers;
 
+import org.threeten.bp.ZonedDateTime;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-
-import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
 
@@ -96,8 +96,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .subscribeOn(Schedulers.computation())
                 .toObservable()
                 .flatMap(Observable::from)
-                .doOnNext(reviewStore::put)
-                .map(Review::id)
+                .flatMap(review -> reviewStore.put(review).toObservable().map(__ -> review.id()))
                 .toList()
                 .toSingle()
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()))
