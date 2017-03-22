@@ -21,7 +21,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,11 +34,13 @@ import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
 import quickbeer.android.analytics.Events;
+import quickbeer.android.analytics.Events.Screen;
+import quickbeer.android.core.fragment.BaseFragment;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BeerDetailsPagerFragment extends Fragment {
+public class BeerDetailsPagerFragment extends BaseFragment {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -53,6 +54,11 @@ public class BeerDetailsPagerFragment extends Fragment {
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
+
+    @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,9 +82,9 @@ public class BeerDetailsPagerFragment extends Fragment {
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                Events.Screen screen = (position == 0)
-                        ? Events.Screen.BEER_DETAILS
-                        : Events.Screen.BEER_REVIEWS;
+                Screen screen = (position == 0)
+                        ? Screen.BEER_DETAILS
+                        : Screen.BEER_REVIEWS;
                 get(analytics).createViewEvent(screen);
             }
         });

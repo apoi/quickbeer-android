@@ -35,11 +35,13 @@ import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
 import quickbeer.android.analytics.Events;
+import quickbeer.android.analytics.Events.Screen;
+import quickbeer.android.core.fragment.BaseFragment;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BrewerDetailsPagerFragment extends Fragment {
+public class BrewerDetailsPagerFragment extends BaseFragment {
 
     @BindView(R.id.view_pager)
     ViewPager viewPager;
@@ -64,6 +66,11 @@ public class BrewerDetailsPagerFragment extends Fragment {
     }
 
     @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.brewer_details_fragment_pager, container, false);
     }
@@ -85,9 +92,9 @@ public class BrewerDetailsPagerFragment extends Fragment {
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(final int position) {
-                Events.Screen screen = (position == 0)
-                        ? Events.Screen.BREWER_DETAILS
-                        : Events.Screen.BREWER_BEERS;
+                Screen screen = (position == 0)
+                        ? Screen.BREWER_DETAILS
+                        : Screen.BREWER_BEERS;
                 get(analytics).createViewEvent(screen);
             }
         });
