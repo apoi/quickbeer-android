@@ -33,6 +33,8 @@ import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -55,6 +57,10 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
     @Nullable
     @Inject
     ProfileDetailsViewModel profileDetailsViewModel;
+
+    @Nullable
+    @Inject
+    Analytics analytics;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -92,6 +98,8 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         unbinder.setIfNone(bind(this, view));
+
+        get(analytics).createViewEvent(Events.Screen.PROFILE_VIEW);
     }
 
     @Override

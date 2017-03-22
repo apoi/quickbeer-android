@@ -37,6 +37,9 @@ import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
+import quickbeer.android.analytics.Events.Screen;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -77,6 +80,10 @@ public class HomeFragment extends BindingBaseFragment {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
@@ -113,6 +120,16 @@ public class HomeFragment extends BindingBaseFragment {
 
         viewPager.setAdapter(new HomeViewAdapter(getChildFragmentManager(), getContext()));
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(final int position) {
+                Screen screen = (position == 0)
+                        ? Screen.HOME_BEERS
+                        : Screen.HOME_BREWERS;
+                get(analytics).createViewEvent(screen);
+            }
+        });
 
         barcodeScanButton.setOnClickListener(__ -> {
             Intent intent = new Intent(getActivity(), BarcodeScanActivity.class);

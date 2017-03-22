@@ -74,6 +74,7 @@ dependencies {
     compile 'javax.annotation:jsr250-api:1.0'
 
     // Firebase
+    compile 'com.google.firebase:firebase-core:10.2.1'
     compile 'com.google.firebase:firebase-crash:10.2.1'
 
     // Play services barcode support

@@ -28,6 +28,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
@@ -44,11 +46,16 @@ public class AboutActivity extends InjectingDrawerActivity {
     @Inject
     NavigationProvider navigationProvider;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         checkNotNull(navigationProvider);
+        checkNotNull(analytics);
 
         setContentView(R.layout.basic_activity);
 
@@ -59,6 +66,8 @@ public class AboutActivity extends InjectingDrawerActivity {
         setBackNavigationEnabled(true);
 
         toolbar.setTitle(getString(R.string.about));
+
+        analytics.createViewEvent(Events.Screen.ABOUT);
 
         if (savedInstanceState == null) {
             navigationProvider.addPage(Page.ABOUT);

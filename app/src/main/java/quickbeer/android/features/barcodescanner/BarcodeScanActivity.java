@@ -15,6 +15,13 @@
  */
 package quickbeer.android.features.barcodescanner;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.MultiProcessor;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,6 +35,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -36,20 +44,17 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
-import com.google.android.gms.vision.MultiProcessor;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
-
 import java.io.IOException;
 
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
 import quickbeer.android.features.barcodescanner.ui.camera.CameraSource;
 import quickbeer.android.features.barcodescanner.ui.camera.CameraSourcePreview;
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 import timber.log.Timber;
+
+import static io.reark.reark.utils.Preconditions.get;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
@@ -76,12 +81,18 @@ public final class BarcodeScanActivity extends AppCompatActivity implements Barc
     private int viewWidth;
     private int viewHeight;
 
+    @Nullable
+    private Analytics analytics;
+
     /**
      * Initializes the UI and creates the detector pipeline.
      */
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
+        analytics = new Analytics(this);
+        analytics.createViewEvent(Events.Screen.BARCODE_SCANNER);
 
         setContentView(R.layout.barcode_scan_activity);
 
@@ -110,6 +121,11 @@ public final class BarcodeScanActivity extends AppCompatActivity implements Barc
                 }
             });
         }
+    }
+
+    @NonNull
+    private Analytics analytics() {
+        return get(analytics);
     }
 
     /**

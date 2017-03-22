@@ -17,6 +17,8 @@
  */
 package quickbeer.android.features.brewerdetails;
 
+import org.threeten.bp.ZonedDateTime;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,8 +32,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.threeten.bp.ZonedDateTime;
-
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -39,6 +39,8 @@ import butterknife.ButterKnife;
 import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events.LaunchAction;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
@@ -114,6 +116,10 @@ public class BrewerDetailsView extends NestedScrollView {
     @Inject
     ToastProvider toastProvider;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     public BrewerDetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -144,7 +150,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 .map(StringUtils::removeTrailingSlash)
                 .ifSome(website -> {
                     brewerWebsite.setAlpha(1.0f);
-                    brewerWebsiteColumn.setOnClickListener(__ -> openUri(website));
+                    brewerWebsiteColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_WEBSITE, website));
                 })
                 .ifNone(() -> {
                     brewerWebsite.setAlpha(0.2f);
@@ -156,7 +162,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 .map(handle -> String.format(Constants.FACEBOOK_PATH, handle))
                 .ifSome(facebook -> {
                     brewerFacebook.setAlpha(1.0f);
-                    brewerFacebookColumn.setOnClickListener(__ -> openUri(facebook));
+                    brewerFacebookColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_FACEBOOK, facebook));
                 })
                 .ifNone(() -> {
                     brewerFacebook.setAlpha(0.2f);
@@ -168,7 +174,7 @@ public class BrewerDetailsView extends NestedScrollView {
                 .map(handle -> String.format(Constants.TWITTER_PATH, handle))
                 .ifSome(twitter -> {
                     brewerTwitter.setAlpha(1.0f);
-                    brewerTwitterColumn.setOnClickListener(__ -> openUri(twitter));
+                    brewerTwitterColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_TWITTER, twitter));
                 })
                 .ifNone(() -> {
                     brewerTwitter.setAlpha(0.2f);
@@ -203,7 +209,7 @@ public class BrewerDetailsView extends NestedScrollView {
         return get(resourceProvider).getString(R.string.not_available);
     }
 
-    private void openUri(@NonNull String uri) {
+    private void openUri(@NonNull LaunchAction action, @NonNull String uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         getContext().startActivity(intent);
     }

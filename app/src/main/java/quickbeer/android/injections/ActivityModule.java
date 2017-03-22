@@ -26,6 +26,7 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 
@@ -49,6 +50,12 @@ public class ActivityModule {
     static SearchViewViewModel provideSearchViewViewModel(
             @NonNull DataLayer.GetBeerSearchQueries getBeerSearchQueries) {
         return new SearchViewViewModel(getBeerSearchQueries);
+    }
+
+    @Provides
+    @ActivityScope
+    static Analytics provideAnalytics(@NonNull AppCompatActivity activity) {
+        return new Analytics(activity);
     }
 
     @Provides

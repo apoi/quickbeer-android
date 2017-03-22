@@ -27,12 +27,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
 
 import static butterknife.ButterKnife.bind;
+import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsPagerFragment extends Fragment {
 
@@ -41,6 +46,10 @@ public class BeerDetailsPagerFragment extends Fragment {
 
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+
+    @Nullable
+    @Inject
+    Analytics analytics;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -63,6 +72,16 @@ public class BeerDetailsPagerFragment extends Fragment {
 
         viewPager.setAdapter(new BeerDetailsPagerAdapter(getChildFragmentManager()));
         tabLayout.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(final int position) {
+                Events.Screen screen = (position == 0)
+                        ? Events.Screen.BEER_DETAILS
+                        : Events.Screen.BEER_REVIEWS;
+                get(analytics).createViewEvent(screen);
+            }
+        });
     }
 
     @Override

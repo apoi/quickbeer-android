@@ -39,6 +39,8 @@ import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -80,6 +82,10 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     @Inject
     ToastProvider toastProvider;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
@@ -116,6 +122,8 @@ public class ProfileLoginFragment extends BindingBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         unbinder.setIfNone(bind(this, view));
+
+        get(analytics).createViewEvent(Events.Screen.PROFILE_LOGIN);
 
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == R.id.login || id == EditorInfo.IME_NULL) {
