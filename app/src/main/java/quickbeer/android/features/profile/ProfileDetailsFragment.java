@@ -98,6 +98,11 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         unbinder.setIfNone(bind(this, view));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         get(analytics).createViewEvent(Events.Screen.PROFILE_VIEW);
     }

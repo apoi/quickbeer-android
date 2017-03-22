@@ -123,8 +123,6 @@ public class ProfileLoginFragment extends BindingBaseFragment {
 
         unbinder.setIfNone(bind(this, view));
 
-        get(analytics).createViewEvent(Events.Screen.PROFILE_LOGIN);
-
         passwordView.setOnEditorActionListener((textView, id, keyEvent) -> {
             if (id == R.id.login || id == EditorInfo.IME_NULL) {
                 attemptLogin();
@@ -134,6 +132,13 @@ public class ProfileLoginFragment extends BindingBaseFragment {
         });
 
         signInButton.setOnClickListener(__ -> attemptLogin());
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        get(analytics).createViewEvent(Events.Screen.PROFILE_LOGIN);
     }
 
     @Override
