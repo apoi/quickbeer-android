@@ -90,7 +90,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
                 .subscribeOn(Schedulers.computation())
                 .flatMap(beerStore::put)
                 .doOnSubscribe(() -> startRequest(beerId, listenerId, uri))
-                .doOnSuccess(updated -> completeRequest(listenerId, uri, updated))
+                .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
                 .doOnError(doOnError(beerId, uri))
                 .subscribe(__ -> metadataStore.put(BeerMetadata.newUpdate(beerId)),
                         error -> Timber.e(error, "Error fetching beer " + beerId));
