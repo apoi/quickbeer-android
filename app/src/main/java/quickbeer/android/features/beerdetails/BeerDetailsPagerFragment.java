@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,6 +56,16 @@ public class BeerDetailsPagerFragment extends BaseFragment {
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
+    private int beerId;
+
+    @NonNull
+    public static Fragment newInstance(int beerId) {
+        BeerDetailsPagerFragment fragment = new BeerDetailsPagerFragment();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        fragment.beerId = beerId;
+        return fragment;
+    }
+
     @Override
     protected void inject() {
         getComponent().inject(this);
@@ -76,7 +87,7 @@ public class BeerDetailsPagerFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewPager.setAdapter(new BeerDetailsPagerAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new BeerDetailsPagerAdapter(getChildFragmentManager(), beerId));
         tabLayout.setupWithViewPager(viewPager);
 
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

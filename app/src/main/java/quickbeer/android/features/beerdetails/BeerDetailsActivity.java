@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -147,10 +149,22 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
         if (savedInstanceState != null) {
             beerId = savedInstanceState.getInt("beerId");
         } else {
-            beerId = getIntent().getIntExtra("beerId", 0);
+            Intent intent = getIntent();
+            String action = intent.getAction();
+
+            if (Intent.ACTION_VIEW.equals(action)) {
+                List<String> segments = intent.getData().getPathSegments();
+                if (segments.size() > 2) {
+                    beerId = Integer.valueOf(segments.get(2));
+                }
+            }
+
+            if (beerId <= 0) {
+                beerId = intent.getIntExtra("beerId", 0);
+            }
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new BeerDetailsPagerFragment())
+                    .add(R.id.container, BeerDetailsPagerFragment.newInstance(beerId))
                     .commit();
         }
     }
@@ -198,10 +212,6 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("beerId", beerId);
-    }
-
-    public int getBeerId() {
-        return beerId;
     }
 
     @Override

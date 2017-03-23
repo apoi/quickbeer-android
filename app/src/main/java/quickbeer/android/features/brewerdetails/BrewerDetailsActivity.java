@@ -30,6 +30,8 @@ import com.squareup.picasso.Picasso;
 
 import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -137,7 +139,19 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
         if (savedInstanceState != null) {
             brewerId = savedInstanceState.getInt("brewerId");
         } else {
-            brewerId = getIntent().getIntExtra("brewerId", 0);
+            Intent intent = getIntent();
+            String action = intent.getAction();
+
+            if (Intent.ACTION_VIEW.equals(action)) {
+                List<String> segments = intent.getData().getPathSegments();
+                if (segments.size() > 2) {
+                    brewerId = Integer.valueOf(segments.get(2));
+                }
+            }
+
+            if (brewerId <= 0) {
+                brewerId = getIntent().getIntExtra("brewerId", 0);
+            }
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, BrewerDetailsPagerFragment.newInstance(brewerId))

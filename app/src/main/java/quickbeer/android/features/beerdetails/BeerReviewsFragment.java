@@ -20,6 +20,7 @@ package quickbeer.android.features.beerdetails;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,8 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
+    private int beerId;
+
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
@@ -64,6 +67,14 @@ public class BeerReviewsFragment extends BindingBaseFragment {
                     .subscribe(reviewsView::setReviews, Timber::e));
         }
     };
+
+    @NonNull
+    public static Fragment newInstance(int beerId) {
+        BeerReviewsFragment fragment = new BeerReviewsFragment();
+        //noinspection AccessingNonPublicFieldOfAnotherObject
+        fragment.beerId = beerId;
+        return fragment;
+    }
 
     @Override
     protected void inject() {
@@ -84,8 +95,6 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        int beerId = ((BeerDetailsActivity) getActivity()).getBeerId();
 
         viewModel().setBeerId(beerId);
     }

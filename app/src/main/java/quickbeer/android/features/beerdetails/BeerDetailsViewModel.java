@@ -18,7 +18,6 @@
 package quickbeer.android.features.beerdetails;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.List;
 
@@ -35,7 +34,6 @@ import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import rx.Observable;
-import rx.Subscription;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -63,10 +61,15 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     private final GlobalNotificationProvider notificationProvider;
 
     @NonNull
+    private final DataLayer.GetBeer getBeer;
+
+    @NonNull
     private final DataLayer.TickBeer tickBeer;
 
-    @Nullable
-    private Subscription tickSubscription;
+    @NonNull
+    private final CompositeSubscription subscription = new CompositeSubscription();
+
+    private int beerId;
 
     public BeerDetailsViewModel(@NonNull DataLayer.GetBeer getBeer,
                                 @NonNull DataLayer.TickBeer tickBeer,
@@ -79,12 +82,15 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
 
+        this.getBeer = get(getBeer);
         this.tickBeer = get(tickBeer);
         this.resourceProvider = get(resourceProvider);
         this.notificationProvider = get(notificationProvider);
     }
 
     public void setBeerId(int beerId) {
+        this.beerId = beerId;
+
         beerViewModel.setBeerId(beerId);
         brewerViewModel.setBeerId(beerId);
         reviewListViewModel.setBeerId(beerId);
@@ -110,16 +116,19 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         return tickSuccessSubject.asObservable();
     }
 
-    public void tickBeer(@NonNull Beer beer, int rating) {
+    public void tickBeer(int rating) {
         Observable<DataStreamNotification<Void>> observable =
-                get(tickBeer).call(beer.id(), rating)
+                get(tickBeer).call(beerId, rating)
                         .share();
 
-        notificationProvider.addNetworkSuccessListener(observable,
-                chooseSuccessString(beer, rating),
-                resourceProvider.getString(R.string.tick_failure));
+        subscription.add(getBeer.call(beerId)
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
+                .subscribe(beer -> notificationProvider.addNetworkSuccessListener(observable,
+                        chooseSuccessString(beer, rating),
+                        resourceProvider.getString(R.string.tick_failure))));
 
-        tickSubscription = observable
+        subscription.add(observable
                 .takeUntil(DataStreamNotification::isCompleted)
                 .subscribe(notification -> {
                     switch (notification.getType()) {
@@ -134,7 +143,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                         case ON_NEXT:
                             break;
                     }
-                }, error -> Timber.w(error, "Error ticking beer"));
+                }, error -> Timber.w(error, "Error ticking beer")));
     }
 
     @NonNull
@@ -157,9 +166,6 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         brewerViewModel.unbindDataModel();
         reviewListViewModel.unbindDataModel();
 
-        if (tickSubscription != null) {
-            tickSubscription.unsubscribe();
-            tickSubscription = null;
-        }
+        subscription.clear();
     }
 }

@@ -50,12 +50,34 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".features.beerdetails.BeerDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+                android:name=".features.beerdetails.BeerDetailsActivity"
+                android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="ratebeer.com" android:pathPrefix="/beer/" />
+                <data android:scheme="http" android:host="www.ratebeer.com" android:pathPrefix="/beer/" />
+                <data android:scheme="https" android:host="ratebeer.com" android:pathPrefix="/beer/" />
+                <data android:scheme="https" android:host="www.ratebeer.com" android:pathPrefix="/beer/" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".features.brewerdetails.BrewerDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="ratebeer.com" android:pathPrefix="/brewers/" />
+                <data android:scheme="http" android:host="www.ratebeer.com" android:pathPrefix="/brewers/" />
+                <data android:scheme="https" android:host="ratebeer.com" android:pathPrefix="/brewers/" />
+                <data android:scheme="https" android:host="www.ratebeer.com" android:pathPrefix="/brewers/" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".features.photoview.PhotoViewActivity"

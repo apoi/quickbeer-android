@@ -23,8 +23,12 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class BeerDetailsPagerAdapter extends FragmentPagerAdapter {
 
-    public BeerDetailsPagerAdapter(FragmentManager fm) {
+    private final int beerId;
+
+    public BeerDetailsPagerAdapter(FragmentManager fm, int beerId) {
         super(fm);
+
+        this.beerId = beerId;
     }
 
     @Override
@@ -36,10 +40,10 @@ public class BeerDetailsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new BeerDetailsFragment();
+                return BeerDetailsFragment.newInstance(beerId);
             case 1:
             default:
-                return new BeerReviewsFragment();
+                return BeerReviewsFragment.newInstance(beerId);
         }
     }
 
