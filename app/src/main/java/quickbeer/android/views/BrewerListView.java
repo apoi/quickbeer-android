@@ -37,6 +37,7 @@ import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Header;
 import quickbeer.android.features.list.BrewerListAdapter;
 import quickbeer.android.utils.Countries;
+import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
@@ -110,25 +111,11 @@ public class BrewerListView extends FrameLayout {
         get(brewerListAdapter).set(get(brewers));
     }
 
-    public void setProgressStatus(@NonNull ProgressStatus progressStatus) {
+    public void setProgressStatus(@NonNull String progressStatus) {
         checkNotNull(searchStatusTextView);
 
-        switch (progressStatus) {
-            case VALUE:
-                searchStatusTextView.setVisibility(GONE);
-                break;
-            case LOADING:
-                searchStatusTextView.setText(R.string.search_status_loading);
-                searchStatusTextView.setVisibility(VISIBLE);
-                break;
-            case ERROR:
-                searchStatusTextView.setText(R.string.search_status_error);
-                searchStatusTextView.setVisibility(VISIBLE);
-                break;
-            case EMPTY:
-                searchStatusTextView.setText(R.string.search_no_results);
-                searchStatusTextView.setVisibility(VISIBLE);
-                break;
-        }
+        searchStatusTextView.setVisibility(StringUtils.hasValue(progressStatus) ? VISIBLE : GONE);
+        searchStatusTextView.setText(progressStatus);
     }
+
 }

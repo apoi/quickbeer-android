@@ -25,6 +25,8 @@ import javax.inject.Inject;
 import quickbeer.android.R;
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.RecentBeersViewModel;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -54,5 +56,13 @@ public class BeerTabFragment extends BeerListFragment {
     @Override
     protected void onQuery(@NonNull String query) {
         // Doesn't react to search view.
+    }
+
+    @NonNull
+    @Override
+    protected String toStatusValue(@NonNull ProgressStatus progressStatus) {
+        return progressStatus == ProgressStatus.EMPTY
+                ? getString(R.string.home_empty_list)
+                : super.toStatusValue(progressStatus);
     }
 }

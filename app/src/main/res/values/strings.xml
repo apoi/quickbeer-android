@@ -14,7 +14,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- Search -->
-    <string name="search_status_loading">Searching…</string>
+    <string name="search_status_loading">Loading…</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>
     <string name="search_no_results">No results, how curious!</string>
 
@@ -23,6 +23,7 @@
     <string name="tab_brewers">Brewers</string>
     <string name="recent_beers">Recently seen beers</string>
     <string name="recent_brewers">Recently seen brewers</string>
+    <string name="home_empty_list">Cheers!\n\nStart by searching for some of your favorite beers.</string>
 
     <!-- Beer details -->
     <string name="rating_overall">Overall</string>

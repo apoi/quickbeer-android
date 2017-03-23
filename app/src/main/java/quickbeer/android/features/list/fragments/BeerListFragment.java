@@ -40,6 +40,7 @@ import quickbeer.android.features.beerdetails.BeerDetailsActivity;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import quickbeer.android.views.BeerListView;
@@ -88,6 +89,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
 
             subscription.add(viewModel()
                     .getProgressStatus()
+                    .map(BeerListFragment.this::toStatusValue)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(get(view)::setProgressStatus, Timber::e));
 
@@ -150,6 +152,20 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(getLayout(), container, false);
+    }
+
+    @NonNull
+    protected String toStatusValue(@NonNull ProgressStatus progressStatus) {
+        switch (progressStatus) {
+            case LOADING:
+                return getString(R.string.search_status_loading);
+            case ERROR:
+                return getString(R.string.search_status_error);
+            case EMPTY:
+                return getString(R.string.search_no_results);
+            default:
+                return "";
+        }
     }
 
     @Override
