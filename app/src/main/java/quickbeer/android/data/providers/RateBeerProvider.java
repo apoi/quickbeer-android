@@ -25,6 +25,7 @@ import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
+import quickbeer.android.BuildConfig;
 import quickbeer.android.data.columns.BeerColumns;
 import quickbeer.android.data.columns.BeerListColumns;
 import quickbeer.android.data.columns.BeerMetadataColumns;
@@ -38,7 +39,7 @@ import quickbeer.android.data.columns.UserColumns;
 
 @ContentProvider(authority = RateBeerProvider.AUTHORITY, database = RateBeerDatabase.class)
 public final class RateBeerProvider {
-    public static final String AUTHORITY = "quickbeer.android.providers.RateBeerProvider";
+    public static final String AUTHORITY = BuildConfig.APPLICATION_ID + ".providers.RateBeerProvider";
     private static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
     private static final String BASE_TYPE = "vnd.android.cursor.item/";
 

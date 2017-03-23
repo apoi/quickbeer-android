@@ -17,6 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
 
+        <provider
+            android:name=".data.providers.generated.RateBeerProvider"
+            android:authorities="${applicationId}.providers.RateBeerProvider"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -24,6 +29,10 @@
         <meta-data
             android:name="com.google.android.gms.vision.DEPENDENCIES"
             android:value="barcode" />
+
+        <service
+            android:name=".network.NetworkService"
+            android:process=":networkservice" />
 
         <activity
             android:name=".features.home.HomeActivity"
@@ -93,15 +102,6 @@
             android:name=".features.barcodescanner.BarcodeScanActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:label="Read Barcode"/>
-
-        <provider
-            android:name=".data.providers.generated.RateBeerProvider"
-            android:authorities="quickbeer.android.providers.RateBeerProvider"
-            android:exported="false" />
-
-        <service
-            android:name=".network.NetworkService"
-            android:process=":networkservice" />
 
     </application>
 

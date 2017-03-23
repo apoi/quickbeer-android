@@ -27,24 +27,23 @@ android {
         preDexLibraries false
     }
     signingConfigs {
+        debug {
+            storeFile rootProject.file("keys/debug.keystore")
+            storePassword "quickbeer"
+            keyAlias "quickbeer"
+            keyPassword "quickbeer"
+        }
         release {
-            try {
-                storeFile rootProject.file("quickbeer.jks")
-                storePassword KEYSTORE_PASSWORD
-                keyAlias "quickbeer"
-                keyPassword KEY_PASSWORD
-            } catch (ex) {
-                throw new InvalidUserDataException("You should define KEYSTORE_PASSWORD and KEY_PASSWORD in gradle.properties.")
-            }
         }
     }
     buildTypes {
         debug {
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
