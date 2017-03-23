@@ -92,7 +92,7 @@ public final class BarcodeScanActivity extends AppCompatActivity implements Barc
         super.onCreate(icicle);
 
         analytics = new Analytics(this);
-        analytics.createViewEvent(Events.Screen.BARCODE_SCANNER);
+        analytics.createEvent(Events.Screen.BARCODE_SCANNER);
 
         setContentView(R.layout.barcode_scan_activity);
 

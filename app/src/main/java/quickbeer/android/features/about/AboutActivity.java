@@ -67,7 +67,7 @@ public class AboutActivity extends InjectingDrawerActivity {
 
         toolbar.setTitle(getString(R.string.about));
 
-        analytics.createViewEvent(Events.Screen.ABOUT);
+        analytics.createEvent(Events.Screen.ABOUT);
 
         if (savedInstanceState == null) {
             navigationProvider.addPage(Page.ABOUT);

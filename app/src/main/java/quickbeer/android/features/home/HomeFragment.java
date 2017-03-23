@@ -38,7 +38,6 @@ import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
-import quickbeer.android.analytics.Events;
 import quickbeer.android.analytics.Events.Screen;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
@@ -127,7 +126,7 @@ public class HomeFragment extends BindingBaseFragment {
                 Screen screen = (position == 0)
                         ? Screen.HOME_BEERS
                         : Screen.HOME_BREWERS;
-                get(analytics).createViewEvent(screen);
+                get(analytics).createEvent(screen);
             }
         });
 

@@ -1,10 +1,10 @@
 package quickbeer.android.analytics;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 public final class Analytics {
 
@@ -15,22 +15,20 @@ public final class Analytics {
         this.firebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
-    public void createViewEvent(@NonNull Events.Screen screen) {
-        Bundle params = new Bundle();
-        params.putString("view_screen", screen.toString());
-        firebaseAnalytics.logEvent("screen_name", params);
+    public void createEvent(@NonNull Events.Screen screen) {
+        firebaseAnalytics.logEvent(screen.toString(), new Bundle());
     }
 
-    public void createActionEvent(@NonNull Events.Action action) {
-        Bundle params = new Bundle();
-        params.putString("action", action.toString());
-        firebaseAnalytics.logEvent("action_event", params);
+    public void createEvent(@NonNull Events.Entry entry) {
+        firebaseAnalytics.logEvent(entry.toString(), new Bundle());
     }
 
-    public void createLaunchActionEvent(@NonNull Events.LaunchAction action) {
-        Bundle params = new Bundle();
-        params.putString("launch_action", action.toString());
-        firebaseAnalytics.logEvent("target", params);
+    public void createEvent(@NonNull Events.Action action) {
+        firebaseAnalytics.logEvent(action.toString(), new Bundle());
+    }
+
+    public void createEvent(@NonNull Events.LaunchAction action) {
+        firebaseAnalytics.logEvent(action.toString(), new Bundle());
     }
 
 }

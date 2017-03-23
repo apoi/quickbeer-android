@@ -32,6 +32,8 @@ import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events.Action;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -51,6 +53,10 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     @Inject
     @Nullable
     BeerDetailsViewModel beerDetailsViewModel;
+
+    @Nullable
+    @Inject
+    Analytics analytics;
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -139,6 +145,7 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         if (fromUser) {
             viewModel().tickBeer((int) rating);
+            get(analytics).createEvent(Action.TICK_ADD);
         }
     }
 

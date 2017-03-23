@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Permissions for Firebase -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name="quickbeer.android.QuickBeer"
         android:hardwareAccelerated="true"

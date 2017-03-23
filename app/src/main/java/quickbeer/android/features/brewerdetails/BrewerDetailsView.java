@@ -17,8 +17,6 @@
  */
 package quickbeer.android.features.brewerdetails;
 
-import org.threeten.bp.ZonedDateTime;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +29,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.threeten.bp.ZonedDateTime;
 
 import javax.inject.Inject;
 
@@ -213,6 +213,8 @@ public class BrewerDetailsView extends NestedScrollView {
     private void openUri(@NonNull LaunchAction action, @NonNull String uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         getContext().startActivity(intent);
+
+        get(analytics).createEvent(action);
     }
 
     private void navigateToCountry(@NonNull Country country) {

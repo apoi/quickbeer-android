@@ -38,6 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events.Entry;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -93,6 +95,10 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
     @Inject
     Picasso picasso;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     private int brewerId;
 
     @NonNull
@@ -146,6 +152,7 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
                 List<String> segments = intent.getData().getPathSegments();
                 if (segments.size() > 2) {
                     brewerId = Integer.valueOf(segments.get(2));
+                    get(analytics).createEvent(Entry.LINK_BREWER);
                 }
             }
 
