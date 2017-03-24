@@ -23,11 +23,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
-import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 
@@ -41,16 +41,11 @@ public class ProfileDetailsViewModel extends SimpleViewModel {
     @NonNull
     private final DataLayer.GetTickedBeers getTickedBeers;
 
-    @NonNull
-    private final ResourceProvider resourceProvider;
-
     @Inject
     public ProfileDetailsViewModel(@NonNull DataLayer.GetUser getUser,
-                                   @NonNull DataLayer.GetTickedBeers getTickedBeers,
-                                   @NonNull ResourceProvider resourceProvider) {
+                                   @NonNull DataLayer.GetTickedBeers getTickedBeers) {
         this.getUser = get(getUser);
         this.getTickedBeers = get(getTickedBeers);
-        this.resourceProvider = get(resourceProvider);
     }
 
     @NonNull
@@ -62,7 +57,8 @@ public class ProfileDetailsViewModel extends SimpleViewModel {
     @NonNull
     public Observable<List<Integer>> getTicksOnce(@NonNull Integer userId) {
         return getTickedBeers.call(String.valueOf(userId))
-                .toObservable()
+                .filter(DataStreamNotification::isOnNext)
+                .map(DataStreamNotification::getValue)
                 .map(ItemList::getItems);
     }
 

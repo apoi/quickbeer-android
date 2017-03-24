@@ -18,64 +18,42 @@
 package quickbeer.android.features.list.fragments;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
-import quickbeer.android.core.viewmodel.DataBinder;
-import quickbeer.android.core.viewmodel.SimpleDataBinder;
-import quickbeer.android.data.DataLayer;
-import rx.subscriptions.CompositeSubscription;
+import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.TickedBeersViewModel;
 
-public class TickedBeersFragment extends BeerSearchFragment {
+import static io.reark.reark.utils.Preconditions.get;
 
-    /*
+public class TickedBeersFragment extends BeerListFragment {
+
+    @Nullable
     @Inject
-    DataLayer.GetTickedBeers getTickedBeers;
-    */
+    TickedBeersViewModel tickedBeersViewModel;
 
+    @Nullable
     @Inject
-    DataLayer.GetUser getUser;
-
-    @NonNull
-    private final DataBinder dataBinder = new SimpleDataBinder() {
-        @Override
-        public void bind(@NonNull CompositeSubscription subscription) {
-            listDataBinder().bind(subscription);
-
-            /*
-            subscription.add(getUser.call()
-                    .compose(RxUtils::pickValue)
-                    .filter(User::isLogged)
-                    .filter(user -> !user.userId().isEmpty())
-                    .map(User::userId)
-                    .switchMap(id -> get(getTickedBeers.call(id)))
-                    .subscribe(notification -> listViewModel().setNotification(notification),
-                            Timber::e));
-                            */
-        }
-
-        @Override
-        public void unbind() {
-            listDataBinder().unbind();
-        }
-    };
+    NavigationProvider navigationProvider;
 
     @Override
     protected void inject() {
+        super.inject();
+
         getComponent().inject(this);
     }
 
-    /*
     @NonNull
     @Override
-    protected ViewModel viewModel() {
-        return listViewModel();
+    protected BeerListViewModel viewModel() {
+        return get(tickedBeersViewModel);
     }
-    */
 
-    @NonNull
     @Override
-    protected DataBinder dataBinder() {
-        return dataBinder;
+    protected void onQuery(@NonNull String query) {
+        get(navigationProvider).triggerSearch(query);
     }
+
 }

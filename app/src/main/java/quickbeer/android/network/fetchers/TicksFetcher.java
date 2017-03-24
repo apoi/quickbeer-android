@@ -63,6 +63,12 @@ public class TicksFetcher extends BeerSearchFetcher {
 
     @NonNull
     @Override
+    protected List<Beer> sort(@NonNull List<Beer> list) {
+        return list;
+    }
+
+    @NonNull
+    @Override
     protected Single<List<Beer>> createNetworkObservable(@NonNull String userId) {
         Map<String, String> params = networkUtils.createRequestParams("m", "1");
         params.put("u", userId);

@@ -56,7 +56,6 @@ import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.network.fetchers.TickBeerFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
-import rx.Single;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -554,11 +553,40 @@ public class DataLayer extends DataLayerBase {
     //// TICKS
 
     @NonNull
-    public Single<ItemList<Integer>> getTickedBeers(@NonNull String userId) {
-        Timber.v("getTickedBeers(%s)", get(userId));
+    public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull String userId) {
+        Timber.v("getTickedBeers");
 
-        return beerStore.getTickedIdsOnce()
-                .map(ItemList::<Integer>create);
+        // Trigger a fetch only if there was no cached result
+        Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
+                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId))
+                             .toObservable()
+                             .filter(RxUtils::isNoneOrEmpty)
+                             .doOnNext(__ -> {
+                                 Timber.v("Search not cached, fetching");
+                                 fetchTickedBeers(userId);
+                             });
+
+        return getTickedBeersResultStream(userId)
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> getTickedBeersResultStream(@NonNull String userId) {
+        Timber.v("getTickedBeersResultStream");
+
+        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId);
+        String uri = BeerSearchFetcher.getUniqueUri(queryId);
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                                  .compose(RxUtils::pickValue); // No need to filter stale statuses?
+
+        Observable<ItemList<String>> beerSearchObservable =
+                beerListStore.getOnceAndStream(queryId)
+                             .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, beerSearchObservable);
     }
 
     public int fetchTickedBeers(@NonNull String userId) {
@@ -817,7 +845,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetTickedBeers {
         @NonNull
-        Single<ItemList<Integer>> call(String userId);
+        Observable<DataStreamNotification<ItemList<String>>> call(String userId);
     }
 
     public interface GetBrewer {

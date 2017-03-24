@@ -15,41 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.activity.base;
+package quickbeer.android.providers;
 
-import java.util.List;
-
+import io.reark.reark.data.DataStreamNotification;
 import rx.Observable;
 
-public abstract class FilterActivity extends SearchBarActivity {
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        closeSearch();
-    }
-
-    @Override
-    protected Observable<List<String>> getInitialQueriesObservable() {
-        return Observable.empty();
-    }
-
-    @Override
-    protected boolean liveFilteringEnabled() {
-        return true;
-    }
-
-    @Override
-    protected boolean contentOverlayEnabled() {
-        return false;
-    }
-
-    @Override
-    protected int minimumSearchLength() {
-        return -1;
-    }
-
-    @Override
-    protected void showTooShortSearchError() {
-    }
+public interface ProgressStatusAggregator {
+    void addProgressObservable(Observable<? extends DataStreamNotification> observable);
 }
