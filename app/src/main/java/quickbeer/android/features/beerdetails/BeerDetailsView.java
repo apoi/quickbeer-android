@@ -42,6 +42,7 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.Style;
+import quickbeer.android.data.pojos.User;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
@@ -108,11 +109,17 @@ public class BeerDetailsView extends NestedScrollView {
     @BindView(R.id.beer_ibu)
     TextView ibuTextView;
 
+    @BindView(R.id.rating_card)
+    View ratingCard;
+
     @BindView(R.id.rating_bar)
     RatingBar ratingBar;
 
     @BindView(R.id.ticked_date)
     TextView tickedDate;
+
+    @BindView(R.id.login_card)
+    View loginCard;
 
     @Nullable
     @Inject
@@ -155,6 +162,14 @@ public class BeerDetailsView extends NestedScrollView {
 
         ibuColumn.setOnClickListener(__ ->
                 showToast(R.string.description_ibu));
+    }
+
+    public void setUser(@NonNull User user) {
+        ofObj(user)
+                .ifSome(__ -> {
+                    loginCard.setVisibility(GONE);
+                    ratingCard.setVisibility(VISIBLE);
+                });
     }
 
     public void setBeer(@NonNull Beer beer) {

@@ -59,10 +59,11 @@
     <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
     <!-- Ticking -->
-    <string name="beer_tick_date">You ticked this beer on %1$s at %2$s</string>
-    <string name="tick_success">%s ticked!</string>
-    <string name="tick_removed">Tick removed!</string>
-    <string name="tick_failure">Ticking failed! Try again later.</string>
+    <string name="beer_tick_date">You rated this beer on %1$s at %2$s</string>
+    <string name="tick_success">%s rated!</string>
+    <string name="tick_removed">Rating removed!</string>
+    <string name="tick_failure">Rating failed! Try again later.</string>
+    <string name="beer_details_login">Log in to rate this beer</string>
 
     <!-- Brewer details -->
     <string name="brewer_details_no_photo">No logo available for this brewer</string>

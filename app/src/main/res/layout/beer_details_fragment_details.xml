@@ -18,11 +18,13 @@
         android:paddingBottom="@dimen/card_view_margin">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/rating_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/gray_800"
             android:layout_marginBottom="@dimen/card_view_margin"
-            android:elevation="@dimen/card_view_elevation">
+            android:elevation="@dimen/card_view_elevation"
+            android:visibility="gone">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -42,11 +44,36 @@
                     android:id="@+id/ticked_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:layout_below="@id/rating_bar"
                     android:layout_centerHorizontal="true"
                     android:visibility="gone"
                     style="@style/BeerDetailsDescription"/>
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+                android:id="@+id/login_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/gray_800"
+                android:layout_marginBottom="@dimen/card_view_margin"
+                android:elevation="@dimen/card_view_elevation">
+
+            <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/beer_details_login"
+                        style="@style/BeerDetailsDescription"/>
 
             </RelativeLayout>
 
