@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RatingBar;
@@ -45,6 +46,7 @@ import quickbeer.android.data.pojos.Style;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
@@ -109,17 +111,14 @@ public class BeerDetailsView extends NestedScrollView {
     @BindView(R.id.beer_ibu)
     TextView ibuTextView;
 
-    @BindView(R.id.rating_card)
-    View ratingCard;
-
     @BindView(R.id.rating_bar)
     RatingBar ratingBar;
 
     @BindView(R.id.ticked_date)
     TextView tickedDate;
 
-    @BindView(R.id.login_card)
-    View loginCard;
+    @BindView(R.id.rating_card_overlay)
+    View ratingCardOverlay;
 
     @Nullable
     @Inject
@@ -136,6 +135,10 @@ public class BeerDetailsView extends NestedScrollView {
     @Nullable
     @Inject
     ToastProvider toastProvider;
+
+    @Nullable
+    @Inject
+    NavigationProvider navigationProvider;
 
     public BeerDetailsView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -162,14 +165,21 @@ public class BeerDetailsView extends NestedScrollView {
 
         ibuColumn.setOnClickListener(__ ->
                 showToast(R.string.description_ibu));
+
+        ratingCardOverlay.setOnClickListener(__ -> showLoginDialog());
+    }
+
+    private void showLoginDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.login_dialog_title)
+                .setMessage(R.string.login_dialog_message)
+                .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                .show();
     }
 
     public void setUser(@NonNull User user) {
-        ofObj(user)
-                .ifSome(__ -> {
-                    loginCard.setVisibility(GONE);
-                    ratingCard.setVisibility(VISIBLE);
-                });
+        ofObj(user).ifSome(__ -> ratingCardOverlay.setVisibility(GONE));
     }
 
     public void setBeer(@NonNull Beer beer) {
@@ -276,6 +286,13 @@ public class BeerDetailsView extends NestedScrollView {
 
         Intent intent = new Intent(getContext(), BrewerDetailsActivity.class);
         intent.putExtra("brewerId", brewerId);
+        getContext().startActivity(intent);
+    }
+
+    private void navigateToLogin() {
+        Timber.d("navigateToLogin");
+
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
         getContext().startActivity(intent);
     }
 

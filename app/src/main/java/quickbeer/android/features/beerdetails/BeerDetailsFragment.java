@@ -79,6 +79,12 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(detailsView::setBrewer, Timber::e));
 
+            subscription.add(viewModel()
+                    .getUser()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(detailsView::setUser, Timber::e));
+
             // Re-emit beer on tick failure to reset rating bar
             subscription.add(viewModel()
                     .tickSuccessStatus()

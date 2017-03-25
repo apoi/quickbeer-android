@@ -28,8 +28,10 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.ResourceProvider;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
@@ -64,6 +66,9 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
+    private final DataLayer.GetUser getUser;
+
+    @NonNull
     private final DataLayer.TickBeer tickBeer;
 
     @NonNull
@@ -74,6 +79,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     public BeerDetailsViewModel(@NonNull DataLayer.GetBeer getBeer,
                                 @NonNull DataLayer.TickBeer tickBeer,
                                 @NonNull DataLayer.GetBrewer getBrewer,
+                                @NonNull DataLayer.GetUser getUser,
                                 @NonNull DataLayer.GetReviews getReviews,
                                 @NonNull DataLayer.GetReview getReview,
                                 @NonNull ResourceProvider resourceProvider,
@@ -83,6 +89,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
 
         this.getBeer = get(getBeer);
+        this.getUser = get(getUser);
         this.tickBeer = get(tickBeer);
         this.resourceProvider = get(resourceProvider);
         this.notificationProvider = get(notificationProvider);
@@ -104,6 +111,12 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     @NonNull
     public Observable<Brewer> getBrewer() {
         return brewerViewModel.getBrewer();
+    }
+
+    @NonNull
+    public Observable<User> getUser() {
+        return getUser.call()
+                .compose(RxUtils::pickValue);
     }
 
     @NonNull
@@ -168,4 +181,5 @@ public class BeerDetailsViewModel extends SimpleViewModel {
 
         subscription.clear();
     }
+
 }

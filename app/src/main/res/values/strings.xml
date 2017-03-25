@@ -100,5 +100,7 @@
     <string name="about_source_code">Source code</string>
     <string name="about_quickbeer_license">QuickBeer License</string>
     <string name="about_version">Version %s</string>
+    <string name="login_dialog_title">Login required</string>
+    <string name="login_dialog_message">You need to login to rate beers. Login now?</string>
 
 </resources>
