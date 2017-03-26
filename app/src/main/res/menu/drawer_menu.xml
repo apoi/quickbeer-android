@@ -5,35 +5,35 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_home"
-            android:title="Home" />
+            android:title="@string/menu_home" />
     </group>
 
-    <item android:id="@+id/submenu_0" android:title="Reviews">
+    <item android:id="@+id/submenu_0" android:title="@string/menu_header_reviews">
         <menu>
             <group android:id="@+id/drawer_group_reviews">
                 <item
                     android:id="@+id/nav_ticks"
                     android:icon="@drawable/ic_menu_ticked"
-                    android:title="Ticked beers" />
+                    android:title="@string/menu_ticked_beers" />
             </group>
         </menu>
     </item>
 
-    <item android:id="@+id/submenu_1" android:title="Top charts">
+    <item android:id="@+id/submenu_1" android:title="@string/menu_header_top_charts">
         <menu>
             <group android:id="@+id/drawer_group_charts">
                 <item
                     android:id="@+id/nav_best"
                     android:icon="@drawable/ic_menu_stars"
-                    android:title="Best of all" />
+                    android:title="@string/menu_top_beers" />
                 <item
                     android:id="@+id/nav_countries"
                     android:icon="@drawable/ic_menu_globe"
-                    android:title="By country" />
+                    android:title="@string/menu_top_by_country" />
                 <item
                     android:id="@+id/nav_styles"
                     android:icon="@drawable/ic_menu_style"
-                    android:title="By beer style" />
+                    android:title="@string/menu_top_by_beer_style" />
             </group>
         </menu>
     </item>
@@ -42,7 +42,7 @@
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_about"
-            android:title="About QuickBeer" />
+            android:title="@string/menu_about" />
     </group>
 
 </menu>

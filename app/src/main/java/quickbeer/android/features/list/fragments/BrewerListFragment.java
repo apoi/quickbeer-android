@@ -135,7 +135,7 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
         checkNotNull(searchViewViewModel);
 
         searchViewViewModel.setMode(Mode.SEARCH,
-                get(resourceProvider).getString(R.string.search_box_hint_search_brewers));
+                get(resourceProvider).getString(R.string.search_box_hint_search_beers));
     }
 
     @Override

@@ -60,8 +60,8 @@ public abstract class DrawerActivity extends AppCompatActivity
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerToggle = new ActionBarDrawerToggle(
                 this, drawerLayout, (Toolbar) findViewById(R.id.toolbar),
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
+                R.string.action_drawer_open,
+                R.string.action_drawer_close);
 
         ActionBar actionBar = get(getSupportActionBar());
         actionBar.setDisplayHomeAsUpEnabled(true);

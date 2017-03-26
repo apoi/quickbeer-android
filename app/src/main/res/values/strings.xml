@@ -10,8 +10,17 @@
     <string name="search_too_short">Search should be at least four characters</string>
 
     <!-- Navigation drawer -->
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- Drawer menu -->
+    <string name="menu_ticked_beers">Ticked beers</string>
+    <string name="menu_top_beers">Best of all</string>
+    <string name="menu_top_by_country">By country</string>
+    <string name="menu_top_by_beer_style">By beer style</string>
+    <string name="menu_header_reviews">Reviews</string>
+    <string name="menu_header_top_charts">Top charts</string>
+    <string name="menu_about">About QuickBeer</string>
+    <string name="menu_home">Home</string>
+    <string name="action_drawer_open">Open navigation drawer</string>
+    <string name="action_drawer_close">Close navigation drawer</string>
 
     <!-- Search -->
     <string name="search_status_loading">Loading…</string>
