@@ -99,7 +99,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
         }
     };
 
-    private void handleResultList(@NonNull List<BeerViewModel> beerList) {
+    protected void handleResultList(@NonNull List<BeerViewModel> beerList) {
         if (beerList.size() == 1 && singleResultShouldOpenDetails()) {
             openBeerDetails(beerList.get(0).getBeerId());
         } else {
@@ -177,12 +177,6 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     @NonNull
     @Override
     protected DataBinder dataBinder() {
-        return dataBinder;
-    }
-
-    // TODO remove
-    @NonNull
-    protected DataBinder listDataBinder() {
         return dataBinder;
     }
 

@@ -172,9 +172,9 @@ public class BeerDetailsView extends NestedScrollView {
     private void showLoginDialog() {
         new AlertDialog.Builder(getContext())
                 .setTitle(R.string.login_dialog_title)
-                .setMessage(R.string.login_dialog_message)
-                .setPositiveButton("OK", (dialog, which) -> navigateToLogin())
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
+                .setMessage(R.string.login_to_rate_message)
+                .setPositiveButton(R.string.ok, (dialog, which) -> navigateToLogin())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
                 .show();
     }
 

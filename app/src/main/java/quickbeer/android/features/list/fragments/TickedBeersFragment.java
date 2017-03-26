@@ -17,14 +17,26 @@
  */
 package quickbeer.android.features.list.fragments;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 
 import javax.inject.Inject;
 
+import polanski.option.Option;
+import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel;
+import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.TickedBeersViewModel;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -38,6 +50,40 @@ public class TickedBeersFragment extends BeerListFragment {
     @Inject
     NavigationProvider navigationProvider;
 
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull CompositeSubscription subscription) {
+            subscription.add(get(view)
+                    .selectedBeerStream()
+                    .doOnNext(beerId -> Timber.d("Selected beer " + beerId))
+                    .subscribe(beerId -> openBeerDetails(beerId), Timber::e));
+
+            subscription.add(viewModel()
+                    .getBeers()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(TickedBeersFragment.this::handleResultList, Timber::e));
+
+            subscription.add(viewModel()
+                    .getProgressStatus()
+                    .map(TickedBeersFragment.this::toStatusValue)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(get(view)::setProgressStatus, Timber::e));
+
+            subscription.add(get(searchViewViewModel)
+                    .getQueryStream()
+                    .subscribe(TickedBeersFragment.this::onQuery, Timber::e));
+
+            subscription.add(viewModel()
+                    .getUser()
+                    .first()
+                    .filter(Option::isNone)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(__ -> showLoginDialog(), Timber::e));
+        }
+    };
+
     @Override
     protected void inject() {
         super.inject();
@@ -47,7 +93,31 @@ public class TickedBeersFragment extends BeerListFragment {
 
     @NonNull
     @Override
-    protected BeerListViewModel viewModel() {
+    protected String toStatusValue(@NonNull ProgressStatus progressStatus) {
+        return progressStatus == NetworkViewModel.ProgressStatus.EMPTY
+                ? getString(R.string.ticks_empty_list)
+                : super.toStatusValue(progressStatus);
+    }
+
+    private void showLoginDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.login_dialog_title)
+                .setMessage(R.string.login_to_view_ratings_message)
+                .setPositiveButton(R.string.ok, (dialog, which) -> navigateToLogin())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
+                .show();
+    }
+
+    private void navigateToLogin() {
+        Timber.d("navigateToLogin");
+
+        Intent intent = new Intent(getContext(), ProfileActivity.class);
+        getContext().startActivity(intent);
+    }
+
+    @NonNull
+    @Override
+    protected TickedBeersViewModel viewModel() {
         return get(tickedBeersViewModel);
     }
 
@@ -56,4 +126,9 @@ public class TickedBeersFragment extends BeerListFragment {
         get(navigationProvider).triggerSearch(query);
     }
 
+    @NonNull
+    @Override
+    protected DataBinder dataBinder() {
+        return dataBinder;
+    }
 }

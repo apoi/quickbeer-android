@@ -2,6 +2,10 @@
 
     <string name="app_name">QuickBeer</string>
 
+    <!-- General -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
     <!-- Search bar -->
     <string name="search_box_hint_search_beers">Search beers</string>
     <string name="search_box_hint_search_brewers">Search brewers</string>
@@ -73,6 +77,10 @@
     <string name="tick_removed">Rating removed!</string>
     <string name="tick_failure">Rating failed! Try again later.</string>
     <string name="beer_details_login">Log in to rate this beer</string>
+    <string name="ticks_empty_list">You haven\'t rated any beers yet.</string>
+    <string name="login_dialog_title">Login required</string>
+    <string name="login_to_rate_message">You need to login to rate beers. Login now?</string>
+    <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>
 
     <!-- Brewer details -->
     <string name="brewer_details_no_photo">No logo available for this brewer</string>
@@ -81,7 +89,6 @@
     <string name="brewer_details_no_twitter">Twitter feed not available</string>
 
     <!-- Barcode scanner -->
-    <string name="ok">OK</string>
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
     <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>
     <string name="low_storage_error">Barcode scanner dependencies cannot be downloaded due to low device storage</string>
@@ -110,7 +117,5 @@
     <string name="about_source_code">Source Code</string>
     <string name="about_quickbeer_license">QuickBeer License</string>
     <string name="about_version">Version %s</string>
-    <string name="login_dialog_title">Login required</string>
-    <string name="login_dialog_message">You need to login to rate beers. Login now?</string>
 
 </resources>

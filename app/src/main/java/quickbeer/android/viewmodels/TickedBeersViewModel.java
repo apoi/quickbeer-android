@@ -22,10 +22,10 @@ import android.support.annotation.NonNull;
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
+import polanski.option.Option;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
@@ -61,6 +61,11 @@ public class TickedBeersViewModel extends BeerListViewModel {
     }
 
     @NonNull
+    public Observable<Option<User>> getUser() {
+        return getUser.call();
+    }
+
+    @NonNull
     @Override
     protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
         Observable<DataStreamNotification<ItemList<String>>> searchObservable =
@@ -72,10 +77,9 @@ public class TickedBeersViewModel extends BeerListViewModel {
                         .switchMap(query -> get(getBeerSearch).call(query));
 
         return getUser.call()
-                .compose(RxUtils::pickValue)
-                .map(User::id)
-                .map(String::valueOf)
-                .flatMap(get(getTickedBeers)::call)
+                .flatMap(userOption -> userOption.match(
+                        user -> get(getTickedBeers).call(String.valueOf(user.id())),
+                        () -> Observable.just(DataStreamNotification.<ItemList<String>>completedWithoutValue())))
                 .mergeWith(searchObservable);
     }
 }
