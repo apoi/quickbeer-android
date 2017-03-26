@@ -28,7 +28,7 @@
         <ImageView
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:src="@drawable/quickbeer_logo" />
+            android:src="@drawable/logo_quickbeer" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
