@@ -14,7 +14,7 @@
     <string name="search_too_short">Search should be at least four characters</string>
 
     <!-- Drawer menu -->
-    <string name="menu_ticked_beers">Ticked beers</string>
+    <string name="menu_ticked_beers">Rated beers</string>
     <string name="menu_top_beers">Best of all</string>
     <string name="menu_top_by_country">By country</string>
     <string name="menu_top_by_beer_style">By beer style</string>
@@ -105,7 +105,7 @@
     <!-- Profile details -->
     <string name="profile">Profile</string>
     <string name="welcome_text">Welcome, %s!</string>
-    <string name="ticked_beers">You have %d ticked beers.</string>
+    <string name="ticked_beers">You have %d rated beers.</string>
 
     <!-- About application -->
     <string name="about">About</string>
