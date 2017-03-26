@@ -25,10 +25,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class StringDeserializer implements JsonDeserializer<String> {
+public class ApiStringDeserializer implements JsonDeserializer<String> {
+
+    private static final Pattern PATTERN = Pattern.compile("<br ?/?>", Pattern.CASE_INSENSITIVE);
+
     @Override
     public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        return Html.fromHtml(json.getAsString()).toString();
+        String value = PATTERN.matcher(json.getAsString()).replaceAll(Matcher.quoteReplacement("<p>"));
+        return Html.fromHtml(value).toString().trim();
     }
 }

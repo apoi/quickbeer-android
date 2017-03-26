@@ -49,9 +49,10 @@ import okhttp3.OkHttpClient;
 import quickbeer.android.BuildConfig;
 import quickbeer.android.Constants;
 import quickbeer.android.injections.ForApplication;
+import quickbeer.android.network.utils.ApiDateDeserializer;
+import quickbeer.android.network.utils.ApiStringDeserializer;
 import quickbeer.android.network.utils.DateDeserializer;
 import quickbeer.android.network.utils.LoginRedirectInterceptor;
-import quickbeer.android.network.utils.StringDeserializer;
 
 @Module
 public final class NetworkModule {
@@ -60,7 +61,7 @@ public final class NetworkModule {
     @Singleton
     public static NetworkApi provideNetworkApi(
             @NonNull OkHttpClient client,
-            @NonNull Gson gson) {
+            @Named("deserializingGson")@NonNull Gson gson) {
         return new NetworkApi(client, gson);
     }
 
@@ -89,10 +90,20 @@ public final class NetworkModule {
 
     @Provides
     @Singleton
-    public static Gson provideUnescapingGson() {
+    public static Gson provideGson() {
         return new GsonBuilder()
-                .registerTypeAdapter(String.class, new StringDeserializer())
                 .registerTypeAdapter(ZonedDateTime.class, new DateDeserializer())
+                .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
+                .create();
+    }
+
+    @Provides
+    @Singleton
+    @Named("deserializingGson")
+    public static Gson provideDeserializingGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(String.class, new ApiStringDeserializer())
+                .registerTypeAdapter(ZonedDateTime.class, new ApiDateDeserializer())
                 .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
                 .create();
     }

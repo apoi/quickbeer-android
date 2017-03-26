@@ -33,11 +33,22 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.lang.reflect.Type;
 import java.util.Locale;
 
-public class DateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSerializer<ZonedDateTime> {
+public class ApiDateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSerializer<ZonedDateTime> {
+
+    private static final ZoneId PACIFIC_ZONE =
+            ZoneId.of("America/Los_Angeles");
 
     private static final DateTimeFormatter ISO_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
                     .withZone(ZoneOffset.UTC);
+
+    private static final DateTimeFormatter US_DATETIME_FORMAT =
+            DateTimeFormatter.ofPattern("M/d/yyyy h:mm:ss a")
+                    .withLocale(Locale.US)
+                    .withZone(PACIFIC_ZONE);
+
+    private static final DateTimeFormatter US_DATE_FORMAT =
+            DateTimeFormatter.ofPattern("M/d/yyyy");
 
     @Override
     public JsonElement serialize(ZonedDateTime date, Type typeOfSrc, JsonSerializationContext context) {
@@ -46,7 +57,16 @@ public class DateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSe
 
     @Override
     public ZonedDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
-        return ZonedDateTime.parse(json.getAsString(), ISO_FORMAT);
+        final String date = json.getAsString();
+
+        if (date.contains("T")) {
+            return ZonedDateTime.parse(date, ISO_FORMAT);
+        } else if (date.contains(" ")) {
+            return ZonedDateTime.parse(date, US_DATETIME_FORMAT);
+        } else {
+            return LocalDate.parse(date, US_DATE_FORMAT)
+                            .atStartOfDay(ZoneOffset.UTC);
+        }
     }
 
 }
