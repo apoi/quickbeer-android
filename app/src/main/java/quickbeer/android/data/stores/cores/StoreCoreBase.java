@@ -22,8 +22,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
-import io.reark.reark.data.stores.cores.ContentProviderStoreCore;
 import quickbeer.android.data.providers.RateBeerProvider;
+import quickbeer.android.data.stores.reark.ContentProviderStoreCore;
 
 public abstract class StoreCoreBase<T, U> extends ContentProviderStoreCore<T, U> {
 
