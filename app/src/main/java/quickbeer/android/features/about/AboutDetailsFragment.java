@@ -22,24 +22,35 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
 import quickbeer.android.BuildConfig;
 import quickbeer.android.R;
+import quickbeer.android.analytics.Analytics;
+import quickbeer.android.analytics.Events.LaunchAction;
+import quickbeer.android.core.fragment.BaseFragment;
 
 import static butterknife.ButterKnife.bind;
+import static io.reark.reark.utils.Preconditions.get;
 
-public class AboutDetailsFragment extends Fragment {
+public class AboutDetailsFragment extends BaseFragment {
 
     @BindView(R.id.about_version)
     TextView aboutVersion;
+
+    @BindView(R.id.about_spice_program)
+    View aboutChilicorn;
+
+    @BindView(R.id.about_iiro)
+    View aboutIiro;
 
     @BindView(R.id.about_source_row)
     View sourceRow;
@@ -56,8 +67,17 @@ public class AboutDetailsFragment extends Fragment {
     @BindView(R.id.about_privacy_policy_row)
     View privacyRow;
 
+    @Nullable
+    @Inject
+    Analytics analytics;
+
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
+
+    @Override
+    protected void inject() {
+        getComponent().inject(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -72,11 +92,13 @@ public class AboutDetailsFragment extends Fragment {
 
         aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
 
-        sourceRow.setOnClickListener(__ -> openUri("https://github.com/apoi/quickbeer-next"));
-        applicationLicenseRow.setOnClickListener(__ -> openUri("https://ztesch.fi/quickbeer/license"));
-        libraryLicensesRow.setOnClickListener(__ -> openUri("https://ztesch.fi/quickbeer/open-source"));
-        assetsRow.setOnClickListener(__ -> openUri("https://ztesch.fi/quickbeer/graphics-assets"));
-        privacyRow.setOnClickListener(__ -> openUri("https://ztesch.fi/quickbeer/privacy-policy"));
+        aboutChilicorn.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_SPICE_PROGRAM, "https://spiceprogram.org"));
+        aboutIiro.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_IIRO, "http://iiroisotalo.com"));
+        sourceRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_SOURCE, "https://github.com/apoi/quickbeer-next"));
+        applicationLicenseRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_LICENSE, "https://ztesch.fi/quickbeer/license"));
+        libraryLicensesRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_OPEN_SOURCE, "https://ztesch.fi/quickbeer/open-source"));
+        assetsRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_GRAPHICS_ASSETS, "https://ztesch.fi/quickbeer/graphics-assets"));
+        privacyRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_PRIVACY_POLICY, "https://ztesch.fi/quickbeer/privacy-policy"));
     }
 
     @Override
@@ -86,9 +108,11 @@ public class AboutDetailsFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private void openUri(@NonNull String uri) {
+    private void openUri(@NonNull LaunchAction action, @NonNull String uri) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         getContext().startActivity(intent);
+
+        get(analytics).createEvent(action);
     }
 
 }

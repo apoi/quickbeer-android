@@ -2,17 +2,17 @@
 <android.support.v4.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingBottom="@dimen/card_view_margin"
-    android:clipToPadding="false"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    android:paddingBottom="20dp">
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/card_view_margin"
-        android:paddingBottom="@dimen/card_view_margin"
         app:cardBackgroundColor="@color/gray_800"
         android:elevation="@dimen/card_view_elevation">
 
@@ -42,6 +42,52 @@
                 <TextView
                     android:text="@string/about_description"
                     style="@style/BeerDetailsDescription" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/about_spice_program"
+                style="@style/BeerDetailsRowLayout"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/logo_chilicorn"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:text="QuickBeer is sponsored by the Futurice Open Source Program"
+                    style="@style/BeerDetailsDescription"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/about_iiro"
+                style="@style/BeerDetailsRowLayout"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp">
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/logo_iiro"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="5dp"
+                    android:text="Original Android design by Iiro Isotalo"
+                    style="@style/BeerDetailsDescription"/>
 
             </LinearLayout>
 
@@ -115,6 +161,5 @@
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 </android.support.v4.widget.NestedScrollView>

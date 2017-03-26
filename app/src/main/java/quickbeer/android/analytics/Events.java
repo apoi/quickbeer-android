@@ -69,6 +69,8 @@ public interface Events {
         BREWER_FACEBOOK("launch_brewer_facebook"),
         BREWER_TWITTER("launch_brewer_twitter"),
 
+        ABOUT_SPICE_PROGRAM("launch_about_spice"),
+        ABOUT_IIRO("launch_about_iiro"),
         ABOUT_SOURCE("launch_about_source"),
         ABOUT_LICENSE("launch_about_license"),
         ABOUT_OPEN_SOURCE("launch_about_open_source"),
