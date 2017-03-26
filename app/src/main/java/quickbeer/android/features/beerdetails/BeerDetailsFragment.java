@@ -110,6 +110,15 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            beerId = savedInstanceState.getInt("beerId");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.beer_details_fragment_details, container, false);
     }
@@ -126,6 +135,12 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
         super.onActivityCreated(savedInstanceState);
 
         viewModel().setBeerId(beerId);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("beerId", beerId);
     }
 
     @Override

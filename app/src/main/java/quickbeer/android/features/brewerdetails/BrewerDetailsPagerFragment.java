@@ -70,6 +70,15 @@ public class BrewerDetailsPagerFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            brewerId = savedInstanceState.getInt("brewerId");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.brewer_details_fragment_pager, container, false);
     }
@@ -97,6 +106,12 @@ public class BrewerDetailsPagerFragment extends BaseFragment {
                 get(analytics).createEvent(screen);
             }
         });
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("brewerId", brewerId);
     }
 
     @Override

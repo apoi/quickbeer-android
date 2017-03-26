@@ -83,6 +83,15 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            brewerId = savedInstanceState.getInt("brewerId");
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.brewer_details_fragment_details, container, false);
     }
@@ -98,6 +107,12 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         viewModel().setBrewerId(brewerId);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("brewerId", brewerId);
     }
 
     @Override

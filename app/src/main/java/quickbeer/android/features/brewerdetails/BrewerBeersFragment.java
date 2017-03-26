@@ -56,10 +56,25 @@ public class BrewerBeersFragment  extends BeerListFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            brewerId = savedInstanceState.getInt("brewerId");
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         get(brewerBeersViewModel).setBrewerId(brewerId);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("brewerId", brewerId);
     }
 
     @NonNull
