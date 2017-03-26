@@ -151,7 +151,7 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
         if (fromUser) {
             viewModel().tickBeer((int) rating);
-            get(analytics).createEvent(Action.TICK_ADD);
+            get(analytics).createEvent(rating > 0 ? Action.TICK_ADD : Action.TICK_REMOVE);
         }
     }
 
