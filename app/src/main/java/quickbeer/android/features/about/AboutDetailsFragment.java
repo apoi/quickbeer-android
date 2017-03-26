@@ -52,6 +52,9 @@ public class AboutDetailsFragment extends BaseFragment {
     @BindView(R.id.about_iiro)
     View aboutIiro;
 
+    @BindView(R.id.about_google_play)
+    View googlePlayRow;
+
     @BindView(R.id.about_source_row)
     View sourceRow;
 
@@ -91,9 +94,10 @@ public class AboutDetailsFragment extends BaseFragment {
         unbinder.setIfNone(bind(this, view));
 
         aboutVersion.setText(String.format(getString(R.string.about_version), BuildConfig.VERSION_NAME));
-
         aboutChilicorn.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_SPICE_PROGRAM, "https://spiceprogram.org"));
         aboutIiro.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_IIRO, "http://iiroisotalo.com"));
+
+        googlePlayRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_GOOGLE_PLAY, "https://play.google.com/store/apps/details?id=quickbeer.android"));
         sourceRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_SOURCE, "https://github.com/apoi/quickbeer-next"));
         applicationLicenseRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_LICENSE, "https://ztesch.fi/quickbeer/license"));
         libraryLicensesRow.setOnClickListener(__ -> openUri(LaunchAction.ABOUT_OPEN_SOURCE, "https://ztesch.fi/quickbeer/open-source"));

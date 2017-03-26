@@ -93,8 +93,8 @@
 
     <!-- About application -->
     <string name="about">About</string>
-    <string name="about_acknowledgements">Acknowledgements</string>
-    <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it in Play Store if you like the app. Thanks!</string>
+    <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it on Google Play if you like the app. Thanks!</string>
+    <string name="about_google_play">QuickBeer on Google Play</string>
     <string name="about_open_source_licenses">Open Source Licenses</string>
     <string name="about_graphic_asset_licenses">Graphic Asset Licenses</string>
     <string name="about_privacy_policy">Privacy Policy</string>

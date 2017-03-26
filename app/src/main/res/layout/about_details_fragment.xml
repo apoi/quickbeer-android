@@ -94,6 +94,19 @@
             <include layout="@layout/beer_details_separator_horizontal" />
 
             <RelativeLayout
+                android:id="@+id/about_google_play"
+                android:clickable="true"
+                style="@style/BeerDetailsRowLayout">
+
+                <TextView
+                    style="@style/BeerDetailsValue"
+                    android:text="@string/about_google_play"/>
+
+            </RelativeLayout>
+
+            <include layout="@layout/beer_details_separator_horizontal" />
+
+            <RelativeLayout
                 android:id="@+id/about_source_row"
                 android:clickable="true"
                 style="@style/BeerDetailsRowLayout">
@@ -116,7 +129,6 @@
                     android:text="@string/about_quickbeer_license"/>
 
             </RelativeLayout>
-
 
             <include layout="@layout/beer_details_separator_horizontal" />
 
