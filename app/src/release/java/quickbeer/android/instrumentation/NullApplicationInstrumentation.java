@@ -27,8 +27,6 @@ package quickbeer.android.instrumentation;
 
 import android.support.annotation.NonNull;
 
-import okhttp3.OkHttpClient;
-
 public class NullApplicationInstrumentation implements ApplicationInstrumentation {
 
     @Override

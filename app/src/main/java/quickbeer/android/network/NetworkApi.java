@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
@@ -34,7 +33,6 @@ import quickbeer.android.data.pojos.Review;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Observable;
 import rx.Single;
 
 import static io.reark.reark.utils.Preconditions.get;

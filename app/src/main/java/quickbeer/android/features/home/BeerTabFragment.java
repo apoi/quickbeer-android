@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import quickbeer.android.R;
 import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.NetworkViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.RecentBeersViewModel;
 

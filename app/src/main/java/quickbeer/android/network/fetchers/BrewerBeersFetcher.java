@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.List;
-import java.util.Map;
 
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.Beer;

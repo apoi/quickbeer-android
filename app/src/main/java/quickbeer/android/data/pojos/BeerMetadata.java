@@ -17,12 +17,12 @@
  */
 package quickbeer.android.data.pojos;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.auto.value.AutoValue;
 
 import org.threeten.bp.ZonedDateTime;
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
 

@@ -28,9 +28,6 @@ package quickbeer.android.instrumentation;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-
 import static com.facebook.stetho.Stetho.defaultDumperPluginsProvider;
 import static com.facebook.stetho.Stetho.defaultInspectorModulesProvider;
 import static com.facebook.stetho.Stetho.initialize;

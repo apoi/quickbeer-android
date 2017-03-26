@@ -30,7 +30,6 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
 import rx.Single;
 import rx.functions.Action1;
 import timber.log.Timber;

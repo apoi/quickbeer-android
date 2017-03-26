@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.View;
 
-import io.reark.reark.utils.Preconditions;
 import polanski.option.Option;
 
 import static io.reark.reark.utils.Preconditions.get;

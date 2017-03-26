@@ -35,7 +35,6 @@ import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.providers.RateBeerProvider;
 import quickbeer.android.utils.DateUtils;
 import rx.Observable;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static io.reark.reark.utils.Preconditions.get;

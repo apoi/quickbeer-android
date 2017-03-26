@@ -39,7 +39,6 @@ import quickbeer.android.features.list.BrewerListAdapter;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
-import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import rx.Observable;
 import rx.subjects.PublishSubject;
 import timber.log.Timber;

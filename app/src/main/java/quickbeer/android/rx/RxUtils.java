@@ -19,7 +19,6 @@ package quickbeer.android.rx;
 
 import android.support.annotation.NonNull;
 
-import io.reark.reark.data.DataStreamNotification;
 import polanski.option.Option;
 import polanski.option.OptionUnsafe;
 import quickbeer.android.data.pojos.ItemList;

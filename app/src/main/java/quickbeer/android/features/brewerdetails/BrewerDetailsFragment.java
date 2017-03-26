@@ -42,7 +42,6 @@ import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
-import static polanski.option.Option.ofObj;
 
 public class BrewerDetailsFragment extends BindingBaseFragment {
 

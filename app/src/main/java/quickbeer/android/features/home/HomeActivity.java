@@ -17,7 +17,6 @@
  */
 package quickbeer.android.features.home;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MenuItem;
@@ -25,7 +24,6 @@ import android.view.MenuItem;
 import javax.inject.Inject;
 
 import quickbeer.android.R;
-import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;

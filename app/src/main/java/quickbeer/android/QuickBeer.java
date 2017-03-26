@@ -17,12 +17,12 @@
  */
 package quickbeer.android;
 
-import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.squareup.leakcanary.LeakCanary;
-
 import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.jakewharton.threetenabp.AndroidThreeTen;
+import com.squareup.leakcanary.LeakCanary;
 
 import javax.inject.Inject;
 
