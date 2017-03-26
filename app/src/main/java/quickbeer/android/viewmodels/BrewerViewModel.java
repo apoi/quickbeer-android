@@ -104,7 +104,7 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
         if (brewerId > 0) {
             return getBrewer.call(brewerId);
         } else if (beerId > 0) {
-            return getBeer.call(beerId)
+            return getBeer.call(beerId, false)
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)
                     .map(Beer::brewerId)

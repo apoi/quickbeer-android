@@ -42,11 +42,14 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
 
     private int beerId;
 
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer) {
+    private boolean fullDetails = false;
+
+    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer, boolean fullDetails) {
         this.getBeer = get(getBeer);
+        this.fullDetails = fullDetails;
     }
 
-    public BeerViewModel(int beerId, @NonNull DataLayer.GetBeer getBeer) {
+    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer, int beerId) {
         this.beerId = beerId;
         this.getBeer = get(getBeer);
     }
@@ -67,7 +70,7 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
         ConnectableObservable<DataStreamNotification<Beer>> beerSource =
-                getBeer.call(beerId)
+                getBeer.call(beerId, fullDetails)
                         .subscribeOn(Schedulers.computation())
                         .publish();
 

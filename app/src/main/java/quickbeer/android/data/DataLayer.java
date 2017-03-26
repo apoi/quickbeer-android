@@ -144,14 +144,14 @@ public class DataLayer extends DataLayerBase {
     //// GET BEER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeer(int beerId) {
+    public Observable<DataStreamNotification<Beer>> getBeer(int beerId, boolean fullDetails) {
         Timber.v("getBeer(%s)", get(beerId));
 
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Beer>> triggerFetchIfEmpty =
                 beerStore.getOnce(beerId)
                         .toObservable()
-                        .filter(option -> option.match(beer -> !beer.hasDetails(), () -> true))
+                        .filter(option -> option.match(beer -> !beer.hasDetails(fullDetails), () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Beer not cached, fetching");
                             fetchBeer(beerId);
@@ -773,7 +773,7 @@ public class DataLayer extends DataLayerBase {
 
     public interface GetBeer {
         @NonNull
-        Observable<DataStreamNotification<Beer>> call(int beerId);
+        Observable<DataStreamNotification<Beer>> call(int beerId, boolean fullDetails);
     }
 
     public interface AccessBeer {

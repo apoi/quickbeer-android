@@ -84,7 +84,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                                 @NonNull DataLayer.GetReview getReview,
                                 @NonNull ResourceProvider resourceProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
-        beerViewModel = new BeerViewModel(get(getBeer));
+        beerViewModel = new BeerViewModel(get(getBeer), true);
         brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
 
@@ -134,7 +134,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                 get(tickBeer).call(beerId, rating)
                         .share();
 
-        subscription.add(getBeer.call(beerId)
+        subscription.add(getBeer.call(beerId, false)
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .subscribe(beer -> notificationProvider.addNetworkSuccessListener(observable,

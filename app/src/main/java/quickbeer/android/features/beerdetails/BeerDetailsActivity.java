@@ -111,7 +111,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
             ConnectableObservable<Beer> sourceObservable = get(getBeer)
-                    .call(beerId)
+                    .call(beerId, false)
                     .subscribeOn(Schedulers.io())
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)

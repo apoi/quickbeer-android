@@ -94,7 +94,7 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     @NonNull
     private Func1<List<Integer>, List<BeerViewModel>> toBeerViewModelList() {
         return beerIds -> Ix.from(beerIds)
-                .map(integer -> new BeerViewModel(integer, getBeer))
+                .map(integer -> new BeerViewModel(getBeer, integer))
                 .toList();
     }
 
