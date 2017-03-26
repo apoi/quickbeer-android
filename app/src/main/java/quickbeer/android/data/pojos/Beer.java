@@ -27,7 +27,6 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.ZonedDateTime;
-import org.threeten.bp.ZonedDateTime;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -122,6 +121,7 @@ public abstract class Beer {
 
     public int rating() {
         return ofObj(overallRating())
+                .filter(value -> value > 0.0)
                 .map(Math::round)
                 .orDefault(() -> -1);
     }

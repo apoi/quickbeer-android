@@ -13,7 +13,6 @@
     <string name="search_box_hint_filter_styles">Filter styles</string>
     <string name="search_too_short">Search should be at least four characters</string>
 
-    <!-- Navigation drawer -->
     <!-- Drawer menu -->
     <string name="menu_ticked_beers">Ticked beers</string>
     <string name="menu_top_beers">Best of all</string>
@@ -46,6 +45,7 @@
     <string name="beer_details_no_photo">No photo available for this beer</string>
     <string name="no_description">No description available.</string>
     <string name="not_available">N/A</string>
+    <string name="not_enough_ratings">Requires more ratings before score can be shown</string>
 
     <string name="brewer">Brewer</string>
     <string name="origin">Origin</string>

@@ -208,14 +208,20 @@ public class BeerDetailsView extends NestedScrollView {
         ofObj(beer.overallRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
-                .orOption(this::notAvailableString)
-                .ifSome(overallRatingTextView::setText);
+                .ifSome(overallRatingTextView::setText)
+                .ifNone(() -> {
+                    overallRatingTextView.setText("?");
+                    overallRatingColumn.setOnClickListener(__ -> showToast(R.string.not_enough_ratings));
+                });
 
         ofObj(beer.styleRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
-                .orOption(this::notAvailableString)
-                .ifSome(styleRatingTextView::setText);
+                .ifSome(styleRatingTextView::setText)
+                .ifNone(() -> {
+                    styleRatingTextView.setText("?");
+                    styleRatingColumn.setOnClickListener(__ -> showToast(R.string.not_enough_ratings));
+                });
 
         ofObj(beer.alcohol())
                 .map(value -> String.format(Locale.ROOT, "%.1f%%", value))
@@ -261,6 +267,11 @@ public class BeerDetailsView extends NestedScrollView {
     @NonNull
     private Option<String> notAvailableString() {
         return ofObj(get(resourceProvider).getString(R.string.not_available));
+    }
+
+    @NonNull
+    private Option<String> notEnoughRatingsString() {
+        return ofObj("?");
     }
 
     private void navigateToStyle(@Nullable Integer styleId) {

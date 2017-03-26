@@ -68,12 +68,12 @@ public abstract class OverwritableBuilder<T extends OverwritablePojo<T>> extends
 
     @Override
     protected boolean isEmpty(double value) {
-        return value < 0;
+        return value <= 0;
     }
 
     @Override
     protected boolean isEmpty(float value) {
-        return value < 0;
+        return value <= 0;
     }
 
     /**
