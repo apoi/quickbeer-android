@@ -61,6 +61,7 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     protected void bind(@NonNull CompositeSubscription subscription) {
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
                 sourceObservable()
+                        .subscribeOn(Schedulers.computation())
                         .publish();
 
         // Construct progress status. Completed with value means we'll receive onNext.
@@ -73,14 +74,12 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
 
         // Clear list on fetching start
         subscription.add(sharedObservable
-                .subscribeOn(Schedulers.computation())
                 .filter(DataStreamNotification::isOngoing)
                 .map(__ -> Collections.<BeerViewModel>emptyList())
                 .subscribe(beers::onNext));
 
         // Actual update
         subscription.add(sharedObservable
-                .subscribeOn(Schedulers.computation())
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .doOnNext(beerSearch -> Timber.d("Search finished"))
