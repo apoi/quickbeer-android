@@ -48,6 +48,7 @@
             <LinearLayout
                 android:id="@+id/about_spice_program"
                 style="@style/BeerDetailsRowLayout"
+                android:gravity="start"
                 android:orientation="horizontal">
 
                 <ImageView
