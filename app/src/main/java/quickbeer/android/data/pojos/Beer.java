@@ -53,6 +53,22 @@ public abstract class Beer {
     public abstract String name();
 
     @Nullable
+    @SerializedName("BrewerID")
+    public abstract Integer brewerId();
+
+    @Nullable
+    @SerializedName("BrewerName")
+    public abstract String brewerName();
+
+    @Nullable
+    @SerializedName("ContractBrewerID")
+    public abstract Integer contractBrewerId();
+
+    @Nullable
+    @SerializedName("ContractBrewer")
+    public abstract String contractBrewerName();
+
+    @Nullable
     @SerializedName("AverageRating")
     public abstract Float averageRating();
 
@@ -66,7 +82,11 @@ public abstract class Beer {
 
     @Nullable
     @SerializedName("RateCount")
-    public abstract Float rateCount();
+    public abstract Integer rateCount();
+
+    @Nullable
+    @SerializedName("BrewerCountryId")
+    public abstract Integer countryId();
 
     @Nullable
     @SerializedName("BeerStyleID")
@@ -93,16 +113,16 @@ public abstract class Beer {
     public abstract Boolean isAlias();
 
     @Nullable
-    @SerializedName("BrewerID")
-    public abstract Integer brewerId();
+    @SerializedName("Retired")
+    public abstract Boolean isRetired();
 
     @Nullable
-    @SerializedName("BrewerName")
-    public abstract String brewerName();
+    @SerializedName("Verified")
+    public abstract Boolean isVerified();
 
     @Nullable
-    @SerializedName("BrewerCountryId")
-    public abstract Integer countryId();
+    @SerializedName("Unrateable")
+    public abstract Boolean unrateable();
 
     @Nullable
     @SerializedName("Liked")
@@ -146,13 +166,23 @@ public abstract class Beer {
 
         public abstract Builder name(@Nullable String name);
 
+        public abstract Builder brewerId(@Nullable Integer brewerId);
+
+        public abstract Builder brewerName(@Nullable String brewerName);
+
+        public abstract Builder contractBrewerId(@Nullable Integer contractBrewerId);
+
+        public abstract Builder contractBrewerName(@Nullable String contractBrewerName);
+
         public abstract Builder averageRating(@Nullable Float averageRating);
 
         public abstract Builder overallRating(@Nullable Float overallRating);
 
         public abstract Builder styleRating(@Nullable Float styleRating);
 
-        public abstract Builder rateCount(@Nullable Float rateCount);
+        public abstract Builder rateCount(@Nullable Integer rateCount);
+
+        public abstract Builder countryId(@Nullable Integer countryId);
 
         public abstract Builder styleId(@Nullable Integer styleId);
 
@@ -166,11 +196,11 @@ public abstract class Beer {
 
         public abstract Builder isAlias(@Nullable Boolean isAlias);
 
-        public abstract Builder brewerId(@Nullable Integer brewerId);
+        public abstract Builder isRetired(@Nullable Boolean isRetired);
 
-        public abstract Builder brewerName(@Nullable String brewerName);
+        public abstract Builder isVerified(@Nullable Boolean isVerified);
 
-        public abstract Builder countryId(@Nullable Integer countryId);
+        public abstract Builder unrateable(@Nullable Boolean unrateable);
 
         public abstract Builder tickValue(@Nullable Integer tickValue);
 
