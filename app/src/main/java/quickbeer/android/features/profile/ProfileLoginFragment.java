@@ -201,13 +201,17 @@ public class ProfileLoginFragment extends BindingBaseFragment {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
         loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        loginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
+        loginFormView.animate()
+                .setDuration(shortAnimTime)
+                .alpha(show ? 0 : 1)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (loginFormView != null) {
+                            loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                        }
+                    }
+                });
 
         progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
         progressView.animate()
@@ -216,7 +220,9 @@ public class ProfileLoginFragment extends BindingBaseFragment {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+                        if (progressLayout != null) {
+                            progressLayout.setVisibility(show ? View.VISIBLE : View.GONE);
+                        }
                     }
                 });
     }
