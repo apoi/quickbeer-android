@@ -20,7 +20,6 @@ package quickbeer.android.core.activity;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -32,18 +31,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
-import javax.inject.Inject;
-
 import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.features.profile.ProfileActivity;
-import quickbeer.android.providers.PreferencesProvider;
 
 import static io.reark.reark.utils.Preconditions.get;
 
 public abstract class DrawerActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int DRAWER_ACTION_DELAY = 250;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -95,9 +93,11 @@ public abstract class DrawerActivity extends AppCompatActivity
 
     private void setHeaderClickListener(@NonNull View view) {
         view.setOnClickListener(__ -> {
-            drawerLayout.closeDrawer(GravityCompat.START);
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
+            drawerLayout.closeDrawers();
+            drawerLayout.postDelayed(() -> {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                startActivity(intent);
+            }, DRAWER_ACTION_DELAY);
         });
     }
 
@@ -107,10 +107,8 @@ public abstract class DrawerActivity extends AppCompatActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        navigateTo(item);
-
-        drawerLayout.closeDrawer(GravityCompat.START);
-
+        drawerLayout.closeDrawers();
+        drawerLayout.postDelayed(() -> navigateTo(item), DRAWER_ACTION_DELAY);
         return true;
     }
 
