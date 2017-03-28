@@ -31,7 +31,7 @@ public interface Constants {
 
     String BREWER_IMAGE_PATH = "http://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg";
 
-    String FACEBOOK_PATH = "https://m.facebook.com/%s";
+    String FACEBOOK_PATH = "https://www.facebook.com/%s";
 
     String TWITTER_PATH = "https://www.twitter.com/%s";
 
