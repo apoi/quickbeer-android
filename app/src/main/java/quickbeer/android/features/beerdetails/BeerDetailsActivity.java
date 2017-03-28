@@ -146,7 +146,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
 
         ButterKnife.bind(this);
 
-        setupDrawerLayout();
+        setupDrawerLayout(false);
 
         setBackNavigationEnabled(true);
 

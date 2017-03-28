@@ -61,7 +61,7 @@ public class AboutActivity extends InjectingDrawerActivity {
 
         ButterKnife.bind(this);
 
-        setupDrawerLayout();
+        setupDrawerLayout(false);
 
         setBackNavigationEnabled(true);
 

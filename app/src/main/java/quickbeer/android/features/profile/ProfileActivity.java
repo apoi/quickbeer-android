@@ -78,7 +78,7 @@ public class ProfileActivity extends BindingDrawerActivity {
 
         ButterKnife.bind(this);
 
-        setupDrawerLayout();
+        setupDrawerLayout(false);
 
         setBackNavigationEnabled(true);
 

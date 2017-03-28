@@ -36,6 +36,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.providers.GlobalNotificationProvider;
+import quickbeer.android.providers.PreferencesProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
 
@@ -91,5 +92,11 @@ public final class ApplicationModule {
     @Singleton
     static Picasso providePicasso(@ForApplication Context context) {
         return Picasso.with(context);
+    }
+
+    @Provides
+    @Singleton
+    static PreferencesProvider providePreferencesProvider(@ForApplication Context context) {
+        return new PreferencesProvider(context);
     }
 }

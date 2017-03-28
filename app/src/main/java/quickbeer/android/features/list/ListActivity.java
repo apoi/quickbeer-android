@@ -33,6 +33,7 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
+import quickbeer.android.providers.PreferencesProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.SearchView;
 import rx.subscriptions.CompositeSubscription;
@@ -49,6 +50,10 @@ public class ListActivity extends BindingDrawerActivity {
     @Nullable
     @Inject
     NavigationProvider navigationProvider;
+
+    @Nullable
+    @Inject
+    PreferencesProvider preferencesProvider;
 
     @Nullable
     @Inject
@@ -74,11 +79,14 @@ public class ListActivity extends BindingDrawerActivity {
         super.onCreate(savedInstanceState);
 
         checkNotNull(navigationProvider);
+        checkNotNull(preferencesProvider);
         checkNotNull(searchViewViewModel);
 
         setContentView(R.layout.home_activity);
 
-        setupDrawerLayout();
+        // Drawer is shown on first run for making user aware of it
+        setupDrawerLayout(!preferencesProvider.isFirstRunDrawerShown());
+        preferencesProvider.setIsFirstRunDrawerShown(true);
 
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
         searchView.setViewModel(get(searchViewViewModel));

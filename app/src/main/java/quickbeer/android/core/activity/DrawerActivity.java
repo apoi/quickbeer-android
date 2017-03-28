@@ -20,6 +20,7 @@ package quickbeer.android.core.activity;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -31,10 +32,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 
+import javax.inject.Inject;
+
 import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.features.profile.ProfileActivity;
+import quickbeer.android.providers.PreferencesProvider;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -47,7 +51,7 @@ public abstract class DrawerActivity extends AppCompatActivity
 
     private boolean backNavigationEnabled = true;
 
-    protected void setupDrawerLayout() {
+    protected void setupDrawerLayout(boolean startWithDrawerOpen) {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -83,6 +87,10 @@ public abstract class DrawerActivity extends AppCompatActivity
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        if (startWithDrawerOpen) {
+            drawerLayout.openDrawer(GravityCompat.START);
+        }
     }
 
     private void setHeaderClickListener(@NonNull View view) {

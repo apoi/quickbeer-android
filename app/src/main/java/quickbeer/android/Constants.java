@@ -67,4 +67,10 @@ public interface Constants {
 
     }
 
+    interface Preferences {
+
+        String FIRST_RUN_DRAWER = "firstRunDrawer";
+
+    }
+
 }
