@@ -57,10 +57,14 @@ public final class StringUtils {
             return "";
         }
 
-        String normalized = Normalizer.normalize(value, Normalizer.Form.NFD);
-        normalized = BASE_GLYPH.matcher(normalized).replaceAll("");
-
-        return normalized;
+        //noinspection DynamicRegexReplaceableByCompiledPattern
+        return BASE_GLYPH.matcher(Normalizer.normalize(value, Normalizer.Form.NFD))
+                .replaceAll("")
+                .replaceAll("æ", "ae")
+                .replaceAll("Æ", "AE")
+                .replaceAll("ß", "ss")
+                .replaceAll("ø", "o")
+                .replaceAll("Ø", "O");
     }
 
     @NonNull

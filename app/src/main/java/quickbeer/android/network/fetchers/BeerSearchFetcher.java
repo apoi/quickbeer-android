@@ -36,7 +36,6 @@ import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import quickbeer.android.rx.RxUtils;
-import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;
 import rx.Subscription;
@@ -84,7 +83,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         }
 
         String searchString = get(intent).getStringExtra("searchString");
-        fetchBeerSearch(StringUtils.normalize(searchString), listenerId);
+        fetchBeerSearch(searchString, listenerId);
     }
 
     protected void fetchBeerSearch(@NonNull String query, int listenerId) {

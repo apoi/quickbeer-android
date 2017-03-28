@@ -55,6 +55,7 @@ import quickbeer.android.network.fetchers.LoginFetcher;
 import quickbeer.android.network.fetchers.ReviewFetcher;
 import quickbeer.android.network.fetchers.TickBeerFetcher;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
 
@@ -231,17 +232,19 @@ public class DataLayer extends DataLayerBase {
     public Observable<DataStreamNotification<ItemList<String>>> getBeerSearch(@NonNull String searchString) {
         Timber.v("getBeerSearch(%s)", get(searchString));
 
+        String normalized = StringUtils.normalize(searchString);
+
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
-                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, searchString))
+                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, normalized))
                         .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
-                            fetchBeerSearch(searchString);
+                            fetchBeerSearch(normalized);
                         });
 
-        return getBeerSearchResultStream(searchString)
+        return getBeerSearchResultStream(normalized)
                 .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
     }
 
