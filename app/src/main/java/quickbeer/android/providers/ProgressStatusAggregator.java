@@ -21,5 +21,5 @@ import io.reark.reark.data.DataStreamNotification;
 import rx.Observable;
 
 public interface ProgressStatusAggregator {
-    void addProgressObservable(Observable<? extends DataStreamNotification> observable);
+    void addProgressObservable(Observable<DataStreamNotification<?>> observable);
 }

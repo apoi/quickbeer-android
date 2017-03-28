@@ -22,7 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -30,9 +30,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import quickbeer.android.R;
-import quickbeer.android.viewmodels.ProgressIndicatorViewModel;
 import quickbeer.android.viewmodels.ProgressIndicatorViewModel.Status;
-import rx.android.schedulers.AndroidSchedulers;
 import timber.log.Timber;
 
 public class ProgressIndicatorBar extends FrameLayout {
@@ -60,8 +58,21 @@ public class ProgressIndicatorBar extends FrameLayout {
         addPreDrawListener();
     }
 
+    public void setProgress(Status status, float progress) {
+        Timber.v("New progress: " + status + ", " + progress);
+
+        this.nextStatus = status;
+        this.progress = progress;
+
+        // Indefinite status waits until next repeat before applying new status
+        if (currentStatus != Status.INDEFINITE) {
+            applyNextStatus();
+        }
+    }
+
     private void addPreDrawListener() {
-        getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+        getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
+            @Override
             public boolean onPreDraw() {
                 getViewTreeObserver().removeOnPreDrawListener(this);
                 initLayout();
@@ -82,26 +93,6 @@ public class ProgressIndicatorBar extends FrameLayout {
 
         addView(progressBar);
         applyNextStatus();
-    }
-
-    public void setViewModel(ProgressIndicatorViewModel progressViewModel) {
-        progressViewModel
-                .getProgress()
-                .distinctUntilChanged()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(progress -> setProgress(progress.first, progress.second));
-    }
-
-    public void setProgress(Status status, float progress) {
-        Timber.v("New progress: " + status + ", " + progress);
-
-        this.nextStatus = status;
-        this.progress = progress;
-
-        // Indefinite status waits until next repeat before applying new status
-        if (currentStatus != Status.INDEFINITE) {
-            applyNextStatus();
-        }
     }
 
     private void applyNextStatus() {
@@ -177,7 +168,7 @@ public class ProgressIndicatorBar extends FrameLayout {
             return;
         }
 
-        ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / progressBarWidth) + 1,
+        ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / (float) progressBarWidth) + 1,
                 progressBar.getHeight(), progressBar.getHeight());
         animation.setDuration(ANIMATION_END_SCALE_DURATION);
         animation.setFillAfter(true);

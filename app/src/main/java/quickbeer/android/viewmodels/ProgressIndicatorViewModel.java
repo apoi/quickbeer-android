@@ -17,6 +17,8 @@
  */
 package quickbeer.android.viewmodels;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Pair;
 
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.providers.ProgressStatusAggregator;
 import rx.Observable;
 import rx.Subscription;
+import rx.functions.FuncN;
 import rx.subjects.BehaviorSubject;
 import timber.log.Timber;
 
@@ -37,12 +40,30 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
         LOADING
     }
 
+    @Nullable
     private Subscription subscription;
+
+    @NonNull
     private final BehaviorSubject<List<Observable<Float>>> sourceObservables = BehaviorSubject.create();
+
+    @NonNull
     private final BehaviorSubject<Pair<Status, Float>> progressSubject = BehaviorSubject.create();
 
     public ProgressIndicatorViewModel() {
-        sourceObservables.onNext(new ArrayList<>());
+        sourceObservables.onNext(new ArrayList<>(1));
+    }
+
+    @NonNull
+    private static FuncN<Pair<Float, Integer>> sum() {
+        return args -> {
+            float progress = 0.0f;
+
+            for (Object o : args) {
+                progress += (Float) o;
+            }
+
+            return new Pair<>(progress, args.length);
+        };
     }
 
     public void subscribe() {
@@ -52,41 +73,25 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
 
         subscription = sourceObservables.asObservable()
                 .doOnNext(observableList -> Timber.d("Aggregating " + observableList.size()))
-                .flatMap(observableList -> {
-                    return Observable.combineLatest(observableList, args -> {
-                        float progress = 0.0f;
-                        int count = 0;
-
-                        for (Object o : args) {
-                            progress += (Float) o;
-                            count++;
-                        }
-
-                        return new Pair<>(progress, count);
-                    });
-                })
-                .doOnNext(aggregate -> {
-                    Timber.d("Aggregate progress: " +
-                            aggregate.first + " with " +
-                            aggregate.second + " sources");
-                })
+                .flatMap(observableList -> Observable.combineLatest(observableList, sum()))
+                .doOnNext(aggregate -> Timber.d(String.format("Aggregate progress: %s with %s sources", aggregate.first, aggregate.second)))
                 .map(aggregate -> {
                     final int count = aggregate.second;
                     final float progress = aggregate.first / aggregate.second;
 
                     if (count == 0) {
                         // Nothing in progress, though shouldn't happen
-                        return new Pair<Status, Float>(Status.IDLE, 0.0f);
+                        return new Pair<>(Status.IDLE, 0.0f);
                     } else if (count == 1 && progress < 1) {
                         // One request in who knows what state. We don't receive progress
                         // notifications, so we can't show progress for a single request.
-                        return new Pair<Status, Float>(Status.INDEFINITE, 0.0f);
+                        return new Pair<>(Status.INDEFINITE, 0.0f);
                     } else if (progress < 1) {
                         // Multiple requests or done, we can actually show progress
-                        return new Pair<Status, Float>(Status.LOADING, progress);
+                        return new Pair<>(Status.LOADING, progress);
                     } else {
                         // Finished, back to idle
-                        return new Pair<Status, Float>(Status.IDLE, 1.0f);
+                        return new Pair<>(Status.IDLE, 1.0f);
                     }
                 })
                 .doOnNext(progress -> {
@@ -109,21 +114,17 @@ public class ProgressIndicatorViewModel implements ProgressStatusAggregator {
         return progressSubject.asObservable();
     }
 
-    @Override
-    public void addProgressObservable(Observable<? extends DataStreamNotification> observable) {
+    public void addProgressObservable(Observable<DataStreamNotification<?>> observable) {
         Timber.d("addDataStreamNotificationObservable");
 
         List<Observable<Float>> list = sourceObservables.getValue();
-        list.add(observable.map(this::toProgress));
+        list.add(observable.map(ProgressIndicatorViewModel::toProgress));
 
         sourceObservables.onNext(list);
     }
 
-    private float toProgress(DataStreamNotification notification) {
-        if (notification.isOngoing()) {
-            return 0.5f;
-        } else {
-            return 1.0f;
-        }
+    private static float toProgress(DataStreamNotification<?> notification) {
+        //noinspection MagicNumber
+        return notification.isOngoing() ? 0.5f : 1.0f;
     }
 }
