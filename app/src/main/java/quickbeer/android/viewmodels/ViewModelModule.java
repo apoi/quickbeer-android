@@ -85,8 +85,9 @@ public final class ViewModelModule {
             @NonNull DataLayer.GetReviews getReviews,
             @NonNull DataLayer.GetReview getReview,
             @NonNull ResourceProvider resourceProvider,
+            @NonNull ProgressStatusProvider progressStatusProvider,
             @NonNull GlobalNotificationProvider notificationProvider) {
-        return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getUser, getReviews, getReview, resourceProvider, notificationProvider);
+        return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getUser, getReviews, getReview, resourceProvider, progressStatusProvider, notificationProvider);
     }
 
     @Provides

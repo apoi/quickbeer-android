@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -38,19 +39,28 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
+    private final ProgressStatusProvider progressStatusProvider;
+
+    @NonNull
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
 
     private int beerId;
 
     private boolean fullDetails = false;
 
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer, boolean fullDetails) {
+    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer,
+                         @NonNull ProgressStatusProvider progressStatusProvider,
+                         boolean fullDetails) {
         this.getBeer = get(getBeer);
+        this.progressStatusProvider = get(progressStatusProvider);
         this.fullDetails = fullDetails;
     }
 
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer, int beerId) {
+    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer,
+                         @NonNull ProgressStatusProvider progressStatusProvider,
+                         int beerId) {
         this.beerId = beerId;
+        this.progressStatusProvider = get(progressStatusProvider);
         this.getBeer = get(getBeer);
     }
 
@@ -82,6 +92,9 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .subscribe(beer::onNext, Timber::e));
+
+        progressStatusProvider.addProgressObservable(beerSource
+                .map(notification -> notification));
 
         subscription.add(beerSource
                 .connect());

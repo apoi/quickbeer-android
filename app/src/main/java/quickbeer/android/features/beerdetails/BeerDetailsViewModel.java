@@ -30,6 +30,7 @@ import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.GlobalNotificationProvider;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
@@ -83,8 +84,9 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                                 @NonNull DataLayer.GetReviews getReviews,
                                 @NonNull DataLayer.GetReview getReview,
                                 @NonNull ResourceProvider resourceProvider,
+                                @NonNull ProgressStatusProvider progressStatusProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
-        beerViewModel = new BeerViewModel(get(getBeer), true);
+        beerViewModel = new BeerViewModel(get(getBeer), get(progressStatusProvider), true);
         brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
 
