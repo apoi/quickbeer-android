@@ -82,10 +82,12 @@ public class ProgressStatusProvider {
 
     private void aggregate() {
         Collection<Float> values = progressMap.values();
-        float progress = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
+        int count = values.size();
+        float sum = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
+        float progress = count > 0 ? sum / count : 0;
 
-        Timber.d("Create aggregate: %s, %s", values.size(), progress);
-        Pair<Status, Float> aggregate = createStatus(values.size(), progress);
+        Timber.d("Create aggregate: %s, %s", count, progress);
+        Pair<Status, Float> aggregate = createStatus(count, progress);
 
         Timber.d("Progress aggregate: " + aggregate);
         progressSubject.onNext(aggregate);
