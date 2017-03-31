@@ -33,10 +33,6 @@ public class ProgressStatusProvider {
 
     private int nextId = 1;
 
-    public int createId() {
-        return nextId++;
-    }
-
     /**
      * Subscribes to the progress observable. This means that any observable passed here will be
      * kept subscribed until its completion. Idea is that since a requests won't be canceled anyway,
@@ -55,23 +51,28 @@ public class ProgressStatusProvider {
                 .subscribe(progress -> addProgress(progressId, progress), Timber::w));
     }
 
-    public void addProgress(int identifier, float progress) {
+    @NonNull
+    public Observable<Pair<Status, Float>> progressStatus() {
+        return progressSubject.asObservable()
+                .distinctUntilChanged();
+    }
+
+    private int createId() {
+        return nextId++;
+    }
+
+    private void addProgress(int identifier, float progress) {
         Timber.v("addProgress(%s, %s)", identifier, progress);
 
         progressMap.put(identifier, progress);
         aggregate();
     }
 
-    public void finishProgress(int identifier) {
+    private void finishProgress(int identifier) {
         Timber.v("finishProgress(%s)", identifier);
 
         progressMap.remove(identifier);
         aggregate();
-    }
-
-    @NonNull
-    public Observable<Pair<Status, Float>> progressStatus() {
-        return progressSubject.asObservable();
     }
 
     private static float toProgress(@NonNull DataStreamNotification<?> notification) {
