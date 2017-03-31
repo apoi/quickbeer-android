@@ -83,10 +83,17 @@ public class ProgressStatusProvider {
     private void aggregate() {
         Collection<Float> values = progressMap.values();
         float progress = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
+
+        Timber.d("Create aggregate: %s, %s", values.size(), progress);
         Pair<Status, Float> aggregate = createStatus(values.size(), progress);
 
         Timber.d("Progress aggregate: " + aggregate);
         progressSubject.onNext(aggregate);
+
+        // Status is idle when all progresses are idle, and this aggregate has finished.
+        if (aggregate.first == Status.IDLE) {
+            progressMap.clear();
+        }
     }
 
     @SuppressWarnings("IfStatementWithTooManyBranches")
