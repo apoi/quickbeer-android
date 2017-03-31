@@ -58,6 +58,10 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     @NonNull
     protected abstract Observable<DataStreamNotification<ItemList<String>>> sourceObservable();
 
+    protected boolean reportsProgress() {
+        return true;
+    }
+
     @NonNull
     public Observable<List<BeerViewModel>> getBeers() {
         return beers.asObservable();
@@ -78,10 +82,6 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
                 .distinctUntilChanged()
                 .subscribe(this::setProgressStatus));
 
-        // Share progress status to progress provider
-        progressStatusProvider.addProgressObservable(sharedObservable
-                .map(notification -> notification));
-
         // Clear list on fetching start
         subscription.add(sharedObservable
                 .filter(DataStreamNotification::isOngoing)
@@ -97,6 +97,12 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
                 .map(toBeerViewModelList())
                 .doOnNext(list -> Timber.d("Publishing " + list.size() + " beers"))
                 .subscribe(beers::onNext));
+
+        // Share progress status to progress provider
+        if (reportsProgress()) {
+            progressStatusProvider.addProgressObservable(sharedObservable
+                    .map(notification -> notification));
+        }
 
         subscription.add(sharedObservable.connect());
     }

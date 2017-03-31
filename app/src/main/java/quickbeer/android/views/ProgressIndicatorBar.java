@@ -19,6 +19,7 @@ package quickbeer.android.views;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.util.AttributeSet;
@@ -45,9 +46,14 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private final int progressBarWidth = getResources().getDimensionPixelSize(R.dimen.progress_indicator_width);
 
+    @Nullable
     private View progressBar;
-    private Pair<Status, Float> currentProgress;
-    private Pair<Status, Float> nextProgress;
+
+    @NonNull
+    private Pair<Status, Float> currentProgress = Pair.create(Status.IDLE, 0.0f);
+
+    @NonNull
+    private Pair<Status, Float> nextProgress = Pair.create(Status.IDLE, 0.0f);
 
     public ProgressIndicatorBar(Context context) {
         super(context);

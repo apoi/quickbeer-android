@@ -56,12 +56,16 @@ public class ProgressStatusProvider {
     }
 
     public void addProgress(int identifier, float progress) {
+        Timber.v("addProgress(%s, %s)", identifier, progress);
+
         progressMap.put(identifier, progress);
         aggregate();
     }
 
-    public void finishProgress(int index) {
-        progressMap.remove(index);
+    public void finishProgress(int identifier) {
+        Timber.v("finishProgress(%s)", identifier);
+
+        progressMap.remove(identifier);
         aggregate();
     }
 

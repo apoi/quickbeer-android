@@ -40,6 +40,7 @@ import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
 import quickbeer.android.views.SearchView;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -85,6 +86,7 @@ public class ListActivity extends BindingDrawerActivity {
 
             subscription.add(get(progressStatusProvider)
                     .progressStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(progressIndicatorBar::setProgress, Timber::e));
         }
     };

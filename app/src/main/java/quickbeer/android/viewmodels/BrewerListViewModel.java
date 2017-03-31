@@ -27,6 +27,7 @@ import io.reark.reark.data.DataStreamNotification;
 import ix.Ix;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -46,16 +47,25 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
+    private final ProgressStatusProvider progressStatusProvider;
+
+    @NonNull
     private final PublishSubject<List<BrewerViewModel>> brewers = PublishSubject.create();
 
     protected BrewerListViewModel(@NonNull DataLayer.GetBeer getBeer,
-                                  @NonNull DataLayer.GetBrewer getBrewer) {
+                                  @NonNull DataLayer.GetBrewer getBrewer,
+                                  @NonNull ProgressStatusProvider progressStatusProvider) {
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
+        this.progressStatusProvider = get(progressStatusProvider);
     }
 
     @NonNull
     protected abstract Observable<DataStreamNotification<ItemList<String>>> sourceObservable();
+
+    protected boolean reportsProgress() {
+        return true;
+    }
 
     @NonNull
     public Observable<List<BrewerViewModel>> getBrewers() {
@@ -92,6 +102,12 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
                 .map(toBrewerViewModelList())
                 .doOnNext(list -> Timber.d("Publishing " + list.size() + " brewers"))
                 .subscribe(brewers::onNext));
+
+        // Share progress status to progress provider
+        if (reportsProgress()) {
+            progressStatusProvider.addProgressObservable(sharedObservable
+                    .map(notification -> notification));
+        }
 
         subscription.add(sharedObservable.connect());
     }

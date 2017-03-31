@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -36,8 +37,9 @@ public class RecentBrewersViewModel extends BrewerListViewModel {
     @Inject
     RecentBrewersViewModel(@NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetBrewer getBrewer,
-                           @NonNull DataLayer.GetAccessedBrewers getAccessedBrewers) {
-        super(getBeer, getBrewer);
+                           @NonNull DataLayer.GetAccessedBrewers getAccessedBrewers,
+                           @NonNull ProgressStatusProvider progressStatusProvider) {
+        super(getBeer, getBrewer, progressStatusProvider);
 
         this.getAccessedBrewers = get(getAccessedBrewers);
     }
@@ -46,5 +48,10 @@ public class RecentBrewersViewModel extends BrewerListViewModel {
     @Override
     protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
         return getAccessedBrewers.call();
+    }
+
+    @Override
+    protected boolean reportsProgress() {
+        return false;
     }
 }

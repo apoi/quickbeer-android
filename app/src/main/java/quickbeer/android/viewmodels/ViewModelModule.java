@@ -42,8 +42,9 @@ public final class ViewModelModule {
     static RecentBrewersViewModel provideRecentBrewersViewModel(
             @NonNull DataLayer.GetBeer getBeer,
             @NonNull DataLayer.GetBrewer getBrewer,
-            @NonNull DataLayer.GetAccessedBrewers getAccessedBrewers) {
-        return new RecentBrewersViewModel(getBeer, getBrewer, getAccessedBrewers);
+            @NonNull DataLayer.GetAccessedBrewers getAccessedBrewers,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new RecentBrewersViewModel(getBeer, getBrewer, getAccessedBrewers, progressStatusProvider);
     }
 
     @Provides
