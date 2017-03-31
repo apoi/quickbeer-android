@@ -37,6 +37,7 @@ import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.PreferencesProvider;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
 
@@ -72,6 +73,12 @@ public final class ApplicationModule {
     @Singleton
     static ToastProvider provideToastProvider(@ForApplication Context context) {
         return new ToastProvider(context);
+    }
+
+    @Provides
+    @Singleton
+    static ProgressStatusProvider provideProgressStatusProvider() {
+        return new ProgressStatusProvider();
     }
 
     @Provides

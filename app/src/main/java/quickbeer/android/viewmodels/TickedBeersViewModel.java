@@ -26,6 +26,7 @@ import polanski.option.Option;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
@@ -51,8 +52,9 @@ public class TickedBeersViewModel extends BeerListViewModel {
                          @NonNull DataLayer.GetUser getUser,
                          @NonNull DataLayer.GetBeerSearch getBeerSearch,
                          @NonNull DataLayer.GetTickedBeers getTickedBeers,
-                         @NonNull SearchViewViewModel searchViewViewModel) {
-        super(getBeer);
+                         @NonNull SearchViewViewModel searchViewViewModel,
+                         @NonNull ProgressStatusProvider progressStatusProvider) {
+        super(getBeer, progressStatusProvider);
 
         this.getUser = get(getUser);
         this.getTickedBeers = get(getTickedBeers);

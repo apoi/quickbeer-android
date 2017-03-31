@@ -26,6 +26,8 @@ import android.view.MenuItem;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
@@ -34,7 +36,9 @@ import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.PreferencesProvider;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.views.ProgressIndicatorBar;
 import quickbeer.android.views.SearchView;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -44,8 +48,11 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class ListActivity extends BindingDrawerActivity {
 
-    @Nullable
-    private SearchView searchView;
+    @BindView(R.id.toolbar_search_view)
+    SearchView searchView;
+
+    @BindView(R.id.progress_indicator_bar)
+    ProgressIndicatorBar progressIndicatorBar;
 
     @Nullable
     @Inject
@@ -59,6 +66,10 @@ public class ListActivity extends BindingDrawerActivity {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
+    @Nullable
+    @Inject
+    ProgressStatusProvider progressStatusProvider;
+
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
@@ -71,6 +82,10 @@ public class ListActivity extends BindingDrawerActivity {
             subscription.add(viewModel()
                     .modeChangedStream()
                     .subscribe(__ -> get(searchView).updateOptions(), Timber::e));
+
+            subscription.add(get(progressStatusProvider)
+                    .progressStatus()
+                    .subscribe(progressIndicatorBar::setProgress, Timber::e));
         }
     };
 
@@ -83,10 +98,11 @@ public class ListActivity extends BindingDrawerActivity {
         checkNotNull(searchViewViewModel);
 
         setContentView(R.layout.home_activity);
-
         // Drawer is shown on first run for making user aware of it
         setupDrawerLayout(!preferencesProvider.isFirstRunDrawerShown());
         preferencesProvider.setIsFirstRunDrawerShown(true);
+
+        ButterKnife.bind(this);
 
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
         searchView.setViewModel(get(searchViewViewModel));

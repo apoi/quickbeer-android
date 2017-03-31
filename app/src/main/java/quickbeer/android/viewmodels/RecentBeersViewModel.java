@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -35,8 +36,9 @@ public class RecentBeersViewModel extends BeerListViewModel {
 
     @Inject
     RecentBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
-                         @NonNull DataLayer.GetAccessedBeers getAccessedBeers) {
-        super(getBeer);
+                         @NonNull DataLayer.GetAccessedBeers getAccessedBeers,
+                         @NonNull ProgressStatusProvider progressStatusProvider) {
+        super(getBeer, progressStatusProvider);
 
         this.getAccessedBeers = get(getAccessedBeers);
     }

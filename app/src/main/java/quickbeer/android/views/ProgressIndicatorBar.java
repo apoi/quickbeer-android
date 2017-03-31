@@ -18,7 +18,9 @@
 package quickbeer.android.views;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +32,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import quickbeer.android.R;
-import quickbeer.android.viewmodels.ProgressIndicatorViewModel.Status;
+import quickbeer.android.providers.ProgressStatusProvider.Status;
 import timber.log.Timber;
 
 public class ProgressIndicatorBar extends FrameLayout {
@@ -42,11 +44,10 @@ public class ProgressIndicatorBar extends FrameLayout {
     private static final int ANIMATION_END_FADE_DURATION = 300;
 
     private final int progressBarWidth = getResources().getDimensionPixelSize(R.dimen.progress_indicator_width);
-    private float progress = 0;
 
     private View progressBar;
-    private Status currentStatus = Status.IDLE;
-    private Status nextStatus = Status.IDLE;
+    private Pair<Status, Float> currentProgress;
+    private Pair<Status, Float> nextProgress;
 
     public ProgressIndicatorBar(Context context) {
         super(context);
@@ -58,14 +59,13 @@ public class ProgressIndicatorBar extends FrameLayout {
         addPreDrawListener();
     }
 
-    public void setProgress(Status status, float progress) {
-        Timber.v("New progress: " + status + ", " + progress);
+    public void setProgress(@NonNull Pair<Status, Float> progress) {
+        Timber.v("New progress: " + progress);
 
-        this.nextStatus = status;
-        this.progress = progress;
+        nextProgress = progress;
 
         // Indefinite status waits until next repeat before applying new status
-        if (currentStatus != Status.INDEFINITE) {
+        if (currentProgress.first != Status.INDEFINITE) {
             applyNextStatus();
         }
     }
@@ -101,14 +101,14 @@ public class ProgressIndicatorBar extends FrameLayout {
             return;
         }
 
-        currentStatus = nextStatus;
+        currentProgress = nextProgress;
 
-        switch (nextStatus) {
+        switch (currentProgress.first) {
             case INDEFINITE:
                 animateScroller();
                 break;
             case LOADING:
-                animateToProgress(progress);
+                animateToProgress(currentProgress.second);
                 break;
             case IDLE:
                 animateToEnd();
@@ -134,7 +134,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                if (++repeatCounter % 2 == 0 && nextStatus != Status.INDEFINITE) {
+                if (++repeatCounter % 2 == 0 && nextProgress.first != Status.INDEFINITE) {
                     applyNextStatus();
                 }
             }

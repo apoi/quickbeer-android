@@ -24,6 +24,7 @@ import dagger.Provides;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.features.beerdetails.BeerDetailsViewModel;
 import quickbeer.android.providers.GlobalNotificationProvider;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.providers.ResourceProvider;
 
 @Module
@@ -32,8 +33,9 @@ public final class ViewModelModule {
     @Provides
     static RecentBeersViewModel provideRecentBeersViewModel(
             @NonNull DataLayer.GetBeer getBeer,
-            @NonNull DataLayer.GetAccessedBeers getAccessedBeers) {
-        return new RecentBeersViewModel(getBeer, getAccessedBeers);
+            @NonNull DataLayer.GetAccessedBeers getAccessedBeers,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new RecentBeersViewModel(getBeer, getAccessedBeers, progressStatusProvider);
     }
 
     @Provides
@@ -48,8 +50,9 @@ public final class ViewModelModule {
     static BeerSearchViewModel provideBeerSearchViewModel(
             @NonNull DataLayer.GetBeer getBeer,
             @NonNull DataLayer.GetBeerSearch getBeerSearch,
-            @NonNull SearchViewViewModel searchViewViewModel) {
-        return new BeerSearchViewModel(getBeer, getBeerSearch, searchViewViewModel);
+            @NonNull SearchViewViewModel searchViewViewModel,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new BeerSearchViewModel(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
     }
 
     @Provides
@@ -57,8 +60,9 @@ public final class ViewModelModule {
             @NonNull DataLayer.GetBeer getBeer,
             @NonNull DataLayer.GetBeerSearch getBeerSearch,
             @NonNull DataLayer.GetBarcodeSearch getBarcodeSearch,
-            @NonNull SearchViewViewModel searchViewViewModel) {
-        return new BarcodeSearchViewModel(getBeer, getBeerSearch, getBarcodeSearch, searchViewViewModel);
+            @NonNull SearchViewViewModel searchViewViewModel,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new BarcodeSearchViewModel(getBeer, getBeerSearch, getBarcodeSearch, searchViewViewModel, progressStatusProvider);
     }
 
     @Provides
@@ -66,8 +70,9 @@ public final class ViewModelModule {
             @NonNull DataLayer.GetBeer getBeer,
             @NonNull DataLayer.GetBeerSearch getBeerSearch,
             @NonNull DataLayer.GetTopBeers getTopBeers,
-            @NonNull SearchViewViewModel searchViewViewModel) {
-        return new TopBeersViewModel(getBeer, getBeerSearch, getTopBeers, searchViewViewModel);
+            @NonNull SearchViewViewModel searchViewViewModel,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new TopBeersViewModel(getBeer, getBeerSearch, getTopBeers, searchViewViewModel, progressStatusProvider);
     }
 
     @Provides

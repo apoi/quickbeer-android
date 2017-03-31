@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import timber.log.Timber;
@@ -45,8 +46,9 @@ public class TopBeersViewModel extends BeerListViewModel {
     TopBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
                       @NonNull DataLayer.GetBeerSearch getBeerSearch,
                       @NonNull DataLayer.GetTopBeers getTopBeers,
-                      @NonNull SearchViewViewModel searchViewViewModel) {
-        super(getBeer);
+                      @NonNull SearchViewViewModel searchViewViewModel,
+                      @NonNull ProgressStatusProvider progressStatusProvider) {
+        super(getBeer, progressStatusProvider);
 
         this.getTopBeers = get(getTopBeers);
         this.getBeerSearch = get(getBeerSearch);
