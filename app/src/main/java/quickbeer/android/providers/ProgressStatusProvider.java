@@ -82,12 +82,16 @@ public class ProgressStatusProvider {
     }
 
     private void aggregate() {
+        Pair<Status, Float> aggregate = Pair.create(Status.IDLE, 0.0f);
         Collection<Float> values = progressMap.values();
         int count = values.size();
-        float sum = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
-        float progress = count > 0 ? sum / count : 0;
 
-        Pair<Status, Float> aggregate = createStatus(count, progress);
+        if (count > 0) {
+            float sum = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
+            float progress = count > 0 ? sum / count : 0;
+            aggregate = createStatus(count, progress);
+        }
+
         progressSubject.onNext(aggregate);
 
         // Status is idle when all progresses are idle, and this aggregate has finished.
