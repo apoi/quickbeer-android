@@ -46,13 +46,15 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private final int progressBarWidth = getResources().getDimensionPixelSize(R.dimen.progress_indicator_width);
 
+    private float barScale = 1.0f;
+
     @Nullable
     private View progressBar;
 
     @NonNull
     private Pair<Status, Float> currentProgress = Pair.create(Status.IDLE, 0.0f);
 
-    @NonNull
+    @Nullable
     private Pair<Status, Float> nextProgress = Pair.create(Status.IDLE, 0.0f);
 
     public ProgressIndicatorBar(Context context) {
@@ -70,8 +72,8 @@ public class ProgressIndicatorBar extends FrameLayout {
 
         nextProgress = progress;
 
-        // Indefinite status waits until next repeat before applying new status
-        if (currentProgress.first != Status.INDEFINITE) {
+        // Only indefinite progress animation can be interrupted
+        if (!isUninterruptibleAnimation()) {
             applyNextStatus();
         }
     }
@@ -107,7 +109,13 @@ public class ProgressIndicatorBar extends FrameLayout {
             return;
         }
 
+        // Check there's new status to apply
+        if (nextProgress == null) {
+            return;
+        }
+
         currentProgress = nextProgress;
+        nextProgress = null;
 
         switch (currentProgress.first) {
             case INDEFINITE:
@@ -120,6 +128,18 @@ public class ProgressIndicatorBar extends FrameLayout {
                 animateToEnd();
                 break;
         }
+    }
+
+    private boolean isUninterruptibleAnimation() {
+        if (progressBar == null || progressBar.getAnimation() == null) {
+            return false;
+        }
+
+        if (progressBar.getAnimation().hasEnded()) {
+            return false;
+        }
+
+        return true;
     }
 
     private void animateScroller() {
@@ -140,7 +160,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                if (++repeatCounter % 2 == 0 && nextProgress.first != Status.INDEFINITE) {
+                if (nextProgress != null && nextProgress.first != Status.INDEFINITE) {
                     applyNextStatus();
                 }
             }
@@ -152,14 +172,26 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private void animateToProgress(float progress) {
-        Timber.v("animateToProgress(" + progress + ")");
+        Timber.v("animateToProgress(%s)", progress);
 
         float newScale = (getWidth() * progress / progressBarWidth) + 1;
 
-        ScaleAnimation animation = new ScaleAnimation(1, newScale,
+        Timber.v("animate scale %s -> %s", barScale, newScale);
+
+        ScaleAnimation animation = new ScaleAnimation(barScale, newScale,
                 progressBar.getHeight(), progressBar.getHeight());
         animation.setDuration(ANIMATION_PROGRESS_DURATION);
         animation.setFillAfter(true);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override public void onAnimationStart(Animation animation) {}
+            @Override public void onAnimationRepeat(Animation animation) {}
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                barScale = newScale;
+                applyNextStatus();
+            }
+        });
 
         progressBar.setVisibility(VISIBLE);
         progressBar.clearAnimation();
@@ -174,7 +206,7 @@ public class ProgressIndicatorBar extends FrameLayout {
             return;
         }
 
-        ScaleAnimation animation = new ScaleAnimation(1, (getWidth() / (float) progressBarWidth) + 1,
+        ScaleAnimation animation = new ScaleAnimation(barScale, (getWidth() / (float) progressBarWidth) + 1,
                 progressBar.getHeight(), progressBar.getHeight());
         animation.setDuration(ANIMATION_END_SCALE_DURATION);
         animation.setFillAfter(true);
@@ -184,6 +216,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                barScale = 1.0f;
                 animateToHidden();
             }
         });

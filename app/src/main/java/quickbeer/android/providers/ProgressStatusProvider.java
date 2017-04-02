@@ -47,13 +47,14 @@ public class ProgressStatusProvider {
 
         subscription.add(notificationObservable
                 .map(ProgressStatusProvider::toProgress)
-                .doOnCompleted(() -> finishProgress(progressId))
+                .doOnUnsubscribe(() -> finishProgress(progressId))
                 .subscribe(progress -> addProgress(progressId, progress), Timber::w));
     }
 
     @NonNull
     public Observable<Pair<Status, Float>> progressStatus() {
         return progressSubject.asObservable()
+                .onBackpressureBuffer()
                 .distinctUntilChanged();
     }
 
@@ -86,10 +87,7 @@ public class ProgressStatusProvider {
         float sum = Ix.from(values).reduce((v1, v2) -> v1 + v2).first();
         float progress = count > 0 ? sum / count : 0;
 
-        Timber.d("Create aggregate: %s, %s", count, progress);
         Pair<Status, Float> aggregate = createStatus(count, progress);
-
-        Timber.d("Progress aggregate: " + aggregate);
         progressSubject.onNext(aggregate);
 
         // Status is idle when all progresses are idle, and this aggregate has finished.
