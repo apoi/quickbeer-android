@@ -214,7 +214,7 @@ public final class NavigationProvider {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             activity.startActivity(intent);
         } else {
-            clearToPage(menuItem.getItemId());
+            addPage(menuItem.getItemId());
         }
     }
 
