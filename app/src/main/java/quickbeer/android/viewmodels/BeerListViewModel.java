@@ -100,8 +100,9 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
 
         // Share progress status to progress provider
         if (reportsProgress()) {
-            progressStatusProvider.addProgressObservable(sharedObservable
-                    .map(notification -> notification));
+            subscription.add(progressStatusProvider
+                    .addProgressObservable(sharedObservable
+                    .map(notification -> notification)));
         }
 
         subscription.add(sharedObservable.connect());

@@ -75,9 +75,10 @@ public class LoginFetcher extends FetcherBase<Uri> {
         String uri = getUniqueUri();
         int requestId = uri.hashCode();
 
+        addListener(requestId, listenerId);
+
         if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for login");
-            addListener(requestId, listenerId);
             return;
         }
 
@@ -95,7 +96,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = networkApi
                 .login(username, password)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .map(__ -> LoginUtils.getUserId(cookieJar))
                 .doOnSuccess(id -> id.ifNone(() -> Timber.e("No user id found in login response!")))
                 .map(userId -> User.builder()
@@ -104,13 +105,13 @@ public class LoginFetcher extends FetcherBase<Uri> {
                         .password(password)
                         .build())
                 .flatMap(userStore::put)
-                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
                 .subscribe(RxUtils::nothing,
-                        error -> Timber.e(error, "Error fetching user " + username));
+                        error -> Timber.w(error, "Error fetching user " + username));
 
-        addRequest(requestId, listenerId, subscription);
+        addRequest(requestId, subscription);
     }
 
     @NonNull

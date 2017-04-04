@@ -93,14 +93,15 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         final String uri = getUniqueUri(queryId);
         int requestId = uri.hashCode();
 
+        addListener(requestId, listenerId);
+
         if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for search " + queryId);
-            addListener(requestId, listenerId);
             return;
         }
 
         Subscription subscription = createNetworkObservable(query)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .toObservable()
                 .map(this::sort)
                 .flatMap(Observable::from)
@@ -109,13 +110,13 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .toSingle()
                 .map(beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()))
                 .flatMap(beerListStore::put)
-                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
                 .subscribe(RxUtils::nothing,
-                        error -> Timber.e(error, "Error fetching beer search for %s", uri));
+                        error -> Timber.w(error, "Error fetching beer search for %s", uri));
 
-        addRequest(requestId, listenerId, subscription);
+        addRequest(requestId, subscription);
     }
 
     @SuppressWarnings({"CallToStringCompareTo", "IfMayBeConditional"})

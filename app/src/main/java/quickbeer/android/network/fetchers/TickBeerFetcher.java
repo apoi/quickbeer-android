@@ -96,9 +96,10 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
         String uri = getUniqueUri(beerId, rating);
         int requestId = uri.hashCode();
 
+        addListener(requestId, listenerId);
+
         if (isOngoingRequest(requestId)) {
             Timber.d("Found an ongoing request for beer tick");
-            addListener(requestId, listenerId);
             return;
         }
 
@@ -106,20 +107,20 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
 
         Subscription subscription = userStore
                 .getOnce(Constants.DEFAULT_USER_ID)
+                .subscribeOn(Schedulers.io())
                 .compose(RxUtils::valueOrError)
                 .map(User::id)
                 .flatMap(userId -> createNetworkObservable(beerId, rating, userId))
                 .flatMap(__ -> beerStore.getOnce(beerId))
                 .compose(RxUtils::valueOrError)
                 .map(beer -> withRating(beer, rating))
-                .subscribeOn(Schedulers.computation())
-                .doOnSubscribe(() -> startRequest(requestId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, false))
                 .doOnError(doOnError(requestId, uri))
                 .subscribe(beerStore::put,
-                        error -> Timber.e(error, "Error ticking beer"));
+                        error -> Timber.w(error, "Error ticking beer"));
 
-        addRequest(requestId, listenerId, subscription);
+        addRequest(requestId, subscription);
     }
 
     @NonNull

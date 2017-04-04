@@ -84,16 +84,17 @@ public class ReviewFetcher extends FetcherBase<Uri> {
         int beerId = intent.getIntExtra("beerId", 0);
         String uri = getUniqueUri(beerId);
 
+        addListener(beerId, listenerId);
+
         if (isOngoingRequest(beerId)) {
             Timber.d("Found an ongoing request for reviews for beer " + beerId);
-            addListener(beerId, listenerId);
             return;
         }
 
         Timber.d("fetchReviews(" + beerId + ")");
 
         Subscription subscription = createNetworkObservable(beerId)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .toObservable()
                 .flatMap(Observable::from)
                 .flatMap(review -> reviewStore.put(review).toObservable().map(__ -> review.id()))
@@ -101,13 +102,13 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .toSingle()
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
-                .doOnSubscribe(() -> startRequest(beerId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(beerId, uri))
                 .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
                 .doOnError(doOnError(beerId, uri))
                 .subscribe(RxUtils::nothing,
-                        error -> Timber.e(error, "Error fetching reviews for beer " + beerId));
+                        error -> Timber.w(error, "Error fetching reviews for beer " + beerId));
 
-        addRequest(beerId, listenerId, subscription);
+        addRequest(beerId, subscription);
     }
 
     @NonNull

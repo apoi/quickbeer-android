@@ -40,6 +40,7 @@ import com.google.firebase.crash.FirebaseCrash;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
@@ -101,8 +102,6 @@ public abstract class ContentProviderStoreCoreBase<U> {
     private final int groupMaxSize;
 
     private final int groupingTimeout;
-
-    private int nextOperationIndex = 0;
 
     protected ContentProviderStoreCoreBase(@NonNull final ContentResolver contentResolver) {
         this(contentResolver, DEFAULT_GROUPING_TIMEOUT_MS, DEFAULT_GROUP_MAX_SIZE);
@@ -315,7 +314,7 @@ public abstract class ContentProviderStoreCoreBase<U> {
 
     @NonNull
     private Single<Boolean> createModifyingOperation(@NonNull final Func1<Integer, CoreValue<U>> valueFunc) {
-        int index = ++nextOperationIndex;
+        int index = createIndex();
 
         Log.d(TAG, "Create modifying " + index);
         completionNotifiers.put(index, PublishSubject.create());
@@ -324,6 +323,10 @@ public abstract class ContentProviderStoreCoreBase<U> {
         return completionNotifiers.get(index)
                 .first()
                 .toSingle();
+    }
+
+    private static int createIndex() {
+        return UUID.randomUUID().hashCode();
     }
 
     @NonNull

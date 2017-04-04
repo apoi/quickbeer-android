@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentMap;
 import io.reark.reark.data.DataStreamNotification;
 import ix.Ix;
 import rx.Observable;
+import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -42,13 +44,16 @@ public class ProgressStatusProvider {
      * Long-living progress observables should not be aggregated, or at least they should be
      * explicitly finished in a controlled manner if app is sent to background.
      */
-    public void addProgressObservable(@NonNull Observable<DataStreamNotification<?>> notificationObservable) {
+    public Subscription addProgressObservable(@NonNull Observable<DataStreamNotification<?>> notificationObservable) {
         int progressId = createId();
 
-        subscription.add(notificationObservable
+        return notificationObservable
+                .observeOn(Schedulers.computation())
+                .filter(observable -> !observable.isOnNext()) // Only interested in status changes
+                .doOnEach(notification -> Timber.d("%s= progress change: %s", progressId, notification))
                 .map(ProgressStatusProvider::toProgress)
                 .doOnUnsubscribe(() -> finishProgress(progressId))
-                .subscribe(progress -> addProgress(progressId, progress), Timber::w));
+                .subscribe(progress -> addProgress(progressId, progress), Timber::w);
     }
 
     @NonNull
@@ -65,8 +70,11 @@ public class ProgressStatusProvider {
     private void addProgress(int identifier, float progress) {
         Timber.v("addProgress(%s, %s)", identifier, progress);
 
-        progressMap.put(identifier, progress);
-        aggregate();
+        // Skip progress update if it's going straight to finished
+        if (progressMap.containsKey(identifier) || progress < 1.0) {
+            progressMap.put(identifier, progress);
+            aggregate();
+        }
     }
 
     private void finishProgress(int identifier) {
@@ -81,7 +89,7 @@ public class ProgressStatusProvider {
         return notification.isOngoing() ? 0.5f : 1.0f;
     }
 
-    private void aggregate() {
+    private synchronized void aggregate() {
         Pair<Status, Float> aggregate = Pair.create(Status.IDLE, 0.0f);
         Collection<Float> values = progressMap.values();
         int count = values.size();
@@ -114,7 +122,7 @@ public class ProgressStatusProvider {
             return Pair.create(Status.LOADING, progress);
         } else {
             // Finished, back to idle
-            return Pair.create(Status.IDLE, 1.0f);
+            return Pair.create(Status.IDLE, 0.0f);
         }
     }
 

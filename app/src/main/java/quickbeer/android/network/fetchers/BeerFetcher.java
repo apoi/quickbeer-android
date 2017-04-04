@@ -78,24 +78,25 @@ public class BeerFetcher extends FetcherBase<Uri> {
         int beerId = get(intent).getIntExtra("id", 0);
         String uri = getUniqueUri(beerId);
 
+        addListener(beerId, listenerId);
+
         if (isOngoingRequest(beerId)) {
             Timber.d("Found an ongoing request for beer " + beerId);
-            addListener(beerId, listenerId);
             return;
         }
 
-        Timber.d("fetchBeer(" + beerId + ")");
+        Timber.d("fetchBeer(requestId=%s, hashCode=%s, uri=%s", beerId, uri.hashCode(), uri);
 
         Subscription subscription = createNetworkObservable(beerId)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .flatMap(beerStore::put)
-                .doOnSubscribe(() -> startRequest(beerId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(beerId, uri))
                 .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
                 .doOnError(doOnError(beerId, uri))
                 .subscribe(__ -> metadataStore.put(BeerMetadata.newUpdate(beerId)),
-                        error -> Timber.e(error, "Error fetching beer " + beerId));
+                        error -> Timber.w(error, "Error fetching beer " + beerId));
 
-        addRequest(beerId, listenerId, subscription);
+        addRequest(beerId, subscription);
     }
 
     @NonNull

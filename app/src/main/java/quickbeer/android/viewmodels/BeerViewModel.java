@@ -93,8 +93,9 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
                 .map(DataStreamNotification::getValue)
                 .subscribe(beer::onNext, Timber::e));
 
-        progressStatusProvider.addProgressObservable(beerSource
-                .map(notification -> notification));
+        subscription.add(progressStatusProvider
+                .addProgressObservable(beerSource
+                .map(notification -> notification)));
 
         subscription.add(beerSource
                 .connect());

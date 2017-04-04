@@ -78,24 +78,25 @@ public class BrewerFetcher extends FetcherBase<Uri> {
         int brewerId = get(intent).getIntExtra("id", 0);
         String uri = getUniqueUri(brewerId);
 
+        addListener(brewerId, listenerId);
+
         if (isOngoingRequest(brewerId)) {
             Timber.d("Found an ongoing request for brewer " + brewerId);
-            addListener(brewerId, listenerId);
             return;
         }
 
         Timber.d("fetchBrewer(" + brewerId + ")");
 
         Subscription subscription = createNetworkObservable(brewerId)
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .flatMap(brewerStore::put)
-                .doOnSubscribe(() -> startRequest(brewerId, listenerId, uri))
+                .doOnSubscribe(() -> startRequest(brewerId, uri))
                 .doOnSuccess(updated -> completeRequest(brewerId, uri, updated))
                 .doOnError(doOnError(brewerId, uri))
                 .subscribe(__ -> metadataStore.put(BrewerMetadata.newUpdate(brewerId)),
-                        error -> Timber.e(error, "Error fetching brewer " + brewerId));
+                        error -> Timber.w(error, "Error fetching brewer " + brewerId));
 
-        addRequest(brewerId, listenerId, subscription);
+        addRequest(brewerId, subscription);
     }
 
     @NonNull
