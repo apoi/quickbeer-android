@@ -48,10 +48,12 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.transformations.BlurTransformation;
 import quickbeer.android.transformations.ContainerLabelExtractor;
 import quickbeer.android.viewmodels.SearchViewViewModel;
+import quickbeer.android.views.ProgressIndicatorBar;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -72,6 +74,9 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @BindView(R.id.toolbar_overlay_gradient)
     View overlay;
 
+    @BindView(R.id.progress_indicator_bar)
+    ProgressIndicatorBar progressIndicatorBar;
+
     @Inject
     @Nullable
     DataLayer.GetBeer getBeer;
@@ -91,6 +96,10 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     @Nullable
     @Inject
     ToastProvider toastProvider;
+
+    @Nullable
+    @Inject
+    ProgressStatusProvider progressStatusProvider;
 
     @Nullable
     @Inject
@@ -132,6 +141,11 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
             subscription.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(BeerDetailsActivity.this::setToolbarDetails, Timber::e));
+
+            subscription.add(get(progressStatusProvider)
+                    .progressStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(progressIndicatorBar::setProgress, Timber::e));
 
             subscription.add(sourceObservable
                     .connect());

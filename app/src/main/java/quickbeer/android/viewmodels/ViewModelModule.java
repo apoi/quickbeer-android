@@ -93,8 +93,9 @@ public final class ViewModelModule {
     @Provides
     static BrewerViewModel providerBrewerViewModel(
             @NonNull DataLayer.GetBeer getBeer,
-            @NonNull DataLayer.GetBrewer getBrewer) {
-        return new BrewerViewModel(getBeer, getBrewer);
+            @NonNull DataLayer.GetBrewer getBrewer,
+            @NonNull ProgressStatusProvider progressStatusProvider) {
+        return new BrewerViewModel(getBeer, getBrewer, progressStatusProvider);
     }
 
 }

@@ -24,6 +24,7 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
@@ -42,6 +43,9 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
+    private final ProgressStatusProvider progressStatusProvider;
+
+    @NonNull
     private final BehaviorSubject<Brewer> brewer = BehaviorSubject.create();
 
     private int brewerId;
@@ -49,17 +53,21 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     private int beerId;
 
     public BrewerViewModel(@NonNull DataLayer.GetBeer getBeer,
-                           @NonNull DataLayer.GetBrewer getBrewer) {
+                           @NonNull DataLayer.GetBrewer getBrewer,
+                           @NonNull ProgressStatusProvider progressStatusProvider) {
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
+        this.progressStatusProvider = get(progressStatusProvider);
     }
 
     public BrewerViewModel(int brewerId,
                            @NonNull DataLayer.GetBeer getBeer,
-                           @NonNull DataLayer.GetBrewer getBrewer) {
+                           @NonNull DataLayer.GetBrewer getBrewer,
+                           @NonNull ProgressStatusProvider progressStatusProvider) {
         this.brewerId = brewerId;
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
+        this.progressStatusProvider = get(progressStatusProvider);
     }
 
     public int getBrewerId() {
@@ -94,6 +102,10 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
                 .filter(DataStreamNotification::isOnNext)
                 .map(DataStreamNotification::getValue)
                 .subscribe(brewer::onNext, Timber::e));
+
+        subscription.add(progressStatusProvider
+                .addProgressObservable(brewerSource
+                        .map(notification -> notification)));
 
         subscription.add(brewerSource
                 .connect());

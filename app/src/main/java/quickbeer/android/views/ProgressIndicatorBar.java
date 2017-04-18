@@ -36,6 +36,8 @@ import quickbeer.android.R;
 import quickbeer.android.providers.ProgressStatusProvider.Status;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.get;
+
 public class ProgressIndicatorBar extends FrameLayout {
 
     private static final int ANIMATION_SCROLL_DURATION = 1200;
@@ -68,7 +70,11 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     public void setProgress(@NonNull Pair<Status, Float> progress) {
-        Timber.v("New progress: " + progress);
+        if (progress.equals(nextProgress)) {
+            return;
+        }
+
+        Timber.v("New progress: " + get(progress));
 
         nextProgress = progress;
 
@@ -131,11 +137,13 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private boolean isUninterruptibleAnimation() {
-        if (progressBar == null || progressBar.getAnimation() == null) {
+        if (progressBar == null) {
             return false;
         }
 
-        if (progressBar.getAnimation().hasEnded()) {
+        Animation animation = progressBar.getAnimation();
+
+        if (animation == null || animation.hasEnded()) {
             return false;
         }
 

@@ -87,7 +87,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                                 @NonNull ProgressStatusProvider progressStatusProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
         beerViewModel = new BeerViewModel(get(getBeer), get(progressStatusProvider), true);
-        brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer));
+        brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer), get(progressStatusProvider));
         reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
 
         this.getBeer = get(getBeer);
