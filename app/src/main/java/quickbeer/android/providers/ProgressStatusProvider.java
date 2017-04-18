@@ -1,7 +1,8 @@
 package quickbeer.android.providers;
 
 import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+
+import com.google.auto.value.AutoValue;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,7 +14,6 @@ import rx.Observable;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 public class ProgressStatusProvider {
@@ -25,10 +25,7 @@ public class ProgressStatusProvider {
     }
 
     @NonNull
-    private final CompositeSubscription subscription = new CompositeSubscription();
-
-    @NonNull
-    private final BehaviorSubject<Pair<Status, Float>> progressSubject = BehaviorSubject.create(Pair.create(Status.IDLE, 0.0f));
+    private final BehaviorSubject<ProgressStatus> progressSubject = BehaviorSubject.create(ProgressStatus.IDLE);
 
     @NonNull
     private final ConcurrentMap<Integer, Float> progressMap = new ConcurrentHashMap<>(20, 0.75f, 4);
@@ -47,7 +44,7 @@ public class ProgressStatusProvider {
     }
 
     @NonNull
-    public Observable<Pair<Status, Float>> progressStatus() {
+    public Observable<ProgressStatus> progressStatus() {
         return progressSubject.asObservable()
                 .onBackpressureBuffer()
                 .distinctUntilChanged();
@@ -80,7 +77,7 @@ public class ProgressStatusProvider {
     }
 
     private synchronized void aggregate() {
-        Pair<Status, Float> aggregate = Pair.create(Status.IDLE, 0.0f);
+        ProgressStatus aggregate = ProgressStatus.IDLE;
         Collection<Float> values = progressMap.values();
         int count = values.size();
 
@@ -93,27 +90,58 @@ public class ProgressStatusProvider {
         progressSubject.onNext(aggregate);
 
         // Status is idle when all progresses are idle, and this aggregate has finished.
-        if (aggregate.first == Status.IDLE) {
+        if (aggregate.status() == Status.IDLE) {
             progressMap.clear();
         }
     }
 
     @SuppressWarnings("IfStatementWithTooManyBranches")
-    private static Pair<Status, Float> createStatus(int count, float progress) {
+    private static ProgressStatus createStatus(int count, float progress) {
         if (count == 0) {
             // Nothing in progress, though shouldn't happen
-            return Pair.create(Status.IDLE, 0.0f);
+            return ProgressStatus.IDLE;
         } else if (count == 1 && progress < 1) {
             // One request in who knows what state. We don't receive progress
             // notifications, so we can't show progress for a single request.
-            return Pair.create(Status.INDEFINITE, 0.0f);
+            return ProgressStatus.INDEFINITE;
         } else if (progress < 1) {
             // Multiple requests or done, we can actually show progress
-            return Pair.create(Status.LOADING, progress);
+            return ProgressStatus.create(Status.LOADING, progress);
         } else {
             // Finished, back to idle
-            return Pair.create(Status.IDLE, 0.0f);
+            return ProgressStatus.IDLE;
         }
     }
 
+    @SuppressWarnings("EqualsAndHashcode")
+    @AutoValue
+    public abstract static class ProgressStatus {
+
+        public static final ProgressStatus IDLE = ProgressStatus.create(Status.IDLE, 0.0f);
+
+        public static final ProgressStatus INDEFINITE = ProgressStatus.create(Status.INDEFINITE, 0.0f);
+
+        @NonNull
+        public abstract Status status();
+        public abstract float progress();
+
+        @NonNull
+        public static ProgressStatus create(@NonNull Status status, float progress) {
+            return new AutoValue_ProgressStatusProvider_ProgressStatus(status, progress);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (o == this) {
+                return true;
+            }
+            if (o instanceof ProgressStatus) {
+                ProgressStatus other = (ProgressStatus) o;
+                return (status() == other.status() &&
+                        (status() != Status.LOADING // Idle and indefinite equal regardless of progress
+                                || (Float.floatToIntBits(progress()) == Float.floatToIntBits(other.progress()))));
+            }
+            return false;
+        }
+    }
 }

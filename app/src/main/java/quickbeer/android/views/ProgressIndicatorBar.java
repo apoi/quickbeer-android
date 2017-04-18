@@ -21,7 +21,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,9 +32,11 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 
 import quickbeer.android.R;
+import quickbeer.android.providers.ProgressStatusProvider.ProgressStatus;
 import quickbeer.android.providers.ProgressStatusProvider.Status;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ProgressIndicatorBar extends FrameLayout {
@@ -54,10 +55,10 @@ public class ProgressIndicatorBar extends FrameLayout {
     private View progressBar;
 
     @NonNull
-    private Pair<Status, Float> currentProgress = Pair.create(Status.IDLE, 0.0f);
+    private ProgressStatus currentProgress = ProgressStatus.IDLE;
 
-    @Nullable
-    private Pair<Status, Float> nextProgress = Pair.create(Status.IDLE, 0.0f);
+    @NonNull
+    private ProgressStatus nextProgress = ProgressStatus.IDLE;
 
     public ProgressIndicatorBar(Context context) {
         super(context);
@@ -69,11 +70,7 @@ public class ProgressIndicatorBar extends FrameLayout {
         addPreDrawListener();
     }
 
-    public void setProgress(@NonNull Pair<Status, Float> progress) {
-        if (progress.equals(nextProgress)) {
-            return;
-        }
-
+    public void setProgress(@NonNull ProgressStatus progress) {
         Timber.v("New progress: " + get(progress));
 
         nextProgress = progress;
@@ -116,19 +113,18 @@ public class ProgressIndicatorBar extends FrameLayout {
         }
 
         // Check there's new status to apply
-        if (nextProgress == null) {
+        if (nextProgress.equals(currentProgress)) {
             return;
         }
 
         currentProgress = nextProgress;
-        nextProgress = null;
 
-        switch (currentProgress.first) {
+        switch (currentProgress.status()) {
             case INDEFINITE:
                 animateScroller();
                 break;
             case LOADING:
-                animateToProgress(currentProgress.second);
+                animateToProgress(currentProgress.progress());
                 break;
             case IDLE:
                 animateToEnd();
@@ -137,13 +133,11 @@ public class ProgressIndicatorBar extends FrameLayout {
     }
 
     private boolean isUninterruptibleAnimation() {
-        if (progressBar == null) {
+        if (progressBar == null || progressBar.getAnimation() == null) {
             return false;
         }
 
-        Animation animation = progressBar.getAnimation();
-
-        if (animation == null || animation.hasEnded()) {
+        if (progressBar.getAnimation().hasEnded()) {
             return false;
         }
 
@@ -152,6 +146,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private void animateScroller() {
         Timber.v("animateScroller()");
+        checkNotNull(progressBar);
 
         int animEnd = getWidth() - progressBarWidth;
 
@@ -161,14 +156,12 @@ public class ProgressIndicatorBar extends FrameLayout {
         animation.setRepeatMode(Animation.REVERSE);
         animation.setRepeatCount(Animation.INFINITE);
         animation.setAnimationListener(new Animation.AnimationListener() {
-            private int repeatCounter = 0;
-
             @Override public void onAnimationStart(Animation animation) {}
             @Override public void onAnimationEnd(Animation animation) {}
 
             @Override
             public void onAnimationRepeat(Animation animation) {
-                if (nextProgress != null && nextProgress.first != Status.INDEFINITE) {
+                if (nextProgress.status() != Status.INDEFINITE) {
                     applyNextStatus();
                 }
             }
@@ -181,6 +174,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private void animateToProgress(float progress) {
         Timber.v("animateToProgress(%s)", progress);
+        checkNotNull(progressBar);
 
         float newScale = (getWidth() * progress / progressBarWidth) + 1;
 
@@ -208,6 +202,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private void animateToEnd() {
         Timber.v("animateToEnd()");
+        checkNotNull(progressBar);
 
         if (progressBar.getAnimation() == null) {
             // Non-active progress bar doesn't need end animation
@@ -236,6 +231,7 @@ public class ProgressIndicatorBar extends FrameLayout {
 
     private void animateToHidden() {
         Timber.v("animateToHidden()");
+        checkNotNull(progressBar);
 
         AlphaAnimation animation = new AlphaAnimation(1.0f, 0.0f);
         animation.setStartOffset(ANIMATION_END_PAUSE_DURATION);
