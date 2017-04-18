@@ -35,22 +35,12 @@ public class ProgressStatusProvider {
 
     private int nextId = 1;
 
-    /**
-     * Subscribes to the progress observable. This means that any observable passed here will be
-     * kept subscribed until its completion. Idea is that since a requests won't be canceled anyway,
-     * it makes sense to also keep the subscription to follow status even if application is
-     * suspended.
-     *
-     * Long-living progress observables should not be aggregated, or at least they should be
-     * explicitly finished in a controlled manner if app is sent to background.
-     */
     public Subscription addProgressObservable(@NonNull Observable<DataStreamNotification<?>> notificationObservable) {
         int progressId = createId();
 
         return notificationObservable
                 .observeOn(Schedulers.computation())
                 .filter(observable -> !observable.isOnNext()) // Only interested in status changes
-                .doOnEach(notification -> Timber.d("%s= progress change: %s", progressId, notification))
                 .map(ProgressStatusProvider::toProgress)
                 .doOnUnsubscribe(() -> finishProgress(progressId))
                 .subscribe(progress -> addProgress(progressId, progress), Timber::w);
