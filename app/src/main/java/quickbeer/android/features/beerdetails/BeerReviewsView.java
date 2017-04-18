@@ -28,12 +28,16 @@ import java.util.List;
 
 import quickbeer.android.R;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.listeners.LoadMoreListener;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerReviewsView extends FrameLayout {
 
     private BeerReviewsAdapter beerReviewsAdapter;
+
+    private RecyclerView beerReviewsListView;
 
     public BeerReviewsView(Context context) {
         super(context);
@@ -47,13 +51,21 @@ public class BeerReviewsView extends FrameLayout {
         get(beerReviewsAdapter).setReviews(get(reviews));
     }
 
+    public void setOnScrollListener(@NonNull LoadMoreListener listener) {
+        checkNotNull(beerReviewsListView);
+        checkNotNull(listener);
+
+        listener.setLayoutManager((LinearLayoutManager) beerReviewsListView.getLayoutManager());
+        beerReviewsListView.addOnScrollListener(listener);
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
 
         beerReviewsAdapter = new BeerReviewsAdapter();
 
-        RecyclerView beerReviewsListView = (RecyclerView) findViewById(R.id.beers_reviews_list_view);
+        beerReviewsListView = (RecyclerView) findViewById(R.id.beers_reviews_list_view);
         beerReviewsListView.setHasFixedSize(true);
         beerReviewsListView.setLayoutManager(new LinearLayoutManager(getContext()));
         beerReviewsListView.setAdapter(beerReviewsAdapter);

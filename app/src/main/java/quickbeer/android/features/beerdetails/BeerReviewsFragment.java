@@ -34,6 +34,7 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.listeners.LoadMoreListener;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -52,6 +53,9 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     BeerDetailsViewModel beerDetailsViewModel;
 
     @NonNull
+    private final LoadMoreListener listener = new LoadMoreListener();
+
+    @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     private int beerId;
@@ -65,6 +69,9 @@ public class BeerReviewsFragment extends BindingBaseFragment {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(reviewsView::setReviews, Timber::e));
+
+            subscription.add(listener.moreItemsRequestedStream()
+                    .subscribe(viewModel()::loadMoreReviews, Timber::e));
         }
     };
 
@@ -99,12 +106,12 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
+        reviewsView.setOnScrollListener(listener);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         viewModel().setBeerId(beerId);
     }
 

@@ -131,6 +131,10 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         return tickSuccessSubject.asObservable();
     }
 
+    public void loadMoreReviews(int currentReviewsCount) {
+        // TODO load more reviews here
+    }
+
     public void tickBeer(int rating) {
         Observable<DataStreamNotification<Void>> observable =
                 get(tickBeer).call(beerId, rating)
