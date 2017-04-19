@@ -101,7 +101,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
 
     @NonNull
     private Single<Beer> createNetworkObservable(int beerId) {
-        return networkApi.getBeer(networkUtils.createRequestParams("bd", String.valueOf(beerId)));
+            return networkApi.getBeer(networkUtils.createRequestParams("bd", String.valueOf(beerId)));
     }
 
     @NonNull

@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.SimpleViewModel;
 import quickbeer.android.data.DataLayer;
@@ -82,13 +83,14 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                                 @NonNull DataLayer.GetBrewer getBrewer,
                                 @NonNull DataLayer.GetUser getUser,
                                 @NonNull DataLayer.GetReviews getReviews,
+                                @NonNull DataLayer.FetchReviews fetchReviews,
                                 @NonNull DataLayer.GetReview getReview,
                                 @NonNull ResourceProvider resourceProvider,
                                 @NonNull ProgressStatusProvider progressStatusProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
         beerViewModel = new BeerViewModel(get(getBeer), get(progressStatusProvider), true);
         brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer), get(progressStatusProvider));
-        reviewListViewModel = new ReviewListViewModel(get(getReviews), get(getReview));
+        reviewListViewModel = new ReviewListViewModel(get(getReviews), get(fetchReviews), get(getReview));
 
         this.getBeer = get(getBeer);
         this.getUser = get(getUser);
@@ -132,7 +134,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     }
 
     public void loadMoreReviews(int currentReviewsCount) {
-        // TODO load more reviews here
+        reviewListViewModel.fetchReviews((currentReviewsCount / Constants.REVIEWS_PER_PAGE) + 1);
     }
 
     public void tickBeer(int rating) {

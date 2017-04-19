@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.List;
+import java.util.Map;
 
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
@@ -82,6 +83,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
         }
 
         int beerId = intent.getIntExtra("beerId", 0);
+        int page = intent.getIntExtra("page", 1);
         String uri = getUniqueUri(beerId);
 
         addListener(beerId, listenerId);
@@ -91,9 +93,9 @@ public class ReviewFetcher extends FetcherBase<Uri> {
             return;
         }
 
-        Timber.d("fetchReviews(" + beerId + ")");
+        Timber.d("fetchReviews(%s, %s)", beerId, page);
 
-        Subscription subscription = createNetworkObservable(beerId)
+        Subscription subscription = createNetworkObservable(beerId, page)
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 .flatMap(Observable::from)
@@ -112,8 +114,11 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     }
 
     @NonNull
-    private Single<List<Review>> createNetworkObservable(final int beerId) {
-        return networkApi.getReviews(networkUtils.createRequestParams("bid", String.valueOf(beerId)));
+    private Single<List<Review>> createNetworkObservable(int beerId, int page) {
+        Map<String, String> params = networkUtils.createRequestParams("bid", String.valueOf(beerId));
+        params.put("p", String.valueOf(page));
+
+        return networkApi.getReviews(params);
     }
 
     @NonNull
@@ -123,7 +128,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     }
 
     @NonNull
-    public static String getUniqueUri(final int id) {
+    public static String getUniqueUri(int id) {
         return Review.class + "/" + id;
     }
 }

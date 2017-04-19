@@ -83,11 +83,13 @@ public final class ViewModelModule {
             @NonNull DataLayer.GetBrewer getBrewer,
             @NonNull DataLayer.GetUser getUser,
             @NonNull DataLayer.GetReviews getReviews,
+            @NonNull DataLayer.FetchReviews fetchReviews,
             @NonNull DataLayer.GetReview getReview,
             @NonNull ResourceProvider resourceProvider,
             @NonNull ProgressStatusProvider progressStatusProvider,
             @NonNull GlobalNotificationProvider notificationProvider) {
-        return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getUser, getReviews, getReview, resourceProvider, progressStatusProvider, notificationProvider);
+        return new BeerDetailsViewModel(getBeer, tickBeer, getBrewer, getUser, getReviews, fetchReviews,
+                getReview, resourceProvider, progressStatusProvider, notificationProvider);
     }
 
     @Provides

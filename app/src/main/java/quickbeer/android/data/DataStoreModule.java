@@ -140,6 +140,12 @@ public final class DataStoreModule {
     }
 
     @Provides
+    static DataLayer.FetchReviews provideFetchReviews(
+            @NonNull DataLayer dataLayer) {
+        return dataLayer::fetchReviews;
+    }
+
+    @Provides
     static DataLayer.GetTickedBeers provideGetTickedBeers(
             @NonNull DataLayer dataLayer) {
         return dataLayer::getTickedBeers;

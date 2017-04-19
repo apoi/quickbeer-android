@@ -29,6 +29,9 @@ import com.google.gson.reflect.TypeToken;
 import org.threeten.bp.ZonedDateTime;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import quickbeer.android.data.columns.ReviewListColumns;
 import quickbeer.android.data.pojos.ItemList;
@@ -94,5 +97,15 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
         contentValues.put(ReviewListColumns.UPDATED, DateUtils.toEpochSecond(item.getUpdateDate()));
 
         return contentValues;
+    }
+
+    @NonNull
+    @Override
+    protected ItemList<Integer> mergeValues(@NonNull ItemList<Integer> oldList, @NonNull ItemList<Integer> newList) {
+        Set<Integer> items = new LinkedHashSet<>(oldList.getItems().size() + newList.getItems().size());
+        items.addAll(oldList.getItems());
+        items.addAll(newList.getItems());
+
+        return ItemList.create(oldList.getKey(), new ArrayList<>(items), ZonedDateTime.now());
     }
 }

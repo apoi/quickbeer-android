@@ -42,6 +42,9 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     private final DataLayer.GetReviews getReviews;
 
     @NonNull
+    private final DataLayer.FetchReviews fetchReviews;
+
+    @NonNull
     private final DataLayer.GetReview getReview;
 
     @NonNull
@@ -50,8 +53,10 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     private int beerId;
 
     public ReviewListViewModel(@NonNull DataLayer.GetReviews getReviews,
+                               @NonNull DataLayer.FetchReviews fetchReviews,
                                @NonNull DataLayer.GetReview getReview) {
         this.getReviews = get(getReviews);
+        this.fetchReviews = get(fetchReviews);
         this.getReview = get(getReview);
     }
 
@@ -66,6 +71,11 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     @NonNull
     public Observable<List<Review>> getReviews() {
         return reviews.asObservable();
+    }
+
+    public void fetchReviews(int page) {
+        Timber.w("fetchReviews(%s)", page);
+        fetchReviews.call(beerId, page);
     }
 
     @NonNull

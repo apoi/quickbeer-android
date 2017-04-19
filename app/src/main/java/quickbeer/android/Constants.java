@@ -23,6 +23,8 @@ public interface Constants {
 
     int NAV_ARROW_ANIMATION_DURATION = 350;
 
+    int REVIEWS_PER_PAGE = 10;
+
     String API_URL = "https://www.ratebeer.com";
 
     String API_KEY_NAME = "apiKey";

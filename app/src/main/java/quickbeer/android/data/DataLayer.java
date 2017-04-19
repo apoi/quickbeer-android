@@ -514,7 +514,7 @@ public class DataLayer extends DataLayerBase {
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
                             Timber.v("Reviews not cached, fetching");
-                            fetchReviews(beerId);
+                            fetchReviews(beerId, 1);
                         });
 
         return getReviewsResultStream(beerId)
@@ -539,7 +539,7 @@ public class DataLayer extends DataLayerBase {
                 requestStatusObservable, reviewListObservable);
     }
 
-    private int fetchReviews(int beerId) {
+    public int fetchReviews(int beerId, int page) {
         Timber.v("fetchReviews(%s)", beerId);
 
         int listenerId = createListenerId();
@@ -548,6 +548,7 @@ public class DataLayer extends DataLayerBase {
         intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
         intent.putExtra("listenerId", listenerId);
         intent.putExtra("beerId", beerId);
+        intent.putExtra("page", page);
         context.startService(intent);
 
         return listenerId;
@@ -835,6 +836,10 @@ public class DataLayer extends DataLayerBase {
     public interface GetReviews {
         @NonNull
         Observable<DataStreamNotification<ItemList<Integer>>> call(int beerId);
+    }
+
+    public interface FetchReviews {
+        void call(int beerId, int page);
     }
 
     public interface FetchTickedBeers {
