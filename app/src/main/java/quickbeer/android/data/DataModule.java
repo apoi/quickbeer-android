@@ -25,6 +25,8 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import io.reark.reark.network.fetchers.UriFetcherManager;
+import quickbeer.android.data.access.ApplicationDataLayer;
+import quickbeer.android.data.access.ServiceDataLayer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
@@ -40,144 +42,143 @@ import quickbeer.android.injections.ForApplication;
 import quickbeer.android.network.fetchers.FetcherModule;
 
 @Module(includes = { FetcherModule.class, StoreModule.class })
-public final class DataStoreModule {
+public final class DataModule {
 
     @Provides
     static DataLayer.Login provideLogin(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::login;
     }
 
     @Provides
     static DataLayer.GetLoginStatus provideLoginStatus(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getLoginStatus;
     }
 
     @Provides
     static DataLayer.GetUser provideGetUser(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getUser;
     }
 
     @Provides
     static DataLayer.GetBeer provideGetBeer(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBeer;
     }
 
     @Provides
     static DataLayer.AccessBeer provideAccessBeer(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::accessBeer;
     }
 
     @Provides
     static DataLayer.GetAccessedBeers provideGetAccessedBeers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getAccessedBeers;
     }
 
     @Provides
     static DataLayer.AccessBrewer provideAccessBrewer(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::accessBrewer;
     }
 
     @Provides
     static DataLayer.GetAccessedBrewers provideGetAccessedBrewers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getAccessedBrewers;
     }
 
     @Provides
     static DataLayer.GetBeerSearchQueries provideGetBeerSearchQueries(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBeerSearchQueriesOnce;
     }
 
     @Provides
     static DataLayer.GetBeerSearch provideGetBeerSearch(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBeerSearch;
     }
 
     @Provides
     static DataLayer.GetBarcodeSearch provideGetBarcodeSearch(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBarcodeSearch;
     }
 
     @Provides
     static DataLayer.GetTopBeers provideGetTopBeers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getTopBeers;
     }
 
     @Provides
     static DataLayer.GetBeersInCountry provideGetBeersInCountry(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBeersInCountry;
     }
 
     @Provides
     static DataLayer.GetBeersInStyle provideGetBeersInStyle(
-
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBeersInStyle;
     }
 
     @Provides
     static DataLayer.GetReview provideGetReview(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getReview;
     }
 
     @Provides
     static DataLayer.GetReviews provideGetReviews(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getReviews;
     }
 
     @Provides
     static DataLayer.FetchReviews provideFetchReviews(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::fetchReviews;
     }
 
     @Provides
     static DataLayer.GetTickedBeers provideGetTickedBeers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getTickedBeers;
     }
 
     @Provides
     static DataLayer.FetchTickedBeers provideFetchTickedBeers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::fetchTickedBeers;
     }
 
     @Provides
     static DataLayer.TickBeer provideTickBeer(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::tickBeer;
     }
 
     @Provides
     static DataLayer.GetBrewer provideGetBrewer(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBrewer;
     }
 
     @Provides
     static DataLayer.GetBrewerBeers provideGetBrewerBeers(
-            @NonNull DataLayer dataLayer) {
+            @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBrewerBeers;
     }
 
     @Provides
     @Singleton
-    static DataLayer provideApplicationDataLayer(
+    static ApplicationDataLayer provideApplicationDataLayer(
             @ForApplication @NonNull Context context,
             @NonNull UserStore userStore,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -189,7 +190,7 @@ public final class DataStoreModule {
             @NonNull BrewerStore brewerStore,
             @NonNull BrewerListStore brewerListStore,
             @NonNull BrewerMetadataStore brewerMetadataStore) {
-        return new DataLayer(context,
+        return new ApplicationDataLayer(context,
                 userStore,
                 requestStatusStore,
                 beerStore,
@@ -205,25 +206,7 @@ public final class DataStoreModule {
     @Provides
     @Singleton
     static ServiceDataLayer provideServiceDataLayer(
-            @NonNull UriFetcherManager fetcherManager,
-            @NonNull NetworkRequestStatusStore requestStatusStore,
-            @NonNull BeerStore beerStore,
-            @NonNull BeerListStore beerListStore,
-            @NonNull BeerMetadataStore beerMetadataStore,
-            @NonNull ReviewStore reviewStore,
-            @NonNull ReviewListStore reviewListStore,
-            @NonNull BrewerStore brewerStore,
-            @NonNull BrewerListStore brewerListStore,
-            @NonNull BrewerMetadataStore brewerMetadataStore) {
-        return new ServiceDataLayer(fetcherManager,
-                requestStatusStore,
-                beerStore,
-                beerListStore,
-                beerMetadataStore,
-                reviewStore,
-                reviewListStore,
-                brewerStore,
-                brewerListStore,
-                brewerMetadataStore);
+            @NonNull UriFetcherManager fetcherManager) {
+        return new ServiceDataLayer(fetcherManager);
     }
 }

@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.data;
+package quickbeer.android.data.access;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -37,26 +37,12 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class ServiceDataLayer extends DataLayerBase {
+public class ServiceDataLayer {
 
     @NonNull
     private final UriFetcherManager fetcherManager;
 
-    public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager,
-                            @NonNull NetworkRequestStatusStore requestStatusStore,
-                            @NonNull BeerStore beerStore,
-                            @NonNull BeerListStore beerListStore,
-                            @NonNull BeerMetadataStore beerMetadataStore,
-                            @NonNull ReviewStore reviewStore,
-                            @NonNull ReviewListStore reviewListStore,
-                            @NonNull BrewerStore brewerStore,
-                            @NonNull BrewerListStore brewerListStore,
-                            @NonNull BrewerMetadataStore brewerMetadataStore) {
-        super(requestStatusStore,
-                beerStore, beerListStore, beerMetadataStore,
-                reviewStore, reviewListStore,
-                brewerStore, brewerListStore, brewerMetadataStore);
-
+    public ServiceDataLayer(@NonNull UriFetcherManager fetcherManager) {
         this.fetcherManager = get(fetcherManager);
     }
 

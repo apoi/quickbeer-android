@@ -32,7 +32,7 @@ import android.os.IBinder;
 import javax.inject.Inject;
 
 import quickbeer.android.QuickBeer;
-import quickbeer.android.data.ServiceDataLayer;
+import quickbeer.android.data.access.ServiceDataLayer;
 import timber.log.Timber;
 
 public class NetworkService extends Service {
