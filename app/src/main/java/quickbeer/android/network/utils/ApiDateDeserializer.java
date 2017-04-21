@@ -35,8 +35,8 @@ import java.util.Locale;
 
 public class ApiDateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSerializer<ZonedDateTime> {
 
-    private static final ZoneId PACIFIC_ZONE =
-            ZoneId.of("America/Los_Angeles");
+    private static final ZoneId SERVER_ZONE =
+            ZoneId.ofOffset("", ZoneOffset.ofHours(-5));
 
     private static final DateTimeFormatter ISO_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -45,7 +45,7 @@ public class ApiDateDeserializer implements JsonDeserializer<ZonedDateTime>, Jso
     private static final DateTimeFormatter US_DATETIME_FORMAT =
             DateTimeFormatter.ofPattern("M/d/yyyy h:mm:ss a")
                     .withLocale(Locale.US)
-                    .withZone(PACIFIC_ZONE);
+                    .withZone(SERVER_ZONE);
 
     private static final DateTimeFormatter US_DATE_FORMAT =
             DateTimeFormatter.ofPattern("M/d/yyyy");
