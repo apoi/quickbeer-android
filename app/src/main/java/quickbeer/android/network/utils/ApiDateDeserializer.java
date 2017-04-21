@@ -62,10 +62,11 @@ public class ApiDateDeserializer implements JsonDeserializer<ZonedDateTime>, Jso
         if (date.contains("T")) {
             return ZonedDateTime.parse(date, ISO_FORMAT);
         } else if (date.contains(" ")) {
-            return ZonedDateTime.parse(date, US_DATETIME_FORMAT);
+            return ZonedDateTime.parse(date, US_DATETIME_FORMAT)
+                    .withZoneSameInstant(ZoneOffset.UTC);
         } else {
             return LocalDate.parse(date, US_DATE_FORMAT)
-                            .atStartOfDay(ZoneOffset.UTC);
+                    .atStartOfDay(ZoneOffset.UTC);
         }
     }
 
