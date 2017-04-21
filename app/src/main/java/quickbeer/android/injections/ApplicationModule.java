@@ -35,6 +35,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.data.pojos.Session;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.PreferencesProvider;
 import quickbeer.android.providers.ProgressStatusProvider;
@@ -61,6 +62,12 @@ public final class ApplicationModule {
     @Singleton
     Application provideApplication() {
         return application;
+    }
+
+    @Provides
+    @Singleton
+    static Session provideSession() {
+        return new Session();
     }
 
     @Provides

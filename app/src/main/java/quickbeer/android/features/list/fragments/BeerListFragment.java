@@ -67,8 +67,6 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
-    // TODO inject global ProgressViewModel?
-
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 

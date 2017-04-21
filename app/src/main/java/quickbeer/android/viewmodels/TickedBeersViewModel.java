@@ -42,6 +42,9 @@ public class TickedBeersViewModel extends BeerListViewModel {
     private final DataLayer.GetTickedBeers getTickedBeers;
 
     @NonNull
+    private final DataLayer.FetchTickedBeers fetchTickedBeers;
+
+    @NonNull
     private final DataLayer.GetBeerSearch getBeerSearch;
 
     @NonNull
@@ -52,12 +55,14 @@ public class TickedBeersViewModel extends BeerListViewModel {
                          @NonNull DataLayer.GetUser getUser,
                          @NonNull DataLayer.GetBeerSearch getBeerSearch,
                          @NonNull DataLayer.GetTickedBeers getTickedBeers,
+                         @NonNull DataLayer.FetchTickedBeers fetchTickedBeers,
                          @NonNull SearchViewViewModel searchViewViewModel,
                          @NonNull ProgressStatusProvider progressStatusProvider) {
         super(getBeer, progressStatusProvider);
 
         this.getUser = get(getUser);
         this.getTickedBeers = get(getTickedBeers);
+        this.fetchTickedBeers = get(fetchTickedBeers);
         this.getBeerSearch = get(getBeerSearch);
         this.searchViewViewModel = get(searchViewViewModel);
     }
@@ -65,6 +70,10 @@ public class TickedBeersViewModel extends BeerListViewModel {
     @NonNull
     public Observable<Option<User>> getUser() {
         return getUser.call();
+    }
+
+    public void refreshTicks(@NonNull User user) {
+        fetchTickedBeers.call(String.valueOf(get(user).id()));
     }
 
     @NonNull

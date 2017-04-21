@@ -18,6 +18,7 @@
 package quickbeer.android.features.list.fragments;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -28,8 +29,10 @@ import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.data.pojos.Session;
 import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.providers.NavigationProvider;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.NetworkViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.TickedBeersViewModel;
@@ -38,6 +41,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class TickedBeersFragment extends BeerListFragment {
@@ -50,30 +54,17 @@ public class TickedBeersFragment extends BeerListFragment {
     @Inject
     NavigationProvider navigationProvider;
 
+    @Nullable
+    @Inject
+    Session session;
+
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
-            subscription.add(get(view)
-                    .selectedBeerStream()
-                    .doOnNext(beerId -> Timber.d("Selected beer " + beerId))
-                    .subscribe(beerId -> openBeerDetails(beerId), Timber::e));
+            TickedBeersFragment.super.dataBinder().bind(subscription);
 
-            subscription.add(viewModel()
-                    .getBeers()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(TickedBeersFragment.this::handleResultList, Timber::e));
-
-            subscription.add(viewModel()
-                    .getProgressStatus()
-                    .map(TickedBeersFragment.this::toStatusValue)
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(get(view)::setProgressStatus, Timber::e));
-
-            subscription.add(get(searchViewViewModel)
-                    .getQueryStream()
-                    .subscribe(TickedBeersFragment.this::onQuery, Timber::e));
+            checkNotNull(session);
 
             subscription.add(viewModel()
                     .getUser()
@@ -81,6 +72,19 @@ public class TickedBeersFragment extends BeerListFragment {
                     .filter(Option::isNone)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(__ -> showLoginDialog(), Timber::e));
+
+            subscription.add(viewModel()
+                    .getUser()
+                    .first()
+                    .compose(RxUtils::pickValue)
+                    .filter(__ -> !session.isTicksRequested())
+                    .doOnNext(__ -> session.setTicksRequested(true))
+                    .subscribe(user -> viewModel().refreshTicks(user), Timber::e));
+        }
+
+        @Override
+        public void unbind() {
+            TickedBeersFragment.super.dataBinder().unbind();
         }
     };
 

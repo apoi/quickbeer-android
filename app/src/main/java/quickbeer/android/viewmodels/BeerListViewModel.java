@@ -82,12 +82,6 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
                 .distinctUntilChanged()
                 .subscribe(this::setProgressStatus));
 
-        // Clear list on fetching start
-        subscription.add(sharedObservable
-                .filter(DataStreamNotification::isOngoing)
-                .map(__ -> Collections.<BeerViewModel>emptyList())
-                .subscribe(beers::onNext));
-
         // Actual update
         subscription.add(sharedObservable
                 .filter(DataStreamNotification::isOnNext)

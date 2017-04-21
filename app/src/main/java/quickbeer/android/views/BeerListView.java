@@ -100,7 +100,10 @@ public class BeerListView extends FrameLayout {
     public void setProgressStatus(@NonNull String progressStatus) {
         checkNotNull(searchStatusTextView);
 
-        searchStatusTextView.setVisibility(StringUtils.hasValue(progressStatus) ? VISIBLE : GONE);
+        boolean showProgressText = StringUtils.hasValue(progressStatus)
+                && get(beerListAdapter).getItemCount() == 0;
+
+        searchStatusTextView.setVisibility(showProgressText ? VISIBLE : GONE);
         searchStatusTextView.setText(progressStatus);
     }
 

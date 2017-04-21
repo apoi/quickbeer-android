@@ -67,8 +67,6 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
     @Inject
     SearchViewViewModel searchViewViewModel;
 
-    // TODO inject global ProgressViewModel?
-
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
@@ -177,12 +175,6 @@ public abstract class BrewerListFragment extends BindingBaseFragment {
     @NonNull
     @Override
     protected DataBinder dataBinder() {
-        return dataBinder;
-    }
-
-    // TODO remove
-    @NonNull
-    protected DataBinder listDataBinder() {
         return dataBinder;
     }
 
