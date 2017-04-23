@@ -24,7 +24,9 @@ import android.support.annotation.NonNull;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,13 +37,16 @@ import ix.Ix;
 import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.utils.ValueUtils;
 import rx.Single;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -67,18 +72,23 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     private final BeerStore beerStore;
 
     @NonNull
+    private final BeerListStore beerListStore;
+
+    @NonNull
     private final UserStore userStore;
 
     public TickBeerFetcher(@NonNull NetworkApi networkApi,
                            @NonNull NetworkUtils networkUtils,
                            @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
                            @NonNull BeerStore beerStore,
+                           @NonNull BeerListStore beerListStore,
                            @NonNull UserStore userStore) {
         super(networkRequestStatus);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
         this.beerStore = get(beerStore);
+        this.beerListStore = get(beerListStore);
         this.userStore = get(userStore);
     }
 
@@ -105,19 +115,18 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
 
         Timber.d("Tick rating of %s for beer %s", rating, beerId);
 
-        Subscription subscription = userStore
-                .getOnce(Constants.DEFAULT_USER_ID)
-                .subscribeOn(Schedulers.io())
-                .compose(RxUtils::valueOrError)
-                .map(User::id)
+        Subscription subscription = getUserId()
                 .flatMap(userId -> createNetworkObservable(beerId, rating, userId))
                 .flatMap(__ -> beerStore.getOnce(beerId))
                 .compose(RxUtils::valueOrError)
                 .map(beer -> withRating(beer, rating))
+                .doOnSuccess(beerStore::put)
+                .zipWith(getTickedBeers(), TickBeerFetcher::appendTick)
+                .zipWith(getQueryId(), (ticks, ticksQueryId) -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()))
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, false))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(beerStore::put,
+                .subscribe(beerListStore::put,
                         error -> Timber.w(error, "Error ticking beer"));
 
         addRequest(requestId, subscription);
@@ -129,6 +138,39 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .tickValue(rating)
                 .tickDate(ZonedDateTime.now())
                 .build();
+    }
+
+    @NonNull
+    private static List<Integer> appendTick(@NonNull Beer beer, @NonNull List<Integer> ticks) {
+        List<Integer> list = new ArrayList<>(ticks);
+        list.remove(beer.id());
+        if (ValueUtils.greaterThan(beer.tickValue(), 0)) {
+            list.add(0, beer.id());
+        }
+        return list;
+    }
+
+    @NonNull
+    private Single<Integer> getUserId() {
+        return userStore
+                .getOnce(Constants.DEFAULT_USER_ID)
+                .subscribeOn(Schedulers.io())
+                .compose(RxUtils::valueOrError)
+                .map(User::id);
+    }
+
+    @NonNull
+    private Single<List<Integer>> getTickedBeers() {
+        return getQueryId()
+                .flatMap(beerListStore::getOnce)
+                .map(option -> option.match(ItemList::getItems, Collections::emptyList));
+    }
+
+    @NonNull
+    private Single<String> getQueryId() {
+        return getUserId()
+                .map(String::valueOf)
+                .map(userId -> BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId));
     }
 
     @NonNull

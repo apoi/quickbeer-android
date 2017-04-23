@@ -24,4 +24,9 @@ public final class ValueUtils {
     public static int asInt(@Nullable Boolean value) {
         return value != null && value ? 1 : 0;
     }
+
+    public static boolean greaterThan(@Nullable Integer value, int comparison) {
+        return value != null && value > comparison;
+    }
+
 }
