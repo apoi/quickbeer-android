@@ -69,20 +69,20 @@ public class TicksFetcher extends BeerSearchFetcher {
     @NonNull
     protected List<Beer> sort(@NonNull List<Beer> list) {
         Collections.sort(list, (first, second) -> {
-            ZonedDateTime firstTick = first.tickDate();
-            ZonedDateTime secondTick = second.tickDate();
+            ZonedDateTime firstDate = first.tickDate();
+            ZonedDateTime secondDate = second.tickDate();
 
-            if (firstTick == null) {
-                if (secondTick == null) {
+            if (firstDate == null) {
+                if (secondDate == null) {
                     return first.id().compareTo(second.id());
                 } else {
                     return -1;
                 }
             } else {
-                if (secondTick == null) {
+                if (secondDate == null) {
                     return 1;
                 } else {
-                    return secondTick.compareTo(firstTick);
+                    return secondDate.compareTo(firstDate);
                 }
             }
         });

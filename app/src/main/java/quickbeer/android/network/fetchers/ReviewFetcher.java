@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 
 import org.threeten.bp.ZonedDateTime;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -99,7 +100,11 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                 .subscribeOn(Schedulers.io())
                 .toObservable()
                 .flatMap(Observable::from)
-                .flatMap(review -> reviewStore.put(review).toObservable().map(__ -> review.id()))
+                .flatMap(review -> reviewStore.put(review).toObservable().map(__ -> review))
+                .toList()
+                .map(ReviewFetcher::sort)
+                .flatMap(Observable::from)
+                .map(Review::id)
                 .toList()
                 .toSingle()
                 .map(reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()))
@@ -111,6 +116,31 @@ public class ReviewFetcher extends FetcherBase<Uri> {
                         error -> Timber.w(error, "Error fetching reviews for beer " + beerId));
 
         addRequest(beerId, subscription);
+    }
+
+    @SuppressWarnings("IfMayBeConditional")
+    @NonNull
+    protected static List<Review> sort(@NonNull List<Review> list) {
+        Collections.sort(list, (first, second) -> {
+            ZonedDateTime firstDate = first.timeEntered();
+            ZonedDateTime secondDate = second.timeEntered();
+
+            if (firstDate == null) {
+                if (secondDate == null) {
+                    return second.id().compareTo(first.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondDate == null) {
+                    return 1;
+                } else {
+                    return secondDate.compareTo(firstDate);
+                }
+            }
+        });
+
+        return list;
     }
 
     @NonNull
