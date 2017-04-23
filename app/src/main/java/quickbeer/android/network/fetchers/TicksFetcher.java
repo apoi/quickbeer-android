@@ -21,6 +21,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import org.threeten.bp.ZonedDateTime;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -61,9 +64,29 @@ public class TicksFetcher extends BeerSearchFetcher {
         fetchBeerSearch(userId, listenerId);
     }
 
-    @NonNull
+    @SuppressWarnings("IfMayBeConditional")
     @Override
+    @NonNull
     protected List<Beer> sort(@NonNull List<Beer> list) {
+        Collections.sort(list, (first, second) -> {
+            ZonedDateTime firstTick = first.tickDate();
+            ZonedDateTime secondTick = second.tickDate();
+
+            if (firstTick == null) {
+                if (secondTick == null) {
+                    return first.id().compareTo(second.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondTick == null) {
+                    return 1;
+                } else {
+                    return secondTick.compareTo(firstTick);
+                }
+            }
+        });
+
         return list;
     }
 
