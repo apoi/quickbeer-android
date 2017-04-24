@@ -63,7 +63,7 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     protected List<Beer> sort(@NonNull List<Beer> list) {
-        return list;
+        return sortByRating(list);
     }
 
     @NonNull

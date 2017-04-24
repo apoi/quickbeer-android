@@ -46,6 +46,7 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
+@SuppressWarnings({"IfMayBeConditional", "CallToStringCompareTo"})
 public class BeerSearchFetcher extends FetcherBase<Uri> {
 
     @NonNull
@@ -125,6 +126,11 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     @SuppressWarnings({"CallToStringCompareTo", "IfMayBeConditional"})
     @NonNull
     protected List<Beer> sort(@NonNull List<Beer> list) {
+        return sortByName(list);
+    }
+
+    @NonNull
+    protected static List<Beer> sortByName(@NonNull List<Beer> list) {
         Collections.sort(list, (first, second) -> {
             String firstName = first.name();
             String secondName = second.name();
@@ -140,6 +146,54 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                     return 1;
                 } else {
                     return firstName.compareTo(secondName);
+                }
+            }
+        });
+
+        return list;
+    }
+
+    @NonNull
+    protected static List<Beer> sortByTickDate(@NonNull List<Beer> list) {
+        Collections.sort(list, (first, second) -> {
+            ZonedDateTime firstDate = first.tickDate();
+            ZonedDateTime secondDate = second.tickDate();
+
+            if (firstDate == null) {
+                if (secondDate == null) {
+                    return first.id().compareTo(second.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondDate == null) {
+                    return 1;
+                } else {
+                    return secondDate.compareTo(firstDate);
+                }
+            }
+        });
+
+        return list;
+    }
+
+    @NonNull
+    protected static List<Beer> sortByRating(@NonNull List<Beer> list) {
+        Collections.sort(list, (first, second) -> {
+            Float firstRating = first.averageRating();
+            Float secondRating = second.averageRating();
+
+            if (firstRating == null) {
+                if (secondRating == null) {
+                    return first.id().compareTo(second.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondRating == null) {
+                    return 1;
+                } else {
+                    return secondRating.compareTo(firstRating);
                 }
             }
         });
