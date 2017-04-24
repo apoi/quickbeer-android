@@ -25,6 +25,8 @@ public interface Constants {
 
     int REVIEWS_PER_PAGE = 10;
 
+    int USER_REVIEWS_PER_PAGE = 10;
+
     String API_URL = "https://www.ratebeer.com";
 
     String API_KEY_NAME = "apiKey";

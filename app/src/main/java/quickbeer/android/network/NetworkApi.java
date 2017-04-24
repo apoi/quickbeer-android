@@ -89,6 +89,11 @@ public class NetworkApi {
                 .getReviews(params);
     }
 
+    public Single<List<Review>> getUserReviews(Map<String, String> params) {
+        return rateBeerService
+                .getUserReviews(params);
+    }
+
     public Single<List<Beer>> getTicks(Map<String, String> params) {
         return rateBeerService
                 .getTicks(params);

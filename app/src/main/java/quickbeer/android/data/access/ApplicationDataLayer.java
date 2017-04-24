@@ -577,6 +577,7 @@ public class ApplicationDataLayer {
         Intent intent = new Intent(context, NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.USER_REVIEWS.toString());
         intent.putExtra("listenerId", listenerId);
+        intent.putExtra("numReviews", 1);
         intent.putExtra("userId", userId);
         context.startService(intent);
 

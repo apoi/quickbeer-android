@@ -202,13 +202,13 @@ public final class FetcherModule {
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
-            @NonNull BeerStore beerStore,
-            @NonNull BeerListStore beerListStore) {
+            @NonNull ReviewStore reviewStore,
+            @NonNull ReviewListStore reviewListStore) {
         return new ReviewsFetcher(networkApi,
                 networkUtils,
                 requestStatusStore::put,
-                beerStore,
-                beerListStore);
+                reviewStore,
+                reviewListStore);
     }
 
     @Provides

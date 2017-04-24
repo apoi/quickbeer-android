@@ -21,64 +21,177 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import org.threeten.bp.ZonedDateTime;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
-import quickbeer.android.data.pojos.Beer;
-import quickbeer.android.data.stores.BeerListStore;
-import quickbeer.android.data.stores.BeerStore;
+import quickbeer.android.Constants;
+import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.stores.ReviewListStore;
+import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
+import quickbeer.android.rx.RxUtils;
+import rx.Observable;
 import rx.Single;
+import rx.Subscription;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class ReviewsFetcher extends BeerSearchFetcher {
+public class ReviewsFetcher extends FetcherBase<Uri> {
+
+    @NonNull
+    protected final NetworkApi networkApi;
+
+    @NonNull
+    protected final NetworkUtils networkUtils;
+
+    @NonNull
+    private final ReviewStore reviewStore;
+
+    @NonNull
+    private final ReviewListStore reviewListStore;
 
     public ReviewsFetcher(@NonNull NetworkApi networkApi,
                           @NonNull NetworkUtils networkUtils,
                           @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
-                          @NonNull BeerStore beerStore,
-                          @NonNull BeerListStore beerListStore) {
-        super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
+                          @NonNull ReviewStore reviewStore,
+                          @NonNull ReviewListStore reviewListStore) {
+        super(networkRequestStatus);
+
+        this.networkApi = get(networkApi);
+        this.networkUtils = get(networkUtils);
+        this.reviewStore = get(reviewStore);
+        this.reviewListStore = get(reviewListStore);
     }
 
     @Override
     public void fetch(@NonNull Intent intent, int listenerId) {
         checkNotNull(intent);
 
-        if (!intent.hasExtra("userId")) {
+        if (!intent.hasExtra("numReviews") || !intent.hasExtra("userId")) {
             Timber.e("Missing required fetch parameters!");
             return;
         }
 
         String userId = get(intent).getStringExtra("userId");
-        fetchBeerSearch(userId, listenerId);
+        int numReviews = get(intent).getIntExtra("numReviews", 0);
+
+        fetchReviewedBeers(userId, numReviews, listenerId);
     }
 
-    @Override
-    @NonNull
-    protected List<Beer> sort(@NonNull List<Beer> list) {
-        return sortByTickDate(list);
+    private void fetchReviewedBeers(@NonNull String userId, int numReviews, int listenerId) {
+        Timber.d("fetchReviewedBeers(" + numReviews + ")");
+
+        String uri = getUniqueUri(userId);
+        int queryId = userId.hashCode();
+        int requestId = uri.hashCode();
+
+        addListener(requestId, listenerId);
+
+        if (isOngoingRequest(requestId)) {
+            Timber.d("Found an ongoing request for search " + queryId);
+            return;
+        }
+
+        Subscription subscription = getReviews(1, numReviews)
+                .map(ReviewsFetcher::sortByReviewDate)
+                .toObservable()
+                .flatMap(Observable::from)
+                .map(Review::id)
+                .toList()
+                .toSingle()
+                .map(reviewIds -> ItemList.create(queryId, reviewIds, ZonedDateTime.now()))
+                .flatMap(reviewListStore::put)
+                .doOnSubscribe(() -> startRequest(requestId, uri))
+                .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
+                .doOnError(doOnError(requestId, uri))
+                .subscribe(RxUtils::nothing,
+                        error -> Timber.w(error, "Error fetching reviews for user %s", userId));
+
+        addRequest(requestId, subscription);
     }
 
     @NonNull
-    @Override
-    protected Single<List<Beer>> createNetworkObservable(@NonNull String userId) {
-        Map<String, String> params = networkUtils.createRequestParams("m", "1");
-        params.put("u", userId);
+    private Single<List<Review>> getReviews(int page, int numReviews) {
+        return createNetworkObservable(String.valueOf(page))
+                .subscribeOn(Schedulers.io())
+                .toObservable()
+                .flatMap(Observable::from)
+                .flatMap(review -> reviewStore.put(review).map(__ -> review).toObservable())
+                .toList()
+                .toSingle()
+                .zipWith(chooseNextAction(page + 1, numReviews), ReviewsFetcher::joinReviews);
+    }
 
-        return networkApi.getTicks(params);
+    @NonNull
+    private Single<List<Review>> chooseNextAction(int page, int numReviews) {
+        if (page <= Math.ceil(numReviews / (float) Constants.USER_REVIEWS_PER_PAGE)) {
+            return getReviews(page, numReviews);
+        } else {
+            return Single.just(Collections.emptyList());
+        }
+    }
+
+    @NonNull
+    private static List<Review> joinReviews(List<Review> reviews, List<Review> reviews2) {
+        List<Review> list = new ArrayList<>(reviews);
+        list.addAll(reviews2);
+        return list;
+    }
+
+    @SuppressWarnings("IfMayBeConditional")
+    @NonNull
+    protected static List<Review> sortByReviewDate(@NonNull List<Review> list) {
+        Collections.sort(list, (first, second) -> {
+            ZonedDateTime firstDate = first.timeUpdated();
+            ZonedDateTime secondDate = second.timeUpdated();
+
+            if (firstDate == null) {
+                if (secondDate == null) {
+                    return first.id().compareTo(second.id());
+                } else {
+                    return -1;
+                }
+            } else {
+                if (secondDate == null) {
+                    return 1;
+                } else {
+                    return secondDate.compareTo(firstDate);
+                }
+            }
+        });
+
+        return list;
+    }
+
+    @NonNull
+    protected Single<List<Review>> createNetworkObservable(@NonNull String page) {
+        Map<String, String> params = networkUtils.createRequestParams("m", "BR");
+        params.put("p", page);
+
+        return networkApi.getUserReviews(params);
     }
 
     @NonNull
     @Override
     public Uri getServiceUri() {
         return RateBeerService.USER_REVIEWS;
+    }
+
+    @NonNull
+    public static String getUniqueUri(@NonNull String userId) {
+        return ItemList.class + "/reviews/" + userId;
     }
 }

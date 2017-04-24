@@ -72,6 +72,9 @@ public interface RateBeerService {
     @GET("/json/gr.asp")
     Single<List<Review>> getReviews(@QueryMap Map<String, String> params);
 
+    @GET("/json/revs.asp")
+    Single<List<Review>> getUserReviews(@QueryMap Map<String, String> params);
+
     @GET("/json/bt.asp")
     Single<List<Beer>> getTicks(@QueryMap Map<String, String> params);
 
