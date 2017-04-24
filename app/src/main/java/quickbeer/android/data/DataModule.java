@@ -147,6 +147,18 @@ public final class DataModule {
     }
 
     @Provides
+    static DataLayer.GetReviewedBeers provideGetReviewedBeers(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::getReviewedBeers;
+    }
+
+    @Provides
+    static DataLayer.FetchReviewedBeers provideFetchReviewedBeers(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::fetchReviewedBeers;
+    }
+
+    @Provides
     static DataLayer.GetTickedBeers provideGetTickedBeers(
             @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getTickedBeers;

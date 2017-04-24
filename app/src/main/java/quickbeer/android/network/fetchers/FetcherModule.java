@@ -197,6 +197,21 @@ public final class FetcherModule {
     }
 
     @Provides
+    @Named(Fetchers.USER_REVIEWS)
+    static Fetcher<Uri> provideReviewsFetcher(
+            @NonNull NetworkApi networkApi,
+            @NonNull NetworkUtils networkUtils,
+            @NonNull NetworkRequestStatusStore requestStatusStore,
+            @NonNull BeerStore beerStore,
+            @NonNull BeerListStore beerListStore) {
+        return new ReviewsFetcher(networkApi,
+                networkUtils,
+                requestStatusStore::put,
+                beerStore,
+                beerListStore);
+    }
+
+    @Provides
     @Named(Fetchers.TICKS)
     static Fetcher<Uri> provideTicksFetcher(
             @NonNull NetworkApi networkApi,
@@ -240,6 +255,7 @@ public final class FetcherModule {
             @Named(Fetchers.BREWER) @NonNull Fetcher<Uri> brewerFetcher,
             @Named(Fetchers.BREWER_BEERS) @NonNull Fetcher<Uri> brewerBeersFetcher,
             @Named(Fetchers.REVIEW) @NonNull Fetcher<Uri> reviewFetcher,
+            @Named(Fetchers.USER_REVIEWS) @NonNull Fetcher<Uri> userReviewsFetcher,
             @Named(Fetchers.TICKS) @NonNull Fetcher<Uri> ticksFetcher,
             @Named(Fetchers.TICK) @NonNull Fetcher<Uri> tickBeerFetcher) {
         List<Fetcher<Uri>> fetchers = Arrays.asList(
@@ -253,6 +269,7 @@ public final class FetcherModule {
                 brewerFetcher,
                 brewerBeersFetcher,
                 reviewFetcher,
+                userReviewsFetcher,
                 ticksFetcher,
                 tickBeerFetcher
         );

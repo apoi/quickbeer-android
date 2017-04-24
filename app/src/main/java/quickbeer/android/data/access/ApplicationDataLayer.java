@@ -528,7 +528,60 @@ public class ApplicationDataLayer {
         return listenerId;
     }
 
-    //// REVIEWS
+    //// BEER_REVIEWS
+
+    //// USER_TICKS
+
+    @NonNull
+    public Observable<DataStreamNotification<ItemList<String>>> getReviewedBeers(@NonNull String userId) {
+        Timber.v("getReviewedBeers");
+
+        // Trigger a fetch only if there was no cached result
+        Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
+                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.USER_REVIEWS, userId))
+                        .toObservable()
+                        .filter(RxUtils::isNoneOrEmpty)
+                        .doOnNext(__ -> {
+                            Timber.v("Search not cached, fetching");
+                            fetchReviewedBeers(userId);
+                        });
+
+        return getReviewedBeersResultStream(userId)
+                .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> getReviewedBeersResultStream(@NonNull String userId) {
+        Timber.v("getReviewedBeersResultStream");
+
+        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.USER_REVIEWS, userId);
+        String uri = BeerSearchFetcher.getUniqueUri(queryId);
+
+        Observable<NetworkRequestStatus> requestStatusObservable =
+                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                        .compose(RxUtils::pickValue); // No need to filter stale statuses?
+
+        Observable<ItemList<String>> beerSearchObservable =
+                beerListStore.getOnceAndStream(queryId)
+                        .compose(RxUtils::pickValue);
+
+        return DataLayerUtils.createDataStreamNotificationObservable(
+                requestStatusObservable, beerSearchObservable);
+    }
+
+    public int fetchReviewedBeers(@NonNull String userId) {
+        Timber.v("fetchReviewedBeers(%s)", get(userId));
+
+        int listenerId = createListenerId();
+
+        Intent intent = new Intent(context, NetworkService.class);
+        intent.putExtra("serviceUriString", RateBeerService.USER_REVIEWS.toString());
+        intent.putExtra("listenerId", listenerId);
+        intent.putExtra("userId", userId);
+        context.startService(intent);
+
+        return listenerId;
+    }
 
     @NonNull
     public Observable<Option<Review>> getReview(int reviewId) {
@@ -581,7 +634,7 @@ public class ApplicationDataLayer {
         int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("serviceUriString", RateBeerService.REVIEWS.toString());
+        intent.putExtra("serviceUriString", RateBeerService.BEER_REVIEWS.toString());
         intent.putExtra("listenerId", listenerId);
         intent.putExtra("beerId", beerId);
         intent.putExtra("page", page);
@@ -590,7 +643,7 @@ public class ApplicationDataLayer {
         return listenerId;
     }
 
-    //// TICKS
+    //// USER_TICKS
 
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getTickedBeers(@NonNull String userId) {
@@ -598,7 +651,7 @@ public class ApplicationDataLayer {
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
-                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId))
+                beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, userId))
                         .toObservable()
                         .filter(RxUtils::isNoneOrEmpty)
                         .doOnNext(__ -> {
@@ -614,7 +667,7 @@ public class ApplicationDataLayer {
     private Observable<DataStreamNotification<ItemList<String>>> getTickedBeersResultStream(@NonNull String userId) {
         Timber.v("getTickedBeersResultStream");
 
-        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId);
+        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, userId);
         String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
@@ -635,7 +688,7 @@ public class ApplicationDataLayer {
         int listenerId = createListenerId();
 
         Intent intent = new Intent(context, NetworkService.class);
-        intent.putExtra("serviceUriString", RateBeerService.TICKS.toString());
+        intent.putExtra("serviceUriString", RateBeerService.USER_TICKS.toString());
         intent.putExtra("listenerId", listenerId);
         intent.putExtra("userId", userId);
         context.startService(intent);

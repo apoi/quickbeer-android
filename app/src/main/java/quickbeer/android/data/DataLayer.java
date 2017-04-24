@@ -118,7 +118,12 @@ public interface DataLayer {
         void call(int beerId, int page);
     }
 
-    interface FetchTickedBeers {
+    interface GetReviewedBeers {
+        @NonNull
+        Observable<DataStreamNotification<ItemList<String>>> call(String userId);
+    }
+
+    interface FetchReviewedBeers {
         void call(String userId);
     }
 
@@ -130,6 +135,10 @@ public interface DataLayer {
     interface GetTickedBeers {
         @NonNull
         Observable<DataStreamNotification<ItemList<String>>> call(String userId);
+    }
+
+    interface FetchTickedBeers {
+        void call(String userId);
     }
 
     interface GetBrewer {

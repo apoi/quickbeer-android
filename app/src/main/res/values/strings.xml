@@ -14,6 +14,7 @@
     <string name="search_too_short">Search should be at least four characters</string>
 
     <!-- Drawer menu -->
+    <string name="menu_reviewed_beers">Reviewed beers</string>
     <string name="menu_ticked_beers">Rated beers</string>
     <string name="menu_top_beers">Best of all</string>
     <string name="menu_top_by_country">By country</string>

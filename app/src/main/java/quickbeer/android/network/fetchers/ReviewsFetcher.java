@@ -38,13 +38,13 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class TicksFetcher extends BeerSearchFetcher {
+public class ReviewsFetcher extends BeerSearchFetcher {
 
-    public TicksFetcher(@NonNull NetworkApi networkApi,
-                        @NonNull NetworkUtils networkUtils,
-                        @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
-                        @NonNull BeerStore beerStore,
-                        @NonNull BeerListStore beerListStore) {
+    public ReviewsFetcher(@NonNull NetworkApi networkApi,
+                          @NonNull NetworkUtils networkUtils,
+                          @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                          @NonNull BeerStore beerStore,
+                          @NonNull BeerListStore beerListStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
     }
 
@@ -79,6 +79,6 @@ public class TicksFetcher extends BeerSearchFetcher {
     @NonNull
     @Override
     public Uri getServiceUri() {
-        return RateBeerService.USER_TICKS;
+        return RateBeerService.USER_REVIEWS;
     }
 }

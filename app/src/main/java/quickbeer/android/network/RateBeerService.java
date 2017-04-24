@@ -41,8 +41,9 @@ public interface RateBeerService {
     Uri TOP50        = Uri.parse("__top50");
     Uri COUNTRY      = Uri.parse("__country");
     Uri STYLE        = Uri.parse("__style");
-    Uri REVIEWS      = Uri.parse("__reviews");
-    Uri TICKS        = Uri.parse("__ticks");
+    Uri BEER_REVIEWS = Uri.parse("__reviews");
+    Uri USER_REVIEWS = Uri.parse("__user_reviews");
+    Uri USER_TICKS   = Uri.parse("__ticks");
     Uri TICK_BEER    = Uri.parse("__tick_beer");
     Uri BREWER       = Uri.parse("__brewer");
     Uri BREWER_BEERS = Uri.parse("__brewer_beers");

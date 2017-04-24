@@ -154,7 +154,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
     @NonNull
     @Override
     public Uri getServiceUri() {
-        return RateBeerService.REVIEWS;
+        return RateBeerService.BEER_REVIEWS;
     }
 
     @NonNull

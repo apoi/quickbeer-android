@@ -170,7 +170,7 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
     private Single<String> getQueryId() {
         return getUserId()
                 .map(String::valueOf)
-                .map(userId -> BeerSearchFetcher.getQueryId(RateBeerService.TICKS, userId));
+                .map(userId -> BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, userId));
     }
 
     @NonNull
