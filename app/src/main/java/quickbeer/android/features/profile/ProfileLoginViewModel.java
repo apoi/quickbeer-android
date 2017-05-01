@@ -18,6 +18,7 @@
 package quickbeer.android.features.profile;
 
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 
 import javax.inject.Inject;
 
@@ -29,8 +30,12 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import rx.functions.Actions;
 import rx.subjects.PublishSubject;
+import rx.subscriptions.CompositeSubscription;
+import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -47,6 +52,9 @@ public class ProfileLoginViewModel extends SimpleViewModel {
 
     @NonNull
     private final DataLayer.FetchTickedBeers fetchTickedBeers;
+
+    @NonNull
+    private final PublishSubject<Pair<String, String>> loginSubject = PublishSubject.create();
 
     @NonNull
     private final PublishSubject<String> errorSubject = PublishSubject.create();
@@ -67,8 +75,16 @@ public class ProfileLoginViewModel extends SimpleViewModel {
         this.resourceProvider = get(resourceProvider);
     }
 
+    @Override
+    protected void bind(@NonNull CompositeSubscription subscription) {
+        loginSubject.asObservable()
+                .flatMap(user -> login.call(user.first, user.second))
+                .doOnNext(this::handleErrors)
+                .subscribe(Actions.empty(), Timber::e);
+    }
+
     public void login(@NonNull String username, @NonNull String password) {
-        login.call(get(username), get(password));
+        loginSubject.onNext(Pair.create(username, password));
     }
 
     public void fetchTicks(@NonNull Integer userId) {
@@ -84,7 +100,6 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     @NonNull
     public Observable<Boolean> isLoginInProgress() {
         return getLoginStatus.call()
-                .doOnNext(this::handleErrors)
                 .map(DataStreamNotification::isOngoing);
     }
 
@@ -110,7 +125,7 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     private String toReadableError(@NonNull String errorMessage) {
         // We use 403 for when result is a known login failure page. For other errors,
         // just show a generic error message.
-        return resourceProvider.getString(errorMessage.contains("403")
+        return resourceProvider.getString(StringUtils.value(errorMessage).contains("403")
                 ? R.string.login_failed
                 : R.string.login_error);
     }
