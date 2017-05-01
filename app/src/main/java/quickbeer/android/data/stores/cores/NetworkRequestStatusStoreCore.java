@@ -45,7 +45,7 @@ public class NetworkRequestStatusStoreCore extends StoreCoreBase<Integer, Networ
 
     @NonNull
     @Override
-    protected Observable<List<CoreOperation>> groupOperations(@NonNull Observable<CoreOperation> source) {
+    protected <R> Observable<List<R>> groupOperations(@NonNull Observable<R> source) {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.
         return source.map(Collections::singletonList);
     }
