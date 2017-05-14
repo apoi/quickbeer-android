@@ -18,7 +18,6 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -30,7 +29,6 @@ import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.providers.ProgressStatusProvider;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;

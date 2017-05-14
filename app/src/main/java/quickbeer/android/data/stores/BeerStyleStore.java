@@ -10,7 +10,6 @@ import io.reark.reark.data.stores.DefaultStore;
 import ix.Ix;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.BeerStyle;
-import quickbeer.android.data.pojos.Style;
 import quickbeer.android.data.stores.cores.BeerStyleStoreCore;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.SimpleListSource;

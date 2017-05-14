@@ -24,14 +24,11 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import org.threeten.bp.LocalDate;
-import org.threeten.bp.ZoneId;
 import org.threeten.bp.ZoneOffset;
 import org.threeten.bp.ZonedDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
 
 import java.lang.reflect.Type;
-import java.util.Locale;
 
 public class DateDeserializer implements JsonDeserializer<ZonedDateTime>, JsonSerializer<ZonedDateTime> {
 

@@ -43,7 +43,6 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
-import quickbeer.android.data.pojos.Style;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;

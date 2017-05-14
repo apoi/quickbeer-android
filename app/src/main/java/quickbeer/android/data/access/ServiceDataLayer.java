@@ -23,15 +23,6 @@ import android.support.annotation.NonNull;
 
 import io.reark.reark.network.fetchers.Fetcher;
 import io.reark.reark.network.fetchers.UriFetcherManager;
-import quickbeer.android.data.stores.BeerListStore;
-import quickbeer.android.data.stores.BeerMetadataStore;
-import quickbeer.android.data.stores.BeerStore;
-import quickbeer.android.data.stores.BrewerListStore;
-import quickbeer.android.data.stores.BrewerMetadataStore;
-import quickbeer.android.data.stores.BrewerStore;
-import quickbeer.android.data.stores.NetworkRequestStatusStore;
-import quickbeer.android.data.stores.ReviewListStore;
-import quickbeer.android.data.stores.ReviewStore;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;

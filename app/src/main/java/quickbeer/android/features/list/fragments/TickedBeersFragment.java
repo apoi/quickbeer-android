@@ -18,7 +18,6 @@
 package quickbeer.android.features.list.fragments;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -37,7 +36,6 @@ import quickbeer.android.viewmodels.NetworkViewModel;
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus;
 import quickbeer.android.viewmodels.TickedBeersViewModel;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 

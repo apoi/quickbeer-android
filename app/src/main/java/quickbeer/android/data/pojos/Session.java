@@ -1,7 +1,5 @@
 package quickbeer.android.data.pojos;
 
-import com.google.auto.value.AutoValue;
-
 public class Session {
 
     private boolean ticksRequested;

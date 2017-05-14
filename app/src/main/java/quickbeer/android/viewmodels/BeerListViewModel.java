@@ -20,7 +20,6 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
