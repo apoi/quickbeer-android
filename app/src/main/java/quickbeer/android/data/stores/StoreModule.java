@@ -26,6 +26,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.providers.ResourceProvider;
 
 @Module
 public final class StoreModule {
@@ -51,6 +52,14 @@ public final class StoreModule {
             @NonNull ContentResolver contentResolver,
             @NonNull Gson gson) {
         return new BeerStore(contentResolver, gson);
+    }
+
+    @Provides
+    @Singleton
+    static BeerStyleStore provideBeerStyleStore(
+            @NonNull ResourceProvider resourceProvider,
+            @NonNull Gson gson) {
+        return new BeerStyleStore(resourceProvider, gson);
     }
 
     @Provides

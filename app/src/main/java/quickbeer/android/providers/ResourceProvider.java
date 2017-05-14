@@ -19,7 +19,10 @@ package quickbeer.android.providers;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.RawRes;
 import android.support.annotation.StringRes;
+
+import java.io.InputStream;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -39,6 +42,11 @@ public class ResourceProvider {
 
     public int getDrawableIdentifier(@NonNull String name) {
         return context.getResources().getIdentifier(get(name), "drawable", context.getPackageName());
+    }
+
+    @NonNull
+    public InputStream openRawResource(@RawRes final int id) {
+        return context.getResources().openRawResource(id);
     }
 
 }

@@ -28,7 +28,7 @@ import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.stores.cores.CachingStoreCore;
 import quickbeer.android.data.stores.cores.ReviewStoreCore;
 
-public class ReviewStore  extends StoreBase<Integer, Review, Option<Review>> {
+public class ReviewStore extends StoreBase<Integer, Review, Option<Review>> {
 
     public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
