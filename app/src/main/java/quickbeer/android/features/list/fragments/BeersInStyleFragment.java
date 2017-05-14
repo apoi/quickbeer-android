@@ -17,14 +17,20 @@
  */
 package quickbeer.android.features.list.fragments;
 
+import android.animation.LayoutTransition;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.Unbinder;
+import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
@@ -34,10 +40,17 @@ import quickbeer.android.viewmodels.BeersInStyleViewModel;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
 public class BeersInStyleFragment extends BeerListFragment {
+
+    @BindView(R.id.style_container)
+    ViewGroup styleContainer;
+
+    @BindView(R.id.style_details_container)
+    ViewGroup styleDetailsContainer;
 
     @BindView(R.id.style_name)
     TextView styleName;
@@ -45,11 +58,17 @@ public class BeersInStyleFragment extends BeerListFragment {
     @BindView(R.id.style_description)
     TextView styleDescription;
 
+    @BindView(R.id.expand_arrow)
+    ImageView expandArrow;
+
     @Nullable
     @Inject
     BeersInStyleViewModel beersInStyleViewModel;
 
     private int styleId;
+
+    @NonNull
+    private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -66,6 +85,14 @@ public class BeersInStyleFragment extends BeerListFragment {
                     .toObservable()
                     .compose(RxUtils::pickValue)
                     .subscribe(styleDescription::setText, Timber::e);
+
+            viewModel().detailsOpen()
+                    .subscribe(open -> {
+                        styleDescription.setVisibility(open ? View.VISIBLE : View.GONE);
+                        expandArrow.animate()
+                                .rotation(open ? 180.0f : 0.0f)
+                                .start();
+                    }, Timber::e);
         }
 
         @Override
@@ -86,6 +113,26 @@ public class BeersInStyleFragment extends BeerListFragment {
                 .map(state -> state.getInt("styleId", -1))
                 .ifSome(value -> styleId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        unbinder.setIfNone(bind(this, view));
+
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.enableTransitionType(LayoutTransition.CHANGING);
+        styleContainer.setLayoutTransition(layoutTransition);
+
+        styleDetailsContainer.setOnClickListener(__ ->
+                viewModel().detailsClicked(styleDescription.getVisibility()));
+    }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.getAndClear()
+                .ifSome(Unbinder::unbind);
+        super.onDestroyView();
     }
 
     @Override

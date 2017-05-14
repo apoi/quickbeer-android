@@ -55,7 +55,6 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public abstract class BeerListFragment extends BindingBaseFragment {
 
-    @Nullable
     @BindView(R.id.list_layout)
     BeerListView view;
 
@@ -89,7 +88,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
                     .getProgressStatus()
                     .map(BeerListFragment.this::toStatusValue)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(get(view)::setProgressStatus, Timber::e));
+                    .subscribe(view::setProgressStatus, Timber::e));
 
             subscription.add(get(searchViewViewModel)
                     .getQueryStream()
@@ -101,7 +100,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
         if (beerList.size() == 1 && singleResultShouldOpenDetails()) {
             openBeerDetails(beerList.get(0).getBeerId());
         } else {
-            get(view).setBeers(beerList);
+            view.setBeers(beerList);
         }
     }
 

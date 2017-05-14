@@ -18,6 +18,7 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,6 +33,7 @@ import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;
+import rx.subjects.BehaviorSubject;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -53,6 +55,9 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     @NonNull
     private final Integer styleId;
 
+    @NonNull
+    private final BehaviorSubject<Boolean> detailsOpen = BehaviorSubject.create(false);
+
     @Inject
     BeersInStyleViewModel(@Named("id") Integer styleId,
                           @NonNull DataLayer.GetBeer getBeer,
@@ -70,6 +75,10 @@ public class BeersInStyleViewModel extends BeerListViewModel {
         this.searchViewViewModel = get(searchViewViewModel);
     }
 
+    public void detailsClicked(int visibility) {
+        detailsOpen.onNext(visibility != View.VISIBLE);
+    }
+
     @NonNull
     public Single<Option<String>> styleName() {
         return beerStyleStore.getOnce(styleId)
@@ -80,6 +89,11 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     public Single<Option<String>> styleDescription() {
         return beerStyleStore.getOnce(styleId)
                 .map(option -> option.map(BeerStyle::description));
+    }
+
+    @NonNull
+    public Observable<Boolean> detailsOpen() {
+        return detailsOpen.asObservable();
     }
 
     @NonNull
