@@ -20,6 +20,7 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
@@ -43,23 +44,21 @@ public class BeersInCountryViewModel extends BeerListViewModel {
     private final SearchViewViewModel searchViewViewModel;
 
     @NonNull
-    private String country = "";
+    private final Integer countryId;
 
     @Inject
-    BeersInCountryViewModel(@NonNull DataLayer.GetBeer getBeer,
+    BeersInCountryViewModel(@Named("id") Integer countryId,
+                            @NonNull DataLayer.GetBeer getBeer,
                             @NonNull DataLayer.GetBeerSearch getBeerSearch,
                             @NonNull DataLayer.GetBeersInCountry getBeersInCountry,
                             @NonNull SearchViewViewModel searchViewViewModel,
                             @NonNull ProgressStatusProvider progressStatusProvider) {
         super(getBeer, progressStatusProvider);
 
+        this.countryId = get(countryId);
         this.getBeerSearch = get(getBeerSearch);
         this.getBeersInCountry = get(getBeersInCountry);
         this.searchViewViewModel = get(searchViewViewModel);
-    }
-
-    public void setCountry(@NonNull String country) {
-        this.country = get(country);
     }
 
     @NonNull
@@ -73,7 +72,7 @@ public class BeersInCountryViewModel extends BeerListViewModel {
                         .doOnNext(query -> Timber.d("query(%s)", query))
                         .switchMap(query -> get(getBeerSearch).call(query));
 
-        return getBeersInCountry.call(country)
+        return getBeersInCountry.call(String.valueOf(countryId))
                 .mergeWith(searchObservable);
     }
 }

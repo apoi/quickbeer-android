@@ -222,7 +222,7 @@ public class BrewerDetailsView extends NestedScrollView {
 
         Intent intent = new Intent(getContext(), ListActivity.class);
         intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
-        intent.putExtra("country", String.valueOf(country.getId()));
+        intent.putExtra("countryId", country.getId());
         getContext().startActivity(intent);
     }
 

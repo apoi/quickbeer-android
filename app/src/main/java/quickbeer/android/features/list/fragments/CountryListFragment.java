@@ -78,7 +78,7 @@ public class CountryListFragment extends BindingBaseFragment {
         Timber.d("navigateToCountry(" + countryId + ")");
 
         Bundle bundle = new Bundle();
-        bundle.putString("country", String.valueOf(countryId));
+        bundle.putInt("countryId", countryId);
 
         get(navigationProvider).addPage(Page.COUNTRY, bundle);
     }

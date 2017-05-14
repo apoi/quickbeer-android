@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.injections.IdModule;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeersInCountryViewModel;
 import timber.log.Timber;
@@ -36,8 +37,7 @@ public class BeersInCountryFragment extends BeerListFragment {
     @Inject
     BeersInCountryViewModel beersInCountryViewModel;
 
-    @NonNull
-    private String country = "";
+    private int countryId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,14 +48,14 @@ public class BeersInCountryFragment extends BeerListFragment {
                 : getArguments();
 
         ofObj(bundle)
-                .map(state -> state.getString("country"))
-                .ifSome(value -> country = value)
+                .map(state -> state.getInt("countryId"))
+                .ifSome(value -> countryId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("country", country);
+        outState.putInt("countryId", countryId);
         super.onSaveInstanceState(outState);
     }
 
@@ -63,9 +63,9 @@ public class BeersInCountryFragment extends BeerListFragment {
     protected void inject() {
         super.inject();
 
-        getComponent().inject(this);
-
-        get(beersInCountryViewModel).setCountry(country);
+        getComponent()
+                .plusId(new IdModule(countryId))
+                .inject(this);
     }
 
     @NonNull

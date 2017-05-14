@@ -81,8 +81,6 @@ public interface FragmentComponent {
 
     void inject(TopBeersFragment topBeersFragment);
 
-    void inject(BeersInCountryFragment beersInCountryFragment);
-
     void inject(CountryListFragment countryListFragment);
 
     void inject(StyleListFragment styleListFragment);
