@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.data.stores.BeerStyleStore;
+import quickbeer.android.injections.IdModule;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeersInStyleViewModel;
 import timber.log.Timber;
@@ -36,25 +38,39 @@ public class BeersInStyleFragment  extends BeerListFragment {
     @Inject
     BeersInStyleViewModel beersInStyleViewModel;
 
-    @NonNull
-    private String style = "";
+    @Nullable
+    @Inject
+    BeerStyleStore beerStyleStore;
+
+    private int styleId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ofObj(getArguments())
-                .ifSome(state -> style = get(state.getString("style")))
+        Bundle bundle = savedInstanceState != null
+                ? savedInstanceState
+                : getArguments();
+
+        ofObj(bundle)
+                .map(state -> state.getInt("styleId", -1))
+                .ifSome(value -> styleId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putInt("styleId", styleId);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void inject() {
         super.inject();
 
-        getComponent().inject(this);
-
-        get(beersInStyleViewModel).setStyle(style);
+        getComponent()
+                .plusId(new IdModule(styleId))
+                .inject(this);
     }
 
     @NonNull

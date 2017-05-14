@@ -220,8 +220,8 @@ public class BrewerDetailsActivity extends BindingDrawerActivity {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt("brewerId", brewerId);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

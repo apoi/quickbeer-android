@@ -30,10 +30,10 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
-import quickbeer.android.utils.Styles;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import quickbeer.android.views.SimpleListView;
@@ -58,7 +58,7 @@ public class StyleListFragment  extends BindingBaseFragment {
     SearchViewViewModel searchViewViewModel;
 
     @Inject
-    Styles styles;
+    BeerStyleStore beerStyleStore;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -78,7 +78,7 @@ public class StyleListFragment  extends BindingBaseFragment {
         Timber.d("navigateToStyle(" + styleId + ")");
 
         Bundle bundle = new Bundle();
-        bundle.putString("style", String.valueOf(styleId));
+        bundle.putInt("styleId", styleId);
 
         get(navigationProvider).addPage(Page.STYLE, bundle);
     }
@@ -94,7 +94,7 @@ public class StyleListFragment  extends BindingBaseFragment {
 
         checkNotNull(searchViewViewModel);
 
-        getView().setListSource(styles);
+        getView().setListSource(beerStyleStore);
 
         searchViewViewModel.setMode(Mode.FILTER,
                 get(resourceProvider).getString(R.string.search_box_hint_filter_styles));

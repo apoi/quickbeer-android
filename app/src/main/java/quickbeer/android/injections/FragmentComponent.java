@@ -45,6 +45,8 @@ import quickbeer.android.features.profile.ProfileLoginFragment;
 @Subcomponent(modules = FragmentModule.class)
 public interface FragmentComponent {
 
+    IdComponent plusId(IdModule idModule);
+
     void inject(HomeFragment homeFragment);
 
     void inject(ProfileLoginFragment profileLoginFragment);
@@ -80,8 +82,6 @@ public interface FragmentComponent {
     void inject(TopBeersFragment topBeersFragment);
 
     void inject(BeersInCountryFragment beersInCountryFragment);
-
-    void inject(BeersInStyleFragment beersInStyleFragment);
 
     void inject(CountryListFragment countryListFragment);
 

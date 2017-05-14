@@ -43,9 +43,20 @@ public class BeersInCountryFragment extends BeerListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ofObj(getArguments())
-                .ifSome(state -> country = get(state.getString("country")))
+        Bundle bundle = savedInstanceState != null
+                ? savedInstanceState
+                : getArguments();
+
+        ofObj(bundle)
+                .map(state -> state.getString("country"))
+                .ifSome(value -> country = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("country", country);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

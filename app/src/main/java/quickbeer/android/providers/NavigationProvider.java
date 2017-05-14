@@ -127,24 +127,7 @@ public final class NavigationProvider {
                 ? toPage(intent.getIntExtra(NAVIGATION_KEY, 0))
                 : Page.from(intent.getIntExtra(PAGE_KEY, Page.HOME.ordinal()));
 
-        Bundle arguments = getArguments(intent);
-
-        addPage(page, arguments);
-    }
-
-    @NonNull
-    private static Bundle getArguments(@NonNull Intent intent) {
-        Bundle bundle = new Bundle();
-        setBundleValue(intent, bundle, "country");
-        setBundleValue(intent, bundle, "style");
-
-        return bundle;
-    }
-
-    private static void setBundleValue(@NonNull Intent intent, @NonNull Bundle bundle, @NonNull String key) {
-        if (intent.hasExtra(key)) {
-            bundle.putString(key, intent.getStringExtra(key));
-        }
+        addPage(page, intent.getExtras());
     }
 
     private void transaction(@NonNull Page page, @Nullable Bundle arguments, boolean addToBackStack) {

@@ -44,10 +44,4 @@ public final class UtilsModule {
         return new Countries();
     }
 
-    @Provides
-    @Singleton
-    static Styles provideStyles() {
-        return new Styles();
-    }
-
 }

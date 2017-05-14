@@ -18,25 +18,22 @@ import static io.reark.reark.utils.Preconditions.get;
 @AutoValue
 public abstract class BeerStyle {
 
-    @NonNull
     @SerializedName("BeerStyleID")
-    public abstract Integer id();
+    public abstract int id();
 
-    @Nullable
+    @NonNull
     @SerializedName("BeerStyleName")
     public abstract String name();
 
-    @Nullable
+    @NonNull
     @SerializedName("BeerStyleDescription")
     public abstract String description();
 
-    @Nullable
     @SerializedName("BeerStyleParent")
-    public abstract Integer parent();
+    public abstract int parent();
 
-    @Nullable
     @SerializedName("BeerStyleCategory")
-    public abstract Integer category();
+    public abstract int category();
 
     // Plumbing
 
@@ -44,15 +41,15 @@ public abstract class BeerStyle {
     @AutoValue.Builder
     public abstract static class Builder extends OverwritableBuilder<AutoValue_BeerStyle.Builder> {
 
-        public abstract Builder id(final Integer id);
+        public abstract Builder id(int id);
 
-        public abstract Builder name(final String name);
+        public abstract Builder name(@NonNull String name);
 
-        public abstract Builder description(final String description);
+        public abstract Builder description(@NonNull String description);
 
-        public abstract Builder parent(final Integer parent);
+        public abstract Builder parent(int parent);
 
-        public abstract Builder category(final Integer category);
+        public abstract Builder category(int category);
 
         public abstract BeerStyle build();
 
@@ -84,6 +81,32 @@ public abstract class BeerStyle {
         AutoValue_BeerStyle.Builder builder2 = new AutoValue_BeerStyle.Builder(get(v2));
 
         return builder1.overwrite(builder2).build();
+    }
+
+    public static class SimpleStyle extends SimpleItem {
+
+        private final BeerStyle style;
+
+        public SimpleStyle(@NonNull BeerStyle style) {
+            this.style = get(style);
+        }
+
+        @Override
+        public int getId() {
+            return style.id();
+        }
+
+        @NonNull
+        @Override
+        public String getName() {
+            return style.name();
+        }
+
+        @NonNull
+        @Override
+        public String getCode() {
+            return style.name().substring(0, 2);
+        }
     }
 
 }

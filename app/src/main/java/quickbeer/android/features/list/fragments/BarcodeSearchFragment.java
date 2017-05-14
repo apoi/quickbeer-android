@@ -45,9 +45,20 @@ public class BarcodeSearchFragment extends BeerListFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ofObj(getArguments())
-                .ifSome(state -> barcode = get(state.getString("barcode")))
+        Bundle bundle = savedInstanceState != null
+                ? savedInstanceState
+                : getArguments();
+
+        ofObj(bundle)
+                .map(state -> state.getString("barcode"))
+                .ifSome(value -> barcode = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("barcode", barcode);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

@@ -42,6 +42,7 @@ import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
+import static polanski.option.Option.ofObj;
 
 public class BrewerDetailsFragment extends BindingBaseFragment {
 
@@ -71,8 +72,9 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
 
     public static Fragment newInstance(int brewerId) {
         BrewerDetailsFragment fragment = new BrewerDetailsFragment();
-        //noinspection AccessingNonPublicFieldOfAnotherObject
-        fragment.brewerId = brewerId;
+        Bundle bundle = new Bundle();
+        bundle.putInt("brewerId", brewerId);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -85,9 +87,14 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            brewerId = savedInstanceState.getInt("brewerId");
-        }
+        Bundle bundle = savedInstanceState != null
+                ? savedInstanceState
+                : getArguments();
+
+        ofObj(bundle)
+                .map(state -> state.getInt("brewerId"))
+                .ifSome(value -> brewerId = value)
+                .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
 
     @Override
@@ -110,8 +117,8 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt("brewerId", brewerId);
+        super.onSaveInstanceState(outState);
     }
 
     @Override

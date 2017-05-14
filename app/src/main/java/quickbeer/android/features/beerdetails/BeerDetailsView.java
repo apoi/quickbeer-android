@@ -40,10 +40,12 @@ import polanski.option.Option;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.Style;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.profile.ProfileActivity;
@@ -54,7 +56,6 @@ import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
-import quickbeer.android.utils.Styles;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -122,7 +123,7 @@ public class BeerDetailsView extends NestedScrollView {
 
     @Nullable
     @Inject
-    Styles styles;
+    BeerStyleStore beerStyleStore;
 
     @Nullable
     @Inject
@@ -184,7 +185,7 @@ public class BeerDetailsView extends NestedScrollView {
 
     public void setBeer(@NonNull Beer beer) {
         checkNotNull(beer);
-        checkNotNull(styles);
+        checkNotNull(beerStyleStore);
         checkNotNull(resourceProvider);
 
         descriptionTextView.setText(
@@ -198,10 +199,10 @@ public class BeerDetailsView extends NestedScrollView {
                 .ifSome(brewerId -> brewerNameRow.setOnClickListener(__ -> navigateToBrewer(brewerId)));
 
         ofObj(beer.styleId())
-                .map(styles::getItem)
-                .orOption(() -> ofObj(beer.styleName()).flatMap(styles::getStyle))
+                .map(beerStyleStore::getItem)
+                .orOption(() -> ofObj(beer.styleName()).flatMap(beerStyleStore::getStyle))
                 .ifSome(style -> beerStyleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
-                .map(Style::getName)
+                .map(BeerStyle.SimpleStyle::getName)
                 .orOption(this::notAvailableString)
                 .ifSome(beerStyle::setText);
 
@@ -270,7 +271,7 @@ public class BeerDetailsView extends NestedScrollView {
     }
 
     @NonNull
-    private Option<String> notEnoughRatingsString() {
+    private static Option<String> notEnoughRatingsString() {
         return ofObj("?");
     }
 
@@ -279,7 +280,7 @@ public class BeerDetailsView extends NestedScrollView {
 
         Intent intent = new Intent(getContext(), ListActivity.class);
         intent.putExtra(NavigationProvider.PAGE_KEY, Page.STYLE.ordinal());
-        intent.putExtra("style", String.valueOf(styleId));
+        intent.putExtra("styleId", styleId);
         getContext().startActivity(intent);
     }
 

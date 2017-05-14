@@ -20,6 +20,7 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
@@ -43,23 +44,21 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     private final SearchViewViewModel searchViewViewModel;
 
     @NonNull
-    private String style = "";
+    private final Integer styleId;
 
     @Inject
-    BeersInStyleViewModel(@NonNull DataLayer.GetBeer getBeer,
+    BeersInStyleViewModel(@Named("id") Integer styleId,
+                          @NonNull DataLayer.GetBeer getBeer,
                           @NonNull DataLayer.GetBeerSearch getBeerSearch,
                           @NonNull DataLayer.GetBeersInStyle getBeersInStyle,
                           @NonNull SearchViewViewModel searchViewViewModel,
                           @NonNull ProgressStatusProvider progressStatusProvider) {
         super(getBeer, progressStatusProvider);
 
+        this.styleId = get(styleId);
         this.getBeerSearch = get(getBeerSearch);
         this.getBeersInStyle = get(getBeersInStyle);
         this.searchViewViewModel = get(searchViewViewModel);
-    }
-
-    public void setStyle(@NonNull String style) {
-        this.style = get(style);
     }
 
     @NonNull
@@ -73,7 +72,7 @@ public class BeersInStyleViewModel extends BeerListViewModel {
                         .doOnNext(query -> Timber.d("query(%s)", query))
                         .switchMap(query -> get(getBeerSearch).call(query));
 
-        return getBeersInStyle.call(style)
+        return getBeersInStyle.call(String.valueOf(styleId))
                 .mergeWith(searchObservable);
     }
 }
