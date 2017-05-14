@@ -35,7 +35,6 @@ proguard/
 /examples
 /screenshots
 /releases
-/app/src/main/res/raw/
 /app/ratebeer-api.properties
 /app/google-services.json
 gradle.properties
