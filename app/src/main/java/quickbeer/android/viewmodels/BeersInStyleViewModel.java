@@ -18,16 +18,22 @@
 package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import io.reark.reark.data.DataStreamNotification;
+import polanski.option.Option;
 import quickbeer.android.data.DataLayer;
+import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.ItemList;
+import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.providers.ProgressStatusProvider;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import rx.Single;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -41,6 +47,9 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     private final DataLayer.GetBeerSearch getBeerSearch;
 
     @NonNull
+    private final BeerStyleStore beerStyleStore;
+
+    @NonNull
     private final SearchViewViewModel searchViewViewModel;
 
     @NonNull
@@ -51,6 +60,7 @@ public class BeersInStyleViewModel extends BeerListViewModel {
                           @NonNull DataLayer.GetBeer getBeer,
                           @NonNull DataLayer.GetBeerSearch getBeerSearch,
                           @NonNull DataLayer.GetBeersInStyle getBeersInStyle,
+                          @NonNull BeerStyleStore beerStyleStore,
                           @NonNull SearchViewViewModel searchViewViewModel,
                           @NonNull ProgressStatusProvider progressStatusProvider) {
         super(getBeer, progressStatusProvider);
@@ -58,7 +68,20 @@ public class BeersInStyleViewModel extends BeerListViewModel {
         this.styleId = get(styleId);
         this.getBeerSearch = get(getBeerSearch);
         this.getBeersInStyle = get(getBeersInStyle);
+        this.beerStyleStore = get(beerStyleStore);
         this.searchViewViewModel = get(searchViewViewModel);
+    }
+
+    @NonNull
+    public Single<Option<String>> styleName() {
+        return beerStyleStore.getOnce(styleId)
+                .map(option -> option.map(BeerStyle::name));
+    }
+
+    @NonNull
+    public Single<Option<String>> styleDescription() {
+        return beerStyleStore.getOnce(styleId)
+                .map(option -> option.map(BeerStyle::description));
     }
 
     @NonNull

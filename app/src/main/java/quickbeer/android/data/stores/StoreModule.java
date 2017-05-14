@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -58,7 +59,7 @@ public final class StoreModule {
     @Singleton
     static BeerStyleStore provideBeerStyleStore(
             @NonNull ResourceProvider resourceProvider,
-            @NonNull Gson gson) {
+            @Named("deserializingGson") @NonNull Gson gson) {
         return new BeerStyleStore(resourceProvider, gson);
     }
 

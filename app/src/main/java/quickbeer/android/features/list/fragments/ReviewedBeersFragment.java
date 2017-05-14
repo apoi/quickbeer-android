@@ -127,8 +127,8 @@ public class ReviewedBeersFragment extends BeerListFragment {
         get(navigationProvider).triggerSearch(query);
     }
 
-    @NonNull
     @Override
+    @NonNull
     protected DataBinder dataBinder() {
         return dataBinder;
     }

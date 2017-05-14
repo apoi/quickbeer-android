@@ -172,8 +172,8 @@ public abstract class BeerListFragment extends BindingBaseFragment {
 
     protected abstract void onQuery(@NonNull String query);
 
-    @NonNull
     @Override
+    @NonNull
     protected DataBinder dataBinder() {
         return dataBinder;
     }

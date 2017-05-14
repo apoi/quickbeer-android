@@ -20,29 +20,59 @@ package quickbeer.android.features.list.fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import quickbeer.android.data.stores.BeerStyleStore;
+import butterknife.BindView;
+import quickbeer.android.R;
+import quickbeer.android.core.viewmodel.DataBinder;
+import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.injections.IdModule;
-import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.rx.RxUtils;
 import quickbeer.android.viewmodels.BeersInStyleViewModel;
+import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeersInStyleFragment  extends BeerListFragment {
+public class BeersInStyleFragment extends BeerListFragment {
+
+    @BindView(R.id.style_name)
+    TextView styleName;
+
+    @BindView(R.id.style_description)
+    TextView styleDescription;
 
     @Nullable
     @Inject
     BeersInStyleViewModel beersInStyleViewModel;
 
-    @Nullable
-    @Inject
-    BeerStyleStore beerStyleStore;
-
     private int styleId;
+
+    @NonNull
+    private final DataBinder dataBinder = new SimpleDataBinder() {
+        @Override
+        public void bind(@NonNull CompositeSubscription subscription) {
+            BeersInStyleFragment.super.dataBinder().bind(subscription);
+
+            viewModel().styleName()
+                    .toObservable()
+                    .compose(RxUtils::pickValue)
+                    .subscribe(styleName::setText, Timber::e);
+
+            viewModel().styleDescription()
+                    .toObservable()
+                    .compose(RxUtils::pickValue)
+                    .subscribe(styleDescription::setText, Timber::e);
+        }
+
+        @Override
+        public void unbind() {
+            BeersInStyleFragment.super.dataBinder().unbind();
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,14 +103,25 @@ public class BeersInStyleFragment  extends BeerListFragment {
                 .inject(this);
     }
 
+    @Override
+    protected int getLayout() {
+        return R.layout.beers_in_style_fragment;
+    }
+
     @NonNull
     @Override
-    protected BeerListViewModel viewModel() {
+    protected BeersInStyleViewModel viewModel() {
         return get(beersInStyleViewModel);
     }
 
     @Override
     protected void onQuery(@NonNull String query) {
         // No action, new search replaces old results.
+    }
+
+    @Override
+    @NonNull
+    protected DataBinder dataBinder() {
+        return dataBinder;
     }
 }
