@@ -102,6 +102,7 @@
     <string name="create_account">New to RateBeer?\nCreate an account at <a href="https://www.ratebeer.com/newuser/">ratebeer.com</a>!</string>
     <string name="login_failed">Login failed. Check your username and password.</string>
     <string name="login_error">Error logging in, please try again later!</string>
+    <string name="ratebeer_login_problems">RateBeer servers are experiencing login problems. Please try again in a week or two if login fails.</string>
 
     <!-- Profile details -->
     <string name="profile">Profile</string>

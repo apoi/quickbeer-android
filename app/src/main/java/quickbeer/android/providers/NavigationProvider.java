@@ -213,8 +213,10 @@ public final class NavigationProvider {
         switch (menuNavigationId) {
             case R.id.nav_home:
                 return Page.HOME;
+            /*
             case R.id.nav_reviews:
                 return Page.REVIEWS;
+            */
             case R.id.nav_ticks:
                 return Page.TICKS;
             case R.id.nav_best:

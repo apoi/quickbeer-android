@@ -89,6 +89,14 @@
                 android:autoLink="web"
                 android:text="@string/create_account" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColor="#AA0000"
+                android:textAlignment="center"
+                android:text="@string/ratebeer_login_problems" />
+
         </LinearLayout>
 
     </ScrollView>
