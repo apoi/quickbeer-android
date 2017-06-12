@@ -110,7 +110,8 @@ public class BeerStoreCore extends StoreCoreBase<Integer, Beer> {
         final int tickValue = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE));
         final ZonedDateTime tickDate = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)));
 
-        return Beer.builder(Beer.fromJson(json, getGson()))
+        return Beer.fromJson(json, getGson())
+                .toBuilder()
                 .tickValue(tickValue)
                 .tickDate(tickDate)
                 .build();

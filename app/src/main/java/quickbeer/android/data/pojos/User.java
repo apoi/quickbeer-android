@@ -30,6 +30,7 @@ import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.get;
 
+@SuppressWarnings("InnerClassReferencedViaSubclass")
 @AutoValue
 public abstract class User {
 
@@ -75,20 +76,17 @@ public abstract class User {
         return new AutoValue_User.GsonTypeAdapter(get(gson));
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static Builder builder() {
         return new AutoValue_User.Builder();
     }
 
     @NonNull
-    public static Builder builder(@NonNull User user) {
-        return new AutoValue_User.Builder(user);
-    }
-
-    @NonNull
     public static User merge(@NonNull User v1, @NonNull User v2) {
-        AutoValue_User.Builder builder1 = new AutoValue_User.Builder(get(v1));
-        AutoValue_User.Builder builder2 = new AutoValue_User.Builder(get(v2));
+        AutoValue_User.Builder builder1 = (AutoValue_User.Builder) get(v1).toBuilder();
+        AutoValue_User.Builder builder2 = (AutoValue_User.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

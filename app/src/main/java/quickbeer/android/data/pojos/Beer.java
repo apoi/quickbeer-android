@@ -230,20 +230,17 @@ public abstract class Beer {
         }
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static Builder builder() {
         return new AutoValue_Beer.Builder();
     }
 
     @NonNull
-    public static Builder builder(@NonNull Beer beer) {
-        return new AutoValue_Beer.Builder(beer);
-    }
-
-    @NonNull
     public static Beer merge(@NonNull Beer v1, @NonNull Beer v2) {
-        AutoValue_Beer.Builder builder1 = new AutoValue_Beer.Builder(get(v1));
-        AutoValue_Beer.Builder builder2 = new AutoValue_Beer.Builder(get(v2));
+        AutoValue_Beer.Builder builder1 = (AutoValue_Beer.Builder) get(v1).toBuilder();
+        AutoValue_Beer.Builder builder2 = (AutoValue_Beer.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

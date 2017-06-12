@@ -69,8 +69,7 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     @Override
     protected Brewer read(@NonNull Cursor cursor) {
         final String json = cursor.getString(cursor.getColumnIndex(BrewerColumns.JSON));
-        return Brewer.builder(getGson().fromJson(json, Brewer.class))
-                .build();
+        return getGson().fromJson(json, Brewer.class);
     }
 
     @NonNull

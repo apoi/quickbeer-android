@@ -253,20 +253,17 @@ public abstract class Brewer {
         }
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static Builder builder() {
         return new AutoValue_Brewer.Builder();
     }
 
     @NonNull
-    public static Builder builder(@NonNull Brewer brewer) {
-        return new AutoValue_Brewer.Builder(brewer);
-    }
-
-    @NonNull
     public static Brewer merge(@NonNull Brewer v1, @NonNull Brewer v2) {
-        AutoValue_Brewer.Builder builder1 = new AutoValue_Brewer.Builder(get(v1));
-        AutoValue_Brewer.Builder builder2 = new AutoValue_Brewer.Builder(get(v2));
+        AutoValue_Brewer.Builder builder1 = (AutoValue_Brewer.Builder) get(v1).toBuilder();
+        AutoValue_Brewer.Builder builder2 = (AutoValue_Brewer.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

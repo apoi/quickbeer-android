@@ -70,14 +70,11 @@ public abstract class BeerMetadata {
         }
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static Builder builder() {
         return new AutoValue_BeerMetadata.Builder();
-    }
-
-    @NonNull
-    public static Builder builder(@NonNull BeerMetadata metadata) {
-        return new AutoValue_BeerMetadata.Builder(metadata);
     }
 
     @NonNull
@@ -98,8 +95,8 @@ public abstract class BeerMetadata {
 
     @NonNull
     public static BeerMetadata merge(@NonNull BeerMetadata v1, @NonNull BeerMetadata v2) {
-        AutoValue_BeerMetadata.Builder builder1 = new AutoValue_BeerMetadata.Builder(get(v1));
-        AutoValue_BeerMetadata.Builder builder2 = new AutoValue_BeerMetadata.Builder(get(v2));
+        AutoValue_BeerMetadata.Builder builder1 = (AutoValue_BeerMetadata.Builder) get(v1).toBuilder();
+        AutoValue_BeerMetadata.Builder builder2 = (AutoValue_BeerMetadata.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

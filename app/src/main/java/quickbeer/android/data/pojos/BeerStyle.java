@@ -64,20 +64,17 @@ public abstract class BeerStyle {
         return new AutoValue_BeerStyle.GsonTypeAdapter(get(gson));
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static BeerStyle.Builder builder() {
         return new AutoValue_BeerStyle.Builder();
     }
 
     @NonNull
-    public static BeerStyle.Builder builder(@NonNull BeerStyle style) {
-        return new AutoValue_BeerStyle.Builder(style);
-    }
-
-    @NonNull
     public static BeerStyle merge(@NonNull BeerStyle v1, @NonNull BeerStyle v2) {
-        AutoValue_BeerStyle.Builder builder1 = new AutoValue_BeerStyle.Builder(get(v1));
-        AutoValue_BeerStyle.Builder builder2 = new AutoValue_BeerStyle.Builder(get(v2));
+        AutoValue_BeerStyle.Builder builder1 = (AutoValue_BeerStyle.Builder) get(v1).toBuilder();
+        AutoValue_BeerStyle.Builder builder2 = (AutoValue_BeerStyle.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

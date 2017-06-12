@@ -23,6 +23,7 @@ import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.squareup.picasso.Callback.EmptyCallback;
 import com.squareup.picasso.Picasso;
 
@@ -30,7 +31,6 @@ import javax.inject.Inject;
 
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingBaseActivity;
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 import static io.reark.reark.utils.Preconditions.get;
 

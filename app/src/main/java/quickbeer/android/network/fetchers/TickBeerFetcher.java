@@ -134,7 +134,7 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
 
     @NonNull
     private static Beer withRating(@NonNull Beer beer, int rating) {
-        return Beer.builder(beer)
+        return beer.toBuilder()
                 .tickValue(rating)
                 .tickDate(ZonedDateTime.now())
                 .build();

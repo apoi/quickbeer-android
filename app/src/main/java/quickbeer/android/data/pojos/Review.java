@@ -185,20 +185,17 @@ public abstract class Review {
         }
     }
 
+    public abstract Builder toBuilder();
+
     @NonNull
     public static Builder builder() {
         return new AutoValue_Review.Builder();
     }
 
     @NonNull
-    public static Builder builder(@NonNull Review beer) {
-        return new AutoValue_Review.Builder(beer);
-    }
-
-    @NonNull
     public static Review merge(@NonNull Review v1, @NonNull Review v2) {
-        AutoValue_Review.Builder builder1 = new AutoValue_Review.Builder(get(v1));
-        AutoValue_Review.Builder builder2 = new AutoValue_Review.Builder(get(v2));
+        AutoValue_Review.Builder builder1 = (AutoValue_Review.Builder) get(v1).toBuilder();
+        AutoValue_Review.Builder builder2 = (AutoValue_Review.Builder) get(v2).toBuilder();
 
         return builder1.overwrite(builder2).build();
     }

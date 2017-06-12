@@ -73,8 +73,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
         final boolean isDraft = cursor.getInt(cursor.getColumnIndex(ReviewColumns.DRAFT)) > 0;
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(ReviewColumns.MODIFIED)) > 0;
 
-        return Review.builder(getGson().fromJson(json, Review.class))
-                .build();
+        return getGson().fromJson(json, Review.class);
     }
 
     @NonNull
