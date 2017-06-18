@@ -1,0 +1,3 @@
+[submodule "submodules/reark"]
+	path = submodules/reark
+	url = git@github.com:reark/reark.git

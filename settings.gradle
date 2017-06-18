@@ -1,3 +1,2 @@
-include ':app', ':materialsearch'
-include 'reark:reark'
-project(':reark:reark').projectDir = new File(settingsDir, '../reark/reark')
+include ':app', ':materialsearch', ':reark'
+project(':reark').projectDir = new File(rootDir, 'submodules/reark/reark')

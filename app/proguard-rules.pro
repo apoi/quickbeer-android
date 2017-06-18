@@ -39,9 +39,6 @@
 # Picasso
 -dontwarn com.squareup.okhttp.**
 
-# Retrolambda
--dontwarn java.lang.invoke.*
-
 # Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
