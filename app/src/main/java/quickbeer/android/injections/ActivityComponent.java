@@ -29,6 +29,7 @@ import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.photoview.PhotoViewActivity;
 import quickbeer.android.features.profile.ProfileActivity;
+import quickbeer.android.features.styledetails.StyleDetailsActivity;
 import quickbeer.android.views.BrewerListView;
 
 @ActivityScope
@@ -50,6 +51,8 @@ public interface ActivityComponent {
     void inject(BeerDetailsActivity beerDetailsActivity);
 
     void inject(BrewerDetailsActivity brewerDetailsActivity);
+
+    void inject(StyleDetailsActivity styleDetailsActivity);
 
     void inject(PhotoViewActivity photoViewActivity);
 

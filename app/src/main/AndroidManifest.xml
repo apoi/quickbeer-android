@@ -93,6 +93,21 @@
         </activity>
 
         <activity
+            android:name=".features.styledetails.StyleDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="ratebeer.com" android:pathPrefix="/beerstyles/" />
+                <data android:scheme="http" android:host="www.ratebeer.com" android:pathPrefix="/beerstyles/" />
+                <data android:scheme="https" android:host="ratebeer.com" android:pathPrefix="/beerstyles/" />
+                <data android:scheme="https" android:host="www.ratebeer.com" android:pathPrefix="/beerstyles/" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".features.photoview.PhotoViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:launchMode="singleTask"/>

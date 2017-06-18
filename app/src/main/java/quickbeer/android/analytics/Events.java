@@ -53,7 +53,8 @@ public interface Events {
 
     enum Entry {
         LINK_BEER("entry_beer_link"),
-        LINK_BREWER("entry_brewer_link");
+        LINK_BREWER("entry_brewer_link"),
+        LINK_STYLE("entry_style_link");
 
         private final String value;
 
