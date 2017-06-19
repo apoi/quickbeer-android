@@ -89,7 +89,7 @@ public class BeerDetailsPagerFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.beer_details_fragment_pager, container, false);
+        return inflater.inflate(R.layout.details_fragment_pager, container, false);
     }
 
     @Override

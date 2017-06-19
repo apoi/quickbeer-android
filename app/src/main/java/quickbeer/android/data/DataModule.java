@@ -189,6 +189,12 @@ public final class DataModule {
     }
 
     @Provides
+    static DataLayer.GetStyle provideGetStyle(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::getStyle;
+    }
+
+    @Provides
     @Singleton
     static ApplicationDataLayer provideApplicationDataLayer(
             @ForApplication @NonNull Context context,

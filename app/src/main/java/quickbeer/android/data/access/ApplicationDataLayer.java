@@ -25,6 +25,8 @@ import android.support.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
@@ -32,6 +34,7 @@ import polanski.option.Option;
 import quickbeer.android.Constants;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerMetadata;
+import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.pojos.ItemList;
@@ -40,6 +43,7 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
+import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.data.stores.BrewerListStore;
 import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
@@ -58,6 +62,7 @@ import quickbeer.android.network.fetchers.TickBeerFetcher;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import rx.Single;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -99,6 +104,10 @@ public class ApplicationDataLayer {
     @NonNull
     private final BrewerMetadataStore brewerMetadataStore;
 
+    @NonNull
+    private final BeerStyleStore beerStyleStore;
+
+    @Inject
     public ApplicationDataLayer(@NonNull Context context,
                                 @NonNull UserStore userStore,
                                 @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -109,7 +118,8 @@ public class ApplicationDataLayer {
                                 @NonNull ReviewListStore reviewListStore,
                                 @NonNull BrewerStore brewerStore,
                                 @NonNull BrewerListStore brewerListStore,
-                                @NonNull BrewerMetadataStore brewerMetadataStore) {
+                                @NonNull BrewerMetadataStore brewerMetadataStore,
+                                @NonNull BeerStyleStore beerStyleStore) {
         this.context = get(context);
         this.requestStatusStore = get(requestStatusStore);
         this.userStore = get(userStore);
@@ -121,6 +131,7 @@ public class ApplicationDataLayer {
         this.brewerStore = get(brewerStore);
         this.brewerListStore = get(brewerListStore);
         this.brewerMetadataStore = get(brewerMetadataStore);
+        this.beerStyleStore = get(beerStyleStore);
     }
 
     private static int createListenerId() {
@@ -843,6 +854,14 @@ public class ApplicationDataLayer {
         return brewerMetadataStore.getAccessedIdsOnce()
                 .map(ids -> new ItemList<String>(null, ids, null))
                 .map(DataStreamNotification::onNext);
+    }
+
+    //// STYLES
+
+    public Single<Option<BeerStyle>> getStyle(int styleId) {
+        Timber.v("getStyle(%s)", styleId);
+
+        return beerStyleStore.getOnce(styleId);
     }
 
 }

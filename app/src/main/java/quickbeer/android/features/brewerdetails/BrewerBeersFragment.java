@@ -32,7 +32,7 @@ import timber.log.Timber;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BrewerBeersFragment  extends BeerListFragment {
+public class BrewerBeersFragment extends BeerListFragment {
 
     @Nullable
     @Inject

@@ -38,6 +38,8 @@ import quickbeer.android.features.list.fragments.TickedBeersFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
 import quickbeer.android.features.profile.ProfileDetailsFragment;
 import quickbeer.android.features.profile.ProfileLoginFragment;
+import quickbeer.android.features.styledetails.StyleDetailsFragment;
+import quickbeer.android.features.styledetails.StyleDetailsPagerFragment;
 
 @FragmentScope
 @Subcomponent(modules = FragmentModule.class)
@@ -82,6 +84,10 @@ public interface FragmentComponent {
     void inject(CountryListFragment countryListFragment);
 
     void inject(StyleListFragment styleListFragment);
+
+    void inject(StyleDetailsPagerFragment styleDetailsPagerFragment);
+
+    void inject(StyleDetailsFragment styleDetailsFragment);
 
     void inject(AboutDetailsFragment aboutDetailsFragment);
 

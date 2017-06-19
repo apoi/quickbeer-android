@@ -24,11 +24,13 @@ import java.util.List;
 import io.reark.reark.data.DataStreamNotification;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.Beer;
+import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.pojos.User;
 import rx.Observable;
+import rx.Single;
 
 @SuppressWarnings("MarkerInterface")
 public interface DataLayer {
@@ -151,4 +153,8 @@ public interface DataLayer {
         Observable<DataStreamNotification<ItemList<String>>> call(@NonNull String brewerId);
     }
 
+    interface GetStyle {
+        @NonNull
+        Single<Option<BeerStyle>> call(int styleId);
+    }
 }
