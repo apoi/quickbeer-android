@@ -33,7 +33,7 @@ public interface Constants {
 
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
 
-    String BREWER_IMAGE_PATH = "http://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg";
+    String BREWER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg";
 
     String FACEBOOK_PATH = "https://www.facebook.com/%s";
 
@@ -42,6 +42,8 @@ public interface Constants {
     String LOGIN_DEFAULT_SAVE_INFO = "on";
 
     String META_QUERY_PREFIX = "__";
+
+    String ID_KEY = "idKey";
 
     interface Fetchers {
 

@@ -26,12 +26,11 @@ import android.view.View
 import android.view.ViewGroup
 import butterknife.BindView
 import io.reark.reark.utils.Preconditions.get
-import polanski.option.Option.ofObj
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.analytics.Events.Screen
 import quickbeer.android.core.fragment.BaseFragment
-import quickbeer.android.features.brewerdetails.BrewerDetailsPagerAdapter
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,9 +48,9 @@ class StyleDetailsPagerFragment : BaseFragment() {
     private var styleId: Int = 0
 
     companion object {
-        fun newInstance(brewerId: Int): Fragment {
+        fun newInstance(styleId: Int): Fragment {
             val bundle = Bundle()
-            bundle.putInt("styleId", brewerId)
+            bundle.putInt(Constants.ID_KEY, styleId)
             val fragment = StyleDetailsPagerFragment()
             fragment.arguments = bundle
             return fragment
@@ -66,11 +65,11 @@ class StyleDetailsPagerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         val bundle = savedInstanceState ?: arguments
+        styleId = bundle?.getInt(Constants.ID_KEY) ?: 0
 
-        ofObj(bundle)
-                .map { state -> state.getInt("styleId") }
-                .ifSome { value -> styleId = value!! }
-                .ifNone { Timber.w("Expected state for initializing!") }
+        if (styleId == 0) {
+            Timber.w("Expected state for initializing!")
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -81,14 +80,13 @@ class StyleDetailsPagerFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         viewPager.apply {
-            adapter = BrewerDetailsPagerAdapter(childFragmentManager, styleId)
+            adapter = StyleDetailsPagerAdapter(childFragmentManager, styleId)
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
-                    val screen = if (position == 0)
-                        Screen.BREWER_DETAILS
-                    else
-                        Screen.BREWER_BEERS
-                    get(analytics).createEvent(screen)
+                    get(analytics).createEvent(
+                            if (position == 0) Screen.STYLE_DETAILS
+                            else Screen.STYLE_BEERS
+                    )
                 }
             })
         }
@@ -97,7 +95,7 @@ class StyleDetailsPagerFragment : BaseFragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("styleId", styleId)
+        outState.putInt(Constants.ID_KEY, styleId)
         super.onSaveInstanceState(outState)
     }
 

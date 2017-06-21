@@ -21,6 +21,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import quickbeer.android.R
 import quickbeer.android.core.fragment.BindingBaseFragment
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
@@ -40,8 +41,8 @@ class StyleDetailsFragment : BindingBaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.style_details_fragment_details, container, false)
     }
 
     override fun viewModel(): StyleViewModel {
