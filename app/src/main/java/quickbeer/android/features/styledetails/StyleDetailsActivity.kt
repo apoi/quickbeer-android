@@ -42,6 +42,7 @@ import timber.log.Timber
 
 import io.reark.reark.utils.Preconditions.checkNotNull
 import io.reark.reark.utils.Preconditions.get
+import quickbeer.android.Constants
 
 class StyleDetailsActivity : InjectingDrawerActivity() {
 
@@ -80,21 +81,18 @@ class StyleDetailsActivity : InjectingDrawerActivity() {
         setBackNavigationEnabled(true)
 
         if (savedInstanceState != null) {
-            styleId = savedInstanceState.getInt("styleId")
+            styleId = savedInstanceState.getInt(Constants.ID_KEY)
         } else {
-            val intent = intent
-            val action = intent.action
-
-            if (Intent.ACTION_VIEW == action) {
+            if (Intent.ACTION_VIEW == intent.action) {
                 val segments = intent.data.pathSegments
                 if (segments.size > 2) {
-                    styleId = Integer.valueOf(segments[2])!!
+                    styleId = Integer.valueOf(segments[2])
                     get(analytics).createEvent(Events.Entry.LINK_STYLE)
                 }
             }
 
             if (styleId <= 0) {
-                styleId = intent.getIntExtra("styleId", 0)
+                styleId = intent.getIntExtra(Constants.ID_KEY, 0)
             }
 
             supportFragmentManager.beginTransaction()
@@ -112,7 +110,7 @@ class StyleDetailsActivity : InjectingDrawerActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("styleId", styleId)
+        outState.putInt(Constants.ID_KEY, styleId)
         super.onSaveInstanceState(outState)
     }
 
