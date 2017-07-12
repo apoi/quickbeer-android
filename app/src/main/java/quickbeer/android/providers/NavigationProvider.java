@@ -47,6 +47,7 @@ import quickbeer.android.features.list.fragments.TickedBeersFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
 import quickbeer.android.features.profile.ProfileDetailsFragment;
 import quickbeer.android.features.profile.ProfileLoginFragment;
+import quickbeer.android.features.styledetails.StyleDetailsPagerFragment;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -253,7 +254,7 @@ public final class NavigationProvider {
             case STYLE_LIST:
                 return new StyleListFragment();
             case STYLE:
-                return new BeersInStyleFragment();
+                return new StyleDetailsPagerFragment();
             case PROFILE_LOGIN:
                 return new ProfileLoginFragment();
             case PROFILE_VIEW:

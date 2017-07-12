@@ -96,6 +96,8 @@ public class BeerDetailsPagerFragment extends BaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ViewPager pager = (ViewPager) view.findViewById(R.id.view_pager);
+
         unbinder.setIfNone(bind(this, view));
     }
 

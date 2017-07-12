@@ -72,8 +72,16 @@ class StyleDetailsPagerFragment : BaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.details_fragment_pager, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // TODO bind instead
+        viewPager = view.findViewById(R.id.view_pager) as ViewPager
+        tabLayout = view.findViewById(R.id.tab_layout) as TabLayout
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

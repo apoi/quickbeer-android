@@ -22,29 +22,32 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
-
-import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
-
-import javax.inject.Inject
-
 import butterknife.BindView
 import butterknife.ButterKnife
+import io.reark.reark.utils.Preconditions.get
+import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.analytics.Events
-import quickbeer.android.core.activity.InjectingDrawerActivity
+import quickbeer.android.core.activity.BindingDrawerActivity
+import quickbeer.android.core.viewmodel.DataBinder
+import quickbeer.android.core.viewmodel.SimpleDataBinder
+import quickbeer.android.core.viewmodel.ViewModel
+import quickbeer.android.data.DataLayer
+import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.Style
 import quickbeer.android.features.beerdetails.BeerDetailsPagerFragment
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
+import quickbeer.android.viewmodels.SearchViewViewModel
 import quickbeer.android.views.ProgressIndicatorBar
+import rx.android.schedulers.AndroidSchedulers
+import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
+import javax.inject.Inject
 
-import io.reark.reark.utils.Preconditions.checkNotNull
-import io.reark.reark.utils.Preconditions.get
-import quickbeer.android.Constants
-
-class StyleDetailsActivity : InjectingDrawerActivity() {
+class StyleDetailsActivity : BindingDrawerActivity() {
 
     @BindView(R.id.collapsing_toolbar)
     lateinit var collapsingToolbar: CollapsingToolbarLayout
@@ -59,6 +62,12 @@ class StyleDetailsActivity : InjectingDrawerActivity() {
     lateinit var progressIndicatorBar: ProgressIndicatorBar
 
     @Inject
+    lateinit var getStyle: DataLayer.GetStyle
+
+    @Inject
+    lateinit var searchViewViewModel: SearchViewViewModel
+
+    @Inject
     lateinit var navigationProvider: NavigationProvider
 
     @Inject
@@ -68,6 +77,21 @@ class StyleDetailsActivity : InjectingDrawerActivity() {
     lateinit var analytics: Analytics
 
     private var styleId: Int = 0
+
+    private val dataBinder = object : SimpleDataBinder() {
+        override fun bind(subscription: CompositeSubscription) {
+            // Set toolbar title
+            subscription.add(getStyle.call(styleId)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(Action1<Beer> { this@BeerDetailsActivity.setToolbarDetails(it) }, Action1<Throwable> { Timber.e(it) }))
+
+            subscription.add(get(progressStatusProvider)
+                    .progressStatus()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(Action1<ProgressStatus> { progressIndicatorBar.setProgress(it) }, Action1<Throwable> { Timber.e(it) }))
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +131,14 @@ class StyleDetailsActivity : InjectingDrawerActivity() {
 
     override fun inject() {
         component.inject(this)
+    }
+
+    override fun viewModel(): SearchViewViewModel {
+        return searchViewViewModel
+    }
+
+    override fun dataBinder(): DataBinder {
+        return dataBinder
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
