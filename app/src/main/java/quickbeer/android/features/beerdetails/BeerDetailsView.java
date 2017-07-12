@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import polanski.option.Option;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Beer;
@@ -48,6 +49,7 @@ import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.profile.ProfileActivity;
+import quickbeer.android.features.styledetails.StyleDetailsActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
@@ -277,9 +279,9 @@ public class BeerDetailsView extends NestedScrollView {
     private void navigateToStyle(@Nullable Integer styleId) {
         Timber.d("navigateToStyle(%s)", styleId);
 
-        Intent intent = new Intent(getContext(), ListActivity.class);
+        Intent intent = new Intent(getContext(), StyleDetailsActivity.class);
         intent.putExtra(NavigationProvider.PAGE_KEY, Page.STYLE.ordinal());
-        intent.putExtra("styleId", styleId);
+        intent.putExtra(Constants.ID_KEY, styleId);
         getContext().startActivity(intent);
     }
 

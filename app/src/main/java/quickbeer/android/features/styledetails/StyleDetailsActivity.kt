@@ -20,12 +20,8 @@ package quickbeer.android.features.styledetails
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
-import android.widget.ImageView
-import butterknife.BindView
-import butterknife.ButterKnife
 import io.reark.reark.utils.Preconditions.get
-import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout
+import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
@@ -33,33 +29,19 @@ import quickbeer.android.analytics.Events
 import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
-import quickbeer.android.core.viewmodel.ViewModel
 import quickbeer.android.data.DataLayer
-import quickbeer.android.data.pojos.Beer
-import quickbeer.android.data.pojos.Style
+import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.features.beerdetails.BeerDetailsPagerFragment
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
+import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.SearchViewViewModel
-import quickbeer.android.views.ProgressIndicatorBar
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
 class StyleDetailsActivity : BindingDrawerActivity() {
-
-    @BindView(R.id.collapsing_toolbar)
-    lateinit var collapsingToolbar: CollapsingToolbarLayout
-
-    @BindView(R.id.collapsing_toolbar_background)
-    lateinit var imageView: ImageView
-
-    @BindView(R.id.toolbar_overlay_gradient)
-    lateinit var overlay: View
-
-    @BindView(R.id.progress_indicator_bar)
-    lateinit var progressIndicatorBar: ProgressIndicatorBar
 
     @Inject
     lateinit var getStyle: DataLayer.GetStyle
@@ -82,23 +64,22 @@ class StyleDetailsActivity : BindingDrawerActivity() {
         override fun bind(subscription: CompositeSubscription) {
             // Set toolbar title
             subscription.add(getStyle.call(styleId)
+                    .toObservable()
+                    .compose({ RxUtils.pickValue(it) })
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(Action1<Beer> { this@BeerDetailsActivity.setToolbarDetails(it) }, Action1<Throwable> { Timber.e(it) }))
+                    .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             subscription.add(get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(Action1<ProgressStatus> { progressIndicatorBar.setProgress(it) }, Action1<Throwable> { Timber.e(it) }))
+                    .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.collapsing_toolbar_activity)
-
-        ButterKnife.bind(this)
 
         setupDrawerLayout(false)
 
@@ -125,8 +106,8 @@ class StyleDetailsActivity : BindingDrawerActivity() {
         }
     }
 
-    private fun setToolbarDetails(style: Style) {
-        collapsingToolbar.title = style.name
+    private fun setToolbarDetails(style: BeerStyle) {
+        collapsing_toolbar.title = style.name()
     }
 
     override fun inject() {
