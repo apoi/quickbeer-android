@@ -18,14 +18,18 @@
 package quickbeer.android.features.styledetails
 
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.fragment.BindingBaseFragment
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
+import quickbeer.android.injections.IdModule
 import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
 import javax.inject.Inject
 
 class StyleDetailsFragment : BindingBaseFragment() {
@@ -33,11 +37,34 @@ class StyleDetailsFragment : BindingBaseFragment() {
     @Inject
     lateinit var viewModel: StyleViewModel
 
+    private var styleId: Int = 0
+
+    companion object {
+        fun newInstance(styleId: Int): Fragment {
+            val bundle = Bundle()
+            bundle.putInt(Constants.ID_KEY, styleId)
+            val fragment = StyleDetailsFragment()
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
+
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(subscription: CompositeSubscription) {
             subscription.add(viewModel()
                     .getStyle()
                     .subscribe())
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val bundle = savedInstanceState ?: arguments
+        styleId = bundle?.getInt(Constants.ID_KEY) ?: 0
+
+        if (styleId == 0) {
+            Timber.w("Expected state for initializing!")
         }
     }
 
@@ -54,7 +81,8 @@ class StyleDetailsFragment : BindingBaseFragment() {
     }
 
     override fun inject() {
-        component.inject(this)
+        component.plusId(IdModule(styleId))
+                .inject(this)
     }
 
 }

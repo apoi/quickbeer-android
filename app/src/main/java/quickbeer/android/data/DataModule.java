@@ -30,6 +30,7 @@ import quickbeer.android.data.access.ServiceDataLayer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerMetadataStore;
 import quickbeer.android.data.stores.BeerStore;
+import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.data.stores.BrewerListStore;
 import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
@@ -207,7 +208,8 @@ public final class DataModule {
             @NonNull ReviewListStore reviewListStore,
             @NonNull BrewerStore brewerStore,
             @NonNull BrewerListStore brewerListStore,
-            @NonNull BrewerMetadataStore brewerMetadataStore) {
+            @NonNull BrewerMetadataStore brewerMetadataStore,
+            @NonNull BeerStyleStore beerStyleStore) {
         return new ApplicationDataLayer(context,
                 userStore,
                 requestStatusStore,
@@ -218,7 +220,8 @@ public final class DataModule {
                 reviewListStore,
                 brewerStore,
                 brewerListStore,
-                brewerMetadataStore);
+                brewerMetadataStore,
+                beerStyleStore);
     }
 
     @Provides

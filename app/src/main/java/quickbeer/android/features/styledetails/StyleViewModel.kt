@@ -26,8 +26,11 @@ import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.viewmodels.BeerListViewModel
 import rx.Observable
 import rx.Single
+import javax.inject.Inject
+import javax.inject.Named
 
-class StyleViewModel(private val styleId: Int,
+class StyleViewModel @Inject
+internal constructor(@Named("id") private val styleId: Integer,
                      private val getStyle: DataLayer.GetStyle,
                      private val getBeersInStyle: DataLayer.GetBeersInStyle,
                      getBeer: DataLayer.GetBeer,
@@ -35,7 +38,7 @@ class StyleViewModel(private val styleId: Int,
     : BeerListViewModel(getBeer, progressStatusProvider) {
 
     fun getStyle(): Single<Option<BeerStyle>> {
-        return getStyle.call(styleId);
+        return getStyle.call(styleId.toInt());
     }
 
     override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {

@@ -87,8 +87,6 @@ public interface FragmentComponent {
 
     void inject(StyleDetailsPagerFragment styleDetailsPagerFragment);
 
-    void inject(StyleDetailsFragment styleDetailsFragment);
-
     void inject(AboutDetailsFragment aboutDetailsFragment);
 
 }
