@@ -38,6 +38,15 @@ public class BeersInStyleFragment extends BeerListFragment {
 
     private int styleId;
 
+    @NonNull
+    public static BeersInStyleFragment newInstance(int styleId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("styleId", styleId);
+        BeersInStyleFragment fragment = new BeersInStyleFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

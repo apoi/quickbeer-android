@@ -31,7 +31,6 @@ import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.data.DataLayer
 import quickbeer.android.data.pojos.BeerStyle
-import quickbeer.android.features.beerdetails.BeerDetailsPagerFragment
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
@@ -101,7 +100,7 @@ class StyleDetailsActivity : BindingDrawerActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, BeerDetailsPagerFragment.newInstance(styleId))
+                    .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId))
                     .commit()
         }
     }

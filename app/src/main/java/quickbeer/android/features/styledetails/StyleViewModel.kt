@@ -23,6 +23,7 @@ import quickbeer.android.data.DataLayer
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
+import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.BeerListViewModel
 import rx.Observable
 import rx.Single
@@ -39,6 +40,15 @@ internal constructor(@Named("id") private val styleId: Integer,
 
     fun getStyle(): Single<Option<BeerStyle>> {
         return getStyle.call(styleId.toInt());
+    }
+
+    fun getParentStyle(): Single<Option<BeerStyle>> {
+        return getStyle()
+                .toObservable()
+                .compose { RxUtils.pickValue(it) }
+                .first()
+                .toSingle()
+                .flatMap { getStyle.call(it.parent()) }
     }
 
     override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {

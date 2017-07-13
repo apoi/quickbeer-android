@@ -22,6 +22,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import quickbeer.android.features.brewerdetails.BrewerBeersFragment
 import quickbeer.android.features.brewerdetails.BrewerDetailsFragment
+import quickbeer.android.features.list.fragments.BeersInStyleFragment
 
 class StyleDetailsPagerAdapter(fm: FragmentManager, private val styleId: Int) : FragmentPagerAdapter(fm) {
 
@@ -31,15 +32,15 @@ class StyleDetailsPagerAdapter(fm: FragmentManager, private val styleId: Int) : 
 
     override fun getItem(position: Int): Fragment {
         when (position) {
-            0 -> return BrewerDetailsFragment.newInstance(styleId)
-            else -> return BrewerBeersFragment.newInstance(styleId)
+            0 -> return StyleDetailsFragment.newInstance(styleId)
+            else -> return BeersInStyleFragment.newInstance(styleId)
         }
     }
 
     override fun getPageTitle(position: Int): CharSequence {
         when (position) {
             0 -> return "Details"
-            else -> return "Beers"
+            else -> return "Top Beers"
         }
     }
 }
