@@ -37,6 +37,7 @@ import quickbeer.android.rx.RxUtils;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class ProfileActivity extends BindingDrawerActivity {
@@ -57,8 +58,8 @@ public class ProfileActivity extends BindingDrawerActivity {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
             subscription.add(viewModel()
-                    .isLoggedIn()
-                    .map(isLoggedIn -> isLoggedIn ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
+                    .loginCompletedStream()
+                    .map(success -> success ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
                     .subscribe(get(navigationProvider)::replacePage, Timber::e));
 
             // Trigger refresh of ticked beers after user has logged in
@@ -66,6 +67,7 @@ public class ProfileActivity extends BindingDrawerActivity {
                     .isLoginInProgress()
                     .filter(RxUtils::isTrue)
                     .switchMap(__ -> viewModel().getUser())
+                    .compose(RxUtils::pickValue)
                     .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
         }
     };
@@ -73,6 +75,8 @@ public class ProfileActivity extends BindingDrawerActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        checkNotNull(navigationProvider);
 
         setContentView(R.layout.basic_activity);
 
@@ -83,6 +87,15 @@ public class ProfileActivity extends BindingDrawerActivity {
         setBackNavigationEnabled(true);
 
         toolbar.setTitle(getString(R.string.profile));
+
+        navigationProvider.addPage(Page.PROFILE_LOGIN);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        viewModel().autoLogin();
     }
 
     @Override

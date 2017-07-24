@@ -30,9 +30,9 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.rx.RxUtils;
+import quickbeer.android.rx.Unit;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
-import rx.functions.Actions;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
@@ -57,6 +57,12 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     private final PublishSubject<Pair<String, String>> loginSubject = PublishSubject.create();
 
     @NonNull
+    private final PublishSubject<Unit> autoLoginSubject = PublishSubject.create();
+
+    @NonNull
+    private final PublishSubject<Boolean> loginCompletedSubject = PublishSubject.create();
+
+    @NonNull
     private final PublishSubject<String> errorSubject = PublishSubject.create();
 
     @NonNull
@@ -77,14 +83,22 @@ public class ProfileLoginViewModel extends SimpleViewModel {
 
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
-        loginSubject.asObservable()
-                .flatMap(user -> login.call(user.first, user.second))
-                .doOnNext(this::handleErrors)
-                .subscribe(Actions.empty(), Timber::e);
+        subscription.add(loginSubject.asObservable()
+                .switchMap(user -> login.call(user.first, user.second))
+                .subscribe(this::handleNotification, Timber::e));
+
+        subscription.add(autoLoginSubject.asObservable()
+                .switchMap(__ -> getUser())
+                .compose(RxUtils::pickValue)
+                .subscribe(user -> login(user.username(), user.password()), Timber::e));
     }
 
     public void login(@NonNull String username, @NonNull String password) {
         loginSubject.onNext(Pair.create(username, password));
+    }
+
+    public void autoLogin() {
+        autoLoginSubject.onNext(Unit.DEFAULT);
     }
 
     public void fetchTicks(@NonNull Integer userId) {
@@ -103,10 +117,18 @@ public class ProfileLoginViewModel extends SimpleViewModel {
                 .map(DataStreamNotification::isOngoing);
     }
 
-    private void handleErrors(@NonNull DataStreamNotification<User> notification) {
+    private void handleNotification(@NonNull DataStreamNotification<User> notification) {
+        if (notification.isCompleted()) {
+            loginCompletedSubject.onNext(notification.isCompletedWithSuccess());
+        }
         if (notification.isCompletedWithError()) {
             errorSubject.onNext(notification.getError());
         }
+    }
+
+    @NonNull
+    public Observable<Boolean> loginCompletedStream() {
+        return loginCompletedSubject;
     }
 
     @NonNull
@@ -116,9 +138,8 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     }
 
     @NonNull
-    public Observable<User> getUser() {
-        return getUser.call()
-                .compose(RxUtils::pickValue);
+    public Observable<Option<User>> getUser() {
+        return getUser.call();
     }
 
     @NonNull
