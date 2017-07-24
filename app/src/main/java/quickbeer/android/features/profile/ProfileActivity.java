@@ -57,14 +57,16 @@ public class ProfileActivity extends BindingDrawerActivity {
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
+            // Change fragment on login success
             subscription.add(viewModel()
                     .loginCompletedStream()
-                    .map(success -> success ? Page.PROFILE_VIEW : Page.PROFILE_LOGIN)
+                    .filter(RxUtils::isTrue)
+                    .map(__ -> Page.PROFILE_VIEW)
                     .subscribe(get(navigationProvider)::replacePage, Timber::e));
 
             // Trigger refresh of ticked beers after user has logged in
             subscription.add(viewModel()
-                    .isLoginInProgress()
+                    .loginCompletedStream()
                     .filter(RxUtils::isTrue)
                     .switchMap(__ -> viewModel().getUser())
                     .compose(RxUtils::pickValue)

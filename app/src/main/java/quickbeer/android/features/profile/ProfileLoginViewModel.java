@@ -106,24 +106,9 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     }
 
     @NonNull
-    public Observable<Boolean> isLoggedIn() {
-        return getUser.call()
-                .map(Option::isSome);
-    }
-
-    @NonNull
     public Observable<Boolean> isLoginInProgress() {
         return getLoginStatus.call()
                 .map(DataStreamNotification::isOngoing);
-    }
-
-    private void handleNotification(@NonNull DataStreamNotification<User> notification) {
-        if (notification.isCompleted()) {
-            loginCompletedSubject.onNext(notification.isCompletedWithSuccess());
-        }
-        if (notification.isCompletedWithError()) {
-            errorSubject.onNext(notification.getError());
-        }
     }
 
     @NonNull
@@ -140,6 +125,15 @@ public class ProfileLoginViewModel extends SimpleViewModel {
     @NonNull
     public Observable<Option<User>> getUser() {
         return getUser.call();
+    }
+
+    private void handleNotification(@NonNull DataStreamNotification<User> notification) {
+        if (notification.isCompleted()) {
+            loginCompletedSubject.onNext(notification.isCompletedWithSuccess());
+        }
+        if (notification.isCompletedWithError()) {
+            errorSubject.onNext(notification.getError());
+        }
     }
 
     @NonNull
