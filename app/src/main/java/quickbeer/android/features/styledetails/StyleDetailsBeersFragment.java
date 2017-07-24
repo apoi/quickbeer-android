@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.list.fragments;
+package quickbeer.android.features.styledetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,14 +23,15 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.R;
+import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.injections.IdModule;
-import quickbeer.android.viewmodels.BeersInStyleViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeersInStyleFragment extends BeerListFragment {
+public class StyleDetailsBeersFragment extends BeerListFragment {
 
     @Nullable
     @Inject
@@ -39,10 +40,10 @@ public class BeersInStyleFragment extends BeerListFragment {
     private int styleId;
 
     @NonNull
-    public static BeersInStyleFragment newInstance(int styleId) {
+    public static StyleDetailsBeersFragment newInstance(int styleId) {
         Bundle bundle = new Bundle();
         bundle.putInt("styleId", styleId);
-        BeersInStyleFragment fragment = new BeersInStyleFragment();
+        StyleDetailsBeersFragment fragment = new StyleDetailsBeersFragment();
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -65,6 +66,11 @@ public class BeersInStyleFragment extends BeerListFragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt("styleId", styleId);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.beer_list_fragment_paged;
     }
 
     @Override

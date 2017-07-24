@@ -18,14 +18,13 @@
 package quickbeer.android.features.styledetails
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.BindView
 import io.reark.reark.utils.Preconditions.get
+import kotlinx.android.synthetic.main.details_fragment_pager.*
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
@@ -35,12 +34,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class StyleDetailsPagerFragment : BaseFragment() {
-
-    @BindView(R.id.view_pager)
-    lateinit var viewPager: ViewPager
-
-    @BindView(R.id.tab_layout)
-    lateinit var tabLayout: TabLayout
 
     @Inject
     lateinit var analytics: Analytics
@@ -76,18 +69,10 @@ class StyleDetailsPagerFragment : BaseFragment() {
         return inflater.inflate(R.layout.details_fragment_pager, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // TODO bind instead
-        viewPager = view.findViewById(R.id.view_pager) as ViewPager
-        tabLayout = view.findViewById(R.id.tab_layout) as TabLayout
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        viewPager.apply {
+        view_pager.apply {
             adapter = StyleDetailsPagerAdapter(childFragmentManager, styleId)
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
@@ -99,7 +84,7 @@ class StyleDetailsPagerFragment : BaseFragment() {
             })
         }
 
-        tabLayout.setupWithViewPager(viewPager)
+        tab_layout.setupWithViewPager(view_pager)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

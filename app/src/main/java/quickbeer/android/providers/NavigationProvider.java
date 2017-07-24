@@ -39,7 +39,6 @@ import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
 import quickbeer.android.features.list.fragments.BeersInCountryFragment;
-import quickbeer.android.features.list.fragments.BeersInStyleFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.ReviewedBeersFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;

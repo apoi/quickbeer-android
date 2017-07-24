@@ -191,14 +191,14 @@
   {
     "BeerStyleID": 29,
     "BeerStyleName": "Schwarzbier",
-    "BeerStyleDescription": "Dark brown to black. Medium body. Roasted malt evident. Low sweetness in aroma and flavor. Low to medium bitterness. Low bitterness from roast malt. Hop flavor and aroma, &quot;noble-type&quot; OK. No fruitiness, esters. ",
+    "BeerStyleDescription": "Dark brown to black. Medium body. Roasted malt evident. Low sweetness in aroma and flavor. Low to medium bitterness. Low bitterness from roast malt. Hop flavor and aroma, &quot;noble-type&quot; OK. No fruitiness, esters.",
     "BeerStyleParent": 70,
     "BeerStyleCategory": 1
   },
   {
     "BeerStyleID": 31,
     "BeerStyleName": "Czech Pilsner (Sv&#283;tlý)",
-    "BeerStyleDescription": "Hallmarked by the generous use of the Saaz hop, Bohemian or Czech pilsners are also noted for their rich gold color, fat maltiness and moderate to full body. Generally brewed to 10-12° Plato. in Czech these beers are simply called Sv&#283;tlý Ležák.  Sometimes served cloudy and unfiltered with young wort mixed in, known as Kvasnicova in the Czech Republic, the same as what is known as krausening in Germany.  Regardless of origin, to be a pilsner a beer must have at least 28 units of bitterness, and preferably much more.  ",
+    "BeerStyleDescription": "Hallmarked by the generous use of the Saaz hop, Bohemian or Czech pilsners are also noted for their rich gold color, fat maltiness and moderate to full body. Generally brewed to 10-12° Plato. In Czech these beers are simply called Sv&#283;tlý Ležák.  Sometimes served cloudy and unfiltered with young wort mixed in, known as Kvasnicova in the Czech Republic, the same as what is known as krausening in Germany.  Regardless of origin, to be a pilsner a beer must have at least 28 units of bitterness, and preferably much more.",
     "BeerStyleParent": 70,
     "BeerStyleCategory": 1
   },
@@ -226,7 +226,7 @@
   {
     "BeerStyleID": 39,
     "BeerStyleName": "Kölsch",
-    "BeerStyleDescription": "Golden, top-fermented style native to Köln, Germany. The style has a very narrow profile and many beers that consider themselves to be Kölsch-beers are not. Generally they have a moderate bitterness, but fairly prominent hop flavour &#40;typically Spalt, Tettnang, or Hallertau&#41;. They have high effervescence, medium esters, but a rounded, stylish character derived from lagering. Many Kölsch-beers are brewed using additional wheat-malt to create a smoother sweeter taste. ",
+    "BeerStyleDescription": "Golden, top-fermented style native to Köln, Germany. The style has a very narrow profile and many beers that consider themselves to be Kölsch-beers are not. Generally they have a moderate bitterness, but fairly prominent hop flavour &#40;typically Spalt, Tettnang, or Hallertau&#41;. They have high effervescence, medium esters, but a rounded, stylish character derived from lagering. Many Kölsch-beers are brewed using additional wheat-malt to create a smoother sweeter taste.",
     "BeerStyleParent": 67,
     "BeerStyleCategory": 1
   },
@@ -310,7 +310,7 @@
   {
     "BeerStyleID": 57,
     "BeerStyleName": "Spice/Herb/Vegetable",
-    "BeerStyleDescription": "A catch-all category for ale or lager made with herbs, spices or vegetables. The additive should be distinctive in the aroma. Body, color, hop character and strength vary depending on the type of spice, herb or vegetable used. ",
+    "BeerStyleDescription": "A catch-all category for ale or lager made with herbs, spices or vegetables. The additive should be distinctive in the aroma. Body, color, hop character and strength vary depending on the type of spice, herb or vegetable used.",
     "BeerStyleParent": 120,
     "BeerStyleCategory": 1
   },
@@ -358,7 +358,7 @@
   },
   {
     "BeerStyleID": 64,
-    "BeerStyleName": "American Strong Ale ",
+    "BeerStyleName": "American Strong Ale",
     "BeerStyleDescription": "Not a style, per se, but a catch-all category to incorporate the plethora of strong, stylistically vague beers coming from American microbreweries today. Some are related to English Strong Ales but with a higher hop rate while others are ultra-strong variants on the IPA or red ale themes. No matter how varied their origins or characters might be, all are intense, potent, and with generous quantities of hops and malt.",
     "BeerStyleParent": 67,
     "BeerStyleCategory": 1
@@ -604,7 +604,7 @@
   {
     "BeerStyleID": 102,
     "BeerStyleName": "Scotch Ale",
-    "BeerStyleDescription": "Scotch Ale was the name given to a strong pale ale from Edinburgh in the 19th century. This was typical of the strong pale ales brewed in Britain at that time - mainly pale barley malt and moderate hopping, and were not that stylistically different to English Strong Ales or Barley Wines. The name however became regionalised so that a strong pale ale from Scotland became known as a Scotch Ale or Wee Heavy.\r\n\r\n\r\nBeers using the designation Scotch Ale are popular in the USA where most examples are brewed locally. Examples of beers brewed in the USA under the name Wee Heavy tend to be 7% abv and higher, while Scottish brewed examples, such as Belhavens Wee Heavy, are typically between 5.5% and 6.5% abv. ",
+    "BeerStyleDescription": "Scotch Ale was the name given to a strong pale ale from Edinburgh in the 19th century. This was typical of the strong pale ales brewed in Britain at that time - mainly pale barley malt and moderate hopping, and were not that stylistically different to English Strong Ales or Barley Wines. The name however became regionalised so that a strong pale ale from Scotland became known as a Scotch Ale or Wee Heavy.\r\n\r\n\r\nBeers using the designation Scotch Ale are popular in the USA where most examples are brewed locally. Examples of beers brewed in the USA under the name Wee Heavy tend to be 7% abv and higher, while Scottish brewed examples, such as Belhavens Wee Heavy, are typically between 5.5% and 6.5% abv.",
     "BeerStyleParent": 67,
     "BeerStyleCategory": 1
   },
@@ -625,7 +625,7 @@
   {
     "BeerStyleID": 105,
     "BeerStyleName": "Heller Bock",
-    "BeerStyleDescription": "The Heller Bock is primarily a malty beer from the German brewing tradition with little hop character - neither bitter nor aromatic - though the style typically has a little more hops than the standard Bock. The color is golden to light brown or amber. They should normally pour with a substantial white head. Typical examples are pale and clear and normally brewed with Lager-yeast. ",
+    "BeerStyleDescription": "The Heller Bock is primarily a malty beer from the German brewing tradition with little hop character - neither bitter nor aromatic - though the style typically has a little more hops than the standard Bock. The color is golden to light brown or amber. They should normally pour with a substantial white head. Typical examples are pale and clear and normally brewed with Lager-yeast.",
     "BeerStyleParent": 70,
     "BeerStyleCategory": 1
   },
@@ -639,21 +639,21 @@
   {
     "BeerStyleID": 107,
     "BeerStyleName": "Perry",
-    "BeerStyleDescription": "Perry or Pear Cider is an alcoholic drink made from pressed pears, mostly especially grown for this purpose. Also there are a few producers doing fermented drinks using Quinces instead of Pears, creating an aroma of its own. ",
+    "BeerStyleDescription": "Perry or Pear Cider is an alcoholic drink made from pressed pears, mostly especially grown for this purpose. Also there are a few producers doing fermented drinks using Quinces instead of Pears, creating an aroma of its own.",
     "BeerStyleParent": 104,
     "BeerStyleCategory": 3
   },
   {
     "BeerStyleID": 112,
     "BeerStyleName": "Ice Cider/Ice Perry",
-    "BeerStyleDescription": "Ice cider is traditionally made by leaving apples on the tree into the winter, picking them only when they are frozen.  This results in highly concentrated apples, from which juice is pressed and then fermented.  Less traditional producers ferment juice than has been partially frozen to achieve concentration. ",
+    "BeerStyleDescription": "Ice cider is traditionally made by leaving apples on the tree into the winter, picking them only when they are frozen.  This results in highly concentrated apples, from which juice is pressed and then fermented.  Less traditional producers ferment juice than has been partially frozen to achieve concentration.",
     "BeerStyleParent": 104,
     "BeerStyleCategory": 3
   },
   {
     "BeerStyleID": 113,
     "BeerStyleName": "Imperial Porter",
-    "BeerStyleDescription": "Imperial &#40;extra-strong&#41; porters fall in between the traditional porter, a Baltic porter, and an imperial stout.  They range from around 7.5% upwards, with hefty dark malt character, but lack the overt roastiness of an imperial stout. ",
+    "BeerStyleDescription": "Imperial &#40;extra-strong&#41; porters fall in between the traditional porter, a Baltic porter, and an imperial stout.  They range from around 7.5% upwards, with hefty dark malt character, but lack the overt roastiness of an imperial stout.",
     "BeerStyleParent": 68,
     "BeerStyleCategory": 1
   },
@@ -667,14 +667,14 @@
   {
     "BeerStyleID": 115,
     "BeerStyleName": "Polotmavý",
-    "BeerStyleDescription": "This is the amber lager style of the Czech Republic. The character that the brewery usually aims for with this style is a hybrid between the dark lager and the pale pilsner. The result has a richer malt character than the American Dark/Amber Lager/Vienna style and more hop than the Oktoberfest/Marzen style. ",
+    "BeerStyleDescription": "This is the amber lager style of the Czech Republic. The character that the brewery usually aims for with this style is a hybrid between the dark lager and the pale pilsner. The result has a richer malt character than the American Dark/Amber Lager/Vienna style and more hop than the Oktoberfest/Marzen style.",
     "BeerStyleParent": 70,
     "BeerStyleCategory": 1
   },
   {
     "BeerStyleID": 116,
     "BeerStyleName": "Sahti/Gotlandsdricke/Koduõlu",
-    "BeerStyleDescription": "A traditional ale style unique to three areas: Finland, the Swedish island of Gotland and the Estonian island of Saaremaa. There are subtle differences between them and also between sahti from different regions in Finland. In general however these are strong ales made with a combination of rye and barley malt. They have minimal hop character and instead receive most of their flavor by virtue of being filtered through juniper twigs. Most examples will exhibit a strong yeast character and many homebrewed traditional examples are made with baking yeast. Such yeast often generates a highly phenolic character as well. Some examples will also have a smoky character and this is particularly evident in gotlandsdricke. ",
+    "BeerStyleDescription": "A traditional ale style unique to three areas: Finland, the Swedish island of Gotland and the Estonian island of Saaremaa. There are subtle differences between them and also between sahti from different regions in Finland. In general however these are strong ales made with a combination of rye and barley malt. They have minimal hop character and instead receive most of their flavor by virtue of being filtered through juniper twigs. Most examples will exhibit a strong yeast character and many homebrewed traditional examples are made with baking yeast. Such yeast often generates a highly phenolic character as well. Some examples will also have a smoky character and this is particularly evident in gotlandsdricke.",
     "BeerStyleParent": 120,
     "BeerStyleCategory": 1
   },
@@ -688,7 +688,7 @@
   {
     "BeerStyleID": 118,
     "BeerStyleName": "Sour Red/Brown",
-    "BeerStyleDescription": "The sour red/brown beers of Flanders can be considered as two different styles, or two ends of a single style continuum, depending on how you choose to view the issue. They are a clearly–defined sour ale subtype, one with strong historical traditions. Their character blends rich malt with tartness, and usually some fruity character as well. Oak aging is common in the traditional production of the style and therefore is often evident in the character. Many examples are also aged on fruit. At the red end of the style, the classic is Rodenbach at the brown end it is Liefmans, and there are several very good examples in between. ",
+    "BeerStyleDescription": "The sour red/brown beers of Flanders can be considered as two different styles, or two ends of a single style continuum, depending on how you choose to view the issue. They are a clearly–defined sour ale subtype, one with strong historical traditions. Their character blends rich malt with tartness, and usually some fruity character as well. Oak aging is common in the traditional production of the style and therefore is often evident in the character. Many examples are also aged on fruit. At the red end of the style, the classic is Rodenbach at the brown end it is Liefmans, and there are several very good examples in between.",
     "BeerStyleParent": 119,
     "BeerStyleCategory": 1
   },

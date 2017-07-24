@@ -64,5 +64,4 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
     private fun showToast(@StringRes resource: Int) {
         get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG)
     }
-
 }

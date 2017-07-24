@@ -47,7 +47,7 @@
                     android:layout_below="@id/rating_bar"
                     android:layout_centerHorizontal="true"
                     android:visibility="gone"
-                    style="@style/BeerDetailsDescription"/>
+                    style="@style/DetailsDescription"/>
 
             </RelativeLayout>
 
@@ -75,18 +75,18 @@
                     android:layout_marginTop="5dp"
                     android:padding="15dp"
                     android:clipChildren="false"
-                    style="@style/BeerDetailsRowLayout">
+                    style="@style/DetailsRowLayout">
 
                     <LinearLayout
                         android:id="@+id/beer_rating_overall_column"
-                        style="@style/BeerDetailsColumnLayout">
+                        style="@style/DetailsColumnLayout">
 
                         <TextView
-                            style="@style/BeerDetailsTitle"
+                            style="@style/DetailsTitle"
                             android:text="@string/rating_overall"/>
 
                         <TextView
-                            style="@style/BeerDetailsValue"
+                            style="@style/DetailsValue"
                             android:id="@+id/beer_rating_overall"
                             tools:text="100"/>
 
@@ -96,14 +96,14 @@
 
                     <LinearLayout
                         android:id="@+id/beer_rating_style_column"
-                        style="@style/BeerDetailsColumnLayout">
+                        style="@style/DetailsColumnLayout">
 
                         <TextView
-                            style="@style/BeerDetailsTitle"
+                            style="@style/DetailsTitle"
                             android:text="@string/rating_style"/>
 
                         <TextView
-                            style="@style/BeerDetailsValue"
+                            style="@style/DetailsValue"
                             android:id="@+id/beer_rating_style"
                             tools:text="98"/>
 
@@ -113,14 +113,14 @@
 
                     <LinearLayout
                         android:id="@+id/beer_abv_column"
-                        style="@style/BeerDetailsColumnLayout">
+                        style="@style/DetailsColumnLayout">
 
                         <TextView
-                            style="@style/BeerDetailsTitle"
+                            style="@style/DetailsTitle"
                             android:text="@string/abv"/>
 
                         <TextView
-                            style="@style/BeerDetailsValue"
+                            style="@style/DetailsValue"
                             android:id="@+id/beer_abv"
                             tools:text="4.7"/>
 
@@ -130,14 +130,14 @@
 
                     <LinearLayout
                         android:id="@+id/beer_ibu_column"
-                        style="@style/BeerDetailsColumnLayout">
+                        style="@style/DetailsColumnLayout">
 
                         <TextView
-                            style="@style/BeerDetailsTitle"
+                            style="@style/DetailsTitle"
                             android:text="@string/ibu"/>
 
                         <TextView
-                            style="@style/BeerDetailsValue"
+                            style="@style/DetailsValue"
                             android:id="@+id/beer_ibu"
                             tools:text="38"/>
 
@@ -148,13 +148,13 @@
                 <include layout="@layout/beer_details_separator_horizontal" />
 
                 <LinearLayout
-                    style="@style/BeerDetailsRowLayout"
-                    android:layout_margin="5dp">
+                    style="@style/DetailsRowLayout"
+                    android:layout_margin="@dimen/card_inner_margin">
 
                     <TextView
                         android:id="@+id/beer_description"
                         tools:text="This is beer description."
-                        style="@style/BeerDetailsDescription" />
+                        style="@style/DetailsDescription" />
 
                 </LinearLayout>
 
@@ -163,14 +163,14 @@
                 <LinearLayout
                     android:id="@+id/beer_style_row"
                     android:clickable="true"
-                    style="@style/BeerDetailsRowLayout">
+                    style="@style/DetailsRowLayout">
 
                     <TextView
-                        style="@style/BeerDetailsTitle"
+                        style="@style/DetailsTitle"
                         android:text="@string/style"/>
 
                     <TextView
-                        style="@style/BeerDetailsValue"
+                        style="@style/DetailsValue"
                         android:id="@+id/beer_style"
                         tools:text="Pale lager" />
 
@@ -181,14 +181,14 @@
                 <LinearLayout
                     android:id="@+id/brewer_name_row"
                     android:clickable="true"
-                    style="@style/BeerDetailsRowLayout">
+                    style="@style/DetailsRowLayout">
 
                     <TextView
-                        style="@style/BeerDetailsTitle"
+                        style="@style/DetailsTitle"
                         android:text="@string/brewer"/>
 
                     <TextView
-                        style="@style/BeerDetailsValue"
+                        style="@style/DetailsValue"
                         android:id="@+id/brewer_name"
                         tools:text="Very Cool Brewery"/>
 
@@ -200,14 +200,14 @@
                     android:id="@+id/brewer_country_row"
                     android:layout_marginBottom="5dp"
                     android:clickable="true"
-                    style="@style/BeerDetailsRowLayout">
+                    style="@style/DetailsRowLayout">
 
                     <TextView
-                        style="@style/BeerDetailsTitle"
+                        style="@style/DetailsTitle"
                         android:text="@string/origin"/>
 
                     <TextView
-                        style="@style/BeerDetailsValue"
+                        style="@style/DetailsValue"
                         android:id="@+id/brewer_country"
                         tools:text="Kerava, Finland"/>
 

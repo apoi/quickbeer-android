@@ -40,6 +40,7 @@ public class BeerStyleStore
         return getOnce()
                 .toObservable()
                 .flatMap(Observable::from)
+                .filter(style -> style.parent() > -1)
                 .map(BeerStyle.SimpleStyle::new)
                 .toList()
                 .toBlocking()

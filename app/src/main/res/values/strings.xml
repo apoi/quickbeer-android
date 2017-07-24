@@ -89,6 +89,10 @@
     <string name="brewer_details_no_facebook">Facebook page not available</string>
     <string name="brewer_details_no_twitter">Twitter feed not available</string>
 
+    <!-- Style details -->
+    <string name="style_details_description">Description</string>
+    <string name="style_details_parent">Parent Category</string>
+
     <!-- Barcode scanner -->
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
     <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>

@@ -7,7 +7,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha6'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha7'
         classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
         classpath 'com.stanfy.spoon:spoon-gradle-plugin:1.2.2'
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.4'

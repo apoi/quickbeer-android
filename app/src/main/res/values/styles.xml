@@ -37,7 +37,7 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="BeerDetailsDescription">
+    <style name="DetailsDescription">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/gray_300</item>
@@ -45,7 +45,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="BeerDetailsTitle" parent="BeerDetailsDescription">
+    <style name="DetailsTitle" parent="DetailsDescription">
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">sans-serif-smallcaps</item>
@@ -54,23 +54,23 @@
         <item name="android:alpha">0.4</item>
     </style>
 
-    <style name="BeerDetailsValue" parent="BeerDetailsDescription">
+    <style name="DetailsValue" parent="DetailsDescription">
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:gravity">center_horizontal</item>
         <item name="android:textSize">17sp</item>
     </style>
 
-    <style name="BeerDetailsSubvalue" parent="BeerDetailsDescription">
+    <style name="DetailsSubvalue" parent="DetailsDescription">
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="BeerDetailsInfoValue" parent="BeerDetailsDescription">
+    <style name="DetailsInfoValue" parent="DetailsDescription">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">11sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="BeerDetailsRowLayout">
+    <style name="DetailsRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">10dp</item>
@@ -80,7 +80,7 @@
         <item name="android:background">?attr/selectableItemBackground</item>
     </style>
 
-    <style name="BeerDetailsColumnLayout">
+    <style name="DetailsColumnLayout">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>

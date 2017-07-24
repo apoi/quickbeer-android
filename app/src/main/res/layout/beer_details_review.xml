@@ -19,33 +19,33 @@
 
         <LinearLayout
             android:gravity="start"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            style="@style/BeerDetailsRowLayout">
+            android:layout_marginTop="@dimen/card_inner_margin"
+            android:layout_marginLeft="@dimen/card_inner_margin"
+            android:layout_marginRight="@dimen/card_inner_margin"
+            style="@style/DetailsRowLayout">
 
             <TextView
                 android:id="@+id/review_description"
                 tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this."
                 android:textAlignment="viewStart"
-                style="@style/BeerDetailsDescription"/>
+                style="@style/DetailsDescription"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
-            style="@style/BeerDetailsRowLayout">
+            style="@style/DetailsRowLayout">
 
             <LinearLayout
                 android:id="@+id/review_appearance_column"
-                style="@style/BeerDetailsColumnLayout">
+                style="@style/DetailsColumnLayout">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
+                    style="@style/DetailsTitle"
                     android:text="@string/review_appearance"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/review_appearance"
                     tools:text="5"/>
 
@@ -55,14 +55,14 @@
 
             <LinearLayout
                 android:id="@+id/review_aroma_column"
-                style="@style/BeerDetailsColumnLayout">
+                style="@style/DetailsColumnLayout">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
+                    style="@style/DetailsTitle"
                     android:text="@string/review_aroma"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/review_aroma"
                     tools:text="3"/>
 
@@ -72,14 +72,14 @@
 
             <LinearLayout
                 android:id="@+id/review_flavor_column"
-                style="@style/BeerDetailsColumnLayout">
+                style="@style/DetailsColumnLayout">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
+                    style="@style/DetailsTitle"
                     android:text="@string/review_flavor"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/review_flavor"
                     tools:text="10"/>
 
@@ -89,14 +89,14 @@
 
             <LinearLayout
                 android:id="@+id/review_mouthfeel_column"
-                style="@style/BeerDetailsColumnLayout">
+                style="@style/DetailsColumnLayout">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
+                    style="@style/DetailsTitle"
                     android:text="@string/review_mouthfeel"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/review_mouthfeel"
                     tools:text="8"/>
 
@@ -106,14 +106,14 @@
 
             <LinearLayout
                 android:id="@+id/review_overall_column"
-                style="@style/BeerDetailsColumnLayout">
+                style="@style/DetailsColumnLayout">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
+                    style="@style/DetailsTitle"
                     android:text="@string/review_overall"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/review_overall"
                     tools:text="15"/>
 
@@ -126,17 +126,17 @@
         <LinearLayout
             android:gravity="end"
             android:layout_marginEnd="5dp"
-            style="@style/BeerDetailsRowLayout">
+            style="@style/DetailsRowLayout">
 
             <TextView
                 android:id="@+id/review_user"
                 tools:text="beerdude @ 2017-02-11"
-                style="@style/BeerDetailsInfoValue" />
+                style="@style/DetailsInfoValue" />
 
             <TextView
                 android:id="@+id/review_location"
                 tools:text="Berlin, Brandenburg, Germany"
-                style="@style/BeerDetailsInfoValue" />
+                style="@style/DetailsInfoValue" />
 
         </LinearLayout>
 

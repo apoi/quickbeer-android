@@ -30,24 +30,24 @@
                 android:src="@drawable/logo_quickbeer"/>
 
             <LinearLayout
-                style="@style/BeerDetailsRowLayout"
+                style="@style/DetailsRowLayout"
                 android:layout_margin="5dp">
 
                 <TextView
                     android:id="@+id/about_version"
                     android:text="@string/about_version"
                     android:paddingBottom="30dp"
-                    style="@style/BeerDetailsDescription" />
+                    style="@style/DetailsDescription" />
 
                 <TextView
                     android:text="@string/about_description"
-                    style="@style/BeerDetailsDescription" />
+                    style="@style/DetailsDescription" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/about_spice_program"
-                style="@style/BeerDetailsRowLayout"
+                style="@style/DetailsRowLayout"
                 android:gravity="start"
                 android:orientation="horizontal">
 
@@ -64,13 +64,13 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:text="QuickBeer is sponsored by the Futurice Open Source Program"
-                    style="@style/BeerDetailsDescription"/>
+                    style="@style/DetailsDescription"/>
 
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/about_iiro"
-                style="@style/BeerDetailsRowLayout"
+                style="@style/DetailsRowLayout"
                 android:gravity="start"
                 android:orientation="horizontal"
                 android:layout_marginBottom="10dp">
@@ -88,7 +88,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="5dp"
                     android:text="Original Android design by Iiro Isotalo"
-                    style="@style/BeerDetailsDescription"/>
+                    style="@style/DetailsDescription"/>
 
             </LinearLayout>
 
@@ -97,10 +97,10 @@
             <RelativeLayout
                 android:id="@+id/about_google_play"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_google_play"/>
 
             </RelativeLayout>
@@ -110,10 +110,10 @@
             <RelativeLayout
                 android:id="@+id/about_source_row"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_source_code"/>
 
             </RelativeLayout>
@@ -123,10 +123,10 @@
             <RelativeLayout
                 android:id="@+id/about_application_license_row"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_quickbeer_license"/>
 
             </RelativeLayout>
@@ -136,10 +136,10 @@
             <RelativeLayout
                 android:id="@+id/about_library_licenses_row"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_open_source_licenses"/>
 
             </RelativeLayout>
@@ -149,10 +149,10 @@
             <RelativeLayout
                 android:id="@+id/about_assets_row"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_graphic_asset_licenses"/>
 
             </RelativeLayout>
@@ -163,10 +163,10 @@
                 android:id="@+id/about_privacy_policy_row"
                 android:layout_marginBottom="5dp"
                 android:clickable="true"
-                style="@style/BeerDetailsRowLayout">
+                style="@style/DetailsRowLayout">
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:text="@string/about_privacy_policy"/>
 
             </RelativeLayout>

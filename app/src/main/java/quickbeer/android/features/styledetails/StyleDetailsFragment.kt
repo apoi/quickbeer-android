@@ -84,7 +84,7 @@ class StyleDetailsFragment : BindingBaseFragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.style_details_fragment_details, container, false)
     }
 
@@ -100,6 +100,5 @@ class StyleDetailsFragment : BindingBaseFragment() {
         component.plusId(IdModule(styleId))
                 .inject(this)
     }
-
 }
 

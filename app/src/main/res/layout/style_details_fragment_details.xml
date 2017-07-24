@@ -21,19 +21,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingTop="@dimen/card_inner_margin"
+            android:paddingBottom="@dimen/card_inner_margin"
             android:clipChildren="false">
 
             <LinearLayout
-                style="@style/BeerDetailsRowLayout"
-                android:id="@+id/style_parent_row"
-                android:clickable="true">
+                style="@style/DetailsRowLayout"
+                android:paddingStart="@dimen/card_inner_margin"
+                android:paddingEnd="@dimen/card_inner_margin">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
-                    android:text="Parent Category"/>
+                    style="@style/DetailsTitle"
+                    android:text="@string/style_details_parent"/>
 
                 <TextView
-                    style="@style/BeerDetailsValue"
+                    style="@style/DetailsValue"
                     android:id="@+id/style_parent"
                     tools:text="Ales and Stouts"/>
 
@@ -42,18 +44,17 @@
             <include layout="@layout/beer_details_separator_horizontal" />
 
             <LinearLayout
-                style="@style/BeerDetailsRowLayout"
-                android:id="@+id/style_description_row"
-                android:clickable="true">
+                style="@style/DetailsRowLayout"
+                android:layout_margin="@dimen/card_inner_margin">
 
                 <TextView
-                    style="@style/BeerDetailsTitle"
-                    android:text="Description"/>
+                    style="@style/DetailsTitle"
+                    android:text="@string/style_details_description"/>
 
                 <TextView
-                    style="@style/BeerDetailsDescription"
+                    style="@style/DetailsDescription"
                     android:id="@+id/style_description"
-                    tools:text="This is a long style description"/>
+                    tools:text="This is a long style description that goes on and on for a while"/>
 
             </LinearLayout>
 

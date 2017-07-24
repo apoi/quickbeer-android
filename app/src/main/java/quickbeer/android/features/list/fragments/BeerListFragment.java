@@ -143,7 +143,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     }
 
     protected int getLayout() {
-        return R.layout.beer_list_fragment;
+        return R.layout.beer_list_fragment_standalone;
     }
 
     @Override

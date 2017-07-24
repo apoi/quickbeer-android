@@ -38,7 +38,7 @@ public class BeerTabFragment extends BeerListFragment {
 
     @Override
     protected int getLayout() {
-        return R.layout.beer_tab_fragment;
+        return R.layout.beer_list_fragment_paged;
     }
 
     @Override

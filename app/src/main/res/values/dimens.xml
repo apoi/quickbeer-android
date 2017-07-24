@@ -30,5 +30,6 @@
 
     <dimen name="card_view_elevation">2dp</dimen>
     <dimen name="card_view_margin">10dp</dimen>
+    <dimen name="card_inner_margin">5dp</dimen>
 
 </resources>
