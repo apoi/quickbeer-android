@@ -20,11 +20,15 @@ package quickbeer.android.network.utils;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import timber.log.Timber;
+
+import static quickbeer.android.utils.StringUtils.value;
 
 public class LoginRedirectInterceptor implements Interceptor {
 
@@ -35,7 +39,7 @@ public class LoginRedirectInterceptor implements Interceptor {
     private static final int HTTP_FORBIDDEN = 403;
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
         Response response = chain.proceed(request);
 
@@ -47,11 +51,11 @@ public class LoginRedirectInterceptor implements Interceptor {
     }
 
     private static boolean isLoginRequest(@NonNull Request request) {
-        return request.url().encodedPath().equals(SIGN_IN_PAGE);
+        return Objects.equals(request.url().encodedPath(), SIGN_IN_PAGE);
     }
 
     private static Response handleLoginResponse(@NonNull Request request, @NonNull Response response) {
-        if (isSuccessfulLogin(response)) {
+        if (isSuccessfulLogin(request, response)) {
             Timber.d("Modifying response for successful login");
 
             return new Response.Builder()
@@ -84,13 +88,20 @@ public class LoginRedirectInterceptor implements Interceptor {
         return response;
     }
 
-    private static boolean isSuccessfulLogin(@NonNull Response response) {
-        return response.isRedirect() && response.header("location").contains("uid");
+    private static boolean isSuccessfulLogin(@NonNull Request request, @NonNull Response response) {
+        // Just a straightforward success
+        if (request.url().toString().contains("Signin_r.asp") && response.code() == HTTP_OK) {
+            return true;
+        }
+
+        // Old-style API redirect response
+        return response.isRedirect() && value(response.header("location")).contains("uid");
     }
 
     private static boolean isKnownLoginFailure(@NonNull Response response) {
         try {
-            return response.body().string().contains("failed login");
+            ResponseBody body = response.body();
+            return body != null && body.string().contains("failed login");
         } catch (IOException ignored) {
             return false;
         }
