@@ -89,8 +89,10 @@ public class LoginRedirectInterceptor implements Interceptor {
     }
 
     private static boolean isSuccessfulLogin(@NonNull Request request, @NonNull Response response) {
-        // Just a straightforward success
-        if (request.url().toString().contains("Signin_r.asp") && response.code() == HTTP_OK) {
+        // Success with id in a cookie header
+        if (request.url().toString().contains("Signin_r.asp")
+                && response.code() == HTTP_OK
+                && LoginUtils.idFromStringList(response.headers("set-cookie")).isSome()) {
             return true;
         }
 
