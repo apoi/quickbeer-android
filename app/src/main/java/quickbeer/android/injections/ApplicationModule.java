@@ -35,7 +35,9 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Session;
+import quickbeer.android.providers.AutoLoginProvider;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.PreferencesProvider;
 import quickbeer.android.providers.ProgressStatusProvider;
@@ -112,5 +114,13 @@ public final class ApplicationModule {
     @Singleton
     static PreferencesProvider providePreferencesProvider(@ForApplication Context context) {
         return new PreferencesProvider(context);
+    }
+
+    @Provides
+    @Singleton
+    static AutoLoginProvider autoLoginProvider(DataLayer.GetUser getUser,
+                                               DataLayer.Login login,
+                                               ToastProvider toastProvider) {
+        return new AutoLoginProvider(getUser, login, toastProvider);
     }
 }

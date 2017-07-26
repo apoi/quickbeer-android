@@ -99,6 +99,7 @@
     <string name="low_storage_error">Barcode scanner dependencies cannot be downloaded due to low device storage</string>
 
     <!-- Login -->
+    <string name="auto_login_failed">Login failed! Some features may not be available without login.</string>
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
