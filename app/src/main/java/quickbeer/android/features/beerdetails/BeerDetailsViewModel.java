@@ -144,6 +144,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
 
         subscription.add(getBeer.call(beerId, false)
                 .filter(DataStreamNotification::isOnNext)
+                .take(1)
                 .map(DataStreamNotification::getValue)
                 .subscribe(beer -> notificationProvider.addNetworkSuccessListener(observable,
                         chooseSuccessString(beer, rating),
