@@ -84,6 +84,11 @@ class StyleDetailsFragment : BindingBaseFragment() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(Constants.ID_KEY, styleId)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.style_details_fragment_details, container, false)
     }
