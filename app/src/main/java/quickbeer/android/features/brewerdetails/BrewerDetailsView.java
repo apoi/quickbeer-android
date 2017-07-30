@@ -44,12 +44,12 @@ import quickbeer.android.analytics.Events.LaunchAction;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
-import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
 import timber.log.Timber;
 
@@ -106,7 +106,7 @@ public class BrewerDetailsView extends NestedScrollView {
 
     @Nullable
     @Inject
-    Countries countries;
+    CountryStore countryStore;
 
     @Nullable
     @Inject
@@ -136,7 +136,7 @@ public class BrewerDetailsView extends NestedScrollView {
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
-        checkNotNull(countries);
+        checkNotNull(countryStore);
         checkNotNull(resourceProvider);
 
         ofObj(brewer.founded())
@@ -183,9 +183,9 @@ public class BrewerDetailsView extends NestedScrollView {
                 });
 
         ofObj(brewer.countryId())
-                .map(countries::getItem)
+                .map(countryStore::getItem)
                 .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country)))
-                .map(Country::getName)
+                .map(Country.SimpleCountry::getName)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCountry::setText);
 
@@ -217,7 +217,7 @@ public class BrewerDetailsView extends NestedScrollView {
         get(analytics).createEvent(action);
     }
 
-    private void navigateToCountry(@NonNull Country country) {
+    private void navigateToCountry(@NonNull Country.SimpleCountry country) {
         Timber.d("navigateToCountry(%s)", country.getName());
 
         Intent intent = new Intent(getContext(), ListActivity.class);

@@ -19,45 +19,132 @@ package quickbeer.android.data.pojos;
 
 import android.support.annotation.NonNull;
 
-public class Country extends SimpleItem {
-    private final int id;
-    private final String name;
-    private final String code;
+import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
+import com.google.gson.annotations.JsonAdapter;
+import com.google.gson.annotations.SerializedName;
 
-    public Country(int id, String name, String code) {
-        this.id = id;
-        this.name = name;
-        this.code = code;
-    }
+import quickbeer.android.data.pojos.base.OverwritableBuilder;
 
-    @Override
-    public int getId() {
-        return id;
+import static io.reark.reark.utils.Preconditions.get;
+
+@SuppressWarnings("InnerClassReferencedViaSubclass")
+@JsonAdapter(AutoValue_Country.GsonTypeAdapter.class)
+@AutoValue
+public abstract class Country {
+
+    @SerializedName("id")
+    public abstract int id();
+
+    @NonNull
+    @SerializedName("name")
+    public abstract String name();
+
+    @NonNull
+    @SerializedName("official")
+    public abstract String official();
+
+    @NonNull
+    @SerializedName("code")
+    public abstract String code();
+
+    @NonNull
+    @SerializedName("refer")
+    public abstract String refer();
+
+    @NonNull
+    @SerializedName("capital")
+    public abstract String capital();
+
+    @NonNull
+    @SerializedName("region")
+    public abstract String region();
+
+    @NonNull
+    @SerializedName("subregion")
+    public abstract String subregion();
+
+    @NonNull
+    @SerializedName("wikipedia")
+    public abstract String wikipedia();
+
+    // Plumbing
+
+    @SuppressWarnings("ClassReferencesSubclass")
+    @AutoValue.Builder
+    public abstract static class Builder extends OverwritableBuilder<AutoValue_Country.Builder> {
+
+        public abstract Builder id(int value);
+
+        public abstract Builder name(@NonNull String value);
+
+        public abstract Builder official(@NonNull String value);
+
+        public abstract Builder code(@NonNull String value);
+
+        public abstract Builder refer(@NonNull String value);
+
+        public abstract Builder capital(@NonNull String value);
+
+        public abstract Builder region(@NonNull String value);
+
+        public abstract Builder subregion(@NonNull String value);
+
+        public abstract Builder wikipedia(@NonNull String value);
+
+        public abstract Country build();
+
+        @NonNull
+        @Override
+        protected Class<AutoValue_Country.Builder> getTypeParameterClass() {
+            return AutoValue_Country.Builder.class;
+        }
     }
 
     @NonNull
-    @Override
-    public String getName() {
-        return name;
+    public static TypeAdapter<Country> typeAdapter(@NonNull Gson gson) {
+        return new AutoValue_Country.GsonTypeAdapter(get(gson));
+    }
+
+    public abstract Builder toBuilder();
+
+    @NonNull
+    public static Country.Builder builder() {
+        return new AutoValue_Country.Builder();
     }
 
     @NonNull
-    @Override
-    public String getCode() {
-        return code;
+    public static Country merge(@NonNull Country v1, @NonNull Country v2) {
+        AutoValue_Country.Builder builder1 = (AutoValue_Country.Builder) get(v1).toBuilder();
+        AutoValue_Country.Builder builder2 = (AutoValue_Country.Builder) get(v2).toBuilder();
+
+        return builder1.overwrite(builder2).build();
     }
 
-    @NonNull
-    public String getFlagResourceName() {
-        switch (id) {
-            case 239:
-                return "flag_wales.png";
-            case 240:
-                return "flag_england.png";
-            case 241:
-                return "flag_scotland.png";
-            default:
-                return String.format("flag_%s.png", id);
+    public static class SimpleCountry extends SimpleItem {
+
+        private final Country country;
+
+        public SimpleCountry(@NonNull Country country) {
+            this.country = get(country);
+        }
+
+        @Override
+        public int getId() {
+            return country.id();
+        }
+
+        @NonNull
+        @Override
+        public String getName() {
+            return country.name();
+        }
+
+        @NonNull
+        @Override
+        public String getCode() {
+            return country.code();
         }
     }
 }

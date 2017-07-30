@@ -22,6 +22,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -65,10 +66,13 @@ public class BeerStyleStoreCore extends MemoryStoreCore<Integer, BeerStyle> {
             Type listType = new TypeToken<ArrayList<BeerStyle>>(){}.getType();
             List<BeerStyle> styleList = gson.fromJson(reader, listType);
 
+            reader.close();
+            input.close();
+
             Ix.from(styleList)
                     .subscribe(beerStyle -> put(beerStyle.id(), beerStyle));
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
             Timber.e(e, "Failed reading styles!");
         }
     }

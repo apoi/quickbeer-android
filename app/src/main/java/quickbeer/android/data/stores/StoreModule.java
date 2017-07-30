@@ -81,6 +81,14 @@ public final class StoreModule {
 
     @Provides
     @Singleton
+    static CountryStore provideCountryStore(
+            @NonNull ResourceProvider resourceProvider,
+            @Named("deserializingGson") @NonNull Gson gson) {
+        return new CountryStore(resourceProvider, gson);
+    }
+
+    @Provides
+    @Singleton
     static ReviewStore provideReviewStore(
             @NonNull ContentResolver contentResolver,
             @NonNull Gson gson) {

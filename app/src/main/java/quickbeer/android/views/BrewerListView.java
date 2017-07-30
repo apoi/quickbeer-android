@@ -35,8 +35,8 @@ import butterknife.ButterKnife;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Header;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.features.list.BrewerListAdapter;
-import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import rx.Observable;
@@ -62,7 +62,7 @@ public class BrewerListView extends FrameLayout {
 
     @Inject
     @Nullable
-    Countries countries;
+    CountryStore countryStore;
 
     public BrewerListView(Context context) {
         super(context);
@@ -82,7 +82,7 @@ public class BrewerListView extends FrameLayout {
                 .getComponent()
                 .inject(this);
 
-        brewerListAdapter = new BrewerListAdapter(get(countries));
+        brewerListAdapter = new BrewerListAdapter(get(countryStore));
         brewerListAdapter.setOnClickListener(v -> {
             final int itemPosition = brewersListView.getChildAdapterPosition(v);
             final int brewerId = brewerListAdapter.getBrewerViewModel(itemPosition).getBrewerId();

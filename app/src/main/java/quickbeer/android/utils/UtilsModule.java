@@ -37,11 +37,4 @@ public final class UtilsModule {
                                              @Named(Constants.API_KEY_NAME) String apiKey) {
         return new NetworkUtils(apiKey);
     }
-
-    @Provides
-    @Singleton
-    static Countries provideCountries() {
-        return new Countries();
-    }
-
 }

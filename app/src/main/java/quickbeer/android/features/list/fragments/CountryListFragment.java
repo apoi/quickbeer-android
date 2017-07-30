@@ -30,10 +30,10 @@ import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
-import quickbeer.android.utils.Countries;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode;
 import quickbeer.android.views.SimpleListView;
@@ -58,7 +58,7 @@ public class CountryListFragment extends BindingBaseFragment {
     SearchViewViewModel searchViewViewModel;
 
     @Inject
-    Countries countries;
+    CountryStore countryStore;
 
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
@@ -94,7 +94,7 @@ public class CountryListFragment extends BindingBaseFragment {
 
         checkNotNull(searchViewViewModel);
 
-        getView().setListSource(countries);
+        getView().setListSource(countryStore);
 
         searchViewViewModel.setMode(Mode.FILTER,
                 get(resourceProvider).getString(R.string.search_box_hint_filter_countries));

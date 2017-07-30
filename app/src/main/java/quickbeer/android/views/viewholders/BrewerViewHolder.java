@@ -30,7 +30,7 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.core.viewmodel.viewholder.BaseBindingViewHolder;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
-import quickbeer.android.utils.Countries;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,7 +53,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     TextView brewerCountry;
 
     @NonNull
-    private final Countries countries;
+    private final CountryStore countryStore;
 
     @NonNull
     private final DataBinder viewDataBinder = new SimpleDataBinder() {
@@ -70,11 +70,11 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     };
 
     public BrewerViewHolder(@NonNull View view,
-                            @NonNull Countries countries,
+                            @NonNull CountryStore countryStore,
                             @NonNull View.OnClickListener onClickListener) {
         super(view);
 
-        this.countries = countries;
+        this.countryStore = countryStore;
 
         ButterKnife.bind(this, view);
         view.setOnClickListener(onClickListener);
@@ -89,15 +89,15 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     public void setBrewer(@NonNull Brewer brewer) {
         brewerName.setText(brewer.name());
 
-        Option<Country> countryOption = ofObj(brewer.countryId())
-                .map(countries::getItem);
+        Option<Country.SimpleCountry> countryOption = ofObj(brewer.countryId())
+                .map(countryStore::getItem);
 
         countryOption.ifSome(c -> brewerCircle.setText(c.getCode()));
 
         ofObj(brewer.city())
                 .filter(StringUtils::hasValue)
                 .lift(countryOption, (city, country) -> String.format("%s, %s", city, country.getName()))
-                .orOption(() -> countryOption.map(Country::getName))
+                .orOption(() -> countryOption.map(Country.SimpleCountry::getName))
                 .orOption(() -> ofObj("Unknown"))
                 .ifSome(origin -> brewerCountry.setText(origin));
     }

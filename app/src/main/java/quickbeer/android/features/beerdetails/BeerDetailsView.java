@@ -46,6 +46,7 @@ import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.BeerStyleStore;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.profile.ProfileActivity;
@@ -54,7 +55,6 @@ import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
-import quickbeer.android.utils.Countries;
 import quickbeer.android.utils.DateUtils;
 import quickbeer.android.utils.StringUtils;
 import timber.log.Timber;
@@ -124,11 +124,11 @@ public class BeerDetailsView extends NestedScrollView {
 
     @Nullable
     @Inject
-    BeerStyleStore beerStyleStore;
+    CountryStore countryStore;
 
     @Nullable
     @Inject
-    Countries countries;
+    BeerStyleStore beerStyleStore;
 
     @Nullable
     @Inject
@@ -251,12 +251,12 @@ public class BeerDetailsView extends NestedScrollView {
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
-        checkNotNull(countries);
+        checkNotNull(countryStore);
 
         ofObj(brewer.countryId())
-                .map(countries::getItem)
+                .map(countryStore::getItem)
                 .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
-                .map(Country::getName)
+                .map(Country.SimpleCountry::getName)
                 .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableString)
                 .ifSome(brewerLocation::setText);
@@ -285,7 +285,7 @@ public class BeerDetailsView extends NestedScrollView {
         getContext().startActivity(intent);
     }
 
-    private void navigateToCountry(@NonNull Country country) {
+    private void navigateToCountry(@NonNull Country.SimpleCountry country) {
         Timber.d("navigateToCountry(%s)", country.getName());
 
         Intent intent = new Intent(getContext(), ListActivity.class);
