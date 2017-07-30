@@ -54,11 +54,11 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
     }
 
     fun setStyle(style: BeerStyle) {
-        style_description.text = style.description()
+        style_description.text = style.description
     }
 
     fun setParent(style: BeerStyle) {
-        style_parent.text = style.name()
+        style_parent.text = style.name
     }
 
     private fun showToast(@StringRes resource: Int) {

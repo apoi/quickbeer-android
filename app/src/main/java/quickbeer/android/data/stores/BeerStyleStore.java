@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import java.util.Collection;
+import java.util.Objects;
 
 import io.reark.reark.data.stores.DefaultStore;
 import ix.Ix;
@@ -17,40 +18,38 @@ import rx.Observable;
 
 public class BeerStyleStore
         extends DefaultStore<Integer, BeerStyle, Option<BeerStyle>>
-        implements SimpleListSource<BeerStyle.SimpleStyle> {
+        implements SimpleListSource<BeerStyle> {
 
     public BeerStyleStore(@NonNull ResourceProvider resourceProvider, @NonNull Gson gson) {
         super(new BeerStyleStoreCore(resourceProvider, gson),
-                BeerStyle::id,
+                BeerStyle::getId,
                 Option::ofObj,
                 Option::none);
     }
 
     @Override
-    public BeerStyle.SimpleStyle getItem(int id) {
+    public BeerStyle getItem(int id) {
         return getOnce(id)
                 .toBlocking()
                 .value()
-                .map(BeerStyle.SimpleStyle::new)
                 .orDefault(() -> null);
     }
 
     @Override
-    public Collection<BeerStyle.SimpleStyle> getList() {
+    public Collection<BeerStyle> getList() {
         return getOnce()
                 .toObservable()
                 .flatMap(Observable::from)
-                .filter(style -> style.parent() > -1)
-                .map(BeerStyle.SimpleStyle::new)
+                .filter(style -> style.getParent() > -1)
                 .toList()
                 .toBlocking()
                 .first();
     }
 
     @NonNull
-    public Option<BeerStyle.SimpleStyle> getStyle(@NonNull String styleName) {
+    public Option<BeerStyle> getStyle(@NonNull String styleName) {
         return Ix.from(getList())
-                .filter(value -> value.getName().equals(styleName))
+                .filter(value -> Objects.equals(value.getName(), styleName))
                 .map(Option::ofObj)
                 .first(Option.none());
     }

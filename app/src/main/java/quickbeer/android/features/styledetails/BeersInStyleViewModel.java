@@ -84,13 +84,13 @@ public class BeersInStyleViewModel extends BeerListViewModel {
     @NonNull
     public Single<Option<String>> styleName() {
         return beerStyleStore.getOnce(styleId)
-                .map(option -> option.map(BeerStyle::name));
+                .map(option -> option.map(BeerStyle::getName));
     }
 
     @NonNull
     public Single<Option<String>> styleDescription() {
         return beerStyleStore.getOnce(styleId)
-                .map(option -> option.map(BeerStyle::description));
+                .map(option -> option.map(BeerStyle::getDescription));
     }
 
     @NonNull

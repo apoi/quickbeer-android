@@ -203,7 +203,7 @@ public class BeerDetailsView extends NestedScrollView {
                 .map(beerStyleStore::getItem)
                 .orOption(() -> ofObj(beer.styleName()).flatMap(beerStyleStore::getStyle))
                 .ifSome(style -> beerStyleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
-                .map(BeerStyle.SimpleStyle::getName)
+                .map(BeerStyle::getName)
                 .orOption(this::notAvailableString)
                 .ifSome(beerStyle::setText);
 

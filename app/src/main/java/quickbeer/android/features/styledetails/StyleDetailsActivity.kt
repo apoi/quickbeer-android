@@ -106,7 +106,7 @@ class StyleDetailsActivity : BindingDrawerActivity() {
     }
 
     private fun setToolbarDetails(style: BeerStyle) {
-        collapsing_toolbar.title = style.name()
+        collapsing_toolbar.title = style.name
     }
 
     override fun inject() {

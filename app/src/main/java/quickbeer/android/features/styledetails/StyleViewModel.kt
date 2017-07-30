@@ -48,7 +48,7 @@ internal constructor(@Named("id") private val styleId: Integer,
                 .compose { RxUtils.pickValue(it) }
                 .first()
                 .toSingle()
-                .flatMap { getStyle.call(it.parent()) }
+                .flatMap { getStyle.call(it.parent) }
     }
 
     override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {
