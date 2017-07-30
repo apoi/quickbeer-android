@@ -22,7 +22,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="@dimen/card_inner_margin"
-            android:paddingBottom="@dimen/card_inner_margin"
             android:clipChildren="false">
 
             <LinearLayout

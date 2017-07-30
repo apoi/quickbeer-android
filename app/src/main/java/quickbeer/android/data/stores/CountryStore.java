@@ -23,10 +23,8 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 
 import java.util.Collection;
-import java.util.Objects;
 
 import io.reark.reark.data.stores.DefaultStore;
-import ix.Ix;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.stores.cores.CountryStoreCore;
