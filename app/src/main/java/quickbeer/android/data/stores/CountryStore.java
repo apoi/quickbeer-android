@@ -32,44 +32,30 @@ import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.stores.cores.CountryStoreCore;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.utils.SimpleListSource;
-import rx.Observable;
 
 public class CountryStore
         extends DefaultStore<Integer, Country, Option<Country>>
-        implements SimpleListSource<Country.SimpleCountry> {
+        implements SimpleListSource<Country> {
 
     public CountryStore(@NonNull ResourceProvider resourceProvider, @NonNull Gson gson) {
         super(new CountryStoreCore(resourceProvider, gson),
-                Country::id,
+                Country::getId,
                 Option::ofObj,
                 Option::none);
     }
 
     @Override
-    public Country.SimpleCountry getItem(int id) {
+    public Country getItem(int id) {
         return getOnce(id)
                 .toBlocking()
                 .value()
-                .map(Country.SimpleCountry::new)
                 .orDefault(() -> null);
     }
 
     @Override
-    public Collection<Country.SimpleCountry> getList() {
+    public Collection<Country> getList() {
         return getOnce()
-                .toObservable()
-                .flatMap(Observable::from)
-                .map(Country.SimpleCountry::new)
-                .toList()
                 .toBlocking()
-                .first();
-    }
-
-    @NonNull
-    public Option<Country.SimpleCountry> getStyle(@NonNull String countryName) {
-        return Ix.from(getList())
-                .filter(value -> Objects.equals(value.getName(), countryName))
-                .map(Option::ofObj)
-                .first(Option.none());
+                .value();
     }
 }

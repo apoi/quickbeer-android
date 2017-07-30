@@ -185,7 +185,7 @@ public class BrewerDetailsView extends NestedScrollView {
         ofObj(brewer.countryId())
                 .map(countryStore::getItem)
                 .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country)))
-                .map(Country.SimpleCountry::getName)
+                .map(Country::getName)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCountry::setText);
 
@@ -217,7 +217,7 @@ public class BrewerDetailsView extends NestedScrollView {
         get(analytics).createEvent(action);
     }
 
-    private void navigateToCountry(@NonNull Country.SimpleCountry country) {
+    private void navigateToCountry(@NonNull Country country) {
         Timber.d("navigateToCountry(%s)", country.getName());
 
         Intent intent = new Intent(getContext(), ListActivity.class);

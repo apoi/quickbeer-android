@@ -31,8 +31,8 @@ import java.util.*
 import javax.inject.Inject
 
 class CountryStoreCore @Inject
-internal constructor(private val resourceProvider: ResourceProvider,
-                     private val gson: Gson)
+internal constructor(resourceProvider: ResourceProvider,
+                     gson: Gson)
     : MemoryStoreCore<Int, Country>() {
 
     init {
@@ -47,7 +47,7 @@ internal constructor(private val resourceProvider: ResourceProvider,
             input.close()
 
             Ix.from(countryList)
-                    .subscribe { country -> put(country.id(), country) }
+                    .subscribe { country -> put(country.getId(), country) }
 
         } catch (e: IOException) {
             Timber.e(e, "Failed reading countries!")

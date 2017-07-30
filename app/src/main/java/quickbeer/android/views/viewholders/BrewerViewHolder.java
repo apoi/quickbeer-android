@@ -89,7 +89,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
     public void setBrewer(@NonNull Brewer brewer) {
         brewerName.setText(brewer.name());
 
-        Option<Country.SimpleCountry> countryOption = ofObj(brewer.countryId())
+        Option<Country> countryOption = ofObj(brewer.countryId())
                 .map(countryStore::getItem);
 
         countryOption.ifSome(c -> brewerCircle.setText(c.getCode()));
@@ -97,7 +97,7 @@ public class BrewerViewHolder extends BaseBindingViewHolder<BrewerViewModel> {
         ofObj(brewer.city())
                 .filter(StringUtils::hasValue)
                 .lift(countryOption, (city, country) -> String.format("%s, %s", city, country.getName()))
-                .orOption(() -> countryOption.map(Country.SimpleCountry::getName))
+                .orOption(() -> countryOption.map(Country::getName))
                 .orOption(() -> ofObj("Unknown"))
                 .ifSome(origin -> brewerCountry.setText(origin));
     }
