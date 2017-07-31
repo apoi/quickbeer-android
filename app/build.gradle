@@ -18,10 +18,17 @@ android {
 
         minSdkVersion 19
         targetSdkVersion 25
+        multiDexEnabled true
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
 
         buildConfigField(STRING, "RATEBEER_API_KEY", ratebeer_api_key)
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
     }
     dexOptions {
         preDexLibraries false
@@ -60,10 +67,14 @@ dependencies {
     implementation project(':reark')
     implementation project(':materialsearch')
 
+    implementation 'com.android.support:support-v4:25.3.1'
     implementation 'com.android.support:recyclerview-v7:25.3.1'
     implementation 'com.android.support:appcompat-v7:25.3.1'
     implementation 'com.android.support:design:25.3.1'
     implementation 'com.android.support:cardview-v7:25.3.1'
+
+    // Damnit multidex
+    implementation 'com.android.support:multidex:1.0.1'
 
     // Firebase
     implementation 'com.google.firebase:firebase-core:10.2.1'
@@ -96,6 +107,15 @@ dependencies {
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.0.0-RC1@aar'
+    implementation 'com.github.bumptech.glide:glide:4.0.0-RC1'
+    implementation 'com.github.bumptech.glide:annotations:4.0.0-RC1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
+
+    // AndroidSVG
+    implementation 'com.caverock:androidsvg:1.2.1'
+
     // PhotoView
     implementation 'com.github.chrisbanes:PhotoView:2.0.0'
 
@@ -112,11 +132,14 @@ dependencies {
     // Cookie Jar
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okhttp3:okhttp-android-support:3.8.1'
+
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
-    implementation 'com.squareup.okhttp3:okhttp-android-support:3.8.0'
 
     // Stetho
     debugImplementation 'com.facebook.stetho:stetho:1.5.0'

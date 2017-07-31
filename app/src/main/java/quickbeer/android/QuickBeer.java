@@ -17,9 +17,9 @@
  */
 package quickbeer.android;
 
-import android.app.Application;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.multidex.MultiDexApplication;
 
 import com.jakewharton.threetenabp.AndroidThreeTen;
 import com.squareup.leakcanary.LeakCanary;
@@ -35,7 +35,7 @@ import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
-public class QuickBeer extends Application {
+public class QuickBeer extends MultiDexApplication {
 
     @Nullable
     private Graph graph;
