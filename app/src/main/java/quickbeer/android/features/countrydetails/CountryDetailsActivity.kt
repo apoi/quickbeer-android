@@ -17,8 +17,12 @@
  */
 package quickbeer.android.features.countrydetails
 
+import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
@@ -32,6 +36,7 @@ import quickbeer.android.data.pojos.Country
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.glide.SvgSoftwareLayerSetter
 import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -97,6 +102,14 @@ class CountryDetailsActivity : BindingDrawerActivity() {
 
     private fun setToolbarDetails(country: Country) {
         collapsing_toolbar.title = country.name
+        toolbar_overlay_gradient.visibility = View.VISIBLE
+
+        Glide.with(this)
+                .`as`(PictureDrawable::class.java)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .listener(SvgSoftwareLayerSetter())
+                .load(String.format(Constants.FLAG_IMAGE_PATH, country.refer.toLowerCase()))
+                .into(collapsing_toolbar_background)
     }
 
     override fun inject() {

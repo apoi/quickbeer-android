@@ -94,9 +94,10 @@
     <string name="style_details_parent">Parent Category</string>
 
     <!-- Country details -->
+    <string name="country_official_name">Official Name</string>
     <string name="country_region">Region</string>
     <string name="country_capital">Capital</string>
-    <string name="country_beer_culture">Beer in %s</string>
+    <string name="country_beer_culture">Beer Culture</string>
 
     <!-- Barcode scanner -->
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>

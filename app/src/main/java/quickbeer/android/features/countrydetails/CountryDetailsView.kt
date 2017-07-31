@@ -21,6 +21,7 @@ import android.content.Context
 import android.support.annotation.StringRes
 import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Toast
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.country_details_fragment_details.view.*
@@ -29,6 +30,7 @@ import quickbeer.android.core.activity.InjectingDrawerActivity
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
+import quickbeer.android.utils.StringUtils
 import javax.inject.Inject
 
 /**
@@ -54,9 +56,15 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
     }
 
     fun setCountry(country: Country) {
+        country_official_name.text = country.official
         country_region.text = country.subregion
         country_capital.text = country.capital
-        country_description.text = country.description
+        country_culture.text = country.description
+
+        if (!StringUtils.hasValue(country.description)) {
+            country_culture_divider.visibility = View.GONE
+            country_culture_layout.visibility = View.GONE
+        }
     }
 
     private fun showToast(@StringRes resource: Int) {

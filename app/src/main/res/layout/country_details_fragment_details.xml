@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/card_view_margin"
+    android:paddingBottom="20dp"
     android:clipToPadding="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -31,6 +32,24 @@
 
                 <TextView
                     style="@style/DetailsTitle"
+                    android:text="@string/country_official_name"/>
+
+                <TextView
+                    style="@style/DetailsValue"
+                    android:id="@+id/country_official_name"
+                    tools:text="The Bestest Country"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_horizontal" />
+
+            <LinearLayout
+                style="@style/DetailsRowLayout"
+                android:paddingStart="@dimen/card_inner_margin"
+                android:paddingEnd="@dimen/card_inner_margin">
+
+                <TextView
+                    style="@style/DetailsTitle"
                     android:text="@string/country_region"/>
 
                 <TextView
@@ -39,6 +58,8 @@
                     tools:text="Northern Europe"/>
 
             </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_horizontal" />
 
             <LinearLayout
                 style="@style/DetailsRowLayout"
@@ -56,10 +77,13 @@
 
             </LinearLayout>
 
-            <include layout="@layout/beer_details_separator_horizontal" />
+            <include
+                android:id="@+id/country_culture_divider"
+                layout="@layout/beer_details_separator_horizontal" />
 
             <LinearLayout
                 style="@style/DetailsRowLayout"
+                android:id="@+id/country_culture_layout"
                 android:layout_margin="@dimen/card_inner_margin">
 
                 <TextView
@@ -68,7 +92,7 @@
 
                 <TextView
                     style="@style/DetailsDescription"
-                    android:id="@+id/country_description"
+                    android:id="@+id/country_culture"
                     tools:text="This is a long country description that goes on and on for a while"/>
 
             </LinearLayout>
