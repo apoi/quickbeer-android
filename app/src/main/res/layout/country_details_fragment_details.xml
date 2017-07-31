@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quickbeer.android.features.countrydetails.CountryDetailsView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/country_details_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/card_view_margin"
+    android:clipToPadding="false"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/card_view_margin"
+        app:cardBackgroundColor="@color/gray_800"
+        android:elevation="@dimen/card_view_elevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/card_inner_margin"
+            android:clipChildren="false">
+
+            <LinearLayout
+                style="@style/DetailsRowLayout"
+                android:paddingStart="@dimen/card_inner_margin"
+                android:paddingEnd="@dimen/card_inner_margin">
+
+                <TextView
+                    style="@style/DetailsTitle"
+                    android:text="@string/country_region"/>
+
+                <TextView
+                    style="@style/DetailsValue"
+                    android:id="@+id/country_region"
+                    tools:text="Northern Europe"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/DetailsRowLayout"
+                android:paddingStart="@dimen/card_inner_margin"
+                android:paddingEnd="@dimen/card_inner_margin">
+
+                <TextView
+                    style="@style/DetailsTitle"
+                    android:text="@string/country_capital"/>
+
+                <TextView
+                    style="@style/DetailsValue"
+                    android:id="@+id/country_capital"
+                    tools:text="Berlin"/>
+
+            </LinearLayout>
+
+            <include layout="@layout/beer_details_separator_horizontal" />
+
+            <LinearLayout
+                style="@style/DetailsRowLayout"
+                android:layout_margin="@dimen/card_inner_margin">
+
+                <TextView
+                    style="@style/DetailsTitle"
+                    android:text="@string/country_beer_culture"/>
+
+                <TextView
+                    style="@style/DetailsDescription"
+                    android:id="@+id/country_description"
+                    tools:text="This is a long country description that goes on and on for a while"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</quickbeer.android.features.countrydetails.CountryDetailsView>

@@ -61,7 +61,7 @@ public final class NetworkModule {
     @Singleton
     public static NetworkApi provideNetworkApi(
             @NonNull OkHttpClient client,
-            @Named("deserializingGson")@NonNull Gson gson) {
+            @Named("deserializingGson") @NonNull Gson gson) {
         return new NetworkApi(client, gson);
     }
 

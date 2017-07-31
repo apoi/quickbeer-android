@@ -26,6 +26,7 @@ import polanski.option.Option;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
+import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.pojos.User;
@@ -156,5 +157,10 @@ public interface DataLayer {
     interface GetStyle {
         @NonNull
         Single<Option<BeerStyle>> call(int styleId);
+    }
+
+    interface GetCountry {
+        @NonNull
+        Single<Option<Country>> call(int countryId);
     }
 }

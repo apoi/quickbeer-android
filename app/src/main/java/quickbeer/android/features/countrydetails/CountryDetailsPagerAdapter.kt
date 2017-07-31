@@ -1,4 +1,4 @@
-/**
+/*
  * This file is part of QuickBeer.
  * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
@@ -15,30 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.data.pojos
+package quickbeer.android.features.countrydetails
 
-data class Country(private val id: Int,
-                   private val name: String,
-                   val official: String,
-                   private val code: String,
-                   val refer: String,
-                   val capital: String,
-                   val region: String,
-                   val subregion: String,
-                   val wikipedia: String,
-                   val wikipedia_beer: String,
-                   val description: String)
-    : SimpleItem() {
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentPagerAdapter
 
-    override fun getId(): Int {
-        return id
+class CountryDetailsPagerAdapter(fm: FragmentManager, private val countryId: Int) : FragmentPagerAdapter(fm) {
+
+    override fun getCount(): Int {
+        return 2
     }
 
-    override fun getName(): String {
-        return name
+    override fun getItem(position: Int): Fragment {
+        when (position) {
+            0 -> return CountryDetailsFragment.newInstance(countryId)
+            else -> return CountryDetailsBeersFragment.newInstance(countryId)
+        }
     }
 
-    override fun getCode(): String {
-        return code
+    override fun getPageTitle(position: Int): CharSequence {
+        when (position) {
+            0 -> return "Details"
+            else -> return "Top Beers"
+        }
     }
 }

@@ -93,6 +93,11 @@
     <string name="style_details_description">Description</string>
     <string name="style_details_parent">Parent Category</string>
 
+    <!-- Country details -->
+    <string name="country_region">Region</string>
+    <string name="country_capital">Capital</string>
+    <string name="country_beer_culture">Beer in %s</string>
+
     <!-- Barcode scanner -->
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
     <string name="no_camera_permission">Barcode scanner cannot run because it does not have the camera permission.</string>

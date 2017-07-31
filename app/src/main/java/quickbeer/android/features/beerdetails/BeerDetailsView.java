@@ -48,7 +48,7 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.features.brewerdetails.BrewerDetailsActivity;
-import quickbeer.android.features.list.ListActivity;
+import quickbeer.android.features.countrydetails.CountryDetailsActivity;
 import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.features.styledetails.StyleDetailsActivity;
 import quickbeer.android.providers.NavigationProvider;
@@ -255,7 +255,7 @@ public class BeerDetailsView extends NestedScrollView {
 
         ofObj(brewer.countryId())
                 .map(countryStore::getItem)
-                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country)))
+                .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country.getId())))
                 .map(Country::getName)
                 .map(country -> String.format("%s, %s", brewer.city(), country))
                 .orOption(this::notAvailableString)
@@ -285,12 +285,12 @@ public class BeerDetailsView extends NestedScrollView {
         getContext().startActivity(intent);
     }
 
-    private void navigateToCountry(@NonNull Country country) {
-        Timber.d("navigateToCountry(%s)", country.getName());
+    private void navigateToCountry(@NonNull Integer countryId) {
+        Timber.d("navigateToCountry(%s)", countryId);
 
-        Intent intent = new Intent(getContext(), ListActivity.class);
+        Intent intent = new Intent(getContext(), CountryDetailsActivity.class);
         intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
-        intent.putExtra("countryId", country.getId());
+        intent.putExtra(Constants.ID_KEY, countryId);
         getContext().startActivity(intent);
     }
 

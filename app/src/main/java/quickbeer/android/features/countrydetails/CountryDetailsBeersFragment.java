@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.list.fragments;
+package quickbeer.android.features.countrydetails;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,21 +23,30 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.R;
+import quickbeer.android.features.list.fragments.BeerListFragment;
 import quickbeer.android.injections.IdModule;
-import quickbeer.android.viewmodels.BeerListViewModel;
-import quickbeer.android.viewmodels.BeersInCountryViewModel;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeersInCountryFragment extends BeerListFragment {
+public class CountryDetailsBeersFragment extends BeerListFragment {
 
     @Nullable
     @Inject
     BeersInCountryViewModel beersInCountryViewModel;
 
     private int countryId;
+
+    @NonNull
+    public static CountryDetailsBeersFragment newInstance(int countryId) {
+        Bundle bundle = new Bundle();
+        bundle.putInt("countryId", countryId);
+        CountryDetailsBeersFragment fragment = new CountryDetailsBeersFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +69,11 @@ public class BeersInCountryFragment extends BeerListFragment {
     }
 
     @Override
+    protected int getLayout() {
+        return R.layout.beer_list_fragment_paged;
+    }
+
+    @Override
     protected void inject() {
         super.inject();
 
@@ -70,7 +84,7 @@ public class BeersInCountryFragment extends BeerListFragment {
 
     @NonNull
     @Override
-    protected BeerListViewModel viewModel() {
+    protected BeersInCountryViewModel viewModel() {
         return get(beersInCountryViewModel);
     }
 

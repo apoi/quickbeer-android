@@ -33,12 +33,12 @@ import javax.inject.Named;
 import quickbeer.android.R;
 import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.about.AboutDetailsFragment;
+import quickbeer.android.features.countrydetails.CountryDetailsPagerFragment;
 import quickbeer.android.features.home.HomeActivity;
 import quickbeer.android.features.home.HomeFragment;
 import quickbeer.android.features.list.ListActivity;
 import quickbeer.android.features.list.fragments.BarcodeSearchFragment;
 import quickbeer.android.features.list.fragments.BeerSearchFragment;
-import quickbeer.android.features.list.fragments.BeersInCountryFragment;
 import quickbeer.android.features.list.fragments.CountryListFragment;
 import quickbeer.android.features.list.fragments.ReviewedBeersFragment;
 import quickbeer.android.features.list.fragments.StyleListFragment;
@@ -249,7 +249,7 @@ public final class NavigationProvider {
             case COUNTRY_LIST:
                 return new CountryListFragment();
             case COUNTRY:
-                return new BeersInCountryFragment();
+                return new CountryDetailsPagerFragment();
             case STYLE_LIST:
                 return new StyleListFragment();
             case STYLE:

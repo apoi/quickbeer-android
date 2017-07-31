@@ -37,6 +37,7 @@ import quickbeer.android.data.pojos.BeerMetadata;
 import quickbeer.android.data.pojos.BeerStyle;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.BrewerMetadata;
+import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.pojos.User;
@@ -47,6 +48,7 @@ import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.data.stores.BrewerListStore;
 import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
@@ -107,6 +109,9 @@ public class ApplicationDataLayer {
     @NonNull
     private final BeerStyleStore beerStyleStore;
 
+    @NonNull
+    private final CountryStore countryStore;
+
     @Inject
     public ApplicationDataLayer(@NonNull Context context,
                                 @NonNull UserStore userStore,
@@ -119,7 +124,8 @@ public class ApplicationDataLayer {
                                 @NonNull BrewerStore brewerStore,
                                 @NonNull BrewerListStore brewerListStore,
                                 @NonNull BrewerMetadataStore brewerMetadataStore,
-                                @NonNull BeerStyleStore beerStyleStore) {
+                                @NonNull BeerStyleStore beerStyleStore,
+                                @NonNull CountryStore countryStore) {
         this.context = get(context);
         this.requestStatusStore = get(requestStatusStore);
         this.userStore = get(userStore);
@@ -132,6 +138,7 @@ public class ApplicationDataLayer {
         this.brewerListStore = get(brewerListStore);
         this.brewerMetadataStore = get(brewerMetadataStore);
         this.beerStyleStore = get(beerStyleStore);
+        this.countryStore = get(countryStore);
     }
 
     private static int createListenerId() {
@@ -864,4 +871,11 @@ public class ApplicationDataLayer {
         return beerStyleStore.getOnce(styleId);
     }
 
+    //// COUNTRIES
+
+    public Single<Option<Country>> getCountry(int countryId) {
+        Timber.v("getCountry(%s)", countryId);
+
+        return countryStore.getOnce(countryId);
+    }
 }

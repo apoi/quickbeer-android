@@ -15,43 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.styledetails
+package quickbeer.android.features.countrydetails
 
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.DataLayer
-import quickbeer.android.data.pojos.BeerStyle
+import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.BeerListViewModel
 import rx.Observable
 import rx.Single
 import javax.inject.Inject
 import javax.inject.Named
 
-class StyleViewModel @Inject
-internal constructor(@Named("id") private val styleId: Int,
-                     private val getStyle: DataLayer.GetStyle,
-                     private val getBeersInStyle: DataLayer.GetBeersInStyle,
+class CountryViewModel @Inject
+internal constructor(@Named("id") private val countryId: Int,
+                     private val getCountry: DataLayer.GetCountry,
+                     private val getBeersInCountry: DataLayer.GetBeersInCountry,
                      getBeer: DataLayer.GetBeer,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(getBeer, progressStatusProvider) {
 
-    fun getStyle(): Single<Option<BeerStyle>> {
-        return getStyle.call(styleId.toInt());
-    }
-
-    fun getParentStyle(): Single<Option<BeerStyle>> {
-        return getStyle()
-                .toObservable()
-                .compose { RxUtils.pickValue(it) }
-                .first()
-                .toSingle()
-                .flatMap { getStyle.call(it.parent) }
+    fun getCountry(): Single<Option<Country>> {
+        return getCountry.call(countryId.toInt());
     }
 
     override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {
-        return getBeersInStyle.call(styleId.toString())
+        return getBeersInCountry.call(countryId.toString())
     }
 }

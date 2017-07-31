@@ -34,6 +34,7 @@ import quickbeer.android.data.stores.BeerStyleStore;
 import quickbeer.android.data.stores.BrewerListStore;
 import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
+import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.data.stores.NetworkRequestStatusStore;
 import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
@@ -196,6 +197,12 @@ public final class DataModule {
     }
 
     @Provides
+    static DataLayer.GetCountry provideGetCountry(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::getCountry;
+    }
+
+    @Provides
     @Singleton
     static ApplicationDataLayer provideApplicationDataLayer(
             @ForApplication @NonNull Context context,
@@ -209,7 +216,8 @@ public final class DataModule {
             @NonNull BrewerStore brewerStore,
             @NonNull BrewerListStore brewerListStore,
             @NonNull BrewerMetadataStore brewerMetadataStore,
-            @NonNull BeerStyleStore beerStyleStore) {
+            @NonNull BeerStyleStore beerStyleStore,
+            @NonNull CountryStore countryStore) {
         return new ApplicationDataLayer(context,
                 userStore,
                 requestStatusStore,
@@ -221,7 +229,8 @@ public final class DataModule {
                 brewerStore,
                 brewerListStore,
                 brewerMetadataStore,
-                beerStyleStore);
+                beerStyleStore,
+                countryStore);
     }
 
     @Provides

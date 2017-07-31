@@ -35,6 +35,8 @@ public interface Events {
         BREWER_BEERS("screen_brewer_beers"),
         STYLE_DETAILS("screen_style_details"),
         STYLE_BEERS("screen_style_beers"),
+        COUNTRY_DETAILS("screen_country_details"),
+        COUNTRY_BEERS("screen_country_beers"),
         BARCODE_SCANNER("screen_barcode_scanner"),
         TOP_BEERS("screen_top_beers"),
         COUNTRY_LIST("screen_country_list"),
