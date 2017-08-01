@@ -41,6 +41,8 @@ public interface Constants {
 
     String TWITTER_PATH = "https://www.twitter.com/%s";
 
+    String WIKIPEDIA_PATH = "https://en.m.wikipedia.org/wiki/%s";
+
     String LOGIN_DEFAULT_SAVE_INFO = "on";
 
     String META_QUERY_PREFIX = "__";

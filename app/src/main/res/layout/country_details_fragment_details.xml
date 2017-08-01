@@ -27,6 +27,7 @@
 
             <LinearLayout
                 style="@style/DetailsRowLayout"
+                android:id="@+id/country_official_name_layout"
                 android:paddingStart="@dimen/card_inner_margin"
                 android:paddingEnd="@dimen/card_inner_margin">
 
@@ -45,6 +46,7 @@
 
             <LinearLayout
                 style="@style/DetailsRowLayout"
+                android:id="@+id/country_region_layout"
                 android:paddingStart="@dimen/card_inner_margin"
                 android:paddingEnd="@dimen/card_inner_margin">
 
@@ -63,6 +65,7 @@
 
             <LinearLayout
                 style="@style/DetailsRowLayout"
+                android:id="@+id/country_capital_layout"
                 android:paddingStart="@dimen/card_inner_margin"
                 android:paddingEnd="@dimen/card_inner_margin">
 

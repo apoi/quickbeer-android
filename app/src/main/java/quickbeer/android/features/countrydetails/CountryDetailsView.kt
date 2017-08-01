@@ -18,6 +18,8 @@
 package quickbeer.android.features.countrydetails
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.support.annotation.StringRes
 import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
@@ -25,6 +27,7 @@ import android.view.View
 import android.widget.Toast
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.country_details_fragment_details.view.*
+import quickbeer.android.Constants
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.core.activity.InjectingDrawerActivity
 import quickbeer.android.data.pojos.Country
@@ -61,6 +64,10 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
         country_capital.text = country.capital
         country_culture.text = country.description
 
+        country_official_name_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.wikipedia) })
+        country_region_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.subregion) })
+        country_capital_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.capital) })
+
         if (!StringUtils.hasValue(country.description)) {
             country_culture_divider.visibility = View.GONE
             country_culture_layout.visibility = View.GONE
@@ -69,5 +76,10 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
 
     private fun showToast(@StringRes resource: Int) {
         get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG)
+    }
+
+    private fun openWikipedia(article: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Constants.WIKIPEDIA_PATH, article)))
+        context.startActivity(intent)
     }
 }
