@@ -59,7 +59,7 @@ public final class StoreModule {
     @Singleton
     static BeerStyleStore provideBeerStyleStore(
             @NonNull ResourceProvider resourceProvider,
-            @Named("deserializingGson") @NonNull Gson gson) {
+            @NonNull Gson gson) {
         return new BeerStyleStore(resourceProvider, gson);
     }
 
