@@ -76,6 +76,11 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
+    <style name="DetailsLicense" parent="DetailsDescription">
+        <item name="android:textColor">@color/gray_500</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
     <style name="DetailsRowLayout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

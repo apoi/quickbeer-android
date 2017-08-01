@@ -7,126 +7,141 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/card_view_margin"
-    android:paddingBottom="20dp"
+    android:paddingBottom="@dimen/card_view_margin"
     android:clipToPadding="false"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:layout_margin="@dimen/card_view_margin"
-        app:cardBackgroundColor="@color/gray_800"
-        android:elevation="@dimen/card_view_elevation">
+        android:paddingBottom="@dimen/card_view_margin">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/card_inner_margin"
-            android:clipChildren="false">
+            app:cardBackgroundColor="@color/gray_800"
+            android:layout_marginBottom="@dimen/card_view_margin"
+            android:elevation="@dimen/card_view_elevation">
 
             <LinearLayout
-                style="@style/DetailsRowLayout"
-                android:id="@+id/country_official_name_layout"
-                android:paddingStart="@dimen/card_inner_margin"
-                android:paddingEnd="@dimen/card_inner_margin">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/card_inner_margin"
+                android:clipChildren="false">
 
-                <TextView
-                    style="@style/DetailsTitle"
-                    android:text="@string/country_official_name"/>
-
-                <TextView
-                    style="@style/DetailsValue"
-                    android:id="@+id/country_official_name"
-                    tools:text="The Bestest Country"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/beer_details_separator_horizontal" />
-
-            <LinearLayout
-                style="@style/DetailsRowLayout"
-                android:id="@+id/country_region_layout"
-                android:paddingStart="@dimen/card_inner_margin"
-                android:paddingEnd="@dimen/card_inner_margin">
-
-                <TextView
-                    style="@style/DetailsTitle"
-                    android:text="@string/country_region"/>
-
-                <TextView
-                    style="@style/DetailsValue"
-                    android:id="@+id/country_region"
-                    tools:text="Northern Europe"/>
-
-            </LinearLayout>
-
-            <include layout="@layout/beer_details_separator_horizontal" />
-
-            <LinearLayout
-                style="@style/DetailsRowLayout"
-                android:id="@+id/country_capital_layout"
-                android:paddingStart="@dimen/card_inner_margin"
-                android:paddingEnd="@dimen/card_inner_margin">
-
-                <TextView
-                    style="@style/DetailsTitle"
-                    android:text="@string/country_capital"/>
-
-                <TextView
-                    style="@style/DetailsValue"
-                    android:id="@+id/country_capital"
-                    tools:text="Berlin"/>
-
-            </LinearLayout>
-
-            <include
-                android:id="@+id/country_culture_divider"
-                layout="@layout/beer_details_separator_horizontal" />
-
-            <LinearLayout
-                style="@style/DetailsRowLayout"
-                android:id="@+id/country_culture_layout"
-                android:layout_margin="@dimen/card_inner_margin">
-
-                <TextView
-                    style="@style/DetailsTitle"
-                    android:text="@string/country_beer_culture"/>
-
-                <TextView
-                    style="@style/DetailsDescription"
-                    android:id="@+id/country_culture"
-                    tools:text="This is a long country description that goes on and on for a while"/>
-
-                <RelativeLayout
-                    android:id="@+id/launch_wikipedia"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal">
+                <LinearLayout
+                    style="@style/DetailsRowLayout"
+                    android:id="@+id/country_official_name_layout"
+                    android:paddingStart="@dimen/card_inner_margin"
+                    android:paddingEnd="@dimen/card_inner_margin">
 
                     <TextView
-                        style="@style/DetailsLink"
-                        android:id="@+id/launch_wikipedia_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/country_read_more"/>
+                        style="@style/DetailsTitle"
+                        android:text="@string/country_official_name"/>
 
-                    <ImageView
-                        android:src="@drawable/ic_action_launch_small"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/launch_wikipedia_text"
-                        android:layout_alignTop="@id/launch_wikipedia_text"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="1dp"/>
+                    <TextView
+                        style="@style/DetailsValue"
+                        android:id="@+id/country_official_name"
+                        tools:text="The Bestest Country"/>
 
-                </RelativeLayout>
+                </LinearLayout>
+
+                <include layout="@layout/beer_details_separator_horizontal" />
+
+                <LinearLayout
+                    style="@style/DetailsRowLayout"
+                    android:id="@+id/country_region_layout"
+                    android:paddingStart="@dimen/card_inner_margin"
+                    android:paddingEnd="@dimen/card_inner_margin">
+
+                    <TextView
+                        style="@style/DetailsTitle"
+                        android:text="@string/country_region"/>
+
+                    <TextView
+                        style="@style/DetailsValue"
+                        android:id="@+id/country_region"
+                        tools:text="Northern Europe"/>
+
+                </LinearLayout>
+
+                <include layout="@layout/beer_details_separator_horizontal" />
+
+                <LinearLayout
+                    style="@style/DetailsRowLayout"
+                    android:id="@+id/country_capital_layout"
+                    android:paddingStart="@dimen/card_inner_margin"
+                    android:paddingEnd="@dimen/card_inner_margin">
+
+                    <TextView
+                        style="@style/DetailsTitle"
+                        android:text="@string/country_capital"/>
+
+                    <TextView
+                        style="@style/DetailsValue"
+                        android:id="@+id/country_capital"
+                        tools:text="Berlin"/>
+
+                </LinearLayout>
+
+                <include
+                    android:id="@+id/country_culture_divider"
+                    layout="@layout/beer_details_separator_horizontal" />
+
+                <LinearLayout
+                    style="@style/DetailsRowLayout"
+                    android:id="@+id/country_culture_layout"
+                    android:layout_margin="@dimen/card_inner_margin">
+
+                    <TextView
+                        style="@style/DetailsTitle"
+                        android:text="@string/country_beer_culture"/>
+
+                    <TextView
+                        style="@style/DetailsDescription"
+                        android:id="@+id/country_culture"
+                        tools:text="This is a long country description that goes on and on for a while"/>
+
+                    <RelativeLayout
+                        android:id="@+id/launch_wikipedia"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal">
+
+                        <TextView
+                            style="@style/DetailsLink"
+                            android:id="@+id/launch_wikipedia_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/country_read_more"/>
+
+                        <ImageView
+                            android:src="@drawable/ic_action_launch_small"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/launch_wikipedia_text"
+                            android:layout_alignTop="@id/launch_wikipedia_text"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="1dp"/>
+
+                    </RelativeLayout>
+
+                </LinearLayout>
 
             </LinearLayout>
 
-        </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-    </android.support.v7.widget.CardView>
+        <TextView
+            style="@style/DetailsLicense"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/wikipedia_license_cc"/>
+
+    </LinearLayout>
 
 </quickbeer.android.features.countrydetails.CountryDetailsView>
