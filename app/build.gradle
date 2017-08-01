@@ -59,6 +59,40 @@ android {
     }
 }
 
+ext {
+    dependencyVersions = [
+            kotlin                  : kotlin_version,
+            androidSupportLibrary   : '25.4.0',
+            firebase                : '11.0.4',
+            playServices            : '11.0.4',
+            collapsingToolbar       : '1.5.0',
+            multidex                : '1.0.2',
+            dagger2                 : '2.11',
+            rxJava                  : '1.3.0',
+            rxAndroid               : '1.2.1',
+            ixJava                  : '1.0.0-RC5',
+            options                 : '1.2.4',
+            okHttp                  : '3.8.1',
+            retrofit2               : '2.3.0',
+            cookiejar               : 'v1.0.1',
+            gson                    : '2.8.1',
+            autoValue               : '1.4.1',
+            autoValueGson           : '0.5.0',
+            photoView               : '2.1.3',
+            androidSvg              : '1.2.1',
+            picasso                 : '2.5.2',
+            glide                   : '4.0.0',
+            butterknife             : '8.7.0',
+            threeTenAbp             : '1.0.5',
+            stetho                  : '1.5.0',
+            schematic               : '0.7.0',
+            chuck                   : '1.0.4',
+            timber                  : '4.5.1',
+            junit                   : '4.12',
+            leakCanary              : '1.5.1',
+    ]
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
@@ -67,98 +101,98 @@ dependencies {
     implementation project(':reark')
     implementation project(':materialsearch')
 
-    implementation 'com.android.support:support-v4:25.3.1'
-    implementation 'com.android.support:recyclerview-v7:25.3.1'
-    implementation 'com.android.support:appcompat-v7:25.3.1'
-    implementation 'com.android.support:design:25.3.1'
-    implementation 'com.android.support:cardview-v7:25.3.1'
+    implementation "com.android.support:support-v4:$dependencyVersions.androidSupportLibrary"
+    implementation "com.android.support:recyclerview-v7:$dependencyVersions.androidSupportLibrary"
+    implementation "com.android.support:appcompat-v7:$dependencyVersions.androidSupportLibrary"
+    implementation "com.android.support:design:$dependencyVersions.androidSupportLibrary"
+    implementation "com.android.support:cardview-v7:$dependencyVersions.androidSupportLibrary"
 
     // Damnit multidex
-    implementation 'com.android.support:multidex:1.0.1'
+    implementation "com.android.support:multidex:$dependencyVersions.multidex"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:10.2.1'
-    implementation 'com.google.firebase:firebase-crash:10.2.1'
+    implementation "com.google.firebase:firebase-core:$dependencyVersions.firebase"
+    implementation "com.google.firebase:firebase-crash:$dependencyVersions.firebase"
 
     // Play services barcode support
-    implementation 'com.google.android.gms:play-services-vision:10.2.1'
+    implementation "com.google.android.gms:play-services-vision:$dependencyVersions.playServices"
 
     // Multiline Collapsing Toolbar
-    implementation 'net.opacapp:multiline-collapsingtoolbar:1.4.0'
+    implementation "net.opacapp:multiline-collapsingtoolbar:$dependencyVersions.collapsingToolbar"
 
     // Dagger
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    implementation 'com.google.dagger:dagger:2.11'
+    annotationProcessor "com.google.dagger:dagger-compiler:$dependencyVersions.dagger2"
+    implementation "com.google.dagger:dagger:$dependencyVersions.dagger2"
 
     // RxJava
-    implementation 'io.reactivex:rxjava:1.3.0'
-    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation "io.reactivex:rxjava:$dependencyVersions.rxjava"
+    implementation "io.reactivex:rxandroid:$dependencyVersions.rxAndroid"
 
     // IxJava
-    implementation 'com.github.akarnokd:ixjava:1.0.0-RC5'
+    implementation "com.github.akarnokd:ixjava:$dependencyVersions.ixJava"
 
     // Optionals
-    implementation 'com.github.tomaszpolanski:options:1.3.0'
+    implementation "com.github.tomaszpolanski:options:$dependencyVersions.options"
 
     // Schematic
-    annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
-    implementation 'net.simonvt.schematic:schematic:0.7.0'
+    annotationProcessor "net.simonvt.schematic:schematic-compiler:$dependencyVersions.schematic"
+    implementation "net.simonvt.schematic:schematic:$dependencyVersions.schematic"
 
     // Picasso
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation "com.squareup.picasso:picasso:$dependencyVersions.picasso"
 
     // Glide
-    implementation 'com.github.bumptech.glide:okhttp3-integration:4.0.0-RC1@aar'
-    implementation 'com.github.bumptech.glide:glide:4.0.0-RC1'
-    implementation 'com.github.bumptech.glide:annotations:4.0.0-RC1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0-RC1'
+    implementation "com.github.bumptech.glide:okhttp3-integration:$dependencyVersions.glide@aar"
+    implementation "com.github.bumptech.glide:glide:$dependencyVersions.glide"
+    implementation "com.github.bumptech.glide:annotations:$dependencyVersions.glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$dependencyVersions.glide"
 
     // AndroidSVG
-    implementation 'com.caverock:androidsvg:1.2.1'
+    implementation "com.caverock:androidsvg:$dependencyVersions.androidSvg"
 
     // PhotoView
-    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+    implementation "com.github.chrisbanes:PhotoView:$dependencyVersions.photoView"
 
     // Butter Knife
-    implementation 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    implementation "com.jakewharton:butterknife:$dependencyVersions.butterknife"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$dependencyVersions.butterknife"
 
     // Timber
-    implementation 'com.jakewharton.timber:timber:4.5.1'
+    implementation "com.jakewharton.timber:timber:$dependencyVersions.timber"
 
     // ThreeTenABP
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.0.5'
+    implementation "com.jakewharton.threetenabp:threetenabp:$dependencyVersions.threeTenAbp"
 
     // Cookie Jar
-    implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    implementation "com.github.franmontiel:PersistentCookieJar:$dependencyVersions.cookiejar"
 
     // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
-    implementation 'com.squareup.okhttp3:okhttp-android-support:3.8.1'
+    implementation "com.squareup.okhttp3:okhttp:$dependencyVersions.okHttp"
+    implementation "com.squareup.okhttp3:okhttp-android-support:$dependencyVersions.okHttp"
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation "com.squareup.retrofit2:retrofit:$dependencyVersions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$dependencyVersions.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$dependencyVersions.retrofit"
 
     // Stetho
-    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
-    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+    debugImplementation "com.facebook.stetho:stetho:$dependencyVersions.stetho"
+    debugImplementation "com.facebook.stetho:stetho-okhttp3:$dependencyVersions.stetho"
 
     // Auto-Value
-    compileOnly "com.google.auto.value:auto-value:1.4.1"
-    annotationProcessor "com.google.auto.value:auto-value:1.4.1"
+    compileOnly "com.google.auto.value:auto-value:$dependencyVersions.autoValue"
+    annotationProcessor "com.google.auto.value:auto-value:$dependencyVersions.autoValue"
 
     // Auto-Value GSON
-    annotationProcessor "com.ryanharter.auto.value:auto-value-gson:0.4.6"
-    provided "com.ryanharter.auto.value:auto-value-gson:0.4.6"
+    annotationProcessor "com.ryanharter.auto.value:auto-value-gson:$dependencyVersions.autoValueGson"
+    provided "com.ryanharter.auto.value:auto-value-gson:$dependencyVersions.autoValueGson"
 
     // Leak tracing
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+    debugImplementation "com.squareup.leakcanary:leakcanary-android:$dependencyVersions.leakCanary"
+    releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$dependencyVersions.leakCanary"
+    testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$dependencyVersions.leakCanary"
 
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$dependencyVersions.junit"
 }
 
 apply plugin: 'com.google.gms.google-services'
