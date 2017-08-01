@@ -99,8 +99,10 @@ class StyleDetailsActivity : BindingDrawerActivity() {
                 styleId = intent.getIntExtra(Constants.ID_KEY, 0)
             }
 
+            val defaultIndex = intent.getIntExtra(Constants.PAGER_INDEX, 0)
+
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId))
+                    .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId, defaultIndex))
                     .commit()
         }
     }

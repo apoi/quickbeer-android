@@ -90,12 +90,11 @@ class CountryDetailsActivity : BindingDrawerActivity() {
         if (savedInstanceState != null) {
             countryId = savedInstanceState.getInt(Constants.ID_KEY)
         } else {
-            if (countryId <= 0) {
-                countryId = intent.getIntExtra(Constants.ID_KEY, 0)
-            }
+            val defaultIndex = intent.getIntExtra(Constants.PAGER_INDEX, 0)
+            countryId = intent.getIntExtra(Constants.ID_KEY, 0)
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, CountryDetailsPagerFragment.newInstance(countryId))
+                    .add(R.id.container, CountryDetailsPagerFragment.newInstance(countryId, defaultIndex))
                     .commit()
         }
     }

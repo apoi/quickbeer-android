@@ -20,69 +20,50 @@ package quickbeer.android;
 public interface Constants {
 
     int DEFAULT_USER_ID = 0;
-
     int NAV_ARROW_ANIMATION_DURATION = 350;
 
     int REVIEWS_PER_PAGE = 10;
-
     int USER_REVIEWS_PER_PAGE = 10;
 
     String API_URL = "https://www.ratebeer.com";
-
     String API_KEY_NAME = "apiKey";
 
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
-
     String BREWER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg";
-
     String FLAG_IMAGE_PATH = "https://ztesch.fi/quickbeer/flags/%s.svg";
-
     String FACEBOOK_PATH = "https://www.facebook.com/%s";
-
     String TWITTER_PATH = "https://www.twitter.com/%s";
-
     String WIKIPEDIA_PATH = "https://en.m.wikipedia.org/wiki/%s";
 
     String LOGIN_DEFAULT_SAVE_INFO = "on";
-
     String META_QUERY_PREFIX = "__";
 
     String ID_KEY = "idKey";
+    String PAGER_INDEX = "pagerIndex";
 
     interface Fetchers {
-
         String LOGIN = "loginFetcher";
-
         String BEER = "beerFetcher";
 
         String BEER_SEARCH = "beerSearchFetcher";
-
         String BARCODE_SEARCH = "barcodeSearchFetcher";
-
         String TOP_BEERS = "topBeersFetcher";
 
         String BEERS_IN_COUNTRY = "beersInCountryFetcher";
-
         String BEERS_IN_STYLE = "beersInStyleFetcher";
 
         String BREWER = "brewerFetcher";
-
         String BREWER_BEERS = "brewerBeersFetcher";
 
         String REVIEW = "reviewFetcher";
-
         String USER_REVIEWS = "reviewsFetcher";
 
         String TICKS = "ticksFetcher";
-
         String TICK = "tickBeerFetcher";
-
     }
 
     interface Preferences {
-
         String FIRST_RUN_DRAWER = "firstRunDrawer";
-
     }
 
 }

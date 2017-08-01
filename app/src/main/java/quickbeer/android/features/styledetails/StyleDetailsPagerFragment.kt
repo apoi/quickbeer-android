@@ -40,10 +40,13 @@ class StyleDetailsPagerFragment : BaseFragment() {
 
     private var styleId: Int = 0
 
+    private var defaultIndex: Int = 0
+
     companion object {
-        fun newInstance(styleId: Int): Fragment {
+        fun newInstance(styleId: Int, defaultIndex: Int = 0): Fragment {
             val bundle = Bundle()
             bundle.putInt(Constants.ID_KEY, styleId)
+            bundle.putInt(Constants.PAGER_INDEX, defaultIndex)
             val fragment = StyleDetailsPagerFragment()
             fragment.arguments = bundle
             return fragment
@@ -59,6 +62,7 @@ class StyleDetailsPagerFragment : BaseFragment() {
 
         val bundle = savedInstanceState ?: arguments
         styleId = bundle?.getInt(Constants.ID_KEY) ?: 0
+        defaultIndex = bundle.getInt(Constants.PAGER_INDEX) ?: 0
 
         if (styleId == 0) {
             Timber.w("Expected state for initializing!")
@@ -74,6 +78,7 @@ class StyleDetailsPagerFragment : BaseFragment() {
 
         view_pager.apply {
             adapter = StyleDetailsPagerAdapter(childFragmentManager, styleId)
+            setCurrentItem(defaultIndex)
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
                     get(analytics).createEvent(

@@ -81,6 +81,7 @@ public class CountryListFragment extends BindingBaseFragment {
 
         Intent intent = new Intent(getActivity(), CountryDetailsActivity.class);
         intent.putExtra(Constants.ID_KEY, countryId);
+        intent.putExtra(Constants.PAGER_INDEX, 1);
         startActivity(intent);
     }
 

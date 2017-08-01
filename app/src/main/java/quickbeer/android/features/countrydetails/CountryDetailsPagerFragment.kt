@@ -40,10 +40,13 @@ class CountryDetailsPagerFragment : BaseFragment() {
 
     private var countryId: Int = 0
 
+    private var defaultIndex: Int = 0
+
     companion object {
-        fun newInstance(countryId: Int): Fragment {
+        fun newInstance(countryId: Int, defaultIndex: Int = 0): Fragment {
             val bundle = Bundle()
             bundle.putInt(Constants.ID_KEY, countryId)
+            bundle.putInt(Constants.PAGER_INDEX, defaultIndex)
             val fragment = CountryDetailsPagerFragment()
             fragment.arguments = bundle
             return fragment
@@ -59,6 +62,7 @@ class CountryDetailsPagerFragment : BaseFragment() {
 
         val bundle = savedInstanceState ?: arguments
         countryId = bundle?.getInt(Constants.ID_KEY) ?: 0
+        defaultIndex = bundle.getInt(Constants.PAGER_INDEX) ?: 0
 
         if (countryId == 0) {
             Timber.w("Expected state for initializing!")
@@ -74,6 +78,7 @@ class CountryDetailsPagerFragment : BaseFragment() {
 
         view_pager.apply {
             adapter = CountryDetailsPagerAdapter(childFragmentManager, countryId)
+            setCurrentItem(defaultIndex)
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
                     get(analytics).createEvent(

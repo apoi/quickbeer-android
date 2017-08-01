@@ -83,6 +83,7 @@ public class StyleListFragment  extends BindingBaseFragment {
 
         Intent intent = new Intent(getActivity(), StyleDetailsActivity.class);
         intent.putExtra(Constants.ID_KEY, styleId);
+        intent.putExtra(Constants.PAGER_INDEX, 1);
         startActivity(intent);
     }
 
