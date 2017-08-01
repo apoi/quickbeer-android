@@ -67,6 +67,7 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
         country_official_name_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.wikipedia) })
         country_region_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.subregion) })
         country_capital_layout.setOnClickListener(View.OnClickListener { openWikipedia(country.capital) })
+        launch_wikipedia.setOnClickListener(View.OnClickListener { openWikipedia(country.wikipedia_beer) })
 
         if (!StringUtils.hasValue(country.description)) {
             country_culture_divider.visibility = View.GONE

@@ -98,6 +98,31 @@
                     android:id="@+id/country_culture"
                     tools:text="This is a long country description that goes on and on for a while"/>
 
+                <RelativeLayout
+                    android:id="@+id/launch_wikipedia"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        style="@style/DetailsLink"
+                        android:id="@+id/launch_wikipedia_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/country_read_more"/>
+
+                    <ImageView
+                        android:src="@drawable/ic_action_launch_small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/launch_wikipedia_text"
+                        android:layout_alignTop="@id/launch_wikipedia_text"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="1dp"/>
+
+                </RelativeLayout>
+
             </LinearLayout>
 
         </LinearLayout>

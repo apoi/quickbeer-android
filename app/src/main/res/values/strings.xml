@@ -98,6 +98,7 @@
     <string name="country_region">Region</string>
     <string name="country_capital">Capital</string>
     <string name="country_beer_culture">Beer Culture</string>
+    <string name="country_read_more">Read more</string>
 
     <!-- Barcode scanner -->
     <string name="permission_camera_rationale">Camera is needed for barcode scanning</string>
