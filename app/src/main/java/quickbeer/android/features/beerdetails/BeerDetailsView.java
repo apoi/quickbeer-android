@@ -276,20 +276,18 @@ public class BeerDetailsView extends NestedScrollView {
         return ofObj("?");
     }
 
-    private void navigateToStyle(@Nullable Integer styleId) {
+    private void navigateToStyle(int styleId) {
         Timber.d("navigateToStyle(%s)", styleId);
 
         Intent intent = new Intent(getContext(), StyleDetailsActivity.class);
-        intent.putExtra(NavigationProvider.PAGE_KEY, Page.STYLE.ordinal());
         intent.putExtra(Constants.ID_KEY, styleId);
         getContext().startActivity(intent);
     }
 
-    private void navigateToCountry(@NonNull Integer countryId) {
+    private void navigateToCountry(int countryId) {
         Timber.d("navigateToCountry(%s)", countryId);
 
         Intent intent = new Intent(getContext(), CountryDetailsActivity.class);
-        intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
         intent.putExtra(Constants.ID_KEY, countryId);
         getContext().startActivity(intent);
     }

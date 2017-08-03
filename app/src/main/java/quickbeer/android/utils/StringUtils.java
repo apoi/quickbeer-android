@@ -23,6 +23,8 @@ import android.support.annotation.Nullable;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
+import polanski.option.Option;
+
 public final class StringUtils {
 
     private static final Pattern BASE_GLYPH = Pattern.compile("\\p{M}");
@@ -43,6 +45,12 @@ public final class StringUtils {
 
     public static String value(@Nullable String value) {
         return value != null ? value : "";
+    }
+
+    public static Option<String> emptyAsNone(@Nullable String value) {
+        return hasValue(value)
+                ? Option.ofObj(value)
+                : Option.none();
     }
 
     public static boolean equals(@Nullable String first, @Nullable String second) {

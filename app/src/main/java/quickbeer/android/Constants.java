@@ -34,6 +34,7 @@ public interface Constants {
     String FACEBOOK_PATH = "https://www.facebook.com/%s";
     String TWITTER_PATH = "https://www.twitter.com/%s";
     String WIKIPEDIA_PATH = "https://en.m.wikipedia.org/wiki/%s";
+    String GOOGLE_MAPS_PATH = "https://www.google.com/maps/place/%s";
 
     String LOGIN_DEFAULT_SAVE_INFO = "on";
     String META_QUERY_PREFIX = "__";

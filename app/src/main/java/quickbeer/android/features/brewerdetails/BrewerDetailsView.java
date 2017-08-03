@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
@@ -45,17 +44,15 @@ import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.stores.CountryStore;
-import quickbeer.android.features.list.ListActivity;
-import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.providers.NavigationProvider.Page;
+import quickbeer.android.features.countrydetails.CountryDetailsActivity;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.StringUtils;
 import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
+import static quickbeer.android.utils.StringUtils.emptyAsNone;
 
 /**
  * View holder for all the brewer details
@@ -104,19 +101,15 @@ public class BrewerDetailsView extends NestedScrollView {
     @BindView(R.id.brewer_address)
     TextView brewerAddress;
 
-    @Nullable
     @Inject
     CountryStore countryStore;
 
-    @Nullable
     @Inject
     ResourceProvider resourceProvider;
 
-    @Nullable
     @Inject
     ToastProvider toastProvider;
 
-    @Nullable
     @Inject
     Analytics analytics;
 
@@ -136,9 +129,6 @@ public class BrewerDetailsView extends NestedScrollView {
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
-        checkNotNull(countryStore);
-        checkNotNull(resourceProvider);
-
         ofObj(brewer.founded())
                 .map(ZonedDateTime::getYear)
                 .map(String::valueOf)
@@ -184,13 +174,14 @@ public class BrewerDetailsView extends NestedScrollView {
 
         ofObj(brewer.countryId())
                 .map(countryStore::getItem)
-                .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country)))
+                .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country.getId())))
                 .map(Country::getName)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCountry::setText);
 
         ofObj(brewer.city())
                 .filter(StringUtils::hasValue)
+                .ifSome(city -> brewerCityRow.setOnClickListener(__ -> openWikipedia(city)))
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCity::setText);
 
@@ -198,6 +189,9 @@ public class BrewerDetailsView extends NestedScrollView {
                 .filter(StringUtils::hasValue)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerAddress::setText);
+
+        fullAddress(brewer)
+                .ifSome(address -> brewerAddressRow.setOnClickListener(__ -> openMaps(address)));
     }
 
     @NonNull
@@ -217,17 +211,38 @@ public class BrewerDetailsView extends NestedScrollView {
         get(analytics).createEvent(action);
     }
 
-    private void navigateToCountry(@NonNull Country country) {
-        Timber.d("navigateToCountry(%s)", country.getName());
+    private void navigateToCountry(int countryId) {
+        Timber.d("navigateToCountry(%s)", countryId);
 
-        Intent intent = new Intent(getContext(), ListActivity.class);
-        intent.putExtra(NavigationProvider.PAGE_KEY, Page.COUNTRY.ordinal());
-        intent.putExtra("countryId", country.getId());
+        Intent intent = new Intent(getContext(), CountryDetailsActivity.class);
+        intent.putExtra(Constants.ID_KEY, countryId);
         getContext().startActivity(intent);
+    }
+
+    private void openWikipedia(@NonNull String article) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Constants.WIKIPEDIA_PATH, article)));
+        getContext().startActivity(intent);
+    }
+
+    private void openMaps(@NonNull String address) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(Constants.GOOGLE_MAPS_PATH, address)));
+        getContext().startActivity(intent);
+    }
+
+    private Option<String> fullAddress(@NonNull Brewer brewer) {
+        return ofObj(brewer.countryId())
+                .map(countryStore::getItem)
+                .map(Country::getName)
+                .lift(emptyAsNone(brewer.city()), emptyAsNone(brewer.address()), (country, city, address) -> {
+                    String street = address.contains(",")
+                            ? address.split(",")[0]
+                            : address;
+
+                    return String.format("%s, %s, %s", street, city, country);
+                });
     }
 
     private void showToast(@StringRes int resource) {
         get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG);
     }
-
 }
