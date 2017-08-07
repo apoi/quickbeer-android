@@ -218,12 +218,14 @@ public final class FetcherModule {
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
             @NonNull BeerStore beerStore,
-            @NonNull BeerListStore beerListStore) {
+            @NonNull BeerListStore beerListStore,
+            @NonNull UserStore userStore) {
         return new TicksFetcher(networkApi,
                 networkUtils,
                 requestStatusStore::put,
                 beerStore,
-                beerListStore);
+                beerListStore,
+                userStore);
     }
 
     @Provides

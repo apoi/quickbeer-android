@@ -28,8 +28,10 @@ import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
+import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.fetchers.actions.LoginAndRetry;
 import quickbeer.android.network.utils.NetworkUtils;
 import rx.Single;
 import rx.functions.Action1;
@@ -40,12 +42,18 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class TicksFetcher extends BeerSearchFetcher {
 
+    @NonNull
+    private final UserStore userStore;
+
     public TicksFetcher(@NonNull NetworkApi networkApi,
                         @NonNull NetworkUtils networkUtils,
                         @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
                         @NonNull BeerStore beerStore,
-                        @NonNull BeerListStore beerListStore) {
+                        @NonNull BeerListStore beerListStore,
+                        @NonNull UserStore userStore) {
         super(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore);
+
+        this.userStore = get(userStore);
     }
 
     @Override
@@ -73,7 +81,8 @@ public class TicksFetcher extends BeerSearchFetcher {
         Map<String, String> params = networkUtils.createRequestParams("m", "1");
         params.put("u", userId);
 
-        return networkApi.getTicks(params);
+        return networkApi.getTicks(params)
+                .retryWhen(new LoginAndRetry(networkApi, userStore));
     }
 
     @NonNull

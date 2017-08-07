@@ -124,7 +124,6 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .doOnSuccess(beerStore::put)
                 .zipWith(getTickedBeers(), TickBeerFetcher::appendTick)
                 .zipWith(getQueryId(), (ticks, ticksQueryId) -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()))
-                .retryWhen(new LoginAndRetry(networkApi, userStore))
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, false))
                 .doOnError(doOnError(requestId, uri))
@@ -188,7 +187,8 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
         }
 
         return networkApi.tickBeer(requestParams)
-                .flatMap(TickBeerFetcher::requestSuccessful);
+                .flatMap(TickBeerFetcher::requestSuccessful)
+                .retryWhen(new LoginAndRetry(networkApi, userStore));
     }
 
     @NonNull
