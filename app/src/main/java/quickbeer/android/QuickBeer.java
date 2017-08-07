@@ -30,7 +30,6 @@ import quickbeer.android.injections.ApplicationModule;
 import quickbeer.android.injections.DaggerGraph;
 import quickbeer.android.injections.Graph;
 import quickbeer.android.instrumentation.ApplicationInstrumentation;
-import quickbeer.android.providers.AutoLoginProvider;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -46,9 +45,6 @@ public class QuickBeer extends MultiDexApplication {
     @Inject
     ApplicationInstrumentation instrumentation;
 
-    @Inject
-    AutoLoginProvider autoLoginProvider;
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -62,8 +58,6 @@ public class QuickBeer extends MultiDexApplication {
         initInstrumentation();
 
         initDateAndTime();
-
-        initialLogin();
     }
 
     @NonNull
@@ -89,10 +83,6 @@ public class QuickBeer extends MultiDexApplication {
         if (!LeakCanary.isInAnalyzerProcess(this)) {
             LeakCanary.install(this);
         }
-    }
-
-    private void initialLogin() {
-        autoLoginProvider.login();
     }
 
     private void initInstrumentation() {
