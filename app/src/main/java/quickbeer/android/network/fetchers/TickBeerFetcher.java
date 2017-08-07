@@ -44,6 +44,7 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.fetchers.actions.LoginAndRetry;
 import quickbeer.android.network.utils.NetworkUtils;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.ValueUtils;
@@ -123,6 +124,7 @@ public class TickBeerFetcher extends FetcherBase<Uri> {
                 .doOnSuccess(beerStore::put)
                 .zipWith(getTickedBeers(), TickBeerFetcher::appendTick)
                 .zipWith(getQueryId(), (ticks, ticksQueryId) -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()))
+                .retryWhen(new LoginAndRetry(networkApi, userStore))
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, false))
                 .doOnError(doOnError(requestId, uri))
