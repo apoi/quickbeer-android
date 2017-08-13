@@ -19,11 +19,13 @@ package quickbeer.android.network;
 
 import android.support.annotation.NonNull;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.google.gson.Gson;
 
 import java.util.List;
 import java.util.Map;
 
+import io.reark.reark.utils.Preconditions;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
@@ -39,9 +41,14 @@ import static io.reark.reark.utils.Preconditions.get;
 
 public class NetworkApi {
 
+    @NonNull
+    private final ClearableCookieJar cookieJar;
+
+    @NonNull
     private final RateBeerService rateBeerService;
 
     public NetworkApi(@NonNull OkHttpClient client,
+                      @NonNull ClearableCookieJar cookieJar,
                       @NonNull Gson gson) {
         Retrofit retrofit = new Retrofit.Builder()
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -50,10 +57,14 @@ public class NetworkApi {
                 .client(get(client))
                 .build();
 
-        rateBeerService = retrofit.create(RateBeerService.class);
+        this.cookieJar = get(cookieJar);
+        this.rateBeerService = retrofit.create(RateBeerService.class);
     }
 
     public Single<ResponseBody> login(String username, String password) {
+        // Clear cookies before login to ensure old session doesn't linger
+        cookieJar.clear();
+
         return rateBeerService
                 .login(username, password, Constants.LOGIN_DEFAULT_SAVE_INFO);
     }

@@ -29,7 +29,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
-import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
@@ -53,6 +52,7 @@ import quickbeer.android.network.utils.ApiDateDeserializer;
 import quickbeer.android.network.utils.ApiStringDeserializer;
 import quickbeer.android.network.utils.DateDeserializer;
 import quickbeer.android.network.utils.LoginRedirectInterceptor;
+import quickbeer.android.network.utils.SessionPersistingCookieJar;
 
 @Module
 public final class NetworkModule {
@@ -61,8 +61,9 @@ public final class NetworkModule {
     @Singleton
     public static NetworkApi provideNetworkApi(
             @NonNull OkHttpClient client,
+            @NonNull ClearableCookieJar cookieJar,
             @Named("deserializingGson") @NonNull Gson gson) {
-        return new NetworkApi(client, gson);
+        return new NetworkApi(client, cookieJar, gson);
     }
 
     @Provides
@@ -111,6 +112,6 @@ public final class NetworkModule {
     @Provides
     @Singleton
     public static ClearableCookieJar provideCookieJar(@ForApplication @NonNull Context context) {
-        return new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
+        return new SessionPersistingCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
     }
 }
