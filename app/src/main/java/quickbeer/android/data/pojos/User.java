@@ -26,7 +26,6 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
-import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -42,13 +41,6 @@ public abstract class User {
 
     @SerializedName("password")
     public abstract String password();
-
-    // Accessors
-
-    public boolean credentialsEqual(@Nullable String username, @Nullable String password) {
-        return StringUtils.equals(username, username())
-                && StringUtils.equals(password, password());
-    }
 
     // Plumbing
 

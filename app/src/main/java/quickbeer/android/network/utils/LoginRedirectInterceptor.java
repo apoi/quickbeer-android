@@ -18,16 +18,22 @@
 package quickbeer.android.network.utils;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.Objects;
 
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import polanski.option.Option;
 import timber.log.Timber;
 
+import static quickbeer.android.utils.StringUtils.emptyAsNone;
 import static quickbeer.android.utils.StringUtils.value;
 
 public class LoginRedirectInterceptor implements Interceptor {
@@ -38,54 +44,71 @@ public class LoginRedirectInterceptor implements Interceptor {
 
     private static final int HTTP_FORBIDDEN = 403;
 
+    private static final int HTTP_UNKNOWN_RESPONSE = 520;
+
+    @NonNull
+    private final JsonParser parser = new JsonParser();
+
     @Override
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
         Response response = chain.proceed(request);
 
-        if (isLoginRequest(request)) {
-            return handleLoginResponse(request, response);
+        MediaType contentType = Option.ofObj(response.body())
+                .map(ResponseBody::contentType)
+                .orDefault(() -> null);
+
+        Option<String> body = Option.ofObj(response.body())
+                .flatMap(value -> emptyAsNone(value::string));
+
+        return isLoginRequest(request)
+                ? handleLoginResponse(request, response, contentType, body)
+                : validateResponse(request, response, contentType, body);
+    }
+
+    private Response handleLoginResponse(@NonNull Request request,
+                                         @NonNull Response response,
+                                         @Nullable MediaType contentType,
+                                         @NonNull Option<String> body) {
+        if (isSuccessfulLogin(request, response)) {
+            Timber.d("Modifying response for successful login");
+
+            return createResponse(request, response, contentType,
+                    body.orDefault(() -> ""),
+                    HTTP_OK);
         }
 
-        return response;
+        if (isKnownLoginFailure(body)) {
+            Timber.d("Interpreting response as failed login");
+
+            return createResponse(request, response, contentType,
+                    body.orDefault(() -> ""),
+                    HTTP_FORBIDDEN);
+        }
+
+        return validateResponse(request, response, contentType, body);
+    }
+
+    @NonNull
+    private Response validateResponse(@NonNull Request request,
+                                      @NonNull Response response,
+                                      @Nullable MediaType contentType,
+                                      @NonNull Option<String> body) {
+        if (!isValidJson(body)) {
+            Timber.d("Response isn't JSON!");
+
+            return createResponse(request, response, contentType,
+                    body.orDefault(() -> ""),
+                    HTTP_UNKNOWN_RESPONSE);
+        }
+
+        return createResponse(request, response, contentType,
+                body.orDefault(() -> ""),
+                response.code());
     }
 
     private static boolean isLoginRequest(@NonNull Request request) {
         return Objects.equals(request.url().encodedPath(), SIGN_IN_PAGE);
-    }
-
-    private static Response handleLoginResponse(@NonNull Request request, @NonNull Response response) {
-        if (isSuccessfulLogin(request, response)) {
-            Timber.d("Modifying response for successful login");
-
-            return new Response.Builder()
-                    .request(request)
-                    .protocol(response.protocol())
-                    .code(HTTP_OK)
-                    .message(response.message())
-                    .handshake(response.handshake())
-                    .headers(response.headers())
-                    .body(response.body())
-                    .networkResponse(response.networkResponse())
-                    .build();
-        }
-
-        if (isKnownLoginFailure(response)) {
-            Timber.d("Interpreting response as failed login");
-
-            return new Response.Builder()
-                    .request(request)
-                    .protocol(response.protocol())
-                    .code(HTTP_FORBIDDEN)
-                    .message(response.message())
-                    .handshake(response.handshake())
-                    .headers(response.headers())
-                    .body(response.body())
-                    .networkResponse(response.networkResponse())
-                    .build();
-        }
-
-        return response;
     }
 
     private static boolean isSuccessfulLogin(@NonNull Request request, @NonNull Response response) {
@@ -100,12 +123,36 @@ public class LoginRedirectInterceptor implements Interceptor {
         return response.isRedirect() && value(response.header("location")).contains("uid");
     }
 
-    private static boolean isKnownLoginFailure(@NonNull Response response) {
-        try {
-            ResponseBody body = response.body();
-            return body != null && body.string().contains("failed login");
-        } catch (IOException ignored) {
-            return false;
-        }
+    private static boolean isKnownLoginFailure(@NonNull Option<String> body) {
+        return body.filter(value -> value.contains("failed login"))
+                .isSome();
+    }
+
+    private boolean isValidJson(@NonNull Option<String> body) {
+        return body.flatMap(value -> Option.tryAsOption(() -> parser.parse(value)))
+                .isSome();
+    }
+
+    /**
+     * Body contents can be read only once from the response, so we must create
+     * a new response object; otherwise attempts to access the body contents
+     * later in the chain would throw.
+     */
+    @NonNull
+    private static Response createResponse(@NonNull Request request,
+                                           @NonNull Response response,
+                                           @Nullable MediaType contentType,
+                                           @NonNull String body,
+                                           int code) {
+        return new Response.Builder()
+                .request(request)
+                .protocol(response.protocol())
+                .code(code)
+                .message(response.message())
+                .handshake(response.handshake())
+                .headers(response.headers())
+                .body(ResponseBody.create(contentType, body))
+                .networkResponse(response.networkResponse())
+                .build();
     }
 }

@@ -50,7 +50,7 @@ public class LoginAndRetry implements Func1<Observable<? extends Throwable>, Obs
         return error.flatMap(throwable -> {
             // Attempt re-login with every HTTP error
             if (throwable instanceof HttpException) {
-                Timber.d("Retrying operation after login");
+                Timber.d("Error %s, retrying operation after login", ((HttpException) throwable).code());
                 return getUserOrError(throwable)
                         .flatMapSingle(user -> networkApi.login(user.username(), user.password()))
                         .doOnError(e -> Timber.w("Retry failed, propagating login error"));

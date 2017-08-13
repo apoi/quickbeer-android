@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.text.Normalizer;
+import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
 
 import polanski.option.Option;
@@ -39,24 +40,30 @@ public final class StringUtils {
         return value == null || value.isEmpty();
     }
 
+    @NonNull
     public static String value(@Nullable String primary, @NonNull String secondary) {
         return hasValue(primary) ? primary : secondary;
     }
 
+    @NonNull
     public static String value(@Nullable String value) {
         return value != null ? value : "";
     }
 
+    @NonNull
     public static Option<String> emptyAsNone(@Nullable String value) {
         return hasValue(value)
                 ? Option.ofObj(value)
                 : Option.none();
     }
 
-    public static boolean equals(@Nullable String first, @Nullable String second) {
-        return first == null
-                ? second == null
-                : first.equals(second);
+    @NonNull
+    public static Option<String> emptyAsNone(@NonNull Callable<String> callable) {
+        try {
+            return emptyAsNone(callable.call());
+        } catch (Exception ignored) {
+            return Option.none();
+        }
     }
 
     @NonNull
@@ -100,5 +107,4 @@ public final class StringUtils {
 
         return value;
     }
-
 }

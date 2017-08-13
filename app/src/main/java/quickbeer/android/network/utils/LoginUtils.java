@@ -31,6 +31,7 @@ import okhttp3.HttpUrl;
 import polanski.option.Option;
 import quickbeer.android.Constants;
 
+import static polanski.option.Option.none;
 import static polanski.option.Option.ofObj;
 
 public final class LoginUtils {
@@ -53,7 +54,7 @@ public final class LoginUtils {
                 .filter(cookie -> Objects.equals(cookie.name(), USER_ID_KEY))
                 .map(Cookie::value)
                 .map(Option::ofObj)
-                .first(Option.none());
+                .first(none());
     }
 
     @NonNull
@@ -64,6 +65,6 @@ public final class LoginUtils {
                     Matcher matcher = ID_PATTERN.matcher(value);
                     return matcher.find() ? ofObj(matcher.group(1)) : Option.<String>none();
                 })
-                .first();
+                .first(none());
     }
 }
