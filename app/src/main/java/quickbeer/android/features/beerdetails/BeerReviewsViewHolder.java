@@ -45,6 +45,9 @@ import static java.lang.String.valueOf;
  */
 public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
 
+    @BindView(R.id.review_details_row)
+    View detailsRow;
+
     @BindView(R.id.review_appearance)
     TextView appearance;
 
@@ -105,11 +108,6 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     public void setReview(@NonNull Review review) {
         checkNotNull(review);
 
-        appearance.setText(valueOf(review.appearance()));
-        aroma.setText(valueOf(review.aroma()));
-        flavor.setText(valueOf(review.flavor()));
-        mouthfeel.setText(valueOf(review.mouthfeel()));
-        overall.setText(valueOf(review.overall()));
         description.setText(review.comments());
         user.setText(format("%s @ %s", review.userName(), review.getDate()));
         location.setText(review.country());
@@ -117,6 +115,21 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
         if (!StringUtils.hasValue(review.country())) {
             location.setVisibility(View.GONE);
         }
+
+        if (review.appearance() != null) {
+            setDetails(review);
+            detailsRow.setVisibility(View.VISIBLE);
+        } else {
+            detailsRow.setVisibility(View.GONE);
+        }
+    }
+
+    private void setDetails(@NonNull Review review) {
+        appearance.setText(valueOf(review.appearance()));
+        aroma.setText(valueOf(review.aroma()));
+        flavor.setText(valueOf(review.flavor()));
+        mouthfeel.setText(valueOf(review.mouthfeel()));
+        overall.setText(valueOf(review.overall()));
 
         appearanceColumn.setOnClickListener(__ ->
                 showToast(R.string.review_appearance_hint));

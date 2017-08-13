@@ -33,6 +33,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/review_details_row"
             android:orientation="horizontal"
             style="@style/DetailsRowLayout">
 
