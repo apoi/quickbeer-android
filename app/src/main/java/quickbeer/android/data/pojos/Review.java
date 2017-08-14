@@ -29,8 +29,6 @@ import com.google.gson.annotations.SerializedName;
 import org.threeten.bp.ZonedDateTime;
 
 import quickbeer.android.data.pojos.base.OverwritableBuilder;
-import quickbeer.android.utils.DateUtils;
-import quickbeer.android.utils.StringUtils;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -110,19 +108,6 @@ public abstract class Review {
     @Nullable
     @SerializedName("RateCount")
     public abstract Integer rateCount();
-
-    // Accessors
-
-    public String getDate() {
-        return DateUtils.formatDate(timeEntered());
-    }
-
-    public String getLocation() {
-        String first = StringUtils.hasValue(city()) ? city() + ", " : "";
-        String second = StringUtils.value(country(), "");
-
-        return first + second;
-    }
 
     // Plumbing
 

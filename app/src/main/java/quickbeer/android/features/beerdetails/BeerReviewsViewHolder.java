@@ -33,17 +33,25 @@ import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.providers.ToastProvider;
-import quickbeer.android.utils.StringUtils;
+import quickbeer.android.utils.DateUtils;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
-import static java.lang.String.format;
 import static java.lang.String.valueOf;
 
 /**
  * View holder for reviews in list
  */
 public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
+
+    @BindView(R.id.review_score)
+    TextView score;
+
+    @BindView(R.id.review_description)
+    TextView description;
+
+    @BindView(R.id.review_user)
+    TextView user;
 
     @BindView(R.id.review_details_row)
     View detailsRow;
@@ -78,15 +86,6 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.review_overall_column)
     View overallColumn;
 
-    @BindView(R.id.review_description)
-    TextView description;
-
-    @BindView(R.id.review_user)
-    TextView user;
-
-    @BindView(R.id.review_location)
-    TextView location;
-
     @Nullable
     @Inject
     ToastProvider toastProvider;
@@ -108,15 +107,13 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
     public void setReview(@NonNull Review review) {
         checkNotNull(review);
 
-        description.setText(review.comments());
-        user.setText(format("%s @ %s", review.userName(), review.getDate()));
+        String metadata = review.userName()
+                + (review.country() != null ? ", " + review.country() : "")
+                + "\n" + DateUtils.formatDate(review.timeEntered());
 
-        if (StringUtils.hasValue(review.country())) {
-            location.setText(review.country());
-            location.setVisibility(View.VISIBLE);
-        } else {
-            location.setVisibility(View.GONE);
-        }
+        user.setText(metadata);
+        score.setText(String.format("%.1f", review.totalScore()));
+        description.setText(review.comments());
 
         if (review.appearance() != null) {
             setDetails(review);

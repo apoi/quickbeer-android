@@ -14,23 +14,50 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/card_inner_margin"
+        android:layout_marginBottom="@dimen/card_inner_margin"
         android:orientation="vertical"
         android:clipChildren="false">
 
-        <LinearLayout
+        <RelativeLayout
             android:gravity="start"
-            android:layout_marginTop="@dimen/card_inner_margin"
             android:layout_marginLeft="@dimen/card_inner_margin"
             android:layout_marginRight="@dimen/card_inner_margin"
             style="@style/DetailsRowLayout">
 
             <TextView
+                android:id="@+id/review_score"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="20dp"
+                tools:text="3.8"
+                style="@style/DetailsScore"/>
+
+            <include layout="@layout/beer_details_separator_vertical"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_alignTop="@id/review_score"
+                android:layout_alignBottom="@id/review_score"
+                android:layout_toEndOf="@id/review_score"/>
+
+            <TextView
+                android:id="@+id/review_user"
+                android:layout_alignTop="@id/review_score"
+                android:layout_alignBottom="@id/review_score"
+                android:layout_toEndOf="@id/review_score"
+                android:layout_marginStart="20dp"
+                android:gravity="center_vertical"
+                tools:text="beerdude, Germany\n2017-02-11"
+                style="@style/DetailsInfoValue" />
+
+            <TextView
                 android:id="@+id/review_description"
-                tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this."
+                android:layout_below="@id/review_score"
+                android:layout_marginTop="15dp"
                 android:textAlignment="viewStart"
+                tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this."
                 style="@style/DetailsDescription"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/review_details_row"
@@ -119,25 +146,6 @@
                     tools:text="15"/>
 
             </LinearLayout>
-
-        </LinearLayout>
-
-        <include layout="@layout/beer_details_separator_horizontal" />
-
-        <LinearLayout
-            android:gravity="end"
-            android:layout_marginEnd="5dp"
-            style="@style/DetailsRowLayout">
-
-            <TextView
-                android:id="@+id/review_user"
-                tools:text="beerdude @ 2017-02-11"
-                style="@style/DetailsInfoValue" />
-
-            <TextView
-                android:id="@+id/review_location"
-                tools:text="Berlin, Brandenburg, Germany"
-                style="@style/DetailsInfoValue" />
 
         </LinearLayout>
 

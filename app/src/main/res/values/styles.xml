@@ -37,6 +37,14 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="DetailsScore">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray_300</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
     <style name="DetailsDescription">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -65,9 +73,8 @@
     </style>
 
     <style name="DetailsInfoValue" parent="DetailsDescription">
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
     </style>
 
     <style name="DetailsLink" parent="DetailsDescription">
