@@ -62,7 +62,7 @@ class CountryDetailsPagerFragment : BaseFragment() {
 
         val bundle = savedInstanceState ?: arguments
         countryId = bundle?.getInt(Constants.ID_KEY) ?: 0
-        defaultIndex = bundle.getInt(Constants.PAGER_INDEX) ?: 0
+        defaultIndex = bundle.getInt(Constants.PAGER_INDEX)
 
         if (countryId == 0) {
             Timber.w("Expected state for initializing!")
