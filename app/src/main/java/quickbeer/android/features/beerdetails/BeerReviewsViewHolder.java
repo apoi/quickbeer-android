@@ -110,9 +110,11 @@ public class BeerReviewsViewHolder extends RecyclerView.ViewHolder {
 
         description.setText(review.comments());
         user.setText(format("%s @ %s", review.userName(), review.getDate()));
-        location.setText(review.country());
 
-        if (!StringUtils.hasValue(review.country())) {
+        if (StringUtils.hasValue(review.country())) {
+            location.setText(review.country());
+            location.setVisibility(View.VISIBLE);
+        } else {
             location.setVisibility(View.GONE);
         }
 
