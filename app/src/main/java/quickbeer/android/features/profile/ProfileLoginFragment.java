@@ -45,7 +45,6 @@ import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.ToastProvider;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subscriptions.CompositeSubscription;

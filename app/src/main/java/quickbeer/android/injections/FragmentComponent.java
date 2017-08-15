@@ -19,11 +19,8 @@ package quickbeer.android.injections;
 
 import dagger.Subcomponent;
 import quickbeer.android.features.about.AboutDetailsFragment;
-import quickbeer.android.features.beerdetails.BeerDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerDetailsPagerFragment;
-import quickbeer.android.features.beerdetails.BeerReviewsFragment;
 import quickbeer.android.features.brewerdetails.BrewerBeersFragment;
-import quickbeer.android.features.brewerdetails.BrewerDetailsFragment;
 import quickbeer.android.features.brewerdetails.BrewerDetailsPagerFragment;
 import quickbeer.android.features.countrydetails.CountryDetailsPagerFragment;
 import quickbeer.android.features.home.BeerTabFragment;
@@ -39,7 +36,6 @@ import quickbeer.android.features.list.fragments.TickedBeersFragment;
 import quickbeer.android.features.list.fragments.TopBeersFragment;
 import quickbeer.android.features.profile.ProfileDetailsFragment;
 import quickbeer.android.features.profile.ProfileLoginFragment;
-import quickbeer.android.features.styledetails.StyleDetailsFragment;
 import quickbeer.android.features.styledetails.StyleDetailsPagerFragment;
 
 @FragmentScope

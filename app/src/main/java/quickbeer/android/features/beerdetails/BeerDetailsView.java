@@ -52,7 +52,6 @@ import quickbeer.android.features.countrydetails.CountryDetailsActivity;
 import quickbeer.android.features.profile.ProfileActivity;
 import quickbeer.android.features.styledetails.StyleDetailsActivity;
 import quickbeer.android.providers.NavigationProvider;
-import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.providers.ResourceProvider;
 import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.DateUtils;

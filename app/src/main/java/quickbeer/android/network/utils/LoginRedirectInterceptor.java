@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;

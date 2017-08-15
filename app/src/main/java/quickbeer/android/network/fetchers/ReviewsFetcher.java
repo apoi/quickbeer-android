@@ -38,11 +38,11 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import rx.Single;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Actions;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -117,7 +117,7 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(RxUtils::nothing,
+                .subscribe(Actions.empty(),
                         error -> Timber.w(error, "Error fetching reviews for user %s", userId));
 
         addRequest(requestId, subscription);

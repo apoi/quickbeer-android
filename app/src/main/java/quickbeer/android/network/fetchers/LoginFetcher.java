@@ -31,10 +31,10 @@ import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.LoginUtils;
-import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Subscription;
 import rx.functions.Action1;
+import rx.functions.Actions;
 import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
@@ -108,7 +108,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(RxUtils::nothing,
+                .subscribe(Actions.empty(),
                         error -> Timber.w(error, "Error fetching user " + username));
 
         addRequest(requestId, subscription);
