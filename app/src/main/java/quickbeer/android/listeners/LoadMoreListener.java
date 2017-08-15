@@ -91,6 +91,6 @@ public class LoadMoreListener extends RecyclerView.OnScrollListener {
      */
     @NonNull
     public Observable<Integer> moreItemsRequestedStream() {
-        return loadMoreSubject.distinctUntilChanged();
+        return loadMoreSubject;
     }
 }
