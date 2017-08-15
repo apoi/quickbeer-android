@@ -20,6 +20,9 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.Beer;
@@ -48,23 +51,29 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     @NonNull
     private final BehaviorSubject<Brewer> brewer = BehaviorSubject.create();
 
-    private int brewerId;
+    private final int brewerId;
 
-    private int beerId;
+    private final int beerId;
 
-    public BrewerViewModel(@NonNull DataLayer.GetBeer getBeer,
+    @Inject
+    public BrewerViewModel(@Named("id") Integer brewerId,
+                           @Named("secondaryId") Integer beerId,
+                           @NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetBrewer getBrewer,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
+        this.brewerId = brewerId;
+        this.beerId = beerId;
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
         this.progressStatusProvider = get(progressStatusProvider);
     }
 
-    public BrewerViewModel(int brewerId,
+    public BrewerViewModel(@Named("id") Integer brewerId,
                            @NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetBrewer getBrewer,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
         this.brewerId = brewerId;
+        this.beerId = -1;
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
         this.progressStatusProvider = get(progressStatusProvider);
@@ -72,14 +81,6 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
 
     public int getBrewerId() {
         return brewerId;
-    }
-
-    public void setBrewerId(int brewerId) {
-        this.brewerId = brewerId;
-    }
-
-    public void setBeerId(int beerId) {
-        this.beerId = beerId;
     }
 
     @NonNull

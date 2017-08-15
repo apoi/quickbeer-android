@@ -65,7 +65,8 @@ public class CachingStoreCore<T, U> implements StoreCoreInterface<T, U> {
     @NonNull
     @Override
     public Single<Boolean> delete(@NonNull T id) {
-        return providerCore.delete(id);
+        return memoryCore.delete(id)
+                .flatMap(__ -> providerCore.delete(id));
     }
 
     @NonNull

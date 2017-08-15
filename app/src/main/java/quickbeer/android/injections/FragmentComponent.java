@@ -68,13 +68,7 @@ public interface FragmentComponent {
 
     void inject(BeerDetailsPagerFragment beerDetailsPagerFragment);
 
-    void inject(BeerDetailsFragment beerDetailsFragment);
-
-    void inject(BeerReviewsFragment beerReviewsFragment);
-
     void inject(BrewerDetailsPagerFragment brewerDetailsPagerFragment);
-
-    void inject(BrewerDetailsFragment brewerDetailsFragment);
 
     void inject(BrewerBeersFragment brewerBeersFragment);
 

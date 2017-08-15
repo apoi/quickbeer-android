@@ -22,9 +22,8 @@ import android.support.v4.app.Fragment;
 
 import dagger.Module;
 import dagger.Provides;
-import quickbeer.android.viewmodels.ViewModelModule;
 
-@Module(includes = ViewModelModule.class)
+@Module
 public class FragmentModule {
 
     private final Fragment fragment;
@@ -38,5 +37,4 @@ public class FragmentModule {
     Fragment provideFragment() {
         return fragment;
     }
-
 }

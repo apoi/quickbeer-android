@@ -8,16 +8,29 @@ import dagger.Provides;
 @Module
 public class IdModule {
 
-    private final int id;
+    private final int primaryId;
+    private final int secondaryId;
 
     public IdModule(int id) {
-        this.id = id;
+        this.primaryId = id;
+        this.secondaryId = -1;
+    }
+
+    public IdModule(int primaryId, int secondaryId) {
+        this.primaryId = primaryId;
+        this.secondaryId = secondaryId;
     }
 
     @Provides
     @Named("id")
     Integer provideId() {
-        return id;
+        return primaryId;
+    }
+
+    @Provides
+    @Named("secondaryId")
+    Integer provideSecondaryId() {
+        return secondaryId;
     }
 
 }

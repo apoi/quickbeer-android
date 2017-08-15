@@ -44,32 +44,22 @@ public class BeerViewModel extends NetworkViewModel<Beer> {
     @NonNull
     private final BehaviorSubject<Beer> beer = BehaviorSubject.create();
 
-    private int beerId;
+    private final int beerId;
 
-    private boolean fullDetails = false;
+    private final boolean fullDetails;
 
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer,
-                         @NonNull ProgressStatusProvider progressStatusProvider,
-                         boolean fullDetails) {
-        this.getBeer = get(getBeer);
-        this.progressStatusProvider = get(progressStatusProvider);
-        this.fullDetails = fullDetails;
-    }
-
-    public BeerViewModel(@NonNull DataLayer.GetBeer getBeer,
-                         @NonNull ProgressStatusProvider progressStatusProvider,
-                         int beerId) {
+    public BeerViewModel(int beerId,
+                         boolean fullDetails,
+                         @NonNull DataLayer.GetBeer getBeer,
+                         @NonNull ProgressStatusProvider progressStatusProvider) {
         this.beerId = beerId;
+        this.fullDetails = fullDetails;
         this.progressStatusProvider = get(progressStatusProvider);
         this.getBeer = get(getBeer);
     }
 
     public int getBeerId() {
         return beerId;
-    }
-
-    public void setBeerId(int beerId) {
-        this.beerId = beerId;
     }
 
     @NonNull

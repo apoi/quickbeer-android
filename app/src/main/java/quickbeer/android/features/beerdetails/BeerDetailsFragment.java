@@ -31,12 +31,14 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
 import quickbeer.android.analytics.Events.Action;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.injections.IdModule;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -52,10 +54,8 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     BeerDetailsView detailsView;
 
     @Inject
-    @Nullable
     BeerDetailsViewModel beerDetailsViewModel;
 
-    @Nullable
     @Inject
     Analytics analytics;
 
@@ -101,14 +101,16 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     public static Fragment newInstance(int beerId) {
         BeerDetailsFragment fragment = new BeerDetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("beerId", beerId);
+        bundle.putInt(Constants.ID_KEY, beerId);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected void inject() {
-        getComponent().inject(this);
+        getComponent()
+                .plusId(new IdModule(beerId))
+                .inject(this);
     }
 
     @Override
@@ -120,7 +122,7 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
                 : getArguments();
 
         ofObj(bundle)
-                .map(state -> state.getInt("beerId"))
+                .map(state -> state.getInt(Constants.ID_KEY))
                 .ifSome(value -> beerId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
@@ -138,15 +140,8 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        viewModel().setBeerId(beerId);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("beerId", beerId);
+        outState.putInt(Constants.ID_KEY, beerId);
         super.onSaveInstanceState(outState);
     }
 
@@ -176,5 +171,4 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
             get(analytics).createEvent(rating > 0 ? Action.TICK_ADD : Action.TICK_REMOVE);
         }
     }
-
 }

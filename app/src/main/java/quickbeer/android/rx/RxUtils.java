@@ -24,6 +24,7 @@ import polanski.option.OptionUnsafe;
 import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
 import rx.Single;
+import rx.functions.Func1;
 
 public final class RxUtils<T> {
 

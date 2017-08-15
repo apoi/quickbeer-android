@@ -21,6 +21,9 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.Constants;
 import quickbeer.android.R;
@@ -30,6 +33,7 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.pojos.User;
+import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.providers.GlobalNotificationProvider;
 import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.providers.ResourceProvider;
@@ -76,35 +80,31 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     @NonNull
     private final CompositeSubscription subscription = new CompositeSubscription();
 
-    private int beerId;
+    private final int beerId;
 
-    public BeerDetailsViewModel(@NonNull DataLayer.GetBeer getBeer,
+    @Inject
+    public BeerDetailsViewModel(@Named("id") Integer beerId,
+                                @NonNull DataLayer.GetBeer getBeer,
                                 @NonNull DataLayer.TickBeer tickBeer,
                                 @NonNull DataLayer.GetBrewer getBrewer,
                                 @NonNull DataLayer.GetUser getUser,
                                 @NonNull DataLayer.GetReviews getReviews,
                                 @NonNull DataLayer.FetchReviews fetchReviews,
                                 @NonNull DataLayer.GetReview getReview,
+                                @NonNull ReviewListStore reviewListStore,
                                 @NonNull ResourceProvider resourceProvider,
                                 @NonNull ProgressStatusProvider progressStatusProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
-        beerViewModel = new BeerViewModel(get(getBeer), get(progressStatusProvider), true);
-        brewerViewModel = new BrewerViewModel(get(getBeer), get(getBrewer), get(progressStatusProvider));
-        reviewListViewModel = new ReviewListViewModel(get(getReviews), get(fetchReviews), get(getReview));
+        beerViewModel = new BeerViewModel(beerId, true, get(getBeer), get(progressStatusProvider));
+        brewerViewModel = new BrewerViewModel(-1, beerId, get(getBeer), get(getBrewer), get(progressStatusProvider));
+        reviewListViewModel = new ReviewListViewModel(beerId, get(getReviews), get(fetchReviews), get(getReview), get(reviewListStore), get(progressStatusProvider));
 
+        this.beerId = beerId;
         this.getBeer = get(getBeer);
         this.getUser = get(getUser);
         this.tickBeer = get(tickBeer);
         this.resourceProvider = get(resourceProvider);
         this.notificationProvider = get(notificationProvider);
-    }
-
-    public void setBeerId(int beerId) {
-        this.beerId = beerId;
-
-        beerViewModel.setBeerId(beerId);
-        brewerViewModel.setBeerId(beerId);
-        reviewListViewModel.setBeerId(beerId);
     }
 
     @NonNull
@@ -128,13 +128,17 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         return reviewListViewModel.getReviews();
     }
 
+    public void loadMoreReviews(int currentReviewsCount) {
+        reviewListViewModel.fetchReviews((currentReviewsCount / Constants.REVIEWS_PER_PAGE) + 1);
+    }
+
+    public void refreshReviews() {
+        reviewListViewModel.refreshReviews();
+    }
+
     @NonNull
     public Observable<Boolean> tickSuccessStatus() {
         return tickSuccessSubject.asObservable();
-    }
-
-    public void loadMoreReviews(int currentReviewsCount) {
-        reviewListViewModel.fetchReviews((currentReviewsCount / Constants.REVIEWS_PER_PAGE) + 1);
     }
 
     public void tickBeer(int rating) {
@@ -190,5 +194,4 @@ public class BeerDetailsViewModel extends SimpleViewModel {
 
         subscription.clear();
     }
-
 }

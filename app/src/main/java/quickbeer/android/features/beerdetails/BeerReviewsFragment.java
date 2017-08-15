@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +31,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.injections.IdModule;
 import quickbeer.android.listeners.LoadMoreListener;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -44,17 +47,19 @@ import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeerReviewsFragment extends BindingBaseFragment {
+public class BeerReviewsFragment extends BindingBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.beer_reviews_view)
     BeerReviewsView reviewsView;
 
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Inject
-    @Nullable
     BeerDetailsViewModel beerDetailsViewModel;
 
     @NonNull
-    private final LoadMoreListener listener = new LoadMoreListener();
+    private final LoadMoreListener loadMoreListener = new LoadMoreListener();
 
     @NonNull
     private final AtomicOption<Unbinder> unbinder = new AtomicOption<>();
@@ -71,7 +76,7 @@ public class BeerReviewsFragment extends BindingBaseFragment {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(reviewsView::setReviews, Timber::e));
 
-            subscription.add(listener.moreItemsRequestedStream()
+            subscription.add(loadMoreListener.moreItemsRequestedStream()
                     .subscribe(viewModel()::loadMoreReviews, Timber::e));
         }
     };
@@ -80,14 +85,16 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     public static Fragment newInstance(int beerId) {
         BeerReviewsFragment fragment = new BeerReviewsFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("beerId", beerId);
+        bundle.putInt(Constants.ID_KEY, beerId);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected void inject() {
-        getComponent().inject(this);
+        getComponent()
+                .plusId(new IdModule(beerId))
+                .inject(this);
     }
 
     @Override
@@ -99,7 +106,7 @@ public class BeerReviewsFragment extends BindingBaseFragment {
                 : getArguments();
 
         ofObj(bundle)
-                .map(state -> state.getInt("beerId"))
+                .map(state -> state.getInt(Constants.ID_KEY))
                 .ifSome(value -> beerId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
@@ -113,18 +120,13 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
-        reviewsView.setOnScrollListener(listener);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        viewModel().setBeerId(beerId);
+        reviewsView.setOnScrollListener(loadMoreListener);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("beerId", beerId);
+        outState.putInt(Constants.ID_KEY, beerId);
         super.onSaveInstanceState(outState);
     }
 
@@ -145,5 +147,12 @@ public class BeerReviewsFragment extends BindingBaseFragment {
     @Override
     protected DataBinder dataBinder() {
         return dataBinder;
+    }
+
+    @Override
+    public void onRefresh() {
+        loadMoreListener.resetState();
+        viewModel().refreshReviews();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

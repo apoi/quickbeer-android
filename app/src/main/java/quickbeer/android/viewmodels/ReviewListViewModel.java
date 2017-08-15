@@ -20,6 +20,7 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -27,10 +28,15 @@ import io.reark.reark.utils.RxUtils;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.Review;
+import quickbeer.android.data.stores.ReviewListStore;
+import quickbeer.android.providers.ProgressStatusProvider;
+import quickbeer.android.rx.Unit;
 import rx.Observable;
+import rx.functions.Actions;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
 import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
@@ -48,24 +54,34 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     private final DataLayer.GetReview getReview;
 
     @NonNull
+    private final ReviewListStore reviewListStore;
+
+    @NonNull
+    private final ProgressStatusProvider progressStatusProvider;
+
+    @NonNull
+    private final PublishSubject<Unit> loadTrigger = PublishSubject.create();
+
+    @NonNull
+    private final PublishSubject<Unit> refreshTrigger = PublishSubject.create();
+
+    @NonNull
     private final BehaviorSubject<List<Review>> reviews = BehaviorSubject.create();
 
-    private int beerId;
+    private final int beerId;
 
-    public ReviewListViewModel(@NonNull DataLayer.GetReviews getReviews,
+    public ReviewListViewModel(int beerId,
+                               @NonNull DataLayer.GetReviews getReviews,
                                @NonNull DataLayer.FetchReviews fetchReviews,
-                               @NonNull DataLayer.GetReview getReview) {
+                               @NonNull DataLayer.GetReview getReview,
+                               @NonNull ReviewListStore reviewListStore,
+                               @NonNull ProgressStatusProvider progressStatusProvider) {
+        this.beerId = beerId;
         this.getReviews = get(getReviews);
         this.fetchReviews = get(fetchReviews);
         this.getReview = get(getReview);
-    }
-
-    public int getBeerId() {
-        return beerId;
-    }
-
-    public void setBeerId(int beerId) {
-        this.beerId = beerId;
+        this.reviewListStore = get(reviewListStore);
+        this.progressStatusProvider = get(progressStatusProvider);
     }
 
     @NonNull
@@ -76,6 +92,10 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     public void fetchReviews(int page) {
         Timber.w("fetchReviews(%s)", page);
         fetchReviews.call(beerId, page);
+    }
+
+    public void refreshReviews() {
+        refreshTrigger.onNext(Unit.DEFAULT);
     }
 
     @NonNull
@@ -99,7 +119,8 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
         Timber.v("subscribeToDataStoreInternal");
 
         ConnectableObservable<DataStreamNotification<ItemList<Integer>>> reviewSource =
-                getReviews.call(beerId).publish();
+                loadTrigger.flatMap(__ -> getReviews.call(beerId))
+                        .publish();
 
         subscription.add(reviewSource
                 .map(toStaticProgressStatus())
@@ -114,8 +135,21 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
                 .doOnNext(list -> Timber.d("Publishing " + list.size() + " reviews from the view model"))
                 .subscribe(reviews::onNext));
 
+        subscription.add(progressStatusProvider
+                .addProgressObservable(reviewSource
+                        .map(notification -> notification)));
+
         subscription.add(reviewSource
                 .connect());
+
+        subscription.add(refreshTrigger.asObservable()
+                .switchMap(__ -> reviewListStore.delete(beerId).toObservable())
+                .doOnEach(__ -> reviews.onNext(Collections.emptyList()))
+                .doOnEach(__ -> loadTrigger.onNext(Unit.DEFAULT))
+                .subscribe(Actions.empty(), Timber::e));
+
+        // Initial trigger at bind time
+        loadTrigger.onNext(Unit.DEFAULT);
     }
 
     @Override

@@ -30,10 +30,12 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import polanski.option.AtomicOption;
+import quickbeer.android.Constants;
 import quickbeer.android.R;
 import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
+import quickbeer.android.injections.IdModule;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -50,7 +52,6 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     BrewerDetailsView detailsView;
 
     @Inject
-    @Nullable
     BrewerViewModel brewerViewModel;
 
     @NonNull
@@ -73,14 +74,16 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     public static Fragment newInstance(int brewerId) {
         BrewerDetailsFragment fragment = new BrewerDetailsFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("brewerId", brewerId);
+        bundle.putInt(Constants.ID_KEY, brewerId);
         fragment.setArguments(bundle);
         return fragment;
     }
 
     @Override
     protected void inject() {
-        getComponent().inject(this);
+        getComponent()
+                .plusId(new IdModule(brewerId))
+                .inject(this);
     }
 
     @Override
@@ -92,7 +95,7 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
                 : getArguments();
 
         ofObj(bundle)
-                .map(state -> state.getInt("brewerId"))
+                .map(state -> state.getInt(Constants.ID_KEY))
                 .ifSome(value -> brewerId = value)
                 .ifNone(() -> Timber.w("Expected state for initializing!"));
     }
@@ -109,15 +112,8 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        viewModel().setBrewerId(brewerId);
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt("brewerId", brewerId);
+        outState.putInt(Constants.ID_KEY, brewerId);
         super.onSaveInstanceState(outState);
     }
 
@@ -139,5 +135,4 @@ public class BrewerDetailsFragment extends BindingBaseFragment {
     protected DataBinder dataBinder() {
         return dataBinder;
     }
-
 }
