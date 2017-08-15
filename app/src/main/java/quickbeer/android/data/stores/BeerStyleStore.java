@@ -49,7 +49,7 @@ public class BeerStyleStore
     @NonNull
     public Option<BeerStyle> getStyle(@NonNull String styleName) {
         return Ix.from(getList())
-                .filter(value -> Objects.equals(value.getName(), styleName))
+                .filter(value -> styleName.equals(value.getName()))
                 .map(Option::ofObj)
                 .first(Option.none());
     }

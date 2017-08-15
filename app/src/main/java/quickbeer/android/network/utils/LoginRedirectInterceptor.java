@@ -108,7 +108,7 @@ public class LoginRedirectInterceptor implements Interceptor {
     }
 
     private static boolean isLoginRequest(@NonNull Request request) {
-        return Objects.equals(request.url().encodedPath(), SIGN_IN_PAGE);
+        return SIGN_IN_PAGE.equals(request.url().encodedPath());
     }
 
     private static boolean isSuccessfulLogin(@NonNull Request request, @NonNull Response response) {

@@ -16,7 +16,7 @@ android {
         versionCode version_code
         versionName "3.2.${version_code}"
 
-        minSdkVersion 19
+        minSdkVersion 17
         targetSdkVersion 25
         multiDexEnabled true
         renderscriptTargetApi 20

@@ -51,7 +51,7 @@ public final class LoginUtils {
     @NonNull
     private static Option<String> idFromCookieList(@NonNull List<Cookie> cookies) {
         return Ix.from(cookies)
-                .filter(cookie -> Objects.equals(cookie.name(), USER_ID_KEY))
+                .filter(cookie -> USER_ID_KEY.equals(cookie.name()))
                 .map(Cookie::value)
                 .map(Option::ofObj)
                 .first(none());
