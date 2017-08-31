@@ -42,10 +42,12 @@ import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import quickbeer.android.viewmodels.ReviewListViewModel;
 import rx.Observable;
+import rx.functions.Actions;
 import rx.subjects.PublishSubject;
 import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
+import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 public class BeerDetailsViewModel extends SimpleViewModel {
@@ -72,6 +74,9 @@ public class BeerDetailsViewModel extends SimpleViewModel {
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
+    private final DataLayer.GetBeer reloadBeer;
+
+    @NonNull
     private final DataLayer.GetUser getUser;
 
     @NonNull
@@ -84,9 +89,11 @@ public class BeerDetailsViewModel extends SimpleViewModel {
 
     @Inject
     public BeerDetailsViewModel(@Named("id") Integer beerId,
-                                @NonNull DataLayer.GetBeer getBeer,
+                                @Named("full") @NonNull DataLayer.GetBeer getBeer,
+                                @Named("reload") @NonNull DataLayer.GetBeer reloadBeer,
                                 @NonNull DataLayer.TickBeer tickBeer,
                                 @NonNull DataLayer.GetBrewer getBrewer,
+                                @Named("reload") @NonNull DataLayer.GetBrewer reloadBrewer,
                                 @NonNull DataLayer.GetUser getUser,
                                 @NonNull DataLayer.GetReviews getReviews,
                                 @NonNull DataLayer.FetchReviews fetchReviews,
@@ -95,16 +102,32 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                                 @NonNull ResourceProvider resourceProvider,
                                 @NonNull ProgressStatusProvider progressStatusProvider,
                                 @NonNull GlobalNotificationProvider notificationProvider) {
-        beerViewModel = new BeerViewModel(beerId, true, get(getBeer), get(progressStatusProvider));
-        brewerViewModel = new BrewerViewModel(-1, beerId, get(getBeer), get(getBrewer), get(progressStatusProvider));
-        reviewListViewModel = new ReviewListViewModel(beerId, get(getReviews), get(fetchReviews), get(getReview), get(reviewListStore), get(progressStatusProvider));
+        checkNotNull(beerId);
+        checkNotNull(getBeer);
+        checkNotNull(reloadBeer);
+        checkNotNull(tickBeer);
+        checkNotNull(getBrewer);
+        checkNotNull(reloadBrewer);
+        checkNotNull(getUser);
+        checkNotNull(getReviews);
+        checkNotNull(fetchReviews);
+        checkNotNull(getReview);
+        checkNotNull(reviewListStore);
+        checkNotNull(resourceProvider);
+        checkNotNull(progressStatusProvider);
+        checkNotNull(notificationProvider);
+
+        beerViewModel = new BeerViewModel(beerId, getBeer, progressStatusProvider);
+        brewerViewModel = new BrewerViewModel(-1, beerId, getBeer, getBrewer, reloadBrewer, progressStatusProvider);
+        reviewListViewModel = new ReviewListViewModel(beerId, getReviews, fetchReviews, getReview, reviewListStore, progressStatusProvider);
 
         this.beerId = beerId;
-        this.getBeer = get(getBeer);
-        this.getUser = get(getUser);
-        this.tickBeer = get(tickBeer);
-        this.resourceProvider = get(resourceProvider);
-        this.notificationProvider = get(notificationProvider);
+        this.getBeer = getBeer;
+        this.reloadBeer = reloadBeer;
+        this.getUser = getUser;
+        this.tickBeer = tickBeer;
+        this.resourceProvider = resourceProvider;
+        this.notificationProvider = notificationProvider;
     }
 
     @NonNull
@@ -132,8 +155,13 @@ public class BeerDetailsViewModel extends SimpleViewModel {
         reviewListViewModel.fetchReviews((currentReviewsCount / Constants.REVIEWS_PER_PAGE) + 1);
     }
 
-    public void refreshReviews() {
-        reviewListViewModel.refreshReviews();
+    public void reloadBeerDetails() {
+        subscription.add(reloadBeer.call(beerId)
+                .subscribe(Actions.empty(), Timber::e));
+    }
+
+    public void reloadReviews() {
+        reviewListViewModel.reloadReviews();
     }
 
     @NonNull
@@ -146,7 +174,7 @@ public class BeerDetailsViewModel extends SimpleViewModel {
                 get(tickBeer).call(beerId, rating)
                         .share();
 
-        subscription.add(getBeer.call(beerId, false)
+        subscription.add(getBeer.call(beerId)
                 .filter(DataStreamNotification::isOnNext)
                 .take(1)
                 .map(DataStreamNotification::getValue)

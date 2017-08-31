@@ -56,7 +56,7 @@ public interface DataLayer {
 
     interface GetBeer {
         @NonNull
-        Observable<DataStreamNotification<Beer>> call(int beerId, boolean fullDetails);
+        Observable<DataStreamNotification<Beer>> call(int beerId);
     }
 
     interface AccessBeer {

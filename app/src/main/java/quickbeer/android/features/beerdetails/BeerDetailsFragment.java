@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,14 @@ import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;
 import static polanski.option.Option.ofObj;
 
-public class BeerDetailsFragment extends BindingBaseFragment implements RatingBar.OnRatingBarChangeListener {
+public class BeerDetailsFragment extends BindingBaseFragment
+        implements RatingBar.OnRatingBarChangeListener, SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.beer_details_view)
     BeerDetailsView detailsView;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
     BeerDetailsViewModel beerDetailsViewModel;
@@ -137,6 +142,7 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
         detailsView.setRatingBarChangeListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -170,5 +176,11 @@ public class BeerDetailsFragment extends BindingBaseFragment implements RatingBa
             viewModel().tickBeer((int) rating);
             get(analytics).createEvent(rating > 0 ? Action.TICK_ADD : Action.TICK_REMOVE);
         }
+    }
+
+    @Override
+    public void onRefresh() {
+        viewModel().reloadBeerDetails();
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

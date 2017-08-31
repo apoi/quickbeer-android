@@ -33,6 +33,7 @@ import net.opacapp.multilinecollapsingtoolbar.CollapsingToolbarLayout;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,38 +79,29 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
     ProgressIndicatorBar progressIndicatorBar;
 
     @Inject
-    @Nullable
     DataLayer.GetBeer getBeer;
 
     @Inject
-    @Nullable
     DataLayer.AccessBeer accessBeer;
 
     @Inject
-    @Nullable
     DataLayer.AccessBrewer accessBrewer;
 
-    @Nullable
     @Inject
     NavigationProvider navigationProvider;
 
-    @Nullable
     @Inject
     ToastProvider toastProvider;
 
-    @Nullable
     @Inject
     ProgressStatusProvider progressStatusProvider;
 
-    @Nullable
     @Inject
     SearchViewViewModel searchViewViewModel;
 
-    @Nullable
     @Inject
     Picasso picasso;
 
-    @Nullable
     @Inject
     Analytics analytics;
 
@@ -120,7 +112,7 @@ public class BeerDetailsActivity extends BindingDrawerActivity {
         @Override
         public void bind(@NonNull CompositeSubscription subscription) {
             ConnectableObservable<Beer> sourceObservable = get(getBeer)
-                    .call(beerId, false)
+                    .call(beerId)
                     .subscribeOn(Schedulers.io())
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)

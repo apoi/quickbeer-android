@@ -29,6 +29,7 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.providers.ProgressStatusProvider;
 import rx.Observable;
+import rx.functions.Actions;
 import rx.observables.ConnectableObservable;
 import rx.schedulers.Schedulers;
 import rx.subjects.BehaviorSubject;
@@ -46,36 +47,46 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     private final DataLayer.GetBrewer getBrewer;
 
     @NonNull
+    private final DataLayer.GetBrewer reloadBrewer;
+
+    @NonNull
     private final ProgressStatusProvider progressStatusProvider;
 
     @NonNull
     private final BehaviorSubject<Brewer> brewer = BehaviorSubject.create();
+
+    @NonNull
+    private final CompositeSubscription subscription = new CompositeSubscription();
 
     private final int brewerId;
 
     private final int beerId;
 
     @Inject
-    public BrewerViewModel(@Named("id") Integer brewerId,
+    public BrewerViewModel(@Named("id") @NonNull Integer brewerId,
                            @Named("secondaryId") Integer beerId,
                            @NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetBrewer getBrewer,
+                           @Named("reload") @NonNull DataLayer.GetBrewer reloadBrewer,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
         this.brewerId = brewerId;
         this.beerId = beerId;
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
+        this.reloadBrewer = get(reloadBrewer);
         this.progressStatusProvider = get(progressStatusProvider);
     }
 
-    public BrewerViewModel(@Named("id") Integer brewerId,
+    public BrewerViewModel(@NonNull Integer brewerId,
                            @NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetBrewer getBrewer,
+                           @NonNull DataLayer.GetBrewer reloadBrewer,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
         this.brewerId = brewerId;
         this.beerId = -1;
         this.getBeer = get(getBeer);
         this.getBrewer = get(getBrewer);
+        this.reloadBrewer = get(reloadBrewer);
         this.progressStatusProvider = get(progressStatusProvider);
     }
 
@@ -86,6 +97,11 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     @NonNull
     public Observable<Brewer> getBrewer() {
         return brewer.asObservable();
+    }
+
+    public void reloadBrewerDetails() {
+        subscription.add(reloadBrewer.call(brewerId)
+                .subscribe(Actions.empty(), Timber::e));
     }
 
     @Override
@@ -117,7 +133,7 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
         if (brewerId > 0) {
             return getBrewer.call(brewerId);
         } else if (beerId > 0) {
-            return getBeer.call(beerId, false)
+            return getBeer.call(beerId)
                     .filter(DataStreamNotification::isOnNext)
                     .map(DataStreamNotification::getValue)
                     .map(Beer::brewerId)
@@ -130,5 +146,10 @@ public class BrewerViewModel extends NetworkViewModel<Brewer> {
     @Override
     protected boolean hasValue(@Nullable Brewer item) {
         return true;
+    }
+
+    @Override
+    protected void unbind() {
+        subscription.clear();
     }
 }

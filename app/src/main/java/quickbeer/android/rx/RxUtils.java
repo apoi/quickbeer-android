@@ -48,9 +48,6 @@ public final class RxUtils<T> {
         return option.match(list -> list.getItems().isEmpty(), () -> true);
     }
 
-    public static void nothing(Object __) {
-    }
-
     public static boolean isTrue(boolean value) {
         return value;
     }

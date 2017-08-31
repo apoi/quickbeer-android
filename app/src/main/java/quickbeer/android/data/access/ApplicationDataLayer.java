@@ -65,6 +65,7 @@ import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.Single;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -199,16 +200,31 @@ public class ApplicationDataLayer {
     //// GET BEER DETAILS
 
     @NonNull
-    public Observable<DataStreamNotification<Beer>> getBeer(int beerId, boolean fullDetails) {
+    public Observable<DataStreamNotification<Beer>> getBeerPartial(int beerId) {
+        return getBeer(beerId, Beer::basicDataMissing);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Beer>> getBeerFull(int beerId) {
+        return getBeer(beerId, Beer::detailedDataMissing);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Beer>> reloadBeer(int beerId) {
+        return getBeer(beerId, beer -> true);
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<Beer>> getBeer(int beerId, @NonNull Func1<Beer, Boolean> needsReload) {
         Timber.v("getBeer(%s)", get(beerId));
 
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Beer>> triggerFetchIfEmpty =
                 beerStore.getOnce(beerId)
                         .toObservable()
-                        .filter(option -> option.match(beer -> !beer.hasDetails(fullDetails), () -> true))
+                        .filter(option -> option.match(needsReload::call, () -> true))
                         .doOnNext(__ -> {
-                            Timber.v("Beer not cached, fetching");
+                            Timber.v("Fetching beer data");
                             fetchBeer(beerId);
                         });
 
@@ -715,6 +731,7 @@ public class ApplicationDataLayer {
         return listenerId;
     }
 
+    @NonNull
     public Observable<DataStreamNotification<Void>> tickBeer(int beerId, int rating) {
         Timber.v("tickBeer(%s, %s)", beerId, rating);
 
@@ -742,15 +759,25 @@ public class ApplicationDataLayer {
 
     @NonNull
     public Observable<DataStreamNotification<Brewer>> getBrewer(int brewerId) {
+        return getBrewer(brewerId, brewer -> !brewer.hasDetails());
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Brewer>> reloadBrewer(int brewerId) {
+        return getBrewer(brewerId, brewer -> true);
+    }
+
+    @NonNull
+    public Observable<DataStreamNotification<Brewer>> getBrewer(int brewerId, @NonNull Func1<Brewer, Boolean> needsReload) {
         Timber.v("getBrewer(%s)", brewerId);
 
         // Trigger a fetch only if full details haven't been fetched
         Observable<Option<Brewer>> triggerFetchIfEmpty =
                 brewerStore.getOnce(brewerId)
                         .toObservable()
-                        .filter(option -> option.match(brewer -> !brewer.hasDetails(), () -> true))
+                        .filter(option -> option.match(needsReload::call, () -> true))
                         .doOnNext(__ -> {
-                            Timber.v("Brewer not cached, fetching");
+                            Timber.v("Fetching brewer data");
                             fetchBrewer(brewerId);
                         });
 
@@ -865,6 +892,7 @@ public class ApplicationDataLayer {
 
     //// STYLES
 
+    @NonNull
     public Single<Option<BeerStyle>> getStyle(int styleId) {
         Timber.v("getStyle(%s)", styleId);
 
@@ -873,6 +901,7 @@ public class ApplicationDataLayer {
 
     //// COUNTRIES
 
+    @NonNull
     public Single<Option<Country>> getCountry(int countryId) {
         Timber.v("getCountry(%s)", countryId);
 

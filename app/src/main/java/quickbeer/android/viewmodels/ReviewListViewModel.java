@@ -63,7 +63,7 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
     private final PublishSubject<Unit> loadTrigger = PublishSubject.create();
 
     @NonNull
-    private final PublishSubject<Unit> refreshTrigger = PublishSubject.create();
+    private final PublishSubject<Unit> reloadTrigger = PublishSubject.create();
 
     @NonNull
     private final BehaviorSubject<List<Review>> reviews = BehaviorSubject.create();
@@ -94,8 +94,8 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
         fetchReviews.call(beerId, page);
     }
 
-    public void refreshReviews() {
-        refreshTrigger.onNext(Unit.DEFAULT);
+    public void reloadReviews() {
+        reloadTrigger.onNext(Unit.DEFAULT);
     }
 
     @NonNull
@@ -142,7 +142,7 @@ public class ReviewListViewModel extends NetworkViewModel<ItemList<Review>> {
         subscription.add(reviewSource
                 .connect());
 
-        subscription.add(refreshTrigger.asObservable()
+        subscription.add(reloadTrigger.asObservable()
                 .switchMap(__ -> reviewListStore.delete(beerId).toObservable())
                 .doOnEach(__ -> reviews.onNext(Collections.emptyList()))
                 .doOnEach(__ -> loadTrigger.onNext(Unit.DEFAULT))

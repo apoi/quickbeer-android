@@ -20,6 +20,7 @@ package quickbeer.android.data;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -65,9 +66,23 @@ public final class DataModule {
     }
 
     @Provides
-    static DataLayer.GetBeer provideGetBeer(
+    static DataLayer.GetBeer provideGetBeerPartial(
             @NonNull ApplicationDataLayer dataLayer) {
-        return dataLayer::getBeer;
+        return dataLayer::getBeerPartial;
+    }
+
+    @Provides
+    @Named("full")
+    static DataLayer.GetBeer provideGetBeerFull(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::getBeerFull;
+    }
+
+    @Provides
+    @Named("reload")
+    static DataLayer.GetBeer provideReloadBeer(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::reloadBeer;
     }
 
     @Provides
@@ -182,6 +197,13 @@ public final class DataModule {
     static DataLayer.GetBrewer provideGetBrewer(
             @NonNull ApplicationDataLayer dataLayer) {
         return dataLayer::getBrewer;
+    }
+
+    @Provides
+    @Named("reload")
+    static DataLayer.GetBrewer provideReloadBrewer(
+            @NonNull ApplicationDataLayer dataLayer) {
+        return dataLayer::reloadBrewer;
     }
 
     @Provides

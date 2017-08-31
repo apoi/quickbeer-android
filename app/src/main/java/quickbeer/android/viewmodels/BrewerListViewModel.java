@@ -116,7 +116,7 @@ public abstract class BrewerListViewModel extends NetworkViewModel<ItemList<Stri
     @NonNull
     private Func1<List<Integer>, List<BrewerViewModel>> toBrewerViewModelList() {
         return brewerIds -> Ix.from(brewerIds)
-                .map(id -> new BrewerViewModel(id, getBeer, getBrewer, progressStatusProvider))
+                .map(id -> new BrewerViewModel(id, getBeer, getBrewer, getBrewer, progressStatusProvider))
                 .toList();
     }
 

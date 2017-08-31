@@ -134,11 +134,12 @@ public abstract class Beer {
 
     // Accessors
 
-    public boolean hasDetails(boolean fullDetails) {
-        //noinspection OverlyComplexBooleanExpression
-        return brewerId() != null
-                && hasValue(styleName())
-                && (!fullDetails || description() != null);
+    public boolean basicDataMissing() {
+        return brewerId() == null || !hasValue(styleName());
+    }
+
+    public boolean detailedDataMissing() {
+        return basicDataMissing() || description() == null;
     }
 
     public int rating() {

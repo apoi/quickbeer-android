@@ -152,7 +152,7 @@ public class BeerReviewsFragment extends BindingBaseFragment implements SwipeRef
     @Override
     public void onRefresh() {
         loadMoreListener.resetState();
-        viewModel().refreshReviews();
+        viewModel().reloadReviews();
         swipeRefreshLayout.setRefreshing(false);
     }
 }
