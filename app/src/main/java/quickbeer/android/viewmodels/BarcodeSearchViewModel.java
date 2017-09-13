@@ -25,9 +25,7 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.providers.ProgressStatusProvider;
-import quickbeer.android.utils.StringUtils;
 import rx.Observable;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -35,12 +33,6 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
 
     @NonNull
     private final DataLayer.GetBarcodeSearch getBarcodeSearch;
-
-    @NonNull
-    private final DataLayer.GetBeerSearch getBeerSearch;
-
-    @NonNull
-    private final SearchViewViewModel searchViewViewModel;
 
     @NonNull
     private String barcode = "";
@@ -51,11 +43,9 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
                            @NonNull DataLayer.GetBarcodeSearch getBarcodeSearch,
                            @NonNull SearchViewViewModel searchViewViewModel,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
-        this.getBeerSearch = get(getBeerSearch);
         this.getBarcodeSearch = get(getBarcodeSearch);
-        this.searchViewViewModel = get(searchViewViewModel);
     }
 
     public void setBarcode(@NonNull String barcode) {
@@ -64,16 +54,13 @@ public class BarcodeSearchViewModel extends BeerListViewModel {
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        Observable<DataStreamNotification<ItemList<String>>> searchObservable =
-                get(searchViewViewModel)
-                        .getQueryStream()
-                        .distinctUntilChanged()
-                        .filter(StringUtils::hasValue)
-                        .doOnNext(query -> Timber.d("query(%s)", query))
-                        .switchMap(query -> get(getBeerSearch).call(query));
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
+        return getBarcodeSearch.call(barcode);
+    }
 
-        return getBarcodeSearch.call(barcode)
-                .mergeWith(searchObservable);
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 }

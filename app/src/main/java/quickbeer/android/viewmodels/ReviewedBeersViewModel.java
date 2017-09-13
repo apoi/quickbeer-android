@@ -20,7 +20,6 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import io.reark.reark.data.DataStreamNotification;
 import polanski.option.Option;
@@ -28,9 +27,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.pojos.User;
 import quickbeer.android.providers.ProgressStatusProvider;
-import quickbeer.android.utils.StringUtils;
 import rx.Observable;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -45,12 +42,6 @@ public class ReviewedBeersViewModel extends BeerListViewModel {
     @NonNull
     private final DataLayer.FetchReviewedBeers fetchReviewedBeers;
 
-    @NonNull
-    private final DataLayer.GetBeerSearch getBeerSearch;
-
-    @NonNull
-    private final SearchViewViewModel searchViewViewModel;
-
     @Inject
     ReviewedBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
                            @NonNull DataLayer.GetUser getUser,
@@ -59,13 +50,11 @@ public class ReviewedBeersViewModel extends BeerListViewModel {
                            @NonNull DataLayer.FetchReviewedBeers fetchReviewedBeers,
                            @NonNull SearchViewViewModel searchViewViewModel,
                            @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
         this.getUser = get(getUser);
         this.getReviewedBeers = get(getReviewedBeers);
         this.fetchReviewedBeers = get(fetchReviewedBeers);
-        this.getBeerSearch = get(getBeerSearch);
-        this.searchViewViewModel = get(searchViewViewModel);
     }
 
     @NonNull
@@ -79,19 +68,16 @@ public class ReviewedBeersViewModel extends BeerListViewModel {
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        Observable<DataStreamNotification<ItemList<String>>> searchObservable =
-                get(searchViewViewModel)
-                        .getQueryStream()
-                        .distinctUntilChanged()
-                        .filter(StringUtils::hasValue)
-                        .doOnNext(query -> Timber.d("query(%s)", query))
-                        .switchMap(query -> get(getBeerSearch).call(query));
-
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
         return getUser.call()
                 .flatMap(userOption -> userOption.match(
                         user -> get(getReviewedBeers).call(String.valueOf(user.id())),
-                        () -> Observable.just(DataStreamNotification.<ItemList<String>>completedWithoutValue())))
-                .mergeWith(searchObservable);
+                        () -> Observable.just(DataStreamNotification.<ItemList<String>>completedWithoutValue())));
+    }
+
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 }

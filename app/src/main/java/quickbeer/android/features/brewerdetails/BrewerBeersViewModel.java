@@ -26,6 +26,7 @@ import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
+import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.Observable;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -39,9 +40,11 @@ public class BrewerBeersViewModel extends BeerListViewModel {
 
     @Inject
     public BrewerBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                @NonNull DataLayer.GetBeerSearch getBeerSearch,
                                 @NonNull DataLayer.GetBrewerBeers getBrewerBeers,
+                                @NonNull SearchViewViewModel searchViewViewModel,
                                 @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
         this.getBrewerBeers = get(getBrewerBeers);
     }
@@ -52,7 +55,13 @@ public class BrewerBeersViewModel extends BeerListViewModel {
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
         return get(getBrewerBeers).call(String.valueOf(brewerId));
+    }
+
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 }

@@ -24,6 +24,7 @@ import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.viewmodels.BeerListViewModel
+import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.Observable
 import rx.Single
 import javax.inject.Inject
@@ -34,14 +35,20 @@ internal constructor(@Named("id") private val countryId: Int,
                      private val getCountry: DataLayer.GetCountry,
                      private val getBeersInCountry: DataLayer.GetBeersInCountry,
                      getBeer: DataLayer.GetBeer,
+                     getBeerSearch: DataLayer.GetBeerSearch,
+                     searchViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(getBeer, progressStatusProvider) {
+    : BeerListViewModel(getBeer, getBeerSearch, searchViewModel, progressStatusProvider) {
 
     fun getCountry(): Single<Option<Country>> {
         return getCountry.call(countryId.toInt());
     }
 
-    override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {
+    override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return getBeersInCountry.call(countryId.toString())
+    }
+
+    override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
+        return Observable.empty()
     }
 }

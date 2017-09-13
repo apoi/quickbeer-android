@@ -36,17 +36,25 @@ public class RecentBeersViewModel extends BeerListViewModel {
 
     @Inject
     RecentBeersViewModel(@NonNull DataLayer.GetBeer getBeer,
+                         @NonNull DataLayer.GetBeerSearch getBeerSearch,
                          @NonNull DataLayer.GetAccessedBeers getAccessedBeers,
+                         @NonNull SearchViewViewModel searchViewViewModel,
                          @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
         this.getAccessedBeers = get(getAccessedBeers);
     }
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
         return getAccessedBeers.call();
+    }
+
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 
     @Override

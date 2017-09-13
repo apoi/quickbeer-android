@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,10 +54,13 @@ import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public abstract class BeerListFragment extends BindingBaseFragment {
+public abstract class BeerListFragment extends BindingBaseFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.list_layout)
     BeerListView view;
+
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Inject
@@ -123,6 +127,7 @@ public abstract class BeerListFragment extends BindingBaseFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder.setIfNone(bind(this, view));
+        swipeRefreshLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -177,4 +182,9 @@ public abstract class BeerListFragment extends BindingBaseFragment {
         return dataBinder;
     }
 
+    @Override
+    public void onRefresh() {
+        viewModel().reload();
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }

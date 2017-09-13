@@ -27,6 +27,7 @@ import ix.Ix;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.providers.ProgressStatusProvider;
+import quickbeer.android.utils.StringUtils;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.observables.ConnectableObservable;
@@ -43,19 +44,35 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
     private final DataLayer.GetBeer getBeer;
 
     @NonNull
+    private final DataLayer.GetBeerSearch getBeerSearch;
+
+    @NonNull
+    private final SearchViewViewModel searchViewViewModel;
+
+    @NonNull
     private final ProgressStatusProvider progressStatusProvider;
+
+    @NonNull
+    private final PublishSubject<Observable<DataStreamNotification<ItemList<String>>>> source = PublishSubject.create();
 
     @NonNull
     private final PublishSubject<List<BeerViewModel>> beers = PublishSubject.create();
 
     protected BeerListViewModel(@NonNull DataLayer.GetBeer getBeer,
+                                @NonNull DataLayer.GetBeerSearch getBeerSearch,
+                                @NonNull SearchViewViewModel searchViewViewModel,
                                 @NonNull ProgressStatusProvider progressStatusProvider) {
         this.getBeer = get(getBeer);
+        this.getBeerSearch = get(getBeerSearch);
+        this.searchViewViewModel = get(searchViewViewModel);
         this.progressStatusProvider = get(progressStatusProvider);
     }
 
     @NonNull
-    protected abstract Observable<DataStreamNotification<ItemList<String>>> sourceObservable();
+    protected abstract Observable<DataStreamNotification<ItemList<String>>> dataSource();
+
+    @NonNull
+    protected abstract Observable<DataStreamNotification<ItemList<String>>> reloadSource();
 
     protected boolean reportsProgress() {
         return true;
@@ -66,10 +83,15 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
         return beers.asObservable();
     }
 
+    public void reload() {
+        source.onNext(reloadSource());
+    }
+
     @Override
     protected void bind(@NonNull CompositeSubscription subscription) {
+        // Switch source according to selector subject
         ConnectableObservable<DataStreamNotification<ItemList<String>>> sharedObservable =
-                sourceObservable()
+                Observable.switchOnNext(source)
                         .subscribeOn(Schedulers.computation())
                         .publish();
 
@@ -99,6 +121,18 @@ public abstract class BeerListViewModel extends NetworkViewModel<ItemList<String
         }
 
         subscription.add(sharedObservable.connect());
+
+        // Start with default data source
+        source.onNext(dataSource());
+
+        // Switch to search on new search term
+        subscription.add(get(searchViewViewModel)
+                .getQueryStream()
+                .distinctUntilChanged()
+                .filter(StringUtils::hasValue)
+                .doOnNext(query -> Timber.d("query(%s)", query))
+                .map(query -> get(getBeerSearch).call(query))
+                .subscribe(source::onNext, Timber::e));
     }
 
     @NonNull

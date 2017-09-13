@@ -25,6 +25,7 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.BeerListViewModel
+import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.Observable
 import rx.Single
 import javax.inject.Inject
@@ -35,8 +36,10 @@ internal constructor(@Named("id") private val styleId: Int,
                      private val getStyle: DataLayer.GetStyle,
                      private val getBeersInStyle: DataLayer.GetBeersInStyle,
                      getBeer: DataLayer.GetBeer,
+                     getBeerSearch: DataLayer.GetBeerSearch,
+                     searchViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(getBeer, progressStatusProvider) {
+    : BeerListViewModel(getBeer, getBeerSearch, searchViewModel, progressStatusProvider) {
 
     fun getStyle(): Single<Option<BeerStyle>> {
         return getStyle.call(styleId.toInt());
@@ -51,7 +54,11 @@ internal constructor(@Named("id") private val styleId: Int,
                 .flatMap { getStyle.call(it.parent) }
     }
 
-    override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {
+    override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return getBeersInStyle.call(styleId.toString())
+    }
+
+    override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
+        return Observable.empty()
     }
 }

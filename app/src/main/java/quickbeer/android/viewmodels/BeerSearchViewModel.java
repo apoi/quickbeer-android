@@ -25,9 +25,7 @@ import io.reark.reark.data.DataStreamNotification;
 import quickbeer.android.data.DataLayer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.providers.ProgressStatusProvider;
-import quickbeer.android.utils.StringUtils;
 import rx.Observable;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -37,9 +35,6 @@ public class BeerSearchViewModel extends BeerListViewModel {
     private final DataLayer.GetBeerSearch getBeerSearch;
 
     @NonNull
-    private final SearchViewViewModel searchViewViewModel;
-
-    @NonNull
     private String initialQuery = "";
 
     @Inject
@@ -47,10 +42,9 @@ public class BeerSearchViewModel extends BeerListViewModel {
                         @NonNull DataLayer.GetBeerSearch getBeerSearch,
                         @NonNull SearchViewViewModel searchViewViewModel,
                         @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
         this.getBeerSearch = get(getBeerSearch);
-        this.searchViewViewModel = get(searchViewViewModel);
     }
 
     public void setInitialQuery(@NonNull String query) {
@@ -59,14 +53,13 @@ public class BeerSearchViewModel extends BeerListViewModel {
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        return get(searchViewViewModel)
-                .getQueryStream()
-                .startWith(initialQuery)
-                .distinctUntilChanged()
-                .filter(StringUtils::hasValue)
-                .doOnNext(this::setInitialQuery)
-                .doOnNext(query -> Timber.d("query(%s)", query))
-                .switchMap(query -> get(getBeerSearch).call(query));
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
+        return getBeerSearch.call(initialQuery);
+    }
+
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 }

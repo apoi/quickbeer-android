@@ -30,13 +30,11 @@ import quickbeer.android.data.pojos.Country;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.providers.ProgressStatusProvider;
-import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import rx.Observable;
 import rx.Single;
 import rx.subjects.BehaviorSubject;
-import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -46,13 +44,7 @@ public class BeersInCountryViewModel extends BeerListViewModel {
     private final DataLayer.GetBeersInCountry getBeersInCountry;
 
     @NonNull
-    private final DataLayer.GetBeerSearch getBeerSearch;
-
-    @NonNull
     private final CountryStore countryStore;
-
-    @NonNull
-    private final SearchViewViewModel searchViewViewModel;
 
     @NonNull
     private final Integer countryId;
@@ -68,13 +60,11 @@ public class BeersInCountryViewModel extends BeerListViewModel {
                             @NonNull CountryStore countryStore,
                             @NonNull SearchViewViewModel searchViewViewModel,
                             @NonNull ProgressStatusProvider progressStatusProvider) {
-        super(getBeer, progressStatusProvider);
+        super(getBeer, getBeerSearch, searchViewViewModel, progressStatusProvider);
 
         this.countryId = get(countryId);
-        this.getBeerSearch = get(getBeerSearch);
         this.getBeersInCountry = get(getBeersInCountry);
         this.countryStore = get(countryStore);
-        this.searchViewViewModel = get(searchViewViewModel);
     }
 
     public void detailsClicked(int visibility) {
@@ -100,16 +90,13 @@ public class BeersInCountryViewModel extends BeerListViewModel {
 
     @NonNull
     @Override
-    protected Observable<DataStreamNotification<ItemList<String>>> sourceObservable() {
-        Observable<DataStreamNotification<ItemList<String>>> searchObservable =
-                get(searchViewViewModel)
-                        .getQueryStream()
-                        .distinctUntilChanged()
-                        .filter(StringUtils::hasValue)
-                        .doOnNext(query -> Timber.d("query(%s)", query))
-                        .switchMap(query -> get(getBeerSearch).call(query));
+    protected Observable<DataStreamNotification<ItemList<String>>> dataSource() {
+        return getBeersInCountry.call(String.valueOf(countryId));
+    }
 
-        return getBeersInCountry.call(String.valueOf(countryId))
-                .mergeWith(searchObservable);
+    @NonNull
+    @Override
+    protected Observable<DataStreamNotification<ItemList<String>>> reloadSource() {
+        return Observable.empty();
     }
 }
