@@ -20,7 +20,6 @@ package quickbeer.android.data.stores.cores
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.reark.reark.data.stores.cores.MemoryStoreCore
-import ix.Ix
 import quickbeer.android.R
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.providers.ResourceProvider
@@ -46,8 +45,7 @@ internal constructor(resourceProvider: ResourceProvider,
             reader.close()
             input.close()
 
-            Ix.from(countryList)
-                    .subscribe { country -> put(country.id, country) }
+            countryList.forEach{ put(it.id, it) }
 
         } catch (e: IOException) {
             Timber.e(e, "Failed reading countries!")
