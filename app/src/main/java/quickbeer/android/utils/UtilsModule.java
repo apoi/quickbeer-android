@@ -34,7 +34,7 @@ public final class UtilsModule {
     @Provides
     @Singleton
     static NetworkUtils provideNetworkUtils(@ForApplication Context context,
-                                             @Named(Constants.API_KEY_NAME) String apiKey) {
+                                            @Named(Constants.API_KEY_NAME) String apiKey) {
         return new NetworkUtils(apiKey);
     }
 }

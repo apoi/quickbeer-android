@@ -19,7 +19,9 @@ package quickbeer.android.features.styledetails
 
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
-import quickbeer.android.data.DataLayer
+import quickbeer.android.data.actions.BeerActions
+import quickbeer.android.data.actions.BeerSearchActions
+import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
@@ -33,16 +35,15 @@ import javax.inject.Named
 
 class StyleViewModel @Inject
 internal constructor(@Named("id") private val styleId: Int,
-                     private val getStyle: DataLayer.GetStyle,
-                     private val getBeersInStyle: DataLayer.GetBeersInStyle,
-                     getBeer: DataLayer.GetBeer,
-                     getBeerSearch: DataLayer.GetBeerSearch,
+                     private val styleActions: StyleActions,
+                     beerActions: BeerActions,
+                     beerSearchActions: BeerSearchActions,
                      searchViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(getBeer, getBeerSearch, searchViewModel, progressStatusProvider) {
+    : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
 
     fun getStyle(): Single<Option<BeerStyle>> {
-        return getStyle.call(styleId.toInt());
+        return styleActions.get(styleId)
     }
 
     fun getParentStyle(): Single<Option<BeerStyle>> {
@@ -51,11 +52,11 @@ internal constructor(@Named("id") private val styleId: Int,
                 .compose { RxUtils.pickValue(it) }
                 .first()
                 .toSingle()
-                .flatMap { getStyle.call(it.parent) }
+                .flatMap { styleActions.get(it.parent) }
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return getBeersInStyle.call(styleId.toString())
+        return styleActions.beers(styleId)
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {

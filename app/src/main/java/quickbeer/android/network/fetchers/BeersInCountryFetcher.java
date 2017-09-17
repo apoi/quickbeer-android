@@ -57,8 +57,8 @@ public class BeersInCountryFetcher extends BeerSearchFetcher {
             return;
         }
 
-        String countryId = get(intent).getStringExtra("countryId");
-        fetchBeerSearch(countryId, listenerId);
+        int countryId = get(intent).getIntExtra("countryId", 0);
+        fetchBeerSearch(String.valueOf(countryId), listenerId);
     }
 
     @NonNull

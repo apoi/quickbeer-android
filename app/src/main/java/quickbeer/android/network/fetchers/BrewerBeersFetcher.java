@@ -56,8 +56,8 @@ public class BrewerBeersFetcher extends BeerSearchFetcher {
             return;
         }
 
-        String brewerId = get(intent).getStringExtra("brewerId");
-        fetchBeerSearch(brewerId, listenerId);
+        int brewerId = get(intent).getIntExtra("brewerId", 0);
+        fetchBeerSearch(String.valueOf(brewerId), listenerId);
     }
 
     @NonNull

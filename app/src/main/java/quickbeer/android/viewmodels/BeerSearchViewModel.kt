@@ -18,28 +18,32 @@
 package quickbeer.android.viewmodels
 
 import io.reark.reark.data.DataStreamNotification
+import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BeerActions
-import quickbeer.android.data.actions.BeerListActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import rx.Observable
 import javax.inject.Inject
 
-class TopBeersViewModel @Inject
-internal constructor(private val beerListActions: BeerListActions,
-                     beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
+class BeerSearchViewModel @Inject
+internal constructor(beerActions: BeerActions,
+                     private val beerSearchActions: BeerSearchActions,
                      searchViewViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
+    private var initialQuery = ""
+
+    fun setInitialQuery(query: String) {
+        initialQuery = get(query)
+    }
+
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.topBeers()
+        return beerSearchActions.search(initialQuery)
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.fetchTopBeers()
-                .flatMapObservable { beerListActions.topBeers() }
+        return Observable.empty<DataStreamNotification<ItemList<String>>>()
     }
 }

@@ -56,8 +56,8 @@ public class BeersInStyleFetcher extends BeerSearchFetcher {
             return;
         }
 
-        String styleId = get(intent).getStringExtra("styleId");
-        fetchBeerSearch(styleId, listenerId);
+        int styleId = get(intent).getIntExtra("styleId", 0);
+        fetchBeerSearch(String.valueOf(styleId), listenerId);
     }
 
     @NonNull

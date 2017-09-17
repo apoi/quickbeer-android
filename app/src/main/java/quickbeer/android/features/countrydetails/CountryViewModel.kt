@@ -19,7 +19,9 @@ package quickbeer.android.features.countrydetails
 
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
-import quickbeer.android.data.DataLayer
+import quickbeer.android.data.actions.BeerActions
+import quickbeer.android.data.actions.BeerSearchActions
+import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
@@ -32,20 +34,19 @@ import javax.inject.Named
 
 class CountryViewModel @Inject
 internal constructor(@Named("id") private val countryId: Int,
-                     private val getCountry: DataLayer.GetCountry,
-                     private val getBeersInCountry: DataLayer.GetBeersInCountry,
-                     getBeer: DataLayer.GetBeer,
-                     getBeerSearch: DataLayer.GetBeerSearch,
+                     private val countryActions: CountryActions,
+                     beerActions: BeerActions,
+                     beerSearchActions: BeerSearchActions,
                      searchViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(getBeer, getBeerSearch, searchViewModel, progressStatusProvider) {
+    : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
 
     fun getCountry(): Single<Option<Country>> {
-        return getCountry.call(countryId.toInt());
+        return countryActions.get(countryId)
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return getBeersInCountry.call(countryId.toString())
+        return countryActions.beers(countryId)
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {

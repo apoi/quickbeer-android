@@ -31,7 +31,7 @@ import quickbeer.android.analytics.Analytics
 import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
-import quickbeer.android.data.DataLayer
+import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
@@ -46,10 +46,10 @@ import javax.inject.Inject
 class CountryDetailsActivity : BindingDrawerActivity() {
 
     @Inject
-    lateinit var getCountry: DataLayer.GetCountry
+    internal lateinit var countryActions: CountryActions
 
     @Inject
-    lateinit var searchViewViewModel: SearchViewViewModel
+    internal lateinit var searchViewViewModel: SearchViewViewModel
 
     @Inject
     lateinit var navigationProvider: NavigationProvider
@@ -65,7 +65,7 @@ class CountryDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(subscription: CompositeSubscription) {
             // Set toolbar title
-            subscription.add(getCountry.call(countryId)
+            subscription.add(countryActions.get(countryId)
                     .toObservable()
                     .compose({ RxUtils.pickValue(it) })
                     .observeOn(AndroidSchedulers.mainThread())

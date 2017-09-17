@@ -3,6 +3,7 @@ package quickbeer.android.injections;
 import dagger.Subcomponent;
 import quickbeer.android.features.beerdetails.BeerDetailsFragment;
 import quickbeer.android.features.beerdetails.BeerReviewsFragment;
+import quickbeer.android.features.brewerdetails.BrewerBeersFragment;
 import quickbeer.android.features.brewerdetails.BrewerDetailsFragment;
 import quickbeer.android.features.countrydetails.CountryDetailsBeersFragment;
 import quickbeer.android.features.countrydetails.CountryDetailsFragment;
@@ -15,6 +16,8 @@ public interface IdComponent {
     void inject(BeerDetailsFragment beerDetailsFragment);
 
     void inject(BrewerDetailsFragment brewerDetailsFragment);
+
+    void inject(BrewerBeersFragment brewerBeersFragment);
 
     void inject(BeerReviewsFragment beerReviewsFragment);
 

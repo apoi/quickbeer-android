@@ -94,7 +94,7 @@ public class ProfileLoginFragment extends BindingBaseFragment {
         public void bind(@NonNull CompositeSubscription subscription) {
             // Progress indicator during login
             subscription.add(viewModel()
-                    .isLoginInProgress()
+                    .getIsLoginInProgress()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showProgress, Timber::e));
 

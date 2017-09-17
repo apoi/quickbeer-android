@@ -33,6 +33,7 @@ import android.widget.FrameLayout;
 
 import quickbeer.android.R;
 import quickbeer.android.providers.ProgressStatusProvider.ProgressStatus;
+import quickbeer.android.providers.ProgressStatusProvider.Status;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -56,10 +57,10 @@ public class ProgressIndicatorBar extends FrameLayout {
     private View progressBar;
 
     @NonNull
-    private ProgressStatus currentProgress = ProgressStatus.Companion.getIDLE();
+    private ProgressStatus currentProgress = new ProgressStatus(Status.IDLE, 0.0f);
 
     @NonNull
-    private ProgressStatus nextProgress = ProgressStatus.Companion.getIDLE();
+    private ProgressStatus nextProgress = new ProgressStatus(Status.IDLE, 0.0f);
 
     public ProgressIndicatorBar(Context context) {
         super(context);

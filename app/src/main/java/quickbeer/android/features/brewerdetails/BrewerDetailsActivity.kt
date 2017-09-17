@@ -1,77 +1,102 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
- *
+ * Copyright (C) 2017 Antti Poikela <antti.poikela></antti.poikela>@iki.fi>
+
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *
+
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <http:></http:>//www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.styledetails
+package quickbeer.android.features.brewerdetails
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
-import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
-import quickbeer.android.analytics.Events
+import quickbeer.android.analytics.Events.Entry
 import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
-import quickbeer.android.data.actions.StyleActions
-import quickbeer.android.data.pojos.BeerStyle
+import quickbeer.android.core.viewmodel.ViewModel
+import quickbeer.android.data.actions.BrewerActions
+import quickbeer.android.data.pojos.Brewer
+import quickbeer.android.features.photoview.PhotoViewActivity
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.providers.ToastProvider
+import quickbeer.android.transformations.BlurTransformation
 import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
-class StyleDetailsActivity : BindingDrawerActivity() {
+class BrewerDetailsActivity : BindingDrawerActivity() {
 
     @Inject
-    internal lateinit var styleActions: StyleActions
-
-    @Inject
-    internal lateinit var searchViewViewModel: SearchViewViewModel
+    internal lateinit var brewerActions: BrewerActions
 
     @Inject
     internal lateinit var navigationProvider: NavigationProvider
 
     @Inject
+    internal lateinit var toastProvider: ToastProvider
+
+    @Inject
     internal lateinit var progressStatusProvider: ProgressStatusProvider
+
+    @Inject
+    internal lateinit var searchViewViewModel: SearchViewViewModel
+
+    @Inject
+    internal lateinit var picasso: Picasso
 
     @Inject
     internal lateinit var analytics: Analytics
 
-    private var styleId: Int = 0
+    private var brewerId: Int = 0
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(subscription: CompositeSubscription) {
+            val sourceObservable = brewerActions.get(brewerId)
+                    .subscribeOn(Schedulers.io())
+                    .filter { it.isOnNext }
+                    .map { get(it.value) }
+                    .first()
+                    .publish()
+
+            // Update brewer access date
+            subscription.add(sourceObservable
+                    .map { it.id() }
+                    .subscribe({ brewerActions.access(it) }, { Timber.e(it) }))
+
             // Set toolbar title
-            subscription.add(styleActions.get(styleId)
-                    .toObservable()
-                    .compose({ RxUtils.pickValue(it) })
+            subscription.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(get(progressStatusProvider)
+            subscription.add(progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
+
+            subscription.add(sourceObservable
+                    .connect())
         }
     }
 
@@ -84,38 +109,56 @@ class StyleDetailsActivity : BindingDrawerActivity() {
 
         setBackNavigationEnabled(true)
 
+        collapsing_toolbar_background.setOnClickListener { toastProvider.showToast(R.string.brewer_details_no_photo) }
+
         if (savedInstanceState != null) {
-            styleId = savedInstanceState.getInt(Constants.ID_KEY)
+            brewerId = savedInstanceState.getInt("brewerId")
         } else {
-            if (Intent.ACTION_VIEW == intent.action) {
+            val intent = intent
+            val action = intent.action
+
+            if (Intent.ACTION_VIEW == action) {
                 val segments = intent.data.pathSegments
                 if (segments.size > 2) {
-                    styleId = Integer.valueOf(segments[2])
-                    get(analytics).createEvent(Events.Entry.LINK_STYLE)
+                    brewerId = Integer.valueOf(segments[2])
+                    analytics.createEvent(Entry.LINK_BREWER)
                 }
             }
 
-            if (styleId <= 0) {
-                styleId = intent.getIntExtra(Constants.ID_KEY, 0)
+            if (brewerId <= 0) {
+                brewerId = getIntent().getIntExtra("brewerId", 0)
             }
 
-            val defaultIndex = intent.getIntExtra(Constants.PAGER_INDEX, 0)
-
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId, defaultIndex))
+                    .add(R.id.container, BrewerDetailsPagerFragment.newInstance(brewerId))
                     .commit()
         }
     }
 
-    private fun setToolbarDetails(style: BeerStyle) {
-        collapsing_toolbar.title = style.name
+    private fun setToolbarDetails(brewer: Brewer) {
+        collapsing_toolbar.title = brewer.name()
+
+        picasso.load(brewer.imageUri)
+                .transform(BlurTransformation(applicationContext, 15))
+                .into(collapsing_toolbar_background, object : Callback.EmptyCallback() {
+                    override fun onSuccess() {
+                        toolbar_overlay_gradient.visibility = View.VISIBLE
+                        collapsing_toolbar_background.setOnClickListener { openPhotoView(brewer.imageUri) }
+                    }
+                })
+    }
+
+    private fun openPhotoView(uri: String) {
+        val intent = Intent(this, PhotoViewActivity::class.java)
+        intent.putExtra("source", uri)
+        startActivity(intent)
     }
 
     override fun inject() {
         component.inject(this)
     }
 
-    override fun viewModel(): SearchViewViewModel {
+    override fun viewModel(): ViewModel {
         return searchViewViewModel
     }
 
@@ -123,8 +166,8 @@ class StyleDetailsActivity : BindingDrawerActivity() {
         return dataBinder
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt(Constants.ID_KEY, styleId)
+    public override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt("brewerId", brewerId)
         super.onSaveInstanceState(outState)
     }
 
