@@ -44,6 +44,8 @@ public interface FragmentComponent {
 
     IdComponent plusId(IdModule idModule);
 
+    SearchComponent plusSearch(SearchModule searchModule);
+
     void inject(HomeFragment homeFragment);
 
     void inject(ProfileLoginFragment profileLoginFragment);
@@ -57,8 +59,6 @@ public interface FragmentComponent {
     void inject(BeerListFragment beerListFragment);
 
     void inject(BrewerListFragment brewerListFragment);
-
-    void inject(BeerSearchFragment beerSearchFragment);
 
     void inject(BarcodeSearchFragment barcodeSearchFragment);
 

@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import quickbeer.android.injections.SearchModule;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.viewmodels.BeerListViewModel;
 import quickbeer.android.viewmodels.BeerSearchViewModel;
@@ -68,9 +69,9 @@ public class BeerSearchFragment extends BeerListFragment {
     protected void inject() {
         super.inject();
 
-        getComponent().inject(this);
-
-        get(beerSearchViewModel).setInitialQuery(initialQuery);
+        getComponent()
+                .plusSearch(new SearchModule(initialQuery))
+                .inject(this);
     }
 
     @NonNull

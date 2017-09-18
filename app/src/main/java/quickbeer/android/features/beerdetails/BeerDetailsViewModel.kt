@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela></antti.poikela>@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
 
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:></http:>//www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package quickbeer.android.features.beerdetails
 
@@ -108,11 +108,11 @@ constructor(@Named("id") private val beerId: Int,
                 .filter { it.isOnNext }
                 .take(1)
                 .map { it.value }
-                .subscribe {
+                .subscribe({
                     notificationProvider.addNetworkSuccessListener(observable,
                             chooseSuccessString(it!!, rating),
                             resourceProvider.getString(R.string.tick_failure))
-                })
+                }, { Timber.e(it) }))
 
         subscription.add(observable
                 .takeUntil { it.isCompleted }

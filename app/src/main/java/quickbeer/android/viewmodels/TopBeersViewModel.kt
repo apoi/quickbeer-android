@@ -40,6 +40,6 @@ internal constructor(private val beerListActions: BeerListActions,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerListActions.fetchTopBeers()
-                .flatMapObservable { beerListActions.topBeers() }
+                .flatMapObservable { dataSource() }
     }
 }

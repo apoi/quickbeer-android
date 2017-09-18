@@ -18,32 +18,37 @@
 package quickbeer.android.viewmodels
 
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import rx.Observable
+import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
 import javax.inject.Inject
+import javax.inject.Named
 
 class BeerSearchViewModel @Inject
-internal constructor(beerActions: BeerActions,
+internal constructor(@Named("query") private var query: String,
+                     beerActions: BeerActions,
                      private val beerSearchActions: BeerSearchActions,
-                     searchViewViewModel: SearchViewViewModel,
+                     private val searchViewViewModel: SearchViewViewModel,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
-    private var initialQuery = ""
+    override fun bind(subscription: CompositeSubscription) {
+        super.bind(subscription)
 
-    fun setInitialQuery(query: String) {
-        initialQuery = get(query)
+        subscription.add(searchViewViewModel.getQueryStream()
+                .subscribe({ query = it }, { Timber.e(it) }))
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerSearchActions.search(initialQuery)
+        return beerSearchActions.search(query)
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return Observable.empty<DataStreamNotification<ItemList<String>>>()
+        return beerSearchActions.fetchSearch(query)
+                .flatMapObservable { dataSource() }
     }
 }

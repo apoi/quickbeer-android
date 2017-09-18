@@ -50,6 +50,7 @@ internal constructor(@Named("id") private val countryId: Int,
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return Observable.empty()
+        return countryActions.fetchBeers(countryId)
+                .flatMapObservable { dataSource() }
     }
 }

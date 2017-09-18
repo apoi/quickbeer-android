@@ -30,6 +30,7 @@ import java.util.List;
 import quickbeer.android.R;
 import quickbeer.android.adapters.BaseListAdapter;
 import quickbeer.android.data.pojos.Header;
+import quickbeer.android.utils.CollectionUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
 import quickbeer.android.views.viewholders.BeerViewHolder;
 import quickbeer.android.views.viewholders.HeaderViewHolder;
@@ -127,7 +128,7 @@ public class BeerListAdapter extends BaseListAdapter {
     public void set(@NonNull List<BeerViewModel> beers) {
         checkNotNull(beers);
 
-        if (!beers.equals(this.beers)) {
+        if (!CollectionUtils.areEqual(this.beers, beers)) {
             this.beers.clear();
             this.beers.addAll(beers);
 
