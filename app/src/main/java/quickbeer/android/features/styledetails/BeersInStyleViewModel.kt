@@ -67,7 +67,8 @@ internal constructor(@Named("id") private val styleId: Int,
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return styleActions.fetchBeers(styleId)
-                .flatMapObservable { dataSource() }
+        return Observable.never()
+        //return styleActions.fetchBeers(styleId)
+        //        .flatMapObservable { dataSource() }
     }
 }

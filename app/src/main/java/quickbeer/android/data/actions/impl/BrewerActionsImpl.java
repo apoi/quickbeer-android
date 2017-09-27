@@ -29,6 +29,7 @@ import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import polanski.option.Option;
 import quickbeer.android.data.actions.BrewerActions;
+import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.pojos.ItemList;
@@ -156,17 +157,32 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
     @Override
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> beers(int brewerId) {
+        return getBeers(brewerId, list -> list.getItems().isEmpty());
+    }
+
+    @Override
+    @NonNull
+    public Single<Boolean> fetchBeers(int brewerId) {
+        return getBeers(brewerId, list -> true)
+                .filter(DataStreamNotification::isCompleted)
+                .map(DataStreamNotification::isCompletedWithSuccess)
+                .first()
+                .toSingle();
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> getBeers(int brewerId, @NonNull Func1<ItemList<String>, Boolean> needsReload) {
         Timber.v("getBrewerBeers(%s)", brewerId);
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BREWER_BEERS, String.valueOf(brewerId)))
-                        .toObservable()
-                        .filter(RxUtils::isNoneOrEmpty)
-                        .doOnNext(__ -> {
-                            Timber.v("Search not cached, fetching");
-                            fetchBrewerBeers(brewerId);
-                        });
+                             .toObservable()
+                             .filter(option -> option.match(needsReload::call, () -> true))
+                             .doOnNext(__ -> {
+                                 Timber.v("Search not cached, fetching");
+                                 fetchBrewerBeers(brewerId);
+                             });
 
         return getBrewerBeersResultStream(brewerId)
                 .mergeWith(triggerFetchIfEmpty.flatMap(__ -> Observable.empty()));

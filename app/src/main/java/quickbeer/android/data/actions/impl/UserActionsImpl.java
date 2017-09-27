@@ -53,8 +53,8 @@ public class UserActionsImpl extends ApplicationDataLayer implements UserActions
 
     @Inject
     public UserActionsImpl(@NonNull Context context,
-                           @NonNull UserStore userStore,
-                           @NonNull NetworkRequestStatusStore requestStatusStore) {
+                           @NonNull NetworkRequestStatusStore requestStatusStore,
+                           @NonNull UserStore userStore) {
         super(context);
 
         this.requestStatusStore = requestStatusStore;

@@ -48,7 +48,8 @@ internal constructor(@Named("query") private var query: String,
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerSearchActions.fetchSearch(query)
-                .flatMapObservable { dataSource() }
+        return Observable.never()
+        //return beerSearchActions.fetchSearch(query)
+        //        .flatMapObservable { dataSource() }
     }
 }
