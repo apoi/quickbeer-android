@@ -17,22 +17,12 @@
  */
 package quickbeer.android.data.pojos
 
-data class BeerStyle(private val id: Int,
-                     private val name: String,
+data class BeerStyle(override val id: Int,
+                     override val name: String,
                      val description: String,
                      val parent: Int,
                      val category: Int)
     : SimpleItem() {
-
-    override fun getId(): Int {
-        return id
-    }
-
-    override fun getName(): String {
-        return name
-    }
-
-    override fun getCode(): String {
-        return name.substring(0, 2)
-    }
+    override val code: String
+        get() = name.substring(0, 2)
 }
