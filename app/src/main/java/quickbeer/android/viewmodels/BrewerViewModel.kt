@@ -92,7 +92,7 @@ internal constructor(@Named("id") val brewerId: Int,
             return beerActions.get(beerId)
                     .filter { it.isOnNext }
                     .map { Preconditions.get(it.value) }
-                    .map { Preconditions.get(it.brewerId()) }
+                    .map { Preconditions.get(it.brewerId) }
                     .toSingle()
         } else {
             throw IllegalStateException("No source id!")

@@ -109,7 +109,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .toList()
                 .map(this::sort)
                 .flatMap(Observable::from)
-                .map(Beer::id)
+                .map(Beer::getId)
                 .toList()
                 .toSingle()
                 .map(beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()))
@@ -132,12 +132,12 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     @NonNull
     protected static List<Beer> sortByName(@NonNull List<Beer> list) {
         Collections.sort(list, (first, second) -> {
-            String firstName = first.name();
-            String secondName = second.name();
+            String firstName = first.getName();
+            String secondName = second.getName();
 
             if (firstName == null) {
                 if (secondName == null) {
-                    return first.id().compareTo(second.id());
+                    return Integer.valueOf(first.getId()).compareTo(second.getId());
                 } else {
                     return -1;
                 }
@@ -156,12 +156,12 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     @NonNull
     protected static List<Beer> sortByTickDate(@NonNull List<Beer> list) {
         Collections.sort(list, (first, second) -> {
-            ZonedDateTime firstDate = first.tickDate();
-            ZonedDateTime secondDate = second.tickDate();
+            ZonedDateTime firstDate = first.getTickDate();
+            ZonedDateTime secondDate = second.getTickDate();
 
             if (firstDate == null) {
                 if (secondDate == null) {
-                    return first.id().compareTo(second.id());
+                    return Integer.valueOf(first.getId()).compareTo(second.getId());
                 } else {
                     return -1;
                 }
@@ -180,12 +180,12 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     @NonNull
     protected static List<Beer> sortByRating(@NonNull List<Beer> list) {
         Collections.sort(list, (first, second) -> {
-            Float firstRating = first.averageRating();
-            Float secondRating = second.averageRating();
+            Float firstRating = first.getAverageRating();
+            Float secondRating = second.getAverageRating();
 
             if (firstRating == null) {
                 if (secondRating == null) {
-                    return first.id().compareTo(second.id());
+                    return Integer.valueOf(first.getId()).compareTo(second.getId());
                 } else {
                     return -1;
                 }

@@ -83,21 +83,21 @@ public class BeerViewHolder extends BaseBindingViewHolder<BeerViewModel> {
     public void setBeer(@NonNull Beer beer) {
         // Don't show anything if the name isn't loaded yet.
         // This prevents the rating label to be shown with empty details.
-        if (StringUtils.isEmpty(beer.name())) {
+        if (StringUtils.isEmpty(beer.getName())) {
             return;
         }
 
         if (beer.isTicked()) {
             ratingTextView.setText("");
-            ratingTextView.setBackgroundResource(Score.fromTick(beer.tickValue()).getResource());
+            ratingTextView.setBackgroundResource(Score.fromTick(beer.getTickValue()).getResource());
         } else {
             ratingTextView.setText(Score.fromRating(beer.rating()));
             ratingTextView.setBackgroundResource(R.drawable.score_unrated);
         }
 
-        nameTextView.setText(beer.name());
-        styleTextView.setText(beer.styleName());
-        brewerTextView.setText(beer.brewerName());
+        nameTextView.setText(beer.getName());
+        styleTextView.setText(beer.getStyleName());
+        brewerTextView.setText(beer.getBrewerName());
     }
 
     public void clear() {

@@ -87,12 +87,12 @@ class BeerDetailsActivity : BindingDrawerActivity() {
 
             // Update beer access date
             subscription.add(sourceObservable
-                    .map { it.id() }
+                    .map { it.id }
                     .subscribe({ beerActions.access(it) }, { Timber.e(it) }))
 
             // Update brewer access date
             subscription.add(sourceObservable
-                    .map { it.brewerId() }
+                    .map { it.brewerId }
                     .subscribe({ brewerActions.access(it!!) }, { Timber.e(it) }))
 
             // Set toolbar title
@@ -146,15 +146,15 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     }
 
     private fun setToolbarDetails(beer: Beer) {
-        collapsing_toolbar.title = beer.name()
+        collapsing_toolbar.title = beer.name
 
-        picasso.load(beer.imageUri)
+        picasso.load(beer.imageUri())
                 .transform(ContainerLabelExtractor(300, 300))
                 .transform(BlurTransformation(applicationContext, 15))
                 .into(collapsing_toolbar_background, object : EmptyCallback() {
                     override fun onSuccess() {
                         toolbar_overlay_gradient.visibility = View.VISIBLE
-                        collapsing_toolbar_background.setOnClickListener { openPhotoView(beer.imageUri) }
+                        collapsing_toolbar_background.setOnClickListener { openPhotoView(beer.imageUri()) }
                     }
                 })
     }

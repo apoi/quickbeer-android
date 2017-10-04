@@ -131,7 +131,7 @@ constructor(@Named("id") private val beerId: Int,
         return if (rating == 0)
             resourceProvider.getString(R.string.tick_removed)
         else
-            String.format(resourceProvider.getString(R.string.tick_success), beer.name())
+            String.format(resourceProvider.getString(R.string.tick_success), beer.name)
     }
 
     override fun bind(subscription: CompositeSubscription) {

@@ -152,7 +152,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
         intent.putExtra("rating", rating);
         getContext().startService(intent);
 
-        String uri = TickBeerFetcher.getUniqueUri(beerId, rating);
+        String uri = TickBeerFetcher.Companion.getUniqueUri(beerId, rating);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(requestIdForUri(uri))

@@ -38,9 +38,9 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
     public BeerStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                         new BeerStoreCore(contentResolver, gson),
-                        new MemoryStoreCore<>(Beer::merge),
-                        Beer::id),
-                Beer::id,
+                        new MemoryStoreCore<>(Beer.Companion::merge),
+                        Beer::getId),
+                Beer::getId,
                 Option::ofObj,
                 Option::none);
     }
@@ -51,7 +51,7 @@ public class BeerStore extends StoreBase<Integer, Beer, Option<Beer>> {
                 .getCached()
                 .flatMap(Observable::from)
                 .filter(Beer::isTicked)
-                .map(Beer::id)
+                .map(Beer::getId)
                 .toList()
                 .defaultIfEmpty(Collections.emptyList())
                 .toSingle();

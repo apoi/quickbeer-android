@@ -189,24 +189,24 @@ public class BeerDetailsView extends NestedScrollView {
         checkNotNull(resourceProvider);
 
         descriptionTextView.setText(
-                StringUtils.value(beer.description(),
+                StringUtils.value(beer.getDescription(),
                 resourceProvider.getString(R.string.no_description)));
 
-        ofObj(beer.brewerName())
+        ofObj(beer.getBrewerName())
                 .ifSome(brewerName::setText);
 
-        ofObj(beer.brewerId())
+        ofObj(beer.getBrewerId())
                 .ifSome(brewerId -> brewerNameRow.setOnClickListener(__ -> navigateToBrewer(brewerId)));
 
-        ofObj(beer.styleId())
+        ofObj(beer.getStyleId())
                 .map(beerStyleStore::getItem)
-                .orOption(() -> ofObj(beer.styleName()).flatMap(beerStyleStore::getStyle))
+                .orOption(() -> ofObj(beer.getStyleName()).flatMap(beerStyleStore::getStyle))
                 .ifSome(style -> beerStyleRow.setOnClickListener(__ -> navigateToStyle(style.getId())))
                 .map(BeerStyle::getName)
                 .orOption(this::notAvailableString)
                 .ifSome(beerStyle::setText);
 
-        ofObj(beer.overallRating())
+        ofObj(beer.getOverallRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
                 .ifSome(overallRatingTextView::setText)
@@ -215,7 +215,7 @@ public class BeerDetailsView extends NestedScrollView {
                     overallRatingColumn.setOnClickListener(__ -> showToast(R.string.not_enough_ratings));
                 });
 
-        ofObj(beer.styleRating())
+        ofObj(beer.getStyleRating())
                 .filter(value -> value > 0)
                 .map(value -> String.valueOf(Math.round(value)))
                 .ifSome(styleRatingTextView::setText)
@@ -224,22 +224,22 @@ public class BeerDetailsView extends NestedScrollView {
                     styleRatingColumn.setOnClickListener(__ -> showToast(R.string.not_enough_ratings));
                 });
 
-        ofObj(beer.alcohol())
+        ofObj(beer.getAlcohol())
                 .map(value -> String.format(Locale.ROOT, "%.1f%%", value))
                 .orOption(this::notAvailableString)
                 .ifSome(abvTextView::setText);
 
-        ofObj(beer.ibu())
+        ofObj(beer.getIbu())
                 .map(value -> String.valueOf(Math.round(value)))
                 .orOption(this::notAvailableString)
                 .ifSome(ibuTextView::setText);
 
-        ofObj(beer.tickValue())
+        ofObj(beer.getTickValue())
                 .filter(__ -> beer.isTicked())
                 .ifSome(ratingBar::setRating)
                 .ifNone(() -> ratingBar.setRating(0));
 
-        ofObj(beer.tickDate())
+        ofObj(beer.getTickDate())
                 .filter(__ -> beer.isTicked())
                 .map(date -> DateUtils.formatDateTime(resourceProvider.getString(R.string.beer_tick_date), date))
                 .ifSome(value -> {
