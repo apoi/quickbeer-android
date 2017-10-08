@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import io.reark.reark.data.DataStreamNotification;
@@ -40,6 +42,7 @@ import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import rx.Single;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
@@ -72,23 +75,43 @@ public class CountryActionsImpl extends ApplicationDataLayer implements CountryA
     @Override
     @NonNull
     public Single<Option<Country>> get(int countryId) {
-        Timber.v("getCountry(%s)", countryId);
+        Timber.v("get(%s)", countryId);
 
         return countryStore.getOnce(countryId);
     }
 
     //// BEERS IN COUNTRY
 
+
+    @NotNull
     @Override
-    @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> beers(int countryId) {
-        Timber.v("getBeersInCountry(%s)", countryId);
+        Timber.v("beers(%s)", countryId);
+
+        return triggerGetBeers(countryId, list -> list.getItems().isEmpty());
+    }
+
+    @NotNull
+    @Override
+    public Single<Boolean> fetchBeers(int countryId) {
+        Timber.v("fetchBeers(%s)", countryId);
+
+        return triggerGetBeers(countryId, list -> true)
+                .filter(DataStreamNotification::isCompleted)
+                .map(DataStreamNotification::isCompletedWithSuccess)
+                .first()
+                .toSingle();
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> triggerGetBeers(int countryId, @NonNull Func1<ItemList<String>, Boolean> needsReload) {
+        Timber.v("triggerGetBeers(%s)", countryId);
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, String.valueOf(countryId)))
                         .toObservable()
-                        .filter(RxUtils::isNoneOrEmpty)
+                        .filter(option -> option.match(needsReload::call, () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
                             fetchBeersInCountry(countryId);

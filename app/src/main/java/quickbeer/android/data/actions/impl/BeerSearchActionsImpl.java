@@ -22,6 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -41,6 +43,8 @@ import quickbeer.android.network.fetchers.BeerSearchFetcher;
 import quickbeer.android.rx.RxUtils;
 import quickbeer.android.utils.StringUtils;
 import rx.Observable;
+import rx.Single;
+import rx.functions.Func1;
 import timber.log.Timber;
 
 import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
@@ -68,7 +72,7 @@ public class BeerSearchActionsImpl extends ApplicationDataLayer implements BeerS
     @Override
     @NonNull
     public Observable<List<String>> searchQueries() {
-        Timber.v("getBeerSearchQueriesOnce");
+        Timber.v("searchQueries");
 
         return beerListStore.getOnce()
                 .toObservable()
@@ -78,18 +82,37 @@ public class BeerSearchActionsImpl extends ApplicationDataLayer implements BeerS
                 .toList();
     }
 
+    @NotNull
     @Override
-    @NonNull
-    public Observable<DataStreamNotification<ItemList<String>>> search(@NonNull String searchString) {
-        Timber.v("getBeerSearch(%s)", searchString);
+    public Observable<DataStreamNotification<ItemList<String>>> search(@NotNull String query) {
+        Timber.v("search");
 
-        String normalized = StringUtils.normalize(searchString);
+        return triggerSearch(query, list -> list.getItems().isEmpty());
+    }
+
+    @NotNull
+    @Override
+    public Single<Boolean> fetchSearch(@NotNull String query) {
+        Timber.v("fetchSearch");
+
+        return triggerSearch(query, list -> true)
+                .filter(DataStreamNotification::isCompleted)
+                .map(DataStreamNotification::isCompletedWithSuccess)
+                .first()
+                .toSingle();
+    }
+
+    @NonNull
+    private Observable<DataStreamNotification<ItemList<String>>> triggerSearch(@NonNull String query, @NonNull Func1<ItemList<String>, Boolean> needsReload) {
+        Timber.v("triggerSearch(%s)", query);
+
+        String normalized = StringUtils.normalize(query);
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
                 beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, normalized))
                         .toObservable()
-                        .filter(RxUtils::isNoneOrEmpty)
+                        .filter(option -> option.match(needsReload::call, () -> true))
                         .doOnNext(__ -> {
                             Timber.v("Search not cached, fetching");
                             fetchBeerSearch(normalized);
@@ -100,10 +123,10 @@ public class BeerSearchActionsImpl extends ApplicationDataLayer implements BeerS
     }
 
     @NonNull
-    private Observable<DataStreamNotification<ItemList<String>>> getBeerSearchResultStream(@NonNull String searchString) {
-        Timber.v("getBeerSearchResultStream(%s)", searchString);
+    private Observable<DataStreamNotification<ItemList<String>>> getBeerSearchResultStream(@NonNull String query) {
+        Timber.v("getBeerSearchResultStream(%s)", query);
 
-        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, searchString);
+        String queryId = BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, query);
         String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
@@ -118,15 +141,15 @@ public class BeerSearchActionsImpl extends ApplicationDataLayer implements BeerS
                 requestStatusObservable, beerSearchObservable);
     }
 
-    private int fetchBeerSearch(@NonNull String searchString) {
-        Timber.v("fetchBeerSearch(%s)", searchString);
+    private int fetchBeerSearch(@NonNull String query) {
+        Timber.v("fetchBeerSearch(%s)", query);
 
         int listenerId = createListenerId();
 
         Intent intent = new Intent(getContext(), NetworkService.class);
         intent.putExtra("serviceUriString", RateBeerService.SEARCH.toString());
         intent.putExtra("listenerId", listenerId);
-        intent.putExtra("searchString", searchString);
+        intent.putExtra("searchString", query);
         getContext().startService(intent);
 
         return listenerId;

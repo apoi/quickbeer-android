@@ -172,7 +172,7 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
 
     @NonNull
     private Observable<DataStreamNotification<ItemList<String>>> getBeers(int brewerId, @NonNull Func1<ItemList<String>, Boolean> needsReload) {
-        Timber.v("getBrewerBeers(%s)", brewerId);
+        Timber.v("getBeers(%s)", brewerId);
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
@@ -225,7 +225,7 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
 
     @Override
     public void access(int brewerId) {
-        Timber.v("accessBrewer(%s)", brewerId);
+        Timber.v("access(%s)", brewerId);
 
         brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId));
     }

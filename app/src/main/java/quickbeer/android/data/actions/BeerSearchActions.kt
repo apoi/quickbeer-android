@@ -25,7 +25,6 @@ import rx.Single
 
 interface BeerSearchActions {
     fun search(query: String): Observable<DataStreamNotification<ItemList<String>>>
-    // TODO implement
-    // fun fetchSearch(query: String): Single<Boolean>
+    fun fetchSearch(query: String): Single<Boolean>
     fun searchQueries(): Observable<List<String>>
 }

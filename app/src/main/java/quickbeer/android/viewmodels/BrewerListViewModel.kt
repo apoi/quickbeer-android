@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2017 Antti Poikela <antti.poikela></antti.poikela>@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,6 +40,10 @@ protected constructor(private val beerActions: BeerActions,
     protected abstract fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>>
 
     protected open fun reportsProgress(): Boolean {
+        return true
+    }
+
+    open fun isRefreshable(): Boolean {
         return true
     }
 

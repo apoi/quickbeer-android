@@ -50,6 +50,10 @@ protected constructor(private val beerActions: BeerActions,
         return true
     }
 
+    open fun isRefreshable(): Boolean {
+        return true
+    }
+
     fun getBeers(): Observable<List<BeerViewModel>> {
         return beers.asObservable()
     }
@@ -102,7 +106,7 @@ protected constructor(private val beerActions: BeerActions,
                 .getQueryStream()
                 .distinctUntilChanged()
                 .filter { StringUtils.hasValue(it) }
-                .doOnNext { query -> Timber.d("query(%s)", query) }
+                .doOnNext { Timber.d("query(%s)", it) }
                 .map { beerSearchActions.search(it) }
                 .subscribe({ source.onNext(it) }, { Timber.e(it) }))
     }

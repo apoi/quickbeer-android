@@ -17,7 +17,7 @@
  */
 package quickbeer.android.features.beerdetails
 
-import io.reark.reark.data.DataStreamNotification
+import io.reark.reark.data.DataStreamNotification.Type
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.SimpleViewModel
@@ -69,20 +69,22 @@ constructor(@Named("id") private val beerId: Int,
 
     private val subscription = CompositeSubscription()
 
-    val beer: Observable<Beer>
-        get() = beerViewModel.getBeer()
+    fun getBeer(): Observable<Beer> {
+        return beerViewModel.getBeer()
+    }
 
-    val brewer: Observable<Brewer>
-        get() = brewerViewModel.getBrewer()
+    fun getBrewer(): Observable<Brewer> {
+        return brewerViewModel.getBrewer()
+    }
 
-    val user: Observable<User>
-        get() {
-            return userActions.getUser()
-                    .compose { RxUtils.pickValue(it) }
-        }
+    fun getUser(): Observable<User> {
+        return userActions.getUser()
+                .compose { RxUtils.pickValue(it) }
+    }
 
-    val reviews: Observable<List<Review>>
-        get() = reviewListViewModel.getReviews()
+    fun getReviews(): Observable<List<Review>> {
+        return reviewListViewModel.getReviews()
+    }
 
     fun loadMoreReviews(currentReviewsCount: Int) {
         reviewListViewModel.fetchReviews(currentReviewsCount / Constants.REVIEWS_PER_PAGE + 1)
@@ -117,11 +119,11 @@ constructor(@Named("id") private val beerId: Int,
         subscription.add(observable
                 .takeUntil { it.isCompleted }
                 .subscribe(
-                        { notification ->
-                            when (notification.type) {
-                                DataStreamNotification.Type.COMPLETED_WITH_VALUE, DataStreamNotification.Type.COMPLETED_WITHOUT_VALUE -> tickSuccessSubject.onNext(true)
-                                DataStreamNotification.Type.COMPLETED_WITH_ERROR -> tickSuccessSubject.onNext(false)
-                                DataStreamNotification.Type.ONGOING, DataStreamNotification.Type.ON_NEXT -> { }
+                        {
+                            when (it.type) {
+                                Type.COMPLETED_WITH_VALUE, Type.COMPLETED_WITHOUT_VALUE -> tickSuccessSubject.onNext(true)
+                                Type.COMPLETED_WITH_ERROR -> tickSuccessSubject.onNext(false)
+                                Type.ONGOING, Type.ON_NEXT -> { }
                             }
                         },
                         { Timber.w(it, "Error ticking beer") }))

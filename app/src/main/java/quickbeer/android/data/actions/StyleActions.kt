@@ -28,6 +28,5 @@ import rx.Single
 interface StyleActions {
     fun get(styleId: Int): Single<Option<BeerStyle>>
     fun beers(styleId: Int): Observable<DataStreamNotification<ItemList<String>>>
-    // TODO implement
-    // fun fetchBeers(styleId: Int): Single<Boolean>
+    fun fetchBeers(styleId: Int): Single<Boolean>
 }

@@ -49,8 +49,6 @@ data class Beer(@SerializedName("BeerID") val id: Int,
                 @SerializedName("TimeEntered") val tickDate: ZonedDateTime?)
     : OverwritablePojo<Beer>() {
 
-    // Accessors
-
     fun basicDataMissing(): Boolean {
         return brewerId == null || !hasValue(styleName)
     }

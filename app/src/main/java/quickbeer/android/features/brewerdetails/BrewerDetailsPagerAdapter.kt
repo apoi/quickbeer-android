@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2017 Antti Poikela <antti.poikela></antti.poikela>@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

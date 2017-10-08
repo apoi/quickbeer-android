@@ -28,6 +28,5 @@ import rx.Single
 interface CountryActions {
     fun get(countryId: Int): Single<Option<Country>>
     fun beers(countryId: Int): Observable<DataStreamNotification<ItemList<String>>>
-    // TODO impement
-    // fun fetchBeers(countryId: Int): Single<Boolean>
+    fun fetchBeers(countryId: Int): Single<Boolean>
 }

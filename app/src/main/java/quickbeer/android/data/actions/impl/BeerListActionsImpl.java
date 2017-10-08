@@ -72,7 +72,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
     @Override
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> accessed() {
-        Timber.v("getAccessedBeers");
+        Timber.v("accessed");
 
         return beerMetadataStore.getAccessedIdsOnce()
                 .map(ids -> new ItemList<String>(null, ids, null))
@@ -84,7 +84,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
     @Override
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> topBeers() {
-        Timber.v("getTopBeers");
+        Timber.v("topBeers");
 
         return triggerGet(list -> list.getItems().isEmpty());
     }
@@ -92,7 +92,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
     @Override
     @NonNull
     public Single<Boolean> fetchTopBeers() {
-        Timber.v("getTopBeers");
+        Timber.v("fetchTopBeers");
 
         return triggerGet(list -> true)
                 .filter(DataStreamNotification::isCompleted)
@@ -103,7 +103,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
 
     @NonNull
     private Observable<DataStreamNotification<ItemList<String>>> triggerGet(@NonNull Func1<ItemList<String>, Boolean> needsReload) {
-        Timber.v("getTopBeers");
+        Timber.v("triggerGetBeers");
 
         // Trigger a fetch only if there was no cached result
         Observable<Option<ItemList<String>>> triggerFetchIfEmpty =
@@ -139,7 +139,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
     }
 
     private int triggerFetch() {
-        Timber.v("fetchTopBeers");
+        Timber.v("triggerFetch");
 
         int listenerId = createListenerId();
 

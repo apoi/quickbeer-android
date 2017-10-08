@@ -34,12 +34,16 @@ internal constructor(beerActions: BeerActions,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
+    override fun isRefreshable(): Boolean {
+        return false
+    }
+
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerListActions.accessed()
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.accessed()
+        return Observable.never()
     }
 
     override fun reportsProgress(): Boolean {

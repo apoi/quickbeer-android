@@ -46,7 +46,7 @@ public class BrewerListActionsImpl extends ApplicationDataLayer implements Brewe
     @Override
     @NonNull
     public Observable<DataStreamNotification<ItemList<String>>> getAccessed() {
-        Timber.v("getAccessedBrewers");
+        Timber.v("getAccessed");
 
         return brewerMetadataStore.getAccessedIdsOnce()
                 .map(ids -> new ItemList<String>(null, ids, null))
