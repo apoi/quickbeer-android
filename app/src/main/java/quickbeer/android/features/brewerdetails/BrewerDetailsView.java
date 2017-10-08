@@ -59,6 +59,9 @@ import static quickbeer.android.utils.StringUtils.emptyAsNone;
  */
 public class BrewerDetailsView extends NestedScrollView {
 
+    private static final float VISIBLE = 1.0f;
+    private static final float OPAQUE = 0.2f;
+
     @BindView(R.id.brewer_founded_column)
     View brewerFoundedColumn;
 
@@ -140,11 +143,11 @@ public class BrewerDetailsView extends NestedScrollView {
                 .map(StringUtils::removeTrailingSlash)
                 .map(StringUtils::addMissingProtocol)
                 .ifSome(website -> {
-                    brewerWebsite.setAlpha(1.0f);
+                    brewerWebsite.setAlpha(VISIBLE);
                     brewerWebsiteColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_WEBSITE, website));
                 })
                 .ifNone(() -> {
-                    brewerWebsite.setAlpha(0.2f);
+                    brewerWebsite.setAlpha(OPAQUE);
                     brewerWebsiteColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_website));
                 });
 
@@ -152,11 +155,11 @@ public class BrewerDetailsView extends NestedScrollView {
                 .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.FACEBOOK_PATH, handle))
                 .ifSome(facebook -> {
-                    brewerFacebook.setAlpha(1.0f);
+                    brewerFacebook.setAlpha(VISIBLE);
                     brewerFacebookColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_FACEBOOK, facebook));
                 })
                 .ifNone(() -> {
-                    brewerFacebook.setAlpha(0.2f);
+                    brewerFacebook.setAlpha(OPAQUE);
                     brewerFacebookColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_facebook));
                 });
 
@@ -164,11 +167,11 @@ public class BrewerDetailsView extends NestedScrollView {
                 .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.TWITTER_PATH, handle))
                 .ifSome(twitter -> {
-                    brewerTwitter.setAlpha(1.0f);
+                    brewerTwitter.setAlpha(VISIBLE);
                     brewerTwitterColumn.setOnClickListener(__ -> openUri(LaunchAction.BREWER_TWITTER, twitter));
                 })
                 .ifNone(() -> {
-                    brewerTwitter.setAlpha(0.2f);
+                    brewerTwitter.setAlpha(OPAQUE);
                     brewerTwitterColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_twitter));
                 });
 

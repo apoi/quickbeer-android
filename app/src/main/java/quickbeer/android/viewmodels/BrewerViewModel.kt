@@ -89,10 +89,11 @@ internal constructor(@Named("id") val brewerId: Int,
         if (brewerId > 0) {
             return Single.just(brewerId)
         } else if (beerId > 0) {
-            return beerActions.get(beerId)
+            return beerActions.getDetails(beerId)
                     .filter { it.isOnNext }
-                    .map { Preconditions.get(it.value) }
-                    .map { Preconditions.get(it.brewerId) }
+                    .map { it.value!! }
+                    .map { it.brewerId!! }
+                    .first()
                     .toSingle()
         } else {
             throw IllegalStateException("No source id!")

@@ -57,7 +57,7 @@ constructor(@Named("id") private val beerId: Int,
     : SimpleViewModel() {
 
     private val beerViewModel: BeerViewModel =
-            BeerViewModel(beerId, beerActions, progressStatusProvider)
+            BeerViewModel(beerId, true, beerActions, progressStatusProvider)
 
     private val brewerViewModel: BrewerViewModel =
             BrewerViewModel(-1, beerId, beerActions, brewerActions, progressStatusProvider)

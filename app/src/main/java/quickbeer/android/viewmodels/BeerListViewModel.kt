@@ -18,7 +18,6 @@
 package quickbeer.android.viewmodels
 
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
@@ -79,15 +78,15 @@ protected constructor(private val beerActions: BeerActions,
 
         // Actual update
         subscription.add(sharedObservable
-                .filter { it.isOnNext && it.value != null }
-                .map { it.value }
+                .filter { it.isOnNext }
+                .map { it.value!! }
                 .doOnNext { Timber.d("Search finished") }
                 .flatMap {
-                    Observable.from(it!!.items)
-                        .map { BeerViewModel(it, beerActions, progressStatusProvider) }
+                    Observable.from(it.items)
+                        .map { BeerViewModel(it, false, beerActions, progressStatusProvider) }
                         .toList()
                 }
-                .doOnNext { Timber.d("Publishing " + it.size + " beers") }
+                .doOnNext { Timber.d("Publishing %s beers", it.size) }
                 .subscribe { beers.onNext(it) })
 
         // Share progress status to progress provider
@@ -102,7 +101,7 @@ protected constructor(private val beerActions: BeerActions,
         source.onNext(dataSource())
 
         // Switch to search on new search term
-        subscription.add(get(searchViewViewModel)
+        subscription.add(searchViewViewModel
                 .getQueryStream()
                 .distinctUntilChanged()
                 .filter { StringUtils.hasValue(it) }
@@ -112,6 +111,6 @@ protected constructor(private val beerActions: BeerActions,
     }
 
     override fun hasValue(item: ItemList<String>?): Boolean {
-        return !get(item).items.isEmpty()
+        return item!!.items.isEmpty()
     }
 }

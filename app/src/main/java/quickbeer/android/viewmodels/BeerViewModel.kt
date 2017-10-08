@@ -17,6 +17,7 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.providers.ProgressStatusProvider
@@ -27,6 +28,7 @@ import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 class BeerViewModel(val beerId: Int,
+                    private val detailed: Boolean,
                     private val beerActions: BeerActions,
                     private val progressStatusProvider: ProgressStatusProvider)
     : NetworkViewModel<Beer>() {
@@ -38,7 +40,7 @@ class BeerViewModel(val beerId: Int,
     }
 
     override fun bind(subscription: CompositeSubscription) {
-        val beerSource = beerActions.get(beerId)
+        val beerSource = getBeer(beerId)
                 .subscribeOn(Schedulers.computation())
                 .publish()
 
@@ -56,6 +58,13 @@ class BeerViewModel(val beerId: Int,
 
         subscription.add(beerSource
                 .connect())
+    }
+
+    private fun getBeer(beerId: Int): Observable<DataStreamNotification<Beer>> {
+        if (detailed)
+            return beerActions.getDetails(beerId)
+        else
+            return beerActions.get(beerId)
     }
 
     override fun hasValue(item: Beer?): Boolean {

@@ -17,7 +17,6 @@
  */
 package quickbeer.android.features.home
 
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.R
 import quickbeer.android.features.list.fragments.BeerListFragment
 import quickbeer.android.viewmodels.BeerListViewModel
@@ -39,7 +38,7 @@ class BeerTabFragment : BeerListFragment() {
     }
 
     override fun viewModel(): BeerListViewModel {
-        return get(recentBeersViewModel)
+        return recentBeersViewModel
     }
 
     override fun onQuery(query: String) {
@@ -47,9 +46,9 @@ class BeerTabFragment : BeerListFragment() {
     }
 
     override fun toStatusValue(progressStatus: ProgressStatus): String {
-        return when (progressStatus) {
-            ProgressStatus.EMPTY -> getString(R.string.home_empty_list)
-            else -> super.toStatusValue(progressStatus)
+        when (progressStatus) {
+            ProgressStatus.EMPTY -> return getString(R.string.home_empty_list)
+            else -> return super.toStatusValue(progressStatus)
         }
     }
 }
