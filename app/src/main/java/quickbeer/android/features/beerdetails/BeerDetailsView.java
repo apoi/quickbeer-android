@@ -225,6 +225,7 @@ public class BeerDetailsView extends NestedScrollView {
                 });
 
         ofObj(beer.getAlcohol())
+                .filter(value -> value > 0)
                 .map(value -> String.format(Locale.ROOT, "%.1f%%", value))
                 .orOption(this::notAvailableString)
                 .ifSome(abvTextView::setText);
