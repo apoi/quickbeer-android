@@ -17,10 +17,10 @@
  */
 package quickbeer.android.data.stores;
 
+import com.google.gson.Gson;
+
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
-
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -37,9 +37,9 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
     public BeerMetadataStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                 new BeerMetadataStoreCore(contentResolver, gson),
-                        new MemoryStoreCore<>(BeerMetadata::merge),
-                        BeerMetadata::beerId),
-                BeerMetadata::beerId,
+                        new MemoryStoreCore<>(BeerMetadata.Companion::merge),
+                        BeerMetadata::getBeerId),
+                BeerMetadata::getBeerId,
                 Option::ofObj,
                 Option::none);
     }

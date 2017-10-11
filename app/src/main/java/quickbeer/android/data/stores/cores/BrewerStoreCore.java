@@ -76,9 +76,9 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     @Override
     protected ContentValues getContentValuesForItem(@NonNull Brewer item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BrewerColumns.ID, item.id());
+        contentValues.put(BrewerColumns.ID, item.getId());
         contentValues.put(BrewerColumns.JSON, getGson().toJson(item));
-        contentValues.put(BrewerColumns.NAME, item.name());
+        contentValues.put(BrewerColumns.NAME, item.getName());
 
         return contentValues;
     }
@@ -86,6 +86,6 @@ public class BrewerStoreCore extends StoreCoreBase<Integer, Brewer> {
     @NonNull
     @Override
     protected Brewer mergeValues(@NonNull Brewer v1, @NonNull Brewer v2) {
-        return Brewer.merge(v1, v2);
+        return Brewer.Companion.merge(v1, v2);
     }
 }

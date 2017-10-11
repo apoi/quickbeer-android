@@ -111,7 +111,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
     public void access(int beerId) {
         Timber.v("access(%s)", beerId);
 
-        beerMetadataStore.put(BeerMetadata.newAccess(beerId));
+        beerMetadataStore.put(BeerMetadata.Companion.newAccess(beerId));
     }
 
     @Override

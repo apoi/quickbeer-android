@@ -111,23 +111,17 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
         final int reviewId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.REVIEW_ID));
         final boolean isModified = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.MODIFIED)) > 0;
 
-        return BeerMetadata.builder()
-                .beerId(beerId)
-                .updated(updated)
-                .accessed(accessed)
-                .reviewId(reviewId)
-                .isModified(isModified)
-                .build();
+        return new BeerMetadata(beerId, updated, accessed, reviewId, isModified);
     }
 
     @NonNull
     @Override
     protected ContentValues getContentValuesForItem(@NonNull BeerMetadata item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(BeerMetadataColumns.ID, item.beerId());
-        contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.updated()));
-        contentValues.put(BeerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.accessed()));
-        contentValues.put(BeerMetadataColumns.REVIEW_ID, item.reviewId());
+        contentValues.put(BeerMetadataColumns.ID, item.getBeerId());
+        contentValues.put(BeerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.getUpdated()));
+        contentValues.put(BeerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.getAccessed()));
+        contentValues.put(BeerMetadataColumns.REVIEW_ID, item.getReviewId());
         contentValues.put(BeerMetadataColumns.MODIFIED, ValueUtils.asInt(item.isModified()));
 
         return contentValues;
@@ -136,6 +130,6 @@ public class BeerMetadataStoreCore extends StoreCoreBase<Integer, BeerMetadata> 
     @NonNull
     @Override
     protected BeerMetadata mergeValues(@NonNull BeerMetadata v1, @NonNull BeerMetadata v2) {
-        return BeerMetadata.merge(v1, v2);
+        return BeerMetadata.Companion.merge(v1, v2);
     }
 }

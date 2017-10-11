@@ -93,7 +93,7 @@ public class BeerFetcher extends FetcherBase<Uri> {
                 .doOnSubscribe(() -> startRequest(beerId, uri))
                 .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
                 .doOnError(doOnError(beerId, uri))
-                .subscribe(__ -> metadataStore.put(BeerMetadata.newUpdate(beerId)),
+                .subscribe(__ -> metadataStore.put(BeerMetadata.Companion.newUpdate(beerId)),
                         error -> Timber.w(error, "Error fetching beer " + beerId));
 
         addRequest(beerId, subscription);

@@ -252,11 +252,11 @@ public class BeerDetailsView extends NestedScrollView {
     public void setBrewer(@NonNull Brewer brewer) {
         checkNotNull(countryStore);
 
-        ofObj(brewer.countryId())
+        ofObj(brewer.getCountryId())
                 .map(countryStore::getItem)
                 .ifSome(country -> brewerLocationRow.setOnClickListener(__ -> navigateToCountry(country.getId())))
                 .map(Country::getName)
-                .map(country -> String.format("%s, %s", brewer.city(), country))
+                .map(country -> String.format("%s, %s", brewer.getCity(), country))
                 .orOption(this::notAvailableString)
                 .ifSome(brewerLocation::setText);
     }

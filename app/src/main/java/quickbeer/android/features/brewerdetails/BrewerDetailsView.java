@@ -132,13 +132,13 @@ public class BrewerDetailsView extends NestedScrollView {
     }
 
     public void setBrewer(@NonNull Brewer brewer) {
-        ofObj(brewer.founded())
+        ofObj(brewer.getFounded())
                 .map(ZonedDateTime::getYear)
                 .map(String::valueOf)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerFounded::setText);
 
-        ofObj(brewer.website())
+        ofObj(brewer.getWebsite())
                 .filter(StringUtils::hasValue)
                 .map(StringUtils::removeTrailingSlash)
                 .map(StringUtils::addMissingProtocol)
@@ -151,7 +151,7 @@ public class BrewerDetailsView extends NestedScrollView {
                     brewerWebsiteColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_website));
                 });
 
-        ofObj(brewer.facebook())
+        ofObj(brewer.getFacebook())
                 .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.FACEBOOK_PATH, handle))
                 .ifSome(facebook -> {
@@ -163,7 +163,7 @@ public class BrewerDetailsView extends NestedScrollView {
                     brewerFacebookColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_facebook));
                 });
 
-        ofObj(brewer.twitter())
+        ofObj(brewer.getTwitter())
                 .filter(StringUtils::hasValue)
                 .map(handle -> String.format(Constants.TWITTER_PATH, handle))
                 .ifSome(twitter -> {
@@ -175,20 +175,20 @@ public class BrewerDetailsView extends NestedScrollView {
                     brewerTwitterColumn.setOnClickListener(__ -> showToast(R.string.brewer_details_no_twitter));
                 });
 
-        ofObj(brewer.countryId())
+        ofObj(brewer.getCountryId())
                 .map(countryStore::getItem)
                 .ifSome(country -> brewerCountryRow.setOnClickListener(__ -> navigateToCountry(country.getId())))
                 .map(Country::getName)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCountry::setText);
 
-        ofObj(brewer.city())
+        ofObj(brewer.getCity())
                 .filter(StringUtils::hasValue)
                 .ifSome(city -> brewerCityRow.setOnClickListener(__ -> openWikipedia(city)))
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerCity::setText);
 
-        ofObj(brewer.address())
+        ofObj(brewer.getAddress())
                 .filter(StringUtils::hasValue)
                 .orOption(this::notAvailableOption)
                 .ifSome(brewerAddress::setText);
@@ -233,10 +233,10 @@ public class BrewerDetailsView extends NestedScrollView {
     }
 
     private Option<String> fullAddress(@NonNull Brewer brewer) {
-        return ofObj(brewer.countryId())
+        return ofObj(brewer.getCountryId())
                 .map(countryStore::getItem)
                 .map(Country::getName)
-                .lift(emptyAsNone(brewer.city()), emptyAsNone(brewer.address()), (country, city, address) -> {
+                .lift(emptyAsNone(brewer.getCity()), emptyAsNone(brewer.getAddress()), (country, city, address) -> {
                     String street = address.contains(",")
                             ? address.split(",")[0]
                             : address;

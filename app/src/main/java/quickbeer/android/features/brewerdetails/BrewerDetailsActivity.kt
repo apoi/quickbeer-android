@@ -82,7 +82,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
 
             // Update brewer access date
             subscription.add(sourceObservable
-                    .map { it.id() }
+                    .map { it.id }
                     .subscribe({ brewerActions.access(it) }, { Timber.e(it) }))
 
             // Set toolbar title
@@ -136,14 +136,14 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     }
 
     private fun setToolbarDetails(brewer: Brewer) {
-        collapsing_toolbar.title = brewer.name()
+        collapsing_toolbar.title = brewer.name
 
-        picasso.load(brewer.imageUri)
+        picasso.load(brewer.getImageUri())
                 .transform(BlurTransformation(applicationContext, 15))
                 .into(collapsing_toolbar_background, object : Callback.EmptyCallback() {
                     override fun onSuccess() {
                         toolbar_overlay_gradient.visibility = View.VISIBLE
-                        collapsing_toolbar_background.setOnClickListener { openPhotoView(brewer.imageUri) }
+                        collapsing_toolbar_background.setOnClickListener { openPhotoView(brewer.getImageUri()) }
                     }
                 })
     }
