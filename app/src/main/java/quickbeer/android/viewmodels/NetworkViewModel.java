@@ -20,7 +20,10 @@ package quickbeer.android.viewmodels;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Collection;
+
 import io.reark.reark.data.DataStreamNotification;
+import quickbeer.android.data.pojos.ItemList;
 import rx.Observable;
 import rx.functions.Func1;
 import rx.subjects.BehaviorSubject;
@@ -84,6 +87,15 @@ public abstract class NetworkViewModel<T> extends quickbeer.android.core.viewmod
         };
     }
 
-    protected abstract boolean hasValue(@Nullable T item);
-
+    private boolean hasValue(@Nullable T list) {
+        if (list == null) {
+            return false;
+        } else if (list instanceof Collection) {
+            return !((Collection<?>) list).isEmpty();
+        } else if (list instanceof ItemList) {
+            return !((ItemList<?>) list).getItems().isEmpty();
+        } else {
+            return true;
+        }
+    }
 }

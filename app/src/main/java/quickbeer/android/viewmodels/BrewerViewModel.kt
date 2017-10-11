@@ -100,10 +100,6 @@ internal constructor(@Named("id") val brewerId: Int,
         }
     }
 
-    override fun hasValue(item: Brewer?): Boolean {
-        return true
-    }
-
     override fun unbind() {
         subscription.clear()
     }

@@ -67,10 +67,6 @@ class BeerViewModel(val beerId: Int,
             return beerActions.get(beerId)
     }
 
-    override fun hasValue(item: Beer?): Boolean {
-        return true
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other?.javaClass != javaClass) return false

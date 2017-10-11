@@ -81,11 +81,7 @@ protected constructor(private val beerActions: BeerActions,
                 .filter { it.isOnNext }
                 .map { it.value!! }
                 .doOnNext { Timber.d("Search finished") }
-                .flatMap {
-                    Observable.from(it.items)
-                        .map { BeerViewModel(it, false, beerActions, progressStatusProvider) }
-                        .toList()
-                }
+                .map { it.items.map { BeerViewModel(it, false, beerActions, progressStatusProvider) } }
                 .doOnNext { Timber.d("Publishing %s beers", it.size) }
                 .subscribe { beers.onNext(it) })
 
@@ -108,9 +104,5 @@ protected constructor(private val beerActions: BeerActions,
                 .doOnNext { Timber.d("query(%s)", it) }
                 .map { beerSearchActions.search(it) }
                 .subscribe({ source.onNext(it) }, { Timber.e(it) }))
-    }
-
-    override fun hasValue(item: ItemList<String>?): Boolean {
-        return item!!.items.isEmpty()
     }
 }

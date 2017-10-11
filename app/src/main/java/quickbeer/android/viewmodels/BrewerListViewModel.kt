@@ -91,8 +91,4 @@ protected constructor(private val beerActions: BeerActions,
 
         subscription.add(sharedObservable.connect())
     }
-
-    override fun hasValue(item: ItemList<String>?): Boolean {
-        return !get(item).items.isEmpty()
-    }
 }

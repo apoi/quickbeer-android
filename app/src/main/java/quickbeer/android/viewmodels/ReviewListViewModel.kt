@@ -104,8 +104,4 @@ class ReviewListViewModel(private val beerId: Int,
         // Initial trigger at bind time
         loadTrigger.onNext(Unit.DEFAULT)
     }
-
-    override fun hasValue(item: ItemList<Review>?): Boolean {
-        return !get(item).items.isEmpty()
-    }
 }
