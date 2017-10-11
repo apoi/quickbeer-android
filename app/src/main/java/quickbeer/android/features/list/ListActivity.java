@@ -109,7 +109,7 @@ public class ListActivity extends BindingDrawerActivity {
         searchView = get((SearchView) findViewById(R.id.toolbar_search_view));
         searchView.setViewModel(get(searchViewViewModel));
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey("query")) {
             searchViewViewModel.setQuery(savedInstanceState.getString("query"));
         } else if (NavigationProvider.intentHasNavigationTarget(getIntent())) {
             navigationProvider.navigateWithIntent(getIntent());
