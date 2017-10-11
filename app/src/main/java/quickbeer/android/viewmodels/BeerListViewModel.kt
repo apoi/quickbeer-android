@@ -26,6 +26,7 @@ import quickbeer.android.utils.StringUtils
 import rx.Observable
 import rx.observables.ConnectableObservable
 import rx.schedulers.Schedulers
+import rx.subjects.BehaviorSubject
 import rx.subjects.PublishSubject
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
@@ -37,7 +38,7 @@ protected constructor(private val beerActions: BeerActions,
                       private val progressStatusProvider: ProgressStatusProvider)
     : NetworkViewModel<ItemList<String>>() {
 
-    private val source = PublishSubject.create<Observable<DataStreamNotification<ItemList<String>>>>()
+    private val source = BehaviorSubject.create<Observable<DataStreamNotification<ItemList<String>>>>()
 
     private val beers = PublishSubject.create<List<BeerViewModel>>()
 
@@ -62,11 +63,14 @@ protected constructor(private val beerActions: BeerActions,
     }
 
     override fun bind(subscription: CompositeSubscription) {
+        // Start with default data source
+        source.onNext(dataSource())
+
         // Switch source according to selector subject
         val sharedObservable: ConnectableObservable<DataStreamNotification<ItemList<String>>> =
                 Observable.switchOnNext(source)
-                .subscribeOn(Schedulers.computation())
-                .publish()
+                        .subscribeOn(Schedulers.computation())
+                        .publish()
 
         // Construct progress status. Completed with value means we'll receive onNext.
         subscription.add(sharedObservable
@@ -92,9 +96,6 @@ protected constructor(private val beerActions: BeerActions,
         }
 
         subscription.add(sharedObservable.connect())
-
-        // Start with default data source
-        source.onNext(dataSource())
 
         // Switch to search on new search term
         subscription.add(searchViewViewModel
