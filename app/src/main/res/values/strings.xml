@@ -27,6 +27,12 @@
     <string name="action_drawer_open">Open navigation drawer</string>
     <string name="action_drawer_close">Close navigation drawer</string>
 
+    <!-- Share -->
+    <string name="share">Share</string>
+    <string name="open">Open</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="share_template">Drinking %s by %s\n\n%s</string>
+
     <!-- Search -->
     <string name="search_status_loading">Loading…</string>
     <string name="search_status_error">An error occurred.\nTry again soon.</string>

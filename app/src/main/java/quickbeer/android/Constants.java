@@ -28,6 +28,7 @@ public interface Constants {
     String API_URL = "https://www.ratebeer.com";
     String API_KEY_NAME = "apiKey";
 
+    String BEER_PATH = "https://ratebeer.com/beer/%d/";
     String BEER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg";
     String BREWER_IMAGE_PATH = "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg";
     String FLAG_IMAGE_PATH = "https://ztesch.fi/quickbeer/flags/%s.svg";

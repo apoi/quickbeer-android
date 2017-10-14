@@ -18,13 +18,17 @@
 package quickbeer.android.features.beerdetails
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ShareCompat
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Callback.EmptyCallback
 import com.squareup.picasso.Picasso
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.analytics.Events.Entry
@@ -38,6 +42,7 @@ import quickbeer.android.data.pojos.Beer
 import quickbeer.android.features.photoview.PhotoViewActivity
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
+import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.transformations.BlurTransformation
 import quickbeer.android.transformations.ContainerLabelExtractor
@@ -66,6 +71,9 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     internal lateinit var progressStatusProvider: ProgressStatusProvider
 
     @Inject
+    internal lateinit var resourceProvider: ResourceProvider
+
+    @Inject
     internal lateinit var searchViewViewModel: SearchViewViewModel
 
     @Inject
@@ -75,6 +83,10 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     internal lateinit var analytics: Analytics
 
     private var beerId: Int = 0
+
+    private var beerName: String = ""
+
+    private var brewerName: String = ""
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(subscription: CompositeSubscription) {
@@ -99,6 +111,13 @@ class BeerDetailsActivity : BindingDrawerActivity() {
             subscription.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
+
+            // Update share intent
+            subscription.add(sourceObservable
+                    .subscribe({
+                        beerName = it.name ?: ""
+                        brewerName = it.brewerName ?: ""
+                    }, { Timber.e(it) }))
 
             subscription.add(progressStatusProvider
                     .progressStatus()
@@ -145,6 +164,11 @@ class BeerDetailsActivity : BindingDrawerActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.beer_menu, menu);
+        return true
+    }
+
     private fun setToolbarDetails(beer: Beer) {
         collapsing_toolbar.title = beer.name
 
@@ -163,6 +187,24 @@ class BeerDetailsActivity : BindingDrawerActivity() {
         val intent = Intent(this, PhotoViewActivity::class.java)
         intent.putExtra("source", uri)
         startActivity(intent)
+    }
+
+    private fun share() {
+        val uri = String.format(Constants.BEER_PATH, beerId)
+        val template = resourceProvider.getString(R.string.share_template);
+        val text = String.format(template, beerName, brewerName, uri)
+        val intent = ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(text)
+                .intent
+
+        startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.share)))
+    }
+
+    private fun openInBrowser() {
+        val uri = String.format(Constants.BEER_PATH, beerId)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.open)))
     }
 
     override fun inject() {
@@ -187,9 +229,19 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            R.id.menu_item_share -> {
+                share()
+                return true
+            }
+            R.id.menu_item_open -> {
+                openInBrowser()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
