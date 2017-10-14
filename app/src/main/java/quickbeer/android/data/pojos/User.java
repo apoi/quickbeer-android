@@ -25,7 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.SerializedName;
 
-import quickbeer.android.data.pojos.base.OverwritableBuilder;
+import quickbeer.android.data.pojos.base.Overwritable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -46,7 +46,7 @@ public abstract class User {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends OverwritableBuilder<AutoValue_User.Builder> {
+    public abstract static class Builder extends Overwritable<AutoValue_User.Builder> {
 
         public abstract Builder id(@Nullable Integer id);
 

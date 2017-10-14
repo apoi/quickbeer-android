@@ -17,15 +17,15 @@
  */
 package quickbeer.android.data.pojos
 
-import io.reark.reark.pojo.OverwritablePojo
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.data.pojos.base.Overwritable
 
 data class BeerMetadata(val beerId: Int,
                         val updated: ZonedDateTime? = null,
                         val accessed: ZonedDateTime? = null,
                         val reviewId: Int? = null,
                         val isModified: Boolean? = null)
-    : OverwritablePojo<BeerMetadata>() {
+    : Overwritable<BeerMetadata>() {
 
     override fun getTypeParameterClass(): Class<BeerMetadata> {
         return BeerMetadata::class.java

@@ -24,7 +24,7 @@ import com.google.auto.value.AutoValue;
 
 import org.threeten.bp.ZonedDateTime;
 
-import quickbeer.android.data.pojos.base.OverwritableBuilder;
+import quickbeer.android.data.pojos.base.Overwritable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -43,7 +43,7 @@ public abstract class BrewerMetadata {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends OverwritableBuilder<AutoValue_BrewerMetadata.Builder> {
+    public abstract static class Builder extends Overwritable<AutoValue_BrewerMetadata.Builder> {
 
         public abstract Builder brewerId(final Integer brewerId);
 

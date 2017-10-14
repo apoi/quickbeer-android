@@ -18,10 +18,10 @@
 package quickbeer.android.data.pojos
 
 import com.google.gson.annotations.SerializedName
-import io.reark.reark.pojo.OverwritablePojo
 import org.threeten.bp.ZonedDateTime
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
+import quickbeer.android.data.pojos.base.Overwritable
 import quickbeer.android.utils.StringUtils.hasValue
 import java.util.*
 
@@ -47,7 +47,7 @@ data class Beer(@SerializedName("BeerID") val id: Int,
                 @SerializedName("Unrateable") val unrateable: Boolean?,
                 @SerializedName("Liked") val tickValue: Int?,
                 @SerializedName("TimeEntered") val tickDate: ZonedDateTime?)
-    : OverwritablePojo<Beer>() {
+    : Overwritable<Beer>() {
 
     fun basicDataMissing(): Boolean {
         return brewerId == null || !hasValue(styleName)

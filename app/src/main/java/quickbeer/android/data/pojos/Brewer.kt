@@ -18,9 +18,9 @@
 package quickbeer.android.data.pojos
 
 import com.google.gson.annotations.SerializedName
-import io.reark.reark.pojo.OverwritablePojo
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
+import quickbeer.android.data.pojos.base.Overwritable
 import quickbeer.android.utils.StringUtils.hasValue
 import java.util.*
 
@@ -54,7 +54,7 @@ data class Brewer(@SerializedName("BrewerID") val id: Int,
                   @SerializedName("MetroID") val metroId: String?,
                   @SerializedName("MSA") val msa: String?,
                   @SerializedName("RegionID") val regionId: String?)
-    : OverwritablePojo<Brewer>() {
+    : Overwritable<Brewer>() {
 
     fun hasDetails(): Boolean {
         return hasValue(name)

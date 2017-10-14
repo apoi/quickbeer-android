@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
 
 import org.threeten.bp.ZonedDateTime;
 
-import quickbeer.android.data.pojos.base.OverwritableBuilder;
+import quickbeer.android.data.pojos.base.Overwritable;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -118,7 +118,7 @@ public abstract class Review {
 
     @SuppressWarnings("ClassReferencesSubclass")
     @AutoValue.Builder
-    public abstract static class Builder extends OverwritableBuilder<AutoValue_Review.Builder> {
+    public abstract static class Builder extends Overwritable<AutoValue_Review.Builder> {
 
         public abstract Builder id(final Integer id);
 
