@@ -17,7 +17,6 @@
  */
 package quickbeer.android.viewmodels
 
-import io.reark.reark.utils.Preconditions.get
 import io.reark.reark.utils.RxUtils
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.ReviewActions
@@ -71,7 +70,7 @@ class ReviewListViewModel(private val beerId: Int,
                 .publish()
 
         subscription.add(reviewSource
-                .map(NetworkViewModel.toStaticProgressStatus<ItemList<Int>>())
+                .map { toProgressStatus().call(it) }
                 .subscribe { setProgressStatus(it) })
 
         subscription.add(reviewSource
