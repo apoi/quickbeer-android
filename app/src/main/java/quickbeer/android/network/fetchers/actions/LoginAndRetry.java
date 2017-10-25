@@ -24,7 +24,7 @@ import quickbeer.android.data.pojos.User;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.rx.RxUtils;
-import retrofit2.HttpException;
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.functions.Func1;
 import timber.log.Timber;
