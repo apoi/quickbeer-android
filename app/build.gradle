@@ -68,7 +68,7 @@ ext {
             collapsingToolbar : '1.5.0',
             multidex          : '1.0.2',
             dagger2           : '2.11',
-            rxJava            : '1.3.0',
+            rxJava            : '1.3.3',
             rxAndroid         : '1.2.1',
             ixJava            : '1.0.0-RC5',
             options           : '1.2.4',
