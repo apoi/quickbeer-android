@@ -17,12 +17,11 @@
  */
 package quickbeer.android.data.stores;
 
+import com.google.gson.Gson;
+
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-
-import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.cores.BeerListStoreCore;
@@ -37,8 +36,8 @@ public class BeerListStore extends StoreBase<String, ItemList<String>, Option<It
                          @NonNull Gson gson) {
         super(new CachingStoreCore<>(
                 new BeerListStoreCore(contentResolver, gson),
-                new MemoryStoreCore<>((o1, o2) -> o2),
-                ItemList::getKey),
+                ItemList::getKey,
+                (v1, v2) -> v2),
               ItemList::getKey,
               Option::ofObj,
               Option::none);

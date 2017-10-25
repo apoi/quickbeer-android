@@ -45,11 +45,11 @@ public class UserStore extends StoreBase<Integer, User, Option<User>> {
     public UserStore(@NonNull ContentResolver contentResolver,
                      @NonNull Gson gson) {
         super(new CachingStoreCore<>(
-                        new UserStoreCore(contentResolver, gson),
-                        new MemoryStoreCore<>(User::merge),
-                        __ -> Constants.DEFAULT_USER_ID),
-                __ -> Constants.DEFAULT_USER_ID,
-                Option::ofObj,
-                Option::none);
+                      new UserStoreCore(contentResolver, gson),
+                      __ -> Constants.DEFAULT_USER_ID,
+                      User::merge),
+              __ -> Constants.DEFAULT_USER_ID,
+              Option::ofObj,
+              Option::none);
     }
 }

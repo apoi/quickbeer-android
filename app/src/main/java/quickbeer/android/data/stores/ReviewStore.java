@@ -17,12 +17,11 @@
  */
 package quickbeer.android.data.stores;
 
+import com.google.gson.Gson;
+
 import android.content.ContentResolver;
 import android.support.annotation.NonNull;
 
-import com.google.gson.Gson;
-
-import io.reark.reark.data.stores.cores.MemoryStoreCore;
 import polanski.option.Option;
 import quickbeer.android.data.pojos.Review;
 import quickbeer.android.data.stores.cores.CachingStoreCore;
@@ -32,11 +31,11 @@ public class ReviewStore extends StoreBase<Integer, Review, Option<Review>> {
 
     public ReviewStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
-                        new ReviewStoreCore(contentResolver, gson),
-                        new MemoryStoreCore<>(Review::merge),
-                        Review::id),
-                Review::id,
-                Option::ofObj,
-                Option::none);
+                      new ReviewStoreCore(contentResolver, gson),
+                      Review::id,
+                      Review::merge),
+              Review::id,
+              Option::ofObj,
+              Option::none);
     }
 }

@@ -36,12 +36,12 @@ public class BeerMetadataStore extends StoreBase<Integer, BeerMetadata, Option<B
 
     public BeerMetadataStore(@NonNull ContentResolver contentResolver, @NonNull Gson gson) {
         super(new CachingStoreCore<>(
-                new BeerMetadataStoreCore(contentResolver, gson),
-                        new MemoryStoreCore<>(BeerMetadata.Companion::merge),
-                        BeerMetadata::getBeerId),
-                BeerMetadata::getBeerId,
-                Option::ofObj,
-                Option::none);
+                      new BeerMetadataStoreCore(contentResolver, gson),
+                      BeerMetadata::getBeerId,
+                      BeerMetadata.Companion::merge),
+              BeerMetadata::getBeerId,
+              Option::ofObj,
+              Option::none);
     }
 
     @NonNull
