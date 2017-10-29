@@ -30,8 +30,7 @@ import java.util.*
 import javax.inject.Inject
 
 class BeerStyleStoreCore @Inject
-internal constructor(resourceProvider: ResourceProvider,
-                     gson: Gson)
+internal constructor(resourceProvider: ResourceProvider, gson: Gson)
     : MemoryStoreCore<Int, BeerStyle>() {
 
     init {

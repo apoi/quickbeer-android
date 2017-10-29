@@ -106,6 +106,6 @@ public class ReviewListStoreCore extends StoreCoreBase<Integer, ItemList<Integer
         items.addAll(oldList.getItems());
         items.addAll(newList.getItems());
 
-        return ItemList.create(oldList.getKey(), new ArrayList<>(items), ZonedDateTime.now());
+        return ItemList.Companion.create(oldList.getKey(), new ArrayList<>(items), ZonedDateTime.now());
     }
 }

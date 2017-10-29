@@ -70,7 +70,7 @@ public class ProfileActivity extends BindingDrawerActivity {
                     .filter(RxUtils::isTrue)
                     .switchMap(__ -> viewModel().getUser())
                     .compose(RxUtils::pickValue)
-                    .subscribe(user -> viewModel().fetchTicks(user.id()), Timber::e));
+                    .subscribe(user -> viewModel().fetchTicks(user.getId()), Timber::e));
         }
     };
 

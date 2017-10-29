@@ -109,10 +109,10 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
                 .map(ReviewsFetcher::sortByReviewDate)
                 .toObservable()
                 .flatMap(Observable::from)
-                .map(Review::id)
+                .map(Review::getCountryID)
                 .toList()
                 .toSingle()
-                .map(reviewIds -> ItemList.create(queryId, reviewIds, ZonedDateTime.now()))
+                .map(reviewIds -> ItemList.Companion.create(queryId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
@@ -155,12 +155,12 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
     @NonNull
     protected static List<Review> sortByReviewDate(@NonNull List<Review> list) {
         Collections.sort(list, (first, second) -> {
-            ZonedDateTime firstDate = first.timeUpdated();
-            ZonedDateTime secondDate = second.timeUpdated();
+            ZonedDateTime firstDate = first.getTimeUpdated();
+            ZonedDateTime secondDate = second.getTimeUpdated();
 
             if (firstDate == null) {
                 if (secondDate == null) {
-                    return first.id().compareTo(second.id());
+                    return Integer.valueOf(first.getId()).compareTo(second.getId());
                 } else {
                     return -1;
                 }

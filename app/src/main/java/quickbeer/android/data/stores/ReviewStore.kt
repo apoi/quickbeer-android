@@ -29,7 +29,7 @@ import rx.functions.Func2
 
 class ReviewStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, Review, Option<Review>>(
-        CachingStoreCore(ReviewStoreCore(contentResolver, gson), Func1 { it.id() }, Func2 { v1, v2 -> Review.merge(v1, v2) }),
-        GetIdForItem { it.id() },
+        CachingStoreCore(ReviewStoreCore(contentResolver, gson), Func1 { it.id }, Func2 { v1, v2 -> Review.merge(v1, v2) }),
+        GetIdForItem { it.id },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<Review>() })

@@ -92,7 +92,7 @@ class TickBeerFetcher(val networkApi: NetworkApi,
         get() = userStore.getOnce(Constants.DEFAULT_USER_ID)
                 .subscribeOn(Schedulers.io())
                 .compose { RxUtils.valueOrError(it) }
-                .map { it.id() }
+                .map { it.id }
 
     private val tickedBeers: Single<List<Int>>
         get() = queryId.flatMap { beerListStore.getOnce(it) }

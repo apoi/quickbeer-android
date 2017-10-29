@@ -44,13 +44,13 @@ internal constructor(private val userActions: UserActions,
     }
 
     fun refreshTicks(user: User) {
-        reviewActions.fetchTicks(user.id().toString())
+        reviewActions.fetchTicks(user.id.toString())
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return userActions.getUser()
                 .flatMap { userOption -> userOption.match(
-                        { reviewActions.getTicks(it.id().toString()) },
+                        { reviewActions.getTicks(it.id.toString()) },
                         { Observable.just(DataStreamNotification.completedWithoutValue<ItemList<String>>()) })
                 }
     }
@@ -58,7 +58,7 @@ internal constructor(private val userActions: UserActions,
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return userActions.getUser()
                 .flatMapSingle { userOption -> userOption.match(
-                        { reviewActions.fetchTicks(it.id().toString()) },
+                        { reviewActions.fetchTicks(it.id.toString()) },
                         { Single.just(false) })
                 }
                 .flatMap { dataSource() }

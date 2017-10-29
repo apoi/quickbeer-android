@@ -76,7 +76,7 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
 
             subscription.add(viewModel()
                     .getUser()
-                    .map(User::id)
+                    .map(User::getId)
                     .switchMap(viewModel()::getTicksOnce)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileDetailsFragment.this::setTickedBeers, Timber::e));
@@ -115,7 +115,7 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
     }
 
     private void setUser(@NonNull User user) {
-        welcomeTextView.setText(String.format(getString(R.string.welcome_text), user.username()));
+        welcomeTextView.setText(String.format(getString(R.string.welcome_text), user.getUsername()));
     }
 
     private void setTickedBeers(@NonNull List<Integer> tickedBeers) {

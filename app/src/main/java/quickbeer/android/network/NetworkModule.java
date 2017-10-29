@@ -94,7 +94,6 @@ public final class NetworkModule {
     public static Gson provideGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(ZonedDateTime.class, new DateDeserializer())
-                .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
                 .create();
     }
 
@@ -105,7 +104,6 @@ public final class NetworkModule {
         return new GsonBuilder()
                 .registerTypeAdapter(String.class, new ApiStringDeserializer())
                 .registerTypeAdapter(ZonedDateTime.class, new ApiDateDeserializer())
-                .registerTypeAdapterFactory(RateBeerTypeAdapterFactory.create())
                 .create();
     }
 

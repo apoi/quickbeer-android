@@ -112,7 +112,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                 .map(Beer::getId)
                 .toList()
                 .toSingle()
-                .map(beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()))
+                .map(beerIds -> ItemList.Companion.create(queryId, beerIds, ZonedDateTime.now()))
                 .flatMap(beerListStore::put)
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))

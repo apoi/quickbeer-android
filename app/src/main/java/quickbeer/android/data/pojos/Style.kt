@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,19 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.network;
+package quickbeer.android.data.pojos
 
-import android.support.annotation.NonNull;
+class Style(override val id: Int, override val name: String) : SimpleItem() {
 
-import com.google.gson.TypeAdapterFactory;
-import com.ryanharter.auto.value.gson.GsonTypeAdapterFactory;
-
-@GsonTypeAdapterFactory
-public abstract class RateBeerTypeAdapterFactory implements TypeAdapterFactory {
-
-    @NonNull
-    public static TypeAdapterFactory create() {
-        return new AutoValueGson_RateBeerTypeAdapterFactory();
-    }
-
+    override val code: String
+        get() = name.substring(0, 2)
 }

@@ -60,7 +60,7 @@ class ReviewListViewModel(private val beerId: Int,
     private fun getReviewObservable(reviewId: Int): Observable<Review> {
         return reviewActions.get(reviewId)
                 .compose { quickbeer.android.rx.RxUtils.pickValue(it) }
-                .doOnNext { Timber.v("Received review " + it.id()) }
+                .doOnNext { Timber.v("Received review " + it.id) }
     }
 
     override fun bind(subscription: CompositeSubscription) {

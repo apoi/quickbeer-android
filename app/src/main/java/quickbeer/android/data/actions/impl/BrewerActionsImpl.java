@@ -224,6 +224,6 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
     public void access(int brewerId) {
         Timber.v("access(%s)", brewerId);
 
-        brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId));
+        brewerMetadataStore.put(BrewerMetadata.Companion.newAccess(brewerId));
     }
 }

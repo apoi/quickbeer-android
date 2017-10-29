@@ -80,7 +80,7 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     @Override
     protected ContentValues getContentValuesForItem(@NonNull Review item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ReviewColumns.ID, item.id());
+        contentValues.put(ReviewColumns.ID, item.getId());
         contentValues.put(ReviewColumns.JSON, getGson().toJson(item));
 
         return contentValues;
@@ -89,6 +89,6 @@ public class ReviewStoreCore extends StoreCoreBase<Integer, Review> {
     @NonNull
     @Override
     protected Review mergeValues(@NonNull Review v1, @NonNull Review v2) {
-        return Review.merge(v1, v2);
+        return Review.Companion.merge(v1, v2);
     }
 }

@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.data.pojos;
+package quickbeer.android.data.pojos
 
-public class Header {
-    private final String text;
+import org.threeten.bp.ZonedDateTime
 
-    public Header(String text) {
-        this.text = text;
-    }
+class ItemList<T>(val key: T? = null,
+                  val items: List<Int> = emptyList(),
+                  var updateDate: ZonedDateTime? = null) {
 
-    public String getText() {
-        return text;
+    companion object {
+        fun <T> create(key: T?, items: List<Int>, updateDate: ZonedDateTime?): ItemList<T> {
+            return ItemList(key, items, updateDate)
+        }
+
+        fun <T> create(items: List<Int>): ItemList<T> {
+            return ItemList(null, items, null)
+        }
     }
 }

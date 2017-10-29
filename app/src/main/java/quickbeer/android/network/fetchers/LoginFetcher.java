@@ -99,17 +99,13 @@ public class LoginFetcher extends FetcherBase<Uri> {
                 .subscribeOn(Schedulers.io())
                 .map(__ -> LoginUtils.getUserId(cookieJar))
                 .doOnSuccess(id -> id.ifNone(() -> Timber.e("No user id found in login response!")))
-                .map(userId -> User.builder()
-                        .id(userId.orDefault(() -> -1))
-                        .username(username)
-                        .password(password)
-                        .build())
+                .map(userId -> new User(userId.orDefault(() -> -1), username, password))
                 .flatMap(userStore::put)
                 .doOnSubscribe(() -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
                 .subscribe(Actions.empty(),
-                        error -> Timber.w(error, "Error fetching user " + username));
+                        error -> Timber.e(error, "Error fetching user " + username));
 
         addRequest(requestId, subscription);
     }

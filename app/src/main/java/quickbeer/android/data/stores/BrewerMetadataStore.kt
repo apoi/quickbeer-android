@@ -31,8 +31,8 @@ import rx.functions.Func2
 
 class BrewerMetadataStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, BrewerMetadata, Option<BrewerMetadata>>(
-        CachingStoreCore(BrewerMetadataStoreCore(contentResolver, gson), Func1 { it.brewerId() }, Func2 { v1, v2 -> BrewerMetadata.merge(v1, v2) }),
-        GetIdForItem { it.brewerId() },
+        CachingStoreCore(BrewerMetadataStoreCore(contentResolver, gson), Func1 { it.brewerId }, Func2 { v1, v2 -> BrewerMetadata.merge(v1, v2) }),
+        GetIdForItem { it.brewerId },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<BrewerMetadata>() }) {
 

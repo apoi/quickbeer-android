@@ -57,7 +57,7 @@ internal constructor(private val userActions: UserActions,
         subscription.add(autoLoginSubject.asObservable()
                 .switchMap { getUser() }
                 .compose { RxUtils.pickValue(it) }
-                .subscribe({ login(it.username(), it.password()) }, { Timber.e(it) }))
+                .subscribe({ login(it.username, it.password) }, { Timber.e(it) }))
     }
 
     fun login(username: String, password: String) {
