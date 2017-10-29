@@ -42,8 +42,6 @@ import rx.Observable;
 import rx.Single;
 import timber.log.Timber;
 
-import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
-
 public class BarcodeActionsImpl extends ApplicationDataLayer implements BarcodeActions {
 
     @NonNull
@@ -97,7 +95,7 @@ public class BarcodeActionsImpl extends ApplicationDataLayer implements BarcodeA
         String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> barcodeSearchObservable =

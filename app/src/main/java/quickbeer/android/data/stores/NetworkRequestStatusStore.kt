@@ -23,33 +23,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package quickbeer.android.data.stores;
+package quickbeer.android.data.stores
 
-import android.content.ContentResolver;
-import android.support.annotation.NonNull;
+import android.content.ContentResolver
+import com.google.gson.Gson
+import io.reark.reark.data.stores.DefaultStore
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
+import io.reark.reark.pojo.NetworkRequestStatus
+import polanski.option.Option
+import quickbeer.android.data.stores.cores.NetworkRequestStatusStoreCore
 
-import com.google.gson.Gson;
+class NetworkRequestStatusStore(contentResolver: ContentResolver, gson: Gson)
+    : DefaultStore<Int, NetworkRequestStatus, Option<NetworkRequestStatus>>(
+        NetworkRequestStatusStoreCore(contentResolver, gson),
+        GetIdForItem { status -> requestIdForUri(status.uri) },
+        GetNullSafe { Option.ofObj(it) },
+        GetEmptyValue { Option.none<NetworkRequestStatus>() }) {
 
-import io.reark.reark.data.stores.cores.MemoryStoreCore;
-import polanski.option.Option;
-import quickbeer.android.Constants;
-import quickbeer.android.data.pojos.User;
-import quickbeer.android.data.stores.cores.CachingStoreCore;
-import quickbeer.android.data.stores.cores.UserStoreCore;
-
-/**
- * Store to keep user data.
- */
-public class UserStore extends StoreBase<Integer, User, Option<User>> {
-
-    public UserStore(@NonNull ContentResolver contentResolver,
-                     @NonNull Gson gson) {
-        super(new CachingStoreCore<>(
-                      new UserStoreCore(contentResolver, gson),
-                      __ -> Constants.DEFAULT_USER_ID,
-                      User::merge),
-              __ -> Constants.DEFAULT_USER_ID,
-              Option::ofObj,
-              Option::none);
+    companion object {
+        fun requestIdForUri(uri: String): Int {
+            return uri.hashCode()
+        }
     }
 }

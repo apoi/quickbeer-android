@@ -41,8 +41,6 @@ import quickbeer.android.rx.RxUtils;
 import rx.Observable;
 import timber.log.Timber;
 
-import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
-
 public class UserActionsImpl extends ApplicationDataLayer implements UserActions {
 
     @NonNull
@@ -94,7 +92,7 @@ public class UserActionsImpl extends ApplicationDataLayer implements UserActions
         String uri = LoginFetcher.getUniqueUri();
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue)
                         .filter(status -> status.forListener(listenerId));
 

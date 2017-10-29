@@ -42,8 +42,6 @@ import rx.Single;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
-
 public class BeerListActionsImpl extends ApplicationDataLayer implements BeerListActions {
 
     @NonNull
@@ -127,7 +125,7 @@ public class BeerListActionsImpl extends ApplicationDataLayer implements BeerLis
         String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<String>> beerSearchObservable =

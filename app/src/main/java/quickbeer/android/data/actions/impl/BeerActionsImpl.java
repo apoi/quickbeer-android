@@ -48,8 +48,6 @@ import rx.Single;
 import rx.functions.Func1;
 import timber.log.Timber;
 
-import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
-
 public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions {
 
     @NonNull
@@ -155,7 +153,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
         String uri = TickBeerFetcher.Companion.getUniqueUri(beerId, rating);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue)
                         .filter(status -> status.forListener(listenerId));
 
@@ -191,7 +189,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
         String uri = BeerFetcher.getUniqueUri(beerId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue); // No need to filter stale statuses
 
         Observable<Beer> beerObservable =
@@ -243,7 +241,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
         String uri = ReviewFetcher.getUniqueUri(beerId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue); // No need to filter stale statuses?
 
         Observable<ItemList<Integer>> reviewListObservable =

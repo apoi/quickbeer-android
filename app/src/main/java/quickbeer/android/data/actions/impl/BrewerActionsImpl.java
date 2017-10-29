@@ -29,7 +29,6 @@ import io.reark.reark.data.utils.DataLayerUtils;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import polanski.option.Option;
 import quickbeer.android.data.actions.BrewerActions;
-import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.pojos.ItemList;
@@ -47,8 +46,6 @@ import rx.Observable;
 import rx.Single;
 import rx.functions.Func1;
 import timber.log.Timber;
-
-import static quickbeer.android.data.stores.NetworkRequestStatusStore.requestIdForUri;
 
 public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerActions {
 
@@ -127,7 +124,7 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
         String uri = BrewerFetcher.getUniqueUri(brewerId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue);
 
         Observable<Brewer> brewerObservable =
@@ -196,7 +193,7 @@ public class BrewerActionsImpl extends ApplicationDataLayer implements BrewerAct
         String uri = BeerSearchFetcher.getUniqueUri(queryId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
-                requestStatusStore.getOnceAndStream(requestIdForUri(uri))
+                requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
                         .compose(RxUtils::pickValue);
 
         Observable<ItemList<String>> beerSearchObservable =
