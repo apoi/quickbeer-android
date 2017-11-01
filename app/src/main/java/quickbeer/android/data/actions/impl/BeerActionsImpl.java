@@ -185,7 +185,7 @@ public class BeerActionsImpl extends ApplicationDataLayer implements BeerActions
     private Observable<DataStreamNotification<Beer>> getBeerResultStream(int beerId) {
         Timber.v("getBeerResultStream(%s)", beerId);
 
-        String uri = BeerFetcher.getUniqueUri(beerId);
+        String uri = BeerFetcher.Companion.getUniqueUri(beerId);
 
         Observable<NetworkRequestStatus> requestStatusObservable =
                 requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.Companion.requestIdForUri(uri))
