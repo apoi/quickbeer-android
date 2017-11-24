@@ -74,17 +74,13 @@ class BeerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView(
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .component
+                .getComponent()
                 .inject(this)
 
         beer_rating_overall_column.setOnClickListener { showToast(R.string.description_rating_overall) }
-
         beer_rating_style_column.setOnClickListener { showToast(R.string.description_rating_style) }
-
         beer_abv_column.setOnClickListener { showToast(R.string.description_abv) }
-
         beer_ibu_column.setOnClickListener { showToast(R.string.description_ibu) }
-
         rating_card_overlay.setOnClickListener { showLoginDialog() }
     }
 

@@ -155,7 +155,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     }
 
     override fun inject() {
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun viewModel(): ViewModel {

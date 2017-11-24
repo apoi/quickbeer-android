@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-public interface ViewModel {
+import rx.subscriptions.CompositeSubscription
 
-    /**
-     * Bind the ViewModel to its data model (typically modelled Observable View data).
-     */
-    void bindToDataModel();
+/**
+ * ViewModel that doesn't have a data connection.
+ */
+open class SimpleViewModel : BaseViewModel() {
 
-    /**
-     * Unbind the ViewModel from its data model.
-     */
-    void unbindDataModel();
+    override fun bind(subscription: CompositeSubscription) {
+        // Nothing - has no data source to bind to.
+    }
 
-    /**
-     * Permanently dispose of any resources held.
-     *
-     * The instance cannot be reused after this operation.
-     */
-    void dispose();
+    override fun unbind() {
+        // Nothing - has no data source to unbind from.
+    }
 }

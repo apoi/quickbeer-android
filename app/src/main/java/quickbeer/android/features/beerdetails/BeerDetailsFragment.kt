@@ -92,7 +92,7 @@ class BeerDetailsFragment : BindingBaseFragment(), RatingBar.OnRatingBarChangeLi
     }
 
     override fun inject() {
-        component.plusId(IdModule(beerId))
+        getComponent().plusId(IdModule(beerId))
                 .inject(this)
     }
 

@@ -49,7 +49,7 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .component
+                .getComponent()
                 .inject(this)
     }
 

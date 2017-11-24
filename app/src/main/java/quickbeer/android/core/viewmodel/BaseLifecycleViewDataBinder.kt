@@ -13,73 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-import android.support.annotation.NonNull;
-
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.CompositeSubscription
 
 /**
  * Abstracts the view-to-viewmodel binding mechanism from the views associated lifecycle triggers.
  *
  * The View should implement a concrete instance to allow it bind to the time-variant (Observable)
- * values provided by its associated {@link ViewModel}.
+ * values provided by its associated [ViewModel].
  */
-@SuppressWarnings("NoopMethodInAbstractClass")
-public abstract class BaseLifecycleViewDataBinder implements LifecycleDataBinder {
+abstract class BaseLifecycleViewDataBinder : LifecycleDataBinder {
 
-    @NonNull
-    private final CompositeSubscription compositeSubscription = new CompositeSubscription();
+    private val compositeSubscription = CompositeSubscription()
 
     /**
-     *  Inform the ViewModel that it needs to bind to the View's modelled data sources.
+     * Inform the ViewModel that it needs to bind to the View's modelled data sources.
      */
-    @Override
-    public void onCreate() {
-    }
+    override fun onCreate() {}
 
     /**
      * Bind the View to the ViewModel's data sources.
      */
-    @Override
-    public void onResume() {
-        bind(compositeSubscription);
-        viewModel().bindToDataModel();
+    override fun onResume() {
+        bind(compositeSubscription)
+        viewModel().bindToDataModel()
     }
 
     /**
      * Unbind the View from the ViewModel's data sources.
      */
-    @Override
-    public void onPause() {
-        compositeSubscription.clear();
-        unbind();
-        viewModel().unbindDataModel();
+    override fun onPause() {
+        compositeSubscription.clear()
+        unbind()
+        viewModel().unbindDataModel()
     }
 
     /**
      * Inform the ViewModel that it needs to unbind from the View's modelled data sources.
      */
-    @Override
-    public void onDestroyView() {
-    }
+    override fun onDestroyView() {}
 
     /**
      * Permanently dispose of any resources held.
      *
      * The instance cannot be reused after this operation.
      */
-    @Override
-    public void onDestroy() {
-        compositeSubscription.clear();
+    override fun onDestroy() {
+        compositeSubscription.clear()
     }
 
     /**
-     * The {@link ViewModel} to which this binder should bind/unbind.
+     * The [ViewModel] to which this binder should bind/unbind.
      *
-     * @return the {@link ViewModel} instance.
+     * @return the [ViewModel] instance.
      */
-    @NonNull
-    public abstract ViewModel viewModel();
-
+    abstract fun viewModel(): ViewModel
 }

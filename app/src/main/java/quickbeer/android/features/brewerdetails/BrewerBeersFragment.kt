@@ -60,7 +60,7 @@ class BrewerBeersFragment : BeerListFragment() {
     }
 
     override fun inject() {
-        component.plusId(IdModule(brewerId))
+        getComponent().plusId(IdModule(brewerId))
                 .inject(this)
     }
 

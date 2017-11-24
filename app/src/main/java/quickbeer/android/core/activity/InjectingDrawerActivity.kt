@@ -15,32 +15,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.features.list.fragments
+package quickbeer.android.core.activity
 
-import quickbeer.android.providers.NavigationProvider
-import quickbeer.android.viewmodels.BeerListViewModel
-import quickbeer.android.viewmodels.TopBeersViewModel
-import javax.inject.Inject
+import android.os.Bundle
 
-class TopBeersFragment : BeerListFragment() {
+import quickbeer.android.QuickBeer
+import quickbeer.android.injections.ActivityComponent
+import quickbeer.android.injections.ActivityModule
 
-    @Inject
-    internal lateinit var topBeersViewModel: TopBeersViewModel
+abstract class InjectingDrawerActivity : DrawerActivity() {
 
-    @Inject
-    internal lateinit var navigationProvider: NavigationProvider
+    private var component: ActivityComponent? = null
 
-    override fun inject() {
-        super.inject()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        getComponent().inject(this)
+        inject()
     }
 
-    override fun viewModel(): BeerListViewModel {
-        return topBeersViewModel
+    fun getComponent(): ActivityComponent {
+        if (component == null) {
+            component = (application as QuickBeer).graph()
+                    .plusActivity(ActivityModule(this))
+        }
+
+        return component!!
     }
 
-    override fun onQuery(query: String) {
-        navigationProvider.triggerSearch(query)
-    }
+    protected abstract fun inject()
 }

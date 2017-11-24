@@ -102,7 +102,7 @@ class StyleDetailsFragment : BindingBaseFragment() {
     }
 
     override fun inject() {
-        component.plusId(IdModule(styleId))
+        getComponent().plusId(IdModule(styleId))
                 .inject(this)
     }
 }

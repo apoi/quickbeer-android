@@ -67,7 +67,7 @@ class CountryDetailsBeersFragment : BeerListFragment() {
     override fun inject() {
         super.inject()
 
-        component.plusId(IdModule(countryId))
+        getComponent().plusId(IdModule(countryId))
                 .inject(this)
     }
 

@@ -71,7 +71,7 @@ class StyleListFragment : BindingBaseFragment() {
     }
 
     override fun inject() {
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

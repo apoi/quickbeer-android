@@ -71,7 +71,7 @@ class BeerReviewsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefreshL
     }
 
     override fun inject() {
-        component.plusId(IdModule(beerId))
+        getComponent().plusId(IdModule(beerId))
                 .inject(this)
     }
 

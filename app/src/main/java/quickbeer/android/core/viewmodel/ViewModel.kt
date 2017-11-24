@@ -13,24 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-import android.support.annotation.NonNull;
+interface ViewModel {
 
-import rx.subscriptions.CompositeSubscription;
+    /**
+     * Bind the ViewModel to its data model (typically modelled Observable View data).
+     */
+    fun bindToDataModel()
 
-/**
- * Implements methods so that child classes don't need to declare empty implementations.
- */
-public class SimpleDataBinder implements DataBinder {
+    /**
+     * Unbind the ViewModel from its data model.
+     */
+    fun unbindDataModel()
 
-    @Override
-    public void bind(@NonNull CompositeSubscription subscription) {
-        // Override this when required.
-    }
-
-    @Override
-    public void unbind() {
-        // Override this when required.
-    }
+    /**
+     * Permanently dispose of any resources held.
+     *
+     * The instance cannot be reused after this operation.
+     */
+    fun dispose()
 }

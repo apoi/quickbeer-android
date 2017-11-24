@@ -66,7 +66,7 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .component
+                .getComponent()
                 .inject(this)
     }
 

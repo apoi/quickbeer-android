@@ -36,14 +36,14 @@ class PhotoViewActivity : InjectingBaseActivity() {
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
-        component.inject(this)
+        getComponent().inject(this)
 
         setContentView(R.layout.photo_view_activity)
         initImageView(intent.getStringExtra("source") ?: "")
     }
 
     override fun inject() {
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     private fun initImageView(source: String) {

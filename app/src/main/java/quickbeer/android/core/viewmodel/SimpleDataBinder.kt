@@ -13,28 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-import android.support.annotation.NonNull;
-
-import rx.subscriptions.CompositeSubscription;
+import rx.subscriptions.CompositeSubscription
 
 /**
- * Provides the facility to bind/unbind to arbitrary data sources.
+ * Implements methods so that child classes don't need to declare empty implementations.
  */
-public interface DataBinder {
+open class SimpleDataBinder : DataBinder {
 
-    /**
-     * Bind to the data source.
-     *
-     * @param subscription a {@link CompositeSubscription} to hold the bindings.
-     */
-    void bind(@NonNull CompositeSubscription subscription);
+    override fun bind(subscription: CompositeSubscription) {
+        // Override this when required.
+    }
 
-    /**
-     * Unbind from the data source.
-     */
-    void unbind();
-
+    override fun unbind() {
+        // Override this when required.
+    }
 }
-

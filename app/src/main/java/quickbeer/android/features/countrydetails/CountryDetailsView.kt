@@ -54,7 +54,7 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .component
+                .getComponent()
                 .inject(this)
     }
 

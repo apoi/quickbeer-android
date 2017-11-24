@@ -52,7 +52,7 @@ class AboutActivity : InjectingDrawerActivity() {
     }
 
     override fun inject() {
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun navigateTo(menuItem: MenuItem) {

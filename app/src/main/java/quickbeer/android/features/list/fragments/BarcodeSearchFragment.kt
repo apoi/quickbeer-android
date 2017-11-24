@@ -55,7 +55,7 @@ class BarcodeSearchFragment : BeerListFragment() {
 
     override fun inject() {
         super.inject()
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun onResume() {

@@ -54,7 +54,7 @@ class BeerSearchFragment : BeerListFragment() {
     override fun inject() {
         super.inject()
 
-        component.plusSearch(SearchModule(initialQuery))
+        getComponent().plusSearch(SearchModule(initialQuery))
                 .inject(this)
     }
 

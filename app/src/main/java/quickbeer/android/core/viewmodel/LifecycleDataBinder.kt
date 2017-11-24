@@ -13,24 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-import android.support.annotation.NonNull;
+internal interface LifecycleDataBinder : DataBinder {
 
-import rx.subscriptions.CompositeSubscription;
+    fun onCreate()
 
-/**
- * ViewModel that doesn't have a data connection.
- */
-public class SimpleViewModel extends BaseViewModel {
+    fun onResume()
 
-    @Override
-    protected void bind(@NonNull CompositeSubscription subscription) {
-        // Nothing - has no data source to bind to.
-    }
+    fun onPause()
 
-    @Override
-    protected void unbind() {
-        // Nothing - has no data source to unbind from.
-    }
+    fun onDestroyView()
+
+    fun onDestroy()
 }

@@ -13,18 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package quickbeer.android.core.viewmodel;
+package quickbeer.android.core.viewmodel
 
-interface LifecycleDataBinder extends DataBinder {
+import rx.subscriptions.CompositeSubscription
 
-    void onCreate();
+/**
+ * Provides the facility to bind/unbind to arbitrary data sources.
+ */
+interface DataBinder {
 
-    void onResume();
+    /**
+     * Bind to the data source.
+     *
+     * @param subscription a [CompositeSubscription] to hold the bindings.
+     */
+    fun bind(subscription: CompositeSubscription)
 
-    void onPause();
-
-    void onDestroyView();
-
-    void onDestroy();
-
+    /**
+     * Unbind from the data source.
+     */
+    fun unbind()
 }

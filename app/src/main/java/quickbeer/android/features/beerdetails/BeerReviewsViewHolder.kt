@@ -57,7 +57,7 @@ class BeerReviewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     init {
         (view.context as InjectingDrawerActivity)
-                .component
+                .getComponent()
                 .inject(this)
     }
 

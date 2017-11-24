@@ -72,7 +72,7 @@ class ReviewedBeersFragment : BeerListFragment() {
     override fun inject() {
         super.inject()
 
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun toStatusValue(progressStatus: ProgressStatus): String {
@@ -86,8 +86,8 @@ class ReviewedBeersFragment : BeerListFragment() {
         AlertDialog.Builder(context)
                 .setTitle(R.string.login_dialog_title)
                 .setMessage(R.string.login_to_view_ratings_message)
-                .setPositiveButton(R.string.ok) { dialog, which -> navigateToLogin() }
-                .setNegativeButton(R.string.cancel) { dialog, which -> dialog.cancel() }
+                .setPositiveButton(R.string.ok) { _, _ -> navigateToLogin() }
+                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
                 .show()
     }
 

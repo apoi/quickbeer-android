@@ -90,7 +90,7 @@ abstract class BrewerListFragment : BindingBaseFragment() {
     }
 
     override fun inject() {
-        component.inject(this)
+        getComponent().inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

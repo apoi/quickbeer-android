@@ -84,7 +84,7 @@ class BrewerDetailsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefres
     }
 
     override fun inject() {
-        component.plusId(IdModule(brewerId))
+        getComponent().plusId(IdModule(brewerId))
                 .inject(this)
     }
 

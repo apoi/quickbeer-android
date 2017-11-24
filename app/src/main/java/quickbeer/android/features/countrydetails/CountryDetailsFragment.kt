@@ -94,7 +94,7 @@ class CountryDetailsFragment : BindingBaseFragment() {
     }
 
     override fun inject() {
-        component.plusId(IdModule(countryId))
+        getComponent().plusId(IdModule(countryId))
                 .inject(this)
     }
 }
