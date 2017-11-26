@@ -23,13 +23,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
 import quickbeer.android.R;
-import quickbeer.android.data.pojos.Header;
 import quickbeer.android.features.list.BeerListAdapter;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
@@ -66,30 +66,26 @@ public class BeerListView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        beersListView = (RecyclerView) get(findViewById(R.id.list_view));
-        searchStatusTextView = (TextView) findViewById(R.id.search_status);
-
-        beerListAdapter = new BeerListAdapter();
-        beerListAdapter.setOnClickListener(v -> {
-            final int itemPosition = beersListView.getChildAdapterPosition(v);
-            final int beerId = beerListAdapter.getBeerViewModel(itemPosition).getBeerId();
-            selectedBeerSubject.onNext(beerId);
-        });
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
 
+        beersListView = (RecyclerView) get(findViewById(R.id.list_view));
+        searchStatusTextView = (TextView) findViewById(R.id.search_status);
+
+        beerListAdapter = new BeerListAdapter(this::beerSelected);
         beersListView.setAdapter(beerListAdapter);
         beersListView.setLayoutManager(layoutManager);
+    }
+
+    private void beerSelected(View view) {
+        final int itemPosition = get(beersListView).getChildAdapterPosition(view);
+        final int beerId = get(beerListAdapter).getBeerViewModel(itemPosition).getBeerId();
+        selectedBeerSubject.onNext(beerId);
     }
 
     @NonNull
     public Observable<Integer> selectedBeerStream() {
         return selectedBeerSubject.asObservable();
-    }
-
-    public void setHeader(@NonNull Header header) {
-        get(beerListAdapter).setHeader(header);
     }
 
     public void setBeers(@NonNull List<BeerViewModel> beers) {

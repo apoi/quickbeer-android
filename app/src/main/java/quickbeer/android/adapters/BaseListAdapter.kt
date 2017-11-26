@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.adapters;
+package quickbeer.android.adapters
 
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView
 
-public abstract class BaseListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    public enum ItemType {
+abstract class BaseListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    enum class ItemType {
         MENU,
-        HEADER,
         BEER,
         BREWER,
         RATING,

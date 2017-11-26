@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -82,27 +83,23 @@ public class BrewerListView extends FrameLayout {
                 .getComponent()
                 .inject(this);
 
-        brewerListAdapter = new BrewerListAdapter(get(countryStore));
-        brewerListAdapter.setOnClickListener(v -> {
-            final int itemPosition = brewersListView.getChildAdapterPosition(v);
-            final int brewerId = brewerListAdapter.getBrewerViewModel(itemPosition).getBrewerId();
-            selectedBrewerSubject.onNext(brewerId);
-        });
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         layoutManager.setRecycleChildrenOnDetach(true);
 
+        brewerListAdapter = new BrewerListAdapter(get(countryStore), this::brewerSelected);
         brewersListView.setAdapter(brewerListAdapter);
         brewersListView.setLayoutManager(layoutManager);
+    }
+
+    private void brewerSelected(View view) {
+        final int itemPosition = brewersListView.getChildAdapterPosition(view);
+        final int brewerId = get(brewerListAdapter).getBrewerViewModel(itemPosition).getBrewerId();
+        selectedBrewerSubject.onNext(brewerId);
     }
 
     @NonNull
     public Observable<Integer> selectedBrewerStream() {
         return selectedBrewerSubject.asObservable();
-    }
-
-    public void setHeader(@NonNull Header header) {
-        get(brewerListAdapter).setHeader(header);
     }
 
     public void setBrewers(@NonNull List<BrewerViewModel> brewers) {
@@ -116,5 +113,4 @@ public class BrewerListView extends FrameLayout {
         searchStatusTextView.setVisibility(StringUtils.hasValue(progressStatus) ? VISIBLE : GONE);
         searchStatusTextView.setText(progressStatus);
     }
-
 }

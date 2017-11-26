@@ -23,6 +23,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import quickbeer.android.R;
@@ -38,6 +39,9 @@ public class SimpleListView extends FrameLayout {
 
     @Nullable
     private SimpleListAdapter simpleListAdapter;
+
+    @Nullable
+    private RecyclerView simpleListView;
 
     @NonNull
     private final PublishSubject<Integer> selectedId = PublishSubject.create();
@@ -56,19 +60,19 @@ public class SimpleListView extends FrameLayout {
     }
 
     public void setListSource(@NonNull SimpleListSource source) {
-        RecyclerView simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);
+        simpleListAdapter = new SimpleListAdapter(get(source).getList(), this::itemSelected);
 
-        simpleListAdapter = new SimpleListAdapter(get(source).getList());
-        simpleListAdapter.setOnClickListener(v -> {
-            int index = simpleListView.getChildAdapterPosition(v);
-            simpleListAdapter.getItemAt(index)
-                    .ifSome(item -> selectedId.onNext(item.getId()))
-                    .ifNone(() -> Timber.e("No item at index %s!", index));
-        });
-
+        simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);
         simpleListView.setHasFixedSize(true);
         simpleListView.setLayoutManager(new LinearLayoutManager(getContext()));
         simpleListView.setAdapter(simpleListAdapter);
+    }
+
+    private void itemSelected(View view) {
+        int index = get(simpleListView).getChildAdapterPosition(view);
+        get(simpleListAdapter).getItemAt(index)
+                .ifSome(item -> selectedId.onNext(item.getId()))
+                .ifNone(() -> Timber.e("No item at index %s!", index));
     }
 
     public void setFilter(@NonNull String filter) {
