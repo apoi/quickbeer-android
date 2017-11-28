@@ -719,5 +719,12 @@
     "description": "A mix of a sweet soft drink or juice – typically lemon or ginger but sometimes apple, grapefruit, or other fruit – and beer, often in equal parts, that is moderately sweet, thirst quenching, and low in alcohol with medium to spritzy carbonation. It is often but not necessarily sold as a Summer seasonal. Category includes such regional styles as diesel (beer and cola), cola-weizen (wheat beer and cola), and Russ'n. There must be at least 50% beer or cider in this drink to be rateable.",
     "parent": 70,
     "category": 1
+  },
+  {
+    "id": 123,
+    "name": "India Style Lager",
+    "description": "This category is defined by the prominence of modern hop varietals that contribute significantly to the overall character of the beer. Color can vary from pale through dark. Aroma is moderate to strong with clear influence from modern hops. ABV ranges from a few percent (\"session\") through 10% or higher (\"imperial\"). A key attribute of this style is that the beer is fermented with lager rather than ale yeast, thus generally combining a clean lager finish with amplified hop aromas and flavours.",
+    "parent": 70,
+    "category": 1
   }
 ]
