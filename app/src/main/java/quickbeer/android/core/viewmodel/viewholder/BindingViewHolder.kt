@@ -29,8 +29,7 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
 
     protected abstract val viewDataBinder: DataBinder
 
-    protected var viewModel: T? = null
-        private set
+    private var viewModel: T? = null
 
     private val subscription = CompositeSubscription()
 
@@ -46,6 +45,10 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
 
     private fun bindViewToViewModel() {
         viewDataBinder.bind(subscription)
+    }
+
+    protected fun getViewModel(): T? {
+        return viewModel
     }
 
     private fun setAndBindDataModel(viewModel: T) {

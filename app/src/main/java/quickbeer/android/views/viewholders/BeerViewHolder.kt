@@ -19,7 +19,6 @@ package quickbeer.android.views.viewholders
 
 import android.view.View
 import android.widget.TextView
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.beer_list_item.view.*
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.SimpleDataBinder
@@ -49,7 +48,7 @@ class BeerViewHolder(view: View, onClickListener: View.OnClickListener)
         override fun bind(subscription: CompositeSubscription) {
             clearViews()
 
-            subscription.add(get(viewModel)
+            subscription.add(getViewModel()!!
                     .getBeer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
