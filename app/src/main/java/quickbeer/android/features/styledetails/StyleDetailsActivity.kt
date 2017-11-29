@@ -34,6 +34,7 @@ import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
@@ -79,18 +80,16 @@ class StyleDetailsActivity : BindingDrawerActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.collapsing_toolbar_activity)
-
         setupDrawerLayout(false)
-
         setBackNavigationEnabled(true)
 
         if (savedInstanceState != null) {
             styleId = savedInstanceState.getInt(Constants.ID_KEY)
         } else {
             if (Intent.ACTION_VIEW == intent.action) {
-                val segments = intent.data.pathSegments
-                if (segments.size > 2) {
-                    styleId = Integer.valueOf(segments[2])
+                val idSegment = intent.data.pathSegments.find { it.isNumeric() }
+                if (idSegment != null) {
+                    styleId = idSegment.toInt()
                     get(analytics).createEvent(Events.Entry.LINK_STYLE)
                 }
             }

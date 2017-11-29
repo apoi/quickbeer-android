@@ -39,6 +39,7 @@ import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.transformations.BlurTransformation
+import quickbeer.android.utils.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -114,19 +115,16 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
         if (savedInstanceState != null) {
             brewerId = savedInstanceState.getInt("brewerId")
         } else {
-            val intent = intent
-            val action = intent.action
-
-            if (Intent.ACTION_VIEW == action) {
-                val segments = intent.data.pathSegments
-                if (segments.size > 2) {
-                    brewerId = Integer.valueOf(segments[2])
+            if (Intent.ACTION_VIEW == intent.action) {
+                val idSegment = intent.data.pathSegments.find { it.isNumeric() }
+                if (idSegment != null) {
+                    brewerId = idSegment.toInt()
                     analytics.createEvent(Entry.LINK_BREWER)
                 }
             }
 
             if (brewerId <= 0) {
-                brewerId = getIntent().getIntExtra("brewerId", 0)
+                brewerId = intent.getIntExtra("brewerId", 0)
             }
 
             supportFragmentManager.beginTransaction()
