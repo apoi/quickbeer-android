@@ -47,7 +47,7 @@ class TickedBeersFragment : BeerListFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(subscription: CompositeSubscription) {
-            dataBinder().bind(subscription)
+            super@TickedBeersFragment.dataBinder().bind(subscription);
 
             subscription.add(viewModel()
                     .getUser()
@@ -66,7 +66,7 @@ class TickedBeersFragment : BeerListFragment() {
         }
 
         override fun unbind() {
-            dataBinder().unbind()
+            super@TickedBeersFragment.dataBinder().unbind()
         }
     }
 
