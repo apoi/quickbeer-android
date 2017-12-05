@@ -1,3 +1,6 @@
 [submodule "submodules/reark"]
 	path = submodules/reark
 	url = git@github.com:reark/reark.git
+[submodule "submodules/materialsearch"]
+	path = submodules/materialsearch
+	url = git@github.com:apoi/MaterialSearchView.git
