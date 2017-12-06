@@ -19,11 +19,11 @@ package quickbeer.android.rx;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
 import polanski.option.Option;
 import polanski.option.OptionUnsafe;
 import quickbeer.android.data.pojos.ItemList;
-import rx.Observable;
-import rx.Single;
 
 public final class RxUtils<T> {
 

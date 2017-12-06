@@ -41,7 +41,7 @@ class BeerReviewsView : FrameLayout {
 
         beerReviewsAdapter = BeerReviewsAdapter()
 
-        beerReviewsListView = findViewById(R.id.beers_reviews_list_view) as RecyclerView
+        beerReviewsListView = findViewById<RecyclerView>(R.id.beers_reviews_list_view)
         beerReviewsListView.setHasFixedSize(true)
         beerReviewsListView.layoutManager = LinearLayoutManager(context)
         beerReviewsListView.adapter = beerReviewsAdapter

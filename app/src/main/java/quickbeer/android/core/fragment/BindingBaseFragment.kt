@@ -16,11 +16,10 @@
 package quickbeer.android.core.fragment
 
 import android.os.Bundle
-
+import io.reactivex.disposables.CompositeDisposable
 import quickbeer.android.core.viewmodel.BaseLifecycleViewDataBinder
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.ViewModel
-import rx.subscriptions.CompositeSubscription
 
 /**
  * A base Fragment which provides the binding mechanism hooks to a View Model.
@@ -29,8 +28,8 @@ abstract class BindingBaseFragment : BaseFragment() {
 
     private val lifecycleBinder = object : BaseLifecycleViewDataBinder() {
 
-        override fun bind(subscription: CompositeSubscription) {
-            dataBinder().bind(subscription)
+        override fun bind(disposable: CompositeDisposable) {
+            dataBinder().bind(disposable)
         }
 
         override fun unbind() {

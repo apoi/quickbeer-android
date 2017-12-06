@@ -22,6 +22,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.brewer_tab_fragment.*
 import kotlinx.android.synthetic.main.recycler_list.*
 import quickbeer.android.R
@@ -35,9 +38,6 @@ import quickbeer.android.viewmodels.BrewerViewModel
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus
 import quickbeer.android.viewmodels.SearchViewViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -50,23 +50,23 @@ abstract class BrewerListFragment : BindingBaseFragment() {
     internal lateinit var searchViewViewModel: SearchViewViewModel
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(list_layout.selectedBrewerStream()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(list_layout.selectedBrewerStream()
                     .doOnNext { Timber.d("Selected brewer %s", it) }
                     .subscribe({ openBrewerDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getBrewers()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
-            subscription.add(viewModel().getProgressStatus()
+            disposable.add(viewModel().getProgressStatus()
                     .map({ toStatusValue(it) })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
-            subscription.add(searchViewViewModel.getQueryStream()
+            disposable.add(searchViewViewModel.getQueryStream()
                     .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }
     }
@@ -97,7 +97,7 @@ abstract class BrewerListFragment : BindingBaseFragment() {
         return inflater.inflate(getLayout(), container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         swipe_refresh_layout.isEnabled = false
     }
 

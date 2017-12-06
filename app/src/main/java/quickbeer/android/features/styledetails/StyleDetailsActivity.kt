@@ -20,6 +20,8 @@ package quickbeer.android.features.styledetails
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
@@ -36,8 +38,6 @@ import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.utils.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -61,15 +61,15 @@ class StyleDetailsActivity : BindingDrawerActivity() {
     private var styleId: Int = 0
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
+        override fun bind(disposable: CompositeDisposable) {
             // Set toolbar title
-            subscription.add(styleActions.get(styleId)
+            disposable.add(styleActions.get(styleId)
                     .toObservable()
                     .compose({ RxUtils.pickValue(it) })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(get(progressStatusProvider)
+            disposable.add(get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))

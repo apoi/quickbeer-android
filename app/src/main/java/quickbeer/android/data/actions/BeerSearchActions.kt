@@ -17,13 +17,13 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
-import rx.Single
 
 interface BeerSearchActions {
     fun search(query: String): Observable<DataStreamNotification<ItemList<String>>>
     fun fetchSearch(query: String): Single<Boolean>
-    fun searchQueries(): Observable<List<String>>
+    fun searchQueries(): Single<List<String>>
 }

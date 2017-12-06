@@ -19,10 +19,10 @@ package quickbeer.android.core.viewmodel.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.View
+import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.utils.Preconditions.checkNotNull
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.ViewModel
-import rx.subscriptions.CompositeSubscription
 
 abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View)
     : RecyclerView.ViewHolder(view) {
@@ -31,7 +31,7 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
 
     private var viewModel: T? = null
 
-    private val subscription = CompositeSubscription()
+    private val disposable = CompositeDisposable()
 
     fun bind(viewModel: T) {
         setAndBindDataModel(viewModel)
@@ -44,7 +44,7 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
     }
 
     private fun bindViewToViewModel() {
-        viewDataBinder.bind(subscription)
+        viewDataBinder.bind(disposable)
     }
 
     protected fun getViewModel(): T? {
@@ -58,7 +58,7 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
 
     private fun unbindViewFromViewModel() {
         // Don't dispose - we need to reuse it when recycling!
-        subscription.clear()
+        disposable.clear()
         viewDataBinder.unbind()
     }
 

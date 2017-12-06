@@ -26,6 +26,9 @@ import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Callback.EmptyCallback
 import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
@@ -48,9 +51,6 @@ import quickbeer.android.transformations.BlurTransformation
 import quickbeer.android.transformations.ContainerLabelExtractor
 import quickbeer.android.utils.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -90,42 +90,42 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     private var brewerName: String = ""
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
+        override fun bind(disposable: CompositeDisposable) {
             val sourceObservable = beerActions.get(beerId)
                     .subscribeOn(Schedulers.io())
                     .filter { it.isOnNext }
                     .map { get(it.value) }
-                    .first()
+                    .take(1)
                     .publish()
 
             // Update beer access date
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .map { it.id }
                     .subscribe({ beerActions.access(it) }, { Timber.e(it) }))
 
             // Update brewer access date
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .map { it.brewerId }
                     .subscribe({ brewerActions.access(it!!) }, { Timber.e(it) }))
 
             // Set toolbar title
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             // Update share intent
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .subscribe({
                         beerName = it.name ?: ""
                         brewerName = it.brewerName ?: ""
                     }, { Timber.e(it) }))
 
-            subscription.add(progressStatusProvider
+            disposable.add(progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
 
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .connect())
         }
     }

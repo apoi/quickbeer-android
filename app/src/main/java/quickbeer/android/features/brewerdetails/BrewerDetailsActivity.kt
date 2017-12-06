@@ -23,6 +23,9 @@ import android.view.MenuItem
 import android.view.View
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.R
@@ -41,9 +44,6 @@ import quickbeer.android.providers.ToastProvider
 import quickbeer.android.transformations.BlurTransformation
 import quickbeer.android.utils.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -73,30 +73,30 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     private var brewerId: Int = 0
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
+        override fun bind(disposable: CompositeDisposable) {
             val sourceObservable = brewerActions.get(brewerId)
                     .subscribeOn(Schedulers.io())
                     .filter { it.isOnNext }
                     .map { get(it.value) }
-                    .first()
+                    .take(1)
                     .publish()
 
             // Update brewer access date
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .map { it.id }
                     .subscribe({ brewerActions.access(it) }, { Timber.e(it) }))
 
             // Set toolbar title
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(progressStatusProvider
+            disposable.add(progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
 
-            subscription.add(sourceObservable
+            disposable.add(sourceObservable
                     .connect())
         }
     }

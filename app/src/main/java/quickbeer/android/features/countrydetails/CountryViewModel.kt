@@ -17,6 +17,8 @@
  */
 package quickbeer.android.features.countrydetails
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.actions.BeerActions
@@ -27,8 +29,6 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.viewmodels.BeerListViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.Observable
-import rx.Single
 import javax.inject.Inject
 import javax.inject.Named
 

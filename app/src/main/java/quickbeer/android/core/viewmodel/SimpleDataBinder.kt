@@ -15,14 +15,14 @@
  */
 package quickbeer.android.core.viewmodel
 
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Implements methods so that child classes don't need to declare empty implementations.
  */
 open class SimpleDataBinder : DataBinder {
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         // Override this when required.
     }
 

@@ -18,6 +18,7 @@
 package quickbeer.android.data.stores
 
 import com.google.gson.Gson
+import io.reactivex.Observable
 import io.reark.reark.data.stores.DefaultStore
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
@@ -25,7 +26,6 @@ import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.stores.cores.BeerStyleStoreCore
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.utils.SimpleListSource
-import rx.Observable
 
 class BeerStyleStore(resourceProvider: ResourceProvider, gson: Gson)
     : DefaultStore<Int, BeerStyle, Option<BeerStyle>>(
@@ -37,18 +37,16 @@ class BeerStyleStore(resourceProvider: ResourceProvider, gson: Gson)
 
     override fun getItem(id: Int): BeerStyle {
         return getOnce(id)
-                .toBlocking()
-                .value()
+                .blockingGet()
                 .orDefault { null }
     }
 
     override fun getList(): Collection<BeerStyle> {
         return getOnce()
-                .flatMapObservable { Observable.from(it) }
+                .flatMapObservable { Observable.fromIterable(it) }
                 .filter { it.parent > -1 }
                 .toList()
-                .toBlocking()
-                .first()
+                .blockingGet()
     }
 
     fun getStyle(styleName: String): Option<BeerStyle> {

@@ -19,6 +19,9 @@ package quickbeer.android.views.viewholders
 
 import android.view.View
 import android.widget.TextView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.brewer_list_item.view.*
 import polanski.option.Option.ofObj
 import quickbeer.android.core.viewmodel.SimpleDataBinder
@@ -27,9 +30,6 @@ import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.stores.CountryStore
 import quickbeer.android.utils.StringUtils
 import quickbeer.android.viewmodels.BrewerViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 class BrewerViewHolder(view: View,
@@ -46,10 +46,10 @@ class BrewerViewHolder(view: View,
     }
 
     override val viewDataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
+        override fun bind(disposable: CompositeDisposable) {
             clearViews()
 
-            subscription.add(getViewModel()!!
+            disposable.add(getViewModel()!!
                     .getBrewer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

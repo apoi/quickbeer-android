@@ -23,6 +23,8 @@ import android.view.MenuItem
 import android.view.View
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
@@ -38,8 +40,6 @@ import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.utils.glide.SvgSoftwareLayerSetter
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -63,15 +63,15 @@ class CountryDetailsActivity : BindingDrawerActivity() {
     private var countryId: Int = 0
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
+        override fun bind(disposable: CompositeDisposable) {
             // Set toolbar title
-            subscription.add(countryActions.get(countryId)
+            disposable.add(countryActions.get(countryId)
                     .toObservable()
                     .compose({ RxUtils.pickValue(it) })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(get(progressStatusProvider)
+            disposable.add(get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))

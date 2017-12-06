@@ -19,7 +19,6 @@ package quickbeer.android.data.actions.impl
 
 import android.content.Context
 import java.util.*
-import javax.inject.Inject
 
 open class ApplicationDataLayer
 constructor(protected val context: Context) {

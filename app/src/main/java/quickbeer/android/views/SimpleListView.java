@@ -26,11 +26,11 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import quickbeer.android.R;
 import quickbeer.android.adapters.SimpleListAdapter;
 import quickbeer.android.utils.SimpleListSource;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.get;
@@ -56,7 +56,7 @@ public class SimpleListView extends FrameLayout {
 
     @NonNull
     public Observable<Integer> selectionStream() {
-        return selectedId.asObservable();
+        return selectedId.hide();
     }
 
     public void setListSource(@NonNull SimpleListSource source) {

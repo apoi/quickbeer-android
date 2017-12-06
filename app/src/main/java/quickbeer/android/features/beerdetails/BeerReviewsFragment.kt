@@ -23,6 +23,9 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.beer_details_fragment_reviews.*
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
@@ -32,9 +35,6 @@ import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.injections.IdModule
 import quickbeer.android.listeners.LoadMoreListener
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -58,14 +58,14 @@ class BeerReviewsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefreshL
     }
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(viewModel()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(viewModel()
                     .getReviews()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ beer_reviews_view.setReviews(it) }, { Timber.e(it) }))
 
-            subscription.add(loadMoreListener.moreItemsRequestedStream()
+            disposable.add(loadMoreListener.moreItemsRequestedStream()
                     .subscribe({ viewModel().loadMoreReviews(it) }, { Timber.e(it) }))
         }
     }

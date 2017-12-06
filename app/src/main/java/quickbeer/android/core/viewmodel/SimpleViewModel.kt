@@ -15,14 +15,14 @@
  */
 package quickbeer.android.core.viewmodel
 
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * ViewModel that doesn't have a data connection.
  */
 open class SimpleViewModel : BaseViewModel() {
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         // Nothing - has no data source to bind to.
     }
 

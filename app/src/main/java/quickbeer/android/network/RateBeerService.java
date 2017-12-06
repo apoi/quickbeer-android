@@ -22,6 +22,7 @@ import android.net.Uri;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
@@ -31,7 +32,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
-import rx.Single;
 
 public interface RateBeerService {
     Uri LOGIN        = Uri.parse("__login");

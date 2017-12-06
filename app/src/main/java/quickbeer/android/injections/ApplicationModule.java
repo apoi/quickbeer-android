@@ -90,10 +90,8 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
-    static GlobalNotificationProvider provideGlobalNotificationProvider(
-            @ForApplication Context context,
-            ToastProvider toastProvider) {
-        return new GlobalNotificationProvider(context, toastProvider);
+    static GlobalNotificationProvider provideGlobalNotificationProvider(ToastProvider toastProvider) {
+        return new GlobalNotificationProvider(toastProvider);
     }
 
     @Provides

@@ -19,6 +19,9 @@ package quickbeer.android.network.fetchers
 
 import android.content.Intent
 import android.net.Uri
+import io.reactivex.disposables.Disposable
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.network.fetchers.FetcherBase
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.get
@@ -29,14 +32,11 @@ import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.network.NetworkApi
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.utils.NetworkUtils
-import rx.Subscription
-import rx.functions.Action1
-import rx.schedulers.Schedulers
 import timber.log.Timber
 
 class BeerFetcher(private val networkApi: NetworkApi,
                   private val networkUtils: NetworkUtils,
-                  networkRequestStatus: Action1<NetworkRequestStatus>,
+                  networkRequestStatus: Consumer<NetworkRequestStatus>,
                   private val beerStore: BeerStore,
                   private val metadataStore: BeerMetadataStore)
     : FetcherBase<Uri>(networkRequestStatus) {
@@ -61,7 +61,7 @@ class BeerFetcher(private val networkApi: NetworkApi,
         addRequest(beerId, createRequest(beerId, uri))
     }
 
-    private fun createRequest(beerId: Int, uri: String): Subscription {
+    private fun createRequest(beerId: Int, uri: String): Disposable {
         val requestParams = networkUtils.createRequestParams("bd", beerId.toString())
 
         return networkApi.getBeer(requestParams)

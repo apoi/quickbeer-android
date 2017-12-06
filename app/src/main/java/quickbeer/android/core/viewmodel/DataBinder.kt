@@ -15,7 +15,7 @@
  */
 package quickbeer.android.core.viewmodel
 
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Provides the facility to bind/unbind to arbitrary data sources.
@@ -25,9 +25,9 @@ interface DataBinder {
     /**
      * Bind to the data source.
      *
-     * @param subscription a [CompositeSubscription] to hold the bindings.
+     * @param disposable a [CompositeDisposable] to hold the bindings.
      */
-    fun bind(subscription: CompositeSubscription)
+    fun bind(disposable: CompositeDisposable)
 
     /**
      * Unbind from the data source.

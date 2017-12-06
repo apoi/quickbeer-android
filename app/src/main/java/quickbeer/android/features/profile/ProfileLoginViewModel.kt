@@ -17,7 +17,9 @@
  */
 package quickbeer.android.features.profile
 
-import android.support.v4.util.Pair
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.R
@@ -29,9 +31,6 @@ import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.rx.Unit
 import quickbeer.android.utils.StringUtils
-import rx.Observable
-import rx.subjects.PublishSubject
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,19 +48,19 @@ internal constructor(private val userActions: UserActions,
 
     private val errorSubject = PublishSubject.create<String>()
 
-    override fun bind(subscription: CompositeSubscription) {
-        subscription.add(loginSubject.asObservable()
+    override fun bind(disposable: CompositeDisposable) {
+        disposable.add(loginSubject
                 .switchMap { userActions.login(it.first, it.second) }
                 .subscribe({ handleNotification(it) }, { Timber.e(it) }))
 
-        subscription.add(autoLoginSubject.asObservable()
+        disposable.add(autoLoginSubject
                 .switchMap { getUser() }
                 .compose { RxUtils.pickValue(it) }
                 .subscribe({ login(it.username, it.password) }, { Timber.e(it) }))
     }
 
     fun login(username: String, password: String) {
-        loginSubject.onNext(Pair.create(username, password))
+        loginSubject.onNext(Pair(username, password))
     }
 
     fun autoLogin() {
@@ -81,8 +80,7 @@ internal constructor(private val userActions: UserActions,
     }
 
     fun errorStream(): Observable<String> {
-        return errorSubject.asObservable()
-                .map { this.toReadableError(it) }
+        return errorSubject.map { this.toReadableError(it) }
     }
 
     fun getUser(): Observable<Option<User>> {
@@ -94,7 +92,7 @@ internal constructor(private val userActions: UserActions,
             loginCompletedSubject.onNext(notification.isCompletedWithSuccess)
         }
         if (notification.isCompletedWithError) {
-            errorSubject.onNext(notification.error)
+            errorSubject.onNext(notification.error ?: "")
         }
     }
 

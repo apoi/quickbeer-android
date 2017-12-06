@@ -19,6 +19,8 @@ package quickbeer.android.features.list.fragments
 
 import android.content.Intent
 import android.support.v7.app.AlertDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
@@ -29,8 +31,6 @@ import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.NetworkViewModel
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus
 import quickbeer.android.viewmodels.TickedBeersViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,19 +46,19 @@ class TickedBeersFragment : BeerListFragment() {
     internal lateinit var session: Session
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            super@TickedBeersFragment.dataBinder().bind(subscription);
+        override fun bind(disposable: CompositeDisposable) {
+            super@TickedBeersFragment.dataBinder().bind(disposable);
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getUser()
-                    .first()
+                    .take(1)
                     .filter { it.isNone() }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ showLoginDialog() }, { Timber.e(it) }))
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getUser()
-                    .first()
+                    .take(1)
                     .compose { RxUtils.pickValue(it) }
                     .filter { !session.isTicksRequested }
                     .doOnNext { session.isTicksRequested = true }
@@ -84,7 +84,7 @@ class TickedBeersFragment : BeerListFragment() {
     }
 
     private fun showLoginDialog() {
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(context!!)
                 .setTitle(R.string.login_dialog_title)
                 .setMessage(R.string.login_to_view_ratings_message)
                 .setPositiveButton(R.string.ok) { _, _ -> navigateToLogin() }
@@ -96,7 +96,7 @@ class TickedBeersFragment : BeerListFragment() {
         Timber.d("navigateToLogin")
 
         val intent = Intent(context, ProfileActivity::class.java)
-        context.startActivity(intent)
+        context!!.startActivity(intent)
     }
 
     override fun viewModel(): TickedBeersViewModel {

@@ -17,13 +17,13 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
-import rx.Observable
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -36,10 +36,10 @@ internal constructor(@Named("query") private var query: String,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
-    override fun bind(subscription: CompositeSubscription) {
-        super.bind(subscription)
+    override fun bind(disposable: CompositeDisposable) {
+        super.bind(disposable)
 
-        subscription.add(searchViewViewModel.getQueryStream()
+        disposable.add(searchViewViewModel.getQueryStream()
                 .subscribe({ query = it }, { Timber.e(it) }))
     }
 

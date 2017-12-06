@@ -22,6 +22,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.disposables.CompositeDisposable
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.fragment.BindingBaseFragment
@@ -33,7 +34,6 @@ import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.viewmodels.SearchViewViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode
 import quickbeer.android.views.SimpleListView
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,12 +49,12 @@ class StyleListFragment : BindingBaseFragment() {
     internal lateinit var beerStyleStore: BeerStyleStore
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(viewModel()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(viewModel()
                     .getQueryStream()
                     .subscribe({ view.setFilter(it) }, { Timber.e(it) }))
 
-            subscription.add(view
+            disposable.add(view
                     .selectionStream()
                     .subscribe({ navigateToStyle(it) }, { Timber.e(it) }))
         }

@@ -17,12 +17,12 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
-import rx.Observable
-import rx.Single
 
 interface ReviewActions {
     fun get(reviewId: Int): Observable<Option<Review>>

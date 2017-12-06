@@ -19,20 +19,20 @@ package quickbeer.android.data.stores
 
 import android.content.ContentResolver
 import com.google.gson.Gson
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.cores.CachingStoreCore
 import quickbeer.android.data.stores.cores.ReviewListStoreCore
-import rx.functions.Func1
-import rx.functions.Func2
 
 /**
  * Class storing lists of reviews related to a specific beer id.
  */
 class ReviewListStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, ItemList<Int>, Option<ItemList<Int>>>(
-        CachingStoreCore(ReviewListStoreCore(contentResolver, gson), Func1 { it.key }, Func2 { _, s -> s }),
+        CachingStoreCore(ReviewListStoreCore(contentResolver, gson), Function { it.key }, BiFunction { _, s -> s }),
         GetIdForItem { it.key },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<ItemList<Int>>() })

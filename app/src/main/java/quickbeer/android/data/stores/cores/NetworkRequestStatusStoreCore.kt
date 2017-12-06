@@ -22,11 +22,11 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
+import io.reactivex.Observable
 import io.reark.reark.pojo.NetworkRequestStatus
 import quickbeer.android.data.columns.JsonIdColumns
 import quickbeer.android.data.columns.NetworkRequestStatusColumns
 import quickbeer.android.data.providers.RateBeerProvider
-import rx.Observable
 
 class NetworkRequestStatusStoreCore(contentResolver: ContentResolver, gson: Gson)
     : StoreCoreBase<Int, NetworkRequestStatus>(contentResolver, gson) {

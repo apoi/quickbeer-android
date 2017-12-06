@@ -21,21 +21,15 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-
 import com.google.gson.Gson
-
-import org.threeten.bp.ZonedDateTime
-
-import java.util.ArrayList
-
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BrewerMetadataColumns
 import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.DateUtils
-import rx.Observable
-import rx.schedulers.Schedulers
-
-import io.reark.reark.utils.Preconditions.get
+import java.util.*
 
 class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BrewerMetadata>(contentResolver, gson) {
 

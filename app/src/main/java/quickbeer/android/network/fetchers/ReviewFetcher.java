@@ -27,6 +27,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.schedulers.Schedulers;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.ItemList;
@@ -36,12 +42,6 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
-import rx.Single;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Actions;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -63,7 +63,7 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
     public ReviewFetcher(@NonNull NetworkApi networkApi,
                          @NonNull NetworkUtils networkUtils,
-                         @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                         @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                          @NonNull ReviewStore reviewStore,
                          @NonNull ReviewListStore reviewListStore) {
         super(networkRequestStatus);
@@ -96,26 +96,24 @@ public class ReviewFetcher extends FetcherBase<Uri> {
 
         Timber.d("fetchReviews(%s, %s)", beerId, page);
 
-        Subscription subscription = createNetworkObservable(beerId, page)
+        Disposable disposable = createNetworkObservable(beerId, page)
                 .subscribeOn(Schedulers.io())
-                .toObservable()
-                .flatMap(Observable::from)
-                .flatMap(review -> reviewStore.put(review).toObservable().map(__ -> review))
+                .flatMapObservable(Observable::fromIterable)
+                .flatMapSingle(review -> reviewStore.put(review).map(__ -> review))
                 .toList()
                 .map(ReviewFetcher::sort)
-                .flatMap(Observable::from)
+                .flatMapObservable(Observable::fromIterable)
                 .map(Review::getId)
                 .toList()
-                .toSingle()
                 .map(reviewIds -> ItemList.Companion.create(beerId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
-                .doOnSubscribe(() -> startRequest(beerId, uri))
+                .doOnSubscribe(__ -> startRequest(beerId, uri))
                 .doOnSuccess(updated -> completeRequest(beerId, uri, updated))
                 .doOnError(doOnError(beerId, uri))
-                .subscribe(Actions.empty(),
-                        error -> Timber.w(error, "Error fetching reviews for beer " + beerId));
+                .subscribe(Functions.emptyConsumer(),
+                        error -> Timber.w(error, "Error fetching reviews for beer %s", beerId));
 
-        addRequest(beerId, subscription);
+        addRequest(beerId, disposable);
     }
 
     @SuppressWarnings("IfMayBeConditional")

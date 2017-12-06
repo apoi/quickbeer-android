@@ -17,6 +17,8 @@
  */
 package quickbeer.android.features.styledetails
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.actions.BeerActions
@@ -28,8 +30,6 @@ import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.BeerListViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.Observable
-import rx.Single
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,8 +50,7 @@ internal constructor(@Named("id") private val styleId: Int,
         return getStyle()
                 .toObservable()
                 .compose { RxUtils.pickValue(it) }
-                .first()
-                .toSingle()
+                .singleOrError()
                 .flatMap { styleActions.get(it.parent) }
     }
 

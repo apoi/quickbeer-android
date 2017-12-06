@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.CompositeDisposable;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
@@ -34,7 +35,6 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.NavigationProvider;
 import quickbeer.android.providers.NavigationProvider.Page;
 import quickbeer.android.rx.RxUtils;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -56,16 +56,16 @@ public class ProfileActivity extends BindingDrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeDisposable disposable) {
             // Change fragment on login success
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .loginCompletedStream()
                     .filter(RxUtils::isTrue)
                     .map(__ -> Page.PROFILE_VIEW)
                     .subscribe(get(navigationProvider)::replacePage, Timber::e));
 
             // Trigger refresh of ticked beers after user has logged in
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .loginCompletedStream()
                     .filter(RxUtils::isTrue)
                     .switchMap(__ -> viewModel().getUser())

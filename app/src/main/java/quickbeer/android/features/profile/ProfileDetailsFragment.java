@@ -31,6 +31,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
@@ -39,8 +41,6 @@ import quickbeer.android.core.fragment.BindingBaseFragment;
 import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.data.pojos.User;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
@@ -68,13 +68,13 @@ public class ProfileDetailsFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull CompositeSubscription subscription) {
-            subscription.add(viewModel()
+        public void bind(@NonNull CompositeDisposable disposable) {
+            disposable.add(viewModel()
                     .getUser()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileDetailsFragment.this::setUser, Timber::e));
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getUser()
                     .map(User::getId)
                     .switchMap(viewModel()::getTicksOnce)

@@ -22,6 +22,9 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.style_details_fragment_details.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -30,9 +33,6 @@ import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.injections.IdModule
 import quickbeer.android.rx.RxUtils
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,8 +54,8 @@ class StyleDetailsFragment : BindingBaseFragment() {
     }
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(viewModel()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(viewModel()
                     .getStyle()
                     .toObservable()
                     .compose { RxUtils.pickValue(it) }
@@ -63,7 +63,7 @@ class StyleDetailsFragment : BindingBaseFragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ style_details_view.setStyle(it) }, { Timber.e(it) }))
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getParentStyle()
                     .toObservable()
                     .compose { RxUtils.pickValue(it) }

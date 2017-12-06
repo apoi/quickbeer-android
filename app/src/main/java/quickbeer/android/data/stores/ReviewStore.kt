@@ -19,17 +19,17 @@ package quickbeer.android.data.stores
 
 import android.content.ContentResolver
 import com.google.gson.Gson
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.cores.CachingStoreCore
 import quickbeer.android.data.stores.cores.ReviewStoreCore
-import rx.functions.Func1
-import rx.functions.Func2
 
 class ReviewStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, Review, Option<Review>>(
-        CachingStoreCore(ReviewStoreCore(contentResolver, gson), Func1 { it.id }, Func2 { v1, v2 -> Review.merge(v1, v2) }),
+        CachingStoreCore(ReviewStoreCore(contentResolver, gson), Function { it.id }, BiFunction { v1, v2 -> Review.merge(v1, v2) }),
         GetIdForItem { it.id },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<Review>() })

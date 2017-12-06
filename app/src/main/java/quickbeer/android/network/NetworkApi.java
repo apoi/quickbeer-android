@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Single;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import quickbeer.android.Constants;
@@ -32,9 +33,8 @@ import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.Review;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Single;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -50,7 +50,7 @@ public class NetworkApi {
                       @NonNull ClearableCookieJar cookieJar,
                       @NonNull Gson gson) {
         Retrofit retrofit = new Retrofit.Builder()
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(get(gson)))
                 .baseUrl(Constants.API_URL)
                 .client(get(client))

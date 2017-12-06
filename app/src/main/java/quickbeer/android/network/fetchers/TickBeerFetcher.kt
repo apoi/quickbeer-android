@@ -20,6 +20,10 @@ package quickbeer.android.network.fetchers
 import android.content.Intent
 import android.net.Uri
 import android.support.annotation.IntRange
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.network.fetchers.FetcherBase
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.checkNotNull
@@ -37,15 +41,12 @@ import quickbeer.android.network.fetchers.actions.LoginAndRetry
 import quickbeer.android.network.utils.NetworkUtils
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.utils.ValueUtils
-import rx.Single
-import rx.functions.Action1
-import rx.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
 
 class TickBeerFetcher(val networkApi: NetworkApi,
                       val networkUtils: NetworkUtils,
-                      networkRequestStatus: Action1<NetworkRequestStatus>,
+                      networkRequestStatus: Consumer<NetworkRequestStatus>,
                       val beerStore: BeerStore,
                       val beerListStore: BeerListStore,
                       val userStore: UserStore) : FetcherBase<Uri>(networkRequestStatus) {
@@ -72,20 +73,20 @@ class TickBeerFetcher(val networkApi: NetworkApi,
 
         Timber.d("Tick rating of %s for beer %s", rating, beerId)
 
-        val subscription = userId
+        val disposable = userId
                 .flatMap { createNetworkObservable(beerId, rating, it) }
                 .flatMap { beerStore.getOnce(beerId) }
                 .compose { RxUtils.valueOrError(it) }
                 .map { it.copy(tickValue = rating, tickDate = ZonedDateTime.now()) }
                 .doOnSuccess { beerStore.put(it) }
-                .zipWith(tickedBeers) { beer, ticks -> appendTick(beer, ticks) }
-                .zipWith(queryId) { ticks, ticksQueryId -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()) }
+                .zipWith(tickedBeers, BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
+                .zipWith(queryId, BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()) })
                 .doOnSubscribe { startRequest(requestId, uri) }
                 .doOnSuccess { completeRequest(requestId, uri, false) }
                 .doOnError(doOnError(requestId, uri))
                 .subscribe({ beerListStore.put(it) }, { Timber.w(it, "Error ticking beer") })
 
-        addRequest(requestId, subscription)
+        addRequest(requestId, disposable)
     }
 
     private val userId: Single<Int>

@@ -25,6 +25,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.home_fragment_pager.*
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
@@ -37,7 +38,6 @@ import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.NavigationProvider.Page
 import quickbeer.android.viewmodels.SearchViewViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -53,8 +53,8 @@ class HomeFragment : BindingBaseFragment() {
     internal lateinit var analytics: Analytics
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(viewModel().getQueryStream()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(viewModel().getQueryStream()
                     .subscribe({ navigationProvider.triggerSearch(it) }, { Timber.e(it) }))
         }
     }
@@ -70,7 +70,7 @@ class HomeFragment : BindingBaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        view_pager.adapter = HomeViewAdapter(childFragmentManager, context)
+        view_pager.adapter = HomeViewAdapter(childFragmentManager, context!!)
         tab_layout.setupWithViewPager(view_pager)
 
         view_pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {

@@ -44,18 +44,18 @@ abstract class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigation
     private var backNavigationEnabled = true
 
     protected fun setupDrawerLayout(startWithDrawerOpen: Boolean) {
-        val navigationView = findViewById(R.id.nav_view) as NavigationView
+        val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
 
         Option.ofObj(navigationView.getHeaderView(0))
                 .ifSome { setHeaderClickListener(it) }
 
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        drawerLayout = findViewById(R.id.drawer_layout) as DrawerLayout
+        drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerToggle = ActionBarDrawerToggle(
-                this, drawerLayout, findViewById(R.id.toolbar) as Toolbar,
+                this, drawerLayout, findViewById<Toolbar>(R.id.toolbar),
                 R.string.action_drawer_open,
                 R.string.action_drawer_close)
 

@@ -17,18 +17,18 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observables.ConnectableObservable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.PublishSubject
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.utils.StringUtils
-import rx.Observable
-import rx.observables.ConnectableObservable
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
-import rx.subjects.PublishSubject
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 abstract class BeerListViewModel
@@ -55,14 +55,14 @@ protected constructor(private val beerActions: BeerActions,
     }
 
     fun getBeers(): Observable<List<BeerViewModel>> {
-        return beers.asObservable()
+        return beers.hide()
     }
 
     fun reload() {
         source.onNext(reloadSource())
     }
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         // Start with default data source
         source.onNext(dataSource())
 
@@ -73,7 +73,7 @@ protected constructor(private val beerActions: BeerActions,
                         .publish()
 
         // Construct progress status. Completed with value means we'll receive onNext.
-        subscription.add(sharedObservable
+        disposable.add(sharedObservable
                 .filter { !it.isCompletedWithValue }
                 .map(toProgressStatus())
                 .startWith(NetworkViewModel.ProgressStatus.LOADING)
@@ -81,7 +81,7 @@ protected constructor(private val beerActions: BeerActions,
                 .subscribe { setProgressStatus(it) })
 
         // Actual update
-        subscription.add(sharedObservable
+        disposable.add(sharedObservable
                 .filter { it.isOnNext }
                 .map { it.value!! }
                 .doOnNext { Timber.d("Search finished") }
@@ -91,14 +91,14 @@ protected constructor(private val beerActions: BeerActions,
 
         // Share progress status to progress provider
         if (reportsProgress()) {
-            subscription.add(progressStatusProvider
+            disposable.add(progressStatusProvider
                     .addProgressObservable(sharedObservable.map { it }))
         }
 
-        subscription.add(sharedObservable.connect())
+        disposable.add(sharedObservable.connect())
 
         // Switch to search on new search term
-        subscription.add(searchViewViewModel
+        disposable.add(searchViewViewModel
                 .getQueryStream()
                 .distinctUntilChanged()
                 .filter { StringUtils.hasValue(it) }

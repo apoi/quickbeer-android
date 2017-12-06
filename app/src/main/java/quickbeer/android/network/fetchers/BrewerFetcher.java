@@ -21,6 +21,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.Brewer;
@@ -30,10 +34,6 @@ import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Single;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -55,7 +55,7 @@ public class BrewerFetcher extends FetcherBase<Uri> {
 
     public BrewerFetcher(@NonNull NetworkApi networkApi,
                          @NonNull NetworkUtils networkUtils,
-                         @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                         @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                          @NonNull BrewerStore brewerStore,
                          @NonNull BrewerMetadataStore metadataStore) {
         super(networkRequestStatus);
@@ -81,22 +81,22 @@ public class BrewerFetcher extends FetcherBase<Uri> {
         addListener(brewerId, listenerId);
 
         if (isOngoingRequest(brewerId)) {
-            Timber.d("Found an ongoing request for brewer " + brewerId);
+            Timber.d("Found an ongoing request for brewer %s", brewerId);
             return;
         }
 
         Timber.d("fetchBrewer(" + brewerId + ")");
 
-        Subscription subscription = createNetworkObservable(brewerId)
+        Disposable disposable = createNetworkObservable(brewerId)
                 .subscribeOn(Schedulers.io())
                 .flatMap(brewerStore::put)
-                .doOnSubscribe(() -> startRequest(brewerId, uri))
+                .doOnSubscribe(__ -> startRequest(brewerId, uri))
                 .doOnSuccess(updated -> completeRequest(brewerId, uri, updated))
                 .doOnError(doOnError(brewerId, uri))
                 .subscribe(__ -> metadataStore.put(BrewerMetadata.Companion.newUpdate(brewerId)),
-                        error -> Timber.w(error, "Error fetching brewer " + brewerId));
+                        error -> Timber.w(error, "Error fetching brewer %s", brewerId));
 
-        addRequest(brewerId, subscription);
+        addRequest(brewerId, disposable);
     }
 
     @NonNull

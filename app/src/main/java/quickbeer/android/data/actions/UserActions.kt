@@ -17,10 +17,10 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.pojos.User
-import rx.Observable
 
 interface UserActions {
     fun getUser(): Observable<Option<User>>

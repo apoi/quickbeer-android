@@ -23,6 +23,9 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.beer_list_fragment_standalone.*
 import kotlinx.android.synthetic.main.recycler_list.*
@@ -37,9 +40,6 @@ import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus
 import quickbeer.android.viewmodels.SearchViewViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel.Mode
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -52,22 +52,22 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
     internal lateinit var searchViewViewModel: SearchViewViewModel
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(list_layout.selectedBeerStream()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(list_layout.selectedBeerStream()
                     .doOnNext { Timber.d("Selected beer %s", it) }
                     .subscribe({ openBeerDetails(it) }, { Timber.e(it) }))
 
-            subscription.add(viewModel().getBeers()
+            disposable.add(viewModel().getBeers()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
-            subscription.add(viewModel().getProgressStatus()
+            disposable.add(viewModel().getProgressStatus()
                     .map { toStatusValue(it) }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
-            subscription.add(get(searchViewViewModel)
+            disposable.add(get(searchViewViewModel)
                     .getQueryStream()
                     .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }

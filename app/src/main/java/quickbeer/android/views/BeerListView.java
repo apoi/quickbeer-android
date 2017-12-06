@@ -29,12 +29,12 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import quickbeer.android.R;
 import quickbeer.android.features.list.BeerListAdapter;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BeerViewModel;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -85,7 +85,7 @@ public class BeerListView extends FrameLayout {
 
     @NonNull
     public Observable<Integer> selectedBeerStream() {
-        return selectedBeerSubject.asObservable();
+        return selectedBeerSubject.hide();
     }
 
     public void setBeers(@NonNull List<BeerViewModel> beers) {

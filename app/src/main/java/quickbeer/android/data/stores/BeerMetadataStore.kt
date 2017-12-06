@@ -19,19 +19,19 @@ package quickbeer.android.data.stores
 
 import android.content.ContentResolver
 import com.google.gson.Gson
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
 import quickbeer.android.data.columns.BeerMetadataColumns
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.stores.cores.BeerMetadataStoreCore
 import quickbeer.android.data.stores.cores.CachingStoreCore
-import rx.Observable
-import rx.functions.Func1
-import rx.functions.Func2
 
 class BeerMetadataStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, BeerMetadata, Option<BeerMetadata>>(
-        CachingStoreCore(BeerMetadataStoreCore(contentResolver, gson), Func1 { it.beerId }, Func2 { v1, v2 -> BeerMetadata.merge(v1, v2) }),
+        CachingStoreCore(BeerMetadataStoreCore(contentResolver, gson), Function { it.beerId }, BiFunction { v1, v2 -> BeerMetadata.merge(v1, v2) }),
         GetIdForItem { it.beerId },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<BeerMetadata>() }) {

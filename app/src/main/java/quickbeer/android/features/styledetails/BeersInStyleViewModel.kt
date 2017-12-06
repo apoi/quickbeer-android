@@ -18,6 +18,9 @@
 package quickbeer.android.features.styledetails
 
 import android.view.View
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.actions.BeerActions
@@ -27,9 +30,6 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.viewmodels.BeerListViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel
-import rx.Observable
-import rx.Single
-import rx.subjects.BehaviorSubject
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,7 +42,7 @@ internal constructor(@Named("id") private val styleId: Int,
                      progressStatusProvider: ProgressStatusProvider)
     : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
-    private val detailsOpen = BehaviorSubject.create(false)
+    private val detailsOpen = BehaviorSubject.createDefault(false)
 
     fun detailsClicked(visibility: Int) {
         detailsOpen.onNext(visibility != View.VISIBLE)
@@ -59,7 +59,7 @@ internal constructor(@Named("id") private val styleId: Int,
     }
 
     fun detailsOpen(): Observable<Boolean> {
-        return detailsOpen.asObservable()
+        return detailsOpen.hide()
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {

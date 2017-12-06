@@ -17,12 +17,12 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.functions.Function
+import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
-import rx.functions.Func1
-import rx.subjects.BehaviorSubject
 
 abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewModel() {
 
@@ -36,7 +36,7 @@ abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewMo
     private val progressStatus = BehaviorSubject.create<ProgressStatus>()
 
     fun getProgressStatus(): Observable<ProgressStatus> {
-        return progressStatus.asObservable()
+        return progressStatus.hide()
     }
 
     fun setProgressStatus(status: ProgressStatus) {
@@ -47,8 +47,8 @@ abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewMo
         // No implementation
     }
 
-    internal fun toProgressStatus(): Func1<DataStreamNotification<*>, ProgressStatus> {
-        return Func1 { notification ->
+    internal fun toProgressStatus(): Function<DataStreamNotification<*>, ProgressStatus> {
+        return Function { notification ->
             if (notification.isOngoing || notification.isCompletedWithValue) {
                 ProgressStatus.LOADING
             } else if (notification.isCompletedWithError) {

@@ -23,6 +23,9 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.brewer_details_fragment_details.*
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
@@ -32,9 +35,6 @@ import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.injections.IdModule
 import quickbeer.android.viewmodels.BrewerViewModel
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -56,8 +56,8 @@ class BrewerDetailsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefres
     }
 
     private val dataBinder = object : SimpleDataBinder() {
-        override fun bind(subscription: CompositeSubscription) {
-            subscription.add(viewModel()
+        override fun bind(disposable: CompositeDisposable) {
+            disposable.add(viewModel()
                     .getBrewer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

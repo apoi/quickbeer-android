@@ -17,6 +17,9 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
+import io.reactivex.subjects.PublishSubject
 import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option
 import polanski.option.Option.none
@@ -25,8 +28,6 @@ import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.rx.RxUtils
 import quickbeer.android.rx.Unit
-import rx.Observable
-import rx.subjects.PublishSubject
 
 class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
     : SimpleViewModel() {
@@ -59,8 +60,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
         }
 
     fun getSearchQueriesOnceAndStream(): Observable<List<String>> {
-        return modeChangedSubject.asObservable()
-                .map { liveFilteringEnabled }
+        return modeChangedSubject.map { liveFilteringEnabled }
                 .distinctUntilChanged()
                 .switchMap { live ->
                     if (live)
@@ -71,10 +71,12 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
     }
 
     private fun oldSearchesObservable(): Observable<List<String>> {
-        val oldQueries = beerSearchActions.searchQueries().share()
+        val oldQueries = beerSearchActions.searchQueries()
+                .toObservable()
+                .share()
 
         return Observable.combineLatest(oldQueries, searchQueries(),
-                    { list: List<String>, query: String -> list.toMutableList().add(query); list })
+                    BiFunction { list: List<String>, query: String -> list.toMutableList().add(query); list })
                 .startWith(oldQueries)
     }
 
@@ -86,7 +88,6 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
 
     fun getQueryStream(): Observable<String> {
         return querySubject
-                .asObservable()
                 .compose { RxUtils.pickValue(it) }
     }
 
@@ -108,7 +109,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
     }
 
     fun modeChangedStream(): Observable<Unit> {
-        return modeChangedSubject.asObservable()
+        return modeChangedSubject.hide()
     }
 
     fun liveFilteringEnabled(): Boolean {

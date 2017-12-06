@@ -23,6 +23,8 @@ import android.support.annotation.NonNull;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.schedulers.Schedulers;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.Constants;
@@ -32,10 +34,9 @@ import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.LoginUtils;
 import quickbeer.android.utils.StringUtils;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Actions;
-import rx.schedulers.Schedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.functions.Functions;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -54,7 +55,7 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
     public LoginFetcher(@NonNull NetworkApi networkApi,
                         @NonNull ClearableCookieJar cookieJar,
-                        @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                        @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                         @NonNull UserStore userStore) {
         super(networkRequestStatus);
 
@@ -94,20 +95,20 @@ public class LoginFetcher extends FetcherBase<Uri> {
 
         Timber.d("Login with user " + username);
 
-        Subscription subscription = networkApi
+        Disposable disposable = networkApi
                 .login(username, password)
                 .subscribeOn(Schedulers.io())
                 .map(__ -> LoginUtils.getUserId(cookieJar))
                 .doOnSuccess(id -> id.ifNone(() -> Timber.e("No user id found in login response!")))
                 .map(userId -> new User(userId.orDefault(() -> -1), username, password))
                 .flatMap(userStore::put)
-                .doOnSubscribe(() -> startRequest(requestId, uri))
+                .doOnSubscribe(__ -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(Actions.empty(),
+                .subscribe(Functions.emptyConsumer(),
                         error -> Timber.e(error, "Error fetching user " + username));
 
-        addRequest(requestId, subscription);
+        addRequest(requestId, disposable);
     }
 
     @NonNull

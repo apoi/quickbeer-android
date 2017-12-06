@@ -21,20 +21,13 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
-
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-
-import org.threeten.bp.ZonedDateTime
-
-import java.lang.reflect.Type
-
+import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BrewerListColumns
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.DateUtils
-
-import io.reark.reark.utils.Preconditions.get
 
 class BrewerListStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<String, ItemList<String>>(contentResolver, gson) {
 

@@ -26,6 +26,12 @@ import org.threeten.bp.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.schedulers.Schedulers;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.Beer;
@@ -35,12 +41,6 @@ import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
-import rx.Single;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Actions;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -63,7 +63,7 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
 
     public BeerSearchFetcher(@NonNull NetworkApi networkApi,
                              @NonNull NetworkUtils networkUtils,
-                             @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                             @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                              @NonNull BeerStore beerStore,
                              @NonNull BeerListStore beerListStore) {
         super(networkRequestStatus);
@@ -101,26 +101,25 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
             return;
         }
 
-        Subscription subscription = createNetworkObservable(query)
+        Disposable disposable = createNetworkObservable(query)
                 .subscribeOn(Schedulers.io())
                 .toObservable()
-                .flatMap(Observable::from)
+                .flatMap(Observable::fromIterable)
                 .flatMap(beer -> beerStore.put(beer).toObservable().map(__ -> beer))
                 .toList()
                 .map(this::sort)
-                .flatMap(Observable::from)
+                .flatMapObservable(Observable::fromIterable)
                 .map(Beer::getId)
                 .toList()
-                .toSingle()
                 .map(beerIds -> ItemList.Companion.create(queryId, beerIds, ZonedDateTime.now()))
                 .flatMap(beerListStore::put)
-                .doOnSubscribe(() -> startRequest(requestId, uri))
+                .doOnSubscribe(__ -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(Actions.empty(),
+                .subscribe(Functions.emptyConsumer(),
                         error -> Timber.w(error, "Error fetching beer search for %s", uri));
 
-        addRequest(requestId, subscription);
+        addRequest(requestId, disposable);
     }
 
     @SuppressWarnings({"CallToStringCompareTo", "IfMayBeConditional"})

@@ -17,13 +17,13 @@
  */
 package quickbeer.android.features.profile
 
+import io.reactivex.Observable
 import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.actions.UserActions
 import quickbeer.android.data.pojos.User
 import quickbeer.android.rx.RxUtils
-import rx.Observable
 import javax.inject.Inject
 
 class ProfileDetailsViewModel @Inject

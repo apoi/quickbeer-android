@@ -19,20 +19,20 @@ package quickbeer.android.data.stores
 
 import android.content.ContentResolver
 import com.google.gson.Gson
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.cores.BeerListStoreCore
 import quickbeer.android.data.stores.cores.CachingStoreCore
-import rx.functions.Func1
-import rx.functions.Func2
 
 /**
  * Class storing beer lists related to a string key, such as a search.
  */
 class BeerListStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<String, ItemList<String>, Option<ItemList<String>>>(
-        CachingStoreCore(BeerListStoreCore(contentResolver, gson), Func1 { it.key }, Func2 { _, v2 -> v2 }),
+        CachingStoreCore(BeerListStoreCore(contentResolver, gson), Function { it.key }, BiFunction { _, v2 -> v2 }),
         GetIdForItem { it.key },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<ItemList<String>>() })

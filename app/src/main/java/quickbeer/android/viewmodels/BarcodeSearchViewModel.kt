@@ -17,6 +17,7 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BarcodeActions
@@ -24,7 +25,6 @@ import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
-import rx.Observable
 import javax.inject.Inject
 
 class BarcodeSearchViewModel @Inject

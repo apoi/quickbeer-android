@@ -17,13 +17,11 @@
  */
 package quickbeer.android.data.pojos.base
 
-import org.threeten.bp.ZonedDateTime
-
-import java.lang.reflect.Field
-
 import io.reark.reark.pojo.OverwritablePojo
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.utils.DateUtils
 import timber.log.Timber
+import java.lang.reflect.Field
 
 /**
  * Class to implement our specific json empty value definitions, to avoid overwriting

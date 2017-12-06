@@ -17,14 +17,14 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.providers.ProgressStatusProvider
-import rx.Observable
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 class BeerViewModel(val beerId: Int,
@@ -36,27 +36,27 @@ class BeerViewModel(val beerId: Int,
     private val beer = BehaviorSubject.create<Beer>()
 
     fun getBeer(): Observable<Beer> {
-        return beer.asObservable()
+        return beer.hide()
     }
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         val beerSource = getBeer(beerId)
                 .subscribeOn(Schedulers.computation())
                 .publish()
 
-        subscription.add(beerSource
+        disposable.add(beerSource
                 .map(toProgressStatus())
                 .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
 
-        subscription.add(beerSource
+        disposable.add(beerSource
                 .filter { it.isOnNext }
                 .map { it.value }
-                .subscribe({ beer.onNext(it) }, { Timber.e(it) }))
+                .subscribe({ beer.onNext(it!!) }, { Timber.e(it) }))
 
-        subscription.add(progressStatusProvider
+        disposable.add(progressStatusProvider
                 .addProgressObservable(beerSource.map { it }))
 
-        subscription.add(beerSource
+        disposable.add(beerSource
                 .connect())
     }
 

@@ -17,11 +17,11 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
-import rx.Single
 
 interface BeerActions {
     fun get(beerId: Int): Observable<DataStreamNotification<Beer>>

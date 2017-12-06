@@ -15,7 +15,7 @@
  */
 package quickbeer.android.core.viewmodel
 
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Abstracts the view-to-viewmodel binding mechanism from the views associated lifecycle triggers.
@@ -25,7 +25,7 @@ import rx.subscriptions.CompositeSubscription
  */
 abstract class BaseLifecycleViewDataBinder : LifecycleDataBinder {
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeSubscription = CompositeDisposable()
 
     /**
      * Inform the ViewModel that it needs to bind to the View's modelled data sources.

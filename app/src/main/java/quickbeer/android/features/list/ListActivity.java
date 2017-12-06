@@ -28,6 +28,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.BindingDrawerActivity;
 import quickbeer.android.core.viewmodel.DataBinder;
@@ -40,8 +42,6 @@ import quickbeer.android.providers.ProgressStatusProvider;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
 import quickbeer.android.views.SearchView;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -74,17 +74,17 @@ public class ListActivity extends BindingDrawerActivity {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull CompositeSubscription subscription) {
-            subscription.add(viewModel()
+        public void bind(@NonNull CompositeDisposable disposable) {
+            disposable.add(viewModel()
                     .getSearchQueriesOnceAndStream()
                     .doOnNext(list -> Timber.d("searches(" + list.size() + ")"))
                     .subscribe(query -> get(searchView).updateQueryList(query), Timber::e));
 
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .modeChangedStream()
                     .subscribe(__ -> get(searchView).updateOptions(), Timber::e));
 
-            subscription.add(get(progressStatusProvider)
+            disposable.add(get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(progressIndicatorBar::setProgress, Timber::e));

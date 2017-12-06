@@ -17,11 +17,11 @@
  */
 package quickbeer.android.providers
 
+import io.reactivex.Observable
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import rx.Observable
-import rx.Subscription
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
 import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
@@ -34,27 +34,25 @@ class ProgressStatusProvider {
         LOADING
     }
 
-    private val progressSubject = BehaviorSubject.create(ProgressStatus.IDLE)
+    private val progressSubject = BehaviorSubject.createDefault(ProgressStatus.IDLE)
 
     private val progressMap = ConcurrentHashMap<Int, Float>(20, 0.75f, 4)
 
     private var nextId: AtomicInteger = AtomicInteger(1)
 
-    fun addProgressObservable(notificationObservable: Observable<DataStreamNotification<*>>): Subscription {
+    fun addProgressObservable(notificationObservable: Observable<DataStreamNotification<*>>): Disposable {
         val progressId = createId()
 
         return notificationObservable
                 .observeOn(Schedulers.computation())
                 .filter { !it.isOnNext } // Only interested in status changes
                 .map{ toProgress(it) }
-                .doOnUnsubscribe { finishProgress(progressId) }
+                .doOnDispose { finishProgress(progressId) }
                 .subscribe({ addProgress(progressId, it) }, { Timber.w(it) })
     }
 
     fun progressStatus(): Observable<ProgressStatus> {
-        return progressSubject.asObservable()
-                .onBackpressureBuffer()
-                .distinctUntilChanged()
+        return progressSubject.distinctUntilChanged()
     }
 
     private fun createId(): Int {

@@ -33,15 +33,14 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.subjects.PublishSubject;
 import quickbeer.android.R;
 import quickbeer.android.core.activity.InjectingDrawerActivity;
-import quickbeer.android.data.pojos.Header;
 import quickbeer.android.data.stores.CountryStore;
 import quickbeer.android.features.list.BrewerListAdapter;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
-import rx.Observable;
-import rx.subjects.PublishSubject;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -99,7 +98,7 @@ public class BrewerListView extends FrameLayout {
 
     @NonNull
     public Observable<Integer> selectedBrewerStream() {
-        return selectedBrewerSubject.asObservable();
+        return selectedBrewerSubject.hide();
     }
 
     public void setBrewers(@NonNull List<BrewerViewModel> brewers) {

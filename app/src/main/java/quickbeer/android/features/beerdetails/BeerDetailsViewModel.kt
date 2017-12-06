@@ -17,6 +17,9 @@
  */
 package quickbeer.android.features.beerdetails
 
+import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.subjects.PublishSubject
 import io.reark.reark.data.DataStreamNotification.Type
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -37,9 +40,6 @@ import quickbeer.android.rx.RxUtils
 import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.viewmodels.BrewerViewModel
 import quickbeer.android.viewmodels.ReviewListViewModel
-import rx.Observable
-import rx.subjects.PublishSubject
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -67,7 +67,7 @@ constructor(@Named("id") private val beerId: Int,
 
     private val tickSuccessSubject = PublishSubject.create<Boolean>()
 
-    private val subscription = CompositeSubscription()
+    private val disposable = CompositeDisposable()
 
     fun getBeer(): Observable<Beer> {
         return beerViewModel.getBeer()
@@ -91,7 +91,7 @@ constructor(@Named("id") private val beerId: Int,
     }
 
     fun reloadBeerDetails() {
-        subscription.add(beerActions.fetch(beerId)
+        disposable.add(beerActions.fetch(beerId)
                 .subscribe({}, { Timber.e(it) }))
     }
 
@@ -100,13 +100,13 @@ constructor(@Named("id") private val beerId: Int,
     }
 
     fun tickSuccessStatus(): Observable<Boolean> {
-        return tickSuccessSubject.asObservable()
+        return tickSuccessSubject.hide()
     }
 
     fun tickBeer(rating: Int) {
         val observable = beerActions.tick(beerId, rating).share()
 
-        subscription.add(beerActions.get(beerId)
+        disposable.add(beerActions.get(beerId)
                 .filter { it.isOnNext }
                 .take(1)
                 .map { it.value }
@@ -116,7 +116,7 @@ constructor(@Named("id") private val beerId: Int,
                             resourceProvider.getString(R.string.tick_failure))
                 }, { Timber.e(it) }))
 
-        subscription.add(observable
+        disposable.add(observable
                 .takeUntil { it.isCompleted }
                 .subscribe(
                         {
@@ -136,7 +136,7 @@ constructor(@Named("id") private val beerId: Int,
             String.format(resourceProvider.getString(R.string.tick_success), beer.name)
     }
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         beerViewModel.bindToDataModel()
         brewerViewModel.bindToDataModel()
         reviewListViewModel.bindToDataModel()
@@ -147,6 +147,6 @@ constructor(@Named("id") private val beerId: Int,
         brewerViewModel.unbindDataModel()
         reviewListViewModel.unbindDataModel()
 
-        subscription.clear()
+        disposable.clear()
     }
 }

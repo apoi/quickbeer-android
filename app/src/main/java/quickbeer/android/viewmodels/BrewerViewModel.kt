@@ -17,17 +17,16 @@
  */
 package quickbeer.android.viewmodels
 
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.providers.ProgressStatusProvider
-import rx.Observable
-import rx.Single
-import rx.schedulers.Schedulers
-import rx.subjects.BehaviorSubject
-import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -48,35 +47,35 @@ internal constructor(@Named("id") val brewerId: Int,
 
     private val brewer = BehaviorSubject.create<Brewer>()
 
-    private val subscription = CompositeSubscription()
+    private val disposable = CompositeDisposable()
 
     fun getBrewer(): Observable<Brewer> {
-        return brewer.asObservable()
+        return brewer.hide()
     }
 
     fun reloadBrewerDetails() {
-        subscription.add(brewerActions.fetch(brewerId)
+        disposable.add(brewerActions.fetch(brewerId)
                 .subscribe({}, { Timber.e(it) }))
     }
 
-    override fun bind(subscription: CompositeSubscription) {
+    override fun bind(disposable: CompositeDisposable) {
         val brewerSource = brewerSource()
                 .subscribeOn(Schedulers.computation())
                 .publish()
 
-        subscription.add(brewerSource
+        disposable.add(brewerSource
                 .map(toProgressStatus())
                 .subscribe({ this.setProgressStatus(it) }, { Timber.e(it) }))
 
-        subscription.add(brewerSource
+        disposable.add(brewerSource
                 .filter { it.isOnNext }
                 .map { it.value }
-                .subscribe({ brewer.onNext(it) }, { Timber.e(it) }))
+                .subscribe({ brewer.onNext(it!!) }, { Timber.e(it) }))
 
-        subscription.add(progressStatusProvider
+        disposable.add(progressStatusProvider
                 .addProgressObservable(brewerSource.map { it }))
 
-        subscription.add(brewerSource
+        disposable.add(brewerSource
                 .connect())
     }
 
@@ -93,14 +92,13 @@ internal constructor(@Named("id") val brewerId: Int,
                     .filter { it.isOnNext }
                     .map { it.value!! }
                     .map { it.brewerId!! }
-                    .first()
-                    .toSingle()
+                    .singleOrError()
         } else {
             throw IllegalStateException("No source id!")
         }
     }
 
     override fun unbind() {
-        subscription.clear()
+        disposable.clear()
     }
 }

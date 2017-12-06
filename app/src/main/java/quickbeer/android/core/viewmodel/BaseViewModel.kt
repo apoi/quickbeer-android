@@ -17,12 +17,12 @@
  */
 package quickbeer.android.core.viewmodel
 
-import rx.subscriptions.CompositeSubscription
+import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
 
 abstract class BaseViewModel : ViewModel {
 
-    private val compositeSubscription = CompositeSubscription()
+    private val compositeSubscription = CompositeDisposable()
 
     private var isBound: Boolean = false
 
@@ -41,7 +41,7 @@ abstract class BaseViewModel : ViewModel {
         }
     }
 
-    protected abstract fun bind(subscription: CompositeSubscription)
+    protected abstract fun bind(disposable: CompositeDisposable)
 
     protected abstract fun unbind()
 

@@ -36,14 +36,12 @@ class CountryStore(resourceProvider: ResourceProvider, gson: Gson)
 
     override fun getItem(id: Int): Country {
         return getOnce(id)
-                .toBlocking()
-                .value()
+                .blockingGet()
                 .orDefault { null }
     }
 
     override fun getList(): Collection<Country> {
         return getOnce()
-                .toBlocking()
-                .value()
+                .blockingGet()
     }
 }

@@ -37,6 +37,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.Unbinder;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import polanski.option.AtomicOption;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
@@ -46,8 +48,6 @@ import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.providers.ToastProvider;
 import quickbeer.android.utils.StringUtils;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.subscriptions.CompositeSubscription;
 import timber.log.Timber;
 
 import static butterknife.ButterKnife.bind;
@@ -91,15 +91,15 @@ public class ProfileLoginFragment extends BindingBaseFragment {
     @NonNull
     private final DataBinder dataBinder = new SimpleDataBinder() {
         @Override
-        public void bind(@NonNull CompositeSubscription subscription) {
+        public void bind(@NonNull CompositeDisposable disposable) {
             // Progress indicator during login
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .getIsLoginInProgress()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showProgress, Timber::e));
 
             // Error toasts
-            subscription.add(viewModel()
+            disposable.add(viewModel()
                     .errorStream()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ProfileLoginFragment.this::showError, Timber::e));

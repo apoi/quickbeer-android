@@ -22,14 +22,14 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BeerMetadataColumns
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.DateUtils
 import quickbeer.android.utils.ValueUtils
-import rx.Observable
-import rx.schedulers.Schedulers
 import java.util.*
 
 class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BeerMetadata>(contentResolver, gson) {

@@ -28,6 +28,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.internal.functions.Functions;
+import io.reactivex.schedulers.Schedulers;
 import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.Constants;
@@ -38,12 +44,6 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.utils.NetworkUtils;
-import rx.Observable;
-import rx.Single;
-import rx.Subscription;
-import rx.functions.Action1;
-import rx.functions.Actions;
-import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
@@ -65,7 +65,7 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
 
     public ReviewsFetcher(@NonNull NetworkApi networkApi,
                           @NonNull NetworkUtils networkUtils,
-                          @NonNull Action1<NetworkRequestStatus> networkRequestStatus,
+                          @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                           @NonNull ReviewStore reviewStore,
                           @NonNull ReviewListStore reviewListStore) {
         super(networkRequestStatus);
@@ -105,33 +105,29 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
             return;
         }
 
-        Subscription subscription = getReviews(1, numReviews)
+        Disposable disposable = getReviews(1, numReviews)
                 .map(ReviewsFetcher::sortByReviewDate)
-                .toObservable()
-                .flatMap(Observable::from)
+                .flatMapObservable(Observable::fromIterable)
                 .map(Review::getCountryID)
                 .toList()
-                .toSingle()
                 .map(reviewIds -> ItemList.Companion.create(queryId, reviewIds, ZonedDateTime.now()))
                 .flatMap(reviewListStore::put)
-                .doOnSubscribe(() -> startRequest(requestId, uri))
+                .doOnSubscribe(__ -> startRequest(requestId, uri))
                 .doOnSuccess(updated -> completeRequest(requestId, uri, updated))
                 .doOnError(doOnError(requestId, uri))
-                .subscribe(Actions.empty(),
+                .subscribe(Functions.emptyConsumer(),
                         error -> Timber.w(error, "Error fetching reviews for user %s", userId));
 
-        addRequest(requestId, subscription);
+        addRequest(requestId, disposable);
     }
 
     @NonNull
     private Single<List<Review>> getReviews(int page, int numReviews) {
         return createNetworkObservable(String.valueOf(page))
                 .subscribeOn(Schedulers.io())
-                .toObservable()
-                .flatMap(Observable::from)
-                .flatMap(review -> reviewStore.put(review).map(__ -> review).toObservable())
+                .flatMapObservable(Observable::fromIterable)
+                .flatMapSingle(review -> reviewStore.put(review).map(__ -> review))
                 .toList()
-                .toSingle()
                 .zipWith(chooseNextAction(page + 1, numReviews), ReviewsFetcher::joinReviews);
     }
 

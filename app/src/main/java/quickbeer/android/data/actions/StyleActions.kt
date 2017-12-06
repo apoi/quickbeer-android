@@ -17,12 +17,12 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
-import rx.Single
 
 interface StyleActions {
     fun get(styleId: Int): Single<Option<BeerStyle>>

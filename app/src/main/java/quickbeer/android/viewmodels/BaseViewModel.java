@@ -19,11 +19,11 @@ package quickbeer.android.viewmodels;
 
 import android.support.annotation.NonNull;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Function;
+import io.reactivex.subjects.BehaviorSubject;
 import io.reark.reark.data.DataStreamNotification;
 import io.reark.reark.viewmodels.AbstractViewModel;
-import rx.Observable;
-import rx.functions.Func1;
-import rx.subjects.BehaviorSubject;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -40,7 +40,7 @@ public abstract class BaseViewModel extends AbstractViewModel {
 
     @NonNull
     public Observable<ProgressStatus> getNetworkRequestStatus() {
-        return progressStatus.asObservable();
+        return progressStatus.hide();
     }
 
     void setNetworkStatusText(@NonNull ProgressStatus status) {
@@ -48,7 +48,7 @@ public abstract class BaseViewModel extends AbstractViewModel {
     }
 
     @NonNull
-    static Func1<DataStreamNotification, ProgressStatus> toProgressStatus() {
+    static Function<DataStreamNotification, ProgressStatus> toProgressStatus() {
         return notification -> {
             if (notification.isOngoing()) {
                 return ProgressStatus.LOADING;

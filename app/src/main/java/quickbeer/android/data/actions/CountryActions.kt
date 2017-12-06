@@ -17,12 +17,12 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
-import rx.Single
 
 interface CountryActions {
     fun get(countryId: Int): Single<Option<Country>>

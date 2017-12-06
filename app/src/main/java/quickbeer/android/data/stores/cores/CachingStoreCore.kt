@@ -17,17 +17,18 @@
  */
 package quickbeer.android.data.stores.cores
 
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.data.stores.cores.MemoryStoreCore
 import io.reark.reark.data.stores.interfaces.StoreCoreInterface
-import rx.Observable
-import rx.Single
-import rx.functions.Func1
-import rx.functions.Func2
-import rx.schedulers.Schedulers
 
 class CachingStoreCore<T, U>(val providerCore: StoreCoreBase<T, U>,
-                             getIdForItem: Func1<U, T>,
-                             mergeFunction: Func2<U, U, U>)
+                             getIdForItem: Function<U, T>,
+                             mergeFunction: BiFunction<U, U, U>)
     : StoreCoreInterface<T, U> {
 
     private val memoryCore: MemoryStoreCore<T, U> = MemoryStoreCore<T, U>(mergeFunction)
@@ -37,8 +38,7 @@ class CachingStoreCore<T, U>(val providerCore: StoreCoreBase<T, U>,
         // Subscribe to all updates to keep cache up-to-date
         providerCore.stream
                 .subscribeOn(Schedulers.io())
-                .onBackpressureBuffer()
-                .subscribe { item -> memoryCore.put(getIdForItem.call(item), item) }
+                .subscribe { item -> memoryCore.put(getIdForItem.apply(item), item) }
     }
 
     override fun put(id: T, item: U): Single<Boolean> {
@@ -50,13 +50,13 @@ class CachingStoreCore<T, U>(val providerCore: StoreCoreBase<T, U>,
                 .flatMap { providerCore.delete(id) }
     }
 
-    override fun getCached(id: T): Observable<U> {
+    override fun getCached(id: T): Maybe<U> {
         return memoryCore.getCached(id)
                 .switchIfEmpty(providerCore.getCached(id)
-                        .doOnNext { memoryCore.put(id, it) })
+                        .doOnSuccess { memoryCore.put(id, it) })
     }
 
-    override fun getCached(): Observable<List<U>> {
+    override fun getCached(): Single<List<U>> {
         // This could also cache the results?
         return providerCore.cached
     }

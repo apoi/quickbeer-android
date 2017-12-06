@@ -62,7 +62,7 @@ class BarcodeSearchFragment : BeerListFragment() {
         super.onResume()
 
         if (detailsWasOpened) {
-            activity.onBackPressed()
+            activity!!.onBackPressed()
         }
     }
 

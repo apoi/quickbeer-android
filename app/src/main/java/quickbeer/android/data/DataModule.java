@@ -80,7 +80,7 @@ public final class DataModule {
             @NonNull BeerMetadataStore beerMetadataStore,
             @NonNull ReviewStore reviewStore,
             @NonNull ReviewListStore reviewListStore) {
-        return new BeerActionsImpl(context, networkRequestStatusStore, beerStore, beerMetadataStore, reviewStore, reviewListStore);
+        return new BeerActionsImpl(context, networkRequestStatusStore, beerStore, beerMetadataStore, reviewListStore);
     }
 
     @Provides
@@ -108,7 +108,7 @@ public final class DataModule {
             @NonNull BeerMetadataStore beerMetadataStore,
             @NonNull BrewerStore brewerStore,
             @NonNull BrewerMetadataStore brewerMetadataStore) {
-        return new BrewerActionsImpl(context, networkRequestStatusStore, beerListStore, beerMetadataStore, brewerStore, brewerMetadataStore);
+        return new BrewerActionsImpl(context, networkRequestStatusStore, beerListStore, brewerStore, brewerMetadataStore);
     }
 
     @Provides

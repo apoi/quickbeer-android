@@ -19,26 +19,25 @@ package quickbeer.android.data.stores
 
 import android.content.ContentResolver
 import com.google.gson.Gson
+import io.reactivex.Observable
+import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Function
 import io.reark.reark.data.stores.DefaultStore.*
 import polanski.option.Option
 import quickbeer.android.data.columns.BrewerMetadataColumns
 import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.stores.cores.BrewerMetadataStoreCore
 import quickbeer.android.data.stores.cores.CachingStoreCore
-import rx.Observable
-import rx.functions.Func1
-import rx.functions.Func2
 
 class BrewerMetadataStore(contentResolver: ContentResolver, gson: Gson)
     : StoreBase<Int, BrewerMetadata, Option<BrewerMetadata>>(
-        CachingStoreCore(BrewerMetadataStoreCore(contentResolver, gson), Func1 { it.brewerId }, Func2 { v1, v2 -> BrewerMetadata.merge(v1, v2) }),
+        CachingStoreCore(BrewerMetadataStoreCore(contentResolver, gson), Function { it.brewerId }, BiFunction { v1, v2 -> BrewerMetadata.merge(v1, v2) }),
         GetIdForItem { it.brewerId },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<BrewerMetadata>() }) {
 
-    val accessedIdsOnce: Observable<List<Int>>
-        get() {
-            val core = providerCore as BrewerMetadataStoreCore
-            return core.getAccessedIdsOnce(BrewerMetadataColumns.ID, BrewerMetadataColumns.ACCESSED)
-        }
+    fun getAccessedIdsOnce(): Observable<List<Int>> {
+        val core = providerCore as BrewerMetadataStoreCore
+        return core.getAccessedIdsOnce(BrewerMetadataColumns.ID, BrewerMetadataColumns.ACCESSED)
+    }
 }

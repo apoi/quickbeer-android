@@ -61,7 +61,7 @@ class AboutDetailsFragment : BaseFragment() {
 
     private fun openUri(action: LaunchAction, uri: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-        context.startActivity(intent)
+        context!!.startActivity(intent)
 
         analytics.createEvent(action)
     }

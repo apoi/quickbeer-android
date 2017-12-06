@@ -17,9 +17,9 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.ItemList
-import rx.Observable
 
 interface BrewerListActions {
     fun getAccessed(): Observable<DataStreamNotification<ItemList<String>>>
