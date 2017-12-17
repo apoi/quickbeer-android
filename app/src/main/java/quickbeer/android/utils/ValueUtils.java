@@ -28,5 +28,4 @@ public final class ValueUtils {
     public static boolean greaterThan(@Nullable Integer value, int comparison) {
         return value != null && value > comparison;
     }
-
 }
