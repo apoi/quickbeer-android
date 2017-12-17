@@ -27,7 +27,7 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.data.pojos.Session
 import quickbeer.android.features.profile.ProfileActivity
 import quickbeer.android.providers.NavigationProvider
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.viewmodels.NetworkViewModel
 import quickbeer.android.viewmodels.NetworkViewModel.ProgressStatus
 import quickbeer.android.viewmodels.TickedBeersViewModel
@@ -59,7 +59,7 @@ class TickedBeersFragment : BeerListFragment() {
             disposable.add(viewModel()
                     .getUser()
                     .take(1)
-                    .compose { RxUtils.pickValue(it) }
+                    .filterToValue()
                     .filter { !session.isTicksRequested }
                     .doOnNext { session.isTicksRequested = true }
                     .subscribe({ viewModel().refreshTicks(it) }, { Timber.e(it) }))

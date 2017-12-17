@@ -35,8 +35,8 @@ import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.RxUtils
-import quickbeer.android.utils.isNumeric
+import quickbeer.android.utils.kotlin.filterToValue
+import quickbeer.android.utils.kotlin.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -65,7 +65,7 @@ class StyleDetailsActivity : BindingDrawerActivity() {
             // Set toolbar title
             disposable.add(styleActions.get(styleId)
                     .toObservable()
-                    .compose({ RxUtils.pickValue(it) })
+                    .filterToValue()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 

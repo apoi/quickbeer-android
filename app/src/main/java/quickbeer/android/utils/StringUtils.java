@@ -41,11 +41,6 @@ public final class StringUtils {
     }
 
     @NonNull
-    public static String value(@Nullable String primary, @NonNull String secondary) {
-        return hasValue(primary) ? primary : secondary;
-    }
-
-    @NonNull
     public static String value(@Nullable String value) {
         return value != null ? value : "";
     }

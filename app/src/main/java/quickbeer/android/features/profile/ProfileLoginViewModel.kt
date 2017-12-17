@@ -28,9 +28,9 @@ import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.actions.UserActions
 import quickbeer.android.data.pojos.User
 import quickbeer.android.providers.ResourceProvider
-import quickbeer.android.rx.RxUtils
 import quickbeer.android.rx.Unit
 import quickbeer.android.utils.StringUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -55,7 +55,7 @@ internal constructor(private val userActions: UserActions,
 
         disposable.add(autoLoginSubject
                 .switchMap { getUser() }
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
                 .subscribe({ login(it.username, it.password) }, { Timber.e(it) }))
     }
 

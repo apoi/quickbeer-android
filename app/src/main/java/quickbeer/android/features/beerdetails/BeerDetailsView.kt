@@ -44,8 +44,8 @@ import quickbeer.android.features.styledetails.StyleDetailsActivity
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
-import quickbeer.android.utils.DateUtils
-import quickbeer.android.utils.StringUtils
+import quickbeer.android.utils.kotlin.formatDateTime
+import quickbeer.android.utils.kotlin.orDefault
 import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
@@ -98,8 +98,7 @@ class BeerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView(
     }
 
     fun setBeer(beer: Beer) {
-        beer_description.text = StringUtils.value(beer.description,
-                resourceProvider.getString(R.string.no_description))
+        beer_description.text = beer.description.orDefault(resourceProvider.getString(R.string.no_description))
 
         beer.brewerName?.let { brewer_name.text = it }
         beer.brewerId?.let { brewerId -> brewer_name_row.setOnClickListener { navigateToBrewer(brewerId) } }
@@ -148,7 +147,7 @@ class BeerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView(
 
         ofObj(beer.tickDate)
                 .filter { beer.isTicked() }
-                .map { DateUtils.formatDateTime(resourceProvider.getString(R.string.beer_tick_date), it) }
+                .map { it.formatDateTime(resourceProvider.getString(R.string.beer_tick_date)) }
                 .ifSome { value ->
                     ticked_date.text = value
                     ticked_date.visibility = View.VISIBLE

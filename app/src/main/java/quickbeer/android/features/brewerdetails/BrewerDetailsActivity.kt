@@ -42,7 +42,7 @@ import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.transformations.BlurTransformation
-import quickbeer.android.utils.isNumeric
+import quickbeer.android.utils.kotlin.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
 import timber.log.Timber
 import javax.inject.Inject

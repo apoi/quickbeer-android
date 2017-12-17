@@ -26,8 +26,8 @@ import polanski.option.Option.none
 import polanski.option.Option.ofObj
 import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.BeerSearchActions
-import quickbeer.android.rx.RxUtils
 import quickbeer.android.rx.Unit
+import quickbeer.android.utils.kotlin.filterToValue
 
 class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
     : SimpleViewModel() {
@@ -88,7 +88,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
 
     fun getQueryStream(): Observable<String> {
         return querySubject
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
     }
 
     fun setMode(mode: Mode, searchHint: String) {

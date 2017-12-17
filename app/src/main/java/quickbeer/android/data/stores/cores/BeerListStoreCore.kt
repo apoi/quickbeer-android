@@ -27,7 +27,8 @@ import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BeerListColumns
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.providers.RateBeerProvider
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.ZonedDateTime
+import quickbeer.android.utils.kotlin.orEpoch
 
 class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson)
     : StoreCoreBase<String, ItemList<String>>(contentResolver, gson) {
@@ -50,7 +51,7 @@ class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson)
 
     override fun read(cursor: Cursor): ItemList<String> {
         val json = cursor.getString(cursor.getColumnIndex(BeerListColumns.JSON))
-        val updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)))
+        val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)))
 
         val listType = object : TypeToken<ItemList<String>>() {}.type
         val beerList = gson.fromJson<ItemList<String>>(json, listType)
@@ -63,7 +64,7 @@ class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson)
         return ContentValues().apply {
             put(BeerListColumns.KEY, item.key)
             put(BeerListColumns.JSON, gson.toJson(item))
-            put(BeerListColumns.UPDATED, DateUtils.toEpochSecond(item.updateDate))
+            put(BeerListColumns.UPDATED, item.updateDate.orEpoch().toEpochSecond())
         }
     }
 }

@@ -30,7 +30,8 @@ import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.BeerSearchFetcher
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
+import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -49,7 +50,7 @@ constructor(context: Context,
         val triggerFetchIfEmpty = beerListStore
                 .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
                 .toObservable()
-                .filter { RxUtils.isNoneOrEmpty(it) }
+                .filter { it.isNoneOrEmpty() }
                 .doOnNext { Timber.v("Search not cached, fetching") }
                 .doOnNext { fetchBarcodeSearch(barcode) }
                 .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
@@ -70,11 +71,11 @@ constructor(context: Context,
 
         val requestStatusObservable = requestStatusStore
                 .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) } // No need to filter stale statuses?
+                .filterToValue() // No need to filter stale statuses?
 
         val barcodeSearchObservable = beerListStore
                 .getOnceAndStream(queryId)
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, barcodeSearchObservable)

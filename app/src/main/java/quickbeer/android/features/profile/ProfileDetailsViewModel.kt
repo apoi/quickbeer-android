@@ -23,7 +23,7 @@ import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.actions.UserActions
 import quickbeer.android.data.pojos.User
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import javax.inject.Inject
 
 class ProfileDetailsViewModel @Inject
@@ -33,7 +33,7 @@ constructor(private val userActions: UserActions,
 
     fun getUser(): Observable<User> {
         return userActions.getUser()
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
     }
 
     fun getTicksOnce(userId: Int): Observable<List<Int>> {

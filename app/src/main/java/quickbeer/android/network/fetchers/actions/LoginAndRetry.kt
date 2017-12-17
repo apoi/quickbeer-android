@@ -27,7 +27,7 @@ import quickbeer.android.Constants
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import retrofit2.HttpException
 import timber.log.Timber
 
@@ -55,7 +55,7 @@ class LoginAndRetry(private val networkApi: NetworkApi,
     private fun getUserOrError(throwable: Throwable): Flowable<User> {
         return userStore.getOnce(Constants.DEFAULT_USER_ID)
                 .toObservable()
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
                 .switchIfEmpty(Observable.error(throwable))
                 .doOnError { Timber.w("No login details available!") }
                 .toFlowable(BackpressureStrategy.BUFFER)

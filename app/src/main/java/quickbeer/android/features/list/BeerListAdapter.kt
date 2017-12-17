@@ -23,7 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import quickbeer.android.R
 import quickbeer.android.adapters.BaseListAdapter
-import quickbeer.android.utils.CollectionUtils
+import quickbeer.android.utils.kotlin.contentsEqual
 import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.views.viewholders.BeerViewHolder
 import java.util.*
@@ -56,7 +56,7 @@ class BeerListAdapter(private val onClickListener: View.OnClickListener) : BaseL
     }
 
     fun set(beers: List<BeerViewModel>) {
-        if (!CollectionUtils.areEqual(this.beers, beers)) {
+        if (!this.beers.contentsEqual(beers)) {
             this.beers.clear()
             this.beers.addAll(beers)
 

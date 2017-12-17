@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
 import io.reark.reark.pojo.NetworkRequestStatus;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.stores.BeerListStore;
@@ -34,7 +35,6 @@ import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
 import quickbeer.android.network.fetchers.actions.LoginAndRetry;
 import quickbeer.android.network.utils.NetworkUtils;
-import io.reactivex.functions.Consumer;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;

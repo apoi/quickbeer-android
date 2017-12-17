@@ -38,7 +38,8 @@ import quickbeer.android.features.countrydetails.CountryDetailsActivity
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.utils.StringUtils
-import quickbeer.android.utils.StringUtils.emptyAsNone
+import quickbeer.android.utils.kotlin.emptyAsNone
+import quickbeer.android.utils.kotlin.hasValue
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -77,7 +78,7 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
                 .ifSome { brewer_founded.text = it }
 
         ofObj(brewer.website)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .map { StringUtils.removeTrailingSlash(it) }
                 .map { StringUtils.addMissingProtocol(it) }
                 .ifSome { website ->
@@ -90,7 +91,7 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
                 }
 
         ofObj(brewer.facebook)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .map { String.format(Constants.FACEBOOK_PATH, it) }
                 .ifSome { facebook ->
                     brewer_facebook.alpha = VISIBLE
@@ -102,7 +103,7 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
                 }
 
         ofObj(brewer.twitter)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .map { String.format(Constants.TWITTER_PATH, it) }
                 .ifSome { twitter ->
                     brewer_twitter.alpha = VISIBLE
@@ -121,13 +122,13 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
                 .ifSome { brewer_country.text = it }
 
         ofObj(brewer.city)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .ifSome { city -> brewer_city_row.setOnClickListener { openWikipedia(city) } }
                 .orOption { notAvailableOption() }
                 .ifSome { brewer_city.text = it }
 
         ofObj(brewer.address)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .orOption { notAvailableOption() }
                 .ifSome { brewer_address.text = it }
 
@@ -172,7 +173,7 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
         return ofObj(brewer.countryId)
                 .map { countryStore.getItem(it) }
                 .map { it.name }
-                .lift(emptyAsNone(brewer.city), emptyAsNone(brewer.address)) { country, city, address ->
+                .lift(brewer.city.emptyAsNone(), brewer.address.emptyAsNone()) { country, city, address ->
                     val street = if (address.contains(","))
                         address.split(",")[0]
                     else

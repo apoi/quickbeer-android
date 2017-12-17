@@ -39,8 +39,8 @@ import quickbeer.android.network.NetworkApi
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.actions.LoginAndRetry
 import quickbeer.android.network.utils.NetworkUtils
-import quickbeer.android.rx.RxUtils
 import quickbeer.android.utils.ValueUtils
+import quickbeer.android.utils.kotlin.valueOrError
 import timber.log.Timber
 import java.util.*
 
@@ -76,7 +76,7 @@ class TickBeerFetcher(val networkApi: NetworkApi,
         val disposable = userId
                 .flatMap { createNetworkObservable(beerId, rating, it) }
                 .flatMap { beerStore.getOnce(beerId) }
-                .compose { RxUtils.valueOrError(it) }
+                .compose { it.valueOrError() }
                 .map { it.copy(tickValue = rating, tickDate = ZonedDateTime.now()) }
                 .doOnSuccess { beerStore.put(it) }
                 .zipWith(tickedBeers, BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
@@ -92,7 +92,7 @@ class TickBeerFetcher(val networkApi: NetworkApi,
     private val userId: Single<Int>
         get() = userStore.getOnce(Constants.DEFAULT_USER_ID)
                 .subscribeOn(Schedulers.io())
-                .compose { RxUtils.valueOrError(it) }
+                .compose { it.valueOrError() }
                 .map { it.id }
 
     private val tickedBeers: Single<List<Int>>

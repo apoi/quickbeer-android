@@ -28,7 +28,7 @@ import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.core.viewmodel.viewholder.BindingViewHolder
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.stores.CountryStore
-import quickbeer.android.utils.StringUtils
+import quickbeer.android.utils.kotlin.hasValue
 import quickbeer.android.viewmodels.BrewerViewModel
 import timber.log.Timber
 
@@ -66,7 +66,7 @@ class BrewerViewHolder(view: View,
         countryOption.ifSome { (_, _, code) -> brewerCircle.text = code }
 
         ofObj(brewer.city)
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .lift(countryOption) { city, (_, name) -> String.format("%s, %s", city, name) }
                 .orOption { countryOption.map { it.name } }
                 .orOption { ofObj("Unknown") }

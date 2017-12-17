@@ -21,7 +21,7 @@ import com.google.gson.annotations.SerializedName
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.base.Overwritable
-import quickbeer.android.utils.StringUtils.hasValue
+import quickbeer.android.utils.kotlin.hasValue
 import java.util.*
 
 data class Brewer(@SerializedName("BrewerID") val id: Int,
@@ -57,7 +57,7 @@ data class Brewer(@SerializedName("BrewerID") val id: Int,
     : Overwritable<Brewer>() {
 
     fun hasDetails(): Boolean {
-        return hasValue(name)
+        return name.hasValue()
     }
 
     fun getImageUri(): String {

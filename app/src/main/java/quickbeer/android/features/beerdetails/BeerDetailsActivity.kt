@@ -49,7 +49,7 @@ import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.transformations.BlurTransformation
 import quickbeer.android.transformations.ContainerLabelExtractor
-import quickbeer.android.utils.isNumeric
+import quickbeer.android.utils.kotlin.isNumeric
 import quickbeer.android.viewmodels.SearchViewViewModel
 import timber.log.Timber
 import javax.inject.Inject

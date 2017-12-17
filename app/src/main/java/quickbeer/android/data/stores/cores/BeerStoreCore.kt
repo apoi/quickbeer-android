@@ -26,7 +26,8 @@ import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BeerColumns
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.providers.RateBeerProvider
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.ZonedDateTime
+import quickbeer.android.utils.kotlin.orEpoch
 
 class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
     : StoreCoreBase<Int, Beer>(contentResolver, gson) {
@@ -50,7 +51,7 @@ class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
     override fun read(cursor: Cursor): Beer {
         val json = cursor.getString(cursor.getColumnIndex(BeerColumns.JSON))
         val value = cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_VALUE))
-        val date = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)))
+        val date = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)))
 
         return gson.fromJson(json, Beer::class.java)
                 .copy(tickValue = value, tickDate = date)
@@ -62,7 +63,7 @@ class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
             put(BeerColumns.JSON, gson.toJson(item))
             put(BeerColumns.NAME, item.name)
             put(BeerColumns.TICK_VALUE, item.tickValue)
-            put(BeerColumns.TICK_DATE, DateUtils.toEpochSecond(item.tickDate))
+            put(BeerColumns.TICK_DATE, item.tickDate.orEpoch().toEpochSecond())
         }
     }
 

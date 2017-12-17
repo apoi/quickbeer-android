@@ -15,7 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils
+package quickbeer.android.utils.kotlin
+
+import polanski.option.Option
+import java.util.concurrent.Callable
+
+fun String?.hasValue(): Boolean {
+    return this != null && !this.isEmpty()
+}
+
+fun String?.isNullOrEmpty(): Boolean {
+    return this == null || this.isEmpty()
+}
+
+fun String?.orDefault(default: String): String {
+    return if (this != null) this else default
+}
 
 fun CharSequence.isNumeric(): Boolean {
     try {
@@ -23,5 +38,20 @@ fun CharSequence.isNumeric(): Boolean {
         return true
     } catch (ignored: Exception) {
         return false
+    }
+}
+
+fun String?.emptyAsNone(): Option<String> {
+    return if (this.hasValue())
+        Option.ofObj(this)
+    else
+        Option.none()
+}
+
+fun Callable<String>.emptyAsNone(): Option<String> {
+    try {
+        return this.call().emptyAsNone()
+    } catch (ignored: Exception) {
+        return Option.none()
     }
 }

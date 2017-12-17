@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import quickbeer.android.R
 import quickbeer.android.adapters.BaseListAdapter
 import quickbeer.android.data.stores.CountryStore
-import quickbeer.android.utils.CollectionUtils
+import quickbeer.android.utils.kotlin.contentsEqual
 import quickbeer.android.viewmodels.BrewerViewModel
 import quickbeer.android.views.viewholders.BrewerViewHolder
 import java.util.*
@@ -59,7 +59,7 @@ class BrewerListAdapter(private val countryStore: CountryStore,
     }
 
     fun set(brewers: List<BrewerViewModel>) {
-        if (!CollectionUtils.areEqual(brewers, this.brewers)) {
+        if (!this.brewers.contentsEqual(brewers)) {
             this.brewers.clear()
             this.brewers.addAll(brewers)
 

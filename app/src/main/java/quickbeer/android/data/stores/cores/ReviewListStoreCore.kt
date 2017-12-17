@@ -28,7 +28,8 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.columns.ReviewListColumns
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.providers.RateBeerProvider
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.ZonedDateTime
+import quickbeer.android.utils.kotlin.orEpoch
 import java.util.*
 
 class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, ItemList<Int>>(contentResolver, gson) {
@@ -51,7 +52,7 @@ class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreC
 
     override fun read(cursor: Cursor): ItemList<Int> {
         val json = cursor.getString(cursor.getColumnIndex(ReviewListColumns.JSON))
-        val updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)))
+        val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)))
 
         val listType = object : TypeToken<ItemList<Int>>() {}.type
         val reviewList = gson.fromJson<ItemList<Int>>(json, listType)
@@ -64,7 +65,7 @@ class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreC
         return ContentValues().apply {
             put(ReviewListColumns.BEER_ID, item.key)
             put(ReviewListColumns.JSON, gson.toJson(item))
-            put(ReviewListColumns.UPDATED, DateUtils.toEpochSecond(item.updateDate))
+            put(ReviewListColumns.UPDATED, item.updateDate.orEpoch().toEpochSecond())
         }
     }
 

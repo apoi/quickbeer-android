@@ -35,7 +35,7 @@ import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.BeerSearchFetcher
 import quickbeer.android.network.fetchers.BrewerFetcher
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -83,11 +83,11 @@ constructor(context: Context,
 
         val requestStatusObservable = requestStatusStore
                 .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         val brewerObservable = brewerStore
                 .getOnceAndStream(brewerId)
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(requestStatusObservable, brewerObservable)
     }
@@ -143,11 +143,11 @@ constructor(context: Context,
 
         val requestStatusObservable = requestStatusStore
                 .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         val beerSearchObservable = beerListStore
                 .getOnceAndStream(queryId)
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, beerSearchObservable)

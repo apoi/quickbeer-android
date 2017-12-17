@@ -20,10 +20,8 @@ package quickbeer.android.rx;
 import android.support.annotation.NonNull;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import polanski.option.Option;
 import polanski.option.OptionUnsafe;
-import quickbeer.android.data.pojos.ItemList;
 
 public final class RxUtils<T> {
 
@@ -31,21 +29,6 @@ public final class RxUtils<T> {
     public static <T> Observable<T> pickValue(@NonNull Observable<Option<T>> observable) {
         return observable.filter(Option::isSome)
                          .map(OptionUnsafe::getUnsafe);
-    }
-
-    @NonNull
-    public static <T> Observable<T> valueOrError(@NonNull Observable<Option<T>> observable) {
-        return observable.map(OptionUnsafe::getUnsafe);
-    }
-
-    @NonNull
-    public static <T> Single<T> valueOrError(@NonNull Single<Option<T>> single) {
-        return single.map(OptionUnsafe::getUnsafe);
-    }
-
-    @NonNull
-    public static <T> Boolean isNoneOrEmpty(@NonNull Option<ItemList<T>> option) {
-        return option.match(list -> list.getItems().isEmpty(), () -> true);
     }
 
     public static boolean isTrue(boolean value) {

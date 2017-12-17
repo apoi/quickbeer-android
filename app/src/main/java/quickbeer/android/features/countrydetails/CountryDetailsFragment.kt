@@ -32,7 +32,7 @@ import quickbeer.android.core.fragment.BindingBaseFragment
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.injections.IdModule
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -58,7 +58,7 @@ class CountryDetailsFragment : BindingBaseFragment() {
             disposable.add(viewModel()
                     .getCountry()
                     .toObservable()
-                    .compose { RxUtils.pickValue(it) }
+                    .filterToValue()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ country_details_view.setCountry(it) }, { Timber.e(it) }))

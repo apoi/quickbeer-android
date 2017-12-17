@@ -28,7 +28,7 @@ import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.utils.StringUtils
+import quickbeer.android.utils.kotlin.hasValue
 import timber.log.Timber
 
 abstract class BeerListViewModel
@@ -101,7 +101,7 @@ protected constructor(private val beerActions: BeerActions,
         disposable.add(searchViewViewModel
                 .getQueryStream()
                 .distinctUntilChanged()
-                .filter { StringUtils.hasValue(it) }
+                .filter { it.hasValue() }
                 .doOnNext { Timber.d("query(%s)", it) }
                 .map { beerSearchActions.search(it) }
                 .subscribe({ source.onNext(it) }, { Timber.e(it) }))

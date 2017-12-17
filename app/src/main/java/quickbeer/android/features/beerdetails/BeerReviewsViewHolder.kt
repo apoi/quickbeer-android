@@ -28,7 +28,7 @@ import quickbeer.android.R
 import quickbeer.android.core.activity.InjectingDrawerActivity
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.providers.ToastProvider
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.formatDate
 import java.lang.String.valueOf
 import javax.inject.Inject
 
@@ -66,7 +66,7 @@ class BeerReviewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         val metadata = (review.userName
                 + (if (review.country != null) ", " + review.country else "")
-                + "\n" + DateUtils.formatDate(review.timeEntered))
+                + "\n" + review.timeEntered.formatDate())
 
         user.text = metadata
         score.text = String.format("%.1f", review.totalScore)

@@ -27,7 +27,7 @@ import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.viewmodels.BeerListViewModel
 import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
@@ -49,7 +49,7 @@ internal constructor(@Named("id") private val styleId: Int,
     fun getParentStyle(): Single<Option<BeerStyle>> {
         return getStyle()
                 .toObservable()
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
                 .firstOrError()
                 .flatMap { styleActions.get(it.parent) }
     }

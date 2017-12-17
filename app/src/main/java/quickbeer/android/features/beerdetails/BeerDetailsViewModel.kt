@@ -36,7 +36,7 @@ import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.providers.GlobalNotificationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.providers.ResourceProvider
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.viewmodels.BrewerViewModel
 import quickbeer.android.viewmodels.ReviewListViewModel
@@ -79,7 +79,7 @@ constructor(@Named("id") private val beerId: Int,
 
     fun getUser(): Observable<User> {
         return userActions.getUser()
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
     }
 
     fun getReviews(): Observable<List<Review>> {

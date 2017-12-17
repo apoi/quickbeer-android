@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.utils;
+package quickbeer.android.utils.kotlin
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import io.reactivex.Observable
+import io.reactivex.Single
+import polanski.option.Option
+import polanski.option.OptionUnsafe
 
-import dagger.Module;
-import dagger.Provides;
-import quickbeer.android.Constants;
-import quickbeer.android.network.utils.NetworkUtils;
+fun <T> Observable<Option<T>>.filterToValue(): Observable<T> {
+    return compose { filter { it.isSome }
+            .map { OptionUnsafe.getUnsafe(it) } }
+}
 
-@Module
-public final class UtilsModule {
-
-    @Provides
-    @Singleton
-    static NetworkUtils provideNetworkUtils(@Named(Constants.API_KEY_NAME) String apiKey) {
-        return new NetworkUtils(apiKey);
-    }
+fun <T> Single<Option<T>>.valueOrError(): Single<T> {
+    return map { OptionUnsafe.getUnsafe(it) }
 }

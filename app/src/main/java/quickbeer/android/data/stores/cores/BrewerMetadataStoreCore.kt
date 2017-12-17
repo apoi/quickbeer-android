@@ -28,7 +28,8 @@ import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BrewerMetadataColumns
 import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.ZonedDateTime
+import quickbeer.android.utils.kotlin.orEpoch
 import java.util.*
 
 class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BrewerMetadata>(contentResolver, gson) {
@@ -74,8 +75,8 @@ class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : St
 
     override fun read(cursor: Cursor): BrewerMetadata {
         val brewerId = cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ID))
-        val updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)))
-        val accessed = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)))
+        val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.UPDATED)))
+        val accessed = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BrewerMetadataColumns.ACCESSED)))
 
         return BrewerMetadata(brewerId, updated, accessed)
     }
@@ -83,8 +84,8 @@ class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : St
     override fun getContentValuesForItem(item: BrewerMetadata): ContentValues {
         return ContentValues().apply {
             put(BrewerMetadataColumns.ID, item.brewerId)
-            put(BrewerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.updated))
-            put(BrewerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.accessed))
+            put(BrewerMetadataColumns.UPDATED, item.updated.orEpoch().toEpochSecond())
+            put(BrewerMetadataColumns.ACCESSED, item.accessed.orEpoch().toEpochSecond())
         }
     }
 

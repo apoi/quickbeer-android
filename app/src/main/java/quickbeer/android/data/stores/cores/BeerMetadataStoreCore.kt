@@ -28,8 +28,9 @@ import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BeerMetadataColumns
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
-import quickbeer.android.utils.DateUtils
 import quickbeer.android.utils.ValueUtils
+import quickbeer.android.utils.kotlin.ZonedDateTime
+import quickbeer.android.utils.kotlin.orEpoch
 import java.util.*
 
 class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BeerMetadata>(contentResolver, gson) {
@@ -76,8 +77,8 @@ class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : Stor
 
     override fun read(cursor: Cursor): BeerMetadata {
         val beerId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ID))
-        val updated = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)))
-        val accessed = DateUtils.fromEpochSecond(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)))
+        val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.UPDATED)))
+        val accessed = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.ACCESSED)))
         val reviewId = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.REVIEW_ID))
         val isModified = cursor.getInt(cursor.getColumnIndex(BeerMetadataColumns.MODIFIED)) > 0
 
@@ -87,8 +88,8 @@ class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : Stor
     override fun getContentValuesForItem(item: BeerMetadata): ContentValues {
         return ContentValues().apply {
             put(BeerMetadataColumns.ID, item.beerId)
-            put(BeerMetadataColumns.UPDATED, DateUtils.toEpochSecond(item.updated))
-            put(BeerMetadataColumns.ACCESSED, DateUtils.toEpochSecond(item.accessed))
+            put(BeerMetadataColumns.UPDATED, item.updated.orEpoch().toEpochSecond())
+            put(BeerMetadataColumns.ACCESSED, item.accessed.orEpoch().toEpochSecond())
             put(BeerMetadataColumns.REVIEW_ID, item.reviewId)
             put(BeerMetadataColumns.MODIFIED, ValueUtils.asInt(item.isModified))
         }

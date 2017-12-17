@@ -22,7 +22,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import com.squareup.picasso.Transformation
-import java.util.*
 
 class ContainerLabelExtractor(private val width: Int, private val height: Int) : Transformation {
 

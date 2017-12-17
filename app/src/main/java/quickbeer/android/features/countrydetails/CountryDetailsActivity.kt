@@ -37,8 +37,8 @@ import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.RxUtils
 import quickbeer.android.utils.glide.SvgSoftwareLayerSetter
+import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.viewmodels.SearchViewViewModel
 import timber.log.Timber
 import javax.inject.Inject
@@ -67,7 +67,7 @@ class CountryDetailsActivity : BindingDrawerActivity() {
             // Set toolbar title
             disposable.add(countryActions.get(countryId)
                     .toObservable()
-                    .compose({ RxUtils.pickValue(it) })
+                    .filterToValue()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 

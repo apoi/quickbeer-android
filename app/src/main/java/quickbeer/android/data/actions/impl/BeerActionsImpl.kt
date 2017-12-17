@@ -36,7 +36,8 @@ import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.BeerFetcher
 import quickbeer.android.network.fetchers.ReviewFetcher
 import quickbeer.android.network.fetchers.TickBeerFetcher
-import quickbeer.android.rx.RxUtils
+import quickbeer.android.utils.kotlin.filterToValue
+import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -77,7 +78,7 @@ constructor(context: Context,
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = reviewListStore.getOnce(beerId)
                 .toObservable()
-                .filter { RxUtils.isNoneOrEmpty(it) }
+                .filter { it.isNoneOrEmpty() }
                 .doOnNext { Timber.v("Reviews not cached, fetching") }
                 .doOnNext { fetchReviews(beerId, 1) }
                 .flatMap { Observable.empty<DataStreamNotification<ItemList<Int>>>() }
@@ -106,8 +107,8 @@ constructor(context: Context,
         val uri = TickBeerFetcher.getUniqueUri(beerId, rating)
         val requestStatusObservable = requestStatusStore
                 .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) }
-                .filter { status -> status.forListener(listenerId) }
+                .filterToValue()
+                .filter { it.forListener(listenerId) }
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, Observable.never())
@@ -138,10 +139,10 @@ constructor(context: Context,
 
         val requestStatusObservable = requestStatusStore
                 .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) } // No need to filter stale statuses
+                .filterToValue() // No need to filter stale statuses
 
         val beerObservable = beerStore.getOnceAndStream(beerId)
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, beerObservable)
@@ -184,10 +185,10 @@ constructor(context: Context,
         val uri = ReviewFetcher.getUniqueUri(beerId)
 
         val requestStatusObservable = requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .compose { RxUtils.pickValue(it) } // No need to filter stale statuses?
+                .filterToValue() // No need to filter stale statuses?
 
         val reviewListObservable = reviewListStore.getOnceAndStream(beerId)
-                .compose { RxUtils.pickValue(it) }
+                .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
                 requestStatusObservable, reviewListObservable)

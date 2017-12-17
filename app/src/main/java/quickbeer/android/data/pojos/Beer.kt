@@ -22,7 +22,7 @@ import org.threeten.bp.ZonedDateTime
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.base.Overwritable
-import quickbeer.android.utils.StringUtils.hasValue
+import quickbeer.android.utils.kotlin.hasValue
 import java.util.*
 
 data class Beer(@SerializedName("BeerID") val id: Int,
@@ -50,7 +50,7 @@ data class Beer(@SerializedName("BeerID") val id: Int,
     : Overwritable<Beer>() {
 
     fun basicDataMissing(): Boolean {
-        return brewerId == null || !hasValue(styleName)
+        return brewerId == null || styleName.hasValue()
     }
 
     fun detailedDataMissing(): Boolean {

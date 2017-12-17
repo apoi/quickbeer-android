@@ -19,7 +19,7 @@ package quickbeer.android.data.pojos.base
 
 import io.reark.reark.pojo.OverwritablePojo
 import org.threeten.bp.ZonedDateTime
-import quickbeer.android.utils.DateUtils
+import quickbeer.android.utils.kotlin.isValidDate
 import timber.log.Timber
 import java.lang.reflect.Field
 
@@ -48,7 +48,7 @@ abstract class Overwritable<T : OverwritablePojo<T>> : OverwritablePojo<T>() {
     }
 
     protected fun isEmpty(value: ZonedDateTime): Boolean {
-        return !DateUtils.isValidDate(value)
+        return value.isValidDate()
     }
 
     override fun isEmpty(value: Int): Boolean {
