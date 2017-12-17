@@ -68,7 +68,7 @@ constructor(context: Context,
         return getTicks(userId, { true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     private fun getTicks(userId: String, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {

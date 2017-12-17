@@ -50,7 +50,7 @@ internal constructor(@Named("id") private val styleId: Int,
         return getStyle()
                 .toObservable()
                 .compose { RxUtils.pickValue(it) }
-                .singleOrError()
+                .firstOrError()
                 .flatMap { styleActions.get(it.parent) }
     }
 

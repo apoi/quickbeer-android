@@ -62,7 +62,7 @@ abstract class BrewerListFragment : BindingBaseFragment() {
                     .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
             disposable.add(viewModel().getProgressStatus()
-                    .map({ toStatusValue(it) })
+                    .map { toStatusValue(it) }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 

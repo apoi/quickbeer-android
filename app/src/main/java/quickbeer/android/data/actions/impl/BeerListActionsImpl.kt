@@ -84,7 +84,7 @@ constructor(context: Context,
         return triggerGet({ true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     private fun triggerGet(needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {

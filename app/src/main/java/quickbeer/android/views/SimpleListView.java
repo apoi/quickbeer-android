@@ -59,7 +59,7 @@ public class SimpleListView extends FrameLayout {
         return selectedId.hide();
     }
 
-    public void setListSource(@NonNull SimpleListSource source) {
+    public void setListSource(@NonNull SimpleListSource<?> source) {
         simpleListAdapter = new SimpleListAdapter(get(source).getList(), this::itemSelected);
 
         simpleListView = (RecyclerView) findViewById(R.id.simple_list_view);

@@ -66,7 +66,7 @@ constructor(context: Context,
         return triggerGetBeers(styleId, { true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     private fun triggerGetBeers(styleId: Int, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {

@@ -68,7 +68,7 @@ constructor(context: Context,
         return triggerSearch(query, { true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     private fun triggerSearch(query: String, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {

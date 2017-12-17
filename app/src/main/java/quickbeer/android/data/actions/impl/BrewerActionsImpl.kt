@@ -57,7 +57,7 @@ constructor(context: Context,
         return getBrewer(brewerId, { true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     fun getBrewer(brewerId: Int, needsReload: (Brewer) -> Boolean): Observable<DataStreamNotification<Brewer>> {
@@ -116,7 +116,7 @@ constructor(context: Context,
         return getBeers(brewerId, { true })
                 .filter{ it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     private fun getBeers(brewerId: Int, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {

@@ -62,7 +62,7 @@ constructor(context: Context,
         return getBeer(beerId, { true })
                 .filter { it.isCompleted }
                 .map { it.isCompletedWithSuccess }
-                .singleOrError()
+                .firstOrError()
     }
 
     override fun access(beerId: Int) {

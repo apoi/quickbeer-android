@@ -29,8 +29,8 @@ interface BeerActions {
     fun fetch(beerId: Int): Single<Boolean>
 
     fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>>
-    fun fetchReviews(beerId: Int, page: Int): Unit
+    fun fetchReviews(beerId: Int, page: Int)
 
-    fun access(beerId: Int): Unit
+    fun access(beerId: Int)
     fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>>
 }

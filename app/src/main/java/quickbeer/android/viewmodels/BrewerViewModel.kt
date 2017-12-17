@@ -54,7 +54,8 @@ internal constructor(@Named("id") val brewerId: Int,
     }
 
     fun reloadBrewerDetails() {
-        disposable.add(brewerActions.fetch(brewerId)
+        disposable.add(getBrewerId()
+                .flatMap { brewerActions.fetch(it) }
                 .subscribe({}, { Timber.e(it) }))
     }
 
@@ -65,7 +66,7 @@ internal constructor(@Named("id") val brewerId: Int,
 
         disposable.add(brewerSource
                 .map(toProgressStatus())
-                .subscribe({ this.setProgressStatus(it) }, { Timber.e(it) }))
+                .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
 
         disposable.add(brewerSource
                 .filter { it.isOnNext }
@@ -80,11 +81,11 @@ internal constructor(@Named("id") val brewerId: Int,
     }
 
     private fun brewerSource(): Observable<DataStreamNotification<Brewer>> {
-        return brewerId()
+        return getBrewerId()
                 .flatMapObservable { brewerActions.get(it) }
     }
 
-    private fun brewerId(): Single<Int> {
+    private fun getBrewerId(): Single<Int> {
         if (brewerId > 0) {
             return Single.just(brewerId)
         } else if (beerId > 0) {
@@ -92,7 +93,7 @@ internal constructor(@Named("id") val brewerId: Int,
                     .filter { it.isOnNext }
                     .map { it.value!! }
                     .map { it.brewerId!! }
-                    .singleOrError()
+                    .firstOrError()
         } else {
             throw IllegalStateException("No source id!")
         }
