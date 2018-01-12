@@ -73,14 +73,14 @@ class TickBeerFetcher(val networkApi: NetworkApi,
 
         Timber.d("Tick rating of %s for beer %s", rating, beerId)
 
-        val disposable = userId
+        val disposable = getUserId()
                 .flatMap { createNetworkObservable(beerId, rating, it) }
                 .flatMap { beerStore.getOnce(beerId) }
                 .compose { it.valueOrError() }
                 .map { it.copy(tickValue = rating, tickDate = ZonedDateTime.now()) }
                 .doOnSuccess { beerStore.put(it) }
-                .zipWith(tickedBeers, BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
-                .zipWith(queryId, BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()) })
+                .zipWith(getTickedBeers(), BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
+                .zipWith(getQueryId(), BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()) })
                 .doOnSubscribe { startRequest(requestId, uri) }
                 .doOnSuccess { completeRequest(requestId, uri, false) }
                 .doOnError(doOnError(requestId, uri))
@@ -89,20 +89,18 @@ class TickBeerFetcher(val networkApi: NetworkApi,
         addRequest(requestId, disposable)
     }
 
-    private val userId: Single<Int>
-        get() = userStore.getOnce(Constants.DEFAULT_USER_ID)
-                .subscribeOn(Schedulers.io())
-                .compose { it.valueOrError() }
-                .map { it.id }
+    private fun getUserId(): Single<Int> = userStore.getOnce(Constants.DEFAULT_USER_ID)
+            .subscribeOn(Schedulers.io())
+            .compose { it.valueOrError() }
+            .map { it.id }
 
-    private val tickedBeers: Single<List<Int>>
-        get() = queryId.flatMap { beerListStore.getOnce(it) }
-                .map { it.match({ it.items }, { emptyList() }) }
+    private fun getTickedBeers(): Single<List<Int>> = getQueryId()
+            .flatMap { beerListStore.getOnce(it) }
+            .map { it.match({ it.items }, { emptyList() }) }
 
-    private val queryId: Single<String>
-        get() = userId
-                .map { it.toString() }
-                .map { BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, it) }
+    private fun getQueryId(): Single<String> = getUserId()
+            .map { it.toString() }
+            .map { BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, it) }
 
     private fun createNetworkObservable(beerId: Int, @IntRange(from = 0, to = 5) rating: Int, userId: Int): Single<Boolean> {
         val requestParams = networkUtils.createRequestParams("b", beerId.toString())
