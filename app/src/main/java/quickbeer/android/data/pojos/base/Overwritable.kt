@@ -48,7 +48,7 @@ abstract class Overwritable<T : OverwritablePojo<T>> : OverwritablePojo<T>() {
     }
 
     protected fun isEmpty(value: ZonedDateTime): Boolean {
-        return value.isValidDate()
+        return !value.isValidDate()
     }
 
     override fun isEmpty(value: Int): Boolean {
