@@ -8,8 +8,8 @@ apply from: 'app-config.gradle'
 def STRING = "String"
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "quickbeer.android"
@@ -17,7 +17,7 @@ android {
         versionName "3.2.${version_code}"
 
         minSdkVersion 17
-        targetSdkVersion 27
+        targetSdkVersion 28
         multiDexEnabled true
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
@@ -92,7 +92,7 @@ ext {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // Local dependencies
     implementation project(':reark')
