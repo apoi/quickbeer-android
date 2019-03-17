@@ -29,7 +29,7 @@ fun String?.isNullOrEmpty(): Boolean {
 }
 
 fun String?.orDefault(default: String): String {
-    return if (this != null) this else default
+    return if (this != null && !this.isEmpty()) this else default
 }
 
 fun CharSequence.isNumeric(): Boolean {
