@@ -59,6 +59,10 @@ android {
     }
 }
 
+configurations {
+    ktlint
+}
+
 ext {
     versions = [
             kotlin            : kotlin_version,
@@ -87,12 +91,16 @@ ext {
             timber            : '4.6.0',
             leakCanary        : '1.5.1',
             junit             : '4.12',
+            ktlint            : '0.31.0',
     ]
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Ktlint
+    ktlint "com.github.shyiko:ktlint:$versions.ktlint"
 
     // Local dependencies
     implementation project(':reark')
@@ -183,6 +191,25 @@ dependencies {
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$versions.leakCanary"
 
     testImplementation "junit:junit:$versions.junit"
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "src/**/*.kt"
+    // to generate report in checkstyle format prepend following args:
+    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // see https://github.com/shyiko/ktlint#usage for more
+}
+
+check.dependsOn ktlint
+
+task ktlintFormat(type: JavaExec, group: "formatting") {
+    description = "Fix Kotlin code style deviations."
+    classpath = configurations.ktlint
+    main = "com.github.shyiko.ktlint.Main"
+    args "-F", "src/**/*.kt"
 }
 
 apply plugin: 'com.google.gms.google-services'
