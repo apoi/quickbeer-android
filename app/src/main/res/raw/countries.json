@@ -2064,14 +2064,14 @@
   },
   {
     "id": 189,
-    "name": "Swaziland",
-    "official": "Kingdom of Swaziland",
+    "name": "Eswatini",
+    "official": "Kingdom of Eswatini",
     "code": "SZ",
     "refer": "SWZ",
     "capital": "Lobamba",
     "region": "Africa",
     "subregion": "Southern Africa",
-    "wikipedia": "Swaziland"
+    "wikipedia": "Eswatini"
   },
   {
     "id": 190,
@@ -2482,14 +2482,14 @@
   },
   {
     "id": 229,
-    "name": "Macedonia",
-    "official": "Republic of Macedonia",
+    "name": "North Macedonia",
+    "official": "Republic of North Macedonia",
     "code": "MK",
     "refer": "MKD",
     "capital": "Skopje",
     "region": "Europe",
     "subregion": "Southern Europe",
-    "wikipedia": "Macedonia"
+    "wikipedia": "North_Macedonia"
   },
   {
     "id": 230,
@@ -2803,16 +2803,16 @@
   },
   {
     "id": 264,
-    "name": "Nagorno-Karabakh",
-    "official": "Nagorno-Karabakh Republic",
+    "name": "Artsakh",
+    "official": "Republic of Artsakh",
     "code": "AZ",
     "refer": "AZE-NA",
     "capital": "Stepanakert",
     "region": "Asia",
     "subregion": "Western Asia",
-    "wikipedia": "Nagorno-Karabakh_Republic",
-    "wikipedia_beer": "https://en.wikipedia.org/wiki/Beer_in_Armenia",
-    "description": "The unrecognized Nagorno-Karabakh Republic has a single beer producer, the Varaga Brewery operating since 2003 in the town of Askeran, and producing the Varaga pale lager beer."
+    "wikipedia": "Republic_of_Artsakh",
+    "wikipedia_beer": "Beer_in_Armenia",
+    "description": "The Republic of Artsakh currently has a single brewery – Central Brewpub in the capital Stepanakert."
   },
   {
     "id": 265,
@@ -2847,5 +2847,27 @@
     "region": "Americas",
     "subregion": "Caribbean",
     "wikipedia": "Bonaire"
+  },
+  {
+    "id": 268,
+    "name": "Saint Pierre and Miquelon",
+    "official": "Overseas Collectivity of Saint Pierre and Miquelon",
+    "code": "PM",
+    "refer": "FRA",
+    "capital": "Saint-Pierre",
+    "region": "Americas",
+    "subregion": "Northern America",
+    "wikipedia": "Saint_Pierre_and_Miquelon"
+  },
+  {
+    "id": 269,
+    "name": "Easter Island",
+    "official": "Easter Island",
+    "code": "CL",
+    "refer": "CHL-EI",
+    "capital": "Hanga Roa",
+    "region": "Oceania",
+    "subregion": "Polynesia",
+    "wikipedia": "Easter_Island"
   }
 ]
