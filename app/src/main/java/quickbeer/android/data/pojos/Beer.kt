@@ -50,7 +50,7 @@ data class Beer(@SerializedName("BeerID") val id: Int,
     : Overwritable<Beer>() {
 
     fun basicDataMissing(): Boolean {
-        return brewerId == null || styleName.hasValue()
+        return brewerId == null || !styleName.hasValue()
     }
 
     fun detailedDataMissing(): Boolean {
