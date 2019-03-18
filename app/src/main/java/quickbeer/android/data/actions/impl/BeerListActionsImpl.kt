@@ -35,12 +35,12 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class BeerListActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerListStore: BeerListStore,
-            private val beerMetadataStore: BeerMetadataStore)
-    : ApplicationDataLayer(context), BeerListActions {
+class BeerListActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerListStore: BeerListStore,
+    private val beerMetadataStore: BeerMetadataStore
+) : ApplicationDataLayer(context), BeerListActions {
 
     // No need to filter stale statuses?
     private fun getTopBeersResultStream(): Observable<DataStreamNotification<ItemList<String>>> {
@@ -50,27 +50,27 @@ constructor(context: Context,
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue()
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue()
 
         val beerSearchObservable = beerListStore.getOnceAndStream(queryId)
-                .filterToValue()
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerSearchObservable)
+            requestStatusObservable, beerSearchObservable)
     }
 
-    //// ACCESSED BEERS
+    // ACCESSED BEERS
 
     override fun accessed(): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("accessed")
 
         return beerMetadataStore.accessedIdsOnce
-                .map { ids -> ItemList<String>(null, ids, null) }
-                .map { DataStreamNotification.onNext(it) }
+            .map { ids -> ItemList<String>(null, ids, null) }
+            .map { DataStreamNotification.onNext(it) }
     }
 
-    //// TOP BEERS
+    // TOP BEERS
 
     override fun topBeers(): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("topBeers")
@@ -82,9 +82,9 @@ constructor(context: Context,
         Timber.v("fetchTopBeers")
 
         return triggerGet({ true })
-                .filter { it.isCompleted }
-                .map { it.isCompletedWithSuccess }
-                .firstOrError()
+            .filter { it.isCompleted }
+            .map { it.isCompletedWithSuccess }
+            .firstOrError()
     }
 
     private fun triggerGet(needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
@@ -92,14 +92,14 @@ constructor(context: Context,
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.TOP50))
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Search not cached, fetching") }
-                .doOnNext { triggerFetch() }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Search not cached, fetching") }
+            .doOnNext { triggerFetch() }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
 
         return getTopBeersResultStream()
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     private fun triggerFetch(): Int {

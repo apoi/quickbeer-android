@@ -30,8 +30,8 @@ import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.kotlin.ZonedDateTime
 import quickbeer.android.utils.kotlin.orEpoch
 
-class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson)
-    : StoreCoreBase<String, ItemList<String>>(contentResolver, gson) {
+class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<String, ItemList<String>>(contentResolver, gson) {
 
     override fun getUriForId(id: String): Uri {
         return RateBeerProvider.BeerLists.withKey(get(id))

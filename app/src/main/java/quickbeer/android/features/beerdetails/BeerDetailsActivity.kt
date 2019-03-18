@@ -92,40 +92,44 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             val sourceObservable = beerActions.get(beerId)
-                    .subscribeOn(Schedulers.io())
-                    .filter { it.isOnNext }
-                    .map { get(it.value) }
-                    .take(1)
-                    .publish()
+                .subscribeOn(Schedulers.io())
+                .filter { it.isOnNext }
+                .map { get(it.value) }
+                .take(1)
+                .publish()
 
             // Update beer access date
             disposable.add(sourceObservable
-                    .map { it.id }
-                    .subscribe({ beerActions.access(it) }, { Timber.e(it) }))
+                .map { it.id }
+                .subscribe({ beerActions.access(it) }, { Timber.e(it) }))
 
             // Update brewer access date
             disposable.add(sourceObservable
-                    .map { it.brewerId }
-                    .subscribe({ brewerActions.access(it!!) }, { Timber.e(it) }))
+                .map { it.brewerId }
+                .subscribe({ brewerActions.access(it!!) }, { Timber.e(it) }))
 
             // Set toolbar title
-            disposable.add(sourceObservable
+            disposable.add(
+                sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             // Update share intent
-            disposable.add(sourceObservable
+            disposable.add(
+                sourceObservable
                     .subscribe({
                         beerName = it.name ?: ""
                         brewerName = it.brewerName ?: ""
                     }, { Timber.e(it) }))
 
-            disposable.add(progressStatusProvider
+            disposable.add(
+                progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
 
-            disposable.add(sourceObservable
+            disposable.add(
+                sourceObservable
                     .connect())
         }
     }
@@ -157,13 +161,13 @@ class BeerDetailsActivity : BindingDrawerActivity() {
             }
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, BeerDetailsPagerFragment.newInstance(beerId))
-                    .commit()
+                .add(R.id.container, BeerDetailsPagerFragment.newInstance(beerId))
+                .commit()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.beer_menu, menu);
+        menuInflater.inflate(R.menu.beer_menu, menu)
         return true
     }
 
@@ -171,14 +175,14 @@ class BeerDetailsActivity : BindingDrawerActivity() {
         collapsing_toolbar.title = beer.name
 
         picasso.load(beer.imageUri())
-                .transform(ContainerLabelExtractor(300, 300))
-                .transform(BlurTransformation(applicationContext, 15))
-                .into(collapsing_toolbar_background, object : EmptyCallback() {
-                    override fun onSuccess() {
-                        toolbar_overlay_gradient.visibility = View.VISIBLE
-                        collapsing_toolbar_background.setOnClickListener { openPhotoView(beer.imageUri()) }
-                    }
-                })
+            .transform(ContainerLabelExtractor(300, 300))
+            .transform(BlurTransformation(applicationContext, 15))
+            .into(collapsing_toolbar_background, object : EmptyCallback() {
+                override fun onSuccess() {
+                    toolbar_overlay_gradient.visibility = View.VISIBLE
+                    collapsing_toolbar_background.setOnClickListener { openPhotoView(beer.imageUri()) }
+                }
+            })
     }
 
     private fun openPhotoView(uri: String) {
@@ -189,12 +193,12 @@ class BeerDetailsActivity : BindingDrawerActivity() {
 
     private fun share() {
         val uri = String.format(Constants.BEER_PATH, beerId)
-        val template = resourceProvider.getString(R.string.share_template);
+        val template = resourceProvider.getString(R.string.share_template)
         val text = String.format(template, beerName, brewerName, uri)
         val intent = ShareCompat.IntentBuilder.from(this)
-                .setType("text/plain")
-                .setText(text)
-                .intent
+            .setType("text/plain")
+            .setText(text)
+            .intent
 
         startActivity(Intent.createChooser(intent, resourceProvider.getString(R.string.share)))
     }

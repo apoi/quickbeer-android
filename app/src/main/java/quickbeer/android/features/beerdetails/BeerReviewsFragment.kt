@@ -59,29 +59,31 @@ class BeerReviewsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefreshL
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getReviews()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ beer_reviews_view.setReviews(it) }, { Timber.e(it) }))
 
-            disposable.add(loadMoreListener.moreItemsRequestedStream()
+            disposable.add(
+                loadMoreListener.moreItemsRequestedStream()
                     .subscribe({ viewModel().loadMoreReviews(it) }, { Timber.e(it) }))
         }
     }
 
     override fun inject() {
         getComponent().plusId(IdModule(beerId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { state -> state.getInt(Constants.ID_KEY) }
-                .ifSome { value -> beerId = value }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { state -> state.getInt(Constants.ID_KEY) }
+            .ifSome { value -> beerId = value }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

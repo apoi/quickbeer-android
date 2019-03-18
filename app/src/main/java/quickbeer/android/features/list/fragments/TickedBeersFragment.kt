@@ -47,22 +47,22 @@ class TickedBeersFragment : BeerListFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            super@TickedBeersFragment.dataBinder().bind(disposable);
+            super@TickedBeersFragment.dataBinder().bind(disposable)
 
             disposable.add(viewModel()
-                    .getUser()
-                    .take(1)
-                    .filter { it.isNone() }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ showLoginDialog() }, { Timber.e(it) }))
+                .getUser()
+                .take(1)
+                .filter { it.isNone() }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ showLoginDialog() }, { Timber.e(it) }))
 
             disposable.add(viewModel()
-                    .getUser()
-                    .take(1)
-                    .filterToValue()
-                    .filter { !session.isTicksRequested }
-                    .doOnNext { session.isTicksRequested = true }
-                    .subscribe({ viewModel().refreshTicks(it) }, { Timber.e(it) }))
+                .getUser()
+                .take(1)
+                .filterToValue()
+                .filter { !session.isTicksRequested }
+                .doOnNext { session.isTicksRequested = true }
+                .subscribe({ viewModel().refreshTicks(it) }, { Timber.e(it) }))
         }
 
         override fun unbind() {
@@ -85,11 +85,11 @@ class TickedBeersFragment : BeerListFragment() {
 
     private fun showLoginDialog() {
         AlertDialog.Builder(context!!)
-                .setTitle(R.string.login_dialog_title)
-                .setMessage(R.string.login_to_view_ratings_message)
-                .setPositiveButton(R.string.ok) { _, _ -> navigateToLogin() }
-                .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
-                .show()
+            .setTitle(R.string.login_dialog_title)
+            .setMessage(R.string.login_to_view_ratings_message)
+            .setPositiveButton(R.string.ok) { _, _ -> navigateToLogin() }
+            .setNegativeButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            .show()
     }
 
     private fun navigateToLogin() {

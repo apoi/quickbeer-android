@@ -51,12 +51,42 @@ class AboutDetailsFragment : BaseFragment() {
         about_spice_program.setOnClickListener { openUri(LaunchAction.ABOUT_SPICE_PROGRAM, "https://spiceprogram.org") }
         about_iiro.setOnClickListener { openUri(LaunchAction.ABOUT_IIRO, "http://iiroisotalo.com") }
 
-        about_google_play.setOnClickListener { openUri(LaunchAction.ABOUT_GOOGLE_PLAY, "https://play.google.com/store/apps/details?id=quickbeer.android") }
-        about_source_row.setOnClickListener { openUri(LaunchAction.ABOUT_SOURCE, "https://github.com/apoi/quickbeer-next") }
-        about_application_license_row.setOnClickListener { openUri(LaunchAction.ABOUT_LICENSE, "https://ztesch.fi/quickbeer/license") }
-        about_library_licenses_row.setOnClickListener { openUri(LaunchAction.ABOUT_OPEN_SOURCE, "https://ztesch.fi/quickbeer/open-source") }
-        about_assets_row.setOnClickListener { openUri(LaunchAction.ABOUT_GRAPHICS_ASSETS, "https://ztesch.fi/quickbeer/graphics-assets") }
-        about_privacy_policy_row.setOnClickListener { openUri(LaunchAction.ABOUT_PRIVACY_POLICY, "https://ztesch.fi/quickbeer/privacy-policy") }
+        about_google_play.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_GOOGLE_PLAY,
+                "https://play.google.com/store/apps/details?id=quickbeer.android"
+            )
+        }
+        about_source_row.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_SOURCE,
+                "https://github.com/apoi/quickbeer-next"
+            )
+        }
+        about_application_license_row.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_LICENSE,
+                "https://ztesch.fi/quickbeer/license"
+            )
+        }
+        about_library_licenses_row.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_OPEN_SOURCE,
+                "https://ztesch.fi/quickbeer/open-source"
+            )
+        }
+        about_assets_row.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_GRAPHICS_ASSETS,
+                "https://ztesch.fi/quickbeer/graphics-assets"
+            )
+        }
+        about_privacy_policy_row.setOnClickListener {
+            openUri(
+                LaunchAction.ABOUT_PRIVACY_POLICY,
+                "https://ztesch.fi/quickbeer/privacy-policy"
+            )
+        }
     }
 
     private fun openUri(action: LaunchAction, uri: String) {

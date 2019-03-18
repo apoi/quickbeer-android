@@ -34,11 +34,11 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class ProfileLoginViewModel @Inject
-internal constructor(private val userActions: UserActions,
-                     private val reviewActions: ReviewActions,
-                     private val resourceProvider: ResourceProvider)
-    : SimpleViewModel() {
+class ProfileLoginViewModel @Inject internal constructor(
+    private val userActions: UserActions,
+    private val reviewActions: ReviewActions,
+    private val resourceProvider: ResourceProvider
+) : SimpleViewModel() {
 
     private val loginSubject = PublishSubject.create<Pair<String, String>>()
 
@@ -50,13 +50,13 @@ internal constructor(private val userActions: UserActions,
 
     override fun bind(disposable: CompositeDisposable) {
         disposable.add(loginSubject
-                .switchMap { userActions.login(it.first, it.second) }
-                .subscribe({ handleNotification(it) }, { Timber.e(it) }))
+            .switchMap { userActions.login(it.first, it.second) }
+            .subscribe({ handleNotification(it) }, { Timber.e(it) }))
 
         disposable.add(autoLoginSubject
-                .switchMap { getUser() }
-                .filterToValue()
-                .subscribe({ login(it.username, it.password) }, { Timber.e(it) }))
+            .switchMap { getUser() }
+            .filterToValue()
+            .subscribe({ login(it.username, it.password) }, { Timber.e(it) }))
     }
 
     fun login(username: String, password: String) {
@@ -72,7 +72,7 @@ internal constructor(private val userActions: UserActions,
     }
 
     fun getIsLoginInProgress(): Observable<Boolean> {
-        return userActions.getLoginStatus().map{ it.isOngoing() }
+        return userActions.getLoginStatus().map { it.isOngoing() }
     }
 
     fun loginCompletedStream(): Observable<Boolean> {
@@ -99,9 +99,11 @@ internal constructor(private val userActions: UserActions,
     private fun toReadableError(errorMessage: String): String {
         // We use 403 for when result is a known login failure page. For other errors,
         // just show a generic error message.
-        return resourceProvider.getString(if (StringUtils.value(errorMessage).contains("403"))
-            R.string.login_failed
-        else
-            R.string.login_error)
+        return resourceProvider.getString(
+            if (StringUtils.value(errorMessage).contains("403"))
+                R.string.login_failed
+            else
+                R.string.login_error
+        )
     }
 }

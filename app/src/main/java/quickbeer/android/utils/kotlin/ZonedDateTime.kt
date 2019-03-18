@@ -37,15 +37,16 @@ fun ZonedDateTime?.isValidDate(): Boolean {
 
 fun ZonedDateTime?.formatDateTime(template: String): String {
     val localTime = this.orEpoch().withZoneSameInstant(ZoneId.systemDefault())
-    return String.format(template,
-            localTime.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
-            localTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
+    return String.format(
+        template,
+        localTime.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
+        localTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
 }
 
 fun ZonedDateTime?.formatDate(): String {
     return this.orEpoch()
-            .withZoneSameInstant(ZoneId.systemDefault())
-            .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+        .withZoneSameInstant(ZoneId.systemDefault())
+        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 }
 
 fun ZonedDateTime(seconds: Int): ZonedDateTime? {

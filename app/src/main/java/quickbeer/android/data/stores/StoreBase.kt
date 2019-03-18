@@ -21,11 +21,12 @@ import io.reark.reark.data.stores.DefaultStore
 import quickbeer.android.data.stores.cores.CachingStoreCore
 import quickbeer.android.data.stores.cores.StoreCoreBase
 
-open class StoreBase<T, U, R>(val core: CachingStoreCore<T, U>,
-                              getIdForItem: DefaultStore.GetIdForItem<T, U>,
-                              getNullSafe: DefaultStore.GetNullSafe<U, R>,
-                              getEmptyValue: DefaultStore.GetEmptyValue<R>)
-    : DefaultStore<T, U, R>(core, getIdForItem, getNullSafe, getEmptyValue) {
+open class StoreBase<T, U, R>(
+    val core: CachingStoreCore<T, U>,
+    getIdForItem: DefaultStore.GetIdForItem<T, U>,
+    getNullSafe: DefaultStore.GetNullSafe<U, R>,
+    getEmptyValue: DefaultStore.GetEmptyValue<R>
+) : DefaultStore<T, U, R>(core, getIdForItem, getNullSafe, getEmptyValue) {
 
     val providerCore: StoreCoreBase<T, U>
         get() = core.providerCore

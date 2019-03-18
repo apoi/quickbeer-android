@@ -27,11 +27,12 @@ import quickbeer.android.data.pojos.Beer
 import quickbeer.android.providers.ProgressStatusProvider
 import timber.log.Timber
 
-class BeerViewModel(val beerId: Int,
-                    private val detailed: Boolean,
-                    private val beerActions: BeerActions,
-                    private val progressStatusProvider: ProgressStatusProvider)
-    : NetworkViewModel<Beer>() {
+class BeerViewModel(
+    val beerId: Int,
+    private val detailed: Boolean,
+    private val beerActions: BeerActions,
+    private val progressStatusProvider: ProgressStatusProvider
+) : NetworkViewModel<Beer>() {
 
     private val beer = BehaviorSubject.create<Beer>()
 
@@ -41,22 +42,25 @@ class BeerViewModel(val beerId: Int,
 
     override fun bind(disposable: CompositeDisposable) {
         val beerSource = getBeer(beerId)
-                .subscribeOn(Schedulers.computation())
-                .publish()
+            .subscribeOn(Schedulers.computation())
+            .publish()
 
-        disposable.add(beerSource
+        disposable.add(
+            beerSource
                 .map(toProgressStatus())
                 .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
 
         disposable.add(beerSource
-                .filter { it.isOnNext }
-                .map { it.value }
-                .subscribe({ beer.onNext(it!!) }, { Timber.e(it) }))
+            .filter { it.isOnNext }
+            .map { it.value }
+            .subscribe({ beer.onNext(it!!) }, { Timber.e(it) }))
 
-        disposable.add(progressStatusProvider
+        disposable.add(
+            progressStatusProvider
                 .addProgressObservable(beerSource.map { it }))
 
-        disposable.add(beerSource
+        disposable.add(
+            beerSource
                 .connect())
     }
 

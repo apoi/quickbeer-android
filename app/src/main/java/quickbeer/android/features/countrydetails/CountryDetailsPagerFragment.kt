@@ -82,8 +82,8 @@ class CountryDetailsPagerFragment : BaseFragment() {
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
                     get(analytics).createEvent(
-                            if (position == 0) Screen.COUNTRY_DETAILS
-                            else Screen.COUNTRY_BEERS
+                        if (position == 0) Screen.COUNTRY_DETAILS
+                        else Screen.COUNTRY_BEERS
                     )
                 }
             })

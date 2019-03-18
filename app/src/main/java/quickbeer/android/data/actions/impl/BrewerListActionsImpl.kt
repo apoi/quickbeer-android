@@ -26,16 +26,16 @@ import quickbeer.android.data.stores.BrewerMetadataStore
 import timber.log.Timber
 import javax.inject.Inject
 
-class BrewerListActionsImpl @Inject
-constructor(context: Context,
-            private val brewerMetadataStore: BrewerMetadataStore)
-    : ApplicationDataLayer(context), BrewerListActions {
+class BrewerListActionsImpl @Inject constructor(
+    context: Context,
+    private val brewerMetadataStore: BrewerMetadataStore
+) : ApplicationDataLayer(context), BrewerListActions {
 
     override fun getAccessed(): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getAccessed")
 
         return brewerMetadataStore.getAccessedIdsOnce()
-                .map { ids -> ItemList<String>(null, ids, null) }
-                .map { DataStreamNotification.onNext(it) }
+            .map { ids -> ItemList<String>(null, ids, null) }
+            .map { DataStreamNotification.onNext(it) }
     }
 }

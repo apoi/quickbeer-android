@@ -23,8 +23,7 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.simple_list_item.view.*
 import quickbeer.android.data.pojos.SimpleItem
 
-class SimpleListItemViewHolder(view: View, onClickListener: View.OnClickListener)
-    : RecyclerView.ViewHolder(view) {
+class SimpleListItemViewHolder(view: View, onClickListener: View.OnClickListener) : RecyclerView.ViewHolder(view) {
 
     private val textView: TextView = view.list_item_name
     private val iconView: TextView = view.list_item_icon

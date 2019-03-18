@@ -59,9 +59,9 @@ class BeerDetailsPagerFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { state -> state.getInt(Constants.ID_KEY) }
-                .ifSome { value -> beerId = value }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { state -> state.getInt(Constants.ID_KEY) }
+            .ifSome { value -> beerId = value }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

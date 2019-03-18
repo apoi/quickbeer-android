@@ -17,15 +17,16 @@
  */
 package quickbeer.android.data.pojos
 
-data class Country(override val id: Int,
-                   override val name: String,
-                   override val code: String,
-                   val official: String,
-                   val refer: String,
-                   val capital: String,
-                   val region: String,
-                   val subregion: String,
-                   val wikipedia: String,
-                   val wikipedia_beer: String,
-                   val description: String)
-    : SimpleItem()
+data class Country(
+    override val id: Int,
+    override val name: String,
+    override val code: String,
+    val official: String,
+    val refer: String,
+    val capital: String,
+    val region: String,
+    val subregion: String,
+    val wikipedia: String,
+    val wikipedia_beer: String,
+    val description: String
+) : SimpleItem()

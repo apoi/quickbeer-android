@@ -57,7 +57,8 @@ class BrewerDetailsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefres
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getBrewer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -69,9 +70,9 @@ class BrewerDetailsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefres
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { it.getInt(Constants.ID_KEY) }
-                .ifSome { brewerId = it }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { it.getInt(Constants.ID_KEY) }
+            .ifSome { brewerId = it }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,7 +86,7 @@ class BrewerDetailsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefres
 
     override fun inject() {
         getComponent().plusId(IdModule(brewerId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

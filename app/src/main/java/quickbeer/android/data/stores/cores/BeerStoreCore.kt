@@ -29,8 +29,8 @@ import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.kotlin.ZonedDateTime
 import quickbeer.android.utils.kotlin.orEpoch
 
-class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
-    : StoreCoreBase<Int, Beer>(contentResolver, gson) {
+class BeerStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, Beer>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
         return RateBeerProvider.Beers.withId(get(id))
@@ -45,7 +45,13 @@ class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
     }
 
     override fun getProjection(): Array<String> {
-        return arrayOf(BeerColumns.ID, BeerColumns.JSON, BeerColumns.NAME, BeerColumns.TICK_VALUE, BeerColumns.TICK_DATE)
+        return arrayOf(
+            BeerColumns.ID,
+            BeerColumns.JSON,
+            BeerColumns.NAME,
+            BeerColumns.TICK_VALUE,
+            BeerColumns.TICK_DATE
+        )
     }
 
     override fun read(cursor: Cursor): Beer {
@@ -54,7 +60,7 @@ class BeerStoreCore(contentResolver: ContentResolver, gson: Gson)
         val date = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerColumns.TICK_DATE)))
 
         return gson.fromJson(json, Beer::class.java)
-                .copy(tickValue = value, tickDate = date)
+            .copy(tickValue = value, tickDate = date)
     }
 
     override fun getContentValuesForItem(item: Beer): ContentValues {

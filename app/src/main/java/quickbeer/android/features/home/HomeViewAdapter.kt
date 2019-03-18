@@ -24,8 +24,7 @@ import android.support.v4.app.FragmentPagerAdapter
 
 import quickbeer.android.R
 
-class HomeViewAdapter(manager: FragmentManager, private val context: Context)
-    : FragmentPagerAdapter(manager) {
+class HomeViewAdapter(manager: FragmentManager, private val context: Context) : FragmentPagerAdapter(manager) {
 
     override fun getCount(): Int {
         return 2

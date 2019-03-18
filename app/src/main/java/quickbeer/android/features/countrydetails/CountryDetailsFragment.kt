@@ -55,7 +55,8 @@ class CountryDetailsFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getCountry()
                     .toObservable()
                     .filterToValue()
@@ -95,7 +96,6 @@ class CountryDetailsFragment : BindingBaseFragment() {
 
     override fun inject() {
         getComponent().plusId(IdModule(countryId))
-                .inject(this)
+            .inject(this)
     }
 }
-

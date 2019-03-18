@@ -31,12 +31,13 @@ import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.rx.Unit
 import timber.log.Timber
 
-class ReviewListViewModel(private val beerId: Int,
-                          private val beerActions: BeerActions,
-                          private val reviewActions: ReviewActions,
-                          private val reviewListStore: ReviewListStore,
-                          private val progressStatusProvider: ProgressStatusProvider)
-    : NetworkViewModel<ItemList<Review>>() {
+class ReviewListViewModel(
+    private val beerId: Int,
+    private val beerActions: BeerActions,
+    private val reviewActions: ReviewActions,
+    private val reviewListStore: ReviewListStore,
+    private val progressStatusProvider: ProgressStatusProvider
+) : NetworkViewModel<ItemList<Review>>() {
 
     private val loadTrigger = PublishSubject.create<Unit>()
 
@@ -59,45 +60,48 @@ class ReviewListViewModel(private val beerId: Int,
 
     private fun getReviewObservable(reviewId: Int): Observable<Review> {
         return reviewActions.get(reviewId)
-                .compose { quickbeer.android.rx.RxUtils.pickValue(it) }
-                .doOnNext { Timber.v("Received review ${it.id}") }
+            .compose { quickbeer.android.rx.RxUtils.pickValue(it) }
+            .doOnNext { Timber.v("Received review ${it.id}") }
     }
 
     override fun bind(disposable: CompositeDisposable) {
         Timber.v("subscribeToDataStoreInternal")
 
         val reviewSource = loadTrigger.flatMap { beerActions.getReviews(beerId) }
-                .publish()
+            .publish()
 
         disposable.add(reviewSource
-                .map { toProgressStatus().apply(it) }
-                .subscribe { setProgressStatus(it) })
+            .map { toProgressStatus().apply(it) }
+            .subscribe { setProgressStatus(it) })
 
         disposable.add(reviewSource
-                .filter { it.isOnNext }
-                .map { it.value?.items ?: emptyList() }
-                .doOnNext { Timber.d("Review get finished") }
-                .flatMap {
-                    Observable.fromIterable(it)
-                            .map { getReviewObservable(it) }
-                            .toList()
-                            .flatMapObservable { RxUtils.toObservableList(it) }
-                }
-                .doOnNext { Timber.d("Publishing ${it.size} reviews from the view model") }
-                .subscribe { reviews.onNext(it) })
+            .filter { it.isOnNext }
+            .map { it.value?.items ?: emptyList() }
+            .doOnNext { Timber.d("Review get finished") }
+            .flatMap {
+                Observable.fromIterable(it)
+                    .map { getReviewObservable(it) }
+                    .toList()
+                    .flatMapObservable { RxUtils.toObservableList(it) }
+            }
+            .doOnNext { Timber.d("Publishing ${it.size} reviews from the view model") }
+            .subscribe { reviews.onNext(it) })
 
-        disposable.add(progressStatusProvider
-                .addProgressObservable(reviewSource
+        disposable.add(
+            progressStatusProvider
+                .addProgressObservable(
+                    reviewSource
                         .map({ notification -> notification })))
 
-        disposable.add(reviewSource
+        disposable.add(
+            reviewSource
                 .connect())
 
         disposable.add(reloadTrigger.hide()
-                .switchMap { reviewListStore.delete(beerId).toObservable() }
-                .doOnEach { reviews.onNext(emptyList<Review>()) }
-                .doOnEach { loadTrigger.onNext(Unit.DEFAULT) }
-                .subscribe({}, { Timber.e(it) }))
+            .switchMap { reviewListStore.delete(beerId).toObservable() }
+            .doOnEach { reviews.onNext(emptyList<Review>()) }
+            .doOnEach { loadTrigger.onNext(Unit.DEFAULT) }
+            .subscribe({}, { Timber.e(it) }))
 
         // Initial trigger at bind time
         loadTrigger.onNext(Unit.DEFAULT)

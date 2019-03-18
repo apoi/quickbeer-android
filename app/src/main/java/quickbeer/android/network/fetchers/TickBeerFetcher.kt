@@ -42,14 +42,16 @@ import quickbeer.android.network.utils.NetworkUtils
 import quickbeer.android.utils.ValueUtils
 import quickbeer.android.utils.kotlin.valueOrError
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 
-class TickBeerFetcher(val networkApi: NetworkApi,
-                      val networkUtils: NetworkUtils,
-                      networkRequestStatus: Consumer<NetworkRequestStatus>,
-                      val beerStore: BeerStore,
-                      val beerListStore: BeerListStore,
-                      val userStore: UserStore) : FetcherBase<Uri>(networkRequestStatus) {
+class TickBeerFetcher(
+    val networkApi: NetworkApi,
+    val networkUtils: NetworkUtils,
+    networkRequestStatus: Consumer<NetworkRequestStatus>,
+    val beerStore: BeerStore,
+    val beerListStore: BeerListStore,
+    val userStore: UserStore
+) : FetcherBase<Uri>(networkRequestStatus) {
 
     override fun fetch(intent: Intent, listenerId: Int) {
         checkNotNull(intent)
@@ -74,35 +76,49 @@ class TickBeerFetcher(val networkApi: NetworkApi,
         Timber.d("Tick rating of %s for beer %s", rating, beerId)
 
         val disposable = getUserId()
-                .flatMap { createNetworkObservable(beerId, rating, it) }
-                .flatMap { beerStore.getOnce(beerId) }
-                .compose { it.valueOrError() }
-                .map { it.copy(tickValue = rating, tickDate = ZonedDateTime.now()) }
-                .doOnSuccess { beerStore.put(it) }
-                .zipWith(getTickedBeers(), BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
-                .zipWith(getQueryId(), BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId -> ItemList.create(ticksQueryId, ticks, ZonedDateTime.now()) })
-                .doOnSubscribe { startRequest(requestId, uri) }
-                .doOnSuccess { completeRequest(requestId, uri, false) }
-                .doOnError(doOnError(requestId, uri))
-                .subscribe({ beerListStore.put(it) }, { Timber.w(it, "Error ticking beer") })
+            .flatMap { createNetworkObservable(beerId, rating, it) }
+            .flatMap { beerStore.getOnce(beerId) }
+            .compose { it.valueOrError() }
+            .map { it.copy(tickValue = rating, tickDate = ZonedDateTime.now()) }
+            .doOnSuccess { beerStore.put(it) }
+            .zipWith(
+                getTickedBeers(),
+                BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
+            .zipWith(
+                getQueryId(),
+                BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId ->
+                    ItemList.create(
+                        ticksQueryId,
+                        ticks,
+                        ZonedDateTime.now()
+                    )
+                })
+            .doOnSubscribe { startRequest(requestId, uri) }
+            .doOnSuccess { completeRequest(requestId, uri, false) }
+            .doOnError(doOnError(requestId, uri))
+            .subscribe({ beerListStore.put(it) }, { Timber.w(it, "Error ticking beer") })
 
         addRequest(requestId, disposable)
     }
 
     private fun getUserId(): Single<Int> = userStore.getOnce(Constants.DEFAULT_USER_ID)
-            .subscribeOn(Schedulers.io())
-            .compose { it.valueOrError() }
-            .map { it.id }
+        .subscribeOn(Schedulers.io())
+        .compose { it.valueOrError() }
+        .map { it.id }
 
     private fun getTickedBeers(): Single<List<Int>> = getQueryId()
-            .flatMap { beerListStore.getOnce(it) }
-            .map { it.match({ it.items }, { emptyList() }) }
+        .flatMap { beerListStore.getOnce(it) }
+        .map { it.match({ it.items }, { emptyList() }) }
 
     private fun getQueryId(): Single<String> = getUserId()
-            .map { it.toString() }
-            .map { BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, it) }
+        .map { it.toString() }
+        .map { BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, it) }
 
-    private fun createNetworkObservable(beerId: Int, @IntRange(from = 0, to = 5) rating: Int, userId: Int): Single<Boolean> {
+    private fun createNetworkObservable(
+        beerId: Int,
+        @IntRange(from = 0, to = 5) rating: Int,
+        userId: Int
+    ): Single<Boolean> {
         val requestParams = networkUtils.createRequestParams("b", beerId.toString())
         requestParams.put("u", userId.toString())
 
@@ -114,8 +130,8 @@ class TickBeerFetcher(val networkApi: NetworkApi,
         }
 
         return networkApi.tickBeer(requestParams)
-                .flatMap { requestSuccessful(it) }
-                .retryWhen(LoginAndRetry(networkApi, userStore))
+            .flatMap { requestSuccessful(it) }
+            .retryWhen(LoginAndRetry(networkApi, userStore))
     }
 
     override fun getServiceUri(): Uri {
@@ -128,12 +144,12 @@ class TickBeerFetcher(val networkApi: NetworkApi,
 
         private fun appendTick(beer: Beer, ticks: List<Int>): List<Int> {
             return ticks.toMutableList()
-                    .apply {
-                        remove(beer.id)
-                        if (ValueUtils.greaterThan(beer.tickValue, 0)) {
-                            add(0, beer.id)
-                        }
+                .apply {
+                    remove(beer.id)
+                    if (ValueUtils.greaterThan(beer.tickValue, 0)) {
+                        add(0, beer.id)
                     }
+                }
         }
 
         private fun requestSuccessful(responseBody: ResponseBody): Single<Boolean> {

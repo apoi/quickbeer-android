@@ -21,9 +21,13 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.data.DataStreamNotification.Type.*
+import io.reark.reark.data.DataStreamNotification.Type.COMPLETED_WITHOUT_VALUE
+import io.reark.reark.data.DataStreamNotification.Type.COMPLETED_WITH_ERROR
+import io.reark.reark.data.DataStreamNotification.Type.COMPLETED_WITH_VALUE
+import io.reark.reark.data.DataStreamNotification.Type.ONGOING
+import io.reark.reark.data.DataStreamNotification.Type.ON_NEXT
 import timber.log.Timber
-import java.util.*
+import java.util.HashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 class GlobalNotificationProvider(private val toastProvider: ToastProvider) {
@@ -31,16 +35,18 @@ class GlobalNotificationProvider(private val toastProvider: ToastProvider) {
     private val counter: AtomicInteger = AtomicInteger(0)
     private val disposableList = HashMap<Int, Disposable>(10)
 
-    fun addNetworkSuccessListener(observable: Observable<DataStreamNotification<Void>>,
-                                  successToast: String,
-                                  failureToast: String) {
+    fun addNetworkSuccessListener(
+        observable: Observable<DataStreamNotification<Void>>,
+        successToast: String,
+        failureToast: String
+    ) {
         val index = counter.incrementAndGet()
         val disposable = observable
-                .takeUntil { it.isCompleted }
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnComplete { disposableList.remove(index) }
-                .subscribe({ handleType(it.type, successToast, failureToast) },
-                        { Timber.w(it, "Global listener error") })
+            .takeUntil { it.isCompleted }
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnComplete { disposableList.remove(index) }
+            .subscribe({ handleType(it.type, successToast, failureToast) },
+                { Timber.w(it, "Global listener error") })
 
         disposableList.put(index, disposable)
     }
@@ -49,7 +55,8 @@ class GlobalNotificationProvider(private val toastProvider: ToastProvider) {
         when (type) {
             COMPLETED_WITH_VALUE, COMPLETED_WITHOUT_VALUE -> showToast(successToast)
             COMPLETED_WITH_ERROR -> showToast(failureToast)
-            ONGOING, ON_NEXT -> { }
+            ONGOING, ON_NEXT -> {
+            }
         }
     }
 

@@ -26,13 +26,13 @@ import quickbeer.android.providers.ResourceProvider
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
+import java.util.ArrayList
 import javax.inject.Inject
 
-class CountryStoreCore @Inject
-internal constructor(resourceProvider: ResourceProvider,
-                     gson: Gson)
-    : MemoryStoreCore<Int, Country>() {
+class CountryStoreCore @Inject internal constructor(
+    resourceProvider: ResourceProvider,
+    gson: Gson
+) : MemoryStoreCore<Int, Country>() {
 
     init {
         try {
@@ -45,8 +45,7 @@ internal constructor(resourceProvider: ResourceProvider,
             reader.close()
             input.close()
 
-            countryList.forEach{ put(it.id, it) }
-
+            countryList.forEach { put(it.id, it) }
         } catch (e: IOException) {
             Timber.e(e, "Failed reading countries!")
         }

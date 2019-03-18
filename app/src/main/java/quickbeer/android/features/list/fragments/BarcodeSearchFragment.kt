@@ -37,9 +37,9 @@ class BarcodeSearchFragment : BeerListFragment() {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { state -> state.getString("barcode") }
-                .ifSome { value -> barcode = value }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { state -> state.getString("barcode") }
+            .ifSome { value -> barcode = value }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -50,7 +50,6 @@ class BarcodeSearchFragment : BeerListFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         barcodeSearchViewModel.setBarcode(barcode)
-
     }
 
     override fun inject() {

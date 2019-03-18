@@ -21,7 +21,9 @@ import android.content.ContentResolver
 import com.google.gson.Gson
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.cores.CachingStoreCore
@@ -30,8 +32,8 @@ import quickbeer.android.data.stores.cores.ReviewListStoreCore
 /**
  * Class storing lists of reviews related to a specific beer id.
  */
-class ReviewListStore(contentResolver: ContentResolver, gson: Gson)
-    : StoreBase<Int, ItemList<Int>, Option<ItemList<Int>>>(
+class ReviewListStore(contentResolver: ContentResolver, gson: Gson) :
+    StoreBase<Int, ItemList<Int>, Option<ItemList<Int>>>(
         CachingStoreCore(ReviewListStoreCore(contentResolver, gson), Function { it.key }, BiFunction { _, s -> s }),
         GetIdForItem { it.key },
         GetNullSafe { Option.ofObj(it) },

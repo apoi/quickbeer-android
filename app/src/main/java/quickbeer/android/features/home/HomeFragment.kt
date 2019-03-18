@@ -54,7 +54,8 @@ class HomeFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel().getQueryStream()
+            disposable.add(
+                viewModel().getQueryStream()
                     .subscribe({ navigationProvider.triggerSearch(it) }, { Timber.e(it) }))
         }
     }
@@ -127,4 +128,3 @@ class HomeFragment : BindingBaseFragment() {
         private val CODE_CAPTURE_BARCODE = 9876
     }
 }
-

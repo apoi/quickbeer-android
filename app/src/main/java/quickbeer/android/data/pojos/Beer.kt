@@ -23,31 +23,32 @@ import polanski.option.Option.ofObj
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.base.Overwritable
 import quickbeer.android.utils.kotlin.hasValue
-import java.util.*
+import java.util.Locale
 
-data class Beer(@SerializedName("BeerID") val id: Int,
-                @SerializedName("BeerName") val name: String?,
-                @SerializedName("BrewerID") val brewerId: Int?,
-                @SerializedName("BrewerName") val brewerName: String?,
-                @SerializedName("ContractBrewerID") val contractBrewerId: Int?,
-                @SerializedName("ContractBrewer") val contractBrewerName: String?,
-                @SerializedName("AverageRating") val averageRating: Float?,
-                @SerializedName("OverallPctl") val overallRating: Float?,
-                @SerializedName("StylePctl") val styleRating: Float?,
-                @SerializedName("RateCount") val rateCount: Int?,
-                @SerializedName("BrewerCountryId") val countryId: Int?,
-                @SerializedName("BeerStyleID") val styleId: Int?,
-                @SerializedName("BeerStyleName") val styleName: String?,
-                @SerializedName("Alcohol") val alcohol: Float?,
-                @SerializedName("IBU") val ibu: Float?,
-                @SerializedName("Description") val description: String?,
-                @SerializedName("IsAlias") val isAlias: Boolean?,
-                @SerializedName("Retired") val isRetired: Boolean?,
-                @SerializedName("Verified") val isVerified: Boolean?,
-                @SerializedName("Unrateable") val unrateable: Boolean?,
-                @SerializedName("Liked") val tickValue: Int?,
-                @SerializedName("TimeEntered") val tickDate: ZonedDateTime?)
-    : Overwritable<Beer>() {
+data class Beer(
+    @SerializedName("BeerID") val id: Int,
+    @SerializedName("BeerName") val name: String?,
+    @SerializedName("BrewerID") val brewerId: Int?,
+    @SerializedName("BrewerName") val brewerName: String?,
+    @SerializedName("ContractBrewerID") val contractBrewerId: Int?,
+    @SerializedName("ContractBrewer") val contractBrewerName: String?,
+    @SerializedName("AverageRating") val averageRating: Float?,
+    @SerializedName("OverallPctl") val overallRating: Float?,
+    @SerializedName("StylePctl") val styleRating: Float?,
+    @SerializedName("RateCount") val rateCount: Int?,
+    @SerializedName("BrewerCountryId") val countryId: Int?,
+    @SerializedName("BeerStyleID") val styleId: Int?,
+    @SerializedName("BeerStyleName") val styleName: String?,
+    @SerializedName("Alcohol") val alcohol: Float?,
+    @SerializedName("IBU") val ibu: Float?,
+    @SerializedName("Description") val description: String?,
+    @SerializedName("IsAlias") val isAlias: Boolean?,
+    @SerializedName("Retired") val isRetired: Boolean?,
+    @SerializedName("Verified") val isVerified: Boolean?,
+    @SerializedName("Unrateable") val unrateable: Boolean?,
+    @SerializedName("Liked") val tickValue: Int?,
+    @SerializedName("TimeEntered") val tickDate: ZonedDateTime?
+) : Overwritable<Beer>() {
 
     fun basicDataMissing(): Boolean {
         return brewerId == null || !styleName.hasValue()
@@ -59,9 +60,9 @@ data class Beer(@SerializedName("BeerID") val id: Int,
 
     fun rating(): Int {
         return ofObj(overallRating)
-                .filter { value -> value > 0.0 }
-                .map { Math.round(it) }
-                .orDefault { -1 }
+            .filter { value -> value > 0.0 }
+            .map { Math.round(it) }
+            .orDefault { -1 }
     }
 
     fun imageUri(): String {

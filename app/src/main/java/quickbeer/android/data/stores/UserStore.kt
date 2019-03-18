@@ -21,7 +21,9 @@ import android.content.ContentResolver
 import com.google.gson.Gson
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.User
@@ -31,9 +33,12 @@ import quickbeer.android.data.stores.cores.UserStoreCore
 /**
  * Store to keep user data.
  */
-class UserStore(contentResolver: ContentResolver, gson: Gson)
-    : StoreBase<Int, User, Option<User>>(
-        CachingStoreCore(UserStoreCore(contentResolver, gson), Function { Constants.DEFAULT_USER_ID }, BiFunction { v1, v2 -> User.merge(v1, v2) }),
+class UserStore(contentResolver: ContentResolver, gson: Gson) :
+    StoreBase<Int, User, Option<User>>(
+        CachingStoreCore(
+            UserStoreCore(contentResolver, gson),
+            Function { Constants.DEFAULT_USER_ID },
+            BiFunction { v1, v2 -> User.merge(v1, v2) }),
         GetIdForItem { Constants.DEFAULT_USER_ID },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<User>() })

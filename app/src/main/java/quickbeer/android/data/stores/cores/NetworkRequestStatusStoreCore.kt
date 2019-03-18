@@ -28,8 +28,8 @@ import quickbeer.android.data.columns.JsonIdColumns
 import quickbeer.android.data.columns.NetworkRequestStatusColumns
 import quickbeer.android.data.providers.RateBeerProvider
 
-class NetworkRequestStatusStoreCore(contentResolver: ContentResolver, gson: Gson)
-    : StoreCoreBase<Int, NetworkRequestStatus>(contentResolver, gson) {
+class NetworkRequestStatusStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, NetworkRequestStatus>(contentResolver, gson) {
 
     override fun <R> groupOperations(source: Observable<R>): Observable<List<R>> {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.

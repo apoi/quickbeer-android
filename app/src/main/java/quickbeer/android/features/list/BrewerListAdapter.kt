@@ -27,11 +27,12 @@ import quickbeer.android.data.stores.CountryStore
 import quickbeer.android.utils.kotlin.contentsEqual
 import quickbeer.android.viewmodels.BrewerViewModel
 import quickbeer.android.views.viewholders.BrewerViewHolder
-import java.util.*
+import java.util.ArrayList
 
-class BrewerListAdapter(private val countryStore: CountryStore,
-                        private val onClickListener: View.OnClickListener)
-    : BaseListAdapter() {
+class BrewerListAdapter(
+    private val countryStore: CountryStore,
+    private val onClickListener: View.OnClickListener
+) : BaseListAdapter() {
 
     private val brewers = ArrayList<BrewerViewModel>(10)
 

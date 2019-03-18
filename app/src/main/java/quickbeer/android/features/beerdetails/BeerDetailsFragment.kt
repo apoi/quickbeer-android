@@ -40,7 +40,8 @@ import quickbeer.android.injections.IdModule
 import timber.log.Timber
 import javax.inject.Inject
 
-class BeerDetailsFragment : BindingBaseFragment(), RatingBar.OnRatingBarChangeListener, SwipeRefreshLayout.OnRefreshListener {
+class BeerDetailsFragment : BindingBaseFragment(), RatingBar.OnRatingBarChangeListener,
+    SwipeRefreshLayout.OnRefreshListener {
 
     @Inject
     internal lateinit var beerDetailsViewModel: BeerDetailsViewModel
@@ -62,19 +63,22 @@ class BeerDetailsFragment : BindingBaseFragment(), RatingBar.OnRatingBarChangeLi
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getBeer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ beer_details_view.setBeer(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getBrewer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ beer_details_view.setBrewer(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getUser()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -82,27 +86,27 @@ class BeerDetailsFragment : BindingBaseFragment(), RatingBar.OnRatingBarChangeLi
 
             // Re-emit beer on tick failure to reset rating bar
             disposable.add(viewModel()
-                    .tickSuccessStatus()
-                    .filter { success -> !success }
-                    .flatMap { viewModel().getBeer() }
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ beer_details_view.setBeer(it) }, { Timber.e(it) }))
+                .tickSuccessStatus()
+                .filter { success -> !success }
+                .flatMap { viewModel().getBeer() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ beer_details_view.setBeer(it) }, { Timber.e(it) }))
         }
     }
 
     override fun inject() {
         getComponent().plusId(IdModule(beerId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { state -> state.getInt(Constants.ID_KEY) }
-                .ifSome { value -> beerId = value }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { state -> state.getInt(Constants.ID_KEY) }
+            .ifSome { value -> beerId = value }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

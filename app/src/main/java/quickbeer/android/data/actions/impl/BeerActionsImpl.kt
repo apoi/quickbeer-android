@@ -41,15 +41,15 @@ import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
 import javax.inject.Inject
 
-class BeerActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerStore: BeerStore,
-            private val beerMetadataStore: BeerMetadataStore,
-            private val reviewListStore: ReviewListStore)
-    : ApplicationDataLayer(context), BeerActions {
+class BeerActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerStore: BeerStore,
+    private val beerMetadataStore: BeerMetadataStore,
+    private val reviewListStore: ReviewListStore
+) : ApplicationDataLayer(context), BeerActions {
 
-    //// API
+    // API
 
     override operator fun get(beerId: Int): Observable<DataStreamNotification<Beer>> {
         return getBeer(beerId, { it.basicDataMissing() })
@@ -61,9 +61,9 @@ constructor(context: Context,
 
     override fun fetch(beerId: Int): Single<Boolean> {
         return getBeer(beerId, { true })
-                .filter { it.isCompleted }
-                .map { it.isCompletedWithSuccess }
-                .firstOrError()
+            .filter { it.isCompleted }
+            .map { it.isCompletedWithSuccess }
+            .firstOrError()
     }
 
     override fun access(beerId: Int) {
@@ -77,14 +77,14 @@ constructor(context: Context,
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = reviewListStore.getOnce(beerId)
-                .toObservable()
-                .filter { it.isNoneOrEmpty() }
-                .doOnNext { Timber.v("Reviews not cached, fetching") }
-                .doOnNext { fetchReviews(beerId, 1) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<Int>>>() }
+            .toObservable()
+            .filter { it.isNoneOrEmpty() }
+            .doOnNext { Timber.v("Reviews not cached, fetching") }
+            .doOnNext { fetchReviews(beerId, 1) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<Int>>>() }
 
         return getReviewsResultStream(beerId)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     override fun fetchReviews(beerId: Int, page: Int) {
@@ -106,30 +106,30 @@ constructor(context: Context,
 
         val uri = TickBeerFetcher.getUniqueUri(beerId, rating)
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue()
-                .filter { it.forListener(listenerId) }
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue()
+            .filter { it.forListener(listenerId) }
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, Observable.never())
+            requestStatusObservable, Observable.never())
     }
 
-    //// BEER
+    // BEER
 
     private fun getBeer(beerId: Int, needsReload: (Beer) -> Boolean): Observable<DataStreamNotification<Beer>> {
         Timber.v("getBeer(%s)", beerId)
 
         // Trigger a fetch only if full details haven't been fetched
         val triggerFetchIfEmpty = beerStore.getOnce(beerId)
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Fetching beer data") }
-                .doOnNext { triggerBeerFetch(beerId) }
-                .flatMap { Observable.empty<DataStreamNotification<Beer>>() }
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Fetching beer data") }
+            .doOnNext { triggerBeerFetch(beerId) }
+            .flatMap { Observable.empty<DataStreamNotification<Beer>>() }
 
         return getBeerResultStream(beerId)
-                .mergeWith(triggerFetchIfEmpty)
-                .distinctUntilChanged()
+            .mergeWith(triggerFetchIfEmpty)
+            .distinctUntilChanged()
     }
 
     private fun getBeerResultStream(beerId: Int): Observable<DataStreamNotification<Beer>> {
@@ -138,14 +138,14 @@ constructor(context: Context,
         val uri = BeerFetcher.getUniqueUri(beerId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue() // No need to filter stale statuses
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue() // No need to filter stale statuses
 
         val beerObservable = beerStore.getOnceAndStream(beerId)
-                .filterToValue()
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerObservable)
+            requestStatusObservable, beerObservable)
     }
 
     private fun triggerBeerFetch(beerId: Int): Int {
@@ -162,21 +162,24 @@ constructor(context: Context,
         return listenerId
     }
 
-    //// GET REVIEWS
+    // GET REVIEWS
 
-    private fun getReviews(beerId: Int, needsReload: (ItemList<Int>) -> Boolean): Observable<DataStreamNotification<ItemList<Int>>> {
+    private fun getReviews(
+        beerId: Int,
+        needsReload: (ItemList<Int>) -> Boolean
+    ): Observable<DataStreamNotification<ItemList<Int>>> {
         Timber.v("getReviews(%s)", beerId)
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = reviewListStore.getOnce(beerId)
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Reviews not cached, fetching") }
-                .doOnNext { triggerReviewsFetch(beerId, 1) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<Int>>>() }
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Reviews not cached, fetching") }
+            .doOnNext { triggerReviewsFetch(beerId, 1) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<Int>>>() }
 
         return getReviewsResultStream(beerId)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     private fun getReviewsResultStream(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>> {
@@ -184,14 +187,15 @@ constructor(context: Context,
 
         val uri = ReviewFetcher.getUniqueUri(beerId)
 
-        val requestStatusObservable = requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+        val requestStatusObservable =
+            requestStatusStore.getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
                 .filterToValue() // No need to filter stale statuses?
 
         val reviewListObservable = reviewListStore.getOnceAndStream(beerId)
-                .filterToValue()
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, reviewListObservable)
+            requestStatusObservable, reviewListObservable)
     }
 
     private fun triggerReviewsFetch(beerId: Int, page: Int): Int {

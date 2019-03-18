@@ -29,11 +29,13 @@ import quickbeer.android.R
 import quickbeer.android.data.pojos.SimpleItem
 import quickbeer.android.views.viewholders.SimpleListItemViewHolder
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Collections
 
-class SimpleListAdapter(countries: Collection<SimpleItem>,
-                        private val onClickListener: View.OnClickListener)
-    : BaseListAdapter() {
+class SimpleListAdapter(
+    countries: Collection<SimpleItem>,
+    private val onClickListener: View.OnClickListener
+) : BaseListAdapter() {
 
     private val sourceList: List<SimpleItem>
 

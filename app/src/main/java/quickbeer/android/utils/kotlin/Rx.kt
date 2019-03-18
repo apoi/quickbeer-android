@@ -23,8 +23,10 @@ import polanski.option.Option
 import polanski.option.OptionUnsafe
 
 fun <T> Observable<Option<T>>.filterToValue(): Observable<T> {
-    return compose { filter { it.isSome }
-            .map { OptionUnsafe.getUnsafe(it) } }
+    return compose {
+        filter { it.isSome }
+            .map { OptionUnsafe.getUnsafe(it) }
+    }
 }
 
 fun <T> Single<Option<T>>.valueOrError(): Single<T> {

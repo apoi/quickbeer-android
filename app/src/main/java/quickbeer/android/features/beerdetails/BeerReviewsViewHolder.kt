@@ -57,16 +57,16 @@ class BeerReviewsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     init {
         (view.context as InjectingDrawerActivity)
-                .getComponent()
-                .inject(this)
+            .getComponent()
+            .inject(this)
     }
 
     fun setReview(review: Review) {
         checkNotNull(review)
 
-        val metadata = (review.userName
-                + (if (review.country != null) ", " + review.country else "")
-                + "\n" + review.timeEntered.formatDate())
+        val metadata = (review.userName +
+            (if (review.country != null) ", " + review.country else "") +
+            "\n" + review.timeEntered.formatDate())
 
         user.text = metadata
         score.text = String.format("%.1f", review.totalScore)

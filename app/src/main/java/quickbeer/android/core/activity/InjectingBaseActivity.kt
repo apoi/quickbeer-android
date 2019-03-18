@@ -37,7 +37,7 @@ abstract class InjectingBaseActivity : AppCompatActivity() {
     fun getComponent(): ActivityComponent {
         if (component == null) {
             component = (application as QuickBeer).graph()
-                    .plusActivity(ActivityModule(this))
+                .plusActivity(ActivityModule(this))
         }
 
         return component!!

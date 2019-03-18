@@ -26,20 +26,20 @@ import quickbeer.android.data.pojos.User
 import quickbeer.android.utils.kotlin.filterToValue
 import javax.inject.Inject
 
-class ProfileDetailsViewModel @Inject
-constructor(private val userActions: UserActions,
-            private val reviewActions: ReviewActions)
-    : SimpleViewModel() {
+class ProfileDetailsViewModel @Inject constructor(
+    private val userActions: UserActions,
+    private val reviewActions: ReviewActions
+) : SimpleViewModel() {
 
     fun getUser(): Observable<User> {
         return userActions.getUser()
-                .filterToValue()
+            .filterToValue()
     }
 
     fun getTicksOnce(userId: Int): Observable<List<Int>> {
         return reviewActions.getTicks(userId.toString())
-                .filter { it.isOnNext }
-                .map { get(it.value) }
-                .map { it.items }
+            .filter { it.isOnNext }
+            .map { get(it.value) }
+            .map { it.items }
     }
 }

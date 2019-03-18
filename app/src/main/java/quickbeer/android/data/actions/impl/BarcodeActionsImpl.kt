@@ -35,28 +35,28 @@ import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
 import javax.inject.Inject
 
-class BarcodeActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerListStore: BeerListStore)
-    : ApplicationDataLayer(context), BarcodeActions {
+class BarcodeActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerListStore: BeerListStore
+) : ApplicationDataLayer(context), BarcodeActions {
 
-    //// BARCODE SEARCH
+    // BARCODE SEARCH
 
     override operator fun get(barcode: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBarcodeSearch(%s)", barcode)
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-                .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
-                .toObservable()
-                .filter { it.isNoneOrEmpty() }
-                .doOnNext { Timber.v("Search not cached, fetching") }
-                .doOnNext { fetchBarcodeSearch(barcode) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
+            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
+            .toObservable()
+            .filter { it.isNoneOrEmpty() }
+            .doOnNext { Timber.v("Search not cached, fetching") }
+            .doOnNext { fetchBarcodeSearch(barcode) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
 
         return getBarcodeSearchResultStream(barcode)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     override fun fetch(barcode: String): Single<Boolean> {
@@ -70,15 +70,15 @@ constructor(context: Context,
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue() // No need to filter stale statuses?
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue() // No need to filter stale statuses?
 
         val barcodeSearchObservable = beerListStore
-                .getOnceAndStream(queryId)
-                .filterToValue()
+            .getOnceAndStream(queryId)
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, barcodeSearchObservable)
+            requestStatusObservable, barcodeSearchObservable)
     }
 
     private fun fetchBarcodeSearch(barcode: String): Int {

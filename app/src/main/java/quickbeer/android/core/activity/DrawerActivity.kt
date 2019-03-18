@@ -48,16 +48,16 @@ abstract class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigation
         navigationView.setNavigationItemSelectedListener(this)
 
         Option.ofObj(navigationView.getHeaderView(0))
-                .ifSome { setHeaderClickListener(it) }
+            .ifSome { setHeaderClickListener(it) }
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
         drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         drawerToggle = ActionBarDrawerToggle(
-                this, drawerLayout, findViewById<Toolbar>(R.id.toolbar),
-                R.string.action_drawer_open,
-                R.string.action_drawer_close)
+            this, drawerLayout, findViewById<Toolbar>(R.id.toolbar),
+            R.string.action_drawer_open,
+            R.string.action_drawer_close)
 
         supportActionBar!!.apply {
             setDisplayHomeAsUpEnabled(true)

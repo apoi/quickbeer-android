@@ -31,32 +31,33 @@ import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.ValueUtils
 import quickbeer.android.utils.kotlin.ZonedDateTime
 import quickbeer.android.utils.kotlin.orEpoch
-import java.util.*
+import java.util.ArrayList
 
-class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BeerMetadata>(contentResolver, gson) {
+class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, BeerMetadata>(contentResolver, gson) {
 
     fun getAccessedIdsOnce(idColumn: String, accessColumn: String): Observable<List<Int>> {
         return Observable
-                .fromCallable<List<Int>> {
-                    val projection = arrayOf(idColumn)
-                    val selection = String.format("%s > 0", accessColumn) // Has access date
-                    val orderBy = String.format("%s DESC", accessColumn) // Sort by date
+            .fromCallable<List<Int>> {
+                val projection = arrayOf(idColumn)
+                val selection = String.format("%s > 0", accessColumn) // Has access date
+                val orderBy = String.format("%s DESC", accessColumn) // Sort by date
 
-                    val idList = ArrayList<Int>(10)
-                    val cursor = contentResolver.query(contentUri, projection, selection, null, orderBy)
+                val idList = ArrayList<Int>(10)
+                val cursor = contentResolver.query(contentUri, projection, selection, null, orderBy)
 
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            do {
-                                idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)))
-                            } while (cursor.moveToNext())
-                        }
-                        cursor.close()
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        do {
+                            idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)))
+                        } while (cursor.moveToNext())
                     }
-
-                    idList
+                    cursor.close()
                 }
-                .subscribeOn(Schedulers.io())
+
+                idList
+            }
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getUriForId(id: Int): Uri {
@@ -72,7 +73,13 @@ class BeerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : Stor
     }
 
     override fun getProjection(): Array<String> {
-        return arrayOf(BeerMetadataColumns.ID, BeerMetadataColumns.UPDATED, BeerMetadataColumns.ACCESSED, BeerMetadataColumns.REVIEW_ID, BeerMetadataColumns.MODIFIED)
+        return arrayOf(
+            BeerMetadataColumns.ID,
+            BeerMetadataColumns.UPDATED,
+            BeerMetadataColumns.ACCESSED,
+            BeerMetadataColumns.REVIEW_ID,
+            BeerMetadataColumns.MODIFIED
+        )
     }
 
     override fun read(cursor: Cursor): BeerMetadata {

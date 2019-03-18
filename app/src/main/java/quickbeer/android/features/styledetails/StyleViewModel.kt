@@ -33,14 +33,14 @@ import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class StyleViewModel @Inject
-internal constructor(@Named("id") private val styleId: Int,
-                     private val styleActions: StyleActions,
-                     beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
-                     searchViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
+class StyleViewModel @Inject internal constructor(
+    @Named("id") private val styleId: Int,
+    private val styleActions: StyleActions,
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    searchViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
 
     fun getStyle(): Single<Option<BeerStyle>> {
         return styleActions.get(styleId)
@@ -48,10 +48,10 @@ internal constructor(@Named("id") private val styleId: Int,
 
     fun getParentStyle(): Single<Option<BeerStyle>> {
         return getStyle()
-                .toObservable()
-                .filterToValue()
-                .firstOrError()
-                .flatMap { styleActions.get(it.parent) }
+            .toObservable()
+            .filterToValue()
+            .firstOrError()
+            .flatMap { styleActions.get(it.parent) }
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {

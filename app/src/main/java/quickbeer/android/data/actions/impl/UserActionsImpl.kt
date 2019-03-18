@@ -35,11 +35,11 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class UserActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val userStore: UserStore)
-    : ApplicationDataLayer(context), UserActions {
+class UserActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val userStore: UserStore
+) : ApplicationDataLayer(context), UserActions {
 
     override fun login(username: String, password: String): Observable<DataStreamNotification<User>> {
         Timber.v("login(%s)", username)
@@ -67,16 +67,16 @@ constructor(context: Context,
         val uri = LoginFetcher.getUniqueUri()
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue()
-                .filter { it.forListener(listenerId) }
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue()
+            .filter { it.forListener(listenerId) }
 
         val userObservable = userStore
-                .getOnceAndStream(Constants.DEFAULT_USER_ID)
-                .filterToValue()
+            .getOnceAndStream(Constants.DEFAULT_USER_ID)
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, userObservable)
+            requestStatusObservable, userObservable)
     }
 
     override fun getUser(): Observable<Option<User>> {

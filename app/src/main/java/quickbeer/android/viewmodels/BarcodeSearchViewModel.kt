@@ -27,13 +27,13 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import javax.inject.Inject
 
-class BarcodeSearchViewModel @Inject
-internal constructor(beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
-                     private val barcodeActions: BarcodeActions,
-                     searchViewViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class BarcodeSearchViewModel @Inject internal constructor(
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    private val barcodeActions: BarcodeActions,
+    searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     private var barcode = ""
 
@@ -47,6 +47,6 @@ internal constructor(beerActions: BeerActions,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return barcodeActions.fetch(barcode)
-                .flatMapObservable { dataSource() }
+            .flatMapObservable { dataSource() }
     }
 }

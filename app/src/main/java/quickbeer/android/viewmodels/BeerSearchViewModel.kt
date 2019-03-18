@@ -28,18 +28,19 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class BeerSearchViewModel @Inject
-internal constructor(@Named("query") private var query: String,
-                     beerActions: BeerActions,
-                     private val beerSearchActions: BeerSearchActions,
-                     private val searchViewViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class BeerSearchViewModel @Inject internal constructor(
+    @Named("query") private var query: String,
+    beerActions: BeerActions,
+    private val beerSearchActions: BeerSearchActions,
+    private val searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     override fun bind(disposable: CompositeDisposable) {
         super.bind(disposable)
 
-        disposable.add(searchViewViewModel.getQueryStream()
+        disposable.add(
+            searchViewViewModel.getQueryStream()
                 .subscribe({ query = it }, { Timber.e(it) }))
     }
 
@@ -49,6 +50,6 @@ internal constructor(@Named("query") private var query: String,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerSearchActions.fetchSearch(query)
-                .flatMapObservable { dataSource() }
+            .flatMapObservable { dataSource() }
     }
 }

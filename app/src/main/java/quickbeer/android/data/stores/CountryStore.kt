@@ -19,29 +19,31 @@ package quickbeer.android.data.stores
 
 import com.google.gson.Gson
 import io.reark.reark.data.stores.DefaultStore
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.stores.cores.CountryStoreCore
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.utils.SimpleListSource
 
-class CountryStore(resourceProvider: ResourceProvider, gson: Gson)
-    : DefaultStore<Int, Country, Option<Country>>(
+class CountryStore(resourceProvider: ResourceProvider, gson: Gson) :
+    DefaultStore<Int, Country, Option<Country>>(
         CountryStoreCore(resourceProvider, gson),
         GetIdForItem { it.id },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<Country>() }),
-        SimpleListSource<Country> {
+    SimpleListSource<Country> {
 
     override fun getItem(id: Int): Country {
         return getOnce(id)
-                .blockingGet()
-                .orDefault { null }
+            .blockingGet()
+            .orDefault { null }
     }
 
     override fun getList(): Collection<Country> {
         return getOnce()
-                .blockingGet()
+            .blockingGet()
     }
 }

@@ -26,7 +26,7 @@ import quickbeer.android.adapters.BaseListAdapter
 import quickbeer.android.utils.kotlin.contentsEqual
 import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.views.viewholders.BeerViewHolder
-import java.util.*
+import java.util.ArrayList
 
 class BeerListAdapter(private val onClickListener: View.OnClickListener) : BaseListAdapter() {
 

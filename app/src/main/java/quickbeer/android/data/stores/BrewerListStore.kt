@@ -21,7 +21,9 @@ import android.content.ContentResolver
 import com.google.gson.Gson
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.cores.BrewerListStoreCore
@@ -30,8 +32,8 @@ import quickbeer.android.data.stores.cores.CachingStoreCore
 /**
  * Class storing brewer lists related to a string key, such as a search.
  */
-class BrewerListStore(contentResolver: ContentResolver, gson: Gson)
-    : StoreBase<String, ItemList<String>, Option<ItemList<String>>>(
+class BrewerListStore(contentResolver: ContentResolver, gson: Gson) :
+    StoreBase<String, ItemList<String>, Option<ItemList<String>>>(
         CachingStoreCore(BrewerListStoreCore(contentResolver, gson), Function { it.key }, BiFunction { _, v2 -> v2 }),
         GetIdForItem { it.key },
         GetNullSafe { Option.ofObj(it) },

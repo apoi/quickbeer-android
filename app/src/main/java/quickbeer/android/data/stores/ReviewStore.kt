@@ -21,15 +21,20 @@ import android.content.ContentResolver
 import com.google.gson.Gson
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.cores.CachingStoreCore
 import quickbeer.android.data.stores.cores.ReviewStoreCore
 
-class ReviewStore(contentResolver: ContentResolver, gson: Gson)
-    : StoreBase<Int, Review, Option<Review>>(
-        CachingStoreCore(ReviewStoreCore(contentResolver, gson), Function { it.id }, BiFunction { v1, v2 -> Review.merge(v1, v2) }),
+class ReviewStore(contentResolver: ContentResolver, gson: Gson) :
+    StoreBase<Int, Review, Option<Review>>(
+        CachingStoreCore(
+            ReviewStoreCore(contentResolver, gson),
+            Function { it.id },
+            BiFunction { v1, v2 -> Review.merge(v1, v2) }),
         GetIdForItem { it.id },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<Review>() })

@@ -82,8 +82,8 @@ class StyleDetailsPagerFragment : BaseFragment() {
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
                     get(analytics).createEvent(
-                            if (position == 0) Screen.STYLE_DETAILS
-                            else Screen.STYLE_BEERS
+                        if (position == 0) Screen.STYLE_DETAILS
+                        else Screen.STYLE_BEERS
                     )
                 }
             })
@@ -96,5 +96,4 @@ class StyleDetailsPagerFragment : BaseFragment() {
         outState.putInt(Constants.ID_KEY, styleId)
         super.onSaveInstanceState(outState)
     }
-
 }

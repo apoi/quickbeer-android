@@ -41,9 +41,9 @@ class BeerSearchFragment : BeerListFragment() {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { state -> state.getString("query") }
-                .ifSome { value -> initialQuery = value }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { state -> state.getString("query") }
+            .ifSome { value -> initialQuery = value }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -55,7 +55,7 @@ class BeerSearchFragment : BeerListFragment() {
         super.inject()
 
         getComponent().plusSearch(SearchModule(initialQuery))
-                .inject(this)
+            .inject(this)
     }
 
     override fun viewModel(): BeerListViewModel {

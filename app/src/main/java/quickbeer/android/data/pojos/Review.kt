@@ -21,25 +21,26 @@ import com.google.gson.annotations.SerializedName
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.pojos.base.Overwritable
 
-data class Review(@SerializedName("RatingID") val id: Int,
-                  @SerializedName("Appearance") val appearance: Int?,
-                  @SerializedName("Aroma") val aroma: Int?,
-                  @SerializedName("Flavor") val flavor: Int?,
-                  @SerializedName("Mouthfeel") val mouthfeel: Int?,
-                  @SerializedName("Overall") val overall: Int?,
-                  @SerializedName("TotalScore") val totalScore: Float?,
-                  @SerializedName("Comments") val comments: String?,
-                  @SerializedName("TimeEntered") val timeEntered: ZonedDateTime?,
-                  @SerializedName("TimeUpdated") val timeUpdated: ZonedDateTime?,
-                  @SerializedName("UserID") val userID: Int?,
-                  @SerializedName("UserName") val userName: String?,
-                  @SerializedName("City") val city: String?,
-                  @SerializedName("StateID") val stateID: Int?,
-                  @SerializedName("State") val state: String?,
-                  @SerializedName("CountryID") val countryID: Int?,
-                  @SerializedName("Country") val country: String?,
-                  @SerializedName("RateCount") val rateCount: Int?)
-    : Overwritable<Review>() {
+data class Review(
+    @SerializedName("RatingID") val id: Int,
+    @SerializedName("Appearance") val appearance: Int?,
+    @SerializedName("Aroma") val aroma: Int?,
+    @SerializedName("Flavor") val flavor: Int?,
+    @SerializedName("Mouthfeel") val mouthfeel: Int?,
+    @SerializedName("Overall") val overall: Int?,
+    @SerializedName("TotalScore") val totalScore: Float?,
+    @SerializedName("Comments") val comments: String?,
+    @SerializedName("TimeEntered") val timeEntered: ZonedDateTime?,
+    @SerializedName("TimeUpdated") val timeUpdated: ZonedDateTime?,
+    @SerializedName("UserID") val userID: Int?,
+    @SerializedName("UserName") val userName: String?,
+    @SerializedName("City") val city: String?,
+    @SerializedName("StateID") val stateID: Int?,
+    @SerializedName("State") val state: String?,
+    @SerializedName("CountryID") val countryID: Int?,
+    @SerializedName("Country") val country: String?,
+    @SerializedName("RateCount") val rateCount: Int?
+) : Overwritable<Review>() {
 
     override fun getTypeParameterClass(): Class<Review> {
         return Review::class.java

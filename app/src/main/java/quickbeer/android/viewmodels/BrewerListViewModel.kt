@@ -30,10 +30,11 @@ import quickbeer.android.providers.ProgressStatusProvider
 import timber.log.Timber
 
 abstract class BrewerListViewModel
-protected constructor(private val beerActions: BeerActions,
-                      private val brewerActions: BrewerActions,
-                      private val progressStatusProvider: ProgressStatusProvider)
-    : NetworkViewModel<ItemList<String>>() {
+protected constructor(
+    private val beerActions: BeerActions,
+    private val brewerActions: BrewerActions,
+    private val progressStatusProvider: ProgressStatusProvider
+) : NetworkViewModel<ItemList<String>>() {
 
     private val brewers = PublishSubject.create<List<BrewerViewModel>>()
 
@@ -53,39 +54,40 @@ protected constructor(private val beerActions: BeerActions,
 
     override fun bind(disposable: CompositeDisposable) {
         val sharedObservable = sourceObservable()
-                .subscribeOn(Schedulers.computation())
-                .publish()
+            .subscribeOn(Schedulers.computation())
+            .publish()
 
         // Construct progress status. Completed with value means we'll receive onNext.
         disposable.add(sharedObservable
-                .filter { !it.isCompletedWithValue }
-                .map(toProgressStatus())
-                .startWith(NetworkViewModel.ProgressStatus.LOADING)
-                .distinctUntilChanged()
-                .subscribe { setProgressStatus(it) })
+            .filter { !it.isCompletedWithValue }
+            .map(toProgressStatus())
+            .startWith(NetworkViewModel.ProgressStatus.LOADING)
+            .distinctUntilChanged()
+            .subscribe { setProgressStatus(it) })
 
         // Clear list on fetching start
         disposable.add(sharedObservable
-                .filter { it.isOngoing }
-                .map { emptyList<BrewerViewModel>() }
-                .subscribe { brewers.onNext(it) })
+            .filter { it.isOngoing }
+            .map { emptyList<BrewerViewModel>() }
+            .subscribe { brewers.onNext(it) })
 
         // Actual update
         disposable.add(sharedObservable
-                .filter { it.isOnNext }
-                .map { get(it.value) }
-                .doOnNext { Timber.d("Search finished") }
-                .flatMapSingle {
-                    Observable.fromIterable(it.items)
-                            .map { BrewerViewModel(it, beerActions, brewerActions, progressStatusProvider) }
-                            .toList()
-                }
-                .doOnNext { Timber.d("Publishing ${it.size} brewers") }
-                .subscribe { brewers.onNext(it) })
+            .filter { it.isOnNext }
+            .map { get(it.value) }
+            .doOnNext { Timber.d("Search finished") }
+            .flatMapSingle {
+                Observable.fromIterable(it.items)
+                    .map { BrewerViewModel(it, beerActions, brewerActions, progressStatusProvider) }
+                    .toList()
+            }
+            .doOnNext { Timber.d("Publishing ${it.size} brewers") }
+            .subscribe { brewers.onNext(it) })
 
         // Share progress status to progress provider
         if (reportsProgress()) {
-            disposable.add(progressStatusProvider
+            disposable.add(
+                progressStatusProvider
                     .addProgressObservable(sharedObservable.map { it }))
         }
 

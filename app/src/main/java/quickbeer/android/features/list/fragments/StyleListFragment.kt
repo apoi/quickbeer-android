@@ -50,11 +50,13 @@ class StyleListFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getQueryStream()
                     .subscribe({ view.setFilter(it) }, { Timber.e(it) }))
 
-            disposable.add(view
+            disposable.add(
+                view
                     .selectionStream()
                     .subscribe({ navigateToStyle(it) }, { Timber.e(it) }))
         }
@@ -76,7 +78,7 @@ class StyleListFragment : BindingBaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        
+
         view.setListSource(beerStyleStore)
         searchViewViewModel.setMode(Mode.FILTER, getString(R.string.search_box_hint_filter_styles))
     }

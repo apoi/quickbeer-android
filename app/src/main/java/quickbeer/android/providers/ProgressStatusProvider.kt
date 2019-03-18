@@ -44,11 +44,11 @@ class ProgressStatusProvider {
         val progressId = createId()
 
         return notificationObservable
-                .observeOn(Schedulers.computation())
-                .filter { !it.isOnNext } // Only interested in status changes
-                .map{ toProgress(it) }
-                .doOnDispose { finishProgress(progressId) }
-                .subscribe({ addProgress(progressId, it) }, { Timber.w(it) })
+            .observeOn(Schedulers.computation())
+            .filter { !it.isOnNext } // Only interested in status changes
+            .map { toProgress(it) }
+            .doOnDispose { finishProgress(progressId) }
+            .subscribe({ addProgress(progressId, it) }, { Timber.w(it) })
     }
 
     fun progressStatus(): Observable<ProgressStatus> {

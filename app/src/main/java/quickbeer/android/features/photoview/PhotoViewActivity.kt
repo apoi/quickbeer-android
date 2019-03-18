@@ -48,8 +48,8 @@ class PhotoViewActivity : InjectingBaseActivity() {
 
     private fun initImageView(source: String) {
         picasso.load(source)
-                .centerInside()
-                .fit()
-                .into(photo_view)
+            .centerInside()
+            .fit()
+            .into(photo_view)
     }
 }

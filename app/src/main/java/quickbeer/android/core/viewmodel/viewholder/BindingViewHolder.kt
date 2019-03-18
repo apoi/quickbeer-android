@@ -24,8 +24,7 @@ import io.reark.reark.utils.Preconditions.checkNotNull
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.ViewModel
 
-abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View)
-    : RecyclerView.ViewHolder(view) {
+abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View) : RecyclerView.ViewHolder(view) {
 
     protected abstract val viewDataBinder: DataBinder
 

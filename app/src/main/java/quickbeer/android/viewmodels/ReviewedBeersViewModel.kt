@@ -30,14 +30,14 @@ import quickbeer.android.data.pojos.User
 import quickbeer.android.providers.ProgressStatusProvider
 import javax.inject.Inject
 
-class ReviewedBeersViewModel @Inject
-internal constructor(private val userActions: UserActions,
-                     private val reviewActions: ReviewActions,
-                     beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
-                     searchViewViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class ReviewedBeersViewModel @Inject internal constructor(
+    private val userActions: UserActions,
+    private val reviewActions: ReviewActions,
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     fun getUser(): Observable<Option<User>> {
         return userActions.getUser()
@@ -49,18 +49,20 @@ internal constructor(private val userActions: UserActions,
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return userActions.getUser()
-                .flatMap { it.match(
-                        { reviewActions.getReviews(it.id.toString()) },
-                        { Observable.just(DataStreamNotification.completedWithoutValue<ItemList<String>>()) }
-                )}
+            .flatMap {
+                it.match(
+                    { reviewActions.getReviews(it.id.toString()) },
+                    { Observable.just(DataStreamNotification.completedWithoutValue<ItemList<String>>()) })
+            }
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return userActions.getUser()
-                .flatMapSingle { it.match(
-                        { reviewActions.fetchReviews(it.id.toString()) },
-                        { Single.just(false) }
-                )}
-                .flatMap { dataSource() }
+            .flatMapSingle {
+                it.match(
+                    { reviewActions.fetchReviews(it.id.toString()) },
+                    { Single.just(false) })
+            }
+            .flatMap { dataSource() }
     }
 }

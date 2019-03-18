@@ -55,7 +55,8 @@ class StyleDetailsFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getStyle()
                     .toObservable()
                     .filterToValue()
@@ -63,7 +64,8 @@ class StyleDetailsFragment : BindingBaseFragment() {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ style_details_view.setStyle(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getParentStyle()
                     .toObservable()
                     .filterToValue()
@@ -103,7 +105,6 @@ class StyleDetailsFragment : BindingBaseFragment() {
 
     override fun inject() {
         getComponent().plusId(IdModule(styleId))
-                .inject(this)
+            .inject(this)
     }
 }
-

@@ -49,13 +49,14 @@ class BrewerDetailsPagerFragment : BaseFragment() {
             return fragment
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { it.getInt(Constants.ID_KEY) }
-                .ifSome { brewerId = it }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { it.getInt(Constants.ID_KEY) }
+            .ifSome { brewerId = it }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

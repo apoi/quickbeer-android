@@ -28,13 +28,15 @@ package quickbeer.android.data.stores
 import android.content.ContentResolver
 import com.google.gson.Gson
 import io.reark.reark.data.stores.DefaultStore
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import io.reark.reark.pojo.NetworkRequestStatus
 import polanski.option.Option
 import quickbeer.android.data.stores.cores.NetworkRequestStatusStoreCore
 
-class NetworkRequestStatusStore(contentResolver: ContentResolver, gson: Gson)
-    : DefaultStore<Int, NetworkRequestStatus, Option<NetworkRequestStatus>>(
+class NetworkRequestStatusStore(contentResolver: ContentResolver, gson: Gson) :
+    DefaultStore<Int, NetworkRequestStatus, Option<NetworkRequestStatus>>(
         NetworkRequestStatusStoreCore(contentResolver, gson),
         GetIdForItem { status -> requestIdForUri(status.uri) },
         GetNullSafe { Option.ofObj(it) },

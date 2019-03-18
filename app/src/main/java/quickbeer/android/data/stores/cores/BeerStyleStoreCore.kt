@@ -26,12 +26,13 @@ import quickbeer.android.providers.ResourceProvider
 import timber.log.Timber
 import java.io.IOException
 import java.io.InputStreamReader
-import java.util.*
+import java.util.ArrayList
 import javax.inject.Inject
 
-class BeerStyleStoreCore @Inject
-internal constructor(resourceProvider: ResourceProvider, gson: Gson)
-    : MemoryStoreCore<Int, BeerStyle>() {
+class BeerStyleStoreCore @Inject internal constructor(
+    resourceProvider: ResourceProvider,
+    gson: Gson
+) : MemoryStoreCore<Int, BeerStyle>() {
 
     init {
         try {
@@ -44,8 +45,7 @@ internal constructor(resourceProvider: ResourceProvider, gson: Gson)
             reader.close()
             input.close()
 
-            styleList.forEach{ put(it.id, it) }
-
+            styleList.forEach { put(it.id, it) }
         } catch (e: IOException) {
             Timber.e(e, "Failed reading styles!")
         }

@@ -32,8 +32,7 @@ import quickbeer.android.utils.StringUtils
 import quickbeer.android.viewmodels.BeerViewModel
 import timber.log.Timber
 
-class BeerViewHolder(view: View, onClickListener: View.OnClickListener)
-    : BindingViewHolder<BeerViewModel>(view) {
+class BeerViewHolder(view: View, onClickListener: View.OnClickListener) : BindingViewHolder<BeerViewModel>(view) {
 
     private val ratingTextView: TextView = view.beer_stars
     private val nameTextView: TextView = view.beer_name
@@ -48,7 +47,8 @@ class BeerViewHolder(view: View, onClickListener: View.OnClickListener)
         override fun bind(disposable: CompositeDisposable) {
             clearViews()
 
-            disposable.add(getViewModel()!!
+            disposable.add(
+                getViewModel()!!
                     .getBeer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

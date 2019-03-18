@@ -22,16 +22,21 @@ import com.google.gson.Gson
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Function
-import io.reark.reark.data.stores.DefaultStore.*
+import io.reark.reark.data.stores.DefaultStore.GetEmptyValue
+import io.reark.reark.data.stores.DefaultStore.GetIdForItem
+import io.reark.reark.data.stores.DefaultStore.GetNullSafe
 import polanski.option.Option
 import quickbeer.android.data.columns.BeerMetadataColumns
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.stores.cores.BeerMetadataStoreCore
 import quickbeer.android.data.stores.cores.CachingStoreCore
 
-class BeerMetadataStore(contentResolver: ContentResolver, gson: Gson)
-    : StoreBase<Int, BeerMetadata, Option<BeerMetadata>>(
-        CachingStoreCore(BeerMetadataStoreCore(contentResolver, gson), Function { it.beerId }, BiFunction { v1, v2 -> BeerMetadata.merge(v1, v2) }),
+class BeerMetadataStore(contentResolver: ContentResolver, gson: Gson) :
+    StoreBase<Int, BeerMetadata, Option<BeerMetadata>>(
+        CachingStoreCore(
+            BeerMetadataStoreCore(contentResolver, gson),
+            Function { it.beerId },
+            BiFunction { v1, v2 -> BeerMetadata.merge(v1, v2) }),
         GetIdForItem { it.beerId },
         GetNullSafe { Option.ofObj(it) },
         GetEmptyValue { Option.none<BeerMetadata>() }) {

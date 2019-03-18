@@ -18,7 +18,7 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import java.util.*
+import java.util.UUID
 
 open class ApplicationDataLayer
 constructor(protected val context: Context) {

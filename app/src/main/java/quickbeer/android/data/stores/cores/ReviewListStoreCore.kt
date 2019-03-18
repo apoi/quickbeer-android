@@ -30,9 +30,10 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.kotlin.ZonedDateTime
 import quickbeer.android.utils.kotlin.orEpoch
-import java.util.*
+import java.util.LinkedHashSet
 
-class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, ItemList<Int>>(contentResolver, gson) {
+class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, ItemList<Int>>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
         return RateBeerProvider.ReviewLists.withBeerId(get(id))

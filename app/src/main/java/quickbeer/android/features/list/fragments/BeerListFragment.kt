@@ -54,20 +54,22 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             disposable.add(list_layout.selectedBeerStream()
-                    .doOnNext { Timber.d("Selected beer %s", it) }
-                    .subscribe({ openBeerDetails(it) }, { Timber.e(it) }))
+                .doOnNext { Timber.d("Selected beer %s", it) }
+                .subscribe({ openBeerDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel().getBeers()
+            disposable.add(
+                viewModel().getBeers()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
             disposable.add(viewModel().getProgressStatus()
-                    .map { toStatusValue(it) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
+                .map { toStatusValue(it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
-            disposable.add(get(searchViewViewModel)
+            disposable.add(
+                get(searchViewViewModel)
                     .getQueryStream()
                     .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }
@@ -104,7 +106,7 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
         searchViewViewModel.setMode(Mode.SEARCH, get(resourceProvider).getString(R.string.search_box_hint_search_beers))
     }
 
-    open protected fun getLayout(): Int {
+    protected open fun getLayout(): Int {
         return R.layout.beer_list_fragment_standalone
     }
 

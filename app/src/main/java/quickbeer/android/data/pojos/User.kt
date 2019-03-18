@@ -20,10 +20,11 @@ package quickbeer.android.data.pojos
 import com.google.gson.annotations.SerializedName
 import quickbeer.android.data.pojos.base.Overwritable
 
-data class User(@SerializedName("id") val id: Int,
-                @SerializedName("username") val username: String,
-                @SerializedName("password") val password: String)
-    : Overwritable<User>() {
+data class User(
+    @SerializedName("id") val id: Int,
+    @SerializedName("username") val username: String,
+    @SerializedName("password") val password: String
+) : Overwritable<User>() {
 
     override fun getTypeParameterClass(): Class<User> {
         return User::class.java

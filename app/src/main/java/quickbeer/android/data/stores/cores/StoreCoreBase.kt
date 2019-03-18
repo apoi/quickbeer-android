@@ -24,9 +24,10 @@ import com.google.gson.Gson
 import io.reark.reark.data.stores.cores.ContentProviderStoreCore
 import quickbeer.android.data.providers.RateBeerProvider
 
-abstract class StoreCoreBase<T, U>
-protected constructor(contentResolver: ContentResolver, protected val gson: Gson)
-    : ContentProviderStoreCore<T, U>(contentResolver) {
+abstract class StoreCoreBase<T, U> protected constructor(
+    contentResolver: ContentResolver,
+    protected val gson: Gson
+) : ContentProviderStoreCore<T, U>(contentResolver) {
 
     override fun getAuthority(): String {
         return RateBeerProvider.AUTHORITY

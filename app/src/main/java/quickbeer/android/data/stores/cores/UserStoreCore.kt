@@ -29,7 +29,8 @@ import quickbeer.android.data.columns.UserColumns
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.providers.RateBeerProvider
 
-class UserStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, User>(contentResolver, gson) {
+class UserStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, User>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
         return RateBeerProvider.Users.withId(get(id))

@@ -50,9 +50,9 @@ class CountryDetailsBeersFragment : BeerListFragment() {
         val bundle = savedInstanceState ?: arguments
 
         ofObj(bundle)
-                .map { it.getInt(Constants.ID_KEY) }
-                .ifSome { countryId = it }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { it.getInt(Constants.ID_KEY) }
+            .ifSome { countryId = it }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -68,7 +68,7 @@ class CountryDetailsBeersFragment : BeerListFragment() {
         super.inject()
 
         getComponent().plusId(IdModule(countryId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun viewModel(): BeersInCountryViewModel {

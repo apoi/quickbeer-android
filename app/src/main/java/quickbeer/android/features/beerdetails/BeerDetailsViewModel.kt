@@ -44,26 +44,26 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class BeerDetailsViewModel @Inject
-constructor(@Named("id") private val beerId: Int,
-            private val userActions: UserActions,
-            private val beerActions: BeerActions,
-            brewerActions: BrewerActions,
-            reviewActions: ReviewActions,
-            reviewListStore: ReviewListStore,
-            progressStatusProvider: ProgressStatusProvider,
-            private val resourceProvider: ResourceProvider,
-            private val notificationProvider: GlobalNotificationProvider)
-    : SimpleViewModel() {
+class BeerDetailsViewModel @Inject constructor(
+    @Named("id") private val beerId: Int,
+    private val userActions: UserActions,
+    private val beerActions: BeerActions,
+    brewerActions: BrewerActions,
+    reviewActions: ReviewActions,
+    reviewListStore: ReviewListStore,
+    progressStatusProvider: ProgressStatusProvider,
+    private val resourceProvider: ResourceProvider,
+    private val notificationProvider: GlobalNotificationProvider
+) : SimpleViewModel() {
 
     private val beerViewModel: BeerViewModel =
-            BeerViewModel(beerId, true, beerActions, progressStatusProvider)
+        BeerViewModel(beerId, true, beerActions, progressStatusProvider)
 
     private val brewerViewModel: BrewerViewModel =
-            BrewerViewModel(-1, beerId, beerActions, brewerActions, progressStatusProvider)
+        BrewerViewModel(-1, beerId, beerActions, brewerActions, progressStatusProvider)
 
     private val reviewListViewModel: ReviewListViewModel =
-            ReviewListViewModel(beerId, beerActions, reviewActions, reviewListStore, progressStatusProvider)
+        ReviewListViewModel(beerId, beerActions, reviewActions, reviewListStore, progressStatusProvider)
 
     private val tickSuccessSubject = PublishSubject.create<Boolean>()
 
@@ -79,7 +79,7 @@ constructor(@Named("id") private val beerId: Int,
 
     fun getUser(): Observable<User> {
         return userActions.getUser()
-                .filterToValue()
+            .filterToValue()
     }
 
     fun getReviews(): Observable<List<Review>> {
@@ -91,7 +91,8 @@ constructor(@Named("id") private val beerId: Int,
     }
 
     fun reloadBeerDetails() {
-        disposable.add(beerActions.fetch(beerId)
+        disposable.add(
+            beerActions.fetch(beerId)
                 .subscribe({}, { Timber.e(it) }))
     }
 
@@ -107,26 +108,28 @@ constructor(@Named("id") private val beerId: Int,
         val observable = beerActions.tick(beerId, rating).share()
 
         disposable.add(beerActions.get(beerId)
-                .filter { it.isOnNext }
-                .take(1)
-                .map { it.value }
-                .subscribe({
-                    notificationProvider.addNetworkSuccessListener(observable,
-                            chooseSuccessString(it!!, rating),
-                            resourceProvider.getString(R.string.tick_failure))
-                }, { Timber.e(it) }))
+            .filter { it.isOnNext }
+            .take(1)
+            .map { it.value }
+            .subscribe({
+                notificationProvider.addNetworkSuccessListener(
+                    observable,
+                    chooseSuccessString(it!!, rating),
+                    resourceProvider.getString(R.string.tick_failure))
+            }, { Timber.e(it) }))
 
         disposable.add(observable
-                .takeUntil { it.isCompleted }
-                .subscribe(
-                        {
-                            when (it.type) {
-                                Type.COMPLETED_WITH_VALUE, Type.COMPLETED_WITHOUT_VALUE -> tickSuccessSubject.onNext(true)
-                                Type.COMPLETED_WITH_ERROR -> tickSuccessSubject.onNext(false)
-                                Type.ONGOING, Type.ON_NEXT -> { }
-                            }
-                        },
-                        { Timber.w(it, "Error ticking beer") }))
+            .takeUntil { it.isCompleted }
+            .subscribe(
+                {
+                    when (it.type) {
+                        Type.COMPLETED_WITH_VALUE, Type.COMPLETED_WITHOUT_VALUE -> tickSuccessSubject.onNext(true)
+                        Type.COMPLETED_WITH_ERROR -> tickSuccessSubject.onNext(false)
+                        Type.ONGOING, Type.ON_NEXT -> {
+                        }
+                    }
+                },
+                { Timber.w(it, "Error ticking beer") }))
     }
 
     private fun chooseSuccessString(beer: Beer, rating: Int): String {

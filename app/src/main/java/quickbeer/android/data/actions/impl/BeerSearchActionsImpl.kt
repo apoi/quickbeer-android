@@ -36,24 +36,24 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class BeerSearchActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerListStore: BeerListStore)
-    : ApplicationDataLayer(context), BeerSearchActions {
+class BeerSearchActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerListStore: BeerListStore
+) : ApplicationDataLayer(context), BeerSearchActions {
 
-    //// SEARCH BEERS
+    // SEARCH BEERS
 
     override fun searchQueries(): Single<List<String>> {
         Timber.v("searchQueries")
 
         return beerListStore.getOnce()
-                .toObservable()
-                .flatMap { Observable.fromIterable(it) }
-                .map { it.key }
-                .filter { !it.startsWith(Constants.META_QUERY_PREFIX) }
-                .toList()
-                .map { ArrayList<String>(it) }
+            .toObservable()
+            .flatMap { Observable.fromIterable(it) }
+            .map { it.key }
+            .filter { !it.startsWith(Constants.META_QUERY_PREFIX) }
+            .toList()
+            .map { ArrayList<String>(it) }
     }
 
     override fun search(query: String): Observable<DataStreamNotification<ItemList<String>>> {
@@ -66,27 +66,30 @@ constructor(context: Context,
         Timber.v("fetchSearch")
 
         return triggerSearch(query, { true })
-                .filter { it.isCompleted }
-                .map { it.isCompletedWithSuccess }
-                .firstOrError()
+            .filter { it.isCompleted }
+            .map { it.isCompletedWithSuccess }
+            .firstOrError()
     }
 
-    private fun triggerSearch(query: String, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
+    private fun triggerSearch(
+        query: String,
+        needsReload: (ItemList<String>) -> Boolean
+    ): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("triggerSearch(%s)", query)
 
         val normalized = StringUtils.normalize(query)
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-                .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, normalized))
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Search not cached, fetching") }
-                .doOnNext { fetchBeerSearch(normalized) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
+            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, normalized))
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Search not cached, fetching") }
+            .doOnNext { fetchBeerSearch(normalized) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
 
         return getBeerSearchResultStream(normalized)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     private fun getBeerSearchResultStream(query: String): Observable<DataStreamNotification<ItemList<String>>> {
@@ -96,15 +99,15 @@ constructor(context: Context,
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue() // No need to filter stale statuses?
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue() // No need to filter stale statuses?
 
         val beerSearchObservable = beerListStore
-                .getOnceAndStream(queryId)
-                .filterToValue()
+            .getOnceAndStream(queryId)
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerSearchObservable)
+            requestStatusObservable, beerSearchObservable)
     }
 
     private fun fetchBeerSearch(query: String): Int {

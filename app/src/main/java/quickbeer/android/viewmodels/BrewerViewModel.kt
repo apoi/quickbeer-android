@@ -31,19 +31,20 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class BrewerViewModel @Inject
-internal constructor(@Named("id") val brewerId: Int,
-                     @Named("secondaryId") private val beerId: Int,
-                     private val beerActions: BeerActions,
-                     private val brewerActions: BrewerActions,
-                     private val progressStatusProvider: ProgressStatusProvider)
-    : NetworkViewModel<Brewer>() {
+class BrewerViewModel @Inject internal constructor(
+    @Named("id") val brewerId: Int,
+    @Named("secondaryId") private val beerId: Int,
+    private val beerActions: BeerActions,
+    private val brewerActions: BrewerActions,
+    private val progressStatusProvider: ProgressStatusProvider
+) : NetworkViewModel<Brewer>() {
 
-    constructor(brewerId: Int,
-                beerActions: BeerActions,
-                brewerActions: BrewerActions,
-                progressStatusProvider: ProgressStatusProvider)
-            : this(brewerId, -1, beerActions, brewerActions, progressStatusProvider)
+    constructor(
+        brewerId: Int,
+        beerActions: BeerActions,
+        brewerActions: BrewerActions,
+        progressStatusProvider: ProgressStatusProvider
+    ) : this(brewerId, -1, beerActions, brewerActions, progressStatusProvider)
 
     private val brewer = BehaviorSubject.create<Brewer>()
 
@@ -55,34 +56,37 @@ internal constructor(@Named("id") val brewerId: Int,
 
     fun reloadBrewerDetails() {
         disposable.add(getBrewerId()
-                .flatMap { brewerActions.fetch(it) }
-                .subscribe({}, { Timber.e(it) }))
+            .flatMap { brewerActions.fetch(it) }
+            .subscribe({}, { Timber.e(it) }))
     }
 
     override fun bind(disposable: CompositeDisposable) {
         val brewerSource = brewerSource()
-                .subscribeOn(Schedulers.computation())
-                .publish()
+            .subscribeOn(Schedulers.computation())
+            .publish()
 
-        disposable.add(brewerSource
+        disposable.add(
+            brewerSource
                 .map(toProgressStatus())
                 .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
 
         disposable.add(brewerSource
-                .filter { it.isOnNext }
-                .map { it.value }
-                .subscribe({ brewer.onNext(it!!) }, { Timber.e(it) }))
+            .filter { it.isOnNext }
+            .map { it.value }
+            .subscribe({ brewer.onNext(it!!) }, { Timber.e(it) }))
 
-        disposable.add(progressStatusProvider
+        disposable.add(
+            progressStatusProvider
                 .addProgressObservable(brewerSource.map { it }))
 
-        disposable.add(brewerSource
+        disposable.add(
+            brewerSource
                 .connect())
     }
 
     private fun brewerSource(): Observable<DataStreamNotification<Brewer>> {
         return getBrewerId()
-                .flatMapObservable { brewerActions.get(it) }
+            .flatMapObservable { brewerActions.get(it) }
     }
 
     private fun getBrewerId(): Single<Int> {
@@ -90,10 +94,10 @@ internal constructor(@Named("id") val brewerId: Int,
             return Single.just(brewerId)
         } else if (beerId > 0) {
             return beerActions.getDetails(beerId)
-                    .filter { it.isOnNext }
-                    .map { it.value!! }
-                    .map { it.brewerId!! }
-                    .firstOrError()
+                .filter { it.isOnNext }
+                .map { it.value!! }
+                .map { it.brewerId!! }
+                .firstOrError()
         } else {
             throw IllegalStateException("No source id!")
         }

@@ -67,73 +67,73 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .getComponent()
-                .inject(this)
+            .getComponent()
+            .inject(this)
     }
 
     fun setBrewer(brewer: Brewer) {
         ofObj(brewer.founded)
-                .map { it.year.toString() }
-                .orOption { notAvailableOption() }
-                .ifSome { brewer_founded.text = it }
+            .map { it.year.toString() }
+            .orOption { notAvailableOption() }
+            .ifSome { brewer_founded.text = it }
 
         ofObj(brewer.website)
-                .filter { it.hasValue() }
-                .map { StringUtils.removeTrailingSlash(it) }
-                .map { StringUtils.addMissingProtocol(it) }
-                .ifSome { website ->
-                    brewer_website.alpha = VISIBLE
-                    brewer_website_column.setOnClickListener { openUri(LaunchAction.BREWER_WEBSITE, website) }
-                }
-                .ifNone {
-                    brewer_website.alpha = OPAQUE
-                    brewer_website_column.setOnClickListener { showToast(R.string.brewer_details_no_website) }
-                }
+            .filter { it.hasValue() }
+            .map { StringUtils.removeTrailingSlash(it) }
+            .map { StringUtils.addMissingProtocol(it) }
+            .ifSome { website ->
+                brewer_website.alpha = VISIBLE
+                brewer_website_column.setOnClickListener { openUri(LaunchAction.BREWER_WEBSITE, website) }
+            }
+            .ifNone {
+                brewer_website.alpha = OPAQUE
+                brewer_website_column.setOnClickListener { showToast(R.string.brewer_details_no_website) }
+            }
 
         ofObj(brewer.facebook)
-                .filter { it.hasValue() }
-                .map { String.format(Constants.FACEBOOK_PATH, it) }
-                .ifSome { facebook ->
-                    brewer_facebook.alpha = VISIBLE
-                    brewer_facebook_column.setOnClickListener { openUri(LaunchAction.BREWER_FACEBOOK, facebook) }
-                }
-                .ifNone {
-                    brewer_facebook.alpha = OPAQUE
-                    brewer_facebook_column.setOnClickListener { showToast(R.string.brewer_details_no_facebook) }
-                }
+            .filter { it.hasValue() }
+            .map { String.format(Constants.FACEBOOK_PATH, it) }
+            .ifSome { facebook ->
+                brewer_facebook.alpha = VISIBLE
+                brewer_facebook_column.setOnClickListener { openUri(LaunchAction.BREWER_FACEBOOK, facebook) }
+            }
+            .ifNone {
+                brewer_facebook.alpha = OPAQUE
+                brewer_facebook_column.setOnClickListener { showToast(R.string.brewer_details_no_facebook) }
+            }
 
         ofObj(brewer.twitter)
-                .filter { it.hasValue() }
-                .map { String.format(Constants.TWITTER_PATH, it) }
-                .ifSome { twitter ->
-                    brewer_twitter.alpha = VISIBLE
-                    brewer_twitter_column.setOnClickListener { openUri(LaunchAction.BREWER_TWITTER, twitter) }
-                }
-                .ifNone {
-                    brewer_twitter.alpha = OPAQUE
-                    brewer_twitter_column.setOnClickListener { showToast(R.string.brewer_details_no_twitter) }
-                }
+            .filter { it.hasValue() }
+            .map { String.format(Constants.TWITTER_PATH, it) }
+            .ifSome { twitter ->
+                brewer_twitter.alpha = VISIBLE
+                brewer_twitter_column.setOnClickListener { openUri(LaunchAction.BREWER_TWITTER, twitter) }
+            }
+            .ifNone {
+                brewer_twitter.alpha = OPAQUE
+                brewer_twitter_column.setOnClickListener { showToast(R.string.brewer_details_no_twitter) }
+            }
 
         ofObj(brewer.countryId)
-                .map { countryStore.getItem(it) }
-                .ifSome { (id) -> brewer_country_row.setOnClickListener { navigateToCountry(id) } }
-                .map { it.name }
-                .orOption { notAvailableOption() }
-                .ifSome { brewer_country.text = it }
+            .map { countryStore.getItem(it) }
+            .ifSome { (id) -> brewer_country_row.setOnClickListener { navigateToCountry(id) } }
+            .map { it.name }
+            .orOption { notAvailableOption() }
+            .ifSome { brewer_country.text = it }
 
         ofObj(brewer.city)
-                .filter { it.hasValue() }
-                .ifSome { city -> brewer_city_row.setOnClickListener { openWikipedia(city) } }
-                .orOption { notAvailableOption() }
-                .ifSome { brewer_city.text = it }
+            .filter { it.hasValue() }
+            .ifSome { city -> brewer_city_row.setOnClickListener { openWikipedia(city) } }
+            .orOption { notAvailableOption() }
+            .ifSome { brewer_city.text = it }
 
         ofObj(brewer.address)
-                .filter { it.hasValue() }
-                .orOption { notAvailableOption() }
-                .ifSome { brewer_address.text = it }
+            .filter { it.hasValue() }
+            .orOption { notAvailableOption() }
+            .ifSome { brewer_address.text = it }
 
         fullAddress(brewer)
-                .ifSome { address -> brewer_address_row.setOnClickListener { openMaps(address) } }
+            .ifSome { address -> brewer_address_row.setOnClickListener { openMaps(address) } }
     }
 
     private fun notAvailableOption(): Option<String> {
@@ -171,16 +171,16 @@ class BrewerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVie
 
     private fun fullAddress(brewer: Brewer): Option<String> {
         return ofObj(brewer.countryId)
-                .map { countryStore.getItem(it) }
-                .map { it.name }
-                .lift(brewer.city.emptyAsNone(), brewer.address.emptyAsNone()) { country, city, address ->
-                    val street = if (address.contains(","))
-                        address.split(",")[0]
-                    else
-                        address
+            .map { countryStore.getItem(it) }
+            .map { it.name }
+            .lift(brewer.city.emptyAsNone(), brewer.address.emptyAsNone()) { country, city, address ->
+                val street = if (address.contains(","))
+                    address.split(",")[0]
+                else
+                    address
 
-                    String.format("%s, %s, %s", street, city, country)
-                }
+                String.format("%s, %s, %s", street, city, country)
+            }
     }
 
     private fun showToast(@StringRes resource: Int) {

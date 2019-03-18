@@ -37,7 +37,7 @@ abstract class BaseFragment : Fragment() {
     fun getComponent(): FragmentComponent {
         if (component == null) {
             component = (activity as InjectingDrawerActivity).getComponent()
-                    .plusFragment(FragmentModule(this))
+                .plusFragment(FragmentModule(this))
         }
 
         return component!!

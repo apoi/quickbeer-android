@@ -27,7 +27,8 @@ import quickbeer.android.data.columns.ReviewColumns
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.providers.RateBeerProvider
 
-class ReviewStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, Review>(contentResolver, gson) {
+class ReviewStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, Review>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
         return RateBeerProvider.Reviews.withId(get(id))

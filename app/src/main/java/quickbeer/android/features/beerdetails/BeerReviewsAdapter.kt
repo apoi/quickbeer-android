@@ -23,7 +23,7 @@ import android.view.ViewGroup
 import quickbeer.android.R
 import quickbeer.android.adapters.BaseListAdapter
 import quickbeer.android.data.pojos.Review
-import java.util.*
+import java.util.ArrayList
 
 class BeerReviewsAdapter : BaseListAdapter() {
 

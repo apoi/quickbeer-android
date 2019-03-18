@@ -32,10 +32,11 @@ import quickbeer.android.utils.kotlin.hasValue
 import quickbeer.android.viewmodels.BrewerViewModel
 import timber.log.Timber
 
-class BrewerViewHolder(view: View,
-                       private val countryStore: CountryStore,
-                       onClickListener: View.OnClickListener)
-    : BindingViewHolder<BrewerViewModel>(view) {
+class BrewerViewHolder(
+    view: View,
+    private val countryStore: CountryStore,
+    onClickListener: View.OnClickListener
+) : BindingViewHolder<BrewerViewModel>(view) {
 
     private val brewerCircle: TextView = view.brewer_origin
     private val brewerName: TextView = view.brewer_name
@@ -49,7 +50,8 @@ class BrewerViewHolder(view: View,
         override fun bind(disposable: CompositeDisposable) {
             clearViews()
 
-            disposable.add(getViewModel()!!
+            disposable.add(
+                getViewModel()!!
                     .getBrewer()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -61,16 +63,16 @@ class BrewerViewHolder(view: View,
         brewerName.text = brewer.name
 
         val countryOption = ofObj(brewer.countryId)
-                .map { countryStore.getItem(it) }
+            .map { countryStore.getItem(it) }
 
         countryOption.ifSome { (_, _, code) -> brewerCircle.text = code }
 
         ofObj(brewer.city)
-                .filter { it.hasValue() }
-                .lift(countryOption) { city, (_, name) -> String.format("%s, %s", city, name) }
-                .orOption { countryOption.map { it.name } }
-                .orOption { ofObj("Unknown") }
-                .ifSome { brewerCountry.text = it }
+            .filter { it.hasValue() }
+            .lift(countryOption) { city, (_, name) -> String.format("%s, %s", city, name) }
+            .orOption { countryOption.map { it.name } }
+            .orOption { ofObj("Unknown") }
+            .ifSome { brewerCountry.text = it }
     }
 
     private fun clearViews() {

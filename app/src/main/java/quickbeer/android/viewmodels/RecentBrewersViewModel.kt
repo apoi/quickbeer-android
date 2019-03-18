@@ -26,12 +26,12 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import javax.inject.Inject
 
-class RecentBrewersViewModel @Inject
-internal constructor(beerActions: BeerActions,
-                     brewerActions: BrewerActions,
-                     private val brewerListActions: BrewerListActions,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BrewerListViewModel(beerActions, brewerActions, progressStatusProvider) {
+class RecentBrewersViewModel @Inject internal constructor(
+    beerActions: BeerActions,
+    brewerActions: BrewerActions,
+    private val brewerListActions: BrewerListActions,
+    progressStatusProvider: ProgressStatusProvider
+) : BrewerListViewModel(beerActions, brewerActions, progressStatusProvider) {
 
     override fun isRefreshable(): Boolean {
         return false

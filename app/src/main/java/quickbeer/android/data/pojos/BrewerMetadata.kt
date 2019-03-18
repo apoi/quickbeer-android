@@ -20,10 +20,11 @@ package quickbeer.android.data.pojos
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.pojos.base.Overwritable
 
-data class BrewerMetadata(val brewerId: Int,
-                          val updated: ZonedDateTime? = null,
-                          val accessed: ZonedDateTime? = null)
-    : Overwritable<BrewerMetadata>() {
+data class BrewerMetadata(
+    val brewerId: Int,
+    val updated: ZonedDateTime? = null,
+    val accessed: ZonedDateTime? = null
+) : Overwritable<BrewerMetadata>() {
 
     override fun getTypeParameterClass(): Class<BrewerMetadata> {
         return BrewerMetadata::class.java

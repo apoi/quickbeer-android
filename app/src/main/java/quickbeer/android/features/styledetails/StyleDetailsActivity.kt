@@ -63,13 +63,15 @@ class StyleDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             // Set toolbar title
-            disposable.add(styleActions.get(styleId)
+            disposable.add(
+                styleActions.get(styleId)
                     .toObservable()
                     .filterToValue()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(get(progressStatusProvider)
+            disposable.add(
+                get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
@@ -101,8 +103,8 @@ class StyleDetailsActivity : BindingDrawerActivity() {
             val defaultIndex = intent.getIntExtra(Constants.PAGER_INDEX, 0)
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId, defaultIndex))
-                    .commit()
+                .add(R.id.container, StyleDetailsPagerFragment.newInstance(styleId, defaultIndex))
+                .commit()
         }
     }
 

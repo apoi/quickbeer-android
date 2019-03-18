@@ -31,9 +31,10 @@ import quickbeer.android.utils.kotlin.filterToValue
 import retrofit2.HttpException
 import timber.log.Timber
 
-class LoginAndRetry(private val networkApi: NetworkApi,
-                    private val userStore: UserStore)
-    : Function<Flowable<Throwable>, Publisher<Any>> {
+class LoginAndRetry(
+    private val networkApi: NetworkApi,
+    private val userStore: UserStore
+) : Function<Flowable<Throwable>, Publisher<Any>> {
 
     override fun apply(error: Flowable<Throwable>): Publisher<Any> {
         return error.flatMap { throwable -> handleError(throwable) }
@@ -44,8 +45,8 @@ class LoginAndRetry(private val networkApi: NetworkApi,
         if (throwable is HttpException) {
             Timber.d("Error %s, retrying operation after login", throwable.code())
             return getUserOrError(throwable)
-                    .flatMapSingle { user -> networkApi.login(user.username, user.password) }
-                    .doOnError { Timber.w("Retry failed, propagating login error") }
+                .flatMapSingle { user -> networkApi.login(user.username, user.password) }
+                .doOnError { Timber.w("Retry failed, propagating login error") }
         }
 
         Timber.d("Not a Retrofit error, will not retry")
@@ -54,10 +55,10 @@ class LoginAndRetry(private val networkApi: NetworkApi,
 
     private fun getUserOrError(throwable: Throwable): Flowable<User> {
         return userStore.getOnce(Constants.DEFAULT_USER_ID)
-                .toObservable()
-                .filterToValue()
-                .switchIfEmpty(Observable.error(throwable))
-                .doOnError { Timber.w("No login details available!") }
-                .toFlowable(BackpressureStrategy.BUFFER)
+            .toObservable()
+            .filterToValue()
+            .switchIfEmpty(Observable.error(throwable))
+            .doOnError { Timber.w("No login details available!") }
+            .toFlowable(BackpressureStrategy.BUFFER)
     }
 }

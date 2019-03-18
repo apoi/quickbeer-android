@@ -52,21 +52,23 @@ abstract class BrewerListFragment : BindingBaseFragment() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             disposable.add(list_layout.selectedBrewerStream()
-                    .doOnNext { Timber.d("Selected brewer %s", it) }
-                    .subscribe({ openBrewerDetails(it) }, { Timber.e(it) }))
+                .doOnNext { Timber.d("Selected brewer %s", it) }
+                .subscribe({ openBrewerDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getBrewers()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
             disposable.add(viewModel().getProgressStatus()
-                    .map { toStatusValue(it) }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
+                .map { toStatusValue(it) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
-            disposable.add(searchViewViewModel.getQueryStream()
+            disposable.add(
+                searchViewViewModel.getQueryStream()
                     .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }
     }
@@ -107,7 +109,7 @@ abstract class BrewerListFragment : BindingBaseFragment() {
         searchViewViewModel.setMode(Mode.SEARCH, resourceProvider.getString(R.string.search_box_hint_search_beers))
     }
 
-    open protected fun getLayout(): Int {
+    protected open fun getLayout(): Int {
         return R.layout.brewer_list_fragment
     }
 

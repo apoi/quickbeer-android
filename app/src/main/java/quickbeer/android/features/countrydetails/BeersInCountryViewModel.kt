@@ -33,14 +33,14 @@ import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class BeersInCountryViewModel @Inject
-internal constructor(@Named("id") private val countryId: Int,
-                     private val countryActions: CountryActions,
-                     beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
-                     searchViewViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class BeersInCountryViewModel @Inject internal constructor(
+    @Named("id") private val countryId: Int,
+    private val countryActions: CountryActions,
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     private val detailsOpen = BehaviorSubject.createDefault(false)
 
@@ -50,12 +50,12 @@ internal constructor(@Named("id") private val countryId: Int,
 
     fun countryName(): Single<Option<String>> {
         return countryActions.get(countryId)
-                .map { it.map { it.name } }
+            .map { it.map { it.name } }
     }
 
     fun countryDescription(): Single<Option<String>> {
         return countryActions.get(countryId)
-                .map { it.map { it.description } }
+            .map { it.map { it.description } }
     }
 
     fun detailsOpen(): Observable<Boolean> {
@@ -68,6 +68,6 @@ internal constructor(@Named("id") private val countryId: Int,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return countryActions.fetchBeers(countryId)
-                .flatMapObservable { dataSource() }
+            .flatMapObservable { dataSource() }
     }
 }

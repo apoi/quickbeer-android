@@ -26,19 +26,19 @@ import io.reactivex.schedulers.Schedulers
 import io.reark.reark.data.stores.cores.MemoryStoreCore
 import io.reark.reark.data.stores.interfaces.StoreCoreInterface
 
-class CachingStoreCore<T, U>(val providerCore: StoreCoreBase<T, U>,
-                             getIdForItem: Function<U, T>,
-                             mergeFunction: BiFunction<U, U, U>)
-    : StoreCoreInterface<T, U> {
+class CachingStoreCore<T, U>(
+    val providerCore: StoreCoreBase<T, U>,
+    getIdForItem: Function<U, T>,
+    mergeFunction: BiFunction<U, U, U>
+) : StoreCoreInterface<T, U> {
 
     private val memoryCore: MemoryStoreCore<T, U> = MemoryStoreCore<T, U>(mergeFunction)
 
     init {
-
         // Subscribe to all updates to keep cache up-to-date
         providerCore.stream
-                .subscribeOn(Schedulers.io())
-                .subscribe { item -> memoryCore.put(getIdForItem.apply(item), item) }
+            .subscribeOn(Schedulers.io())
+            .subscribe { item -> memoryCore.put(getIdForItem.apply(item), item) }
     }
 
     override fun put(id: T, item: U): Single<Boolean> {
@@ -47,13 +47,13 @@ class CachingStoreCore<T, U>(val providerCore: StoreCoreBase<T, U>,
 
     override fun delete(id: T): Single<Boolean> {
         return memoryCore.delete(id)
-                .flatMap { providerCore.delete(id) }
+            .flatMap { providerCore.delete(id) }
     }
 
     override fun getCached(id: T): Maybe<U> {
         return memoryCore.getCached(id)
-                .switchIfEmpty(providerCore.getCached(id)
-                        .doOnSuccess { memoryCore.put(id, it) })
+            .switchIfEmpty(providerCore.getCached(id)
+                .doOnSuccess { memoryCore.put(id, it) })
     }
 
     override fun getCached(): Single<List<U>> {

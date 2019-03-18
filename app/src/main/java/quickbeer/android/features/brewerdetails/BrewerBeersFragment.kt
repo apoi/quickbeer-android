@@ -44,8 +44,8 @@ class BrewerBeersFragment : BeerListFragment() {
             fragment.arguments = bundle
             return fragment
         }
-
     }
+
     override fun getLayout(): Int {
         return R.layout.beer_list_fragment_paged
     }
@@ -54,14 +54,14 @@ class BrewerBeersFragment : BeerListFragment() {
         super.onCreate(savedInstanceState)
 
         ofObj(savedInstanceState ?: arguments)
-                .map { it.getInt(Constants.ID_KEY) }
-                .ifSome { brewerId = it }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { it.getInt(Constants.ID_KEY) }
+            .ifSome { brewerId = it }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun inject() {
         getComponent().plusId(IdModule(brewerId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

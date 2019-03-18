@@ -22,39 +22,40 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.base.Overwritable
 import quickbeer.android.utils.kotlin.hasValue
-import java.util.*
+import java.util.Locale
 
-data class Brewer(@SerializedName("BrewerID") val id: Int,
-                  @SerializedName("BrewerName") val name: String?,
-                  @SerializedName("BrewerDescription") val description: String?,
-                  @SerializedName("BrewerAddress") val address: String?,
-                  @SerializedName("BrewerCity") val city: String?,
-                  @SerializedName("BrewerStateID") val stateId: Int?,
-                  @SerializedName("BrewerCountryID") val countryId: Int?,
-                  @SerializedName("BrewerZipCode") val zipCode: String?,
-                  @SerializedName("BrewerTypeID") val typeId: Int?,
-                  @SerializedName("BrewerType") val type: String?,
-                  @SerializedName("BrewerWebSite") val website: String?,
-                  @SerializedName("Facebook") val facebook: String?,
-                  @SerializedName("Twitter") val twitter: String?,
-                  @SerializedName("BrewerEmail") val email: String?,
-                  @SerializedName("BrewerPhone") val phone: String?,
-                  @SerializedName("Barrels") val barrels: Int?,
-                  @SerializedName("Opened") val founded: ZonedDateTime?,
-                  @SerializedName("EnteredOn") val enteredOn: ZonedDateTime?,
-                  @SerializedName("EnteredBy") val enteredBy: Int?,
-                  @SerializedName("LogoImage") val logo: String?,
-                  @SerializedName("ViewCount") val viewCount: String?,
-                  @SerializedName("Score") val score: Int?,
-                  @SerializedName("OOB") val outOfBusiness: Boolean?,
-                  @SerializedName("retired") val retired: Boolean?,
-                  @SerializedName("AreaCode") val areaCode: String?,
-                  @SerializedName("Hours") val hours: String?,
-                  @SerializedName("HeadBrewer") val headBrewer: String?,
-                  @SerializedName("MetroID") val metroId: String?,
-                  @SerializedName("MSA") val msa: String?,
-                  @SerializedName("RegionID") val regionId: String?)
-    : Overwritable<Brewer>() {
+data class Brewer(
+    @SerializedName("BrewerID") val id: Int,
+    @SerializedName("BrewerName") val name: String?,
+    @SerializedName("BrewerDescription") val description: String?,
+    @SerializedName("BrewerAddress") val address: String?,
+    @SerializedName("BrewerCity") val city: String?,
+    @SerializedName("BrewerStateID") val stateId: Int?,
+    @SerializedName("BrewerCountryID") val countryId: Int?,
+    @SerializedName("BrewerZipCode") val zipCode: String?,
+    @SerializedName("BrewerTypeID") val typeId: Int?,
+    @SerializedName("BrewerType") val type: String?,
+    @SerializedName("BrewerWebSite") val website: String?,
+    @SerializedName("Facebook") val facebook: String?,
+    @SerializedName("Twitter") val twitter: String?,
+    @SerializedName("BrewerEmail") val email: String?,
+    @SerializedName("BrewerPhone") val phone: String?,
+    @SerializedName("Barrels") val barrels: Int?,
+    @SerializedName("Opened") val founded: ZonedDateTime?,
+    @SerializedName("EnteredOn") val enteredOn: ZonedDateTime?,
+    @SerializedName("EnteredBy") val enteredBy: Int?,
+    @SerializedName("LogoImage") val logo: String?,
+    @SerializedName("ViewCount") val viewCount: String?,
+    @SerializedName("Score") val score: Int?,
+    @SerializedName("OOB") val outOfBusiness: Boolean?,
+    @SerializedName("retired") val retired: Boolean?,
+    @SerializedName("AreaCode") val areaCode: String?,
+    @SerializedName("Hours") val hours: String?,
+    @SerializedName("HeadBrewer") val headBrewer: String?,
+    @SerializedName("MetroID") val metroId: String?,
+    @SerializedName("MSA") val msa: String?,
+    @SerializedName("RegionID") val regionId: String?
+) : Overwritable<Brewer>() {
 
     fun hasDetails(): Boolean {
         return name.hasValue()

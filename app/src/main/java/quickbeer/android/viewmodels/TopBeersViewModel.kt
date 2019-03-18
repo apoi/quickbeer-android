@@ -26,13 +26,13 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.providers.ProgressStatusProvider
 import javax.inject.Inject
 
-class TopBeersViewModel @Inject
-internal constructor(private val beerListActions: BeerListActions,
-                     beerActions: BeerActions,
-                     beerSearchActions: BeerSearchActions,
-                     searchViewViewModel: SearchViewViewModel,
-                     progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class TopBeersViewModel @Inject internal constructor(
+    private val beerListActions: BeerListActions,
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerListActions.topBeers()
@@ -40,6 +40,6 @@ internal constructor(private val beerListActions: BeerListActions,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerListActions.fetchTopBeers()
-                .flatMapObservable { dataSource() }
+            .flatMapObservable { dataSource() }
     }
 }

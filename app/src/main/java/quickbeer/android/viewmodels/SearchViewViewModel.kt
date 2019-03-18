@@ -29,8 +29,7 @@ import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.rx.Unit
 import quickbeer.android.utils.kotlin.filterToValue
 
-class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
-    : SimpleViewModel() {
+class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : SimpleViewModel() {
 
     enum class Mode {
         SEARCH,
@@ -61,34 +60,34 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions)
 
     fun getSearchQueriesOnceAndStream(): Observable<List<String>> {
         return modeChangedSubject.map { liveFilteringEnabled }
-                .distinctUntilChanged()
-                .switchMap { live ->
-                    if (live)
-                        Observable.concat(Observable.just(emptyList()), Observable.never())
-                    else
-                        oldSearchesObservable()
-                }
+            .distinctUntilChanged()
+            .switchMap { live ->
+                if (live)
+                    Observable.concat(Observable.just(emptyList()), Observable.never())
+                else
+                    oldSearchesObservable()
+            }
     }
 
     private fun oldSearchesObservable(): Observable<List<String>> {
         val oldQueries = beerSearchActions.searchQueries()
-                .toObservable()
-                .share()
+            .toObservable()
+            .share()
 
         return Observable.combineLatest(oldQueries, searchQueries(),
-                    BiFunction { list: List<String>, query: String -> list.toMutableList().add(query); list })
-                .startWith(oldQueries)
+            BiFunction { list: List<String>, query: String -> list.toMutableList().add(query); list })
+            .startWith(oldQueries)
     }
 
     private fun searchQueries(): Observable<String> {
         return getQueryStream()
-                .filter { !liveFilteringEnabled }
-                .distinctUntilChanged()
+            .filter { !liveFilteringEnabled }
+            .distinctUntilChanged()
     }
 
     fun getQueryStream(): Observable<String> {
         return querySubject
-                .filterToValue()
+            .filterToValue()
     }
 
     fun setMode(mode: Mode, searchHint: String) {

@@ -50,9 +50,9 @@ class StyleDetailsBeersFragment : BeerListFragment() {
         val bundle = savedInstanceState ?: arguments
 
         ofObj(bundle)
-                .map { it.getInt(Constants.ID_KEY) }
-                .ifSome { styleId = it }
-                .ifNone { Timber.w("Expected state for initializing!") }
+            .map { it.getInt(Constants.ID_KEY) }
+            .ifSome { styleId = it }
+            .ifNone { Timber.w("Expected state for initializing!") }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -68,7 +68,7 @@ class StyleDetailsBeersFragment : BeerListFragment() {
         super.inject()
 
         getComponent().plusId(IdModule(styleId))
-                .inject(this)
+            .inject(this)
     }
 
     override fun viewModel(): BeersInStyleViewModel {

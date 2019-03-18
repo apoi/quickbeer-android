@@ -37,14 +37,14 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class StyleActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerListStore: BeerListStore,
-            private val beerStyleStore: BeerStyleStore)
-    : ApplicationDataLayer(context), StyleActions {
+class StyleActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerListStore: BeerListStore,
+    private val beerStyleStore: BeerStyleStore
+) : ApplicationDataLayer(context), StyleActions {
 
-    //// STYLES
+    // STYLES
 
     override operator fun get(styleId: Int): Single<Option<BeerStyle>> {
         Timber.v("get(%s)", styleId)
@@ -52,7 +52,7 @@ constructor(context: Context,
         return beerStyleStore.getOnce(styleId)
     }
 
-    //// BEERS IN STYLE
+    // BEERS IN STYLE
 
     override fun beers(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("beers(%s)", styleId)
@@ -64,25 +64,28 @@ constructor(context: Context,
         Timber.v("fetchBeers(%s)", styleId)
 
         return triggerGetBeers(styleId, { true })
-                .filter { it.isCompleted }
-                .map { it.isCompletedWithSuccess }
-                .firstOrError()
+            .filter { it.isCompleted }
+            .map { it.isCompletedWithSuccess }
+            .firstOrError()
     }
 
-    private fun triggerGetBeers(styleId: Int, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
+    private fun triggerGetBeers(
+        styleId: Int,
+        needsReload: (ItemList<String>) -> Boolean
+    ): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("triggerGetBeers(%s)", styleId)
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-                .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.STYLE, styleId.toString()))
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Search not cached, fetching") }
-                .doOnNext { fetchBeersInStyle(styleId) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
+            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.STYLE, styleId.toString()))
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Search not cached, fetching") }
+            .doOnNext { fetchBeersInStyle(styleId) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
 
         return getBeersInStyleResultStream(styleId)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     private fun getBeersInStyleResultStream(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
@@ -92,15 +95,15 @@ constructor(context: Context,
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue() // No need to filter stale statuses?
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue() // No need to filter stale statuses?
 
         val beerSearchObservable = beerListStore
-                .getOnceAndStream(queryId)
-                .filterToValue()
+            .getOnceAndStream(queryId)
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerSearchObservable)
+            requestStatusObservable, beerSearchObservable)
     }
 
     private fun fetchBeersInStyle(styleId: Int): Int {

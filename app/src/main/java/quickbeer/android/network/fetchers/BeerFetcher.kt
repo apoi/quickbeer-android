@@ -34,12 +34,13 @@ import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.utils.NetworkUtils
 import timber.log.Timber
 
-class BeerFetcher(private val networkApi: NetworkApi,
-                  private val networkUtils: NetworkUtils,
-                  networkRequestStatus: Consumer<NetworkRequestStatus>,
-                  private val beerStore: BeerStore,
-                  private val metadataStore: BeerMetadataStore)
-    : FetcherBase<Uri>(networkRequestStatus) {
+class BeerFetcher(
+    private val networkApi: NetworkApi,
+    private val networkUtils: NetworkUtils,
+    networkRequestStatus: Consumer<NetworkRequestStatus>,
+    private val beerStore: BeerStore,
+    private val metadataStore: BeerMetadataStore
+) : FetcherBase<Uri>(networkRequestStatus) {
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!intent.hasExtra("id")) {
@@ -65,13 +66,13 @@ class BeerFetcher(private val networkApi: NetworkApi,
         val requestParams = networkUtils.createRequestParams("bd", beerId.toString())
 
         return networkApi.getBeer(requestParams)
-                .subscribeOn(Schedulers.io())
-                .flatMap { beerStore.put(it) }
-                .doOnSubscribe { startRequest(beerId, uri) }
-                .doOnSuccess { completeRequest(beerId, uri, it) }
-                .doOnError(doOnError(beerId, uri))
-                .subscribe({ metadataStore.put(BeerMetadata.newUpdate(beerId)) },
-                        { Timber.w(it, "Error fetching beer %s", beerId) })
+            .subscribeOn(Schedulers.io())
+            .flatMap { beerStore.put(it) }
+            .doOnSubscribe { startRequest(beerId, uri) }
+            .doOnSuccess { completeRequest(beerId, uri, it) }
+            .doOnError(doOnError(beerId, uri))
+            .subscribe({ metadataStore.put(BeerMetadata.newUpdate(beerId)) },
+                { Timber.w(it, "Error fetching beer %s", beerId) })
     }
 
     override fun getServiceUri(): Uri {

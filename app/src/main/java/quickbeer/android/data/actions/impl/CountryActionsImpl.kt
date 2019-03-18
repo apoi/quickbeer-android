@@ -37,13 +37,14 @@ import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
 
-class CountryActionsImpl @Inject
-constructor(context: Context,
-            private val requestStatusStore: NetworkRequestStatusStore,
-            private val beerListStore: BeerListStore,
-            private val countryStore: CountryStore) : ApplicationDataLayer(context), CountryActions {
+class CountryActionsImpl @Inject constructor(
+    context: Context,
+    private val requestStatusStore: NetworkRequestStatusStore,
+    private val beerListStore: BeerListStore,
+    private val countryStore: CountryStore
+) : ApplicationDataLayer(context), CountryActions {
 
-    //// COUNTRIES
+    // COUNTRIES
 
     override operator fun get(countryId: Int): Single<Option<Country>> {
         Timber.v("get(%s)", countryId)
@@ -51,7 +52,7 @@ constructor(context: Context,
         return countryStore.getOnce(countryId)
     }
 
-    //// BEERS IN COUNTRY
+    // BEERS IN COUNTRY
 
     override fun beers(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("beers(%s)", countryId)
@@ -63,25 +64,28 @@ constructor(context: Context,
         Timber.v("fetchBeers(%s)", countryId)
 
         return triggerGetBeers(countryId, { true })
-                .filter { it.isCompleted }
-                .map { it.isCompletedWithSuccess }
-                .firstOrError()
+            .filter { it.isCompleted }
+            .map { it.isCompletedWithSuccess }
+            .firstOrError()
     }
 
-    private fun triggerGetBeers(countryId: Int, needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
+    private fun triggerGetBeers(
+        countryId: Int,
+        needsReload: (ItemList<String>) -> Boolean
+    ): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("triggerGetBeers(%s)", countryId)
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-                .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, countryId.toString()))
-                .toObservable()
-                .filter { it.match({ needsReload(it) }, { true }) }
-                .doOnNext { Timber.v("Search not cached, fetching") }
-                .doOnNext { fetchBeersInCountry(countryId) }
-                .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
+            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, countryId.toString()))
+            .toObservable()
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnNext { Timber.v("Search not cached, fetching") }
+            .doOnNext { fetchBeersInCountry(countryId) }
+            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
 
         return getBeersInCountryResultStream(countryId)
-                .mergeWith(triggerFetchIfEmpty)
+            .mergeWith(triggerFetchIfEmpty)
     }
 
     private fun getBeersInCountryResultStream(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
@@ -91,15 +95,15 @@ constructor(context: Context,
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
-                .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-                .filterToValue() // No need to filter stale statuses?
+            .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
+            .filterToValue() // No need to filter stale statuses?
 
         val beerSearchObservable = beerListStore
-                .getOnceAndStream(queryId)
-                .filterToValue()
+            .getOnceAndStream(queryId)
+            .filterToValue()
 
         return DataLayerUtils.createDataStreamNotificationObservable(
-                requestStatusObservable, beerSearchObservable)
+            requestStatusObservable, beerSearchObservable)
     }
 
     private fun fetchBeersInCountry(countryId: Int): Int {

@@ -49,8 +49,8 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
         super.onFinishInflate()
 
         (context as InjectingDrawerActivity)
-                .getComponent()
-                .inject(this)
+            .getComponent()
+            .inject(this)
     }
 
     fun setStyle(style: BeerStyle) {

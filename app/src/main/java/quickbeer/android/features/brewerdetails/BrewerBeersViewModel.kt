@@ -29,14 +29,14 @@ import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-class BrewerBeersViewModel @Inject
-constructor(@Named("id") private val brewerId : Int,
-            beerActions: BeerActions,
-            beerSearchActions: BeerSearchActions,
-            private val brewerActions: BrewerActions,
-            searchViewViewModel: SearchViewViewModel,
-            progressStatusProvider: ProgressStatusProvider)
-    : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
+class BrewerBeersViewModel @Inject constructor(
+    @Named("id") private val brewerId: Int,
+    beerActions: BeerActions,
+    beerSearchActions: BeerSearchActions,
+    private val brewerActions: BrewerActions,
+    searchViewViewModel: SearchViewViewModel,
+    progressStatusProvider: ProgressStatusProvider
+) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return brewerActions.beers(brewerId)
@@ -44,6 +44,6 @@ constructor(@Named("id") private val brewerId : Int,
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return brewerActions.fetchBeers(brewerId)
-                .flatMapObservable { dataSource() }
+            .flatMapObservable { dataSource() }
     }
 }

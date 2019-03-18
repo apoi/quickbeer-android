@@ -65,13 +65,15 @@ class CountryDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             // Set toolbar title
-            disposable.add(countryActions.get(countryId)
+            disposable.add(
+                countryActions.get(countryId)
                     .toObservable()
                     .filterToValue()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(get(progressStatusProvider)
+            disposable.add(
+                get(progressStatusProvider)
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
@@ -94,8 +96,8 @@ class CountryDetailsActivity : BindingDrawerActivity() {
             countryId = intent.getIntExtra(Constants.ID_KEY, 0)
 
             supportFragmentManager.beginTransaction()
-                    .add(R.id.container, CountryDetailsPagerFragment.newInstance(countryId, defaultIndex))
-                    .commit()
+                .add(R.id.container, CountryDetailsPagerFragment.newInstance(countryId, defaultIndex))
+                .commit()
         }
     }
 
@@ -104,11 +106,11 @@ class CountryDetailsActivity : BindingDrawerActivity() {
         toolbar_overlay_gradient.visibility = View.VISIBLE
 
         Glide.with(this)
-                .`as`(PictureDrawable::class.java)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .listener(SvgSoftwareLayerSetter())
-                .load(String.format(Constants.FLAG_IMAGE_PATH, country.refer.toLowerCase()))
-                .into(collapsing_toolbar_background)
+            .`as`(PictureDrawable::class.java)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .listener(SvgSoftwareLayerSetter())
+            .load(String.format(Constants.FLAG_IMAGE_PATH, country.refer.toLowerCase()))
+            .into(collapsing_toolbar_background)
     }
 
     override fun inject() {

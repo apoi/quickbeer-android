@@ -30,31 +30,32 @@ import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
 import quickbeer.android.utils.kotlin.ZonedDateTime
 import quickbeer.android.utils.kotlin.orEpoch
-import java.util.*
+import java.util.ArrayList
 
-class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) : StoreCoreBase<Int, BrewerMetadata>(contentResolver, gson) {
+class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) :
+    StoreCoreBase<Int, BrewerMetadata>(contentResolver, gson) {
 
     fun getAccessedIdsOnce(idColumn: String, accessColumn: String): Observable<List<Int>> {
         return Observable.fromCallable<List<Int>> {
-                    val projection = arrayOf(idColumn)
-                    val selection = String.format("%s > 0", accessColumn) // Has access date
-                    val orderBy = String.format("%s DESC", accessColumn) // Sort by date
+            val projection = arrayOf(idColumn)
+            val selection = String.format("%s > 0", accessColumn) // Has access date
+            val orderBy = String.format("%s DESC", accessColumn) // Sort by date
 
-                    val idList = ArrayList<Int>(10)
-                    val cursor = contentResolver.query(contentUri, projection, selection, null, orderBy)
+            val idList = ArrayList<Int>(10)
+            val cursor = contentResolver.query(contentUri, projection, selection, null, orderBy)
 
-                    if (cursor != null) {
-                        if (cursor.moveToFirst()) {
-                            do {
-                                idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)))
-                            } while (cursor.moveToNext())
-                        }
-                        cursor.close()
-                    }
-
-                    idList
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    do {
+                        idList.add(cursor.getInt(cursor.getColumnIndex(idColumn)))
+                    } while (cursor.moveToNext())
                 }
-                .subscribeOn(Schedulers.io())
+                cursor.close()
+            }
+
+            idList
+        }
+            .subscribeOn(Schedulers.io())
     }
 
     override fun getUriForId(id: Int): Uri {

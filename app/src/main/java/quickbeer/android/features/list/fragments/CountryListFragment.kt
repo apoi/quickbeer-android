@@ -50,11 +50,13 @@ class CountryListFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(viewModel()
+            disposable.add(
+                viewModel()
                     .getQueryStream()
                     .subscribe({ view.setFilter(it) }, { Timber.e(it) }))
 
-            disposable.add(view.selectionStream()
+            disposable.add(
+                view.selectionStream()
                     .subscribe({ navigateToCountry(it) }, { Timber.e(it) }))
         }
     }
@@ -75,7 +77,7 @@ class CountryListFragment : BindingBaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        
+
         view.setListSource(countryStore)
         searchViewViewModel.setMode(Mode.FILTER, getString(R.string.search_box_hint_filter_countries))
     }

@@ -32,11 +32,12 @@ import quickbeer.android.utils.kotlin.hasValue
 import timber.log.Timber
 
 abstract class BeerListViewModel
-protected constructor(private val beerActions: BeerActions,
-                      private val beerSearchActions: BeerSearchActions,
-                      private val searchViewViewModel: SearchViewViewModel,
-                      private val progressStatusProvider: ProgressStatusProvider)
-    : NetworkViewModel<ItemList<String>>() {
+protected constructor(
+    private val beerActions: BeerActions,
+    private val beerSearchActions: BeerSearchActions,
+    private val searchViewViewModel: SearchViewViewModel,
+    private val progressStatusProvider: ProgressStatusProvider
+) : NetworkViewModel<ItemList<String>>() {
 
     private val source = BehaviorSubject.create<Observable<DataStreamNotification<ItemList<String>>>>()
 
@@ -68,30 +69,31 @@ protected constructor(private val beerActions: BeerActions,
 
         // Switch source according to selector subject
         val sharedObservable: ConnectableObservable<DataStreamNotification<ItemList<String>>> =
-                Observable.switchOnNext(source)
-                        .subscribeOn(Schedulers.computation())
-                        .publish()
+            Observable.switchOnNext(source)
+                .subscribeOn(Schedulers.computation())
+                .publish()
 
         // Construct progress status. Completed with value means we'll receive onNext.
         disposable.add(sharedObservable
-                .filter { !it.isCompletedWithValue }
-                .map(toProgressStatus())
-                .startWith(NetworkViewModel.ProgressStatus.LOADING)
-                .distinctUntilChanged()
-                .subscribe { setProgressStatus(it) })
+            .filter { !it.isCompletedWithValue }
+            .map(toProgressStatus())
+            .startWith(NetworkViewModel.ProgressStatus.LOADING)
+            .distinctUntilChanged()
+            .subscribe { setProgressStatus(it) })
 
         // Actual update
         disposable.add(sharedObservable
-                .filter { it.isOnNext }
-                .map { it.value!! }
-                .doOnNext { Timber.d("Search finished") }
-                .map { it.items.map { BeerViewModel(it, false, beerActions, progressStatusProvider) } }
-                .doOnNext { Timber.d("Publishing %s beers", it.size) }
-                .subscribe { beers.onNext(it) })
+            .filter { it.isOnNext }
+            .map { it.value!! }
+            .doOnNext { Timber.d("Search finished") }
+            .map { it.items.map { BeerViewModel(it, false, beerActions, progressStatusProvider) } }
+            .doOnNext { Timber.d("Publishing %s beers", it.size) }
+            .subscribe { beers.onNext(it) })
 
         // Share progress status to progress provider
         if (reportsProgress()) {
-            disposable.add(progressStatusProvider
+            disposable.add(
+                progressStatusProvider
                     .addProgressObservable(sharedObservable.map { it }))
         }
 
@@ -99,11 +101,11 @@ protected constructor(private val beerActions: BeerActions,
 
         // Switch to search on new search term
         disposable.add(searchViewViewModel
-                .getQueryStream()
-                .distinctUntilChanged()
-                .filter { it.hasValue() }
-                .doOnNext { Timber.d("query(%s)", it) }
-                .map { beerSearchActions.search(it) }
-                .subscribe({ source.onNext(it) }, { Timber.e(it) }))
+            .getQueryStream()
+            .distinctUntilChanged()
+            .filter { it.hasValue() }
+            .doOnNext { Timber.d("query(%s)", it) }
+            .map { beerSearchActions.search(it) }
+            .subscribe({ source.onNext(it) }, { Timber.e(it) }))
     }
 }
