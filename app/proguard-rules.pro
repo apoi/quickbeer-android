@@ -5,70 +5,32 @@
 -keepattributes SourceFile,LineNumberTable
 -keepattributes *Annotation*
 
-# Optimization step doesn't update things correctly
--optimizations !code/allocation/variable
-
-# Okio
--dontwarn okio.**
--dontwarn org.apache.http.**
--dontwarn com.squareup.okhttp.internal.huc.**
--dontwarn com.google.appengine.api.urlfetch.**
--dontwarn android.net.http.AndroidHttpClient
-
-# OkHttp
--keepattributes Signature
--keepattributes *Annotation*
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
-
-# Gson
--keep public class com.google.gson.** { *; }
-
-# RxJava
--dontwarn sun.misc.Unsafe
--dontwarn sun.misc.**
--keep class rx.internal.util.unsafe.** { *; }
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
-
-# Picasso
--dontwarn com.squareup.okhttp.**
-
 # Glide
 -keep class com.bumptech.glide.integration.okhttp3.OkHttpGlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep class com.bumptech.glide.GeneratedAppGlideModuleImpl
 
 # AndroidSVG
--dontwarn com.caverock.androidsvg.SVGImageView
+-dontwarn com.caverock.androidsvg.**
 
 # Retrofit
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
--keepattributes Signature
--keepattributes Exceptions
--keepclasseswithmembers class * {
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
     @retrofit2.http.* <methods>;
 }
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-dontwarn retrofit2.KotlinExtensions
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+
+# Picasso
+-dontwarn com.squareup.okhttp.**
 
 # Renderscript
 -keep class android.support.v8.renderscript.** { *; }
-
-# AutoValue
--dontwarn com.google.auto.**
--dontwarn autovalue.shaded.com.**
--dontwarn sun.misc.Unsafe
--dontwarn javax.lang.model.element.Modifier
-
--keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
-    long producerIndex;
-    long consumerIndex;
-}
 
 # Remove logging, except for errors
 -assumenosideeffects class timber.log.Timber {
