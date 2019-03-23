@@ -20,7 +20,7 @@ package quickbeer.android.features.beerdetails
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ShareCompat
+import androidx.core.app.ShareCompat
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View

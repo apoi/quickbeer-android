@@ -18,7 +18,7 @@
 package quickbeer.android.core.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 
 import quickbeer.android.core.activity.InjectingDrawerActivity
 import quickbeer.android.injections.FragmentComponent

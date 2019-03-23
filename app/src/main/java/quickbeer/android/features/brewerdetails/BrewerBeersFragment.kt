@@ -18,7 +18,7 @@
 package quickbeer.android.features.brewerdetails
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants

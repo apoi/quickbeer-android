@@ -18,8 +18,8 @@
 package quickbeer.android.features.styledetails
 
 import android.content.Context
-import android.support.annotation.StringRes
-import android.support.v4.widget.NestedScrollView
+import androidx.annotation.StringRes
+import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Toast
 import io.reark.reark.utils.Preconditions.get

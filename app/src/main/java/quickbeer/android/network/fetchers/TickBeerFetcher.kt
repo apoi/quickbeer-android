@@ -19,7 +19,7 @@ package quickbeer.android.network.fetchers
 
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer

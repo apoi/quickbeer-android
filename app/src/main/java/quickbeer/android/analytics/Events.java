@@ -17,7 +17,7 @@
  */
 package quickbeer.android.analytics;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 @SuppressWarnings("MarkerInterface")
 public interface Events {

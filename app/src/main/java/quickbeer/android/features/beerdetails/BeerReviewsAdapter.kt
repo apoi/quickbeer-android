@@ -17,7 +17,7 @@
  */
 package quickbeer.android.features.beerdetails
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import quickbeer.android.R

@@ -18,9 +18,9 @@
 package quickbeer.android.providers;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.RawRes;
-import android.support.annotation.StringRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.RawRes;
+import androidx.annotation.StringRes;
 
 import java.io.InputStream;
 

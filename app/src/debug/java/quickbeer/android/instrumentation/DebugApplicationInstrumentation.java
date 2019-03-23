@@ -25,7 +25,7 @@
  */
 package quickbeer.android.instrumentation;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import static io.reark.reark.utils.Preconditions.get;
 

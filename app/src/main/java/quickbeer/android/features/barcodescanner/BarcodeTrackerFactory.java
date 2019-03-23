@@ -15,7 +15,7 @@
  */
 package quickbeer.android.features.barcodescanner;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;

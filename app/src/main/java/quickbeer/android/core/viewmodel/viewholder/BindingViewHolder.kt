@@ -17,7 +17,7 @@
  */
 package quickbeer.android.core.viewmodel.viewholder
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.utils.Preconditions.checkNotNull

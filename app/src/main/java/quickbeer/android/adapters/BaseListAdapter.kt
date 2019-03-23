@@ -17,7 +17,7 @@
  */
 package quickbeer.android.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 abstract class BaseListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     enum class ItemType {

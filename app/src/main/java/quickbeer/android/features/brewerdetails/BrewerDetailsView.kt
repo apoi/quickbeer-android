@@ -20,8 +20,8 @@ package quickbeer.android.features.brewerdetails
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.annotation.StringRes
-import android.support.v4.widget.NestedScrollView
+import androidx.annotation.StringRes
+import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Toast
 import kotlinx.android.synthetic.main.brewer_details_fragment_details.view.*

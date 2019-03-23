@@ -18,7 +18,7 @@
 package quickbeer.android.features.list.fragments
 
 import android.content.Intent
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import quickbeer.android.R

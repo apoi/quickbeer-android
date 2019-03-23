@@ -16,7 +16,7 @@
 package quickbeer.android.core.activity
 
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 import io.reactivex.disposables.CompositeDisposable
 
 import quickbeer.android.core.viewmodel.BaseLifecycleViewDataBinder

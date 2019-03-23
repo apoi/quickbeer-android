@@ -26,7 +26,7 @@
 package quickbeer.android.instrumentation;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import static com.facebook.stetho.Stetho.defaultDumperPluginsProvider;
 import static com.facebook.stetho.Stetho.defaultInspectorModulesProvider;

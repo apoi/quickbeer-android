@@ -17,9 +17,9 @@
  */
 package quickbeer.android.features.beerdetails
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
 class BeerDetailsPagerAdapter(fm: FragmentManager, private val beerId: Int) : FragmentPagerAdapter(fm) {
 

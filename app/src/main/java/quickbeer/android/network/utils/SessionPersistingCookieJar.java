@@ -15,7 +15,7 @@
  */
 package quickbeer.android.network.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.cache.CookieCache;

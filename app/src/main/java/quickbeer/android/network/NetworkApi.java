@@ -17,7 +17,7 @@
  */
 package quickbeer.android.network;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.google.gson.Gson;

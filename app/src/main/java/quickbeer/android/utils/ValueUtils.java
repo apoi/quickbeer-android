@@ -17,7 +17,7 @@
  */
 package quickbeer.android.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 public final class ValueUtils {
 

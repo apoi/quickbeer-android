@@ -20,7 +20,7 @@ package quickbeer.android.providers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import quickbeer.android.Constants.Preferences;
 
