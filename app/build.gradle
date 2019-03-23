@@ -66,9 +66,11 @@ configurations {
 ext {
     versions = [
             kotlin            : kotlin_version,
+            reark             : '0.3',
             supportLibrary    : '27.0.2',
             playServices      : '11.6.2',
             collapsingToolbar : '1.6.0',
+            materialSearch    : 'v1.4.0-1',
             multidex          : '1.0.2',
             dagger            : '2.13',
             rxJava            : '2.1.7',
@@ -102,10 +104,6 @@ dependencies {
     // Ktlint
     ktlint "com.github.shyiko:ktlint:$versions.ktlint"
 
-    // Local dependencies
-    implementation project(':reark')
-    implementation project(':materialsearch')
-
     implementation "com.android.support:support-v4:$versions.supportLibrary"
     implementation "com.android.support:recyclerview-v7:$versions.supportLibrary"
     implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
@@ -121,6 +119,12 @@ dependencies {
 
     // Play services barcode support
     implementation "com.google.android.gms:play-services-vision:$versions.playServices"
+
+    // Reark
+    implementation "com.github.reark:reark:$versions.reark"
+
+    // MaterialSearchView
+    implementation "com.github.apoi:MaterialSearchView:$versions.materialSearch"
 
     // Multiline Collapsing Toolbar
     implementation "net.opacapp:multiline-collapsingtoolbar:$versions.collapsingToolbar"
