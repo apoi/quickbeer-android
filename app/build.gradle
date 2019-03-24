@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.getkeepsafe.dexcount'
 
 apply from: 'app-config.gradle'
@@ -23,12 +24,6 @@ android {
         renderscriptSupportModeEnabled true
 
         buildConfigField(STRING, "RATEBEER_API_KEY", ratebeer_api_key)
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath = true
-            }
-        }
     }
     dexOptions {
         preDexLibraries false
@@ -97,7 +92,7 @@ ext {
             butterknife      : '10.1.0',
             androidSvg       : '1.3',
             photoView        : '2.3.0',
-            picasso          : '2.5.2',
+            picasso          : '2.71828',
             glide            : '4.9.0',
 
             // Frameworks and tools
@@ -124,7 +119,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$versions.appcompat"
     implementation "com.google.android.material:material:$versions.material"
     implementation "androidx.cardview:cardview:$versions.cardview"
-    annotationProcessor "androidx.annotation:annotation:$versions.annotation"
+    api "androidx.annotation:annotation:$versions.annotation"
 
     // Damnit multidex
     implementation "androidx.multidex:multidex:$versions.multidex"
@@ -146,8 +141,8 @@ dependencies {
     implementation "net.opacapp:multiline-collapsingtoolbar:$versions.collapsingToolbar"
 
     // Dagger
-    annotationProcessor "com.google.dagger:dagger-compiler:$versions.dagger"
     implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 
     // RxJava
     implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
@@ -161,8 +156,8 @@ dependencies {
     implementation "com.github.tomaszpolanski:options:$versions.options"
 
     // Schematic
-    annotationProcessor "net.simonvt.schematic:schematic-compiler:$versions.schematic"
     implementation "net.simonvt.schematic:schematic:$versions.schematic"
+    kapt "net.simonvt.schematic:schematic-compiler:$versions.schematic"
 
     // Picasso
     implementation "com.squareup.picasso:picasso:$versions.picasso"
@@ -171,7 +166,7 @@ dependencies {
     implementation "com.github.bumptech.glide:okhttp3-integration:$versions.glide@aar"
     implementation "com.github.bumptech.glide:glide:$versions.glide"
     implementation "com.github.bumptech.glide:annotations:$versions.glide"
-    annotationProcessor "com.github.bumptech.glide:compiler:$versions.glide"
+    kapt "com.github.bumptech.glide:compiler:$versions.glide"
 
     // AndroidSVG
     implementation "com.caverock:androidsvg:$versions.androidSvg"
@@ -181,7 +176,7 @@ dependencies {
 
     // Butter Knife
     implementation "com.jakewharton:butterknife:$versions.butterknife"
-    annotationProcessor "com.jakewharton:butterknife-compiler:$versions.butterknife"
+    kapt "com.jakewharton:butterknife-compiler:$versions.butterknife"
 
     // Timber
     implementation "com.jakewharton.timber:timber:$versions.timber"

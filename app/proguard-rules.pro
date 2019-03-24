@@ -29,9 +29,6 @@
 # OkHttp
 -dontwarn okhttp3.**
 
-# Picasso
--dontwarn com.squareup.okhttp.**
-
 # Renderscript
 -keep class android.support.v8.renderscript.** { *; }
 
