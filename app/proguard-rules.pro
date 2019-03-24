@@ -26,6 +26,9 @@
 -if interface * { @retrofit2.http.* <methods>; }
 -keep,allowobfuscation interface <1>
 
+# OkHttp
+-dontwarn okhttp3.**
+
 # Picasso
 -dontwarn com.squareup.okhttp.**
 
