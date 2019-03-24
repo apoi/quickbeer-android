@@ -20,17 +20,14 @@ package quickbeer.android;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.multidex.MultiDexApplication;
-
 import com.jakewharton.threetenabp.AndroidThreeTen;
-import com.squareup.leakcanary.LeakCanary;
-
-import javax.inject.Inject;
-
 import quickbeer.android.injections.ApplicationModule;
 import quickbeer.android.injections.DaggerGraph;
 import quickbeer.android.injections.Graph;
 import quickbeer.android.instrumentation.ApplicationInstrumentation;
 import timber.log.Timber;
+
+import javax.inject.Inject;
 
 import static io.reark.reark.utils.Preconditions.get;
 
@@ -52,8 +49,6 @@ public class QuickBeer extends MultiDexApplication {
         inject();
 
         initLogging();
-
-        initLeakCanary();
 
         initInstrumentation();
 
@@ -77,12 +72,6 @@ public class QuickBeer extends MultiDexApplication {
     private void initLogging() {
         Timber.uprootAll();
         Timber.plant(get(loggingTree));
-    }
-
-    private void initLeakCanary() {
-        if (!LeakCanary.isInAnalyzerProcess(this)) {
-            LeakCanary.install(this);
-        }
     }
 
     private void initInstrumentation() {
