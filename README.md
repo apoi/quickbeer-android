@@ -9,7 +9,6 @@ Running the project
 -------------------
 
 * You will need your own API key for the RateBeer service, as the keys can't be distributed. Place the key in format `ratebeer.api.key=KEY` to file `app/ratebeer-api.properties`.
-* The project depends on an up-to-date version of [Reark](https://github.com/reark/reark) to be checked out in a sibling directory.
 
 In other aspects the project should run out of the box with Android Studio. Let me know if there are any issues!
 
@@ -25,7 +24,7 @@ QuickBeer has been sponsored by the [Futurice Open Source Program](http://spicep
 License
 =======
 
-	Copyright (C) 2015-2017 Antti Poikela
+	Copyright (C) 2015-2019 Antti Poikela
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
