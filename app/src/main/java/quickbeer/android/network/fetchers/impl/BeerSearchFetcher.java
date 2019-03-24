@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,39 +15,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.network.fetchers;
+package quickbeer.android.network.fetchers.impl;
 
 import android.content.Intent;
-import android.net.Uri;
 import androidx.annotation.NonNull;
-
-import org.threeten.bp.ZonedDateTime;
-
-import java.util.Collections;
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.internal.functions.Functions;
 import io.reactivex.schedulers.Schedulers;
-import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import org.jetbrains.annotations.NotNull;
+import org.threeten.bp.ZonedDateTime;
 import quickbeer.android.data.pojos.Beer;
 import quickbeer.android.data.pojos.ItemList;
 import quickbeer.android.data.stores.BeerListStore;
 import quickbeer.android.data.stores.BeerStore;
 import quickbeer.android.network.NetworkApi;
-import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.fetchers.CheckingFetcher;
 import quickbeer.android.network.utils.NetworkUtils;
 import timber.log.Timber;
+
+import java.util.Collections;
+import java.util.List;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
 @SuppressWarnings({"IfMayBeConditional", "CallToStringCompareTo"})
-public class BeerSearchFetcher extends FetcherBase<Uri> {
+public class BeerSearchFetcher extends CheckingFetcher {
+
+    public static final String NAME = "__search";
+    public static final String SEARCH = "searchString";
 
     @NonNull
     protected final NetworkApi networkApi;
@@ -66,7 +66,16 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
                              @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                              @NonNull BeerStore beerStore,
                              @NonNull BeerListStore beerListStore) {
-        super(networkRequestStatus);
+        this(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore, NAME);
+    }
+
+    public BeerSearchFetcher(@NonNull NetworkApi networkApi,
+                             @NonNull NetworkUtils networkUtils,
+                             @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
+                             @NonNull BeerStore beerStore,
+                             @NonNull BeerListStore beerListStore,
+                             @NonNull String name) {
+        super(networkRequestStatus, name);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -75,15 +84,15 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
     }
 
     @Override
+    public @NotNull List<String> required() {
+        return Collections.singletonList(SEARCH);
+    }
+
+    @Override
     public void fetch(@NonNull Intent intent, int listenerId) {
-        checkNotNull(intent);
+        if (!validateParams(intent)) return;
 
-        if (!intent.hasExtra("searchString")) {
-            Timber.e("Missing required fetch parameters!");
-            return;
-        }
-
-        String searchString = get(intent).getStringExtra("searchString");
+        String searchString = get(intent).getStringExtra(SEARCH);
         fetchBeerSearch(searchString, listenerId);
     }
 
@@ -205,29 +214,23 @@ public class BeerSearchFetcher extends FetcherBase<Uri> {
         return networkApi.search(networkUtils.createRequestParams("bn", get(searchString)));
     }
 
-    @NonNull
-    @Override
-    public Uri getServiceUri() {
-        return RateBeerService.SEARCH;
-    }
-
-    // Brewer search store needs separate query identifiers for normal searches and fixed searches
+    // Beer search store needs separate query identifiers for normal searches and fixed searches
     // (top50, top in country, top in style). Fixed searches come attached with a service uri
     // identifier to make sure they stand apart from the normal searches.
-    public static String getQueryId(@NonNull Uri serviceUri, @NonNull String query) {
+    public static String getQueryId(@NonNull String serviceUri, @NonNull String query) {
         checkNotNull(serviceUri);
         checkNotNull(query);
 
-        if (serviceUri.equals(RateBeerService.SEARCH)) {
+        if (serviceUri == NAME) {
             return query;
         } else if (!query.isEmpty()) {
             return String.format("%s_%s", serviceUri, query);
         } else {
-            return serviceUri.toString();
+            return serviceUri;
         }
     }
 
-    public static String getQueryId(@NonNull Uri serviceUri) {
+    public static String getQueryId(@NonNull String serviceUri) {
         return getQueryId(serviceUri, "");
     }
 

@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,18 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.network.fetchers
+package quickbeer.android.network.fetchers.impl
 
 import android.content.Intent
-import android.net.Uri
 import androidx.annotation.IntRange
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
-import io.reark.reark.network.fetchers.FetcherBase
 import io.reark.reark.pojo.NetworkRequestStatus
-import io.reark.reark.utils.Preconditions.checkNotNull
 import okhttp3.ResponseBody
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
@@ -36,7 +33,7 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.RateBeerService
+import quickbeer.android.network.fetchers.CheckingFetcher
 import quickbeer.android.network.fetchers.actions.LoginAndRetry
 import quickbeer.android.network.utils.NetworkUtils
 import quickbeer.android.utils.ValueUtils
@@ -51,18 +48,15 @@ class TickBeerFetcher(
     val beerStore: BeerStore,
     val beerListStore: BeerListStore,
     val userStore: UserStore
-) : FetcherBase<Uri>(networkRequestStatus) {
+) : CheckingFetcher(networkRequestStatus, NAME) {
+
+    override fun required() = listOf(BEER_ID, RATING)
 
     override fun fetch(intent: Intent, listenerId: Int) {
-        checkNotNull(intent)
+        if (!validateParams(intent)) return
 
-        if (!intent.hasExtra("beerId") || !intent.hasExtra("rating")) {
-            Timber.e("Missing required fetch parameters!")
-            return
-        }
-
-        val beerId = intent.getIntExtra("beerId", 0)
-        val rating = intent.getIntExtra("rating", 0)
+        val beerId = intent.getIntExtra(BEER_ID, 0)
+        val rating = intent.getIntExtra(RATING, 0)
         val uri = getUniqueUri(beerId, rating)
         val requestId = uri.hashCode()
 
@@ -83,7 +77,11 @@ class TickBeerFetcher(
             .doOnSuccess { beerStore.put(it) }
             .zipWith(
                 getTickedBeers(),
-                BiFunction<Beer, List<Int>, List<Int>> { beer, ticks -> appendTick(beer, ticks) })
+                BiFunction<Beer, List<Int>, List<Int>> { beer, ticks ->
+                    appendTick(
+                        beer,
+                        ticks)
+                })
             .zipWith(
                 getQueryId(),
                 BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId ->
@@ -112,7 +110,7 @@ class TickBeerFetcher(
 
     private fun getQueryId(): Single<String> = getUserId()
         .map { it.toString() }
-        .map { BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, it) }
+        .map { BeerSearchFetcher.getQueryId(name, it) }
 
     private fun createNetworkObservable(
         beerId: Int,
@@ -134,11 +132,10 @@ class TickBeerFetcher(
             .retryWhen(LoginAndRetry(networkApi, userStore))
     }
 
-    override fun getServiceUri(): Uri {
-        return RateBeerService.TICK_BEER
-    }
-
     companion object {
+        const val NAME = "__tick_beer"
+        const val BEER_ID = "beerId"
+        const val RATING = "rating"
 
         private val SUCCESS_RESPONSES = arrayOf("added", "updated", "removed", "deleted")
 

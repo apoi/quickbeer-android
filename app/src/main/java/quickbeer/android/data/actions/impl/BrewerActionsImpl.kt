@@ -23,6 +23,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.BrewerMetadata
@@ -32,9 +33,9 @@ import quickbeer.android.data.stores.BrewerMetadataStore
 import quickbeer.android.data.stores.BrewerStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
-import quickbeer.android.network.fetchers.BrewerFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher
+import quickbeer.android.network.fetchers.impl.BrewerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -97,9 +98,9 @@ class BrewerActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.BREWER.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("id", brewerId)
+            putExtra(ServiceDataLayer.SERVICE_URI, BrewerFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BrewerFetcher.BREWER_ID, brewerId)
         }
 
         context.startService(intent)
@@ -127,7 +128,7 @@ class BrewerActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BREWER_BEERS, brewerId.toString()))
+            .getOnce(BeerSearchFetcher.getQueryId(BrewerBeersFetcher.NAME, brewerId.toString()))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -141,7 +142,7 @@ class BrewerActionsImpl @Inject constructor(
     private fun getBrewerBeersResultStream(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBrewerBeersResultStream(%s)", brewerId)
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.BREWER_BEERS, brewerId.toString())
+        val queryId = BeerSearchFetcher.getQueryId(BrewerBeersFetcher.NAME, brewerId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -161,9 +162,9 @@ class BrewerActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.BREWER_BEERS.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("brewerId", brewerId)
+            putExtra(ServiceDataLayer.SERVICE_URI, BrewerBeersFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BrewerBeersFetcher.BREWER_ID, brewerId)
         }
 
         context.startService(intent)

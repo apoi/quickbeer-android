@@ -19,12 +19,8 @@ package quickbeer.android.data;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
-import io.reark.reark.network.fetchers.UriFetcherManager;
 import quickbeer.android.data.access.ServiceDataLayer;
 import quickbeer.android.data.actions.BarcodeActions;
 import quickbeer.android.data.actions.BeerActions;
@@ -59,7 +55,10 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.data.stores.StoreModule;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.injections.ForApplication;
+import quickbeer.android.network.fetchers.FetcherManager;
 import quickbeer.android.network.fetchers.FetcherModule;
+
+import javax.inject.Singleton;
 
 @Module(includes = { FetcherModule.class, StoreModule.class })
 public final class DataModule {
@@ -156,7 +155,7 @@ public final class DataModule {
     @Provides
     @Singleton
     static ServiceDataLayer provideServiceDataLayer(
-            @NonNull UriFetcherManager fetcherManager) {
+            @NonNull FetcherManager fetcherManager) {
         return new ServiceDataLayer(fetcherManager);
     }
 }

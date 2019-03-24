@@ -24,13 +24,14 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import quickbeer.android.Constants
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.utils.StringUtils
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
@@ -81,7 +82,7 @@ class BeerSearchActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, normalized))
+            .getOnce(BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, normalized))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -95,7 +96,7 @@ class BeerSearchActionsImpl @Inject constructor(
     private fun getBeerSearchResultStream(query: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBeerSearchResultStream(%s)", query)
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.SEARCH, query)
+        val queryId = BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, query)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -115,9 +116,9 @@ class BeerSearchActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.SEARCH.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("searchString", query)
+            putExtra(ServiceDataLayer.SERVICE_URI, BeerSearchFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BeerSearchFetcher.SEARCH, query)
         }
 
         context.startService(intent)

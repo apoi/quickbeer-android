@@ -24,6 +24,7 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
@@ -32,7 +33,8 @@ import quickbeer.android.data.stores.CountryStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeersInCountryFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -77,7 +79,7 @@ class CountryActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, countryId.toString()))
+            .getOnce(BeerSearchFetcher.getQueryId(BeersInCountryFetcher.NAME, countryId.toString()))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -91,7 +93,7 @@ class CountryActionsImpl @Inject constructor(
     private fun getBeersInCountryResultStream(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBeersInCountryResultStream(%s)", countryId)
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.COUNTRY, countryId.toString())
+        val queryId = BeerSearchFetcher.getQueryId(BeersInCountryFetcher.NAME, countryId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -111,9 +113,9 @@ class CountryActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.COUNTRY.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("countryId", countryId)
+            putExtra(ServiceDataLayer.SERVICE_URI, BeersInCountryFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BeersInCountryFetcher.COUNTRY_ID, countryId)
         }
 
         context.startService(intent)

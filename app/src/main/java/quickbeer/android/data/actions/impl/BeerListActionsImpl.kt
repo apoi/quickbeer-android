@@ -23,14 +23,15 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BeerListActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.TopBeersFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -46,7 +47,7 @@ class BeerListActionsImpl @Inject constructor(
     private fun getTopBeersResultStream(): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getTopBeersResultStream")
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.TOP50)
+        val queryId = BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -91,7 +92,7 @@ class BeerListActionsImpl @Inject constructor(
         Timber.v("triggerGetBeers")
 
         // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore.getOnce(BeerSearchFetcher.getQueryId(RateBeerService.TOP50))
+        val triggerFetchIfEmpty = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -107,8 +108,8 @@ class BeerListActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.TOP50.toString())
-            putExtra("listenerId", listenerId)
+            putExtra(ServiceDataLayer.SERVICE_URI, TopBeersFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
         }
 
         context.startService(intent)

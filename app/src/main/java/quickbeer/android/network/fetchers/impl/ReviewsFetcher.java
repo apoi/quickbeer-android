@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.network.fetchers;
+package quickbeer.android.network.fetchers.impl;
 
 import android.content.Intent;
 import android.net.Uri;
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.threeten.bp.ZonedDateTime;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +45,18 @@ import quickbeer.android.data.stores.ReviewListStore;
 import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.fetchers.CheckingFetcher;
 import quickbeer.android.network.utils.NetworkUtils;
 import timber.log.Timber;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;
 
-public class ReviewsFetcher extends FetcherBase<Uri> {
+public class ReviewsFetcher extends CheckingFetcher {
+
+    public static final String NAME = "__user_reviews";
+    public static final String USER_ID = "userId";
+    public static final String NUM_REVIEWS = "numReviews";
 
     @NonNull
     protected final NetworkApi networkApi;
@@ -68,7 +75,7 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
                           @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                           @NonNull ReviewStore reviewStore,
                           @NonNull ReviewListStore reviewListStore) {
-        super(networkRequestStatus);
+        super(networkRequestStatus, NAME);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -77,16 +84,16 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
     }
 
     @Override
+    public @NotNull List<String> required() {
+        return Arrays.asList(USER_ID, NUM_REVIEWS);
+    }
+
+    @Override
     public void fetch(@NonNull Intent intent, int listenerId) {
-        checkNotNull(intent);
+        if (!validateParams(intent)) return;
 
-        if (!intent.hasExtra("numReviews") || !intent.hasExtra("userId")) {
-            Timber.e("Missing required fetch parameters!");
-            return;
-        }
-
-        String userId = get(intent).getStringExtra("userId");
-        int numReviews = get(intent).getIntExtra("numReviews", 0);
+        String userId = get(intent).getStringExtra(USER_ID);
+        int numReviews = get(intent).getIntExtra(NUM_REVIEWS, 0);
 
         fetchReviewedBeers(userId, numReviews, listenerId);
     }
@@ -178,12 +185,6 @@ public class ReviewsFetcher extends FetcherBase<Uri> {
         params.put("p", page);
 
         return networkApi.getUserReviews(params);
-    }
-
-    @NonNull
-    @Override
-    public Uri getServiceUri() {
-        return RateBeerService.USER_REVIEWS;
     }
 
     @NonNull

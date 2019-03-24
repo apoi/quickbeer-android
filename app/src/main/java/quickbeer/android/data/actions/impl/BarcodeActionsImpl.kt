@@ -23,13 +23,14 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BarcodeActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BarcodeSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
@@ -48,7 +49,7 @@ class BarcodeActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode))
+            .getOnce(BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode))
             .toObservable()
             .filter { it.isNoneOrEmpty() }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -66,7 +67,7 @@ class BarcodeActionsImpl @Inject constructor(
     private fun getBarcodeSearchResultStream(barcode: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBarcodeSearchResultStream(%s)", barcode)
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.BARCODE, barcode)
+        val queryId = BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -86,9 +87,9 @@ class BarcodeActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.BARCODE.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("barcode", barcode)
+            putExtra(ServiceDataLayer.SERVICE_URI, BarcodeSearchFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BarcodeSearchFetcher.BARCODE, barcode)
         }
 
         context.startService(intent)

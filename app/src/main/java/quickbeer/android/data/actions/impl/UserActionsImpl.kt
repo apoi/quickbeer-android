@@ -24,13 +24,13 @@ import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
 import quickbeer.android.Constants
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.UserActions
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.LoginFetcher
+import quickbeer.android.network.fetchers.impl.LoginFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -46,10 +46,10 @@ class UserActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.LOGIN.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("username", username)
-            putExtra("password", password)
+            putExtra(ServiceDataLayer.SERVICE_URI, LoginFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(LoginFetcher.USERNAME, username)
+            putExtra(LoginFetcher.PASSWORD, password)
         }
 
         context.startService(intent)

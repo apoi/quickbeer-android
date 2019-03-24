@@ -23,6 +23,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.BeerMetadata
@@ -33,9 +34,10 @@ import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerFetcher
-import quickbeer.android.network.fetchers.ReviewFetcher
-import quickbeer.android.network.fetchers.TickBeerFetcher
+import quickbeer.android.network.fetchers.impl.BeerFetcher
+import quickbeer.android.network.fetchers.impl.ReviewFetcher
+import quickbeer.android.network.fetchers.impl.ReviewsFetcher
+import quickbeer.android.network.fetchers.impl.TickBeerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import timber.log.Timber
@@ -96,10 +98,10 @@ class BeerActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.TICK_BEER.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("beerId", beerId)
-            putExtra("rating", rating)
+            putExtra(ServiceDataLayer.SERVICE_URI, TickBeerFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(TickBeerFetcher.BEER_ID, beerId)
+            putExtra(TickBeerFetcher.RATING, rating)
         }
 
         context.startService(intent)
@@ -153,9 +155,9 @@ class BeerActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.BEER.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("id", beerId)
+            putExtra(ServiceDataLayer.SERVICE_URI, BeerFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BeerFetcher.BEER_ID, beerId)
         }
 
         context.startService(intent)
@@ -203,10 +205,10 @@ class BeerActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.BEER_REVIEWS.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("beerId", beerId)
-            putExtra("page", page)
+            putExtra(ServiceDataLayer.SERVICE_URI, ReviewFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(ReviewFetcher.BEER_ID, beerId)
+            putExtra(ReviewFetcher.PAGE, page)
         }
 
         context.startService(intent)

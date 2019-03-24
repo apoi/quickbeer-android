@@ -43,6 +43,19 @@ import quickbeer.android.data.stores.ReviewStore;
 import quickbeer.android.data.stores.UserStore;
 import quickbeer.android.network.NetworkApi;
 import quickbeer.android.network.NetworkModule;
+import quickbeer.android.network.fetchers.impl.BarcodeSearchFetcher;
+import quickbeer.android.network.fetchers.impl.BeerFetcher;
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher;
+import quickbeer.android.network.fetchers.impl.BeersInCountryFetcher;
+import quickbeer.android.network.fetchers.impl.BeersInStyleFetcher;
+import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher;
+import quickbeer.android.network.fetchers.impl.BrewerFetcher;
+import quickbeer.android.network.fetchers.impl.LoginFetcher;
+import quickbeer.android.network.fetchers.impl.ReviewFetcher;
+import quickbeer.android.network.fetchers.impl.ReviewsFetcher;
+import quickbeer.android.network.fetchers.impl.TickBeerFetcher;
+import quickbeer.android.network.fetchers.impl.TicksFetcher;
+import quickbeer.android.network.fetchers.impl.TopBeersFetcher;
 import quickbeer.android.network.utils.NetworkUtils;
 
 @Module(includes = NetworkModule.class)
@@ -50,7 +63,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.LOGIN)
-    static Fetcher<Uri> provideLoginFetcher(
+    static Fetcher<String> provideLoginFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull ClearableCookieJar cookieJar,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -63,7 +76,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BEER)
-    static Fetcher<Uri> provideBeerFetcher(
+    static Fetcher<String> provideBeerFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -78,7 +91,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BEER_SEARCH)
-    static Fetcher<Uri> provideBeerSearchFetcher(
+    static Fetcher<String> provideBeerSearchFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -93,7 +106,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BARCODE_SEARCH)
-    static Fetcher<Uri> provideBarcodeSearchFetcher(
+    static Fetcher<String> provideBarcodeSearchFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -108,7 +121,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.TOP_BEERS)
-    static Fetcher<Uri> provideTopBeersFetcher(
+    static Fetcher<String> provideTopBeersFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -123,7 +136,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BEERS_IN_COUNTRY)
-    static Fetcher<Uri> provideBeersInCountryFetcher(
+    static Fetcher<String> provideBeersInCountryFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -138,7 +151,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BEERS_IN_STYLE)
-    static Fetcher<Uri> provideBeersInStyleFetcher(
+    static Fetcher<String> provideBeersInStyleFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -153,7 +166,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BREWER)
-    static Fetcher<Uri> provideBrewerFetcher(
+    static Fetcher<String> provideBrewerFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -168,7 +181,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.BREWER_BEERS)
-    static Fetcher<Uri> provideBrewerBeersFetcher(
+    static Fetcher<String> provideBrewerBeersFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -183,7 +196,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.REVIEW)
-    static Fetcher<Uri> provideReviewFetcher(
+    static Fetcher<String> provideReviewFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -198,7 +211,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.USER_REVIEWS)
-    static Fetcher<Uri> provideReviewsFetcher(
+    static Fetcher<String> provideReviewsFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -213,7 +226,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.TICKS)
-    static Fetcher<Uri> provideTicksFetcher(
+    static Fetcher<String> provideTicksFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -230,7 +243,7 @@ public final class FetcherModule {
 
     @Provides
     @Named(Fetchers.TICK)
-    static Fetcher<Uri> provideTickBeerFetcher(
+    static Fetcher<String> provideTickBeerFetcher(
             @NonNull NetworkApi networkApi,
             @NonNull NetworkUtils networkUtils,
             @NonNull NetworkRequestStatusStore requestStatusStore,
@@ -246,21 +259,21 @@ public final class FetcherModule {
     }
 
     @Provides
-    static UriFetcherManager provideUriFetcherManager(
-            @Named(Fetchers.LOGIN) @NonNull Fetcher<Uri> loginFetcher,
-            @Named(Fetchers.BEER) @NonNull Fetcher<Uri> beerFetcher,
-            @Named(Fetchers.BEER_SEARCH) @NonNull Fetcher<Uri> beerSearchFetcher,
-            @Named(Fetchers.BARCODE_SEARCH) @NonNull Fetcher<Uri> barcodeSearchFetcher,
-            @Named(Fetchers.TOP_BEERS) @NonNull Fetcher<Uri> topBeersFetcher,
-            @Named(Fetchers.BEERS_IN_COUNTRY) @NonNull Fetcher<Uri> beersInCountryFetcher,
-            @Named(Fetchers.BEERS_IN_STYLE) @NonNull Fetcher<Uri> beersInStyleFetcher,
-            @Named(Fetchers.BREWER) @NonNull Fetcher<Uri> brewerFetcher,
-            @Named(Fetchers.BREWER_BEERS) @NonNull Fetcher<Uri> brewerBeersFetcher,
-            @Named(Fetchers.REVIEW) @NonNull Fetcher<Uri> reviewFetcher,
-            @Named(Fetchers.USER_REVIEWS) @NonNull Fetcher<Uri> userReviewsFetcher,
-            @Named(Fetchers.TICKS) @NonNull Fetcher<Uri> ticksFetcher,
-            @Named(Fetchers.TICK) @NonNull Fetcher<Uri> tickBeerFetcher) {
-        List<Fetcher<Uri>> fetchers = Arrays.asList(
+    static FetcherManager provideFetcherManager(
+            @Named(Fetchers.LOGIN) @NonNull Fetcher<String> loginFetcher,
+            @Named(Fetchers.BEER) @NonNull Fetcher<String> beerFetcher,
+            @Named(Fetchers.BEER_SEARCH) @NonNull Fetcher<String> beerSearchFetcher,
+            @Named(Fetchers.BARCODE_SEARCH) @NonNull Fetcher<String> barcodeSearchFetcher,
+            @Named(Fetchers.TOP_BEERS) @NonNull Fetcher<String> topBeersFetcher,
+            @Named(Fetchers.BEERS_IN_COUNTRY) @NonNull Fetcher<String> beersInCountryFetcher,
+            @Named(Fetchers.BEERS_IN_STYLE) @NonNull Fetcher<String> beersInStyleFetcher,
+            @Named(Fetchers.BREWER) @NonNull Fetcher<String> brewerFetcher,
+            @Named(Fetchers.BREWER_BEERS) @NonNull Fetcher<String> brewerBeersFetcher,
+            @Named(Fetchers.REVIEW) @NonNull Fetcher<String> reviewFetcher,
+            @Named(Fetchers.USER_REVIEWS) @NonNull Fetcher<String> userReviewsFetcher,
+            @Named(Fetchers.TICKS) @NonNull Fetcher<String> ticksFetcher,
+            @Named(Fetchers.TICK) @NonNull Fetcher<String> tickBeerFetcher) {
+        List<Fetcher<String>> fetchers = Arrays.asList(
                 loginFetcher,
                 beerFetcher,
                 beerSearchFetcher,
@@ -276,8 +289,6 @@ public final class FetcherModule {
                 tickBeerFetcher
         );
 
-        return new UriFetcherManager.Builder()
-                .fetchers(fetchers)
-                .build();
+        return new FetcherManager(fetchers);
     }
 }

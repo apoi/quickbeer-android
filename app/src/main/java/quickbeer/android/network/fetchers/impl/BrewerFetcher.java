@@ -1,6 +1,6 @@
-/**
+/*
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,31 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.network.fetchers;
+package quickbeer.android.network.fetchers.impl;
 
 import android.content.Intent;
-import android.net.Uri;
 import androidx.annotation.NonNull;
-
 import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
-import io.reark.reark.network.fetchers.FetcherBase;
 import io.reark.reark.pojo.NetworkRequestStatus;
+import org.jetbrains.annotations.NotNull;
 import quickbeer.android.data.pojos.Brewer;
 import quickbeer.android.data.pojos.BrewerMetadata;
 import quickbeer.android.data.stores.BrewerMetadataStore;
 import quickbeer.android.data.stores.BrewerStore;
 import quickbeer.android.network.NetworkApi;
-import quickbeer.android.network.RateBeerService;
+import quickbeer.android.network.fetchers.CheckingFetcher;
 import quickbeer.android.network.utils.NetworkUtils;
 import timber.log.Timber;
 
-import static io.reark.reark.utils.Preconditions.checkNotNull;
+import java.util.Collections;
+import java.util.List;
+
 import static io.reark.reark.utils.Preconditions.get;
 
-public class BrewerFetcher extends FetcherBase<Uri> {
+public class BrewerFetcher extends CheckingFetcher {
+
+    public static final String NAME = "__brewer";
+    public static final String BREWER_ID = "brewerId";
 
     @NonNull
     private final NetworkApi networkApi;
@@ -58,7 +61,7 @@ public class BrewerFetcher extends FetcherBase<Uri> {
                          @NonNull Consumer<NetworkRequestStatus> networkRequestStatus,
                          @NonNull BrewerStore brewerStore,
                          @NonNull BrewerMetadataStore metadataStore) {
-        super(networkRequestStatus);
+        super(networkRequestStatus, NAME);
 
         this.networkApi = get(networkApi);
         this.networkUtils = get(networkUtils);
@@ -67,15 +70,16 @@ public class BrewerFetcher extends FetcherBase<Uri> {
     }
 
     @Override
+    public @NotNull
+    List<String> required() {
+        return Collections.singletonList(BREWER_ID);
+    }
+
+    @Override
     public void fetch(@NonNull Intent intent, int listenerId) {
-        checkNotNull(intent);
+        if (!validateParams(intent)) return;
 
-        if (!intent.hasExtra("id")) {
-            Timber.e("Missing required fetch parameters!");
-            return;
-        }
-
-        int brewerId = get(intent).getIntExtra("id", 0);
+        int brewerId = get(intent).getIntExtra(BREWER_ID, 0);
         String uri = getUniqueUri(brewerId);
 
         addListener(brewerId, listenerId);
@@ -102,12 +106,6 @@ public class BrewerFetcher extends FetcherBase<Uri> {
     @NonNull
     private Single<Brewer> createNetworkObservable(int brewerId) {
         return networkApi.getBrewer(networkUtils.createRequestParams("b", String.valueOf(brewerId)));
-    }
-
-    @NonNull
-    @Override
-    public Uri getServiceUri() {
-        return RateBeerService.BREWER;
     }
 
     @NonNull

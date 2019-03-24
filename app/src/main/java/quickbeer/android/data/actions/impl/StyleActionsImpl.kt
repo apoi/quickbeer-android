@@ -24,6 +24,7 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
@@ -31,8 +32,8 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStyleStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeersInStyleFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -77,7 +78,7 @@ class StyleActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.STYLE, styleId.toString()))
+            .getOnce(BeerSearchFetcher.getQueryId(BeersInStyleFetcher.NAME, styleId.toString()))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -91,7 +92,7 @@ class StyleActionsImpl @Inject constructor(
     private fun getBeersInStyleResultStream(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getBeersInStyleResultStream(%s)", styleId)
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.STYLE, styleId.toString())
+        val queryId = BeerSearchFetcher.getQueryId(BeersInStyleFetcher.NAME, styleId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -111,9 +112,9 @@ class StyleActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.STYLE.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("styleId", styleId)
+            putExtra(ServiceDataLayer.SERVICE_URI, BeersInStyleFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(BeersInStyleFetcher.STYLE_ID, styleId)
         }
 
         context.startService(intent)

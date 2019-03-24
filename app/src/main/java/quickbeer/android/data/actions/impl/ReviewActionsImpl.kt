@@ -24,6 +24,7 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
+import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
@@ -31,8 +32,9 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.ReviewStore
 import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
-import quickbeer.android.network.fetchers.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.ReviewsFetcher
+import quickbeer.android.network.fetchers.impl.TicksFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -77,7 +79,7 @@ class ReviewActionsImpl @Inject constructor(
     ): Observable<DataStreamNotification<ItemList<String>>> {
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, userId))
+            .getOnce(BeerSearchFetcher.getQueryId(TicksFetcher.NAME, userId))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -91,7 +93,7 @@ class ReviewActionsImpl @Inject constructor(
     private fun getTicksResultStream(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getTicksResultStream")
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.USER_TICKS, userId)
+        val queryId = BeerSearchFetcher.getQueryId(TicksFetcher.NAME, userId)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -112,9 +114,9 @@ class ReviewActionsImpl @Inject constructor(
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java)
 
-        intent.putExtra("serviceUriString", RateBeerService.USER_TICKS.toString())
-        intent.putExtra("listenerId", listenerId)
-        intent.putExtra("userId", userId)
+        intent.putExtra(ServiceDataLayer.SERVICE_URI, TicksFetcher.NAME)
+        intent.putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+        intent.putExtra(TicksFetcher.USER_ID, userId)
         context.startService(intent)
 
         return listenerId
@@ -143,7 +145,7 @@ class ReviewActionsImpl @Inject constructor(
     ): Observable<DataStreamNotification<ItemList<String>>> {
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(RateBeerService.USER_REVIEWS, userId))
+            .getOnce(BeerSearchFetcher.getQueryId(ReviewsFetcher.NAME, userId))
             .toObservable()
             .filter { it.match({ needsReload(it) }, { true }) }
             .doOnNext { Timber.v("Search not cached, fetching") }
@@ -157,7 +159,7 @@ class ReviewActionsImpl @Inject constructor(
     private fun getReviewsResultStream(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("getReviewsResultStream")
 
-        val queryId = BeerSearchFetcher.getQueryId(RateBeerService.USER_REVIEWS, userId)
+        val queryId = BeerSearchFetcher.getQueryId(ReviewsFetcher.NAME, userId)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
         val requestStatusObservable = requestStatusStore
@@ -177,10 +179,10 @@ class ReviewActionsImpl @Inject constructor(
 
         val listenerId = createListenerId()
         val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra("serviceUriString", RateBeerService.USER_REVIEWS.toString())
-            putExtra("listenerId", listenerId)
-            putExtra("numReviews", 1)
-            putExtra("userId", userId)
+            putExtra(ServiceDataLayer.SERVICE_URI, ReviewsFetcher.NAME)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+            putExtra(ReviewsFetcher.NUM_REVIEWS, 1)
+            putExtra(ReviewsFetcher.USER_ID, userId)
         }
 
         context.startService(intent)
