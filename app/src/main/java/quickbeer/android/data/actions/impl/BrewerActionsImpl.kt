@@ -58,7 +58,7 @@ class BrewerActionsImpl @Inject constructor(
             .firstOrError()
     }
 
-    fun getBrewer(brewerId: Int, needsReload: (Brewer) -> Boolean): Observable<DataStreamNotification<Brewer>> {
+    private fun getBrewer(brewerId: Int, needsReload: (Brewer) -> Boolean): Observable<DataStreamNotification<Brewer>> {
         Timber.v("getBrewer($brewerId)")
 
         // Trigger a fetch only if full details haven't been fetched

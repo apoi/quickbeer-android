@@ -19,10 +19,13 @@ package quickbeer.android.features.list;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,8 +43,6 @@ import quickbeer.android.viewmodels.SearchViewViewModel;
 import quickbeer.android.views.ProgressIndicatorBar;
 import quickbeer.android.views.SearchView;
 import timber.log.Timber;
-
-import javax.inject.Inject;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;

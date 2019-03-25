@@ -18,17 +18,14 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BarcodeActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
-import quickbeer.android.network.NetworkService
 import quickbeer.android.network.fetchers.impl.BarcodeSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.utils.kotlin.filterToValue
