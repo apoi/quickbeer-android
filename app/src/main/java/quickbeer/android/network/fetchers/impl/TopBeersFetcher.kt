@@ -40,7 +40,7 @@ class TopBeersFetcher(
     }
 
     override fun sort(list: List<Beer>): List<Beer> {
-        return BeerSearchFetcher.sortByRating(list)
+        return list.sortedWith(compareByDescending(Beer::averageRating).thenBy(Beer::id))
     }
 
     override fun createNetworkObservable(searchString: String): Single<List<Beer>> {

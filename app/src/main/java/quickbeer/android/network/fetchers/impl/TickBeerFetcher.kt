@@ -69,7 +69,7 @@ class TickBeerFetcher(
 
         Timber.d("Tick rating of %s for beer %s", rating, beerId)
 
-        val disposable = getUserId()
+        getUserId()
             .flatMap { createNetworkObservable(beerId, rating, it) }
             .flatMap { beerStore.getOnce(beerId) }
             .compose { it.valueOrError() }
@@ -78,25 +78,18 @@ class TickBeerFetcher(
             .zipWith(
                 getTickedBeers(),
                 BiFunction<Beer, List<Int>, List<Int>> { beer, ticks ->
-                    appendTick(
-                        beer,
-                        ticks)
+                    appendTick(beer, ticks)
                 })
             .zipWith(
                 getQueryId(),
                 BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId ->
-                    ItemList.create(
-                        ticksQueryId,
-                        ticks,
-                        ZonedDateTime.now()
-                    )
+                    ItemList.create(ticksQueryId, ticks, ZonedDateTime.now())
                 })
             .doOnSubscribe { startRequest(requestId, uri) }
             .doOnSuccess { completeRequest(requestId, uri, false) }
             .doOnError(doOnError(requestId, uri))
             .subscribe({ beerListStore.put(it) }, { Timber.w(it, "Error ticking beer") })
-
-        addRequest(requestId, disposable)
+            .also { addRequest(requestId, it) }
     }
 
     private fun getUserId(): Single<Int> = userStore.getOnce(Constants.DEFAULT_USER_ID)

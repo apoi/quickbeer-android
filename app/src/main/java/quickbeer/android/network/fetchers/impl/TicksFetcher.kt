@@ -51,7 +51,7 @@ class TicksFetcher(
     }
 
     override fun sort(list: List<Beer>): List<Beer> {
-        return BeerSearchFetcher.sortByTickDate(list)
+        return list.sortedWith(compareByDescending(Beer::tickDate).thenBy(Beer::id))
     }
 
     override fun createNetworkObservable(userId: String): Single<List<Beer>> {

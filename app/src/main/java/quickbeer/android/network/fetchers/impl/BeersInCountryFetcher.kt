@@ -26,8 +26,6 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.network.NetworkApi
 import quickbeer.android.network.utils.NetworkUtils
-import kotlin.collections.List
-import kotlin.collections.listOf
 import kotlin.collections.set
 
 class BeersInCountryFetcher(
@@ -50,7 +48,7 @@ class BeersInCountryFetcher(
     }
 
     override fun sort(list: List<Beer>): List<Beer> {
-        return BeerSearchFetcher.sortByRating(list)
+        return list.sortedWith(compareByDescending(Beer::averageRating).thenBy(Beer::id))
     }
 
     override fun createNetworkObservable(countryId: String): Single<List<Beer>> {
