@@ -43,27 +43,6 @@ public interface Constants {
     String ID_KEY = "idKey";
     String PAGER_INDEX = "pagerIndex";
 
-    interface Fetchers {
-        String LOGIN = "loginFetcher";
-        String BEER = "beerFetcher";
-
-        String BEER_SEARCH = "beerSearchFetcher";
-        String BARCODE_SEARCH = "barcodeSearchFetcher";
-        String TOP_BEERS = "topBeersFetcher";
-
-        String BEERS_IN_COUNTRY = "beersInCountryFetcher";
-        String BEERS_IN_STYLE = "beersInStyleFetcher";
-
-        String BREWER = "brewerFetcher";
-        String BREWER_BEERS = "brewerBeersFetcher";
-
-        String REVIEW = "reviewFetcher";
-        String USER_REVIEWS = "reviewsFetcher";
-
-        String TICKS = "ticksFetcher";
-        String TICK = "tickBeerFetcher";
-    }
-
     interface Preferences {
         String FIRST_RUN_DRAWER = "firstRunDrawer";
     }
