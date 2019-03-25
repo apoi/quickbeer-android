@@ -47,7 +47,7 @@ class BeerSearchActionsImpl @Inject constructor(
     // SEARCH BEERS
 
     override fun searchQueries(): Single<List<String>> {
-        Timber.v("searchQueries")
+        Timber.v("searchQueries()")
 
         return beerListStore.getOnce()
             .toObservable()
@@ -59,13 +59,13 @@ class BeerSearchActionsImpl @Inject constructor(
     }
 
     override fun search(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("search")
+        Timber.v("search()")
 
         return triggerSearch(query, { it.items.isEmpty() })
     }
 
     override fun fetchSearch(query: String): Single<Boolean> {
-        Timber.v("fetchSearch")
+        Timber.v("fetchSearch()")
 
         return triggerSearch(query, { true })
             .filter { it.isCompleted }
@@ -77,7 +77,7 @@ class BeerSearchActionsImpl @Inject constructor(
         query: String,
         needsReload: (ItemList<String>) -> Boolean
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerSearch(%s)", query)
+        Timber.v("triggerSearch($query)")
 
         val normalized = StringUtils.normalize(query)
 
@@ -95,7 +95,7 @@ class BeerSearchActionsImpl @Inject constructor(
     }
 
     private fun getBeerSearchResultStream(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeerSearchResultStream(%s)", query)
+        Timber.v("getBeerSearchResultStream($query)")
 
         val queryId = BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, query)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -113,7 +113,7 @@ class BeerSearchActionsImpl @Inject constructor(
     }
 
     private fun fetchBeerSearch(query: String): Int {
-        Timber.v("fetchBeerSearch(%s)", query)
+        Timber.v("fetchBeerSearch($query)")
 
         return createServiceRequest(
             serviceUri = BeerSearchFetcher.NAME,

@@ -46,7 +46,7 @@ class BeerListActionsImpl @Inject constructor(
 
     // No need to filter stale statuses?
     private fun getTopBeersResultStream(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getTopBeersResultStream")
+        Timber.v("getTopBeersResultStream()")
 
         val queryId = BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -65,7 +65,7 @@ class BeerListActionsImpl @Inject constructor(
     // ACCESSED BEERS
 
     override fun accessed(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("accessed")
+        Timber.v("accessed()")
 
         return beerMetadataStore.accessedIdsOnce
             .map { ids -> ItemList<String>(null, ids, null) }
@@ -75,13 +75,13 @@ class BeerListActionsImpl @Inject constructor(
     // TOP BEERS
 
     override fun topBeers(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("topBeers")
+        Timber.v("topBeers()")
 
         return triggerGet({ list -> list.items.isEmpty() })
     }
 
     override fun fetchTopBeers(): Single<Boolean> {
-        Timber.v("fetchTopBeers")
+        Timber.v("fetchTopBeers()")
 
         return triggerGet({ true })
             .filter { it.isCompleted }
@@ -90,7 +90,7 @@ class BeerListActionsImpl @Inject constructor(
     }
 
     private fun triggerGet(needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers")
+        Timber.v("triggerGetBeers()")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
@@ -105,7 +105,7 @@ class BeerListActionsImpl @Inject constructor(
     }
 
     private fun triggerFetch(): Int {
-        Timber.v("triggerFetch")
+        Timber.v("triggerFetch()")
 
         return createServiceRequest(serviceUri = TopBeersFetcher.NAME)
     }

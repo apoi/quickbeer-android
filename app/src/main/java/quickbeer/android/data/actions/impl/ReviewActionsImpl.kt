@@ -56,13 +56,13 @@ class ReviewActionsImpl @Inject constructor(
     // USER TICKS
 
     override fun getTicks(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getTicks(%s)", userId)
+        Timber.v("getTicks($userId)")
 
         return getTicks(userId, { it.items.isEmpty() })
     }
 
     override fun fetchTicks(userId: String): Single<Boolean> {
-        Timber.v("fetchTicks(%s)", userId)
+        Timber.v("fetchTicks($userId)")
 
         return getTicks(userId, { true })
             .filter { it.isCompleted }
@@ -88,7 +88,7 @@ class ReviewActionsImpl @Inject constructor(
     }
 
     private fun getTicksResultStream(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getTicksResultStream")
+        Timber.v("getTicksResultStream($userId)")
 
         val queryId = BeerSearchFetcher.getQueryId(TicksFetcher.NAME, userId)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -106,7 +106,7 @@ class ReviewActionsImpl @Inject constructor(
     }
 
     private fun triggerTicksFetch(userId: String): Int {
-        Timber.v("triggerTicksFetch(%s)", userId)
+        Timber.v("triggerTicksFetch($userId)")
 
         return createServiceRequest(
             serviceUri = TicksFetcher.NAME,
@@ -116,13 +116,13 @@ class ReviewActionsImpl @Inject constructor(
     // USER REVIEWS
 
     override fun getReviews(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getReviews(%s)", userId)
+        Timber.v("getReviews($userId)")
 
         return getReviews(userId, { it.items.isEmpty() })
     }
 
     override fun fetchReviews(userId: String): Single<Boolean> {
-        Timber.v("fetchReviews(%s)", userId)
+        Timber.v("fetchReviews($userId)")
 
         return getReviews(userId, { true })
             .filter { it.isCompleted }
@@ -148,7 +148,7 @@ class ReviewActionsImpl @Inject constructor(
     }
 
     private fun getReviewsResultStream(userId: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getReviewsResultStream")
+        Timber.v("getReviewsResultStream($userId)")
 
         val queryId = BeerSearchFetcher.getQueryId(ReviewsFetcher.NAME, userId)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -166,7 +166,7 @@ class ReviewActionsImpl @Inject constructor(
     }
 
     private fun triggerReviewFetch(userId: String): Int {
-        Timber.v("triggerReviewFetch(%s)", userId)
+        Timber.v("triggerReviewFetch($userId)")
 
         return createServiceRequest(
             serviceUri = ReviewsFetcher.NAME,

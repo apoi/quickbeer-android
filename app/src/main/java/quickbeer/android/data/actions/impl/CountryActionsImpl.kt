@@ -18,24 +18,19 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.CountryStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
-import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeersInCountryFetcher
-import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -50,7 +45,7 @@ class CountryActionsImpl @Inject constructor(
     // COUNTRIES
 
     override operator fun get(countryId: Int): Single<Option<Country>> {
-        Timber.v("get(%s)", countryId)
+        Timber.v("get($countryId)")
 
         return countryStore.getOnce(countryId)
     }
@@ -58,13 +53,13 @@ class CountryActionsImpl @Inject constructor(
     // BEERS IN COUNTRY
 
     override fun beers(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("beers(%s)", countryId)
+        Timber.v("beers($countryId)")
 
         return triggerGetBeers(countryId, { it.items.isEmpty() })
     }
 
     override fun fetchBeers(countryId: Int): Single<Boolean> {
-        Timber.v("fetchBeers(%s)", countryId)
+        Timber.v("fetchBeers($countryId)")
 
         return triggerGetBeers(countryId, { true })
             .filter { it.isCompleted }
@@ -76,7 +71,7 @@ class CountryActionsImpl @Inject constructor(
         countryId: Int,
         needsReload: (ItemList<String>) -> Boolean
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers(%s)", countryId)
+        Timber.v("triggerGetBeers($countryId)")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
@@ -92,7 +87,7 @@ class CountryActionsImpl @Inject constructor(
     }
 
     private fun getBeersInCountryResultStream(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeersInCountryResultStream(%s)", countryId)
+        Timber.v("getBeersInCountryResultStream($countryId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BeersInCountryFetcher.NAME, countryId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -110,7 +105,7 @@ class CountryActionsImpl @Inject constructor(
     }
 
     private fun fetchBeersInCountry(countryId: Int): Int {
-        Timber.v("fetchBeersInCountry")
+        Timber.v("fetchBeersInCountry($countryId)")
 
         return createServiceRequest(
             serviceUri = BeersInCountryFetcher.NAME,

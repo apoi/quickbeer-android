@@ -45,7 +45,7 @@ class StyleActionsImpl @Inject constructor(
     // STYLES
 
     override operator fun get(styleId: Int): Single<Option<BeerStyle>> {
-        Timber.v("get(%s)", styleId)
+        Timber.v("get($styleId)")
 
         return beerStyleStore.getOnce(styleId)
     }
@@ -53,13 +53,13 @@ class StyleActionsImpl @Inject constructor(
     // BEERS IN STYLE
 
     override fun beers(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("beers(%s)", styleId)
+        Timber.v("beers($styleId)")
 
         return triggerGetBeers(styleId, { it.items.isEmpty() })
     }
 
     override fun fetchBeers(styleId: Int): Single<Boolean> {
-        Timber.v("fetchBeers(%s)", styleId)
+        Timber.v("fetchBeers($styleId)")
 
         return triggerGetBeers(styleId, { true })
             .filter { it.isCompleted }
@@ -71,7 +71,7 @@ class StyleActionsImpl @Inject constructor(
         styleId: Int,
         needsReload: (ItemList<String>) -> Boolean
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers(%s)", styleId)
+        Timber.v("triggerGetBeers($styleId)")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
@@ -87,7 +87,7 @@ class StyleActionsImpl @Inject constructor(
     }
 
     private fun getBeersInStyleResultStream(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeersInStyleResultStream(%s)", styleId)
+        Timber.v("getBeersInStyleResultStream($styleId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BeersInStyleFetcher.NAME, styleId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -105,7 +105,7 @@ class StyleActionsImpl @Inject constructor(
     }
 
     private fun fetchBeersInStyle(styleId: Int): Int {
-        Timber.v("fetchBeersInStyle(%s)", styleId)
+        Timber.v("fetchBeersInStyle($styleId)")
 
         return createServiceRequest(
             serviceUri = BeersInStyleFetcher.NAME,

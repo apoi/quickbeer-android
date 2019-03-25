@@ -59,7 +59,7 @@ class BrewerActionsImpl @Inject constructor(
     }
 
     fun getBrewer(brewerId: Int, needsReload: (Brewer) -> Boolean): Observable<DataStreamNotification<Brewer>> {
-        Timber.v("getBrewer(%s)", brewerId)
+        Timber.v("getBrewer($brewerId)")
 
         // Trigger a fetch only if full details haven't been fetched
         val triggerFetchIfEmpty = brewerStore.getOnce(brewerId)
@@ -75,7 +75,7 @@ class BrewerActionsImpl @Inject constructor(
     }
 
     private fun getBrewerResultStream(brewerId: Int): Observable<DataStreamNotification<Brewer>> {
-        Timber.v("getBrewerResultStream(%s)", brewerId)
+        Timber.v("getBrewerResultStream($brewerId)")
 
         val uri = BrewerFetcher.getUniqueUri(brewerId)
 
@@ -91,7 +91,7 @@ class BrewerActionsImpl @Inject constructor(
     }
 
     private fun fetchBrewer(brewerId: Int): Int {
-        Timber.v("fetchBrewer(%s)", brewerId)
+        Timber.v("fetchBrewer($brewerId)")
 
         return createServiceRequest(
             serviceUri = BrewerFetcher.NAME,
@@ -101,10 +101,14 @@ class BrewerActionsImpl @Inject constructor(
     // BREWER'S BEERS
 
     override fun beers(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>> {
+        Timber.v("beers($brewerId)")
+
         return getBeers(brewerId, { list -> list.items.isEmpty() })
     }
 
     override fun fetchBeers(brewerId: Int): Single<Boolean> {
+        Timber.v("fetchBeers($brewerId)")
+
         return getBeers(brewerId, { true })
             .filter { it.isCompleted }
             .map { it.isCompletedWithSuccess }
@@ -115,7 +119,7 @@ class BrewerActionsImpl @Inject constructor(
         brewerId: Int,
         needsReload: (ItemList<String>) -> Boolean
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeers(%s)", brewerId)
+        Timber.v("getBeers($brewerId)")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = beerListStore
@@ -131,7 +135,7 @@ class BrewerActionsImpl @Inject constructor(
     }
 
     private fun getBrewerBeersResultStream(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBrewerBeersResultStream(%s)", brewerId)
+        Timber.v("getBrewerBeersResultStream($brewerId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BrewerBeersFetcher.NAME, brewerId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
@@ -149,7 +153,7 @@ class BrewerActionsImpl @Inject constructor(
     }
 
     private fun fetchBrewerBeers(brewerId: Int): Int {
-        Timber.v("fetchBrewerBeers(%s)", brewerId)
+        Timber.v("fetchBrewerBeers($brewerId)")
 
         return createServiceRequest(
             serviceUri = BrewerBeersFetcher.NAME,
@@ -159,7 +163,7 @@ class BrewerActionsImpl @Inject constructor(
     // ACCESS BREWER
 
     override fun access(brewerId: Int) {
-        Timber.v("access(%s)", brewerId)
+        Timber.v("access($brewerId)")
 
         brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId))
     }

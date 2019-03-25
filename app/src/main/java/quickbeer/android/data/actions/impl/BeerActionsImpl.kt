@@ -64,13 +64,13 @@ class BeerActionsImpl @Inject constructor(
     }
 
     override fun access(beerId: Int) {
-        Timber.v("access(%s)", beerId)
+        Timber.v("access($beerId)")
 
         beerMetadataStore.put(BeerMetadata.newAccess(beerId))
     }
 
     override fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>> {
-        Timber.v("getReviews(%s)", beerId)
+        Timber.v("getReviews($beerId)")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = reviewListStore.getOnce(beerId)
@@ -89,7 +89,7 @@ class BeerActionsImpl @Inject constructor(
     }
 
     override fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>> {
-        Timber.v("tick(%s, %s)", beerId, rating)
+        Timber.v("tick($beerId, $rating)")
 
         val listenerId = createServiceRequest(
             serviceUri = TickBeerFetcher.NAME,
@@ -111,7 +111,7 @@ class BeerActionsImpl @Inject constructor(
     // BEER
 
     private fun getBeer(beerId: Int, needsReload: (Beer) -> Boolean): Observable<DataStreamNotification<Beer>> {
-        Timber.v("getBeer(%s)", beerId)
+        Timber.v("getBeer($beerId)")
 
         // Trigger a fetch only if full details haven't been fetched
         val triggerFetchIfEmpty = beerStore.getOnce(beerId)
@@ -127,7 +127,7 @@ class BeerActionsImpl @Inject constructor(
     }
 
     private fun getBeerResultStream(beerId: Int): Observable<DataStreamNotification<Beer>> {
-        Timber.v("getBeerResultStream(%s)", beerId)
+        Timber.v("getBeerResultStream($beerId)")
 
         val uri = BeerFetcher.getUniqueUri(beerId)
 
@@ -143,7 +143,7 @@ class BeerActionsImpl @Inject constructor(
     }
 
     private fun triggerBeerFetch(beerId: Int): Int {
-        Timber.v("triggerBeerFetch(%s)", beerId)
+        Timber.v("triggerBeerFetch($beerId)")
 
         return createServiceRequest(
             serviceUri = BeerFetcher.NAME,
@@ -156,7 +156,7 @@ class BeerActionsImpl @Inject constructor(
         beerId: Int,
         needsReload: (ItemList<Int>) -> Boolean
     ): Observable<DataStreamNotification<ItemList<Int>>> {
-        Timber.v("getReviews(%s)", beerId)
+        Timber.v("getReviews($beerId)")
 
         // Trigger a fetch only if there was no cached result
         val triggerFetchIfEmpty = reviewListStore.getOnce(beerId)
@@ -171,7 +171,7 @@ class BeerActionsImpl @Inject constructor(
     }
 
     private fun getReviewsResultStream(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>> {
-        Timber.v("getReviewsResultStream(%s)", beerId)
+        Timber.v("getReviewsResultStream($beerId)")
 
         val uri = ReviewFetcher.getUniqueUri(beerId)
 
@@ -187,7 +187,7 @@ class BeerActionsImpl @Inject constructor(
     }
 
     private fun triggerReviewsFetch(beerId: Int, page: Int): Int {
-        Timber.v("triggerReviewsFetch(%s)", beerId)
+        Timber.v("triggerReviewsFetch($beerId)")
 
         return createServiceRequest(
             serviceUri = ReviewFetcher.NAME,

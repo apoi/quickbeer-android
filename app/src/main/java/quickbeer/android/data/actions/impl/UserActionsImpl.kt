@@ -39,7 +39,7 @@ class UserActionsImpl @Inject constructor(
 ) : ApplicationDataLayer(context), UserActions {
 
     override fun login(username: String, password: String): Observable<DataStreamNotification<User>> {
-        Timber.v("login(%s)", username)
+        Timber.v("login($username)")
 
         val listenerId = createServiceRequest(
             serviceUri = LoginFetcher.NAME,
