@@ -20,7 +20,6 @@ package quickbeer.android.network.fetchers.impl
 import android.content.Intent
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.pojos.Beer
@@ -28,7 +27,7 @@ import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.utils.NetworkUtils
 import timber.log.Timber
 
@@ -38,9 +37,9 @@ class BeerFetcher(
     networkRequestStatus: Consumer<NetworkRequestStatus>,
     private val beerStore: BeerStore,
     private val metadataStore: BeerMetadataStore
-) : CheckingFetcher(networkRequestStatus, NAME) {
+) : CommonFetcher(networkRequestStatus, NAME) {
 
-    override fun required() = listOf(BEER_ID)
+    override fun requiredParams() = listOf(BEER_ID)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -63,11 +62,8 @@ class BeerFetcher(
         val requestParams = networkUtils.createRequestParams("bd", beerId.toString())
 
         return networkApi.getBeer(requestParams)
-            .subscribeOn(Schedulers.io())
             .flatMap { beerStore.put(it) }
-            .doOnSubscribe { startRequest(beerId, uri) }
-            .doOnSuccess { completeRequest(beerId, uri, it) }
-            .doOnError(doOnError(beerId, uri))
+            .compose(addFetcherTracking(beerId, uri))
             .subscribe({ metadataStore.put(BeerMetadata.newUpdate(beerId)) },
                 { Timber.w(it, "Error fetching beer %s", beerId) })
     }

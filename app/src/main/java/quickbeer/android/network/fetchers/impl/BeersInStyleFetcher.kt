@@ -35,7 +35,7 @@ class BeersInStyleFetcher(
     beerListStore: BeerListStore
 ) : BeerSearchFetcher(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore, NAME) {
 
-    override fun required() = listOf(STYLE_ID)
+    override fun requiredParams() = listOf(STYLE_ID)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return

@@ -21,7 +21,6 @@ import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.checkNotNull
 import io.reark.reark.utils.Preconditions.get
@@ -31,7 +30,7 @@ import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.utils.NetworkUtils
 import timber.log.Timber
 
@@ -42,9 +41,9 @@ open class BeerSearchFetcher @JvmOverloads constructor(
     private val beerStore: BeerStore,
     private val beerListStore: BeerListStore,
     name: String = NAME
-) : CheckingFetcher(networkRequestStatus, name) {
+) : CommonFetcher(networkRequestStatus, name) {
 
-    override fun required() = listOf(SEARCH)
+    override fun requiredParams() = listOf(SEARCH)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -68,17 +67,14 @@ open class BeerSearchFetcher @JvmOverloads constructor(
         }
 
         createNetworkObservable(query)
-            .subscribeOn(Schedulers.io())
             .flatMapObservable { Observable.fromIterable(it) }
-            .flatMap { beer -> beerStore.put(beer).toObservable().map { beer } }
+            .flatMapSingle { beer -> beerStore.put(beer).map { beer } }
             .toList()
             .map { sort(it) }
             .map { it.map(Beer::id) }
-            .map { beerIds -> ItemList.create(queryId, beerIds, ZonedDateTime.now()) }
+            .map { beerIds -> ItemList.create(queryId, beerIds) }
             .flatMap { beerListStore.put(it) }
-            .doOnSubscribe { startRequest(requestId, uri) }
-            .doOnSuccess { updated -> completeRequest(requestId, uri, updated) }
-            .doOnError(doOnError(requestId, uri))
+            .compose(addFetcherTracking(requestId, uri))
             .subscribe({}, { Timber.w(it, "Error fetching beer search for $uri") })
             .also { addRequest(requestId, it) }
     }

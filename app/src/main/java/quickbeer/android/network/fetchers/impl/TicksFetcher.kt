@@ -39,7 +39,7 @@ class TicksFetcher(
     private val userStore: UserStore
 ) : BeerSearchFetcher(networkApi, networkUtils, networkRequestStatus, beerStore, beerListStore, NAME) {
 
-    override fun required(): List<String> {
+    override fun requiredParams(): List<String> {
         return listOf(USER_ID)
     }
 

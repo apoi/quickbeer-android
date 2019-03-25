@@ -33,7 +33,7 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.fetchers.actions.LoginAndRetry
 import quickbeer.android.network.utils.NetworkUtils
 import quickbeer.android.utils.ValueUtils
@@ -48,9 +48,9 @@ class TickBeerFetcher(
     val beerStore: BeerStore,
     val beerListStore: BeerListStore,
     val userStore: UserStore
-) : CheckingFetcher(networkRequestStatus, NAME) {
+) : CommonFetcher(networkRequestStatus, NAME) {
 
-    override fun required() = listOf(BEER_ID, RATING)
+    override fun requiredParams() = listOf(BEER_ID, RATING)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -83,7 +83,7 @@ class TickBeerFetcher(
             .zipWith(
                 getQueryId(),
                 BiFunction<List<Int>, String, ItemList<String>> { ticks, ticksQueryId ->
-                    ItemList.create(ticksQueryId, ticks, ZonedDateTime.now())
+                    ItemList.create(ticksQueryId, ticks)
                 })
             .doOnSubscribe { startRequest(requestId, uri) }
             .doOnSuccess { completeRequest(requestId, uri, false) }
@@ -125,34 +125,34 @@ class TickBeerFetcher(
             .retryWhen(LoginAndRetry(networkApi, userStore))
     }
 
+    private fun appendTick(beer: Beer, ticks: List<Int>): List<Int> {
+        return ticks.toMutableList()
+            .apply {
+                remove(beer.id)
+                if (ValueUtils.greaterThan(beer.tickValue, 0)) {
+                    add(0, beer.id)
+                }
+            }
+    }
+
+    private fun requestSuccessful(responseBody: ResponseBody): Single<Boolean> {
+        return Single.fromCallable {
+            val value = responseBody.string().toLowerCase(Locale.ROOT)
+
+            if (!SUCCESS_RESPONSES.any { value.contains(it) }) {
+                throw Exception("Unexpected response: $value")
+            }
+
+            true
+        }
+    }
+
     companion object {
         const val NAME = "__tick_beer"
         const val BEER_ID = "beerId"
         const val RATING = "rating"
 
         private val SUCCESS_RESPONSES = arrayOf("added", "updated", "removed", "deleted")
-
-        private fun appendTick(beer: Beer, ticks: List<Int>): List<Int> {
-            return ticks.toMutableList()
-                .apply {
-                    remove(beer.id)
-                    if (ValueUtils.greaterThan(beer.tickValue, 0)) {
-                        add(0, beer.id)
-                    }
-                }
-        }
-
-        private fun requestSuccessful(responseBody: ResponseBody): Single<Boolean> {
-            return Single.fromCallable {
-                val value = responseBody.string().toLowerCase(Locale.ROOT)
-
-                if (!SUCCESS_RESPONSES.any { value.contains(it) }) {
-                    throw Exception("Unexpected response: " + value)
-                }
-
-                true
-            }
-        }
 
         fun getUniqueUri(id: Int, rating: Int): String {
             return Beer::class.java.toString() + "/" + id + "/rate/" + rating

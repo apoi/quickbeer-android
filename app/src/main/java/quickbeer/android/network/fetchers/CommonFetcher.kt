@@ -19,20 +19,22 @@
 package quickbeer.android.network.fetchers
 
 import android.content.Intent
+import io.reactivex.SingleTransformer
 import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import io.reark.reark.network.fetchers.FetcherBase
 import io.reark.reark.pojo.NetworkRequestStatus
 import timber.log.Timber
 
-abstract class CheckingFetcher(
+abstract class CommonFetcher(
     networkRequestStatus: Consumer<NetworkRequestStatus>,
     val name: String
 ) : FetcherBase<String>(networkRequestStatus) {
 
-    abstract fun required(): List<String>
+    abstract fun requiredParams(): List<String>
 
     fun validateParams(intent: Intent): Boolean {
-        required().forEach {
+        requiredParams().forEach {
             if (!intent.hasExtra(it)) {
                 Timber.e("Missing required fetch parameters $it!")
                 return false
@@ -40,6 +42,17 @@ abstract class CheckingFetcher(
         }
 
         return true
+    }
+
+    fun addFetcherTracking(id: Int, uri: String): SingleTransformer<Boolean, Boolean> {
+        return SingleTransformer { source ->
+            source
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe { startRequest(id, uri) }
+                .doOnSuccess { completeRequest(id, uri, it) }
+                .doOnError(doOnError(id, uri))
+
+        }
     }
 
     override fun getServiceUri() = name

@@ -32,7 +32,7 @@ import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.data.stores.ReviewStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.utils.NetworkUtils
 import timber.log.Timber
 
@@ -42,9 +42,9 @@ class ReviewsFetcher(
     networkRequestStatus: Consumer<NetworkRequestStatus>,
     private val reviewStore: ReviewStore,
     private val reviewListStore: ReviewListStore
-) : CheckingFetcher(networkRequestStatus, NAME) {
+) : CommonFetcher(networkRequestStatus, NAME) {
 
-    override fun required() = listOf(USER_ID, NUM_REVIEWS)
+    override fun requiredParams() = listOf(USER_ID, NUM_REVIEWS)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -72,18 +72,15 @@ class ReviewsFetcher(
         getReviews(1, numReviews)
             .map { it.sortedWith(compareByDescending(Review::timeUpdated).thenBy(Review::id)) }
             .map { it.mapNotNull(Review::countryID) }
-            .map { reviewIds -> ItemList.create(queryId, reviewIds, ZonedDateTime.now()) }
+            .map { reviewIds -> ItemList.create(queryId, reviewIds) }
             .flatMap { reviewListStore.put(it) }
-            .doOnSubscribe { startRequest(requestId, uri) }
-            .doOnSuccess { updated -> completeRequest(requestId, uri, updated!!) }
-            .doOnError(doOnError(requestId, uri))
+            .compose(addFetcherTracking(requestId, uri))
             .subscribe({}, { Timber.w(it, "Error fetching reviews for user $userId") })
             .also { addRequest(requestId, it) }
     }
 
     private fun getReviews(page: Int, numReviews: Int): Single<List<Review>> {
         return createNetworkObservable(page.toString())
-            .subscribeOn(Schedulers.io())
             .flatMapObservable { Observable.fromIterable(it) }
             .flatMapSingle { review -> reviewStore.put(review).map { review } }
             .toList()

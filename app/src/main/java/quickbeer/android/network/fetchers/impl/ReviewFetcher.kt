@@ -29,7 +29,7 @@ import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.data.stores.ReviewStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.utils.NetworkUtils
 import timber.log.Timber
 import kotlin.collections.set
@@ -40,9 +40,9 @@ class ReviewFetcher(
     networkRequestStatus: Consumer<NetworkRequestStatus>,
     private val reviewStore: ReviewStore,
     private val reviewListStore: ReviewListStore
-) : CheckingFetcher(networkRequestStatus, NAME) {
+) : CommonFetcher(networkRequestStatus, NAME) {
 
-    override fun required() = listOf(BEER_ID)
+    override fun requiredParams() = listOf(BEER_ID)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -61,17 +61,14 @@ class ReviewFetcher(
         Timber.d("fetchReviews($beerId, $page)")
 
         createNetworkObservable(beerId, page)
-            .subscribeOn(Schedulers.io())
             .flatMapObservable { Observable.fromIterable(it) }
             .flatMapSingle { review -> reviewStore.put(review).map { review } }
             .toList()
             .map { it.sortedWith(compareByDescending(Review::timeEntered).thenBy(Review::id)) }
             .map { it.map(Review::id) }
-            .map { reviewIds -> ItemList.create(beerId, reviewIds, ZonedDateTime.now()) }
+            .map { reviewIds -> ItemList.create(beerId, reviewIds) }
             .flatMap { reviewListStore.put(it) }
-            .doOnSubscribe { startRequest(beerId, uri) }
-            .doOnSuccess { updated -> completeRequest(beerId, uri, updated) }
-            .doOnError(doOnError(beerId, uri))
+            .compose(addFetcherTracking(beerId, uri))
             .subscribe({}, { Timber.w(it, "Error fetching reviews for beer $beerId") })
             .also { addRequest(beerId, it) }
     }

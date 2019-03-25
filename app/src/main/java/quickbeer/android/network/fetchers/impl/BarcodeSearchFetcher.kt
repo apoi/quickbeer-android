@@ -35,7 +35,7 @@ class BarcodeSearchFetcher(
     beerListStore: BeerListStore
 ) : BeerSearchFetcher(networkApi, networkUtils, requestStatus, beerStore, beerListStore, NAME) {
 
-    override fun required() = listOf(BARCODE)
+    override fun requiredParams() = listOf(BARCODE)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return

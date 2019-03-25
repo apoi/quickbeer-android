@@ -26,7 +26,7 @@ class ItemList<T>(
 ) {
 
     companion object {
-        fun <T> create(key: T?, items: List<Int>, updateDate: ZonedDateTime?): ItemList<T> {
+        fun <T> create(key: T?, items: List<Int>, updateDate: ZonedDateTime = ZonedDateTime.now()): ItemList<T> {
             return ItemList(key, items, updateDate)
         }
 

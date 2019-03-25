@@ -20,13 +20,12 @@ package quickbeer.android.network.fetchers.impl
 import android.content.Intent
 import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reark.reark.pojo.NetworkRequestStatus
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkApi
-import quickbeer.android.network.fetchers.CheckingFetcher
+import quickbeer.android.network.fetchers.CommonFetcher
 import quickbeer.android.network.utils.LoginUtils
 import timber.log.Timber
 
@@ -35,9 +34,9 @@ class LoginFetcher(
     private val cookieJar: ClearableCookieJar,
     networkRequestStatus: Consumer<NetworkRequestStatus>,
     private val userStore: UserStore
-) : CheckingFetcher(networkRequestStatus, NAME) {
+) : CommonFetcher(networkRequestStatus, NAME) {
 
-    override fun required() = listOf(USERNAME, PASSWORD)
+    override fun requiredParams() = listOf(USERNAME, PASSWORD)
 
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
@@ -65,14 +64,11 @@ class LoginFetcher(
         Timber.d("Login with user $username")
 
         networkApi.login(username, password)
-            .subscribeOn(Schedulers.io())
             .map { LoginUtils.getUserId(cookieJar) }
             .doOnSuccess { id -> id.ifNone { Timber.e("No user id found in login response!") } }
             .map { userId -> User(userId.orDefault { -1 }, username, password) }
             .flatMap { userStore.put(it) }
-            .doOnSubscribe { startRequest(requestId, uri) }
-            .doOnSuccess { updated -> completeRequest(requestId, uri, updated!!) }
-            .doOnError(doOnError(requestId, uri))
+            .compose(addFetcherTracking(requestId, uri))
             .subscribe({}, { error -> Timber.e(error, "Error fetching user $username") })
             .also { addRequest(requestId, it) }
     }
