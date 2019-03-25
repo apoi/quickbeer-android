@@ -48,7 +48,7 @@ class TopBeersFetcher(
         return networkApi.getBeersInCountry(networkUtils.createRequestParams("m", "top50"))
     }
 
-    companion object {
-        const val NAME = "__top50"
+    companion object : FetcherCompanion {
+        override val NAME = "__top50"
     }
 }

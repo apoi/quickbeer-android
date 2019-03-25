@@ -48,8 +48,8 @@ class BarcodeSearchFetcher(
         return networkApi.barcode(networkUtils.createRequestParams("upc", barcode))
     }
 
-    companion object {
-        const val NAME = "__barcode"
+    companion object : FetcherCompanion {
+        override val NAME = "__barcode"
         const val BARCODE = "barcode"
     }
 }

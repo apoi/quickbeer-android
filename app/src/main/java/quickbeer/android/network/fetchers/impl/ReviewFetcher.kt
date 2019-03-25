@@ -21,9 +21,7 @@ import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reark.reark.pojo.NetworkRequestStatus
-import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.ReviewListStore
@@ -81,13 +79,9 @@ class ReviewFetcher(
         return networkApi.getReviews(params)
     }
 
-    companion object {
-        const val NAME = "__reviews"
+    companion object : FetcherCompanion {
+        override val NAME = "__reviews"
         const val BEER_ID = "beerId"
         const val PAGE = "page"
-
-        fun getUniqueUri(id: Int): String {
-            return Review::class.java.toString() + "/" + id
-        }
     }
 }

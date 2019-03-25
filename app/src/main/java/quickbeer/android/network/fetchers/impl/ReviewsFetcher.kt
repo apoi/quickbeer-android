@@ -22,10 +22,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.get
-import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
@@ -106,13 +104,9 @@ class ReviewsFetcher(
         return networkApi.getUserReviews(params)
     }
 
-    companion object {
-        const val NAME = "__user_reviews"
+    companion object : FetcherCompanion {
+        override val NAME = "__user_reviews"
         const val USER_ID = "userId"
         const val NUM_REVIEWS = "numReviews"
-
-        fun getUniqueUri(userId: String): String {
-            return ItemList::class.java.toString() + "/reviews/" + userId
-        }
     }
 }

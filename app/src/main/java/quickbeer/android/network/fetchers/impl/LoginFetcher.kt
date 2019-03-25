@@ -21,7 +21,6 @@ import android.content.Intent
 import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
-import quickbeer.android.Constants
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.stores.UserStore
 import quickbeer.android.network.NetworkApi
@@ -73,13 +72,9 @@ class LoginFetcher(
             .also { addRequest(requestId, it) }
     }
 
-    companion object {
-        const val NAME = "__login"
+    companion object : FetcherCompanion {
+        override val NAME = "__login"
         const val USERNAME = "username"
         const val PASSWORD = "password"
-
-        fun getUniqueUri(): String {
-            return User::class.java.toString() + "/" + Constants.DEFAULT_USER_ID
-        }
     }
 }

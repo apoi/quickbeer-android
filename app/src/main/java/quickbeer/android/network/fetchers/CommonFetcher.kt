@@ -56,4 +56,17 @@ abstract class CommonFetcher(
     }
 
     override fun getServiceUri() = name
+
+    interface FetcherCompanion {
+        val NAME: String
+
+        fun getUniqueUri(id: Any = ""): String {
+            return if (id.toString().isBlank()) NAME
+            else "{$NAME}_$id"
+        }
+
+        fun getUniqueUri(id1: Any, id2: Any): String {
+            return getUniqueUri("$id1:$id2")
+        }
+    }
 }

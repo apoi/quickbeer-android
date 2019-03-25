@@ -18,18 +18,15 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
 import quickbeer.android.Constants
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.UserActions
 import quickbeer.android.data.pojos.User
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.UserStore
-import quickbeer.android.network.NetworkService
 import quickbeer.android.network.fetchers.impl.LoginFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
@@ -44,15 +41,13 @@ class UserActionsImpl @Inject constructor(
     override fun login(username: String, password: String): Observable<DataStreamNotification<User>> {
         Timber.v("login(%s)", username)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, LoginFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(LoginFetcher.USERNAME, username)
-            putExtra(LoginFetcher.PASSWORD, password)
-        }
+        val listenerId = createServiceRequest(
+            serviceUri = LoginFetcher.NAME,
+            stringParams = mapOf(
+                LoginFetcher.USERNAME to username,
+                LoginFetcher.PASSWORD to password
+            ))
 
-        context.startService(intent)
         return getLoginStatus(listenerId)
     }
 

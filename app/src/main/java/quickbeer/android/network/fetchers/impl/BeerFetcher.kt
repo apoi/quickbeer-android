@@ -22,7 +22,6 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
 import io.reark.reark.utils.Preconditions.get
-import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.BeerStore
@@ -68,12 +67,8 @@ class BeerFetcher(
                 { Timber.w(it, "Error fetching beer %s", beerId) })
     }
 
-    companion object {
-        const val NAME = "__beer"
+    companion object : FetcherCompanion {
+        override val NAME = "__beer"
         const val BEER_ID = "beerId"
-
-        fun getUniqueUri(id: Int): String {
-            return Beer::class.java.toString() + "/" + id
-        }
     }
 }

@@ -18,20 +18,17 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.ReviewStore
-import quickbeer.android.network.NetworkService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.ReviewsFetcher
 import quickbeer.android.network.fetchers.impl.TicksFetcher
@@ -111,15 +108,9 @@ class ReviewActionsImpl @Inject constructor(
     private fun triggerTicksFetch(userId: String): Int {
         Timber.v("triggerTicksFetch(%s)", userId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java)
-
-        intent.putExtra(ServiceDataLayer.SERVICE_URI, TicksFetcher.NAME)
-        intent.putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-        intent.putExtra(TicksFetcher.USER_ID, userId)
-        context.startService(intent)
-
-        return listenerId
+        return createServiceRequest(
+            serviceUri = TicksFetcher.NAME,
+            stringParams = mapOf(TicksFetcher.USER_ID to userId))
     }
 
     // USER REVIEWS
@@ -177,15 +168,9 @@ class ReviewActionsImpl @Inject constructor(
     private fun triggerReviewFetch(userId: String): Int {
         Timber.v("triggerReviewFetch(%s)", userId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, ReviewsFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(ReviewsFetcher.NUM_REVIEWS, 1)
-            putExtra(ReviewsFetcher.USER_ID, userId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = ReviewsFetcher.NAME,
+            stringParams = mapOf(ReviewsFetcher.USER_ID to userId),
+            intParams = mapOf(ReviewsFetcher.NUM_REVIEWS to 1))
     }
 }

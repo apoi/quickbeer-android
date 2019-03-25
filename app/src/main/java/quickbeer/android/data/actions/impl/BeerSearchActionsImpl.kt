@@ -32,6 +32,7 @@ import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
+import quickbeer.android.network.fetchers.impl.TopBeersFetcher
 import quickbeer.android.utils.StringUtils
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
@@ -114,14 +115,8 @@ class BeerSearchActionsImpl @Inject constructor(
     private fun fetchBeerSearch(query: String): Int {
         Timber.v("fetchBeerSearch(%s)", query)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BeerSearchFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BeerSearchFetcher.SEARCH, query)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BeerSearchFetcher.NAME,
+            stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
     }
 }

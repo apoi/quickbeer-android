@@ -48,8 +48,8 @@ class BrewerBeersFetcher(
         return networkApi.getBrewerBeers(networkUtils.createRequestParams("b", brewerId))
     }
 
-    companion object {
-        const val NAME = "__brewer_beers"
+    companion object : FetcherCompanion {
+        override val NAME = "__brewer_beers"
         const val BREWER_ID = "brewerId"
     }
 }

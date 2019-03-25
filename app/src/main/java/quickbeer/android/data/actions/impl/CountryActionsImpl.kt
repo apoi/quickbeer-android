@@ -35,6 +35,7 @@ import quickbeer.android.network.NetworkService
 import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeersInCountryFetcher
+import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import timber.log.Timber
 import javax.inject.Inject
@@ -111,14 +112,8 @@ class CountryActionsImpl @Inject constructor(
     private fun fetchBeersInCountry(countryId: Int): Int {
         Timber.v("fetchBeersInCountry")
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BeersInCountryFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BeersInCountryFetcher.COUNTRY_ID, countryId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BeersInCountryFetcher.NAME,
+            intParams = mapOf(BeersInCountryFetcher.COUNTRY_ID to countryId))
     }
 }

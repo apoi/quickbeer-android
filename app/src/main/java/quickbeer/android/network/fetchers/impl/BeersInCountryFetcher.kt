@@ -57,8 +57,8 @@ class BeersInCountryFetcher(
         return networkApi.getBeersInCountry(params)
     }
 
-    companion object {
-        const val NAME = "__country"
+    companion object: FetcherCompanion {
+        override val NAME = "__country"
         const val COUNTRY_ID = "countryId"
     }
 }

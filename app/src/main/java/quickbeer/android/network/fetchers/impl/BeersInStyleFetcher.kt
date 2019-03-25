@@ -52,8 +52,8 @@ class BeersInStyleFetcher(
         return networkApi.getBeersInStyle(networkUtils.createRequestParams("s", styleId))
     }
 
-    companion object {
-        const val NAME = "__style"
+    companion object : FetcherCompanion {
+        override val NAME = "__style"
         const val STYLE_ID = "styleId"
     }
 }

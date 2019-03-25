@@ -62,8 +62,8 @@ class TicksFetcher(
             .retryWhen(LoginAndRetry(networkApi, userStore))
     }
 
-    companion object {
-        const val NAME = "__ticks"
+    companion object : FetcherCompanion {
+        override val NAME = "__ticks"
         const val USER_ID = "userId"
     }
 }

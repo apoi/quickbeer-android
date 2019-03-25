@@ -147,15 +147,11 @@ class TickBeerFetcher(
         }
     }
 
-    companion object {
-        const val NAME = "__tick_beer"
+    companion object : FetcherCompanion {
+        override val NAME = "__tick_beer"
         const val BEER_ID = "beerId"
         const val RATING = "rating"
 
         private val SUCCESS_RESPONSES = arrayOf("added", "updated", "removed", "deleted")
-
-        fun getUniqueUri(id: Int, rating: Int): String {
-            return Beer::class.java.toString() + "/" + id + "/rate/" + rating
-        }
     }
 }

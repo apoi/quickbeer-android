@@ -18,12 +18,34 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
+import android.content.Intent
+import quickbeer.android.data.access.ServiceDataLayer
+import quickbeer.android.network.NetworkService
 import java.util.UUID
 
-open class ApplicationDataLayer
-constructor(protected val context: Context) {
+open class ApplicationDataLayer(protected val context: Context) {
 
-    protected fun createListenerId(): Int {
+    protected fun createServiceRequest(
+        serviceUri: String,
+        stringParams: Map<String, String> = emptyMap(),
+        intParams: Map<String, Int> = emptyMap()
+    ): Int {
+        val listenerId = createListenerId()
+        val intent = Intent(context, NetworkService::class.java).apply {
+            putExtra(ServiceDataLayer.SERVICE_URI, serviceUri)
+            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
+
+            stringParams.forEach { putExtra(it.key, it.value) }
+            intParams.forEach { putExtra(it.key, it.value) }
+
+            context.startService(this)
+        }
+
+        context.startService(intent)
+        return listenerId
+    }
+
+    private fun createListenerId(): Int {
         return UUID.randomUUID().hashCode()
     }
 }

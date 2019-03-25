@@ -69,12 +69,8 @@ class BrewerFetcher(
         return networkApi.getBrewer(networkUtils.createRequestParams("b", brewerId.toString()))
     }
 
-    companion object {
-        const val NAME = "__brewer"
+    companion object : FetcherCompanion {
+        override val NAME = "__brewer"
         const val BREWER_ID = "brewerId"
-
-        fun getUniqueUri(id: Int): String {
-            return Brewer::class.java.toString() + "/" + id
-        }
     }
 }

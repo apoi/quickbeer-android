@@ -18,12 +18,10 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.BrewerMetadata
@@ -32,7 +30,6 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BrewerMetadataStore
 import quickbeer.android.data.stores.BrewerStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
-import quickbeer.android.network.NetworkService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher
 import quickbeer.android.network.fetchers.impl.BrewerFetcher
@@ -96,15 +93,9 @@ class BrewerActionsImpl @Inject constructor(
     private fun fetchBrewer(brewerId: Int): Int {
         Timber.v("fetchBrewer(%s)", brewerId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BrewerFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BrewerFetcher.BREWER_ID, brewerId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BrewerFetcher.NAME,
+            intParams = mapOf(BrewerFetcher.BREWER_ID to brewerId))
     }
 
     // BREWER'S BEERS
@@ -160,15 +151,9 @@ class BrewerActionsImpl @Inject constructor(
     private fun fetchBrewerBeers(brewerId: Int): Int {
         Timber.v("fetchBrewerBeers(%s)", brewerId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BrewerBeersFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BrewerBeersFetcher.BREWER_ID, brewerId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BrewerBeersFetcher.NAME,
+            intParams = mapOf(BrewerBeersFetcher.BREWER_ID to brewerId))
     }
 
     // ACCESS BREWER

@@ -18,12 +18,10 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.BeerMetadata
@@ -32,11 +30,8 @@ import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.ReviewListStore
-import quickbeer.android.network.NetworkService
-import quickbeer.android.network.RateBeerService
 import quickbeer.android.network.fetchers.impl.BeerFetcher
 import quickbeer.android.network.fetchers.impl.ReviewFetcher
-import quickbeer.android.network.fetchers.impl.ReviewsFetcher
 import quickbeer.android.network.fetchers.impl.TickBeerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.utils.kotlin.isNoneOrEmpty
@@ -96,15 +91,12 @@ class BeerActionsImpl @Inject constructor(
     override fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>> {
         Timber.v("tick(%s, %s)", beerId, rating)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, TickBeerFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(TickBeerFetcher.BEER_ID, beerId)
-            putExtra(TickBeerFetcher.RATING, rating)
-        }
-
-        context.startService(intent)
+        val listenerId = createServiceRequest(
+            serviceUri = TickBeerFetcher.NAME,
+            intParams = mapOf(
+                TickBeerFetcher.BEER_ID to beerId,
+                TickBeerFetcher.RATING to rating
+            ))
 
         val uri = TickBeerFetcher.getUniqueUri(beerId, rating)
         val requestStatusObservable = requestStatusStore
@@ -153,15 +145,9 @@ class BeerActionsImpl @Inject constructor(
     private fun triggerBeerFetch(beerId: Int): Int {
         Timber.v("triggerBeerFetch(%s)", beerId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BeerFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BeerFetcher.BEER_ID, beerId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BeerFetcher.NAME,
+            intParams = mapOf(BeerFetcher.BEER_ID to beerId))
     }
 
     // GET REVIEWS
@@ -203,15 +189,11 @@ class BeerActionsImpl @Inject constructor(
     private fun triggerReviewsFetch(beerId: Int, page: Int): Int {
         Timber.v("triggerReviewsFetch(%s)", beerId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, ReviewFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(ReviewFetcher.BEER_ID, beerId)
-            putExtra(ReviewFetcher.PAGE, page)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = ReviewFetcher.NAME,
+            intParams = mapOf(
+                ReviewFetcher.BEER_ID to beerId,
+                ReviewFetcher.PAGE to page
+            ))
     }
 }

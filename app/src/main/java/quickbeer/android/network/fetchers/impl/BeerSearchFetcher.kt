@@ -22,9 +22,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
-import io.reark.reark.utils.Preconditions.checkNotNull
 import io.reark.reark.utils.Preconditions.get
-import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
@@ -87,8 +85,8 @@ open class BeerSearchFetcher @JvmOverloads constructor(
         return networkApi.search(networkUtils.createRequestParams("bn", get(searchString)))
     }
 
-    companion object {
-        const val NAME = "__search"
+    companion object : FetcherCompanion {
+        override val NAME = "__search"
         const val SEARCH = "searchString"
 
         // Beer search store needs separate query identifiers for normal searches and fixed searches
@@ -96,20 +94,13 @@ open class BeerSearchFetcher @JvmOverloads constructor(
         // identifier to make sure they stand apart from the normal searches.
         @JvmOverloads
         fun getQueryId(serviceUri: String, query: String = ""): String {
-            checkNotNull(serviceUri)
-            checkNotNull(query)
-
-            return if (serviceUri === NAME) {
+            return if (serviceUri === BeerSearchFetcher.NAME) {
                 query
             } else if (!query.isEmpty()) {
                 String.format("%s_%s", serviceUri, query)
             } else {
                 serviceUri
             }
-        }
-
-        fun getUniqueUri(id: String): String {
-            return ItemList::class.java.toString() + "/beerSearch/" + id
         }
     }
 }

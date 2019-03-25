@@ -85,14 +85,8 @@ class BarcodeActionsImpl @Inject constructor(
     private fun fetchBarcodeSearch(barcode: String): Int {
         Timber.v("fetchBarcodeSearch(%s)", barcode)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BarcodeSearchFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BarcodeSearchFetcher.BARCODE, barcode)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BarcodeSearchFetcher.NAME,
+            stringParams = mapOf(BarcodeSearchFetcher.BARCODE to barcode))
     }
 }

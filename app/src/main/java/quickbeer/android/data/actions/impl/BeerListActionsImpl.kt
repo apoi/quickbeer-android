@@ -30,6 +30,7 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.network.NetworkService
+import quickbeer.android.network.fetchers.impl.BarcodeSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.TopBeersFetcher
 import quickbeer.android.utils.kotlin.filterToValue
@@ -106,13 +107,6 @@ class BeerListActionsImpl @Inject constructor(
     private fun triggerFetch(): Int {
         Timber.v("triggerFetch")
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, TopBeersFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(serviceUri = TopBeersFetcher.NAME)
     }
 }

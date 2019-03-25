@@ -18,20 +18,17 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import android.content.Intent
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
-import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStyleStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
-import quickbeer.android.network.NetworkService
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeersInStyleFetcher
 import quickbeer.android.utils.kotlin.filterToValue
@@ -110,14 +107,8 @@ class StyleActionsImpl @Inject constructor(
     private fun fetchBeersInStyle(styleId: Int): Int {
         Timber.v("fetchBeersInStyle(%s)", styleId)
 
-        val listenerId = createListenerId()
-        val intent = Intent(context, NetworkService::class.java).apply {
-            putExtra(ServiceDataLayer.SERVICE_URI, BeersInStyleFetcher.NAME)
-            putExtra(ServiceDataLayer.LISTENER_ID, listenerId)
-            putExtra(BeersInStyleFetcher.STYLE_ID, styleId)
-        }
-
-        context.startService(intent)
-        return listenerId
+        return createServiceRequest(
+            serviceUri = BeersInStyleFetcher.NAME,
+            intParams = mapOf(BeersInStyleFetcher.STYLE_ID to styleId))
     }
 }
