@@ -68,7 +68,7 @@ protected constructor(
         source.onNext(dataSource())
 
         // Switch source according to selector subject
-        val sharedObservable: ConnectableObservable<DataStreamNotification<ItemList<String>>> =
+        val sharedObservable =
             Observable.switchOnNext(source)
                 .subscribeOn(Schedulers.computation())
                 .publish()

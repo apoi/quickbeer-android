@@ -19,10 +19,10 @@ package quickbeer.android.data.pojos
 
 import org.threeten.bp.ZonedDateTime
 
-class ItemList<T>(
+data class ItemList<T>(
     val key: T? = null,
     val items: List<Int> = emptyList(),
-    var updateDate: ZonedDateTime? = null
+    val updateDate: ZonedDateTime? = null
 ) {
 
     companion object {

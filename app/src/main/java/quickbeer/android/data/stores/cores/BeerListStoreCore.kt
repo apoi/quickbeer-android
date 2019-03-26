@@ -53,10 +53,8 @@ class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson) :
         val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(BeerListColumns.UPDATED)))
 
         val listType = object : TypeToken<ItemList<String>>() {}.type
-        val beerList = gson.fromJson<ItemList<String>>(json, listType)
-        beerList.updateDate = updated
 
-        return beerList
+        return gson.fromJson<ItemList<String>>(json, listType).copy(updateDate = updated)
     }
 
     override fun getContentValuesForItem(item: ItemList<String>): ContentValues {

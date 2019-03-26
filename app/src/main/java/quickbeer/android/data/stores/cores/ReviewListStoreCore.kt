@@ -55,10 +55,8 @@ class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) :
         val updated = ZonedDateTime(cursor.getInt(cursor.getColumnIndex(ReviewListColumns.UPDATED)))
 
         val listType = object : TypeToken<ItemList<Int>>() {}.type
-        val reviewList = gson.fromJson<ItemList<Int>>(json, listType)
-        reviewList.updateDate = updated
 
-        return reviewList
+        return gson.fromJson<ItemList<Int>>(json, listType).copy(updateDate = updated)
     }
 
     override fun getContentValuesForItem(item: ItemList<Int>): ContentValues {
