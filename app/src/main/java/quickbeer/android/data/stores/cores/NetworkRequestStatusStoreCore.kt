@@ -27,9 +27,16 @@ import io.reark.reark.pojo.NetworkRequestStatus
 import quickbeer.android.data.columns.JsonIdColumns
 import quickbeer.android.data.columns.NetworkRequestStatusColumns
 import quickbeer.android.data.providers.RateBeerProvider
+import timber.log.Timber
 
 class NetworkRequestStatusStoreCore(contentResolver: ContentResolver, gson: Gson) :
     StoreCoreBase<Int, NetworkRequestStatus>(contentResolver, gson) {
+
+    init {
+        // Clear old statuses at init
+        val count = contentResolver.delete(contentUri, null, null)
+        Timber.d("Deleted $count old values")
+    }
 
     override fun <R> groupOperations(source: Observable<R>): Observable<List<R>> {
         // NetworkRequestStatus updates should not be grouped to ensure fast processing.
