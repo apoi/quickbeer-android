@@ -37,8 +37,6 @@ open class ApplicationDataLayer(protected val context: Context) {
 
             stringParams.forEach { putExtra(it.key, it.value) }
             intParams.forEach { putExtra(it.key, it.value) }
-
-            context.startService(this)
         }
 
         context.startService(intent)
