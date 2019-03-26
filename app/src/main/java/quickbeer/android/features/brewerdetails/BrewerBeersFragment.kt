@@ -19,7 +19,6 @@ package quickbeer.android.features.brewerdetails
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -70,7 +69,7 @@ class BrewerBeersFragment : BeerListFragment() {
     }
 
     override fun viewModel(): BeerListViewModel {
-        return get(brewerBeersViewModel)
+        return brewerBeersViewModel
     }
 
     override fun onQuery(query: String) {

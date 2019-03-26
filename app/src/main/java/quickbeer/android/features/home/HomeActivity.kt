@@ -18,7 +18,6 @@
 package quickbeer.android.features.home
 
 import android.view.MenuItem
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.R
 import quickbeer.android.features.list.ListActivity
 import quickbeer.android.providers.NavigationProvider
@@ -35,7 +34,7 @@ class HomeActivity : ListActivity() {
     }
 
     override fun initialBackNavigationEnabled(): Boolean {
-        supportFragmentManager.addOnBackStackChangedListener { setBackNavigationEnabled(get(navigationProvider).canNavigateBack()) }
+        supportFragmentManager.addOnBackStackChangedListener { setBackNavigationEnabled(navigationProvider.canNavigateBack()) }
 
         return false
     }

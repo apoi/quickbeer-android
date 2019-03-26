@@ -20,7 +20,6 @@ package quickbeer.android.viewmodels
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.PublishSubject
-import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option
 import polanski.option.Option.none
 import polanski.option.Option.ofObj
@@ -101,7 +100,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : Si
             minimumSearchLength = -1
         }
 
-        this.searchHint = get(searchHint)
+        this.searchHint = searchHint
         lastQuery = Option.none()
 
         modeChangedSubject.onNext(Unit.DEFAULT)

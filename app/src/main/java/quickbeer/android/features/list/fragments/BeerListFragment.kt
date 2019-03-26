@@ -19,14 +19,13 @@ package quickbeer.android.features.list.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.beer_list_fragment_standalone.*
 import kotlinx.android.synthetic.main.recycler_list.*
 import quickbeer.android.R
@@ -69,7 +68,7 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
                 .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
             disposable.add(
-                get(searchViewViewModel)
+                searchViewViewModel
                     .getQueryStream()
                     .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }
@@ -103,7 +102,7 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
         swipe_refresh_layout.isEnabled = viewModel().isRefreshable()
         swipe_refresh_layout.setOnRefreshListener(this)
 
-        searchViewViewModel.setMode(Mode.SEARCH, get(resourceProvider).getString(R.string.search_box_hint_search_beers))
+        searchViewViewModel.setMode(Mode.SEARCH, resourceProvider.getString(R.string.search_box_hint_search_beers))
     }
 
     protected open fun getLayout(): Int {

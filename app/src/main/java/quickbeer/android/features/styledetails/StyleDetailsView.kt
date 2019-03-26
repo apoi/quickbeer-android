@@ -22,7 +22,6 @@ import androidx.annotation.StringRes
 import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Toast
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.style_details_fragment_details.view.*
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.core.activity.InjectingDrawerActivity
@@ -62,6 +61,6 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
     }
 
     private fun showToast(@StringRes resource: Int) {
-        get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG)
+        toastProvider.showCancelableToast(resource, Toast.LENGTH_LONG)
     }
 }

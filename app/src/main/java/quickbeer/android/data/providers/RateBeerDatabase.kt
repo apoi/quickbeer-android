@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela></antti.poikela>@iki.fi>
+ * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http:></http:>//www.gnu.org/licenses/>.
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package quickbeer.android.data.providers
 
@@ -39,37 +39,44 @@ import timber.log.Timber
 @Database(version = RateBeerDatabase.VERSION)
 object RateBeerDatabase {
 
-    val VERSION = 2
+    const val VERSION = 2
 
     @Table(NetworkRequestStatusColumns::class)
-    internal val REQUEST_STATUSES = "requestStatuses"
+    const val REQUEST_STATUSES = "requestStatuses"
+
     @Table(UserColumns::class)
-    internal val USERS = "users"
+    const val USERS = "users"
 
     @Table(BeerColumns::class)
-    internal val BEERS = "beers"
+    const val BEERS = "beers"
+
     @Table(BeerListColumns::class)
-    internal val BEER_LISTS = "beerLists"
+    const val BEER_LISTS = "beerLists"
+
     @Table(BeerMetadataColumns::class)
-    internal val BEER_METADATA = "beerMetadata"
+    const val BEER_METADATA = "beerMetadata"
 
     @Table(BrewerColumns::class)
-    internal val BREWERS = "brewers"
+    const val BREWERS = "brewers"
+
     @Table(BrewerListColumns::class)
-    internal val BREWER_LISTS = "brewerLists"
+    const val BREWER_LISTS = "brewerLists"
+
     @Table(BrewerMetadataColumns::class)
-    internal val BREWER_METADATA = "brewerMetadata"
+    const val BREWER_METADATA = "brewerMetadata"
 
     @Table(ReviewColumns::class)
-    internal val REVIEWS = "reviews"
+    const val REVIEWS = "reviews"
+
     @Table(ReviewListColumns::class)
-    internal val REVIEW_LISTS = "reviewsLists"
+    const val REVIEW_LISTS = "reviewsLists"
 
     private val MIGRATIONS = arrayOf(
         // Version 1 -> 2: request format was changed
         "DELETE FROM $REQUEST_STATUSES;")
 
     @OnUpgrade
+    @JvmStatic
     fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         for (i in oldVersion until newVersion) {
             val migration = MIGRATIONS[i - 1]

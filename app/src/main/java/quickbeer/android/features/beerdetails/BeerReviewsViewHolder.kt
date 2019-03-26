@@ -17,12 +17,11 @@
  */
 package quickbeer.android.features.beerdetails
 
-import androidx.annotation.StringRes
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import io.reark.reark.utils.Preconditions.checkNotNull
+import androidx.annotation.StringRes
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.beer_details_review.view.*
 import quickbeer.android.R
 import quickbeer.android.core.activity.InjectingDrawerActivity

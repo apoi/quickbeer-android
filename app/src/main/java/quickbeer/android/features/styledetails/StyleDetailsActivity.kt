@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -71,7 +70,7 @@ class StyleDetailsActivity : BindingDrawerActivity() {
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             disposable.add(
-                get(progressStatusProvider)
+                progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
@@ -92,7 +91,7 @@ class StyleDetailsActivity : BindingDrawerActivity() {
                 val idSegment = intent.data.pathSegments.find { it.isNumeric() }
                 if (idSegment != null) {
                     styleId = idSegment.toInt()
-                    get(analytics).createEvent(Events.Entry.LINK_STYLE)
+                    analytics.createEvent(Events.Entry.LINK_STYLE)
                 }
             }
 

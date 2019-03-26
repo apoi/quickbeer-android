@@ -23,7 +23,6 @@ import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BeerListColumns
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.providers.RateBeerProvider
@@ -34,11 +33,11 @@ class BeerListStoreCore(contentResolver: ContentResolver, gson: Gson) :
     StoreCoreBase<String, ItemList<String>>(contentResolver, gson) {
 
     override fun getUriForId(id: String): Uri {
-        return RateBeerProvider.BeerLists.withKey(get(id))
+        return RateBeerProvider.BeerLists.withKey(id)
     }
 
     override fun getIdForUri(uri: Uri): String {
-        return RateBeerProvider.BeerLists.fromUri(get(uri))
+        return RateBeerProvider.BeerLists.fromUri(uri)
     }
 
     override fun getContentUri(): Uri {

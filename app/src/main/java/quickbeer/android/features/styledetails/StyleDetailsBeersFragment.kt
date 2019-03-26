@@ -18,7 +18,6 @@
 package quickbeer.android.features.styledetails
 
 import android.os.Bundle
-import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -72,7 +71,7 @@ class StyleDetailsBeersFragment : BeerListFragment() {
     }
 
     override fun viewModel(): BeersInStyleViewModel {
-        return get(beersInStyleViewModel)
+        return beersInStyleViewModel
     }
 
     override fun onQuery(query: String) {

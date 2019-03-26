@@ -23,7 +23,6 @@ import io.reactivex.Single
 import io.reactivex.functions.BiFunction
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.Constants
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
@@ -47,8 +46,8 @@ class ReviewsFetcher(
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
 
-        val userId = get(intent).getStringExtra(USER_ID)
-        val numReviews = get(intent).getIntExtra(NUM_REVIEWS, 0)
+        val userId = intent.getStringExtra(USER_ID)
+        val numReviews = intent.getIntExtra(NUM_REVIEWS, 0)
 
         fetchReviewedBeers(userId, numReviews, listenerId)
     }

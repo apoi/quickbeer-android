@@ -23,7 +23,6 @@ import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.details_fragment_pager.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -81,7 +80,7 @@ class CountryDetailsPagerFragment : BaseFragment() {
             setCurrentItem(defaultIndex)
             addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
                 override fun onPageSelected(position: Int) {
-                    get(analytics).createEvent(
+                    analytics.createEvent(
                         if (position == 0) Screen.COUNTRY_DETAILS
                         else Screen.COUNTRY_BEERS
                     )

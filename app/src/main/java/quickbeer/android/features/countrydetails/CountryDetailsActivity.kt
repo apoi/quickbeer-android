@@ -25,7 +25,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -73,7 +72,7 @@ class CountryDetailsActivity : BindingDrawerActivity() {
                     .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             disposable.add(
-                get(progressStatusProvider)
+                progressStatusProvider
                     .progressStatus()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))

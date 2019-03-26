@@ -21,7 +21,6 @@ import io.reactivex.Observable
 import io.reactivex.functions.Function
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.pojos.ItemList
 
 abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewModel() {
@@ -40,7 +39,7 @@ abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewMo
     }
 
     fun setProgressStatus(status: ProgressStatus) {
-        progressStatus.onNext(get(status))
+        progressStatus.onNext(status)
     }
 
     override fun unbind() {

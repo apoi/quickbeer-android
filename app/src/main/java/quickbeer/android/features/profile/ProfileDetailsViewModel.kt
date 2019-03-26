@@ -18,7 +18,6 @@
 package quickbeer.android.features.profile
 
 import io.reactivex.Observable
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.actions.UserActions
@@ -39,7 +38,7 @@ class ProfileDetailsViewModel @Inject constructor(
     fun getTicksOnce(userId: Int): Observable<List<Int>> {
         return reviewActions.getTicks(userId.toString())
             .filter { it.isOnNext }
-            .map { get(it.value) }
+            .map { it.value }
             .map { it.items }
     }
 }

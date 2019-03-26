@@ -22,7 +22,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
@@ -46,14 +45,14 @@ open class BeerSearchFetcher @JvmOverloads constructor(
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
 
-        val searchString = get(intent).getStringExtra(SEARCH)
+        val searchString = intent.getStringExtra(SEARCH)
         fetchBeerSearch(searchString, listenerId)
     }
 
     protected fun fetchBeerSearch(query: String, listenerId: Int) {
         Timber.d("fetchBeerSearch($query)")
 
-        val queryId = getQueryId(serviceUri, get(query))
+        val queryId = getQueryId(serviceUri, query)
         val uri = getUniqueUri(queryId)
         val requestId = uri.hashCode()
 
@@ -82,7 +81,7 @@ open class BeerSearchFetcher @JvmOverloads constructor(
     }
 
     protected open fun createNetworkObservable(searchString: String): Single<List<Beer>> {
-        return networkApi.search(networkUtils.createRequestParams("bn", get(searchString)))
+        return networkApi.search(networkUtils.createRequestParams("bn", searchString))
     }
 
     companion object : FetcherCompanion {

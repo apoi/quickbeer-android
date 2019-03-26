@@ -29,7 +29,6 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -94,7 +93,7 @@ class BeerDetailsActivity : BindingDrawerActivity() {
             val sourceObservable = beerActions.get(beerId)
                 .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
-                .map { get(it.value) }
+                .map { it.value!! }
                 .take(1)
                 .publish()
 

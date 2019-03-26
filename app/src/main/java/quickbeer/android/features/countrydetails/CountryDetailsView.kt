@@ -25,7 +25,6 @@ import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.country_details_fragment_details.view.*
 import quickbeer.android.Constants
 import quickbeer.android.analytics.Analytics
@@ -76,7 +75,7 @@ class CountryDetailsView(context: Context, attrs: AttributeSet) : NestedScrollVi
     }
 
     private fun showToast(@StringRes resource: Int) {
-        get(toastProvider).showCancelableToast(resource, Toast.LENGTH_LONG)
+        toastProvider.showCancelableToast(resource, Toast.LENGTH_LONG)
     }
 
     private fun openWikipedia(article: String) {

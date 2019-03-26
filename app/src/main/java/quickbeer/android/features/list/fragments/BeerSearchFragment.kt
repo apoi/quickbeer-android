@@ -18,7 +18,6 @@
 package quickbeer.android.features.list.fragments
 
 import android.os.Bundle
-import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option.ofObj
 import quickbeer.android.injections.SearchModule
 import quickbeer.android.providers.NavigationProvider
@@ -59,7 +58,7 @@ class BeerSearchFragment : BeerListFragment() {
     }
 
     override fun viewModel(): BeerListViewModel {
-        return get(beerSearchViewModel)
+        return beerSearchViewModel
     }
 
     override fun onQuery(query: String) {

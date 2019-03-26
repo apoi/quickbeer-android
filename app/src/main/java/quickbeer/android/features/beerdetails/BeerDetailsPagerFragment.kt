@@ -23,7 +23,6 @@ import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.details_fragment_pager.*
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
@@ -80,7 +79,8 @@ class BeerDetailsPagerFragment : BaseFragment() {
                     Screen.BEER_DETAILS
                 else
                     Screen.BEER_REVIEWS
-                get(analytics).createEvent(screen)
+
+                analytics.createEvent(screen)
             }
         })
     }

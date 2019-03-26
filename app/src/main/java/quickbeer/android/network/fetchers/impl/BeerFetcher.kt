@@ -21,7 +21,6 @@ import android.content.Intent
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.Consumer
 import io.reark.reark.pojo.NetworkRequestStatus
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.BeerStore
@@ -43,7 +42,7 @@ class BeerFetcher(
     override fun fetch(intent: Intent, listenerId: Int) {
         if (!validateParams(intent)) return
 
-        val beerId = get(intent).getIntExtra(BEER_ID, 0)
+        val beerId = intent.getIntExtra(BEER_ID, 0)
         val uri = getUniqueUri(beerId)
 
         addListener(beerId, listenerId)

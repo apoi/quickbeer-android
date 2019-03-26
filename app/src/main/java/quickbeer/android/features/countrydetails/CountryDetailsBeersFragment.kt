@@ -18,7 +18,6 @@
 package quickbeer.android.features.countrydetails
 
 import android.os.Bundle
-import io.reark.reark.utils.Preconditions.get
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -72,7 +71,7 @@ class CountryDetailsBeersFragment : BeerListFragment() {
     }
 
     override fun viewModel(): BeersInCountryViewModel {
-        return get(beersInCountryViewModel)
+        return beersInCountryViewModel
     }
 
     override fun onQuery(query: String) {

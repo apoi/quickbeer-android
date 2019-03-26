@@ -24,7 +24,6 @@ import android.net.Uri
 import com.google.gson.Gson
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BrewerMetadataColumns
 import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.providers.RateBeerProvider
@@ -59,11 +58,11 @@ class BrewerMetadataStoreCore(contentResolver: ContentResolver, gson: Gson) :
     }
 
     override fun getUriForId(id: Int): Uri {
-        return RateBeerProvider.BrewerMetadata.withId(get(id))
+        return RateBeerProvider.BrewerMetadata.withId(id)
     }
 
     override fun getIdForUri(uri: Uri): Int {
-        return RateBeerProvider.BrewerMetadata.fromUri(get(uri))
+        return RateBeerProvider.BrewerMetadata.fromUri(uri)
     }
 
     override fun getContentUri(): Uri {

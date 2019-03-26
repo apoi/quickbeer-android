@@ -22,7 +22,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.ItemList
@@ -74,7 +73,7 @@ protected constructor(
         // Actual update
         disposable.add(sharedObservable
             .filter { it.isOnNext }
-            .map { get(it.value) }
+            .map { it.value }
             .doOnNext { Timber.d("Search finished") }
             .flatMapSingle {
                 Observable.fromIterable(it.items)

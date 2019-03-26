@@ -20,7 +20,6 @@ package quickbeer.android.core.viewmodel.viewholder
 import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import io.reactivex.disposables.CompositeDisposable
-import io.reark.reark.utils.Preconditions.checkNotNull
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.ViewModel
 
@@ -62,8 +61,7 @@ abstract class BindingViewHolder<T : ViewModel> protected constructor(view: View
     }
 
     private fun unbindViewModelFromData() {
-        checkNotNull(viewModel, "View Model cannot be null when unbinding")
-        viewModel!!.unbindDataModel()
+        viewModel?.unbindDataModel()
         viewModel = null
     }
 }

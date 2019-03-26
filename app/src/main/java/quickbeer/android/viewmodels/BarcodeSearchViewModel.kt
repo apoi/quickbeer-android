@@ -19,7 +19,6 @@ package quickbeer.android.viewmodels
 
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.actions.BarcodeActions
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
@@ -38,7 +37,7 @@ class BarcodeSearchViewModel @Inject internal constructor(
     private var barcode = ""
 
     fun setBarcode(barcode: String) {
-        this.barcode = get(barcode)
+        this.barcode = barcode
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {

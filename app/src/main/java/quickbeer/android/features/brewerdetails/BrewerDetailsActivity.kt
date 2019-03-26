@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import io.reark.reark.utils.Preconditions.get
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
@@ -77,7 +76,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
             val sourceObservable = brewerActions.get(brewerId)
                 .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
-                .map { get(it.value) }
+                .map { it.value }
                 .take(1)
                 .publish()
 
@@ -90,7 +89,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
             disposable.add(
                 sourceObservable
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
+                    .subscribe({ setToolbarDetails(it!!) }, { Timber.e(it) }))
 
             disposable.add(
                 progressStatusProvider

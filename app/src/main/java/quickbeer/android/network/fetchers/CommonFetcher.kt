@@ -62,7 +62,7 @@ abstract class CommonFetcher(
 
         fun getUniqueUri(id: Any = ""): String {
             return if (id.toString().isBlank()) NAME
-            else "{$NAME}_$id"
+            else "${NAME}_$id"
         }
 
         fun getUniqueUri(id1: Any, id2: Any): String {

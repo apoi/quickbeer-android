@@ -22,7 +22,6 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
-import io.reark.reark.utils.Preconditions.get
 import quickbeer.android.data.columns.BrewerColumns
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.providers.RateBeerProvider
@@ -31,11 +30,11 @@ class BrewerStoreCore(contentResolver: ContentResolver, gson: Gson) :
     StoreCoreBase<Int, Brewer>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
-        return RateBeerProvider.Brewers.withId(get(id))
+        return RateBeerProvider.Brewers.withId(id)
     }
 
     override fun getIdForUri(uri: Uri): Int {
-        return RateBeerProvider.Brewers.fromUri(get(uri))
+        return RateBeerProvider.Brewers.fromUri(uri)
     }
 
     override fun getContentUri(): Uri {

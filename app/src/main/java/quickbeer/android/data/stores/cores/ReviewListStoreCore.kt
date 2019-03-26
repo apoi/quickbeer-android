@@ -23,7 +23,6 @@ import android.database.Cursor
 import android.net.Uri
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import io.reark.reark.utils.Preconditions.get
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.columns.ReviewListColumns
 import quickbeer.android.data.pojos.ItemList
@@ -36,11 +35,11 @@ class ReviewListStoreCore(contentResolver: ContentResolver, gson: Gson) :
     StoreCoreBase<Int, ItemList<Int>>(contentResolver, gson) {
 
     override fun getUriForId(id: Int): Uri {
-        return RateBeerProvider.ReviewLists.withBeerId(get(id))
+        return RateBeerProvider.ReviewLists.withBeerId(id)
     }
 
     override fun getIdForUri(uri: Uri): Int {
-        return RateBeerProvider.ReviewLists.fromUri(get(uri))
+        return RateBeerProvider.ReviewLists.fromUri(uri)
     }
 
     override fun getContentUri(): Uri {
