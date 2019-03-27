@@ -39,7 +39,7 @@ class TopBeersViewModel @Inject internal constructor(
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.fetchTopBeers()
-            .flatMapObservable { dataSource() }
+        return dataSource()
+            .mergeWith(beerListActions.fetchTopBeers())
     }
 }

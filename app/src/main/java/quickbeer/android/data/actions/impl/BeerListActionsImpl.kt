@@ -18,8 +18,8 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
+import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import quickbeer.android.data.actions.BeerListActions
@@ -52,58 +52,38 @@ class BeerListActionsImpl @Inject constructor(
 
     // TOP BEERS
 
-    override fun topBeers(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("topBeers()")
-
-        return triggerGet { list -> list.items.isEmpty() }
-    }
-
-    override fun fetchTopBeers(): Single<Boolean> {
+    override fun fetchTopBeers(): Completable {
         Timber.v("fetchTopBeers()")
 
-        return triggerGet { true }
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
+        return Completable.fromAction {
+            createServiceRequest(serviceUri = TopBeersFetcher.NAME)
+        }
     }
 
-    private fun triggerGet(needsReload: (ItemList<String>) -> Boolean): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers()")
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnSuccess {
-                Timber.v("Search not cached, fetching")
-                triggerFetch()
-            }
-            .ignoreElement()
-
-        return getTopBeersResultStream()
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    // No need to filter stale statuses?
-    private fun getTopBeersResultStream(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getTopBeersResultStream()")
+    override fun topBeers(): Observable<DataStreamNotification<ItemList<String>>> {
+        Timber.v("topBeers()")
 
         val queryId = BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        // No need to filter stale statuses: all of the statuses are pushed to the progress indicator,
+        // and for that we want also statuses from refreshes with different listener ids.
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue()
 
-        val beerSearchObservable = beerListStore.getOnceAndStream(queryId)
+        val valueStream = beerListStore.getOnceAndStream(queryId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, beerSearchObservable)
-    }
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
+            .filter { it.match({ list -> list.items.isEmpty() }, { true }) }
+            .flatMapCompletable {
+                Timber.v("Search not cached, fetching")
+                fetchTopBeers()
+            }
 
-    private fun triggerFetch(): Int {
-        Timber.v("triggerFetch()")
-
-        return createServiceRequest(serviceUri = TopBeersFetcher.NAME)
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 }

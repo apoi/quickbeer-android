@@ -17,6 +17,7 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
@@ -25,5 +26,5 @@ import quickbeer.android.data.pojos.ItemList
 interface BeerListActions {
     fun accessed(): Observable<DataStreamNotification<ItemList<String>>>
     fun topBeers(): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetchTopBeers(): Single<Boolean>
+    fun fetchTopBeers(): Completable
 }
