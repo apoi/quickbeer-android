@@ -17,6 +17,7 @@
  */
 package quickbeer.android.data.actions
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
@@ -24,5 +25,5 @@ import quickbeer.android.data.pojos.ItemList
 
 interface BarcodeActions {
     fun get(barcode: String): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetch(barcode: String): Single<Boolean>
+    fun fetch(barcode: String): Completable
 }

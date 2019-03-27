@@ -18,8 +18,8 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
+import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import quickbeer.android.data.actions.BarcodeActions
@@ -42,48 +42,40 @@ class BarcodeActionsImpl @Inject constructor(
     // BARCODE SEARCH
 
     override operator fun get(barcode: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBarcodeSearch(%s)", barcode)
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode))
-            .toObservable()
-            .filter { it.isNoneOrEmpty() }
-            .doOnNext { Timber.v("Search not cached, fetching") }
-            .doOnNext { fetchBarcodeSearch(barcode) }
-            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
-
-        return getBarcodeSearchResultStream(barcode)
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    override fun fetch(barcode: String): Single<Boolean> {
-        return Single.just(false)
-    }
-
-    private fun getBarcodeSearchResultStream(barcode: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBarcodeSearchResultStream(%s)", barcode)
+        Timber.v("get($barcode)")
 
         val queryId = BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
-            .filterToValue() // No need to filter stale statuses?
+            .filterToValue() // No need to filter stale statuses
 
-        val barcodeSearchObservable = beerListStore
+        val valueStream = beerListStore
             .getOnceAndStream(queryId)
             .filterToValue()
 
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore
+            .getOnce(BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode))
+            .filter { it.isNoneOrEmpty() }
+            .flatMapCompletable {
+                Timber.v("Search not cached, fetching")
+                fetch(barcode)
+            }
+
         return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, barcodeSearchObservable)
+            statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 
-    private fun fetchBarcodeSearch(barcode: String): Int {
-        Timber.v("fetchBarcodeSearch(%s)", barcode)
+    override fun fetch(barcode: String): Completable {
+        Timber.v("fetch($barcode)")
 
-        return createServiceRequest(
-            serviceUri = BarcodeSearchFetcher.NAME,
-            stringParams = mapOf(BarcodeSearchFetcher.BARCODE to barcode))
+        return Completable.fromCallable {
+            createServiceRequest(
+                serviceUri = BarcodeSearchFetcher.NAME,
+                stringParams = mapOf(BarcodeSearchFetcher.BARCODE to barcode))
+        }
     }
 }

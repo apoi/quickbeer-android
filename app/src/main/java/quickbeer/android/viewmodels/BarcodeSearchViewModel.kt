@@ -45,7 +45,7 @@ class BarcodeSearchViewModel @Inject internal constructor(
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return barcodeActions.fetch(barcode)
-            .flatMapObservable { dataSource() }
+        return dataSource()
+            .mergeWith(barcodeActions.fetch(barcode))
     }
 }
