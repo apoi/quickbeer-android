@@ -24,7 +24,7 @@ import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.ItemList
 
 interface BeerListActions {
-    fun accessed(): Observable<DataStreamNotification<ItemList<String>>>
+    fun recentBeers(): Observable<DataStreamNotification<ItemList<String>>>
     fun topBeers(): Observable<DataStreamNotification<ItemList<String>>>
     fun fetchTopBeers(): Completable
 }

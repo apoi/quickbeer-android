@@ -42,9 +42,8 @@ class BeerMetadataStore(contentResolver: ContentResolver, gson: Gson) :
         GetEmptyValue { Option.none<BeerMetadata>() }) {
 
     // This isn't a result set but rather a custom query. Thus, no caching.
-    val accessedIdsOnce: Observable<List<Int>>
-        get() {
-            val core = providerCore as BeerMetadataStoreCore
-            return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED)
-        }
+    fun getAccessedIdsOnce(): Observable<List<Int>> {
+        val core = providerCore as BeerMetadataStoreCore
+        return core.getAccessedIdsOnce(BeerMetadataColumns.ID, BeerMetadataColumns.ACCESSED)
+    }
 }

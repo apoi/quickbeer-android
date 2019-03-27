@@ -39,7 +39,7 @@ class RecentBeersViewModel @Inject internal constructor(
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.accessed()
+        return beerListActions.recentBeers()
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {

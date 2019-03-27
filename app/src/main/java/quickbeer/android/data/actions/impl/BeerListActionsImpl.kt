@@ -40,12 +40,12 @@ class BeerListActionsImpl @Inject constructor(
     private val beerMetadataStore: BeerMetadataStore
 ) : ApplicationDataLayer(context), BeerListActions {
 
-    // ACCESSED BEERS
+    // RECENT BEERS
 
-    override fun accessed(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("accessed()")
+    override fun recentBeers(): Observable<DataStreamNotification<ItemList<String>>> {
+        Timber.v("recentBeers()")
 
-        return beerMetadataStore.accessedIdsOnce
+        return beerMetadataStore.getAccessedIdsOnce()
             .map { ids -> ItemList<String>(null, ids, null) }
             .map { DataStreamNotification.onNext(it) }
     }
