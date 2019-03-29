@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,26 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.injections;
+package quickbeer.android.injections
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import javax.inject.Scope
 
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class FragmentModule {
-
-    private final Fragment fragment;
-
-    public FragmentModule(@NonNull Fragment fragment) {
-        this.fragment = fragment;
-    }
-
-    @Provides
-    @FragmentScope
-    Fragment provideFragment() {
-        return fragment;
-    }
-}
+@Scope
+@Retention(AnnotationRetention.RUNTIME)
+annotation class FragmentScope

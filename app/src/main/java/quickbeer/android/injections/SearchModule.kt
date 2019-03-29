@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.injections;
+package quickbeer.android.injections
 
-import java.lang.annotation.Retention;
+import dagger.Module
+import dagger.Provides
+import javax.inject.Named
 
-import javax.inject.Scope;
+const val QUERY = "query"
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+@Module
+class SearchModule(private val query: String) {
 
-@Scope
-@Retention(RUNTIME)
-public @interface FragmentScope {
+    @Provides
+    @Named(QUERY)
+    internal fun provideQuery(): String = query
 }
