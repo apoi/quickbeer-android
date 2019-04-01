@@ -23,6 +23,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
+import quickbeer.android.data.HasDetailsData
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
@@ -93,7 +94,7 @@ class BrewerViewModel @Inject internal constructor(
         if (brewerId > 0) {
             return Single.just(brewerId)
         } else if (beerId > 0) {
-            return beerActions.getDetails(beerId)
+            return beerActions.get(beerId, HasDetailsData())
                 .filter { it.isOnNext }
                 .map { it.value!! }
                 .map { it.brewerId!! }

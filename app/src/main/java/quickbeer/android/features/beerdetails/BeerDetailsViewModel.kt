@@ -24,6 +24,7 @@ import io.reark.reark.data.DataStreamNotification.Type
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.SimpleViewModel
+import quickbeer.android.data.Reject
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.actions.ReviewActions
@@ -92,7 +93,7 @@ class BeerDetailsViewModel @Inject constructor(
 
     fun reloadBeerDetails() {
         disposable.add(
-            beerActions.fetch(beerId)
+            beerActions.get(beerId, Reject())
                 .subscribe({}, { Timber.e(it) }))
     }
 

@@ -24,12 +24,13 @@ import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
 import quickbeer.android.Constants
-import quickbeer.android.data.ValidationFailedException
 import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerSearchActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.utils.StringUtils
 import quickbeer.android.utils.kotlin.filterToValue
@@ -75,18 +76,14 @@ class BeerSearchActionsImpl @Inject constructor(
         // Trigger a fetch only if there was no cached result
         val reloadTrigger = beerListStore
             .getOnce(queryId)
-            .compose(validator.validate())
-            .ignoreElement()
-            .onErrorComplete {
-                if (it is ValidationFailedException) {
-                    Timber.v("Search not cached, fetching")
-                    createServiceRequest(
-                        serviceUri = BeerSearchFetcher.NAME,
-                        stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
-                }
-
-                it is ValidationFailedException
+            .validate(validator)
+            .onValidationError {
+                Timber.v("Search not cached, fetching")
+                createServiceRequest(
+                    serviceUri = BeerSearchFetcher.NAME,
+                    stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
             }
+
 
         return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
             .mergeWith(reloadTrigger)

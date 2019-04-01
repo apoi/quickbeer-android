@@ -77,13 +77,13 @@ class ProgressStatusProvider {
     }
 
     private fun toProgress(notification: DataStreamNotification<*>): Float {
-        return if (notification.isOngoing) 0.5f else 1.0f
+        return if (notification.isOngoing) 0.33f else 1.0f
     }
 
     @Synchronized
     private fun aggregate() {
         var aggregate = ProgressStatus.IDLE
-        val values = progressMap.values
+        val values = progressMap.values.toList()
         val count = values.size
 
         if (count > 0) {

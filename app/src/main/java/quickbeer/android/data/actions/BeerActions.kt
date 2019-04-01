@@ -21,13 +21,17 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
+import polanski.option.Option
+import quickbeer.android.data.HasBasicData
+import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
 
 interface BeerActions {
-    fun get(beerId: Int): Observable<DataStreamNotification<Beer>>
-    fun getDetails(beerId: Int): Observable<DataStreamNotification<Beer>>
-    fun fetch(beerId: Int): Completable
+    fun get(
+        beerId: Int,
+        validator: Validator<Option<Beer>> = HasBasicData()
+    ): Observable<DataStreamNotification<Beer>>
 
     fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>>
     fun fetchReviews(beerId: Int, page: Int): Completable
@@ -35,3 +39,4 @@ interface BeerActions {
     fun access(beerId: Int): Single<Boolean>
     fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>>
 }
+

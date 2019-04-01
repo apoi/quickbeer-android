@@ -18,10 +18,16 @@
 
 package quickbeer.android.data
 
+import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
 import polanski.option.Option
+import polanski.option.OptionUnsafe
+import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
+import quickbeer.android.network.fetchers.impl.BeerFetcher
+import timber.log.Timber
 
 interface Validator<T> {
     fun validate(): SingleTransformer<T, T>
@@ -50,6 +56,48 @@ class NotEmpty<T> : Validator<Option<ItemList<T>>> {
                 }
             }
         }
+    }
+}
+
+class HasBasicData : Validator<Option<Beer>> {
+    override fun validate(): SingleTransformer<Option<Beer>, Option<Beer>> {
+        return SingleTransformer { source ->
+            source.map {
+                if (it.match({ it.basicDataMissing() }, { true })) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+class HasDetailsData : Validator<Option<Beer>> {
+    override fun validate(): SingleTransformer<Option<Beer>, Option<Beer>> {
+        return SingleTransformer { source ->
+            source.map {
+                if (it.match({ it.detailedDataMissing() }, { true })) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+fun <T> Single<T>.validate(validator: Validator<T>): Completable {
+    return compose(validator.validate())
+        .ignoreElement()
+}
+
+fun Completable.onValidationError(block: () -> Unit): Completable {
+    return onErrorComplete {
+        if (it is ValidationFailedException) {
+            block()
+            true
+        } else false
     }
 }
 

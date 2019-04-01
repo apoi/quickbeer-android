@@ -23,7 +23,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.BeerMetadata
 import quickbeer.android.data.pojos.ItemList
@@ -31,6 +34,7 @@ import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.BeerStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
 import quickbeer.android.data.stores.ReviewListStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerFetcher
 import quickbeer.android.network.fetchers.impl.ReviewFetcher
 import quickbeer.android.network.fetchers.impl.TickBeerFetcher
@@ -49,20 +53,11 @@ class BeerActionsImpl @Inject constructor(
 
     // BEER
 
-    override operator fun get(beerId: Int): Observable<DataStreamNotification<Beer>> {
+    override operator fun get(
+        beerId: Int,
+        validator: Validator<Option<Beer>>
+    ): Observable<DataStreamNotification<Beer>> {
         Timber.v("get($beerId)")
-
-        return getBeer(beerId, Beer::basicDataMissing)
-    }
-
-    override fun getDetails(beerId: Int): Observable<DataStreamNotification<Beer>> {
-        Timber.v("getDetails($beerId)")
-
-        return getBeer(beerId, Beer::detailedDataMissing)
-    }
-
-    private fun getBeer(beerId: Int, needsReload: (Beer) -> Boolean): Observable<DataStreamNotification<Beer>> {
-        Timber.v("getBeer($beerId)")
 
         val uri = BeerFetcher.getUniqueUri(beerId)
 
@@ -70,30 +65,24 @@ class BeerActionsImpl @Inject constructor(
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue() // No need to filter stale statuses
 
-        val valueStream = beerStore.getOnceAndStream(beerId)
+        val valueStream = beerStore
+            .getOnceAndStream(beerId)
             .filterToValue()
 
         // Trigger a fetch only if full details haven't been fetched
-        val reloadTrigger = beerStore.getOnce(beerId)
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .flatMapCompletable {
+        val reloadTrigger = beerStore
+            .getOnce(beerId)
+            .validate(validator)
+            .onValidationError {
                 Timber.v("Fetching beer data")
-                fetch(beerId)
+                createServiceRequest(
+                    serviceUri = BeerFetcher.NAME,
+                    intParams = mapOf(BeerFetcher.BEER_ID to beerId))
             }
 
         return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
             .mergeWith(reloadTrigger)
             .distinctUntilChanged()
-    }
-
-    override fun fetch(beerId: Int): Completable {
-        Timber.v("fetch($beerId)")
-
-        return Completable.fromCallable {
-            createServiceRequest(
-                serviceUri = BeerFetcher.NAME,
-                intParams = mapOf(BeerFetcher.BEER_ID to beerId))
-        }
     }
 
     // ACCESS
