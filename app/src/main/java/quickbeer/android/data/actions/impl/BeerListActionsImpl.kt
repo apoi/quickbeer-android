@@ -46,7 +46,7 @@ class BeerListActionsImpl @Inject constructor(
         Timber.v("recentBeers()")
 
         return beerMetadataStore.getAccessedIdsOnce()
-            .map { ids -> ItemList<String>(null, ids, null) }
+            .map { ItemList.create<String>(it) }
             .map { DataStreamNotification.onNext(it) }
     }
 

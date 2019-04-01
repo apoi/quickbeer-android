@@ -45,27 +45,22 @@ class BeerSearchActionsImpl @Inject constructor(
         Timber.v("searchQueries()")
 
         return beerListStore.getOnce()
-            .toObservable()
-            .flatMap { Observable.fromIterable(it) }
-            .map { it.key }
-            .filter { !it.startsWith(Constants.META_QUERY_PREFIX) }
-            .toList()
-            .map { ArrayList<String>(it) }
+            .map {
+                it.mapNotNull { it.key }
+                    .filter { !it.startsWith(Constants.META_QUERY_PREFIX) }
+            }
     }
 
     override fun search(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("search()")
+        Timber.v("search($query)")
 
         return triggerSearch(query, { it.items.isEmpty() })
     }
 
-    override fun fetchSearch(query: String): Single<Boolean> {
+    override fun fetchSearch(query: String): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("fetchSearch()")
 
         return triggerSearch(query, { true })
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
     }
 
     private fun triggerSearch(
@@ -75,43 +70,30 @@ class BeerSearchActionsImpl @Inject constructor(
         Timber.v("triggerSearch($query)")
 
         val normalized = StringUtils.normalize(query)
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, normalized))
-            .toObservable()
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnNext { Timber.v("Search not cached, fetching") }
-            .doOnNext { fetchBeerSearch(normalized) }
-            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
-
-        return getBeerSearchResultStream(normalized)
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    private fun getBeerSearchResultStream(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeerSearchResultStream($query)")
-
-        val queryId = BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, query)
+        val queryId = BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, normalized)
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue() // No need to filter stale statuses?
 
-        val beerSearchObservable = beerListStore
+        val valueStream = beerListStore
             .getOnceAndStream(queryId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, beerSearchObservable)
-    }
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore
+            .getOnce(queryId)
+            .filter { it.match({ needsReload(it) }, { true }) }
+            .doOnSuccess {
+                Timber.v("Search not cached, fetching")
+                createServiceRequest(
+                    serviceUri = BeerSearchFetcher.NAME,
+                    stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
+            }
+            .ignoreElement()
 
-    private fun fetchBeerSearch(query: String): Int {
-        Timber.v("fetchBeerSearch($query)")
-
-        return createServiceRequest(
-            serviceUri = BeerSearchFetcher.NAME,
-            stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 }

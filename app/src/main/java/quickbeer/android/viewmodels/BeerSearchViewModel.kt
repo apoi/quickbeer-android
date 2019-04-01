@@ -50,6 +50,5 @@ class BeerSearchViewModel @Inject internal constructor(
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return beerSearchActions.fetchSearch(query)
-            .flatMapObservable { dataSource() }
     }
 }

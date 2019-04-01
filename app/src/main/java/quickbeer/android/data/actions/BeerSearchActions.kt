@@ -24,6 +24,6 @@ import quickbeer.android.data.pojos.ItemList
 
 interface BeerSearchActions {
     fun search(query: String): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetchSearch(query: String): Single<Boolean>
+    fun fetchSearch(query: String): Observable<DataStreamNotification<ItemList<String>>>
     fun searchQueries(): Single<List<String>>
 }
