@@ -57,7 +57,7 @@ class BrewerViewModel @Inject internal constructor(
     fun reloadBrewerDetails() {
         disposable.add(getBrewerId()
             .flatMap { brewerActions.fetch(it) }
-            .subscribe({}, { Timber.e(it) }))
+            .subscribe({}, Timber::e))
     }
 
     override fun bind(disposable: CompositeDisposable) {
@@ -68,12 +68,12 @@ class BrewerViewModel @Inject internal constructor(
         disposable.add(
             brewerSource
                 .map(toProgressStatus())
-                .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
+                .subscribe({ setProgressStatus(it) }, Timber::e))
 
         disposable.add(brewerSource
             .filter { it.isOnNext }
             .map { it.value }
-            .subscribe({ brewer.onNext(it!!) }, { Timber.e(it) }))
+            .subscribe({ brewer.onNext(it!!) }, Timber::e))
 
         disposable.add(
             progressStatusProvider

@@ -62,13 +62,13 @@ protected constructor(
             .map(toProgressStatus())
             .startWith(NetworkViewModel.ProgressStatus.LOADING)
             .distinctUntilChanged()
-            .subscribe { setProgressStatus(it) })
+            .subscribe({ setProgressStatus(it) }, Timber::e))
 
         // Clear list on fetching start
         disposable.add(sharedObservable
             .filter { it.isOngoing }
             .map { emptyList<BrewerViewModel>() }
-            .subscribe { brewers.onNext(it) })
+            .subscribe({ brewers.onNext(it) }, Timber::e))
 
         // Actual update
         disposable.add(sharedObservable
@@ -81,7 +81,7 @@ protected constructor(
                     .toList()
             }
             .doOnNext { Timber.d("Publishing ${it.size} brewers") }
-            .subscribe { brewers.onNext(it) })
+            .subscribe({ brewers.onNext(it) }, Timber::e))
 
         // Share progress status to progress provider
         if (reportsProgress()) {

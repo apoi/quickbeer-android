@@ -45,30 +45,26 @@ class BeerViewModel(
             .subscribeOn(Schedulers.computation())
             .publish()
 
-        disposable.add(
-            beerSource
-                .map(toProgressStatus())
-                .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
+        disposable.add(beerSource
+            .map(toProgressStatus())
+            .subscribe({ setProgressStatus(it) }, Timber::e))
 
         disposable.add(beerSource
             .filter { it.isOnNext }
             .map { it.value }
-            .subscribe({ beer.onNext(it!!) }, { Timber.e(it) }))
+            .subscribe({ beer.onNext(it!!) }, Timber::e))
 
         disposable.add(
             progressStatusProvider
                 .addProgressObservable(beerSource.map { it }))
 
-        disposable.add(
-            beerSource
-                .connect())
+        disposable.add(beerSource.connect())
     }
 
     private fun getBeer(beerId: Int): Observable<DataStreamNotification<Beer>> {
-        if (detailed)
-            return beerActions.getDetails(beerId)
-        else
-            return beerActions.get(beerId)
+        return if (detailed) {
+            beerActions.getDetails(beerId)
+        } else beerActions.get(beerId)
     }
 
     override fun equals(other: Any?): Boolean {

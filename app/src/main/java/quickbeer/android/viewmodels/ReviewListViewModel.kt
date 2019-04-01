@@ -72,7 +72,7 @@ class ReviewListViewModel(
 
         disposable.add(reviewSource
             .map { toProgressStatus().apply(it) }
-            .subscribe { setProgressStatus(it) })
+            .subscribe({ setProgressStatus(it) }, { Timber.e(it) }))
 
         disposable.add(reviewSource
             .filter { it.isOnNext }
@@ -85,7 +85,7 @@ class ReviewListViewModel(
                     .flatMapObservable { RxUtils.toObservableList(it) }
             }
             .doOnNext { Timber.d("Publishing ${it.size} reviews from the view model") }
-            .subscribe { reviews.onNext(it) })
+            .subscribe({ reviews.onNext(it) }, Timber::e))
 
         disposable.add(
             progressStatusProvider
@@ -101,7 +101,7 @@ class ReviewListViewModel(
             .switchMap { reviewListStore.delete(beerId).toObservable() }
             .doOnEach { reviews.onNext(emptyList<Review>()) }
             .doOnEach { loadTrigger.onNext(Unit.DEFAULT) }
-            .subscribe({}, { Timber.e(it) }))
+            .subscribe({}, Timber::e))
 
         // Initial trigger at bind time
         loadTrigger.onNext(Unit.DEFAULT)
