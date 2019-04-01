@@ -19,7 +19,6 @@ package quickbeer.android.data.actions
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.ItemList
 

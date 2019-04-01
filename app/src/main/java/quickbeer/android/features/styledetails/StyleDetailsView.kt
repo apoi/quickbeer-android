@@ -18,10 +18,10 @@
 package quickbeer.android.features.styledetails
 
 import android.content.Context
-import androidx.annotation.StringRes
-import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.core.widget.NestedScrollView
 import kotlinx.android.synthetic.main.style_details_fragment_details.view.*
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.core.activity.InjectingDrawerActivity

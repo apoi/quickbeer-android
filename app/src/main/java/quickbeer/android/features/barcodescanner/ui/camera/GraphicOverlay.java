@@ -19,15 +19,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.google.android.gms.vision.CameraSource;
+import quickbeer.android.features.barcodescanner.BarcodeGraphic;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.Vector;
-
-import quickbeer.android.features.barcodescanner.BarcodeGraphic;
 
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview

@@ -17,10 +17,10 @@
  */
 package quickbeer.android.features.list
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import quickbeer.android.R
 import quickbeer.android.adapters.BaseListAdapter
 import quickbeer.android.data.stores.CountryStore

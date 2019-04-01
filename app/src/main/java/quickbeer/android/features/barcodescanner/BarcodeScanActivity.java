@@ -27,25 +27,21 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-
-import java.io.IOException;
-
+import com.google.android.material.snackbar.Snackbar;
 import quickbeer.android.R;
 import quickbeer.android.analytics.Analytics;
 import quickbeer.android.analytics.Events;
@@ -53,6 +49,8 @@ import quickbeer.android.features.barcodescanner.ui.camera.CameraSource;
 import quickbeer.android.features.barcodescanner.ui.camera.CameraSourcePreview;
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 import timber.log.Timber;
+
+import java.io.IOException;
 
 import static io.reark.reark.utils.Preconditions.get;
 

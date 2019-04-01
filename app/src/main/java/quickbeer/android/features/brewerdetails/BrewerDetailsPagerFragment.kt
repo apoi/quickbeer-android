@@ -18,11 +18,11 @@
 package quickbeer.android.features.brewerdetails
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.details_fragment_pager.*
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants

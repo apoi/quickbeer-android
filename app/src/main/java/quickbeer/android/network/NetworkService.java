@@ -28,12 +28,11 @@ package quickbeer.android.network;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-
-import javax.inject.Inject;
-
 import quickbeer.android.QuickBeer;
 import quickbeer.android.data.access.ServiceDataLayer;
 import timber.log.Timber;
+
+import javax.inject.Inject;
 
 public class NetworkService extends Service {
 

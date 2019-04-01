@@ -17,9 +17,9 @@
  */
 package quickbeer.android.views.viewholders
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.simple_list_item.view.*
 import quickbeer.android.data.pojos.SimpleItem
 

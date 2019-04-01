@@ -18,19 +18,14 @@
 package quickbeer.android.views;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
@@ -42,6 +37,9 @@ import quickbeer.android.features.list.BrewerListAdapter;
 import quickbeer.android.utils.StringUtils;
 import quickbeer.android.viewmodels.BrewerViewModel;
 import timber.log.Timber;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;

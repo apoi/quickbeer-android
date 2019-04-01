@@ -16,11 +16,9 @@
 package quickbeer.android.features.barcodescanner;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
-
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 
 import static io.reark.reark.utils.Preconditions.get;

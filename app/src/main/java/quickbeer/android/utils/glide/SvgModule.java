@@ -29,7 +29,6 @@ package quickbeer.android.utils.glide;
 
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Registry;
 import com.bumptech.glide.annotation.GlideModule;

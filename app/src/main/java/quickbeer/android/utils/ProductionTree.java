@@ -18,7 +18,6 @@
 package quickbeer.android.utils;
 
 import android.util.Log;
-
 import timber.log.Timber;
 
 public class ProductionTree extends Timber.Tree {

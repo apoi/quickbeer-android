@@ -18,14 +18,13 @@
 package quickbeer.android.views;
 
 import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.FrameLayout;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 import quickbeer.android.R;

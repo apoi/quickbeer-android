@@ -20,11 +20,11 @@ package quickbeer.android.features.countrydetails
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.annotation.StringRes
-import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.core.widget.NestedScrollView
 import kotlinx.android.synthetic.main.country_details_fragment_details.view.*
 import quickbeer.android.Constants
 import quickbeer.android.analytics.Analytics

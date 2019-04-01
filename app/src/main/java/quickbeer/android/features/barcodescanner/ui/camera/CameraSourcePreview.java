@@ -18,18 +18,16 @@ package quickbeer.android.features.barcodescanner.ui.camera;
 import android.Manifest;
 import android.content.Context;
 import android.content.res.Configuration;
-import androidx.annotation.RequiresPermission;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-
+import androidx.annotation.RequiresPermission;
 import com.google.android.gms.common.images.Size;
+import quickbeer.android.features.barcodescanner.BarcodeGraphic;
 
 import java.io.IOException;
-
-import quickbeer.android.features.barcodescanner.BarcodeGraphic;
 
 public class CameraSourcePreview extends ViewGroup {
     private static final String TAG = "CameraSourcePreview";

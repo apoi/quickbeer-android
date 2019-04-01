@@ -19,10 +19,10 @@ package quickbeer.android.features.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.viewpager.widget.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.vision.barcode.Barcode
 import io.reactivex.disposables.CompositeDisposable

@@ -18,10 +18,10 @@
 package quickbeer.android.features.beerdetails
 
 import android.content.Context
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import quickbeer.android.R
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.listeners.LoadMoreListener

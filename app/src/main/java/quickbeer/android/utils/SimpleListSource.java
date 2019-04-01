@@ -17,9 +17,9 @@
  */
 package quickbeer.android.utils;
 
-import java.util.Collection;
-
 import quickbeer.android.data.pojos.SimpleItem;
+
+import java.util.Collection;
 
 public interface SimpleListSource<T extends SimpleItem> {
 

@@ -18,7 +18,6 @@ package quickbeer.android.features.barcodescanner;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Tracker;
 import com.google.android.gms.vision.barcode.Barcode;
-
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 
 /**

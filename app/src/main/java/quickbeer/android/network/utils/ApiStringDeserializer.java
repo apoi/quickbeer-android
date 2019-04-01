@@ -18,7 +18,6 @@
 package quickbeer.android.network.utils;
 
 import android.text.Html;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

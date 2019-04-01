@@ -19,17 +19,13 @@ package quickbeer.android.providers;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.MenuItem;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import quickbeer.android.R;
 import quickbeer.android.features.about.AboutActivity;
 import quickbeer.android.features.about.AboutDetailsFragment;
@@ -48,6 +44,9 @@ import quickbeer.android.features.profile.ProfileDetailsFragment;
 import quickbeer.android.features.profile.ProfileLoginFragment;
 import quickbeer.android.features.styledetails.StyleDetailsPagerFragment;
 import timber.log.Timber;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;

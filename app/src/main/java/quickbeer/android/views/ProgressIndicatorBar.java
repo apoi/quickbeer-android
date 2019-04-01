@@ -18,9 +18,6 @@
 package quickbeer.android.views;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +27,9 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import quickbeer.android.R;
 import quickbeer.android.providers.ProgressStatusProvider.ProgressStatus;
 import quickbeer.android.providers.ProgressStatusProvider.Status;

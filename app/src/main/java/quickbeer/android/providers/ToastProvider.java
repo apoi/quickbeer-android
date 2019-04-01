@@ -18,10 +18,10 @@
 package quickbeer.android.providers;
 
 import android.content.Context;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import android.widget.Toast;
 
 import static io.reark.reark.utils.Preconditions.get;
 

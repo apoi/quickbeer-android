@@ -27,24 +27,16 @@ package quickbeer.android.network;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
-
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import org.threeten.bp.ZonedDateTime;
-
-import java.util.List;
-
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import org.threeten.bp.ZonedDateTime;
 import quickbeer.android.BuildConfig;
 import quickbeer.android.Constants;
 import quickbeer.android.injections.ForApplication;
@@ -53,6 +45,10 @@ import quickbeer.android.network.utils.ApiStringDeserializer;
 import quickbeer.android.network.utils.DateDeserializer;
 import quickbeer.android.network.utils.LoginRedirectInterceptor;
 import quickbeer.android.network.utils.SessionPersistingCookieJar;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
+import java.util.List;
 
 @Module
 public final class NetworkModule {

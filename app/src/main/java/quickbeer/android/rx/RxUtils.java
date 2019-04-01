@@ -18,7 +18,6 @@
 package quickbeer.android.rx;
 
 import androidx.annotation.NonNull;
-
 import io.reactivex.Observable;
 import polanski.option.Option;
 import polanski.option.OptionUnsafe;

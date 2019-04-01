@@ -17,8 +17,8 @@
  */
 package quickbeer.android.core.viewmodel.viewholder
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.disposables.CompositeDisposable
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.ViewModel

@@ -18,17 +18,12 @@
 package quickbeer.android.features.profile;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.Unbinder;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -42,6 +37,9 @@ import quickbeer.android.core.viewmodel.DataBinder;
 import quickbeer.android.core.viewmodel.SimpleDataBinder;
 import quickbeer.android.data.pojos.User;
 import timber.log.Timber;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static butterknife.ButterKnife.bind;
 import static io.reark.reark.utils.Preconditions.get;

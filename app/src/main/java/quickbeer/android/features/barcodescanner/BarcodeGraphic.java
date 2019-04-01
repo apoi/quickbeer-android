@@ -19,9 +19,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-
 import com.google.android.gms.vision.barcode.Barcode;
-
 import quickbeer.android.features.barcodescanner.ui.camera.GraphicOverlay;
 
 /**

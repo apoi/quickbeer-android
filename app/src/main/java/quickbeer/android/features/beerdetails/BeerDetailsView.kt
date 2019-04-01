@@ -19,13 +19,13 @@ package quickbeer.android.features.beerdetails
 
 import android.content.Context
 import android.content.Intent
-import androidx.annotation.StringRes
-import androidx.core.widget.NestedScrollView
-import androidx.appcompat.app.AlertDialog
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RatingBar
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
+import androidx.core.widget.NestedScrollView
 import kotlinx.android.synthetic.main.beer_details_fragment_details.view.*
 import polanski.option.Option
 import polanski.option.Option.ofObj

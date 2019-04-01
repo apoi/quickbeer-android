@@ -19,12 +19,11 @@ package quickbeer.android.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import polanski.option.Option;
 
 import java.text.Normalizer;
 import java.util.concurrent.Callable;
 import java.util.regex.Pattern;
-
-import polanski.option.Option;
 
 public final class StringUtils {
 

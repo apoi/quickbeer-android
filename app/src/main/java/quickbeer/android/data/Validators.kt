@@ -19,15 +19,11 @@
 package quickbeer.android.data
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
 import polanski.option.Option
-import polanski.option.OptionUnsafe
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
-import quickbeer.android.network.fetchers.impl.BeerFetcher
-import timber.log.Timber
 
 interface Validator<T> {
     fun validate(): SingleTransformer<T, T>

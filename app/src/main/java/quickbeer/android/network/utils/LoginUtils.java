@@ -18,17 +18,16 @@
 package quickbeer.android.network.utils;
 
 import androidx.annotation.NonNull;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import ix.Ix;
 import okhttp3.Cookie;
 import okhttp3.CookieJar;
 import okhttp3.HttpUrl;
 import polanski.option.Option;
 import quickbeer.android.Constants;
+
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static polanski.option.Option.none;
 import static polanski.option.Option.ofObj;

@@ -19,11 +19,7 @@ package quickbeer.android.network.utils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.google.gson.JsonParser;
-
-import java.io.IOException;
-
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -31,6 +27,8 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import polanski.option.Option;
 import timber.log.Timber;
+
+import java.io.IOException;
 
 import static quickbeer.android.utils.StringUtils.emptyAsNone;
 import static quickbeer.android.utils.StringUtils.value;

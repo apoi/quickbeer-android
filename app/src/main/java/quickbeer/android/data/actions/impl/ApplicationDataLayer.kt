@@ -19,8 +19,6 @@ package quickbeer.android.data.actions.impl
 
 import android.content.Context
 import android.content.Intent
-import io.reactivex.Observable
-import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.network.NetworkService
 import java.util.UUID

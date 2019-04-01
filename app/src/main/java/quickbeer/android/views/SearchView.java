@@ -18,8 +18,6 @@
 package quickbeer.android.views;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -28,16 +26,16 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.miguelcatalan.materialsearchview.utils.AnimationUtil;
-
-import java.util.List;
-
 import quickbeer.android.R;
 import quickbeer.android.adapters.SearchAdapter;
 import quickbeer.android.viewmodels.SearchViewViewModel;
 import timber.log.Timber;
+
+import java.util.List;
 
 import static io.reark.reark.utils.Preconditions.checkNotNull;
 import static io.reark.reark.utils.Preconditions.get;

@@ -21,7 +21,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
-import quickbeer.android.data.Accept
 import quickbeer.android.data.NotEmpty
 import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.ItemList

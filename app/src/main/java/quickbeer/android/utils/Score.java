@@ -18,7 +18,6 @@
 package quickbeer.android.utils;
 
 import androidx.annotation.Nullable;
-
 import quickbeer.android.R;
 
 public class Score {

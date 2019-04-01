@@ -30,7 +30,6 @@ package quickbeer.android.utils.glide;
 import android.graphics.drawable.PictureDrawable;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;

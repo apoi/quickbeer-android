@@ -17,11 +17,11 @@
  */
 package quickbeer.android.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import polanski.option.Option
 import polanski.option.Option.none
 import polanski.option.Option.ofObj

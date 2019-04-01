@@ -17,13 +17,13 @@
  */
 package quickbeer.android.utils;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 import quickbeer.android.Constants;
 import quickbeer.android.network.utils.NetworkUtils;
+
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 @Module
 public final class UtilsModule {

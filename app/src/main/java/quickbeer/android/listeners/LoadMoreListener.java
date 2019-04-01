@@ -3,7 +3,6 @@ package quickbeer.android.listeners;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 

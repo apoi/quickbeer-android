@@ -18,7 +18,6 @@
 package quickbeer.android.features.barcodescanner;
 
 import androidx.annotation.NonNull;
-
 import com.google.android.gms.vision.barcode.Barcode;
 
 public interface BarcodeResultListener {

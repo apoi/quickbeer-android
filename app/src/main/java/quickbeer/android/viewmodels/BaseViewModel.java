@@ -18,7 +18,6 @@
 package quickbeer.android.viewmodels;
 
 import androidx.annotation.NonNull;
-
 import io.reactivex.Observable;
 import io.reactivex.functions.Function;
 import io.reactivex.subjects.BehaviorSubject;
