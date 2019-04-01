@@ -20,21 +20,18 @@ package quickbeer.android.features.home
 import android.view.MenuItem
 import quickbeer.android.R
 import quickbeer.android.features.list.ListActivity
-import quickbeer.android.providers.NavigationProvider
 import quickbeer.android.providers.NavigationProvider.Page
-import javax.inject.Inject
 
 class HomeActivity : ListActivity() {
-
-    @Inject
-    internal lateinit var navigationProvider: NavigationProvider
 
     override fun defaultPage(): Page {
         return Page.HOME
     }
 
     override fun initialBackNavigationEnabled(): Boolean {
-        supportFragmentManager.addOnBackStackChangedListener { setBackNavigationEnabled(navigationProvider.canNavigateBack()) }
+        supportFragmentManager.addOnBackStackChangedListener {
+            setBackNavigationEnabled(navigationProvider.canNavigateBack())
+        }
 
         return false
     }
