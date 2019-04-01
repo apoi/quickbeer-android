@@ -22,7 +22,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import polanski.option.Option
 import quickbeer.android.Constants
+import quickbeer.android.data.ValidationFailedException
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
@@ -51,23 +54,11 @@ class BeerSearchActionsImpl @Inject constructor(
             }
     }
 
-    override fun search(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("search($query)")
-
-        return triggerSearch(query, { it.items.isEmpty() })
-    }
-
-    override fun fetchSearch(query: String): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("fetchSearch()")
-
-        return triggerSearch(query, { true })
-    }
-
-    private fun triggerSearch(
+    override fun search(
         query: String,
-        needsReload: (ItemList<String>) -> Boolean
+        validator: Validator<Option<ItemList<String>>>
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerSearch($query)")
+        Timber.v("search($query)")
 
         val normalized = StringUtils.normalize(query)
         val queryId = BeerSearchFetcher.getQueryId(BeerSearchFetcher.NAME, normalized)
@@ -84,14 +75,18 @@ class BeerSearchActionsImpl @Inject constructor(
         // Trigger a fetch only if there was no cached result
         val reloadTrigger = beerListStore
             .getOnce(queryId)
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnSuccess {
-                Timber.v("Search not cached, fetching")
-                createServiceRequest(
-                    serviceUri = BeerSearchFetcher.NAME,
-                    stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
-            }
+            .compose(validator.validate())
             .ignoreElement()
+            .onErrorComplete {
+                if (it is ValidationFailedException) {
+                    Timber.v("Search not cached, fetching")
+                    createServiceRequest(
+                        serviceUri = BeerSearchFetcher.NAME,
+                        stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
+                }
+
+                it is ValidationFailedException
+            }
 
         return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
             .mergeWith(reloadTrigger)

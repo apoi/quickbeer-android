@@ -20,6 +20,7 @@ package quickbeer.android.viewmodels
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reark.reark.data.DataStreamNotification
+import quickbeer.android.data.Reject
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.pojos.ItemList
@@ -49,6 +50,6 @@ class BeerSearchViewModel @Inject internal constructor(
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerSearchActions.fetchSearch(query)
+        return beerSearchActions.search(query, Reject())
     }
 }

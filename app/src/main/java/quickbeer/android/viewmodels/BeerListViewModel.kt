@@ -79,7 +79,7 @@ protected constructor(
             .map(toProgressStatus())
             .startWith(NetworkViewModel.ProgressStatus.LOADING)
             .distinctUntilChanged()
-            .subscribe { setProgressStatus(it) })
+            .subscribe({ setProgressStatus(it) }, Timber::e))
 
         // Actual update
         disposable.add(sharedObservable
@@ -88,7 +88,7 @@ protected constructor(
             .doOnNext { Timber.d("Search finished") }
             .map { it.items.map { BeerViewModel(it, false, beerActions, progressStatusProvider) } }
             .doOnNext { Timber.d("Publishing %s beers", it.size) }
-            .subscribe { beers.onNext(it) })
+            .subscribe({ beers.onNext(it) }, Timber::e))
 
         // Share progress status to progress provider
         if (reportsProgress()) {
@@ -106,6 +106,6 @@ protected constructor(
             .filter { it.hasValue() }
             .doOnNext { Timber.d("query(%s)", it) }
             .map { beerSearchActions.search(it) }
-            .subscribe({ source.onNext(it) }, { Timber.e(it) }))
+            .subscribe({ source.onNext(it) }, Timber::e))
     }
 }

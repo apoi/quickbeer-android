@@ -20,10 +20,18 @@ package quickbeer.android.data.actions
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
+import polanski.option.Option
+import quickbeer.android.data.Accept
+import quickbeer.android.data.NotEmpty
+import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.ItemList
 
 interface BeerSearchActions {
-    fun search(query: String): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetchSearch(query: String): Observable<DataStreamNotification<ItemList<String>>>
+
+    fun search(
+        query: String,
+        validator: Validator<Option<ItemList<String>>> = NotEmpty()
+    ): Observable<DataStreamNotification<ItemList<String>>>
+
     fun searchQueries(): Single<List<String>>
 }
