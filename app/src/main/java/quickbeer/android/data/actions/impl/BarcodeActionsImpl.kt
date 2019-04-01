@@ -64,8 +64,7 @@ class BarcodeActionsImpl @Inject constructor(
                 fetch(barcode)
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            statusStream, valueStream)
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 
