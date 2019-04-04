@@ -21,9 +21,12 @@ package quickbeer.android.data
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
+import org.threeten.bp.ZonedDateTime
+import org.threeten.bp.temporal.ChronoUnit
 import polanski.option.Option
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
+import quickbeer.android.utils.kotlin.within
 
 interface Validator<T> {
     fun validate(): SingleTransformer<T, T>
@@ -41,11 +44,39 @@ class Reject<T> : Validator<T> {
     }
 }
 
+class Something<T> : Validator<Option<T>> {
+    override fun validate(): SingleTransformer<Option<T>, Option<T>> {
+        return SingleTransformer { source ->
+            source.map {
+                if (it.isNone) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
 class NotEmpty<T> : Validator<Option<ItemList<T>>> {
     override fun validate(): SingleTransformer<Option<ItemList<T>>, Option<ItemList<T>>> {
         return SingleTransformer { source ->
             source.map {
                 if (it.match({ it.items.isEmpty() }, { true })) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+class NoOlderThanMonth : Validator<ZonedDateTime?> {
+    override fun validate(): SingleTransformer<ZonedDateTime?, ZonedDateTime?> {
+        return SingleTransformer { source ->
+            source.map {
+                if (!it.within(30, ChronoUnit.DAYS)) {
                     throw ValidationFailedException()
                 } else {
                     it

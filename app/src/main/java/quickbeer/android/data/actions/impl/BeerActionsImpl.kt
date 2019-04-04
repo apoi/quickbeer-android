@@ -23,7 +23,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import org.threeten.bp.ZonedDateTime
 import polanski.option.Option
+import quickbeer.android.data.Reject
+import quickbeer.android.data.Something
 import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.onValidationError
@@ -40,6 +43,7 @@ import quickbeer.android.network.fetchers.impl.ReviewFetcher
 import quickbeer.android.network.fetchers.impl.TickBeerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
 import quickbeer.android.utils.kotlin.isNoneOrEmpty
+import quickbeer.android.utils.kotlin.valueOrError
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -52,6 +56,24 @@ class BeerActionsImpl @Inject constructor(
 ) : ApplicationDataLayer(context), BeerActions {
 
     // BEER
+
+    override fun get(
+        beerId: Int,
+        validator: Validator<ZonedDateTime?>,
+        valueToSatisfyInterface: Boolean // :(
+    ): Observable<DataStreamNotification<Beer>> {
+        Timber.v("get($beerId)")
+
+        // Get and check metadata, and use or refresh existing beer
+        // based on the metadata date
+        return beerMetadataStore.getOnce(beerId)
+            .valueOrError()
+            .map { it.updated }
+            .compose(validator.validate())
+            .map<Validator<Option<Beer>>> { Something() } // Data within limits
+            .onErrorReturn { Reject() } // Validation failure, force refresh
+            .flatMapObservable { get(beerId, it) }
+    }
 
     override operator fun get(
         beerId: Int,

@@ -21,6 +21,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.PublishSubject
 import io.reark.reark.data.DataStreamNotification.Type
+import polanski.option.Option
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.SimpleViewModel
@@ -93,7 +94,7 @@ class BeerDetailsViewModel @Inject constructor(
 
     fun reloadBeerDetails() {
         disposable.add(
-            beerActions.get(beerId, Reject())
+            beerActions.get(beerId, Reject<Option<Beer>>())
                 .subscribe({}, { Timber.e(it) }))
     }
 

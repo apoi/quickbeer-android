@@ -23,6 +23,7 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.FormatStyle
+import org.threeten.bp.temporal.TemporalUnit
 
 fun ZonedDateTime?.orEpoch(): ZonedDateTime {
     return if (this.isValidDate())
@@ -33,6 +34,11 @@ fun ZonedDateTime?.orEpoch(): ZonedDateTime {
 
 fun ZonedDateTime?.isValidDate(): Boolean {
     return this != null && this.toEpochSecond() > 0
+}
+
+fun ZonedDateTime?.within(value: Long, unit: TemporalUnit): Boolean {
+    val compare = ZonedDateTime.now().minus(value, unit)
+    return this != null && this > compare
 }
 
 fun ZonedDateTime?.formatDateTime(template: String): String {

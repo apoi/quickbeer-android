@@ -21,6 +21,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
+import org.threeten.bp.ZonedDateTime
 import polanski.option.Option
 import quickbeer.android.data.HasBasicData
 import quickbeer.android.data.Validator
@@ -28,6 +29,13 @@ import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
 
 interface BeerActions {
+
+    fun get(
+        beerId: Int,
+        validator: Validator<ZonedDateTime?>,
+        valueToSatisfyInterface: Boolean = true
+    ): Observable<DataStreamNotification<Beer>>
+
     fun get(
         beerId: Int,
         validator: Validator<Option<Beer>> = HasBasicData()
