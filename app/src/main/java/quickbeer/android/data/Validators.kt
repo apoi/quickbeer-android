@@ -18,15 +18,20 @@
 
 package quickbeer.android.data
 
+import android.text.format.DateUtils
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
 import org.threeten.bp.ZonedDateTime
-import org.threeten.bp.temporal.ChronoUnit
 import polanski.option.Option
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.utils.kotlin.within
+
+enum class WithinTime(val time: Long) {
+    MONTH(30 * DateUtils.DAY_IN_MILLIS),
+    SECONDS(10 * DateUtils.SECOND_IN_MILLIS) // For testing
+}
 
 interface Validator<T> {
     fun validate(): SingleTransformer<T, T>
@@ -72,11 +77,25 @@ class NotEmpty<T> : Validator<Option<ItemList<T>>> {
     }
 }
 
-class NoOlderThanMonth : Validator<ZonedDateTime?> {
+class ItemListTimeValidator<T>(private val isWithin: WithinTime) : Validator<Option<ItemList<T>>> {
+    override fun validate(): SingleTransformer<Option<ItemList<T>>, Option<ItemList<T>>> {
+        return SingleTransformer { source ->
+            source.map {
+                if (it.match({ it.items.isEmpty() || !it.updateDate.within(isWithin.time)}, { true })) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+class DateValidator(private val isWithin: WithinTime) : Validator<ZonedDateTime?> {
     override fun validate(): SingleTransformer<ZonedDateTime?, ZonedDateTime?> {
         return SingleTransformer { source ->
             source.map {
-                if (!it.within(30, ChronoUnit.DAYS)) {
+                if (!it.within(isWithin.time)) {
                     throw ValidationFailedException()
                 } else {
                     it

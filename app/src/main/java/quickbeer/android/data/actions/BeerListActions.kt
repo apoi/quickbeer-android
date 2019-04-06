@@ -20,10 +20,19 @@ package quickbeer.android.data.actions
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
+import polanski.option.Option
+import quickbeer.android.data.ItemListTimeValidator
+import quickbeer.android.data.Validator
+import quickbeer.android.data.WithinTime
 import quickbeer.android.data.pojos.ItemList
 
 interface BeerListActions {
+
     fun recentBeers(): Observable<DataStreamNotification<ItemList<String>>>
-    fun topBeers(): Observable<DataStreamNotification<ItemList<String>>>
+
+    fun topBeers(
+        validator: Validator<Option<ItemList<String>>> = ItemListTimeValidator(WithinTime.MONTH)
+    ): Observable<DataStreamNotification<ItemList<String>>>
+
     fun fetchTopBeers(): Completable
 }

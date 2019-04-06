@@ -38,7 +38,8 @@ import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.core.viewmodel.ViewModel
-import quickbeer.android.data.NoOlderThanMonth
+import quickbeer.android.data.WithinTime
+import quickbeer.android.data.DateValidator
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Beer
@@ -91,7 +92,7 @@ class BeerDetailsActivity : BindingDrawerActivity() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            val sourceObservable = beerActions.get(beerId, NoOlderThanMonth())
+            val sourceObservable = beerActions.get(beerId, DateValidator(WithinTime.MONTH))
                 .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
                 .map { it.value!! }

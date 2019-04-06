@@ -22,11 +22,15 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerListActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerMetadataStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.TopBeersFetcher
 import quickbeer.android.utils.kotlin.filterToValue
@@ -60,7 +64,9 @@ class BeerListActionsImpl @Inject constructor(
         }
     }
 
-    override fun topBeers(): Observable<DataStreamNotification<ItemList<String>>> {
+    override fun topBeers(
+        validator: Validator<Option<ItemList<String>>>
+    ): Observable<DataStreamNotification<ItemList<String>>> {
         Timber.v("topBeers()")
 
         val queryId = BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME)
@@ -77,10 +83,10 @@ class BeerListActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val reloadTrigger = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
-            .filter { it.match({ list -> list.items.isEmpty() }, { true }) }
-            .flatMapCompletable {
+            .validate(validator)
+            .onValidationError {
                 Timber.v("Search not cached, fetching")
-                fetchTopBeers()
+                createServiceRequest(serviceUri = TopBeersFetcher.NAME)
             }
 
         return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
