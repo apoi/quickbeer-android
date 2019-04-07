@@ -23,12 +23,15 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.StyleActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BeerStyleStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeersInStyleFetcher
 import quickbeer.android.utils.kotlin.filterToValue
@@ -52,63 +55,35 @@ class StyleActionsImpl @Inject constructor(
 
     // BEERS IN STYLE
 
-    override fun beers(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("beers($styleId)")
-
-        return triggerGetBeers(styleId, { it.items.isEmpty() })
-    }
-
-    override fun fetchBeers(styleId: Int): Single<Boolean> {
-        Timber.v("fetchBeers($styleId)")
-
-        return triggerGetBeers(styleId, { true })
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
-    }
-
-    private fun triggerGetBeers(
+    override fun beers(
         styleId: Int,
-        needsReload: (ItemList<String>) -> Boolean
+        validator: Validator<Option<ItemList<String>>>
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers($styleId)")
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BeersInStyleFetcher.NAME, styleId.toString()))
-            .toObservable()
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnNext { Timber.v("Search not cached, fetching") }
-            .doOnNext { fetchBeersInStyle(styleId) }
-            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
-
-        return getBeersInStyleResultStream(styleId)
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    private fun getBeersInStyleResultStream(styleId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeersInStyleResultStream($styleId)")
+        Timber.v("beers($styleId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BeersInStyleFetcher.NAME, styleId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue() // No need to filter stale statuses?
 
-        val beerSearchObservable = beerListStore
+        val valueStream = beerListStore
             .getOnceAndStream(queryId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, beerSearchObservable)
-    }
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore
+            .getOnce(queryId)
+            .validate(validator)
+            .onValidationError {
+                Timber.v("Search not cached, fetching")
+                createServiceRequest(
+                    serviceUri = BeersInStyleFetcher.NAME,
+                    intParams = mapOf(BeersInStyleFetcher.STYLE_ID to styleId))
+            }
 
-    private fun fetchBeersInStyle(styleId: Int): Int {
-        Timber.v("fetchBeersInStyle($styleId)")
-
-        return createServiceRequest(
-            serviceUri = BeersInStyleFetcher.NAME,
-            intParams = mapOf(BeersInStyleFetcher.STYLE_ID to styleId))
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 }

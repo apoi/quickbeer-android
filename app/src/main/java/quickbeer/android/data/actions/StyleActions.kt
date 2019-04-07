@@ -21,11 +21,16 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.data.pojos.ItemList
 
 interface StyleActions {
+
     fun get(styleId: Int): Single<Option<BeerStyle>>
-    fun beers(styleId: Int): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetchBeers(styleId: Int): Single<Boolean>
+
+    fun beers(
+        styleId: Int,
+        validator: Validator<Option<ItemList<String>>>
+    ): Observable<DataStreamNotification<ItemList<String>>>
 }
