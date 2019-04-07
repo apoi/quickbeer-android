@@ -21,6 +21,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
+import quickbeer.android.data.ItemListTimeValidator
+import quickbeer.android.data.Reject
+import quickbeer.android.data.WithinTime
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerSearchActions
 import quickbeer.android.data.actions.CountryActions
@@ -46,12 +49,10 @@ class CountryViewModel @Inject internal constructor(
     }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return countryActions.beers(countryId)
+        return countryActions.beers(countryId, ItemListTimeValidator(WithinTime.MONTH))
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return Observable.never()
-        // return countryActions.fetchBeers(countryId)
-        //        .flatMapObservable { dataSource() }
+        return countryActions.beers(countryId, Reject())
     }
 }

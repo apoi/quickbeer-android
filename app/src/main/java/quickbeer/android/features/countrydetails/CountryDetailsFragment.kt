@@ -45,11 +45,11 @@ class CountryDetailsFragment : BindingBaseFragment() {
 
     companion object {
         fun newInstance(countryId: Int): Fragment {
-            val bundle = Bundle()
-            bundle.putInt(Constants.ID_KEY, countryId)
-            val fragment = CountryDetailsFragment()
-            fragment.arguments = bundle
-            return fragment
+            return CountryDetailsFragment().apply {
+                arguments = Bundle().apply {
+                    putInt(Constants.ID_KEY, countryId)
+                }
+            }
         }
     }
 
@@ -69,8 +69,7 @@ class CountryDetailsFragment : BindingBaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bundle = savedInstanceState ?: arguments
-        countryId = bundle?.getInt(Constants.ID_KEY) ?: 0
+        countryId = (savedInstanceState ?: arguments)?.getInt(Constants.ID_KEY) ?: 0
 
         if (countryId == 0) {
             Timber.w("Expected state for initializing!")

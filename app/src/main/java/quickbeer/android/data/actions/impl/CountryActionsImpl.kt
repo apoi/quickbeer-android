@@ -23,12 +23,15 @@ import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.CountryActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.Country
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.CountryStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BeersInCountryFetcher
 import quickbeer.android.utils.kotlin.filterToValue
@@ -52,63 +55,35 @@ class CountryActionsImpl @Inject constructor(
 
     // BEERS IN COUNTRY
 
-    override fun beers(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("beers($countryId)")
-
-        return triggerGetBeers(countryId, { it.items.isEmpty() })
-    }
-
-    override fun fetchBeers(countryId: Int): Single<Boolean> {
-        Timber.v("fetchBeers($countryId)")
-
-        return triggerGetBeers(countryId, { true })
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
-    }
-
-    private fun triggerGetBeers(
+    override fun beers(
         countryId: Int,
-        needsReload: (ItemList<String>) -> Boolean
+        validator: Validator<Option<ItemList<String>>>
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("triggerGetBeers($countryId)")
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BeersInCountryFetcher.NAME, countryId.toString()))
-            .toObservable()
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnNext { Timber.v("Search not cached, fetching") }
-            .doOnNext { fetchBeersInCountry(countryId) }
-            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
-
-        return getBeersInCountryResultStream(countryId)
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    private fun getBeersInCountryResultStream(countryId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeersInCountryResultStream($countryId)")
+        Timber.v("beers($countryId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BeersInCountryFetcher.NAME, countryId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue() // No need to filter stale statuses?
 
-        val beerSearchObservable = beerListStore
+        val valueStream = beerListStore
             .getOnceAndStream(queryId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, beerSearchObservable)
-    }
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore
+            .getOnce(queryId)
+            .validate(validator)
+            .onValidationError {
+                Timber.v("Search not cached, fetching")
+                createServiceRequest(
+                    serviceUri = BeersInCountryFetcher.NAME,
+                    intParams = mapOf(BeersInCountryFetcher.COUNTRY_ID to countryId))
+            }
 
-    private fun fetchBeersInCountry(countryId: Int): Int {
-        Timber.v("fetchBeersInCountry($countryId)")
-
-        return createServiceRequest(
-            serviceUri = BeersInCountryFetcher.NAME,
-            intParams = mapOf(BeersInCountryFetcher.COUNTRY_ID to countryId))
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 }
