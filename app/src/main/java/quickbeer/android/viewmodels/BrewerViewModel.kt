@@ -23,7 +23,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import quickbeer.android.data.HasDetailsData
+import polanski.option.Option
+import quickbeer.android.data.HasBeerDetailsData
+import quickbeer.android.data.Reject
+import quickbeer.android.data.Something
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
@@ -57,7 +60,8 @@ class BrewerViewModel @Inject internal constructor(
 
     fun reloadBrewerDetails() {
         disposable.add(getBrewerId()
-            .flatMap { brewerActions.fetch(it) }
+            .flatMapObservable { brewerActions.get(it, Reject<Option<Brewer>>()) }
+            .firstOrError()
             .subscribe({}, Timber::e))
     }
 
@@ -87,14 +91,14 @@ class BrewerViewModel @Inject internal constructor(
 
     private fun brewerSource(): Observable<DataStreamNotification<Brewer>> {
         return getBrewerId()
-            .flatMapObservable { brewerActions.get(it) }
+            .flatMapObservable { brewerActions.get(it, Something()) }
     }
 
     private fun getBrewerId(): Single<Int> {
         if (brewerId > 0) {
             return Single.just(brewerId)
         } else if (beerId > 0) {
-            return beerActions.get(beerId, HasDetailsData())
+            return beerActions.get(beerId, HasBeerDetailsData())
                 .filter { it.isOnNext }
                 .map { it.value!! }
                 .map { it.brewerId!! }

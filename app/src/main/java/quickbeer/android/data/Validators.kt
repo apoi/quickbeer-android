@@ -25,6 +25,7 @@ import io.reactivex.SingleTransformer
 import org.threeten.bp.ZonedDateTime
 import polanski.option.Option
 import quickbeer.android.data.pojos.Beer
+import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.utils.kotlin.within
 
@@ -105,7 +106,7 @@ class DateValidator(private val isWithin: WithinTime) : Validator<ZonedDateTime?
     }
 }
 
-class HasBasicData : Validator<Option<Beer>> {
+class HasBeerBasicData : Validator<Option<Beer>> {
     override fun validate(): SingleTransformer<Option<Beer>, Option<Beer>> {
         return SingleTransformer { source ->
             source.map {
@@ -119,11 +120,25 @@ class HasBasicData : Validator<Option<Beer>> {
     }
 }
 
-class HasDetailsData : Validator<Option<Beer>> {
+class HasBeerDetailsData : Validator<Option<Beer>> {
     override fun validate(): SingleTransformer<Option<Beer>, Option<Beer>> {
         return SingleTransformer { source ->
             source.map {
                 if (it.match({ it.detailedDataMissing() }, { true })) {
+                    throw ValidationFailedException()
+                } else {
+                    it
+                }
+            }
+        }
+    }
+}
+
+class HasBrewerDetailsData : Validator<Option<Brewer>> {
+    override fun validate(): SingleTransformer<Option<Brewer>, Option<Brewer>> {
+        return SingleTransformer { source ->
+            source.map {
+                if (it.match({ !it.hasDetails() }, { true })) {
                     throw ValidationFailedException()
                 } else {
                     it

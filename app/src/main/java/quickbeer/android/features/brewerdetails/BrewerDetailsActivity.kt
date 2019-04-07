@@ -34,6 +34,7 @@ import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.core.viewmodel.ViewModel
+import quickbeer.android.data.HasBrewerDetailsData
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.features.photoview.PhotoViewActivity
@@ -73,7 +74,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            val sourceObservable = brewerActions.get(brewerId)
+            val sourceObservable = brewerActions.get(brewerId, HasBrewerDetailsData())
                 .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
                 .map { it.value }

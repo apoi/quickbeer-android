@@ -56,14 +56,6 @@ class BeerListActionsImpl @Inject constructor(
 
     // TOP BEERS
 
-    override fun fetchTopBeers(): Completable {
-        Timber.v("fetchTopBeers()")
-
-        return Completable.fromAction {
-            createServiceRequest(serviceUri = TopBeersFetcher.NAME)
-        }
-    }
-
     override fun topBeers(
         validator: Validator<Option<ItemList<String>>>
     ): Observable<DataStreamNotification<ItemList<String>>> {

@@ -22,8 +22,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import quickbeer.android.data.HasBasicData
-import quickbeer.android.data.HasDetailsData
+import quickbeer.android.data.HasBeerBasicData
+import quickbeer.android.data.HasBeerDetailsData
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.providers.ProgressStatusProvider
@@ -64,7 +64,7 @@ class BeerViewModel(
     }
 
     private fun getBeer(beerId: Int): Observable<DataStreamNotification<Beer>> {
-        val dataRequirement = if (detailed) HasDetailsData() else HasBasicData()
+        val dataRequirement = if (detailed) HasBeerDetailsData() else HasBeerBasicData()
         return beerActions.get(beerId, dataRequirement)
     }
 

@@ -20,14 +20,29 @@ package quickbeer.android.data.actions
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
+import org.threeten.bp.ZonedDateTime
+import polanski.option.Option
+import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.ItemList
 
 interface BrewerActions {
-    fun get(brewerId: Int): Observable<DataStreamNotification<Brewer>>
-    fun fetch(brewerId: Int): Single<Boolean>
 
-    fun access(brewerId: Int): Unit
-    fun beers(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>>
-    fun fetchBeers(brewerId: Int): Single<Boolean>
+    fun get(
+        brewerId: Int,
+        validator: Validator<ZonedDateTime?>,
+        valueToSatisfyInterface: Boolean = true
+    ): Observable<DataStreamNotification<Brewer>>
+
+    fun get(
+        brewerId: Int,
+        validator: Validator<Option<Brewer>>
+    ): Observable<DataStreamNotification<Brewer>>
+
+    fun beers(
+        brewerId: Int,
+        validator: Validator<Option<ItemList<String>>>
+    ): Observable<DataStreamNotification<ItemList<String>>>
+
+    fun access(brewerId: Int): Single<Boolean>
 }

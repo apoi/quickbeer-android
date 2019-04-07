@@ -22,7 +22,13 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import io.reark.reark.data.utils.DataLayerUtils
+import org.threeten.bp.ZonedDateTime
+import polanski.option.Option
+import quickbeer.android.data.Reject
+import quickbeer.android.data.Something
+import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BrewerActions
+import quickbeer.android.data.onValidationError
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.BrewerMetadata
 import quickbeer.android.data.pojos.ItemList
@@ -30,10 +36,12 @@ import quickbeer.android.data.stores.BeerListStore
 import quickbeer.android.data.stores.BrewerMetadataStore
 import quickbeer.android.data.stores.BrewerStore
 import quickbeer.android.data.stores.NetworkRequestStatusStore
+import quickbeer.android.data.validate
 import quickbeer.android.network.fetchers.impl.BeerSearchFetcher
 import quickbeer.android.network.fetchers.impl.BrewerBeersFetcher
 import quickbeer.android.network.fetchers.impl.BrewerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
+import quickbeer.android.utils.kotlin.valueOrError
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -47,124 +55,96 @@ class BrewerActionsImpl @Inject constructor(
 
     // GET BREWER DETAILS
 
-    override operator fun get(brewerId: Int): Observable<DataStreamNotification<Brewer>> {
-        return getBrewer(brewerId, { brewer -> !brewer.hasDetails() })
+    override operator fun get(
+        brewerId: Int,
+        validator: Validator<ZonedDateTime?>,
+        valueToSatisfyInterface: Boolean // :(
+    ): Observable<DataStreamNotification<Brewer>> {
+        Timber.v("get($brewerId)")
+
+        // Get and check metadata, and use or refresh existing beer
+        // based on the metadata date
+        return brewerMetadataStore.getOnce(brewerId)
+            .valueOrError()
+            .map { it.updated }
+            .compose(validator.validate())
+            .map<Validator<Option<Brewer>>> { Something() } // Data within limits
+            .onErrorReturn { Reject() } // Validation failure, force refresh
+            .flatMapObservable { get(brewerId, it) }
     }
 
-    override fun fetch(brewerId: Int): Single<Boolean> {
-        return getBrewer(brewerId, { true })
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
-    }
-
-    private fun getBrewer(brewerId: Int, needsReload: (Brewer) -> Boolean): Observable<DataStreamNotification<Brewer>> {
-        Timber.v("getBrewer($brewerId)")
-
-        // Trigger a fetch only if full details haven't been fetched
-        val triggerFetchIfEmpty = brewerStore.getOnce(brewerId)
-            .toObservable()
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnNext { Timber.v("Fetching brewer data") }
-            .doOnNext { fetchBrewer(brewerId) }
-            .flatMap { Observable.empty<DataStreamNotification<Brewer>>() }
-
-        return getBrewerResultStream(brewerId)
-            .mergeWith(triggerFetchIfEmpty)
-            .distinctUntilChanged()
-    }
-
-    private fun getBrewerResultStream(brewerId: Int): Observable<DataStreamNotification<Brewer>> {
-        Timber.v("getBrewerResultStream($brewerId)")
+    override fun get(
+        brewerId: Int,
+        validator: Validator<Option<Brewer>>
+    ): Observable<DataStreamNotification<Brewer>> {
+        Timber.v("get($brewerId)")
 
         val uri = BrewerFetcher.getUniqueUri(brewerId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue()
 
-        val brewerObservable = brewerStore
+        val valueStream = brewerStore
             .getOnceAndStream(brewerId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(requestStatusObservable, brewerObservable)
-    }
+        // Trigger a fetch only if full details haven't been fetched
+        val reloadTrigger = brewerStore
+            .getOnce(brewerId)
+            .validate(validator)
+            .onValidationError {
+                Timber.v("Fetching brewer data")
+                createServiceRequest(
+                    serviceUri = BrewerFetcher.NAME,
+                    intParams = mapOf(BrewerFetcher.BREWER_ID to brewerId))
 
-    private fun fetchBrewer(brewerId: Int): Int {
-        Timber.v("fetchBrewer($brewerId)")
+            }
 
-        return createServiceRequest(
-            serviceUri = BrewerFetcher.NAME,
-            intParams = mapOf(BrewerFetcher.BREWER_ID to brewerId))
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
+            .distinctUntilChanged()
     }
 
     // BREWER'S BEERS
 
-    override fun beers(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("beers($brewerId)")
-
-        return getBeers(brewerId, { list -> list.items.isEmpty() })
-    }
-
-    override fun fetchBeers(brewerId: Int): Single<Boolean> {
-        Timber.v("fetchBeers($brewerId)")
-
-        return getBeers(brewerId, { true })
-            .filter { it.isCompleted }
-            .map { it.isCompletedWithSuccess }
-            .firstOrError()
-    }
-
-    private fun getBeers(
+    override fun beers(
         brewerId: Int,
-        needsReload: (ItemList<String>) -> Boolean
+        validator: Validator<Option<ItemList<String>>>
     ): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBeers($brewerId)")
-
-        // Trigger a fetch only if there was no cached result
-        val triggerFetchIfEmpty = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BrewerBeersFetcher.NAME, brewerId.toString()))
-            .toObservable()
-            .filter { it.match({ needsReload(it) }, { true }) }
-            .doOnNext { Timber.v("Search not cached, fetching") }
-            .doOnNext { fetchBrewerBeers(brewerId) }
-            .flatMap { Observable.empty<DataStreamNotification<ItemList<String>>>() }
-
-        return getBrewerBeersResultStream(brewerId)
-            .mergeWith(triggerFetchIfEmpty)
-    }
-
-    private fun getBrewerBeersResultStream(brewerId: Int): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getBrewerBeersResultStream($brewerId)")
+        Timber.v("beers($brewerId)")
 
         val queryId = BeerSearchFetcher.getQueryId(BrewerBeersFetcher.NAME, brewerId.toString())
         val uri = BeerSearchFetcher.getUniqueUri(queryId)
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue()
 
-        val beerSearchObservable = beerListStore
+        val valueStream = beerListStore
             .getOnceAndStream(queryId)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, beerSearchObservable)
-    }
+        // Trigger a fetch only if there was no cached result
+        val reloadTrigger = beerListStore
+            .getOnce(queryId)
+            .validate(validator)
+            .onValidationError {
+                Timber.v("Search not cached, fetching")
+                createServiceRequest(
+                    serviceUri = BrewerBeersFetcher.NAME,
+                    intParams = mapOf(BrewerBeersFetcher.BREWER_ID to brewerId))
+            }
 
-    private fun fetchBrewerBeers(brewerId: Int): Int {
-        Timber.v("fetchBrewerBeers($brewerId)")
-
-        return createServiceRequest(
-            serviceUri = BrewerBeersFetcher.NAME,
-            intParams = mapOf(BrewerBeersFetcher.BREWER_ID to brewerId))
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .mergeWith(reloadTrigger)
     }
 
     // ACCESS BREWER
 
-    override fun access(brewerId: Int) {
+    override fun access(brewerId: Int): Single<Boolean> {
         Timber.v("access($brewerId)")
 
-        brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId))
+        return brewerMetadataStore.put(BrewerMetadata.newAccess(brewerId))
     }
 }

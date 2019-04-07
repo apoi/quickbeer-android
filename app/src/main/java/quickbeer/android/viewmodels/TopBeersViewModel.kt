@@ -19,6 +19,9 @@ package quickbeer.android.viewmodels
 
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
+import quickbeer.android.data.ItemListTimeValidator
+import quickbeer.android.data.Reject
+import quickbeer.android.data.WithinTime
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BeerListActions
 import quickbeer.android.data.actions.BeerSearchActions
@@ -35,11 +38,10 @@ class TopBeersViewModel @Inject internal constructor(
 ) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return beerListActions.topBeers()
+        return beerListActions.topBeers(ItemListTimeValidator(WithinTime.MONTH))
     }
 
     override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return dataSource()
-            .mergeWith(beerListActions.fetchTopBeers())
+        return beerListActions.topBeers(Reject())
     }
 }
