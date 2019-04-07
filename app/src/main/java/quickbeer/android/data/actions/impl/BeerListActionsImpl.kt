@@ -70,11 +70,13 @@ class BeerListActionsImpl @Inject constructor(
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue()
 
-        val valueStream = beerListStore.getOnceAndStream(queryId)
+        val valueStream = beerListStore
+            .getOnceAndStream(queryId)
             .filterToValue()
 
         // Trigger a fetch only if there was no cached result
-        val reloadTrigger = beerListStore.getOnce(BeerSearchFetcher.getQueryId(TopBeersFetcher.NAME))
+        val reloadTrigger = beerListStore
+            .getOnce(queryId)
             .validate(validator)
             .onValidationError {
                 Timber.v("Search not cached, fetching")

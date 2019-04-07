@@ -57,7 +57,7 @@ class BarcodeActionsImpl @Inject constructor(
 
         // Trigger a fetch only if there was no cached result
         val reloadTrigger = beerListStore
-            .getOnce(BeerSearchFetcher.getQueryId(BarcodeSearchFetcher.NAME, barcode))
+            .getOnce(queryId)
             .filter { it.isNoneOrEmpty() }
             .flatMapCompletable {
                 Timber.v("Search not cached, fetching")

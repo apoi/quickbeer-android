@@ -17,12 +17,8 @@
  */
 package quickbeer.android.features.countrydetails
 
-import android.view.View
 import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
-import polanski.option.Option
 import quickbeer.android.data.ItemListTimeValidator
 import quickbeer.android.data.Reject
 import quickbeer.android.data.WithinTime
@@ -44,26 +40,6 @@ class BeersInCountryViewModel @Inject internal constructor(
     searchViewViewModel: SearchViewViewModel,
     progressStatusProvider: ProgressStatusProvider
 ) : BeerListViewModel(beerActions, beerSearchActions, searchViewViewModel, progressStatusProvider) {
-
-    private val detailsOpen = BehaviorSubject.createDefault(false)
-
-    fun detailsClicked(visibility: Int) {
-        detailsOpen.onNext(visibility != View.VISIBLE)
-    }
-
-    fun countryName(): Single<Option<String>> {
-        return countryActions.get(countryId)
-            .map { it.map { it.name } }
-    }
-
-    fun countryDescription(): Single<Option<String>> {
-        return countryActions.get(countryId)
-            .map { it.map { it.description } }
-    }
-
-    fun detailsOpen(): Observable<Boolean> {
-        return detailsOpen.hide()
-    }
 
     override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
         return countryActions.beers(countryId, ItemListTimeValidator(WithinTime.MONTH))
