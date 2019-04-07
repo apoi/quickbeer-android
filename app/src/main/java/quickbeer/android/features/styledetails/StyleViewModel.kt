@@ -17,30 +17,19 @@
  */
 package quickbeer.android.features.styledetails
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
-import quickbeer.android.data.actions.BeerActions
-import quickbeer.android.data.actions.BeerSearchActions
+import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.StyleActions
 import quickbeer.android.data.pojos.BeerStyle
-import quickbeer.android.data.pojos.ItemList
-import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.utils.kotlin.filterToValue
-import quickbeer.android.viewmodels.BeerListViewModel
-import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 class StyleViewModel @Inject internal constructor(
     @Named("id") private val styleId: Int,
-    private val styleActions: StyleActions,
-    beerActions: BeerActions,
-    beerSearchActions: BeerSearchActions,
-    searchViewModel: SearchViewViewModel,
-    progressStatusProvider: ProgressStatusProvider
-) : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
+    private val styleActions: StyleActions
+) : SimpleViewModel() {
 
     fun getStyle(): Single<Option<BeerStyle>> {
         return styleActions.get(styleId)
@@ -52,14 +41,5 @@ class StyleViewModel @Inject internal constructor(
             .filterToValue()
             .firstOrError()
             .flatMap { styleActions.get(it.parent) }
-    }
-
-    override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return styleActions.beers(styleId)
-    }
-
-    override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        // Styles are shipped in assets
-        return Observable.never()
     }
 }
