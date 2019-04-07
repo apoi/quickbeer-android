@@ -17,42 +17,20 @@
  */
 package quickbeer.android.features.countrydetails
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
-import quickbeer.android.data.ItemListTimeValidator
-import quickbeer.android.data.Reject
-import quickbeer.android.data.WithinTime
-import quickbeer.android.data.actions.BeerActions
-import quickbeer.android.data.actions.BeerSearchActions
+import quickbeer.android.core.viewmodel.SimpleViewModel
 import quickbeer.android.data.actions.CountryActions
 import quickbeer.android.data.pojos.Country
-import quickbeer.android.data.pojos.ItemList
-import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.viewmodels.BeerListViewModel
-import quickbeer.android.viewmodels.SearchViewViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 class CountryViewModel @Inject internal constructor(
     @Named("id") private val countryId: Int,
-    private val countryActions: CountryActions,
-    beerActions: BeerActions,
-    beerSearchActions: BeerSearchActions,
-    searchViewModel: SearchViewViewModel,
-    progressStatusProvider: ProgressStatusProvider
-) : BeerListViewModel(beerActions, beerSearchActions, searchViewModel, progressStatusProvider) {
+    private val countryActions: CountryActions
+) : SimpleViewModel() {
 
     fun getCountry(): Single<Option<Country>> {
         return countryActions.get(countryId)
-    }
-
-    override fun dataSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return countryActions.beers(countryId, ItemListTimeValidator(WithinTime.MONTH))
-    }
-
-    override fun reloadSource(): Observable<DataStreamNotification<ItemList<String>>> {
-        return countryActions.beers(countryId, Reject())
     }
 }
