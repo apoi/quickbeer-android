@@ -61,17 +61,16 @@ class UserActionsImpl @Inject constructor(
 
         val uri = LoginFetcher.getUniqueUri()
 
-        val requestStatusObservable = requestStatusStore
+        val statusStream = requestStatusStore
             .getOnceAndStream(NetworkRequestStatusStore.requestIdForUri(uri))
             .filterToValue()
             .filter { it.forListener(listenerId) }
 
-        val userObservable = userStore
+        val valueStream = userStore
             .getOnceAndStream(Constants.DEFAULT_USER_ID)
             .filterToValue()
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            requestStatusObservable, userObservable)
+        return createNotificationStream(statusStream, valueStream)
     }
 
     override fun getUser(): Observable<Option<User>> {

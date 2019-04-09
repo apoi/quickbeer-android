@@ -44,7 +44,6 @@ class BeerViewModel(
 
     override fun bind(disposable: CompositeDisposable) {
         val beerSource = getBeer(beerId)
-            .subscribeOn(Schedulers.computation())
             .publish()
 
         disposable.add(beerSource

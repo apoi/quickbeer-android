@@ -83,7 +83,7 @@ class StyleActionsImpl @Inject constructor(
                     intParams = mapOf(BeersInStyleFetcher.STYLE_ID to styleId))
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 }

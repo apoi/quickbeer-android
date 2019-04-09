@@ -38,7 +38,7 @@ class RecentBrewersViewModel @Inject internal constructor(
     }
 
     override fun sourceObservable(): Observable<DataStreamNotification<ItemList<String>>> {
-        return brewerListActions.getAccessed()
+        return brewerListActions.recentBrewers()
     }
 
     override fun reportsProgress(): Boolean {

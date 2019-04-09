@@ -47,12 +47,10 @@ class BeerViewHolder(view: View, onClickListener: View.OnClickListener) : Bindin
         override fun bind(disposable: CompositeDisposable) {
             clearViews()
 
-            disposable.add(
-                getViewModel()!!
-                    .getBeer()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ setBeer(it) }, { Timber.e(it) }))
+            disposable.add(getViewModel()!!
+                .getBeer()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ setBeer(it) }, { Timber.e(it) }))
         }
     }
 

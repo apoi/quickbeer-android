@@ -53,7 +53,6 @@ protected constructor(
 
     override fun bind(disposable: CompositeDisposable) {
         val sharedObservable = sourceObservable()
-            .subscribeOn(Schedulers.computation())
             .publish()
 
         // Construct progress status. Completed with value means we'll receive onNext.

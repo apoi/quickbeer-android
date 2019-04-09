@@ -19,6 +19,11 @@ package quickbeer.android.data.actions.impl
 
 import android.content.Context
 import android.content.Intent
+import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
+import io.reark.reark.data.DataStreamNotification
+import io.reark.reark.data.utils.DataLayerUtils
+import io.reark.reark.pojo.NetworkRequestStatus
 import quickbeer.android.data.access.ServiceDataLayer
 import quickbeer.android.network.NetworkService
 import java.util.UUID
@@ -41,6 +46,14 @@ open class ApplicationDataLayer(protected val context: Context) {
 
         context.startService(intent)
         return listenerId
+    }
+
+    protected fun <T> createNotificationStream(
+        statusStream: Observable<NetworkRequestStatus>,
+        valueStream: Observable<T>
+    ): Observable<DataStreamNotification<T>> {
+        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+            .subscribeOn(Schedulers.io())
     }
 
     private fun createListenerId(): Int {

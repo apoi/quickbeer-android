@@ -28,7 +28,6 @@ import com.squareup.picasso.Callback.EmptyCallback
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -38,8 +37,8 @@ import quickbeer.android.core.activity.BindingDrawerActivity
 import quickbeer.android.core.viewmodel.DataBinder
 import quickbeer.android.core.viewmodel.SimpleDataBinder
 import quickbeer.android.core.viewmodel.ViewModel
-import quickbeer.android.data.WithinTime
 import quickbeer.android.data.DateValidator
+import quickbeer.android.data.WithinTime
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.BrewerActions
 import quickbeer.android.data.pojos.Beer
@@ -93,7 +92,6 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             val sourceObservable = beerActions.get(beerId, DateValidator(WithinTime.MONTH))
-                .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
                 .map { it.value!! }
                 .take(1)
@@ -110,24 +108,21 @@ class BeerDetailsActivity : BindingDrawerActivity() {
                 .subscribe({ brewerActions.access(it!!) }, { Timber.e(it) }))
 
             // Set toolbar title
-            disposable.add(
-                sourceObservable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
+            disposable.add(sourceObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ setToolbarDetails(it) }, { Timber.e(it) }))
 
             // Update share intent
-            disposable.add(
-                sourceObservable
-                    .subscribe({
-                        beerName = it.name ?: ""
-                        brewerName = it.brewerName ?: ""
-                    }, { Timber.e(it) }))
+            disposable.add(sourceObservable
+                .subscribe({
+                    beerName = it.name ?: ""
+                    brewerName = it.brewerName ?: ""
+                }, { Timber.e(it) }))
 
-            disposable.add(
-                progressStatusProvider
-                    .progressStatus()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
+            disposable.add(progressStatusProvider
+                .progressStatus()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
 
             disposable.add(
                 sourceObservable

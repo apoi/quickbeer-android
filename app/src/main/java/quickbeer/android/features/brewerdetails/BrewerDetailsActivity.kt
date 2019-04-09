@@ -25,7 +25,6 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
@@ -75,7 +74,6 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
             val sourceObservable = brewerActions.get(brewerId, HasBrewerDetailsData())
-                .subscribeOn(Schedulers.io())
                 .filter { it.isOnNext }
                 .map { it.value }
                 .take(1)
@@ -87,16 +85,14 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
                 .subscribe({ brewerActions.access(it) }, { Timber.e(it) }))
 
             // Set toolbar title
-            disposable.add(
-                sourceObservable
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ setToolbarDetails(it!!) }, { Timber.e(it) }))
+            disposable.add(sourceObservable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ setToolbarDetails(it!!) }, { Timber.e(it) }))
 
-            disposable.add(
-                progressStatusProvider
-                    .progressStatus()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
+            disposable.add(progressStatusProvider
+                .progressStatus()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ progress_indicator_bar.setProgress(it) }, { Timber.e(it) }))
 
             disposable.add(
                 sourceObservable

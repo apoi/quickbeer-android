@@ -25,7 +25,6 @@ import android.view.ViewGroup
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.beer_list_fragment_standalone.*
 import kotlinx.android.synthetic.main.recycler_list.*
 import quickbeer.android.R
@@ -56,21 +55,20 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
                 .doOnNext { Timber.d("Selected beer %s", it) }
                 .subscribe({ openBeerDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(
-                viewModel().getBeers()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ handleResultList(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getBeers()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel().getProgressStatus()
+            disposable.add(viewModel()
+                .getProgressStatus()
                 .map { toStatusValue(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
 
-            disposable.add(
-                searchViewViewModel
-                    .getQueryStream()
-                    .subscribe({ onQuery(it) }, { Timber.e(it) }))
+            disposable.add(searchViewViewModel
+                .getQueryStream()
+                .subscribe({ onQuery(it) }, { Timber.e(it) }))
         }
     }
 

@@ -21,7 +21,6 @@ import android.content.Context
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.data.utils.DataLayerUtils
 import quickbeer.android.data.actions.BarcodeActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.stores.BeerListStore
@@ -64,7 +63,7 @@ class BarcodeActionsImpl @Inject constructor(
                 fetch(barcode)
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 

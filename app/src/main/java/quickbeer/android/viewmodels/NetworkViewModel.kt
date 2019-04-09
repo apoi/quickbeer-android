@@ -19,6 +19,7 @@ package quickbeer.android.viewmodels
 
 import io.reactivex.Observable
 import io.reactivex.functions.Function
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.pojos.ItemList
@@ -36,6 +37,7 @@ abstract class NetworkViewModel<T> : quickbeer.android.core.viewmodel.BaseViewMo
 
     fun getProgressStatus(): Observable<ProgressStatus> {
         return progressStatus.hide()
+            .observeOn(Schedulers.io())
     }
 
     fun setProgressStatus(status: ProgressStatus) {

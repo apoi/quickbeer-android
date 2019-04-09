@@ -101,7 +101,7 @@ class BrewerActionsImpl @Inject constructor(
 
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
             .distinctUntilChanged()
     }
@@ -136,7 +136,7 @@ class BrewerActionsImpl @Inject constructor(
                     intParams = mapOf(BrewerBeersFetcher.BREWER_ID to brewerId))
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 

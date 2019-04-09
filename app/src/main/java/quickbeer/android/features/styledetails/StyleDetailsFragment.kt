@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.style_details_fragment_details.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -55,23 +54,19 @@ class StyleDetailsFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(
-                viewModel()
-                    .getStyle()
-                    .toObservable()
-                    .filterToValue()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ style_details_view.setStyle(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getStyle()
+                .toObservable()
+                .filterToValue()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ style_details_view.setStyle(it) }, { Timber.e(it) }))
 
-            disposable.add(
-                viewModel()
-                    .getParentStyle()
-                    .toObservable()
-                    .filterToValue()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ style_details_view.setParent(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getParentStyle()
+                .toObservable()
+                .filterToValue()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ style_details_view.setParent(it) }, { Timber.e(it) }))
         }
     }
 

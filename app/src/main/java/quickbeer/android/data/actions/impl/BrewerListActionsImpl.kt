@@ -31,8 +31,8 @@ class BrewerListActionsImpl @Inject constructor(
     private val brewerMetadataStore: BrewerMetadataStore
 ) : ApplicationDataLayer(context), BrewerListActions {
 
-    override fun getAccessed(): Observable<DataStreamNotification<ItemList<String>>> {
-        Timber.v("getAccessed()")
+    override fun recentBrewers(): Observable<DataStreamNotification<ItemList<String>>> {
+        Timber.v("recentBrewers()")
 
         return brewerMetadataStore.getAccessedIdsOnce()
             .map { ids -> ItemList<String>(null, ids, null) }

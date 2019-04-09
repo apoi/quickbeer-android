@@ -102,7 +102,7 @@ class BeerActionsImpl @Inject constructor(
                     intParams = mapOf(BeerFetcher.BEER_ID to beerId))
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
             .distinctUntilChanged()
     }
@@ -139,7 +139,7 @@ class BeerActionsImpl @Inject constructor(
                 fetchReviews(beerId, 1)
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 
@@ -175,7 +175,6 @@ class BeerActionsImpl @Inject constructor(
             .filterToValue()
             .filter { it.forListener(listenerId) }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(
-            statusStream, Observable.never())
+        return createNotificationStream(statusStream, Observable.never())
     }
 }

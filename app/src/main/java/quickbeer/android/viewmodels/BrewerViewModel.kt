@@ -20,7 +20,6 @@ package quickbeer.android.viewmodels
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import polanski.option.Option
@@ -67,13 +66,11 @@ class BrewerViewModel @Inject internal constructor(
 
     override fun bind(disposable: CompositeDisposable) {
         val brewerSource = brewerSource()
-            .subscribeOn(Schedulers.computation())
             .publish()
 
-        disposable.add(
-            brewerSource
-                .map(toProgressStatus())
-                .subscribe({ setProgressStatus(it) }, Timber::e))
+        disposable.add(brewerSource
+            .map(toProgressStatus())
+            .subscribe({ setProgressStatus(it) }, Timber::e))
 
         disposable.add(brewerSource
             .filter { it.isOnNext }

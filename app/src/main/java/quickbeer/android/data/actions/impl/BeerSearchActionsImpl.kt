@@ -84,7 +84,7 @@ class BeerSearchActionsImpl @Inject constructor(
                     stringParams = mapOf(BeerSearchFetcher.SEARCH to query))
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 }

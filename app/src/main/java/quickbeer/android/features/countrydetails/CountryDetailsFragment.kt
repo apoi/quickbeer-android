@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.country_details_fragment_details.*
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -55,14 +54,12 @@ class CountryDetailsFragment : BindingBaseFragment() {
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(
-                viewModel()
-                    .getCountry()
-                    .toObservable()
-                    .filterToValue()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ country_details_view.setCountry(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getCountry()
+                .toObservable()
+                .filterToValue()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ country_details_view.setCountry(it) }, { Timber.e(it) }))
         }
     }
 

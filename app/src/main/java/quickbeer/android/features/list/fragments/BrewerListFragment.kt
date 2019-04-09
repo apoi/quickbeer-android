@@ -24,7 +24,6 @@ import android.view.View
 import android.view.ViewGroup
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.brewer_tab_fragment.*
 import kotlinx.android.synthetic.main.recycler_list.*
 import quickbeer.android.R
@@ -55,14 +54,13 @@ abstract class BrewerListFragment : BindingBaseFragment() {
                 .doOnNext { Timber.d("Selected brewer %s", it) }
                 .subscribe({ openBrewerDetails(it) }, { Timber.e(it) }))
 
-            disposable.add(
-                viewModel()
-                    .getBrewers()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ handleResultList(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getBrewers()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ handleResultList(it) }, { Timber.e(it) }))
 
-            disposable.add(viewModel().getProgressStatus()
+            disposable.add(viewModel()
+                .getProgressStatus()
                 .map { toStatusValue(it) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ list_layout.setProgressStatus(it) }, { Timber.e(it) }))
@@ -86,9 +84,9 @@ abstract class BrewerListFragment : BindingBaseFragment() {
     }
 
     protected fun openBrewerDetails(brewerId: Int) {
-        val intent = Intent(activity, BrewerDetailsActivity::class.java)
-        intent.putExtra("brewerId", brewerId)
-        startActivity(intent)
+        startActivity(Intent(activity, BrewerDetailsActivity::class.java).apply {
+            putExtra("brewerId", brewerId)
+        })
     }
 
     override fun inject() {

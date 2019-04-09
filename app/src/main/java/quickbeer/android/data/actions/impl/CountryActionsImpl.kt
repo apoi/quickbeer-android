@@ -83,7 +83,7 @@ class CountryActionsImpl @Inject constructor(
                     intParams = mapOf(BeersInCountryFetcher.COUNTRY_ID to countryId))
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 }

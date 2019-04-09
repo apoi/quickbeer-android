@@ -25,7 +25,6 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.beer_details_fragment_reviews.*
 import polanski.option.Option.ofObj
 import quickbeer.android.Constants
@@ -59,12 +58,10 @@ class BeerReviewsFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRefreshL
 
     private val dataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {
-            disposable.add(
-                viewModel()
-                    .getReviews()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ beer_reviews_view.setReviews(it) }, { Timber.e(it) }))
+            disposable.add(viewModel()
+                .getReviews()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ beer_reviews_view.setReviews(it) }, { Timber.e(it) }))
 
             disposable.add(
                 loadMoreListener.moreItemsRequestedStream()

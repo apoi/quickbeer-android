@@ -83,7 +83,7 @@ class BeerListActionsImpl @Inject constructor(
                 createServiceRequest(serviceUri = TopBeersFetcher.NAME)
             }
 
-        return DataLayerUtils.createDataStreamNotificationObservable(statusStream, valueStream)
+        return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 }
