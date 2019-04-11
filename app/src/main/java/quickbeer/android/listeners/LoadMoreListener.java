@@ -12,7 +12,7 @@ import io.reactivex.subjects.PublishSubject;
 public class LoadMoreListener extends RecyclerView.OnScrollListener {
 
     // The minimum amount of items to have below your current scroll position before loading more
-    private static final int VISIBLE_THRESHOLD = 2;
+    private static final int VISIBLE_THRESHOLD = 5;
 
     // Sets the starting page index
     private static final int STARTING_PAGE_INDEX = 0;
