@@ -21,7 +21,6 @@ import android.view.View
 import android.widget.TextView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.beer_list_item.view.*
 import quickbeer.android.R
 import quickbeer.android.core.viewmodel.SimpleDataBinder

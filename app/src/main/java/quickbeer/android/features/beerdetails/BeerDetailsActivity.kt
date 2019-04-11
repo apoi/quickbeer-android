@@ -145,11 +145,13 @@ class BeerDetailsActivity : BindingDrawerActivity() {
             beerId = savedInstanceState.getInt("beerId")
         } else {
             if (Intent.ACTION_VIEW == intent.action) {
-                val idSegment = intent.data.pathSegments.find { it.isNumeric() }
-                if (idSegment != null) {
-                    beerId = idSegment.toInt()
-                    analytics.createEvent(Entry.LINK_BEER)
-                }
+                intent.data
+                    ?.pathSegments
+                    ?.find { it.isNumeric() }
+                    ?.let { idSegment ->
+                        beerId = idSegment.toInt()
+                        analytics.createEvent(Entry.LINK_BEER)
+                    }
             }
 
             if (beerId <= 0) {

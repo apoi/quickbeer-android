@@ -28,7 +28,6 @@ import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
-import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.providers.ProgressStatusProvider
 import timber.log.Timber
 
@@ -36,7 +35,6 @@ class ReviewListViewModel(
     private val beerId: Int,
     private val beerActions: BeerActions,
     private val reviewActions: ReviewActions,
-    private val reviewListStore: ReviewListStore,
     private val progressStatusProvider: ProgressStatusProvider
 ) : NetworkViewModel<ItemList<Review>>() {
 
@@ -98,7 +96,7 @@ class ReviewListViewModel(
             progressStatusProvider
                 .addProgressObservable(
                     reviewSource
-                        .map({ notification -> notification })))
+                        .map { notification -> notification }))
 
         disposable.add(
             reviewSource

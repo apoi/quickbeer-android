@@ -21,7 +21,6 @@ import android.content.Context
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
 import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.CountryActions

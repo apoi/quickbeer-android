@@ -34,7 +34,6 @@ import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.Brewer
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.pojos.User
-import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.providers.GlobalNotificationProvider
 import quickbeer.android.providers.ProgressStatusProvider
 import quickbeer.android.providers.ResourceProvider
@@ -52,7 +51,6 @@ class BeerDetailsViewModel @Inject constructor(
     private val beerActions: BeerActions,
     brewerActions: BrewerActions,
     reviewActions: ReviewActions,
-    reviewListStore: ReviewListStore,
     progressStatusProvider: ProgressStatusProvider,
     private val resourceProvider: ResourceProvider,
     private val notificationProvider: GlobalNotificationProvider
@@ -65,7 +63,7 @@ class BeerDetailsViewModel @Inject constructor(
         BrewerViewModel(-1, beerId, beerActions, brewerActions, progressStatusProvider)
 
     private val reviewListViewModel: ReviewListViewModel =
-        ReviewListViewModel(beerId, beerActions, reviewActions, reviewListStore, progressStatusProvider)
+        ReviewListViewModel(beerId, beerActions, reviewActions, progressStatusProvider)
 
     private val tickSuccessSubject = PublishSubject.create<Boolean>()
 
@@ -125,18 +123,16 @@ class BeerDetailsViewModel @Inject constructor(
                     when (it.type) {
                         Type.COMPLETED_WITH_VALUE, Type.COMPLETED_WITHOUT_VALUE -> tickSuccessSubject.onNext(true)
                         Type.COMPLETED_WITH_ERROR -> tickSuccessSubject.onNext(false)
-                        Type.ONGOING, Type.ON_NEXT -> {
-                        }
+                        Type.ONGOING, Type.ON_NEXT -> Unit
                     }
                 },
                 { Timber.w(it, "Error ticking beer") }))
     }
 
     private fun chooseSuccessString(beer: Beer, rating: Int): String {
-        return if (rating == 0)
+        return if (rating == 0) {
             resourceProvider.getString(R.string.tick_removed)
-        else
-            String.format(resourceProvider.getString(R.string.tick_success), beer.name)
+        } else resourceProvider.getString(R.string.tick_success).format(beer.name)
     }
 
     override fun bind(disposable: CompositeDisposable) {

@@ -18,10 +18,8 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.data.utils.DataLayerUtils
 import polanski.option.Option
 import quickbeer.android.data.Validator
 import quickbeer.android.data.actions.BeerListActions

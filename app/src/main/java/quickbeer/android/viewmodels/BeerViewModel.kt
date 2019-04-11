@@ -19,7 +19,6 @@ package quickbeer.android.viewmodels
 
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reark.reark.data.DataStreamNotification
 import quickbeer.android.data.HasBeerBasicData
