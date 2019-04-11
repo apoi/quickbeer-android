@@ -42,7 +42,7 @@ interface BeerActions {
     ): Observable<DataStreamNotification<Beer>>
 
     fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>>
-    fun fetchReviews(beerId: Int, page: Int): Completable
+    fun fetchReviews(beerId: Int, page: Int)
 
     fun access(beerId: Int): Single<Boolean>
     fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>>

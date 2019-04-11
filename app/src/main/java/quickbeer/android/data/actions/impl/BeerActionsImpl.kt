@@ -134,26 +134,25 @@ class BeerActionsImpl @Inject constructor(
         val reloadTrigger = reviewListStore
             .getOnce(beerId)
             .filter { it.isNoneOrEmpty() }
-            .flatMapCompletable {
+            .doOnSuccess {
                 Timber.v("Reviews not cached, fetching")
                 fetchReviews(beerId, 1)
             }
+            .ignoreElement()
 
         return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 
-    override fun fetchReviews(beerId: Int, page: Int): Completable {
+    override fun fetchReviews(beerId: Int, page: Int) {
         Timber.v("fetchReviews($beerId, $page)")
 
-        return Completable.fromAction {
-            createServiceRequest(
-                serviceUri = ReviewFetcher.NAME,
-                intParams = mapOf(
-                    ReviewFetcher.BEER_ID to beerId,
-                    ReviewFetcher.PAGE to page
-                ))
-        }
+        createServiceRequest(
+            serviceUri = ReviewFetcher.NAME,
+            intParams = mapOf(
+                ReviewFetcher.BEER_ID to beerId,
+                ReviewFetcher.PAGE to page
+            ))
     }
 
     // TICK
