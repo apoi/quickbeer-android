@@ -18,11 +18,9 @@
 package quickbeer.android.data.actions.impl
 
 import android.content.Context
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
-import io.reark.reark.data.utils.DataLayerUtils
 import org.threeten.bp.ZonedDateTime
 import polanski.option.Option
 import quickbeer.android.data.Reject
@@ -42,7 +40,6 @@ import quickbeer.android.network.fetchers.impl.BeerFetcher
 import quickbeer.android.network.fetchers.impl.ReviewFetcher
 import quickbeer.android.network.fetchers.impl.TickBeerFetcher
 import quickbeer.android.utils.kotlin.filterToValue
-import quickbeer.android.utils.kotlin.isNoneOrEmpty
 import quickbeer.android.utils.kotlin.valueOrError
 import timber.log.Timber
 import javax.inject.Inject
@@ -117,7 +114,10 @@ class BeerActionsImpl @Inject constructor(
 
     // REVIEWS
 
-    override fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>> {
+    override fun getReviews(
+        beerId: Int,
+        validator: Validator<Option<ItemList<Int>>>
+    ): Observable<DataStreamNotification<ItemList<Int>>> {
         Timber.v("getReviews($beerId)")
 
         val uri = ReviewFetcher.getUniqueUri(beerId)
@@ -133,19 +133,28 @@ class BeerActionsImpl @Inject constructor(
         // Trigger a fetch only if there was no cached result
         val reloadTrigger = reviewListStore
             .getOnce(beerId)
-            .filter { it.isNoneOrEmpty() }
-            .doOnSuccess {
-                Timber.v("Reviews not cached, fetching")
-                fetchReviews(beerId, 1)
-            }
-            .ignoreElement()
+            .validate(validator)
+            .onValidationError(
+                reviewListStore
+                    .delete(beerId) // Reviews accumulate, so on reload list is cleared
+                    .ignoreElement()
+                    .doOnComplete {
+                        Timber.v("Reviews not cached, fetching")
+                        createServiceRequest(
+                            serviceUri = ReviewFetcher.NAME,
+                            intParams = mapOf(
+                                ReviewFetcher.BEER_ID to beerId,
+                                ReviewFetcher.PAGE to 1
+                            ))
+                    }
+            )
 
         return createNotificationStream(statusStream, valueStream)
             .mergeWith(reloadTrigger)
     }
 
-    override fun fetchReviews(beerId: Int, page: Int) {
-        Timber.v("fetchReviews($beerId, $page)")
+    override fun getReviews(beerId: Int, page: Int) {
+        Timber.v("getReviews($beerId, $page)")
 
         createServiceRequest(
             serviceUri = ReviewFetcher.NAME,

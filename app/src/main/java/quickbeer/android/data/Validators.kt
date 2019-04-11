@@ -31,6 +31,7 @@ import quickbeer.android.utils.kotlin.within
 
 enum class WithinTime(val time: Long) {
     MONTH(30 * DateUtils.DAY_IN_MILLIS),
+    WEEK(7 * DateUtils.DAY_IN_MILLIS),
     SECONDS(10 * DateUtils.SECOND_IN_MILLIS) // For testing
 }
 
@@ -159,6 +160,14 @@ fun Completable.onValidationError(block: () -> Unit): Completable {
             block()
             true
         } else false
+    }
+}
+
+fun Completable.onValidationError(block: Completable): Completable {
+    return onErrorResumeNext {
+        if (it is ValidationFailedException) {
+            block
+        } else Completable.error(it)
     }
 }
 

@@ -17,13 +17,13 @@
  */
 package quickbeer.android.data.actions
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reark.reark.data.DataStreamNotification
 import org.threeten.bp.ZonedDateTime
 import polanski.option.Option
 import quickbeer.android.data.HasBeerBasicData
+import quickbeer.android.data.NotEmpty
 import quickbeer.android.data.Validator
 import quickbeer.android.data.pojos.Beer
 import quickbeer.android.data.pojos.ItemList
@@ -41,10 +41,14 @@ interface BeerActions {
         validator: Validator<Option<Beer>> = HasBeerBasicData()
     ): Observable<DataStreamNotification<Beer>>
 
-    fun getReviews(beerId: Int): Observable<DataStreamNotification<ItemList<Int>>>
-    fun fetchReviews(beerId: Int, page: Int)
+    fun getReviews(
+        beerId: Int,
+        validator: Validator<Option<ItemList<Int>>> = NotEmpty()
+    ): Observable<DataStreamNotification<ItemList<Int>>>
+
+    fun getReviews(beerId: Int, page: Int)
 
     fun access(beerId: Int): Single<Boolean>
+
     fun tick(beerId: Int, rating: Int): Observable<DataStreamNotification<Void>>
 }
-

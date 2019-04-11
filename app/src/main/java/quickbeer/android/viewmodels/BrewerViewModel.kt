@@ -51,8 +51,6 @@ class BrewerViewModel @Inject internal constructor(
 
     private val brewer = BehaviorSubject.create<Brewer>()
 
-    private val disposable = CompositeDisposable()
-
     fun getBrewer(): Observable<Brewer> {
         return brewer.hide()
     }
@@ -103,9 +101,5 @@ class BrewerViewModel @Inject internal constructor(
         } else {
             throw IllegalStateException("No source id!")
         }
-    }
-
-    override fun unbind() {
-        disposable.clear()
     }
 }

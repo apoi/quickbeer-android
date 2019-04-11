@@ -20,15 +20,16 @@ package quickbeer.android.viewmodels
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import io.reark.reark.utils.RxUtils
+import quickbeer.android.data.ItemListTimeValidator
+import quickbeer.android.data.Reject
+import quickbeer.android.data.WithinTime
 import quickbeer.android.data.actions.BeerActions
 import quickbeer.android.data.actions.ReviewActions
 import quickbeer.android.data.pojos.ItemList
 import quickbeer.android.data.pojos.Review
 import quickbeer.android.data.stores.ReviewListStore
 import quickbeer.android.providers.ProgressStatusProvider
-import quickbeer.android.rx.Unit
 import timber.log.Timber
 
 class ReviewListViewModel(
@@ -39,10 +40,6 @@ class ReviewListViewModel(
     private val progressStatusProvider: ProgressStatusProvider
 ) : NetworkViewModel<ItemList<Review>>() {
 
-    private val loadTrigger = PublishSubject.create<Unit>()
-
-    private val reloadTrigger = PublishSubject.create<Unit>()
-
     private val reviews = BehaviorSubject.create<List<Review>>()
 
     fun getReviews(): Observable<List<Review>> {
@@ -50,12 +47,21 @@ class ReviewListViewModel(
     }
 
     fun fetchReviews(page: Int) {
-        Timber.w("fetchReviews(%s)", page)
-        beerActions.fetchReviews(beerId, page)
+        Timber.w("fetchReviews($page)")
+
+        beerActions.getReviews(beerId, page)
     }
 
     fun reloadReviews() {
-        reloadTrigger.onNext(Unit.DEFAULT)
+        Timber.w("reloadReviews()")
+
+        disposable.add(beerActions
+            .getReviews(beerId, validator = Reject())
+            .doOnSubscribe {
+                // Clear to show we're reloading
+                reviews.onNext(emptyList())
+            }
+            .subscribe({}, Timber::e))
     }
 
     private fun getReviewObservable(reviewId: Int): Observable<Review> {
@@ -65,9 +71,10 @@ class ReviewListViewModel(
     }
 
     override fun bind(disposable: CompositeDisposable) {
-        Timber.v("subscribeToDataStoreInternal")
+        Timber.v("bind")
 
-        val reviewSource = loadTrigger.flatMap { beerActions.getReviews(beerId) }
+        val reviewSource = beerActions
+            .getReviews(beerId, validator = ItemListTimeValidator(WithinTime.WEEK))
             .publish()
 
         disposable.add(reviewSource
@@ -96,14 +103,5 @@ class ReviewListViewModel(
         disposable.add(
             reviewSource
                 .connect())
-
-        disposable.add(reloadTrigger.hide()
-            .switchMap { reviewListStore.delete(beerId).toObservable() }
-            .doOnEach { reviews.onNext(emptyList<Review>()) }
-            .doOnEach { loadTrigger.onNext(Unit.DEFAULT) }
-            .subscribe({}, Timber::e))
-
-        // Initial trigger at bind time
-        loadTrigger.onNext(Unit.DEFAULT)
     }
 }

@@ -22,20 +22,20 @@ import timber.log.Timber
 
 abstract class BaseViewModel : ViewModel {
 
-    private val compositeSubscription = CompositeDisposable()
+    protected val disposable = CompositeDisposable()
 
     private var isBound: Boolean = false
 
     override fun bindToDataModel() {
         if (!isBound) {
-            bind(compositeSubscription)
+            bind(disposable)
             isBound = true
         }
     }
 
     override fun unbindDataModel() {
         if (isBound) {
-            compositeSubscription.clear()
+            disposable.clear()
             unbind()
             isBound = false
         }

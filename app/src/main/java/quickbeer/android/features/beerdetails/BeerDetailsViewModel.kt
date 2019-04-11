@@ -69,8 +69,6 @@ class BeerDetailsViewModel @Inject constructor(
 
     private val tickSuccessSubject = PublishSubject.create<Boolean>()
 
-    private val disposable = CompositeDisposable()
-
     fun getBeer(): Observable<Beer> {
         return beerViewModel.getBeer()
     }
@@ -151,7 +149,5 @@ class BeerDetailsViewModel @Inject constructor(
         beerViewModel.unbindDataModel()
         brewerViewModel.unbindDataModel()
         reviewListViewModel.unbindDataModel()
-
-        disposable.clear()
     }
 }
