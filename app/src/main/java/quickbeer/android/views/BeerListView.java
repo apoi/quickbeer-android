@@ -98,6 +98,8 @@ public class BeerListView extends FrameLayout {
         boolean showProgressText = StringUtils.hasValue(progressStatus)
                 && get(beerListAdapter).getItemCount() == 0;
 
+        Timber.v("setProgressStatus(%s, %s)", progressStatus, showProgressText);
+
         searchStatusTextView.setVisibility(showProgressText ? VISIBLE : GONE);
         searchStatusTextView.setText(progressStatus);
     }

@@ -59,10 +59,13 @@ protected constructor(
     }
 
     fun reload() {
+        Timber.v("reload()")
         source.onNext(reloadSource())
     }
 
     override fun bind(disposable: CompositeDisposable) {
+        Timber.v("bind()")
+
         // Start with default data source
         source.onNext(dataSource())
 
@@ -78,6 +81,7 @@ protected constructor(
             .map(toProgressStatus())
             .startWith(NetworkViewModel.ProgressStatus.LOADING)
             .distinctUntilChanged()
+            .doOnNext { Timber.v("New progress status: $it") }
             .subscribe({ setProgressStatus(it) }, Timber::e))
 
         // Actual update
@@ -103,7 +107,11 @@ protected constructor(
             .getQueryStream()
             .distinctUntilChanged()
             .filter { it.hasValue() }
-            .doOnNext { Timber.d("query(%s)", it) }
+            .doOnNext {
+                Timber.d("query(%s)", it)
+                Timber.v("Emptying list for new query")
+                beers.onNext(emptyList())
+            }
             .map { beerSearchActions.search(it) }
             .subscribe({ source.onNext(it) }, Timber::e))
     }

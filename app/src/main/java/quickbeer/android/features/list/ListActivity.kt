@@ -67,7 +67,7 @@ open class ListActivity : BindingDrawerActivity() {
 
             viewModel()
                 .modeChangedStream()
-                .subscribe({ searchView.updateOptions() }, Timber::e)
+                .subscribe({ searchView.closeSearchView() }, Timber::e)
                 .also { disposable.add(it) }
 
             progressStatusProvider.progressStatus()
@@ -103,10 +103,10 @@ open class ListActivity : BindingDrawerActivity() {
         }
     }
 
-    override fun onPause() {
+    override fun onResume() {
         searchView.closeSearchView()
 
-        super.onPause()
+        super.onResume()
     }
 
     protected open fun defaultPage(): Page {
@@ -157,7 +157,7 @@ open class ListActivity : BindingDrawerActivity() {
         Timber.d("onBackPressed")
 
         when {
-            searchView.isSearchViewOpen -> searchView.closeSearchView()
+            searchView.isSearchViewOpen() -> searchView.closeSearchView()
             navigationProvider.canNavigateBack() -> navigationProvider.navigateBack()
             else -> super.onBackPressed()
         }

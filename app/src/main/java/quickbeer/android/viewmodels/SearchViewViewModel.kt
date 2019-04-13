@@ -35,14 +35,16 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : Si
         FILTER
     }
 
+    var searchHint = "Search beers"
+        private set
+
+    var submitted: Boolean = false
+
     private var liveFilteringEnabled: Boolean = false
 
     private var conventOverlayEnabled = true
 
     private var minimumSearchLength = 4
-
-    var searchHint = "Search beers"
-        private set
 
     private var lastQuery = none<String>()
 
@@ -74,7 +76,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : Si
             .share()
 
         return Observable.combineLatest(oldQueries, searchQueries(),
-            BiFunction { list: List<String>, query: String -> list.toMutableList().add(query); list })
+            BiFunction { list: List<String>, query: String -> list + listOf(query) })
             .startWith(oldQueries)
     }
 
@@ -89,7 +91,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : Si
             .filterToValue()
     }
 
-    fun setMode(mode: Mode, searchHint: String) {
+    fun setMode(mode: Mode, hint: String) {
         if (mode == Mode.SEARCH) {
             liveFilteringEnabled = false
             conventOverlayEnabled = true
@@ -100,7 +102,7 @@ class SearchViewViewModel(private val beerSearchActions: BeerSearchActions) : Si
             minimumSearchLength = -1
         }
 
-        this.searchHint = searchHint
+        searchHint = hint
         lastQuery = Option.none()
 
         modeChangedSubject.onNext(Unit.DEFAULT)
