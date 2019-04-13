@@ -20,6 +20,9 @@ package quickbeer.android.utils.kotlin
 import polanski.option.Option
 import java.util.concurrent.Callable
 
+private val ESCAPE_PATTERNS = listOf("(&#[0-9];{2})", "(&#[0-9]{2})")
+private val ESCAPE_CHARS = listOf("(&quot;)", "(&quot)", "(&apos;)", "(&apos)")
+
 fun String?.hasValue(): Boolean {
     return this != null && !this.isEmpty()
 }
@@ -60,4 +63,16 @@ fun String.capitalizeWords(delimiter: String): String {
     return toLowerCase()
         .split(delimiter)
         .joinToString(delimiter) { it.capitalize() }
+}
+
+fun String.fixEncoding(): String {
+    return this
+        .replace("%2C", ",")
+        .let { fixEncoding(it, "quot", "\"") }
+        .let { fixEncoding(it, "apos", "'") }
+}
+
+private fun fixEncoding(input: String, code: String, replacement: String): String {
+    return input.replace("&$code;", replacement)
+        .replace("&$code", replacement)
 }

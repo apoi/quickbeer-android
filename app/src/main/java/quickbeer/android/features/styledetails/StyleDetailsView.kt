@@ -21,6 +21,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.text.HtmlCompat
 import androidx.core.widget.NestedScrollView
 import kotlinx.android.synthetic.main.style_details_fragment_details.view.*
 import quickbeer.android.R
@@ -30,6 +31,7 @@ import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
 import quickbeer.android.utils.kotlin.capitalizeWords
+import quickbeer.android.utils.kotlin.fixEncoding
 import quickbeer.android.utils.kotlin.orDefault
 import javax.inject.Inject
 
@@ -56,7 +58,11 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
     }
 
     fun setStyle(style: BeerStyle) {
-        style_description.text = style.description.orDefault(resourceProvider.getString(R.string.no_description))
+        style.description
+            .orDefault(resourceProvider.getString(R.string.no_description))
+            .fixEncoding()
+            .let { HtmlCompat.fromHtml(it, 0).toString() }
+            .also { style_description.text = it }
     }
 
     fun setParent(style: BeerStyle) {
