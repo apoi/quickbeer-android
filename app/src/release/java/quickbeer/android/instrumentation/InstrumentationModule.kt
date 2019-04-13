@@ -29,7 +29,7 @@ import quickbeer.android.utils.ProductionTree
 import timber.log.Timber
 
 @Module
-object InstrumentationModule {
+class InstrumentationModule {
 
     @Provides
     @Singleton
