@@ -17,6 +17,7 @@
  */
 package quickbeer.android.utils.kotlin
 
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import polanski.option.Option
@@ -27,6 +28,11 @@ fun <T> Observable<Option<T>>.filterToValue(): Observable<T> {
         filter { it.isSome }
             .map { OptionUnsafe.getUnsafe(it) }
     }
+}
+
+fun <T> Single<Option<T>>.filterToValue(): Maybe<T> {
+    return filter { it.isSome }
+        .map { OptionUnsafe.getUnsafe(it) }
 }
 
 fun <T> Single<Option<T>>.valueOrError(): Single<T> {

@@ -17,11 +17,22 @@
  */
 package quickbeer.android.data.pojos
 
+import com.google.gson.annotations.SerializedName
+
 data class BeerStyle(
+    @SerializedName("BeerStyleID")
     override val id: Int,
+
+    @SerializedName("BeerStyleName")
     override val name: String,
+
+    @SerializedName("BeerStyleDescription")
     val description: String,
+
+    @SerializedName("BeerStyleParent")
     val parent: Int,
+
+    @SerializedName("BeerStyleCategory")
     val category: Int
 ) : SimpleItem() {
     override val code: String

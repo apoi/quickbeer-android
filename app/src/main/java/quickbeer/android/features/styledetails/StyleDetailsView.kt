@@ -23,11 +23,14 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.widget.NestedScrollView
 import kotlinx.android.synthetic.main.style_details_fragment_details.view.*
+import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.core.activity.InjectingDrawerActivity
 import quickbeer.android.data.pojos.BeerStyle
 import quickbeer.android.providers.ResourceProvider
 import quickbeer.android.providers.ToastProvider
+import quickbeer.android.utils.kotlin.capitalizeWords
+import quickbeer.android.utils.kotlin.orDefault
 import javax.inject.Inject
 
 /**
@@ -53,11 +56,11 @@ class StyleDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView
     }
 
     fun setStyle(style: BeerStyle) {
-        style_description.text = style.description
+        style_description.text = style.description.orDefault(resourceProvider.getString(R.string.no_description))
     }
 
     fun setParent(style: BeerStyle) {
-        style_parent.text = style.name
+        style_parent.text = style.name.capitalizeWords(" ")
     }
 
     private fun showToast(@StringRes resource: Int) {

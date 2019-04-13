@@ -55,3 +55,9 @@ fun Callable<String>.emptyAsNone(): Option<String> {
         return Option.none()
     }
 }
+
+fun String.capitalizeWords(delimiter: String): String {
+    return toLowerCase()
+        .split(delimiter)
+        .joinToString(delimiter) { it.capitalize() }
+}

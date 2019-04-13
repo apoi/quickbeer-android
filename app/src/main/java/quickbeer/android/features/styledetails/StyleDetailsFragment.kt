@@ -56,14 +56,12 @@ class StyleDetailsFragment : BindingBaseFragment() {
         override fun bind(disposable: CompositeDisposable) {
             disposable.add(viewModel()
                 .getStyle()
-                .toObservable()
                 .filterToValue()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ style_details_view.setStyle(it) }, { Timber.e(it) }))
 
             disposable.add(viewModel()
                 .getParentStyle()
-                .toObservable()
                 .filterToValue()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ style_details_view.setParent(it) }, { Timber.e(it) }))
