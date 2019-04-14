@@ -29,9 +29,6 @@
 # OkHttp
 -dontwarn okhttp3.**
 
-# Renderscript
--keep class android.support.v8.renderscript.** { *; }
-
 # Remove logging, except for errors
 -assumenosideeffects class timber.log.Timber {
     public static *** v(...);
