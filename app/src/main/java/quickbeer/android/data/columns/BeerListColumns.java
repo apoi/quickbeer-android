@@ -1,6 +1,6 @@
 /**
  * This file is part of QuickBeer.
- * Copyright (C) 2019 Antti Poikela <antti.poikela@iki.fi>
+ * Copyright (C) 2016 Antti Poikela <antti.poikela@iki.fi>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,21 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.data.columns
+package quickbeer.android.data.columns;
 
-import net.simonvt.schematic.annotation.DataType
-import net.simonvt.schematic.annotation.PrimaryKey
+import net.simonvt.schematic.annotation.DataType;
+import net.simonvt.schematic.annotation.PrimaryKey;
 
-interface BrewerListColumns {
-    companion object {
-        @DataType(DataType.Type.TEXT)
-        @PrimaryKey
-        const val KEY = "id"
-
-        @DataType(DataType.Type.TEXT)
-        const val JSON = "json"
-
-        @DataType(DataType.Type.INTEGER)
-        const val UPDATED = "updated"
-    }
+public interface BeerListColumns {
+    @DataType(DataType.Type.TEXT) @PrimaryKey String KEY = "id";
+    @DataType(DataType.Type.TEXT) String JSON = "json";
+    @DataType(DataType.Type.INTEGER) String UPDATED = "updated";
 }
