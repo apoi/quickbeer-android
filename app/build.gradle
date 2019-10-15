@@ -64,13 +64,15 @@ ext {
 
             // AndroidX
             recyclerview     : '1.0.0',
-            appcompat        : '1.0.2',
+            appcompat        : '1.1.0',
             material         : '1.0.0',
             cardview         : '1.0.0',
             annotation       : '1.0.2',
 
             // Google and Firebase
-            playServices     : '11.6.2',
+            playVision       : '18.0.0',
+            firebaseCore     : '17.2.0',
+            firebaseCrash    : '16.2.1',
 
             // Rx and chaining
             rxJava           : '2.2.7',
@@ -125,11 +127,11 @@ dependencies {
     implementation "androidx.multidex:multidex:$versions.multidex"
 
     // Firebase
-    implementation "com.google.firebase:firebase-core:$versions.playServices"
-    implementation "com.google.firebase:firebase-crash:$versions.playServices"
+    implementation "com.google.firebase:firebase-core:$versions.firebaseCore"
+    implementation "com.google.firebase:firebase-crash:$versions.firebaseCrash"
 
     // Play services barcode support
-    implementation "com.google.android.gms:play-services-vision:$versions.playServices"
+    implementation "com.google.android.gms:play-services-vision:$versions.playVision"
 
     // Reark
     implementation "com.github.reark:reark:$versions.reark"
