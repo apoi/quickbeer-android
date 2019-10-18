@@ -142,7 +142,7 @@ class BeerDetailsActivity : BindingDrawerActivity() {
         collapsing_toolbar_background.setOnClickListener { toastProvider.showToast(R.string.beer_details_no_photo) }
 
         if (savedInstanceState != null) {
-            beerId = savedInstanceState.getInt("beerId")
+            beerId = savedInstanceState.getInt(Constants.ID_KEY)
         } else {
             if (Intent.ACTION_VIEW == intent.action) {
                 intent.data
@@ -155,7 +155,7 @@ class BeerDetailsActivity : BindingDrawerActivity() {
             }
 
             if (beerId <= 0) {
-                beerId = intent.getIntExtra("beerId", 0)
+                beerId = intent.getIntExtra(Constants.ID_KEY, 0)
             }
 
             supportFragmentManager.beginTransaction()
@@ -184,9 +184,9 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     }
 
     private fun openPhotoView(uri: String) {
-        val intent = Intent(this, PhotoViewActivity::class.java)
-        intent.putExtra("source", uri)
-        startActivity(intent)
+        startActivity(Intent(this, PhotoViewActivity::class.java).apply {
+            putExtra(Constants.ID_KEY, uri)
+        })
     }
 
     private fun share() {
@@ -220,7 +220,7 @@ class BeerDetailsActivity : BindingDrawerActivity() {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("beerId", beerId)
+        outState.putInt(Constants.ID_KEY, beerId)
         super.onSaveInstanceState(outState)
     }
 

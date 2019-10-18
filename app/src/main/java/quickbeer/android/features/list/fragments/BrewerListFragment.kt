@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.brewer_tab_fragment.*
 import kotlinx.android.synthetic.main.recycler_list.*
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.fragment.BindingBaseFragment
 import quickbeer.android.core.viewmodel.DataBinder
@@ -85,7 +86,7 @@ abstract class BrewerListFragment : BindingBaseFragment() {
 
     protected fun openBrewerDetails(brewerId: Int) {
         startActivity(Intent(activity, BrewerDetailsActivity::class.java).apply {
-            putExtra("brewerId", brewerId)
+            putExtra(Constants.ID_KEY, brewerId)
         })
     }
 

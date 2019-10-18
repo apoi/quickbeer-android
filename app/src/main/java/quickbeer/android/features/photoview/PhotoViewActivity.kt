@@ -22,6 +22,7 @@ import android.view.Window
 import android.view.WindowManager.LayoutParams
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.photo_view_activity.*
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.activity.InjectingBaseActivity
 import javax.inject.Inject
@@ -39,7 +40,7 @@ class PhotoViewActivity : InjectingBaseActivity() {
         getComponent().inject(this)
 
         setContentView(R.layout.photo_view_activity)
-        initImageView(intent.getStringExtra("source") ?: "")
+        initImageView(intent.getStringExtra(Constants.ID_KEY) ?: "")
     }
 
     override fun inject() {

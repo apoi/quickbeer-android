@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.collapsing_toolbar_activity.*
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.analytics.Analytics
 import quickbeer.android.analytics.Events.Entry
@@ -112,7 +113,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
         collapsing_toolbar_background.setOnClickListener { toastProvider.showToast(R.string.brewer_details_no_photo) }
 
         if (savedInstanceState != null) {
-            brewerId = savedInstanceState.getInt("brewerId")
+            brewerId = savedInstanceState.getInt(Constants.ID_KEY)
         } else {
             if (Intent.ACTION_VIEW == intent.action) {
                 val idSegment = intent.data.pathSegments.find { it.isNumeric() }
@@ -123,7 +124,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
             }
 
             if (brewerId <= 0) {
-                brewerId = intent.getIntExtra("brewerId", 0)
+                brewerId = intent.getIntExtra(Constants.ID_KEY, 0)
             }
 
             supportFragmentManager.beginTransaction()
@@ -146,9 +147,9 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     }
 
     private fun openPhotoView(uri: String) {
-        val intent = Intent(this, PhotoViewActivity::class.java)
-        intent.putExtra("source", uri)
-        startActivity(intent)
+        startActivity(Intent(this, PhotoViewActivity::class.java).apply {
+            putExtra(Constants.ID_KEY, uri)
+        })
     }
 
     override fun inject() {
@@ -164,7 +165,7 @@ class BrewerDetailsActivity : BindingDrawerActivity() {
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putInt("brewerId", brewerId)
+        outState.putInt(Constants.ID_KEY, brewerId)
         super.onSaveInstanceState(outState)
     }
 

@@ -188,7 +188,7 @@ public final class NavigationProvider {
             intent = new Intent(activity, ListActivity.class);
         }
 
-        intent.putExtra("menuNavigationId", menuItem.getItemId());
+        intent.putExtra(NAVIGATION_KEY, menuItem.getItemId());
         activity.startActivity(intent);
     }
 

@@ -192,7 +192,7 @@ class BeerDetailsView(context: Context, attrs: AttributeSet) : NestedScrollView(
         Timber.d("navigateToBrewer(%s)", brewerId)
 
         val intent = Intent(context, BrewerDetailsActivity::class.java)
-        intent.putExtra("brewerId", brewerId)
+        intent.putExtra(Constants.ID_KEY, brewerId)
         context.startActivity(intent)
     }
 

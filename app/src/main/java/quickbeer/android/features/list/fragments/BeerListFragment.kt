@@ -27,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.beer_list_fragment_standalone.*
 import kotlinx.android.synthetic.main.recycler_list.*
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.core.fragment.BindingBaseFragment
 import quickbeer.android.core.viewmodel.DataBinder
@@ -85,9 +86,9 @@ abstract class BeerListFragment : BindingBaseFragment(), SwipeRefreshLayout.OnRe
     }
 
     protected fun openBeerDetails(beerId: Int) {
-        val intent = Intent(activity, BeerDetailsActivity::class.java)
-        intent.putExtra("beerId", beerId)
-        startActivity(intent)
+        startActivity(Intent(activity, BeerDetailsActivity::class.java).apply {
+            putExtra(Constants.ID_KEY, beerId)
+        })
     }
 
     override fun inject() {
