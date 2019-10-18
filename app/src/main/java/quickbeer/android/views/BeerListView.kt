@@ -47,6 +47,7 @@ class BeerListView : FrameLayout {
             adapter = beerListAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
+                addItemDecoration(ListDivider(context, showLast = false))
             }
 
             addOnItemTouchAction { beerSelected(it) }

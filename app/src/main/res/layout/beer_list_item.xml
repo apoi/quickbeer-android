@@ -71,10 +71,4 @@
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="bottom"
-        android:background="@color/gray_800" />
-
 </FrameLayout>
