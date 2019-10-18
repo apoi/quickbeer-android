@@ -42,3 +42,22 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+configurations {
+    ktlint
+}
+
+dependencies {
+    ktlint "com.github.pinterest:ktlint:0.35.0"
+}
+
+task ktlintConfigure(type: JavaExec, group: "idea") {
+    description = "Configure your IntelliJ IDEA to match Ktlint style"
+    classpath = rootProject.configurations.ktlint
+    main = "com.pinterest.ktlint.Main"
+    args = [
+            "--android",
+            "applyToIDEA",
+            "-y"
+    ]
+}
