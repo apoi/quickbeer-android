@@ -31,16 +31,12 @@ import quickbeer.android.utils.StringUtils
 import quickbeer.android.viewmodels.BeerViewModel
 import timber.log.Timber
 
-class BeerViewHolder(view: View, onClickListener: View.OnClickListener) : BindingViewHolder<BeerViewModel>(view) {
+class BeerViewHolder(view: View) : BindingViewHolder<BeerViewModel>(view) {
 
     private val ratingTextView: TextView = view.beer_stars
     private val nameTextView: TextView = view.beer_name
     private val styleTextView: TextView = view.beer_style
     private val brewerTextView: TextView = view.brewer_name
-
-    init {
-        view.setOnClickListener(onClickListener)
-    }
 
     override val viewDataBinder = object : SimpleDataBinder() {
         override fun bind(disposable: CompositeDisposable) {

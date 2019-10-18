@@ -28,7 +28,7 @@ import quickbeer.android.viewmodels.BeerViewModel
 import quickbeer.android.views.viewholders.BeerViewHolder
 import java.util.ArrayList
 
-class BeerListAdapter(private val onClickListener: View.OnClickListener) : BaseListAdapter() {
+class BeerListAdapter() : BaseListAdapter() {
 
     private val beers = ArrayList<BeerViewModel>(10)
 
@@ -37,8 +37,10 @@ class BeerListAdapter(private val onClickListener: View.OnClickListener) : BaseL
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.beer_list_item, parent, false)
-        return BeerViewHolder(view, onClickListener)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.beer_list_item, parent, false)
+
+        return BeerViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

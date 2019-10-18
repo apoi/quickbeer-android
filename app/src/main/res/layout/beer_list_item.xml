@@ -5,7 +5,10 @@
     android:layout_height="@dimen/beer_list_item_height"
     android:paddingLeft="@dimen/list_item_padding"
     android:paddingRight="@dimen/list_item_padding"
-    android:background="@drawable/listitem_ripple">
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/listitem_ripple"
+    android:foreground="?android:attr/selectableItemBackground">
 
     <LinearLayout
         android:orientation="horizontal"
