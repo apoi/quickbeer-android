@@ -32,10 +32,8 @@ proguard/
 .DS_Store
 
 # Project
-/examples
-/screenshots
-/releases
-/app/ratebeer-api.properties
-/app/google-services.json
+documents
+app/ratebeer-api.properties
+app/google-services.json
 gradle.properties
 *.jks
