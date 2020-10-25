@@ -1,0 +1,76 @@
+package quickbeer.android.data.repository.repository
+
+import kotlinx.coroutines.flow.Flow
+import quickbeer.android.data.fetcher.Fetcher
+import quickbeer.android.data.fetcher.SingleFetcher
+import quickbeer.android.data.repository.Repository
+import quickbeer.android.data.repository.SingleRepository
+import quickbeer.android.data.store.store.ItemListStore
+import quickbeer.android.data.store.store.SingleItemListStore
+import quickbeer.android.network.result.ApiResult
+
+/**
+ * ItemListRepository handles lists of items.
+ *
+ * @param <I> Type of index keys.
+ * @param <K> Type of keys.
+ * @param <V> Type of values.
+ * @param <E> Type of entities.
+ */
+open class ItemListRepository<in I, K, V : Any, E>(
+    private val store: ItemListStore<I, K, V>,
+    private val fetcher: Fetcher<I, List<V>, List<E>>
+) : Repository<I, List<V>>() {
+
+    override suspend fun persist(value: List<V>) {
+        store.put(value)
+    }
+
+    override suspend fun getLocal(key: I): List<V>? {
+        return store.get(key).let {
+            if (it.isEmpty()) null
+            else it
+        }
+    }
+
+    override fun getLocalStream(key: I): Flow<List<V>> {
+        return store.getStream(key)
+    }
+
+    override suspend fun fetchRemote(key: I): ApiResult<List<V>> {
+        return fetcher.fetch(key)
+    }
+}
+
+/**
+ * Special case of ItemListRepository that only handles a single value.
+ *
+ * @param <I> Type of index keys.
+ * @param <K> Type of keys.
+ * @param <V> Type of values.
+ * @param <E> Type of entities.
+ */
+open class SingleItemListRepository<in I, K, V : Any, E>(
+    private val store: SingleItemListStore<I, K, V>,
+    private val fetcher: SingleFetcher<List<V>, List<E>>
+) : SingleRepository<List<V>>() {
+
+    override suspend fun persist(value: List<V>) {
+        store.put(value)
+    }
+
+    override suspend fun getLocal(): List<V>? {
+        return store.get().let {
+            if (it.isEmpty()) null
+            else it
+        }
+    }
+
+    override fun getLocalStream(): Flow<List<V>> {
+        return store.getStream()
+    }
+
+    override suspend fun fetchRemote(): ApiResult<List<V>> {
+        return fetcher.fetch()
+    }
+}

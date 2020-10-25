@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/simple_album"
+    app:startDestination="@id/simple_album_fragment">
+
+    <include app:graph="@navigation/details_nav" />
+
+    <fragment
+        android:id="@+id/simple_album_fragment"
+        android:name="quickbeer.android.feature.beers.RecentBeersFragment"
+        android:label="@string/simple_album_title"
+        tools:layout="@layout/recent_beers_fragment">
+
+        <action
+            android:id="@+id/to_details"
+            app:destination="@id/details_nav">
+
+            <argument
+                android:name="id"
+                app:argType="integer" />
+
+            <argument
+                android:name="fullscreen"
+                android:defaultValue="true"
+                app:argType="boolean" />
+
+        </action>
+
+    </fragment>
+
+</navigation>

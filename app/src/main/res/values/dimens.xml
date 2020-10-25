@@ -1,0 +1,5 @@
+<resources>
+    <dimen name="spacing_s">4dp</dimen>
+    <dimen name="spacing_m">8dp</dimen>
+    <dimen name="spacing_l">16dp</dimen>
+</resources>

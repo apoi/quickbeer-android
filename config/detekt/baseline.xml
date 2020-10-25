@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K, V&gt;</ID>
+  </CurrentIssues>
+</SmellBaseline>

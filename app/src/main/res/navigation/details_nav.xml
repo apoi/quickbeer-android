@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/details_nav"
+    app:startDestination="@id/details_fragment">
+
+    <fragment
+        android:id="@+id/details_fragment"
+        android:name="quickbeer.android.feature.beerdetails.DetailsFragment"
+        android:label="@string/details_title"
+        tools:layout="@layout/details_fragment">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+        <argument
+            android:name="fullscreen"
+            android:defaultValue="true"
+            app:argType="boolean" />
+
+    </fragment>
+
+</navigation>
