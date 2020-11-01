@@ -36,11 +36,11 @@ class BeerListViewHolder(
         if (beer.name.isNullOrEmpty()) return
 
         if (beer.isTicked()) {
-            binding.beerStars.text = ""
-            binding.beerStars.setBackgroundResource(Score.fromTick(beer.tickValue).resource)
+            binding.beerScore.text = ""
+            binding.beerStars.setImageResource(Score.fromTick(beer.tickValue).resource)
         } else {
-            binding.beerStars.text = Score.fromRating(beer.rating())
-            binding.beerStars.setBackgroundResource(R.drawable.score_unrated)
+            binding.beerScore.text = Score.fromRating(beer.rating())
+            binding.beerStars.setImageResource(R.drawable.score_unrated)
         }
 
         binding.beerName.text = beer.name
@@ -51,8 +51,8 @@ class BeerListViewHolder(
     override fun unbind() {
         super.unbind()
 
-        binding.beerStars.background = null
-        binding.beerStars.text = ""
+        binding.beerStars.setImageDrawable(null)
+        binding.beerStyle.text = ""
         binding.beerName.text = ""
         binding.beerStyle.text = ""
         binding.brewerName.text = ""
