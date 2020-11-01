@@ -2,7 +2,6 @@ package quickbeer.android.feature.shared.adapter
 
 import android.view.ViewGroup
 import quickbeer.android.R
-import quickbeer.android.databinding.AlbumListItemBinding
 import quickbeer.android.databinding.BeerListItemBinding
 import quickbeer.android.ui.adapter.simple.ListItem
 import quickbeer.android.ui.adapter.simple.ListTypeFactory

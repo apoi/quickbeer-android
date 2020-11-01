@@ -6,7 +6,6 @@ import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.Cache
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -32,6 +31,7 @@ import quickbeer.android.feature.recentbeers.RecentBeersViewModel
 import quickbeer.android.feature.topbeers.TopBeersViewModel
 import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi
+import quickbeer.android.network.adapter.EscapedStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
@@ -54,6 +54,7 @@ val appModule = module {
     single {
         Moshi.Builder()
             .add(ZonedDateTimeAdapter())
+            .add(EscapedStringAdapter())
             .build()
     }
 

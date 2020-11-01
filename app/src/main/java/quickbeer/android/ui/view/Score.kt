@@ -4,10 +4,9 @@ import quickbeer.android.R
 
 object Score {
 
+    @Suppress("MagicNumber")
     fun fromTick(score: Int?): Stars {
-        return if (score == null) {
-            Stars.UNRATED
-        } else when (score) {
+        return when (score) {
             1 -> Stars.SCORE_1
             2 -> Stars.SCORE_2
             3 -> Stars.SCORE_3
@@ -18,11 +17,7 @@ object Score {
     }
 
     fun fromRating(rating: Int): String {
-        return if (rating >= 0) {
-            rating.toString()
-        } else {
-            "?"
-        }
+        return if (rating >= 0) "$rating" else "?"
     }
 
     enum class Stars(val resource: Int) {

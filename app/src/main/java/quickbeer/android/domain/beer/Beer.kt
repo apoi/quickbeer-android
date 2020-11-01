@@ -34,14 +34,6 @@ data class Beer(
     val tickDate: ZonedDateTime?
 ) : Parcelable {
 
-    fun basicDataMissing(): Boolean {
-        return brewerId == null || styleName.isNullOrEmpty()
-    }
-
-    fun detailedDataMissing(): Boolean {
-        return basicDataMissing() || description == null
-    }
-
     fun rating(): Int {
         return overallRating
             ?.takeIf { it > 0.0f }

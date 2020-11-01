@@ -4,17 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import timber.log.Timber
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
