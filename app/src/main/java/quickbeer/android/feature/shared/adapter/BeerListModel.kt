@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.beer.validator.HasBasicData
 import quickbeer.android.ui.adapter.simple.ListItem
 import quickbeer.android.ui.adapter.simple.ListTypeFactory
 
@@ -21,6 +22,6 @@ class BeerListModel(
     }
 
     fun getBeer(): Flow<State<Beer>> {
-        return repository.getStream(id)
+        return repository.getStream(id, HasBasicData())
     }
 }

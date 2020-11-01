@@ -46,8 +46,8 @@ val appModule = module {
     single {
         OkHttpClient.Builder()
             .cache(Cache(androidContext().cacheDir, TEN_MEGABYTES))
-            .addInterceptor(LoggingInterceptor.create())
             .addInterceptor(AppKeyInterceptor())
+            .addInterceptor(LoggingInterceptor.create())
             .build()
     }
 

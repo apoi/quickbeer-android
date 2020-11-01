@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/beer_list_item_height"
+    android:paddingLeft="@dimen/list_item_padding"
+    android:paddingRight="@dimen/list_item_padding"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/listitem_ripple"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/beer_stars"
+            android:layout_width="@dimen/beer_list_item_icon_size"
+            android:layout_height="@dimen/beer_list_item_icon_size"
+            android:layout_marginTop="@dimen/list_item_icon_margin"
+            android:layout_marginBottom="@dimen/list_item_icon_margin"
+            android:layout_marginEnd="@dimen/list_item_icon_margin_right"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-thin"
+            android:textSize="@dimen/listitem_text_score"
+            android:background="@drawable/score_unrated" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/beer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="@dimen/listitem_text_primary"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/beer_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_300"
+                android:fontFamily="sans-serif-thin"
+                android:textSize="@dimen/listitem_text_secondary"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/brewer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray_300"
+                android:fontFamily="sans-serif-thin"
+                android:layout_marginTop="-2dp"
+                android:textSize="@dimen/listitem_text_secondary"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</FrameLayout>

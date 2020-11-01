@@ -31,7 +31,7 @@ abstract class Repository<in K, V> {
     /**
      * Returns a stream of data with fetching if current value is invalid.
      */
-    fun getStream(key: K, validator: Validator<V> = Accept()): Flow<State<V>> {
+    fun getStream(key: K, validator: Validator<V>): Flow<State<V>> {
         return flow {
             emit(State.Loading)
 
@@ -105,7 +105,7 @@ abstract class SingleRepository<V> {
         return repository.get(0)
     }
 
-    fun getStream(validator: Validator<V> = Accept()): Flow<State<V>> {
+    fun getStream(validator: Validator<V>): Flow<State<V>> {
         return repository.getStream(0, validator)
     }
 

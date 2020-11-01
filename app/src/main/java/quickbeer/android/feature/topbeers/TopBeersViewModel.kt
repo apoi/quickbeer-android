@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
@@ -30,7 +31,7 @@ class TopBeersViewModel(
     }
 
     private suspend fun getRecentBeers() {
-        repository.getStream()
+        repository.getStream(Accept())
             .collect {
                 when (it) {
                     is State.Loading -> Unit

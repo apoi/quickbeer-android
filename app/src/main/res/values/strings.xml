@@ -7,8 +7,8 @@
     <string name="home_title">Home</string>
     <string name="home_description">Home</string>
 
-    <string name="lazy_album_title">Lazy</string>
-    <string name="lazy_album_description">Lazy</string>
+    <string name="top_beers_title">Top 50</string>
+    <string name="top_beer_description">Top 50</string>
 
     <string name="simple_album_title">Simple</string>
     <string name="simple_album_description">Simple</string>

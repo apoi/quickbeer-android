@@ -1,5 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <dimen name="spacing_s">4dp</dimen>
     <dimen name="spacing_m">8dp</dimen>
     <dimen name="spacing_l">16dp</dimen>
+
+    <dimen name="listitem_text_header">15sp</dimen>
+    <dimen name="listitem_text_score">18sp</dimen>
+    <dimen name="listitem_text_primary">17sp</dimen>
+    <dimen name="listitem_text_secondary">13sp</dimen>
+
+    <dimen name="drawer_text_header">18dp</dimen>
+    <dimen name="drawer_text_details">12dp</dimen>
+
+    <dimen name="search_status_text">28sp</dimen>
+    <dimen name="progress_indicator_width">50dp</dimen>
+
+    <dimen name="beer_list_item_height">70dp</dimen>
+    <dimen name="beer_list_item_icon_size">50dp</dimen>
+
+    <dimen name="list_item_padding">15dp</dimen>
+    <dimen name="list_item_icon_margin">10dp</dimen>
+    <dimen name="list_item_icon_margin_right">15dp</dimen>
+
+    <dimen name="beer_details_header_text">30sp</dimen>
+    <dimen name="beer_details_sub_header_text">22sp</dimen>
+    <dimen name="beer_details_info_text">14sp</dimen>
+    <dimen name="beer_details_left_margin_with_line">65dp</dimen>
+    <dimen name="beer_details_line_margin">7dp</dimen>
+    <dimen name="beer_details_image_size">80dp</dimen>
+
+    <dimen name="card_view_elevation">2dp</dimen>
+    <dimen name="card_view_margin">10dp</dimen>
+    <dimen name="card_inner_margin">5dp</dimen>
+
 </resources>
