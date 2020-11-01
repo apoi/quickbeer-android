@@ -1,4 +1,4 @@
-package quickbeer.android.feature.beers
+package quickbeer.android.feature.recentbeers
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.recentbeers.RecentBeersStore
-import quickbeer.android.feature.beers.adapter.BeerListModel
+import quickbeer.android.feature.shared.adapter.BeerListModel
 import timber.log.Timber
 
 class RecentBeersViewModel(

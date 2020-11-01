@@ -9,9 +9,9 @@
 
     <fragment
         android:id="@+id/simple_album_fragment"
-        android:name="quickbeer.android.feature.beers.RecentBeersFragment"
+        android:name="quickbeer.android.feature.recentbeers.RecentBeersFragment"
         android:label="@string/simple_album_title"
-        tools:layout="@layout/recent_beers_fragment">
+        tools:layout="@layout/beer_list_fragment">
 
         <action
             android:id="@+id/to_details"

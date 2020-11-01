@@ -6,12 +6,12 @@ import org.threeten.bp.ZonedDateTime
 class ZonedDateTimeConverter {
 
     @TypeConverter
-    fun fromString(value: String): ZonedDateTime {
-        return ZonedDateTime.parse(value)
+    fun fromString(value: String?): ZonedDateTime? {
+        return value?.let(ZonedDateTime::parse)
     }
 
     @TypeConverter
-    fun toString(date: ZonedDateTime): String {
-        return date.toString()
+    fun toString(date: ZonedDateTime?): String? {
+        return date?.toString()
     }
 }

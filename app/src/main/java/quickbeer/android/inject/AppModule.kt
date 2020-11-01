@@ -6,6 +6,7 @@ import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -20,16 +21,20 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beer.store.BeerRoomCore
 import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.beersearch.network.BeerSearchFetcher
+import quickbeer.android.domain.beersearch.network.TopBeersFetcher
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
-import quickbeer.android.domain.beersearch.store.BeerSearchStore
+import quickbeer.android.domain.beersearch.repository.TopBeersRepository
+import quickbeer.android.domain.beersearch.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.recentbeers.RecentBeersStore
-import quickbeer.android.feature.beers.RecentBeersViewModel
+import quickbeer.android.feature.recentbeers.RecentBeersViewModel
+import quickbeer.android.feature.topbeers.TopBeersViewModel
 import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
+import quickbeer.android.network.interceptor.LoggingInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -41,6 +46,7 @@ val appModule = module {
     single {
         OkHttpClient.Builder()
             .cache(Cache(androidContext().cacheDir, TEN_MEGABYTES))
+            .addInterceptor(LoggingInterceptor.create())
             .addInterceptor(AppKeyInterceptor())
             .build()
     }
@@ -75,26 +81,29 @@ val appModule = module {
             .build()
     }
 
-    // IdList core is used for storing lists of items
+    // Cores
     single<StoreCore<String, IdList>>(named<IdList>()) {
         CachingStoreCore(IdListRoomCore(get()), IdList::key)
     }
-
-    // Stores
     single<StoreCore<Int, Beer>>(named<Beer>()) {
         CachingStoreCore(BeerRoomCore(get()), Beer::id, Beer.merger)
     }
+
+    // Stores
     factory { BeerStore(get(named<Beer>())) }
-    factory { BeerSearchStore(get(), get()) }
+    factory { TopBeersStore(get(named<IdList>()), get(named<Beer>())) }
     factory { RecentBeersStore(get(named<IdList>()), get(named<Beer>())) }
 
     // Fetchers
     factory { BeerFetcher(get()) }
+    factory { TopBeersFetcher(get()) }
     factory { BeerSearchFetcher(get()) }
 
     // Repositories
     factory { BeerRepository(get(), get()) }
+    factory { TopBeersRepository(get(), get()) }
     factory { BeerSearchRepository(get(), get()) }
 
+    viewModel { TopBeersViewModel(get(), get()) }
     viewModel { RecentBeersViewModel(get(), get()) }
 }

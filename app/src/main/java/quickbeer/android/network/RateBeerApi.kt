@@ -33,8 +33,11 @@ interface RateBeerApi {
     @GET("/json/upc.asp")
     suspend fun barcode(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
 
-    @GET("/json/tb.asp")
-    suspend fun topBeers(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
+    @GET("/json/tb.asp?m=top50")
+    suspend fun topBeers(): ApiResult<List<BeerJson>>
+
+    @GET("/json/tb.asp?m=country")
+    suspend fun beersInCountry(@Query("c") id: Int): ApiResult<List<BeerJson>>
 
     @GET("/json/style.asp")
     suspend fun beersInStyle(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>

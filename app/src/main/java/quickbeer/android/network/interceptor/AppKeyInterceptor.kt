@@ -25,6 +25,6 @@ class AppKeyInterceptor : Interceptor {
     }
 
     companion object {
-        private const val RATEBEER_HOST = "ratebeer.com"
+        private const val RATEBEER_HOST = "www.ratebeer.com"
     }
 }

@@ -1,4 +1,4 @@
-package quickbeer.android.feature.beers.adapter
+package quickbeer.android.feature.shared.adapter
 
 import android.annotation.SuppressLint
 import com.squareup.picasso.Picasso
