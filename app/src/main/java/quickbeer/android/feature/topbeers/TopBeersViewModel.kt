@@ -1,5 +1,6 @@
 package quickbeer.android.feature.topbeers
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +13,9 @@ import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
+import quickbeer.android.ui.adapter.search.SearchAdapter
+import quickbeer.android.ui.adapter.search.SearchResult
+import timber.log.Timber
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
@@ -40,5 +44,31 @@ class TopBeersViewModel(
                     is State.Error -> Unit
                 }
             }
+    }
+
+    private val results: MutableList<SearchResult> = mutableListOf()
+
+    private var searchAdapter: SearchAdapter? = null
+
+    fun getSearchAdapter(activity: Activity): SearchAdapter {
+        return SearchAdapter(activity).also {
+            searchAdapter = it
+        }
+    }
+
+    fun onSearchChanged(value: String) {
+        Timber.w("Query: $value")
+        results.add(SearchResult(0, SearchResult.Type.SEARCH, value))
+        searchAdapter?.setItems(results)
+    }
+
+    fun onSearchSubmit(value: String) {
+        Timber.w("Submit: $value")
+        results.clear()
+        searchAdapter?.setItems(results)
+    }
+
+    fun onSuggestionClicked(position: Int) {
+        Timber.w("Suggestion: $position")
     }
 }

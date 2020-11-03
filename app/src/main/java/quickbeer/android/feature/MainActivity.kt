@@ -1,14 +1,11 @@
 package quickbeer.android.feature
 
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import org.koin.android.ext.android.inject
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
@@ -26,8 +23,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setSupportActionBar(binding.mainToolbar)
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
@@ -64,7 +59,6 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         // Whenever the selected controller changes, setup action bar and other changes
         controller.observe(this) { navController ->
             setupFullscreenHandler(navController)
-            setupActionBarWithNavController(navController)
         }
 
         currentNavController = controller
@@ -79,46 +73,12 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         navController.addOnDestinationChangedListener(fullscreenListener)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        setupSearchView(menu.findItem(R.id.action_search).actionView as SearchView)
-        return true
-    }
-
-    private fun setupSearchView(searchView: SearchView) {
-        searchView.suggestionsAdapter = viewModel.getSearchAdapter(this)
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextChange(query: String): Boolean {
-                viewModel.onSearchChanged(query)
-                return true
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-                viewModel.onSearchSubmit(query)
-                return true
-            }
-        })
-
-        searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
-            override fun onSuggestionSelect(position: Int): Boolean {
-                return false
-            }
-
-            override fun onSuggestionClick(position: Int): Boolean {
-                viewModel.onSuggestionClicked(position)
-                return true
-            }
-        })
-    }
-
     private val fullscreenListener = NavController.OnDestinationChangedListener { _, _, arguments ->
         setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN) == true)
     }
 
     private fun setFullscreen(fullscreen: Boolean) {
         binding.mainBottomNav.isVisible = !fullscreen
-        binding.mainToolbar.isVisible = !fullscreen
 
         if (fullscreen) {
             window.apply {

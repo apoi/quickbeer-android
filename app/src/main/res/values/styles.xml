@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -8,36 +8,60 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:textColorHint">@color/gray_platform_secondary</item>
 
-        <!-- App general background -->
+        <!-- Color for toolbar icons -->
+        <item name="colorControlNormal">@color/icon_light</item>
+
         <item name="android:windowBackground">@drawable/background_dark</item>
+        <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
+        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
+        <!-- Color for toolbar navigation icons -->
+        <item name="tint">@color/icon_dark</item>
+    </style>
 
     <!-- Search view -->
 
-    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.ActionBar">
-        <item name="searchViewStyle">@style/SearchViewTheme</item>
-    </style>
+    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
+        <!-- Search expanded layout -->
+        <item name="layout">@layout/search_view_toolbar</item>
 
-    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView.ActionBar">
-        <item name="colorControlNormal">@color/gray_300</item>
-        <item name="colorControlHighlight">@color/gray_500</item>
-        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
-        <item name="suggestionRowLayout">@layout/search_view_suggestion</item>
+        <!-- Color of expanded state icons -->
+        <item name="colorControlNormal">@color/icon_dark</item>
+
+        <!-- Search text field background -->
+        <item name="queryBackground">@drawable/abc_textfield_search_material</item>
+        <item name="submitBackground">@drawable/abc_textfield_search_material</item>
+
+        <!-- Suggestions drop-down style -->
+        <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteText</item>
+
+        <!-- Expanded state close button on right side -->
+        <item name="closeIcon">@drawable/abc_ic_clear_material</item>
+        <item name="searchIcon">@drawable/abc_ic_search_api_material</item>
+
+        <!-- Search icon in expanded state -->
+        <item name="searchHintIcon">@drawable/ic_search</item>
+        <item name="goIcon">@drawable/abc_ic_go_search_api_material</item>
+        <item name="voiceIcon">@drawable/abc_ic_voice_search_api_material</item>
+        <item name="commitIcon">@drawable/abc_ic_commit_search_api_mtrl_alpha</item>
+        <item name="suggestionRowLayout">@layout/abc_search_dropdown_item_icons_2line</item>
         <item name="android:maxWidth">9999dp</item>
     </style>
 
-    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:popupBackground">@drawable/search_suggestion_background</item>
-        <item name="android:popupElevation">0dp</item>
+    <style name="AppTheme.AutoCompleteText" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <!-- Background of suggestions drop-down -->
+        <item name="android:popupBackground">@color/white</item>
+        <!-- Elevation of suggestions drop-down -->
+        <item name="android:popupElevation">4dp</item>
     </style>
 
 </resources>

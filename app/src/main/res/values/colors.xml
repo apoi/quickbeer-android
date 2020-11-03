@@ -17,6 +17,10 @@
     <color name="gray_500">#9E9E9E</color>
     <color name="gray_300">#E0E0E0</color>
 
+    <!-- Icons -->
+    <color name="icon_light">@color/white</color>
+    <color name="icon_dark">@color/black</color>
+
     <!-- Color of the gray field elements on white background -->
     <color name="gray_platform_secondary">#838383</color>
 

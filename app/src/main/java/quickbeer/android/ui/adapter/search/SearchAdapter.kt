@@ -16,7 +16,7 @@ open class SearchAdapter(activity: Activity) :
 
     private val items = mutableListOf<SearchResult>()
 
-    fun setItems(newItems: List<SearchResult>) {
+    open fun setItems(newItems: List<SearchResult>) {
         if (items == newItems) return
 
         val cursor = MatrixCursor(arrayOf(BaseColumns._ID))
