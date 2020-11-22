@@ -1,6 +1,5 @@
 package quickbeer.android.ui.adapter.search
 
-import android.app.Activity
 import android.content.Context
 import android.database.Cursor
 import android.database.MatrixCursor
@@ -11,8 +10,8 @@ import android.view.ViewGroup
 import androidx.cursoradapter.widget.CursorAdapter
 import quickbeer.android.R
 
-open class SearchAdapter(activity: Activity) :
-    CursorAdapter(activity, null, FLAG_REGISTER_CONTENT_OBSERVER) {
+open class SearchAdapter(context: Context) :
+    CursorAdapter(context, null, FLAG_REGISTER_CONTENT_OBSERVER) {
 
     private val items = mutableListOf<SearchResult>()
 
@@ -36,10 +35,12 @@ open class SearchAdapter(activity: Activity) :
     }
 
     override fun newView(context: Context, cursor: Cursor, parent: ViewGroup): View {
-        val inflater: LayoutInflater = context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
+        val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         return inflater.inflate(R.layout.search_view_suggestion, parent, false)
             .apply { tag = SuggestionViewHolder(this) }
+    }
+
+    fun getSuggestionText(position: Int): String {
+        return items[position].text
     }
 }

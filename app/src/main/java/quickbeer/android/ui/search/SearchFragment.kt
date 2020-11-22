@@ -1,13 +1,16 @@
-package quickbeer.android.ui.base
+package quickbeer.android.ui.search
 
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewAnimationUtils
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
-import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.appcompat.widget.SearchView.OnSuggestionListener
 import com.google.android.material.appbar.MaterialToolbar
 import quickbeer.android.R
+import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.AnimationEndListener
 import quickbeer.android.util.ktx.getThemeColor
 import quickbeer.android.util.ktx.onGlobalLayout
@@ -15,74 +18,95 @@ import quickbeer.android.util.ktx.onGlobalLayout
 abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
 
     abstract val searchHint: Int
-    abstract val toolbar: MaterialToolbar
-    abstract val searchViewModel: SearchViewModel
 
+    private val revealDuration = 300L
     private val iconWidth: Int by lazy {
         resources.getDimensionPixelSize(R.dimen.abc_action_button_min_width_material)
     }
 
-    private val revealDuration = 300L
+    private val closeOnBackHandler = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() {
+            closeSearchView()
+        }
+    }
+
+    protected abstract fun toolbar(): MaterialToolbar
+    protected abstract fun searchViewModel(): SearchViewModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        requireActivity().onBackPressedDispatcher.addCallback(this, closeOnBackHandler)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.onGlobalLayout(::setupSearchView)
+        requireView().onGlobalLayout(::setupSearchView)
     }
 
     private fun setupSearchView() {
-        val searchMenuItem = toolbar.menu.findItem(R.id.action_search)
+        val searchMenuItem = toolbar().menu.findItem(R.id.action_search)
         val searchView = searchMenuItem.actionView as SearchView
 
         // Search may already be open after orientation changes
         if (searchMenuItem.isActionViewExpanded) {
-            setWhiteToolbarBackground()
+            setWhiteToolbarBackground(toolbar())
+            closeOnBackHandler.isEnabled = true
         }
 
-        searchView.suggestionsAdapter = searchViewModel.getSearchAdapter(requireActivity())
+        searchView.suggestionsAdapter = searchViewModel().getSearchAdapter(requireActivity())
         searchView.queryHint = getString(searchHint)
 
         searchMenuItem.setOnActionExpandListener(
             object : MenuItem.OnActionExpandListener {
                 override fun onMenuItemActionExpand(item: MenuItem): Boolean {
-                    animateSearchOpen(toolbar, 1)
+                    animateSearchOpen(toolbar(), 1)
+                    closeOnBackHandler.isEnabled = true
                     return true
                 }
 
                 override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
                     if (item.isActionViewExpanded) {
-                        animateSearchClose(toolbar, 1)
+                        animateSearchClose(toolbar(), 1)
                     }
+                    closeOnBackHandler.isEnabled = false
                     return true
                 }
             })
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+        searchView.setOnQueryTextListener(object : OnQueryTextListener {
             override fun onQueryTextChange(query: String): Boolean {
-                searchViewModel.onSearchChanged(query)
+                searchViewModel().onSearchChanged(query)
                 return true
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-                searchViewModel.onSearchSubmit(query)
+                searchViewModel().onSearchSubmit(query)
                 return true
             }
         })
 
-        searchView.setOnSuggestionListener(object : SearchView.OnSuggestionListener {
+        searchView.setOnSuggestionListener(object : OnSuggestionListener {
             override fun onSuggestionSelect(position: Int): Boolean {
                 return false
             }
 
             override fun onSuggestionClick(position: Int): Boolean {
-                searchViewModel.onSuggestionClicked(position)
+                closeSearchView()
+                searchView.onQuerySelected(searchViewModel().getSuggestionText(position))
+                searchViewModel().onSuggestionClicked(position)
                 return true
             }
         })
     }
 
+    protected fun closeSearchView(): Boolean {
+        return toolbar().menu.findItem(R.id.action_search).collapseActionView()
+    }
+
     private fun animateSearchOpen(toolbar: MaterialToolbar, iconIndex: Int) {
-        setWhiteToolbarBackground()
+        setWhiteToolbarBackground(toolbar)
 
         val startX = toolbar.width - iconWidth * iconIndex / 2
         val startY = toolbar.height / 2
@@ -94,7 +118,7 @@ abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
     }
 
     private fun animateSearchClose(toolbar: MaterialToolbar, iconIndex: Int) {
-        setWhiteToolbarBackground()
+        setWhiteToolbarBackground(toolbar)
 
         val start = toolbar.width - iconWidth * iconIndex / 2
         val startY = toolbar.height / 2
@@ -110,9 +134,11 @@ abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
             .start()
     }
 
-    private fun setWhiteToolbarBackground() {
-        toolbar.setBackgroundColor(resources.getColor(R.color.white, null))
-        toolbar.setCollapseIcon(R.drawable.ic_back)
-        toolbar.collapseIcon?.setTint(resources.getColor(R.color.icon_dark, null))
+    private fun setWhiteToolbarBackground(toolbar: MaterialToolbar) {
+        toolbar.apply {
+            setBackgroundColor(resources.getColor(R.color.white, null))
+            setCollapseIcon(R.drawable.ic_back)
+            collapseIcon?.setTint(resources.getColor(R.color.icon_dark, null))
+        }
     }
 }

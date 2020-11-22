@@ -1,6 +1,6 @@
 package quickbeer.android.feature.topbeers
 
-import android.app.Activity
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,7 +14,7 @@ import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.ui.adapter.search.SearchAdapter
 import quickbeer.android.ui.adapter.search.SearchResult
-import quickbeer.android.ui.base.SearchViewModel
+import quickbeer.android.ui.search.SearchViewModel
 import timber.log.Timber
 
 class TopBeersViewModel(
@@ -50,16 +50,19 @@ class TopBeersViewModel(
 
     private var searchAdapter: SearchAdapter? = null
 
-    override fun getSearchAdapter(activity: Activity): SearchAdapter {
-        return SearchAdapter(activity).also {
+    override fun getSearchAdapter(context: Context): SearchAdapter {
+        return SearchAdapter(context).also {
             searchAdapter = it
         }
     }
 
     override fun onSearchChanged(value: String) {
         Timber.w("Query: $value")
-        results.add(SearchResult(0, SearchResult.Type.SEARCH, value))
-        searchAdapter?.setItems(results)
+
+        if (value.isNotEmpty()) {
+            results.add(SearchResult(0, SearchResult.Type.SEARCH, value))
+            searchAdapter?.setItems(results)
+        }
     }
 
     override fun onSearchSubmit(value: String) {
@@ -70,5 +73,11 @@ class TopBeersViewModel(
 
     override fun onSuggestionClicked(position: Int) {
         Timber.w("Suggestion: $position")
+    }
+
+    override fun getSuggestionText(position: Int): String {
+        Timber.w("Get suggestion: $position")
+
+        return searchAdapter?.getSuggestionText(position).orEmpty()
     }
 }

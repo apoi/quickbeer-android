@@ -12,8 +12,8 @@
         android:id="@+id/search_badge"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="2dip"
-        android:drawablePadding="0dip"
+        android:layout_marginBottom="2dp"
+        android:drawablePadding="0dp"
         android:gravity="center_vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="?android:attr/textColorPrimary"
@@ -32,8 +32,8 @@
         android:id="@+id/search_edit_frame"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginLeft="8dip"
-        android:layout_marginRight="8dip"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
@@ -62,7 +62,7 @@
 
             <view
                 android:id="@+id/search_src_text"
-                class="androidx.appcompat.widget.SearchView$SearchAutoComplete"
+                class="quickbeer.android.ui.search.SearchViewAutoComplete"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
@@ -70,8 +70,9 @@
                 android:background="@null"
                 android:dropDownAnchor="@id/anchor_dropdown"
                 android:dropDownHeight="wrap_content"
-                android:dropDownHorizontalOffset="0dip"
-                android:dropDownVerticalOffset="0dip"
+                android:dropDownHorizontalOffset="0dp"
+                android:dropDownVerticalOffset="0dp"
+                android:completionThreshold="0"
                 android:ellipsize="end"
                 android:imeOptions="actionSearch"
                 android:inputType="text|textAutoComplete|textNoSuggestions"
@@ -87,8 +88,8 @@
                 android:contentDescription="@string/abc_searchview_description_clear"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:paddingLeft="8dip"
-                android:paddingRight="8dip" />
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
 
         </LinearLayout>
 
@@ -106,8 +107,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/abc_searchview_description_submit"
                 android:focusable="true"
-                android:paddingLeft="16dip"
-                android:paddingRight="16dip"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:visibility="gone" />
 
             <ImageView
@@ -118,8 +119,8 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/abc_searchview_description_voice"
                 android:focusable="true"
-                android:paddingLeft="16dip"
-                android:paddingRight="16dip"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:visibility="gone" />
 
         </LinearLayout>

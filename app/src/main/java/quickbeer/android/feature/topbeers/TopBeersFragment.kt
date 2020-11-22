@@ -11,7 +11,8 @@ import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
-import quickbeer.android.ui.base.SearchFragment
+import quickbeer.android.ui.search.SearchFragment
+import quickbeer.android.ui.search.SearchViewModel
 import quickbeer.android.util.ktx.viewBinding
 
 class TopBeersFragment : SearchFragment(R.layout.beer_list_fragment) {
@@ -20,9 +21,7 @@ class TopBeersFragment : SearchFragment(R.layout.beer_list_fragment) {
     private val photoAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
     private val viewModel: TopBeersViewModel by inject()
 
-    override val toolbar: MaterialToolbar by lazy { binding.appbar.toolbar }
     override val searchHint = R.string.search_hint
-    override val searchViewModel = viewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,6 +33,14 @@ class TopBeersFragment : SearchFragment(R.layout.beer_list_fragment) {
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
         }
+    }
+
+    override fun toolbar(): MaterialToolbar {
+        return binding.appbar.toolbar
+    }
+
+    override fun searchViewModel(): SearchViewModel {
+        return viewModel
     }
 
     override fun observeViewState() {

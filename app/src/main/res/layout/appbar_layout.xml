@@ -10,6 +10,7 @@
         android:id="@+id/toolbar"
         style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
+        android:outlineProvider="none"
         android:layout_height="?attr/actionBarSize"
         android:clipChildren="false"
         android:clipToPadding="false"

@@ -1,15 +1,17 @@
-package quickbeer.android.ui.base
+package quickbeer.android.ui.search
 
-import android.app.Activity
+import android.content.Context
 import quickbeer.android.ui.adapter.search.SearchAdapter
 
 interface SearchViewModel {
 
-    fun getSearchAdapter(activity: Activity): SearchAdapter
+    fun getSearchAdapter(context: Context): SearchAdapter
 
     fun onSearchChanged(value: String)
 
     fun onSearchSubmit(value: String)
 
     fun onSuggestionClicked(position: Int)
+
+    fun getSuggestionText(position: Int): String
 }
