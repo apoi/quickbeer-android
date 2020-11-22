@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">@color/gray_900</color>
+    <color name="colorPrimary">@color/gray_90</color>
     <color name="colorPrimaryDark">@color/black</color>
     <color name="colorAccent">@color/orange</color>
 
@@ -9,20 +9,24 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#FFFFFFFF</color>
 
-    <!-- https://material.io/guidelines/style/color.html#color-color-palette -->
-    <color name="gray_900">#212121</color>
-    <color name="gray_850">#303030</color>
-    <color name="gray_800">#424242</color>
-    <color name="gray_700">#616161</color>
-    <color name="gray_500">#9E9E9E</color>
-    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_90">#212121</color>
+    <color name="gray_80">#424242</color>
+    <color name="gray_70">#616161</color>
+    <color name="gray_60">#757575</color>
+    <color name="gray_50">#9E9E9E</color>
+    <color name="gray_40">#BDBDBD</color>
+    <color name="gray_30">#E0E0E0</color>
+    <color name="gray_20">#EEEEEE</color>
+    <color name="gray_10">#F5F5F5</color>
 
     <!-- Icons -->
     <color name="icon_light">@color/white</color>
-    <color name="icon_dark">@color/black</color>
+    <color name="icon_dark">@color/gray_50</color>
 
-    <!-- Color of the gray field elements on white background -->
-    <color name="gray_platform_secondary">#838383</color>
+    <!-- Text -->
+    <color name="text_dark">@color/black</color>
+    <color name="text_light">@color/white</color>
+    <color name="text_hint">@color/gray_50</color>
 
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>

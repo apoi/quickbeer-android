@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
@@ -15,12 +14,13 @@ import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.ui.adapter.search.SearchAdapter
 import quickbeer.android.ui.adapter.search.SearchResult
+import quickbeer.android.ui.base.SearchViewModel
 import timber.log.Timber
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
     private val beerStore: BeerRepository
-) : ViewModel() {
+) : ViewModel(), SearchViewModel {
 
     private val _viewState = MutableLiveData<List<BeerListModel>>()
     val viewState: LiveData<List<BeerListModel>> = _viewState
@@ -50,25 +50,25 @@ class TopBeersViewModel(
 
     private var searchAdapter: SearchAdapter? = null
 
-    fun getSearchAdapter(activity: Activity): SearchAdapter {
+    override fun getSearchAdapter(activity: Activity): SearchAdapter {
         return SearchAdapter(activity).also {
             searchAdapter = it
         }
     }
 
-    fun onSearchChanged(value: String) {
+    override fun onSearchChanged(value: String) {
         Timber.w("Query: $value")
         results.add(SearchResult(0, SearchResult.Type.SEARCH, value))
         searchAdapter?.setItems(results)
     }
 
-    fun onSearchSubmit(value: String) {
+    override fun onSearchSubmit(value: String) {
         Timber.w("Submit: $value")
         results.clear()
         searchAdapter?.setItems(results)
     }
 
-    fun onSuggestionClicked(position: Int) {
+    override fun onSuggestionClicked(position: Int) {
         Timber.w("Suggestion: $position")
     }
 }

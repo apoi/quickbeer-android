@@ -5,8 +5,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/gray_platform_secondary</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textColorHint">@color/text_hint</item>
 
         <!-- Color for toolbar icons -->
         <item name="colorControlNormal">@color/icon_light</item>
@@ -20,12 +20,12 @@
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
         <item name="android:background">@color/colorPrimary</item>
-        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextColor">@color/text_light</item>
     </style>
 
     <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <!-- Color for toolbar navigation icons -->
-        <item name="tint">@color/icon_dark</item>
+        <item name="tint">@color/icon_light</item>
     </style>
 
     <!-- Search view -->
@@ -38,7 +38,7 @@
         <item name="colorControlNormal">@color/icon_dark</item>
 
         <!-- Search text field background -->
-        <item name="queryBackground">@drawable/abc_textfield_search_material</item>
+        <item name="queryBackground">@color/transparent</item>
         <item name="submitBackground">@drawable/abc_textfield_search_material</item>
 
         <!-- Suggestions drop-down style -->
@@ -46,10 +46,10 @@
 
         <!-- Expanded state close button on right side -->
         <item name="closeIcon">@drawable/abc_ic_clear_material</item>
-        <item name="searchIcon">@drawable/abc_ic_search_api_material</item>
+        <item name="searchIcon">@drawable/ic_search</item>
 
         <!-- Search icon in expanded state -->
-        <item name="searchHintIcon">@drawable/ic_search</item>
+        <item name="searchHintIcon">@null</item>
         <item name="goIcon">@drawable/abc_ic_go_search_api_material</item>
         <item name="voiceIcon">@drawable/abc_ic_voice_search_api_material</item>
         <item name="commitIcon">@drawable/abc_ic_commit_search_api_mtrl_alpha</item>
@@ -61,7 +61,7 @@
         <!-- Background of suggestions drop-down -->
         <item name="android:popupBackground">@color/white</item>
         <!-- Elevation of suggestions drop-down -->
-        <item name="android:popupElevation">4dp</item>
+        <item name="android:popupElevation">2dp</item>
     </style>
 
 </resources>

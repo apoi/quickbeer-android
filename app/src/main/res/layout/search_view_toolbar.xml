@@ -3,6 +3,8 @@
     android:id="@+id/search_bar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:orientation="horizontal">
 
     <!-- This is actually used for the badge icon *or* the badge label (or neither) -->
@@ -33,6 +35,8 @@
         android:layout_marginLeft="8dip"
         android:layout_marginRight="8dip"
         android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:layoutDirection="locale"
         android:orientation="horizontal">
 
@@ -52,25 +56,27 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="horizontal">
 
             <view
                 android:id="@+id/search_src_text"
                 class="androidx.appcompat.widget.SearchView$SearchAutoComplete"
                 android:layout_width="0dp"
-                android:layout_height="36dip"
+                android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:background="@null"
-                android:dropDownAnchor="@id/search_edit_frame"
+                android:dropDownAnchor="@id/anchor_dropdown"
                 android:dropDownHeight="wrap_content"
                 android:dropDownHorizontalOffset="0dip"
                 android:dropDownVerticalOffset="0dip"
                 android:ellipsize="end"
                 android:imeOptions="actionSearch"
                 android:inputType="text|textAutoComplete|textNoSuggestions"
-                android:paddingLeft="@dimen/abc_dropdownitem_text_padding_left"
-                android:paddingRight="@dimen/abc_dropdownitem_text_padding_right"
+                android:paddingStart="@dimen/abc_dropdownitem_text_padding_left"
+                android:paddingEnd="@dimen/abc_dropdownitem_text_padding_right"
                 android:singleLine="true" />
 
             <ImageView
@@ -78,9 +84,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/abc_searchview_description_clear"
                 android:focusable="true"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:paddingLeft="8dip"
                 android:paddingRight="8dip" />
 
