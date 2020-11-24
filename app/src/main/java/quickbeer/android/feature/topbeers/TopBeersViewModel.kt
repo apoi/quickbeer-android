@@ -12,8 +12,9 @@ import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.ui.adapter.search.SearchAdapter
 import quickbeer.android.ui.adapter.search.SearchResult
+import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
+import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.search.SearchViewModel
 import timber.log.Timber
 
@@ -24,6 +25,9 @@ class TopBeersViewModel(
 
     private val _viewState = MutableLiveData<List<BeerListModel>>()
     val viewState: LiveData<List<BeerListModel>> = _viewState
+
+    private val searchAdapter = ListAdapter<SearchResult>(SearchResultTypeFactory())
+    private val results: MutableList<SearchResult> = mutableListOf()
 
     init {
         viewModelScope.launch {
@@ -46,14 +50,8 @@ class TopBeersViewModel(
             }
     }
 
-    private val results: MutableList<SearchResult> = mutableListOf()
-
-    private var searchAdapter: SearchAdapter? = null
-
-    override fun getSearchAdapter(context: Context): SearchAdapter {
-        return SearchAdapter(context).also {
-            searchAdapter = it
-        }
+    override fun getSearchAdapter(): ListAdapter<SearchResult> {
+        return searchAdapter
     }
 
     override fun onSearchChanged(value: String) {
@@ -78,6 +76,6 @@ class TopBeersViewModel(
     override fun getSuggestionText(position: Int): String {
         Timber.w("Get suggestion: $position")
 
-        return searchAdapter?.getSuggestionText(position).orEmpty()
+        TODO()
     }
 }

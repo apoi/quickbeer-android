@@ -30,4 +30,23 @@
     <dimen name="card_view_margin">10dp</dimen>
     <dimen name="card_inner_margin">5dp</dimen>
 
+    <!-- Search view -->
+
+    <dimen name="search_sp_16">16sp</dimen>
+    <dimen name="search_icon_48">48dp</dimen>
+    <dimen name="search_icon_56">56dp</dimen>
+    <dimen name="search_divider">1dp</dimen>
+    <dimen name="search_stroke_width">1dp</dimen>
+    <dimen name="search_stroke_width_focus">0dp</dimen>
+    <dimen name="search_layout_height">48dp</dimen>
+    <dimen name="search_layout_height_focus">56dp</dimen>
+    <dimen name="search_edit_left_margin_focus">8dp</dimen>
+    <dimen name="search_radius">8dp</dimen>
+    <dimen name="search_radius_focus">0dp</dimen>
+    <dimen name="search_elevation">3dp</dimen>
+    <dimen name="search_elevation_focus">0dp</dimen>
+    <dimen name="search_margins_left_right">8dp</dimen>
+    <dimen name="search_margins_top_bottom">8dp</dimen>
+    <dimen name="search_margins_focus">0dp</dimen>
+
 </resources>

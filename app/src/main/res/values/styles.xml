@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -14,7 +14,6 @@
         <item name="android:windowBackground">@drawable/background_dark</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
         <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
-        <item name="searchViewStyle">@style/AppTheme.SearchView</item>
     </style>
 
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
@@ -26,42 +25,6 @@
     <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
         <!-- Color for toolbar navigation icons -->
         <item name="tint">@color/icon_light</item>
-    </style>
-
-    <!-- Search view -->
-
-    <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
-        <!-- Search expanded layout -->
-        <item name="layout">@layout/search_view_toolbar</item>
-
-        <!-- Color of expanded state icons -->
-        <item name="colorControlNormal">@color/icon_dark</item>
-
-        <!-- Search text field background -->
-        <item name="queryBackground">@color/transparent</item>
-        <item name="submitBackground">@drawable/abc_textfield_search_material</item>
-
-        <!-- Suggestions drop-down style -->
-        <item name="autoCompleteTextViewStyle">@style/AppTheme.AutoCompleteText</item>
-
-        <!-- Expanded state close button on right side -->
-        <item name="closeIcon">@drawable/abc_ic_clear_material</item>
-        <item name="searchIcon">@drawable/ic_search</item>
-
-        <!-- Search icon in expanded state -->
-        <item name="searchHintIcon">@null</item>
-        <item name="goIcon">@drawable/abc_ic_go_search_api_material</item>
-        <item name="voiceIcon">@drawable/abc_ic_voice_search_api_material</item>
-        <item name="commitIcon">@drawable/abc_ic_commit_search_api_mtrl_alpha</item>
-        <item name="suggestionRowLayout">@layout/abc_search_dropdown_item_icons_2line</item>
-        <item name="android:maxWidth">9999dp</item>
-    </style>
-
-    <style name="AppTheme.AutoCompleteText" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <!-- Background of suggestions drop-down -->
-        <item name="android:popupBackground">@color/white</item>
-        <!-- Elevation of suggestions drop-down -->
-        <item name="android:popupElevation">2dp</item>
     </style>
 
 </resources>

@@ -9,15 +9,26 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#FFFFFFFF</color>
 
-    <color name="gray_90">#212121</color>
-    <color name="gray_80">#424242</color>
-    <color name="gray_70">#616161</color>
-    <color name="gray_60">#757575</color>
-    <color name="gray_50">#9E9E9E</color>
-    <color name="gray_40">#BDBDBD</color>
-    <color name="gray_30">#E0E0E0</color>
-    <color name="gray_20">#EEEEEE</color>
-    <color name="gray_10">#F5F5F5</color>
+    <!-- https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->
+    <color name="gray_95">#262626</color>
+    <color name="gray_90">#393939</color>
+    <color name="gray_85">#484848</color>
+    <color name="gray_80">#555555</color>
+    <color name="gray_75">#626262</color>
+    <color name="gray_70">#6d6d6d</color>
+    <color name="gray_65">#787878</color>
+    <color name="gray_60">#838383</color>
+    <color name="gray_55">#8e8e8e</color>
+    <color name="gray_50">#999999</color>
+    <color name="gray_45">#a3a3a3</color>
+    <color name="gray_40">#aeaeae</color>
+    <color name="gray_35">#b9b9b9</color>
+    <color name="gray_30">#c4c4c4</color>
+    <color name="gray_25">#cfcfcf</color>
+    <color name="gray_20">#dadada</color>
+    <color name="gray_15">#e5e5e5</color>
+    <color name="gray_10">#f1f1f1</color>
+    <color name="gray_05">#fdfdfd</color>
 
     <!-- Icons -->
     <color name="icon_light">@color/white</color>
@@ -31,5 +42,8 @@
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>
     <color name="orange_dark">#B76E06</color>
+
+    <!-- Search -->
+    <color name="search_shadow">#99000000</color>
 
 </resources>

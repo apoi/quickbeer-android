@@ -1,23 +1,21 @@
 package quickbeer.android.ui.adapter.search
 
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import quickbeer.android.R
+import quickbeer.android.databinding.SearchViewSuggestionBinding
+import quickbeer.android.ui.adapter.simple.ListViewHolder
 
-class SuggestionViewHolder(view: View) {
+class SuggestionViewHolder(
+    private val binding: SearchViewSuggestionBinding
+) : ListViewHolder<SearchResult>(binding.root) {
 
-    private val icon: ImageView = view.findViewById(R.id.suggestion_icon)
-    private val text: TextView = view.findViewById(R.id.suggestion_text)
-
-    fun bind(result: SearchResult) {
+    override fun bind(result: SearchResult) {
         val res = when (result.type) {
             SearchResult.Type.BEER -> R.drawable.ic_history
             SearchResult.Type.BREWERY -> R.drawable.ic_history
             SearchResult.Type.SEARCH -> R.drawable.ic_history
         }
 
-        text.text = result.text
-        icon.setImageResource(res)
+        binding.suggestionText.text = result.text
+        binding.suggestionIcon.setImageResource(res)
     }
 }

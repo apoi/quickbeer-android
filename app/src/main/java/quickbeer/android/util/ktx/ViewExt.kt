@@ -1,6 +1,7 @@
 package quickbeer.android.util.ktx
 
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_FORCED
@@ -19,5 +20,20 @@ fun View.onGlobalLayout(block: () -> Unit) {
                 block()
             }
         })
+    }
+}
+
+fun View.setMargins(margin: Int) {
+    setMargins(margin, margin, margin, margin)
+}
+
+fun View.setMargins(left: Int, top: Int, right: Int, bottom: Int) {
+    layoutParams = when (val params = layoutParams) {
+        is ViewGroup.MarginLayoutParams -> {
+            params.apply {
+                setMargins(left, top, right, bottom)
+            }
+        }
+        else -> error("Unexpected params")
     }
 }
