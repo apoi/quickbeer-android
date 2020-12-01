@@ -14,7 +14,7 @@ abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
 
     private val closeOnBackHandler = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
-            // closeSearchView()
+            searchView().closeSearchView()
         }
     }
 
@@ -37,6 +37,7 @@ abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
     private fun setupSearchView() {
         searchView().apply {
             setAdapter(searchViewModel().getSearchAdapter())
+            searchFocusChangeCallback = { closeOnBackHandler.isEnabled = it }
             queryChangedCallback = searchViewModel()::onSearchChanged
             querySubmitCallback = searchViewModel()::onSearchSubmit
         }

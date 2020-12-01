@@ -35,6 +35,7 @@ class SearchView @JvmOverloads constructor(
         .getInteger(android.R.integer.config_shortAnimTime)
         .toLong()
 
+    var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var queryChangedCallback: ((String) -> Unit)? = null
     var querySubmitCallback: ((String) -> Unit)? = null
 
@@ -119,8 +120,18 @@ class SearchView @JvmOverloads constructor(
         }
     }
 
+    fun closeSearchView(): Boolean {
+        if (binding.searchEditText.hasFocus()) {
+            binding.searchEditText.clearFocus()
+            return true
+        }
+
+        return false
+    }
+
     private fun normalMode() {
         hideKeyboard()
+        searchFocusChangeCallback?.invoke(false)
 
         // Card view
         setMargins(6.dp())
@@ -145,6 +156,7 @@ class SearchView @JvmOverloads constructor(
 
     private fun focusMode() {
         showKeyboard()
+        searchFocusChangeCallback?.invoke(true)
 
         // Card view
         setHeight(MATCH_PARENT)
