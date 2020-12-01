@@ -1,89 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/listitem_ripple"
+    android:layout_height="@dimen/beer_list_item_height"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
     android:paddingStart="@dimen/spacing_m"
     android:paddingTop="@dimen/spacing_s"
     android:paddingEnd="@dimen/spacing_m"
     android:paddingBottom="@dimen/spacing_s">
 
-    <ImageView
-        android:id="@+id/beer_stars"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
+    <TextView
+        android:id="@+id/beer_score"
+        android:layout_width="@dimen/beer_list_item_icon_size"
+        android:layout_height="@dimen/beer_list_item_icon_size"
+        android:layout_gravity="center"
         android:layout_marginTop="@dimen/spacing_s"
         android:layout_marginEnd="@dimen/spacing_m"
         android:layout_marginBottom="@dimen/spacing_s"
-        android:adjustViewBounds="true"
-        android:src="@drawable/score_unrated"
-        app:layout_constraintBottom_toBottomOf="@id/brewer_name"
-        app:layout_constraintEnd_toStartOf="@id/beer_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/beer_name" />
-
-    <TextView
-        android:id="@+id/beer_score"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:background="@drawable/score_unrated"
         android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:textColor="@color/text_light"
         android:textSize="@dimen/listitem_text_score"
-        app:layout_constraintBottom_toBottomOf="@id/beer_stars"
-        app:layout_constraintEnd_toEndOf="@id/beer_stars"
-        app:layout_constraintStart_toStartOf="@id/beer_stars"
-        app:layout_constraintTop_toTopOf="@id/beer_stars" />
+        tools:text="100" />
 
-    <TextView
-        android:id="@+id/beer_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-thin"
-        android:singleLine="true"
-        android:textColor="@color/text_light"
-        android:textSize="@dimen/listitem_text_primary"
-        app:layout_constraintBottom_toTopOf="@id/beer_style"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/beer_stars"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        tools:text="Westvleteren 12 XII" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/beer_style"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-thin"
-        android:singleLine="true"
-        android:textColor="@color/gray_30"
-        android:textSize="@dimen/listitem_text_secondary"
-        app:layout_constraintBottom_toTopOf="@id/brewer_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/beer_name"
-        app:layout_constraintTop_toBottomOf="@id/beer_name"
-        tools:text="Quadrupel / Abt" />
+        <TextView
+            android:id="@+id/beer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-thin"
+            android:singleLine="true"
+            android:textColor="@color/text_light"
+            android:textSize="@dimen/listitem_text_primary"
+            tools:text="Westvleteren 12 XII" />
 
-    <TextView
-        android:id="@+id/brewer_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif-thin"
-        android:singleLine="true"
-        android:textColor="@color/gray_30"
-        android:textSize="@dimen/listitem_text_secondary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@id/beer_name"
-        app:layout_constraintTop_toBottomOf="@id/beer_style"
-        tools:text="Abjid St. Sixtus - Westvleteren" />
+        <TextView
+            android:id="@+id/beer_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-thin"
+            android:singleLine="true"
+            android:textColor="@color/gray_30"
+            android:textSize="@dimen/listitem_text_secondary"
+            tools:text="Quadrupel / Abt" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/brewer_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-thin"
+            android:singleLine="true"
+            android:textColor="@color/gray_30"
+            android:textSize="@dimen/listitem_text_secondary"
+            tools:text="Abjid St. Sixtus - Westvleteren" />
+
+    </LinearLayout>
+
+</LinearLayout>

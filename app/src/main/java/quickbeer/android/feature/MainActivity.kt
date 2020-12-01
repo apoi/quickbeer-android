@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import org.koin.android.ext.android.inject
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
 import quickbeer.android.navigation.NavParams
@@ -15,10 +14,9 @@ import quickbeer.android.util.ktx.viewBinding
 
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    @Suppress("ProtectedInFinal")
+    @Suppress("ProtectedMemberInFinalClass")
     protected val binding by viewBinding(MainActivityBinding::bind)
 
-    val viewModel: MainViewModel by inject()
     private var currentNavController: LiveData<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -27,7 +27,6 @@ import quickbeer.android.domain.beersearch.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.recentbeers.RecentBeersStore
-import quickbeer.android.feature.MainViewModel
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
 import quickbeer.android.feature.topbeers.TopBeersViewModel
 import quickbeer.android.network.NetworkConfig
@@ -106,7 +105,6 @@ val appModule = module {
     factory { TopBeersRepository(get(), get()) }
     factory { BeerSearchRepository(get(), get()) }
 
-    viewModel { MainViewModel() }
     viewModel { TopBeersViewModel(get(), get()) }
     viewModel { RecentBeersViewModel(get(), get()) }
 }

@@ -2,10 +2,7 @@ package quickbeer.android.ui.adapter.search
 
 import android.view.ViewGroup
 import quickbeer.android.R
-import quickbeer.android.databinding.BeerListItemBinding
 import quickbeer.android.databinding.SearchViewSuggestionBinding
-import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.feature.shared.adapter.BeerListViewHolder
 import quickbeer.android.ui.adapter.simple.ListItem
 import quickbeer.android.ui.adapter.simple.ListTypeFactory
 import quickbeer.android.ui.adapter.simple.ListViewHolder

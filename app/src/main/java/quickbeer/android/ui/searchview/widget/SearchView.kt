@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.card.MaterialCardView
+import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.DividerDecoration
@@ -19,8 +20,8 @@ import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.setMargins
-import kotlin.math.roundToInt
 
+@Suppress("MagicNumber")
 class SearchView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -72,9 +73,11 @@ class SearchView @JvmOverloads constructor(
             hint = resources.getString(R.string.search_hint)
             setTextColor(white)
 
-            addTextChangedListener(OnTextChangedListener {
-                queryChangedCallback?.invoke(it)
-            })
+            addTextChangedListener(
+                OnTextChangedListener {
+                    queryChangedCallback?.invoke(it)
+                }
+            )
 
             setOnEditorActionListener { _, _, _ ->
                 querySubmitCallback?.invoke(text.toString())
