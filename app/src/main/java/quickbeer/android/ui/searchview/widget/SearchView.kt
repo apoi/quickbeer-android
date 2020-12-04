@@ -9,6 +9,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.card.MaterialCardView
 import kotlin.math.roundToInt
@@ -77,6 +78,7 @@ class SearchView @JvmOverloads constructor(
             addTextChangedListener(
                 OnTextChangedListener {
                     queryChangedCallback?.invoke(it)
+                    binding.searchClear.isVisible = it.isNotEmpty()
                 }
             )
 
