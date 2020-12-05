@@ -27,4 +27,85 @@
         <item name="tint">@color/icon_light</item>
     </style>
 
+    <style name="ToolbarCollapsedText" parent="TextAppearance.AppCompat.Title">
+        <item name="android:layout_marginEnd">10dp</item>
+    </style>
+
+    <style name="ToolbarExpandedText" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">28sp</item>
+    </style>
+
+    <!-- Beer details -->
+
+    <style name="DetailsScore">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray_30</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="DetailsDescription">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray_30</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="DetailsTitle" parent="DetailsDescription">
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">10.5sp</item>
+        <item name="android:alpha">0.4</item>
+    </style>
+
+    <style name="DetailsValue" parent="DetailsDescription">
+        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="DetailsSubvalue" parent="DetailsDescription">
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="DetailsInfoValue" parent="DetailsDescription">
+        <item name="android:textSize">12sp</item>
+        <item name="android:lineSpacingMultiplier">1.25</item>
+    </style>
+
+    <style name="DetailsLink" parent="DetailsDescription">
+        <item name="android:textColor">@color/gray_50</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="DetailsLicense" parent="DetailsDescription">
+        <item name="android:textColor">@color/gray_50</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="DetailsRowLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:clickable">false</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+    </style>
+
+    <style name="DetailsColumnLayout">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
 </resources>

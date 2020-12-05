@@ -13,6 +13,7 @@ import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
 import quickbeer.android.feature.topbeers.TopBeersViewEffect.Search
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.search.SearchBarInterface
 import quickbeer.android.ui.searchview.widget.SearchView
@@ -35,6 +36,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
+            setClickListener(::onBeerSelected)
         }
     }
 
@@ -55,6 +57,10 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
                 }
             }
         }
+    }
+
+    private fun onBeerSelected(beer: BeerListModel) {
+        findNavController().navigate(TopBeersFragmentDirections.toDetails(beer.id))
     }
 
     override fun searchView(): SearchView {

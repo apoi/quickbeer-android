@@ -2,6 +2,10 @@ package quickbeer.android
 
 object Constants {
 
+    const val ID = "id"
+
+    // URLS
+
     const val API_URL =
         "https://www.ratebeer.com"
 

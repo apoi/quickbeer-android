@@ -5,6 +5,8 @@
     android:id="@+id/search_nav"
     app:startDestination="@id/search_fragment">
 
+    <include app:graph="@navigation/details_nav" />
+
     <fragment
         android:id="@+id/search_fragment"
         android:name="quickbeer.android.feature.search.SearchFragment"
@@ -14,6 +16,21 @@
         <argument
             android:name="query"
             app:argType="string" />
+
+        <action
+            android:id="@+id/to_details"
+            app:destination="@id/details_nav">
+
+            <argument
+                android:name="id"
+                app:argType="integer" />
+
+            <argument
+                android:name="fullscreen"
+                android:defaultValue="true"
+                app:argType="boolean" />
+
+        </action>
 
     </fragment>
 

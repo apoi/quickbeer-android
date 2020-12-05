@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/details_fragment"
-        android:name="quickbeer.android.feature.beerdetails.DetailsFragment"
+        android:name="quickbeer.android.feature.beerdetails.BeerDetailsFragment"
         android:label="@string/details_title"
-        tools:layout="@layout/details_fragment">
+        tools:layout="@layout/beer_details_fragment">
 
         <argument
             android:name="id"
