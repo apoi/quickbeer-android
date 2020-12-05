@@ -1,4 +1,4 @@
-package quickbeer.android.feature.topbeers
+package quickbeer.android.feature.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,36 +12,34 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.feature.topbeers.TopBeersViewEffect.Search
 import quickbeer.android.ui.adapter.search.SearchResult
 import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.search.SearchBarInterface
-import quickbeer.android.util.SingleLiveEvent
+import timber.log.Timber
 
-class TopBeersViewModel(
-    private val repository: TopBeersRepository,
+class SearchViewModel(
+    query: String,
+    private val repository: BeerSearchRepository,
     private val beerStore: BeerRepository
 ) : ViewModel(), SearchBarInterface {
 
     private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
     val viewState: LiveData<State<List<BeerListModel>>> = _viewState
 
-    private val _viewEffect = SingleLiveEvent<TopBeersViewEffect>()
-    val viewEffect: LiveData<TopBeersViewEffect> = _viewEffect
-
     private val searchAdapter = ListAdapter<SearchResult>(SearchResultTypeFactory())
 
     init {
         viewModelScope.launch {
-            getRecentBeers()
+            search(query)
         }
     }
 
-    private suspend fun getRecentBeers() {
-        repository.getStream(Accept())
+    private suspend fun search(query: String) {
+        repository.getStream(query, Accept())
             .map(StateListMapper<Beer, BeerListModel> { BeerListModel(it.id, beerStore) }::map)
             .collect { _viewState.postValue(it) }
     }
@@ -55,7 +53,7 @@ class TopBeersViewModel(
     }
 
     override fun onSearchSubmit(query: String) {
-        _viewEffect.postValue(Search(query))
+        // TODO
     }
 
     override fun onSuggestionClicked(position: Int) {
@@ -65,5 +63,5 @@ class TopBeersViewModel(
     override fun getSuggestionText(position: Int): String {
         // TODO
         return ""
-    }
+     }
 }

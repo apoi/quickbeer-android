@@ -19,6 +19,9 @@
     <string name="details_title">Details</string>
     <string name="details_description">Details</string>
 
+    <string name="search_title">Search</string>
+    <string name="search_description">Search</string>
+
     <string name="about_title">About</string>
     <string name="about_description">About</string>
 

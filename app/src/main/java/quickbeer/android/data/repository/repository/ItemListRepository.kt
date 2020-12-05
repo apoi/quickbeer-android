@@ -22,8 +22,8 @@ open class ItemListRepository<in I, K, V : Any, E>(
     private val fetcher: Fetcher<I, List<V>, List<E>>
 ) : Repository<I, List<V>>() {
 
-    override suspend fun persist(value: List<V>) {
-        store.put(value)
+    override suspend fun persist(key: I, value: List<V>) {
+        store.put(key, value)
     }
 
     override suspend fun getLocal(key: I): List<V>? {

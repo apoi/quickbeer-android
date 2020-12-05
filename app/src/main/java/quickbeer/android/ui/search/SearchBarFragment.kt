@@ -8,7 +8,7 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.onGlobalLayout
 
-abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
+abstract class SearchBarFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
 
     abstract val searchHint: Int
 
@@ -20,7 +20,7 @@ abstract class SearchFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
 
     protected abstract fun searchView(): SearchView
 
-    protected abstract fun searchViewModel(): SearchViewModel
+    protected abstract fun searchViewModel(): SearchBarInterface
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -45,7 +45,7 @@ abstract class Repository<in K, V> {
                     is ApiResult.Success -> {
                         if (response.value != null) {
                             // Response is persisted to be emitted later
-                            persist(response.value)
+                            persist(key, response.value)
                         } else {
                             // Empty states don't go through persistence layer
                             emit(State.Empty)
@@ -68,7 +68,7 @@ abstract class Repository<in K, V> {
         }.flowOn(Dispatchers.IO)
     }
 
-    protected abstract suspend fun persist(value: V)
+    protected abstract suspend fun persist(key: K, value: V)
 
     protected abstract suspend fun getLocal(key: K): V?
 
@@ -84,7 +84,7 @@ abstract class SingleRepository<V> {
 
     private val repository = object : Repository<Int, V>() {
 
-        override suspend fun persist(value: V) {
+        override suspend fun persist(key: Int, value: V) {
             return this@SingleRepository.persist(value)
         }
 

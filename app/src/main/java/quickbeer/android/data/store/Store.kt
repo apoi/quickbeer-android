@@ -29,7 +29,7 @@ interface Store<in K, V> {
      *
      * @return True if operation was successful, otherwise false.
      */
-    suspend fun put(value: V): Boolean
+    suspend fun put(key: K, value: V): Boolean
 
     /**
      * Deletes value matching the key from the store.

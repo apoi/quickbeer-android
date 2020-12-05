@@ -21,9 +21,9 @@ fun <T : ViewBinding> Fragment.viewBinding(bind: (View) -> T) =
  * Binds a value to View lifecycle. Value is created with the initialization
  * function at View's onCreate, and destroyed at onDestroy.
  */
-fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> =
+fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> {
 
-    object : ReadOnlyProperty<Fragment, T>, DefaultLifecycleObserver {
+    return object : ReadOnlyProperty<Fragment, T>, DefaultLifecycleObserver {
 
         private var value: T? = null
 
@@ -31,13 +31,10 @@ fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> =
             // Observe the View lifecycle of the Fragment
             this@viewLifecycle
                 .viewLifecycleOwnerLiveData
-                .observe(
-                    this@viewLifecycle,
-                    Observer { owner ->
-                        viewLifecycleOwner.lifecycle.removeObserver(this)
-                        owner.lifecycle.addObserver(this)
-                    }
-                )
+                .observe(this@viewLifecycle, { owner ->
+                    viewLifecycleOwner.lifecycle.removeObserver(this)
+                    owner.lifecycle.addObserver(this)
+                })
         }
 
         override fun onCreate(owner: LifecycleOwner) {
@@ -65,3 +62,4 @@ fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> =
             }
         }
     }
+}

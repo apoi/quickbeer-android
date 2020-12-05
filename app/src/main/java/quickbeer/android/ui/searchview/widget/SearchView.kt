@@ -84,6 +84,7 @@ class SearchView @JvmOverloads constructor(
 
             setOnEditorActionListener { _, _, _ ->
                 querySubmitCallback?.invoke(text.toString())
+                binding.searchEditText.clearFocus()
                 return@setOnEditorActionListener true // true
             }
 

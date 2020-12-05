@@ -10,8 +10,8 @@ open class DefaultRepository<in K, V>(
     private val fetcher: suspend (K) -> ApiResult<V>
 ) : Repository<K, V>() {
 
-    override suspend fun persist(value: V) {
-        store.put(value)
+    override suspend fun persist(key: K, value: V) {
+        store.put(key, value)
     }
 
     override suspend fun getLocal(key: K): V? {

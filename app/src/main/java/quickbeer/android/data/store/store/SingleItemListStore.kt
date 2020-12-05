@@ -55,7 +55,7 @@ open class ItemListStore<in I, out K, V : Any>(
     /**
      * Put all values to store, and add index to keep track of all the values.
      */
-    suspend fun put(key: I, values: List<V>): Boolean {
+    override suspend fun put(key: I, values: List<V>): Boolean {
         return withContext(Dispatchers.IO) {
             // Put values first in case there's a listener for the index. This way values
             // already exist for any listeners to query.
@@ -67,10 +67,6 @@ open class ItemListStore<in I, out K, V : Any>(
 
             newValues.isNotEmpty() || indexChanged != null
         }
-    }
-
-    override suspend fun put(value: List<V>): Boolean {
-        error("Not applicable")
     }
 
     /**

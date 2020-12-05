@@ -6,4 +6,4 @@ import quickbeer.android.domain.beer.Beer
 
 class BeerStore(
     beerStoreCore: StoreCore<Int, Beer>
-) : DefaultStore<Int, Beer>(beerStoreCore, Beer::id)
+) : DefaultStore<Int, Beer>(beerStoreCore)

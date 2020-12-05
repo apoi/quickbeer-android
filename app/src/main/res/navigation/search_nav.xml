@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/search_nav"
+    app:startDestination="@id/search_fragment">
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="quickbeer.android.feature.search.SearchFragment"
+        android:label="@string/search_title"
+        tools:layout="@layout/beer_list_fragment">
+
+        <argument
+            android:name="query"
+            app:argType="string" />
+
+    </fragment>
+
+</navigation>

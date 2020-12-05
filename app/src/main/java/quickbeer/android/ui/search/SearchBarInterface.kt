@@ -3,13 +3,13 @@ package quickbeer.android.ui.search
 import quickbeer.android.ui.adapter.search.SearchResult
 import quickbeer.android.ui.adapter.simple.ListAdapter
 
-interface SearchViewModel {
+interface SearchBarInterface {
 
     fun getSearchAdapter(): ListAdapter<SearchResult>
 
-    fun onSearchChanged(value: String)
+    fun onSearchChanged(query: String)
 
-    fun onSearchSubmit(value: String)
+    fun onSearchSubmit(query: String)
 
     fun onSuggestionClicked(position: Int)
 

@@ -23,11 +23,13 @@ import quickbeer.android.domain.beersearch.network.BeerSearchFetcher
 import quickbeer.android.domain.beersearch.network.TopBeersFetcher
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
+import quickbeer.android.domain.beersearch.store.BeerListStore
 import quickbeer.android.domain.beersearch.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.recentbeers.RecentBeersStore
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
+import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.topbeers.TopBeersViewModel
 import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi
@@ -92,6 +94,7 @@ val appModule = module {
 
     // Stores
     factory { BeerStore(get(named<Beer>())) }
+    factory { BeerListStore(get(named<IdList>()), get(named<Beer>())) }
     factory { TopBeersStore(get(named<IdList>()), get(named<Beer>())) }
     factory { RecentBeersStore(get(named<IdList>()), get(named<Beer>())) }
 
@@ -105,6 +108,7 @@ val appModule = module {
     factory { TopBeersRepository(get(), get()) }
     factory { BeerSearchRepository(get(), get()) }
 
-    viewModel { TopBeersViewModel(get(), get()) }
     viewModel { RecentBeersViewModel(get(), get()) }
+    viewModel { TopBeersViewModel(get(), get()) }
+    viewModel { (query: String) -> SearchViewModel(query, get(), get()) }
 }

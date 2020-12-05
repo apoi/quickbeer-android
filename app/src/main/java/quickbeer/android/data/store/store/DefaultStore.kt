@@ -13,10 +13,7 @@ import quickbeer.android.data.store.StoreCore
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class DefaultStore<in K, V>(
-    private val core: StoreCore<K, V>,
-    private val getKey: (V) -> K
-) : Store<K, V> {
+open class DefaultStore<in K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
 
     override suspend fun get(key: K): V? {
         return withContext(Dispatchers.IO) {
@@ -29,9 +26,9 @@ open class DefaultStore<in K, V>(
             .flowOn(Dispatchers.IO)
     }
 
-    override suspend fun put(value: V): Boolean {
+    override suspend fun put(key: K, value: V): Boolean {
         return withContext(Dispatchers.IO) {
-            core.put(getKey(value), value) != null
+            core.put(key, value) != null
         }
     }
 

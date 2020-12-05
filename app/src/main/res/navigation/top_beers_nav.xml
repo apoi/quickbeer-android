@@ -6,6 +6,7 @@
     app:startDestination="@id/top_beers_fragment">
 
     <include app:graph="@navigation/details_nav" />
+    <include app:graph="@navigation/search_nav" />
 
     <fragment
         android:id="@+id/top_beers_fragment"
@@ -26,6 +27,16 @@
                 android:name="fullscreen"
                 android:defaultValue="true"
                 app:argType="boolean" />
+
+        </action>
+
+        <action
+            android:id="@+id/to_search"
+            app:destination="@id/search_nav">
+
+            <argument
+                android:name="query"
+                app:argType="string" />
 
         </action>
 
