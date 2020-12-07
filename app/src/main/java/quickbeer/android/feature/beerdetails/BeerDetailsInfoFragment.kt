@@ -17,25 +17,98 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.os.Bundle
+import android.view.View
 import android.widget.RatingBar
+import android.widget.Toast
+import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.Constants
 import quickbeer.android.R
+import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsFragmentBinding
+import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.util.ToastProvider
+import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.viewBinding
+import kotlin.math.roundToInt
 
-class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_fragment),
+class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment),
     RatingBar.OnRatingBarChangeListener,
     SwipeRefreshLayout.OnRefreshListener {
 
-    private val binding by viewBinding(BeerDetailsFragmentBinding::bind)
+    private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<BeerDetailsViewModel> {
         parametersOf(requireArguments().getInt(Constants.ID))
+    }
+
+    private val toastProvider by inject<ToastProvider>()
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.beerRatingOverallColumn.setOnClickListener { showToast(R.string.description_rating_overall) }
+        binding.beerRatingStyleColumn.setOnClickListener { showToast(R.string.description_rating_style) }
+        binding.beerAbvColumn.setOnClickListener { showToast(R.string.description_abv) }
+        binding.beerIbuColumn.setOnClickListener { showToast(R.string.description_ibu) }
+
+        //binding.ratingCardOverlay.setOnClickListener { showLoginDialog() }
+    }
+
+    override fun observeViewState() {
+        observe(viewModel.viewState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setBeer(state.value)
+                is State.Error -> Unit
+            }
+        }
+    }
+
+    private fun setBeer(beer: Beer) {
+        binding.beerDescription.text = beer.description
+        binding.brewerName.text = beer.brewerName
+
+        binding.beerRatingOverall.text = beer.overallRating
+            ?.takeIf { it > 0 }
+            ?.roundToInt()
+            ?.toString()
+            ?: "?"
+
+        binding.beerRatingStyle.text = beer.styleRating
+            ?.takeIf { it > 0 }
+            ?.roundToInt()
+            ?.toString()
+            ?: "?"
+
+        binding.beerAbv.text = beer.alcohol
+            ?.takeIf { it > 0 }
+            ?.roundToInt()
+            ?.toString()
+            ?: "?"
+
+        binding.beerIbu.text = beer.ibu
+            ?.takeIf { it > 0 }
+            ?.roundToInt()
+            ?.toString()
+            ?: getString(R.string.not_available)
+
+        binding.ratingBar.rating = beer.tickValue
+            ?.takeIf { beer.isTicked() }
+            ?.toFloat()
+            ?: 0F
+
+        binding.tickedDate.text = beer.tickDate
+            ?.takeIf { beer.isTicked() }
+            ?.formatDateTime(getString(R.string.beer_tick_date))
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
@@ -44,6 +117,10 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_fragment),
 
     override fun onRefresh() {
         TODO("Not yet implemented")
+    }
+
+    private fun showToast(@StringRes resource: Int) {
+        toastProvider.showCancelableToast(resource, Toast.LENGTH_LONG)
     }
 
     companion object {

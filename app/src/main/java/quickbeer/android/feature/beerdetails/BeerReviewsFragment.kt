@@ -28,7 +28,7 @@ import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.LoadMoreListener
 
-class BeerReviewsFragment : BaseFragment(R.layout.beer_details_fragment_reviews),
+class BeerReviewsFragment : BaseFragment(R.layout.beer_details_reviews_fragment),
     SwipeRefreshLayout.OnRefreshListener {
 
     private val reviewsAdapter = ListAdapter<ReviewModel>(ReviewTypeFactory())

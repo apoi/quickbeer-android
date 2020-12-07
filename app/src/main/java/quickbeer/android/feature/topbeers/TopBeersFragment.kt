@@ -2,7 +2,6 @@ package quickbeer.android.feature.topbeers
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
@@ -53,14 +52,14 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
         observe(viewModel.viewEffect) { effect ->
             when (effect) {
                 is Search -> {
-                    findNavController().navigate(TopBeersFragmentDirections.toSearch(effect.query))
+                    navigate(TopBeersFragmentDirections.toSearch(effect.query))
                 }
             }
         }
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        findNavController().navigate(TopBeersFragmentDirections.toDetails(beer.id))
+        navigate(TopBeersFragmentDirections.toDetails(beer.id))
     }
 
     override fun searchView(): SearchView {

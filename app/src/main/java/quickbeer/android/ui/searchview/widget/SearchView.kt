@@ -43,8 +43,8 @@ class SearchView @JvmOverloads constructor(
     // Should be moved to attributes and style
     private val black = resources.getColor(R.color.black, null)
     private val white = resources.getColor(R.color.white, null)
-    private val dark = resources.getColor(R.color.gray_95, null)
-    private val light = resources.getColor(R.color.gray_90, null)
+    private val dark = resources.getColor(R.color.gray_85, null)
+    private val light = resources.getColor(R.color.gray_80, null)
     private val text = resources.getColor(R.color.gray_40, null)
     private val orange = resources.getColor(R.color.orange, null)
     private val transparent = resources.getColor(R.color.transparent, null)

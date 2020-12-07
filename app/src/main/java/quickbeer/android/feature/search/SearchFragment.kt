@@ -2,7 +2,6 @@ package quickbeer.android.feature.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
@@ -57,7 +56,7 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        findNavController().navigate(SearchFragmentDirections.toDetails(beer.id))
+        navigate(SearchFragmentDirections.toDetails(beer.id))
     }
 
     override fun searchView(): SearchView {

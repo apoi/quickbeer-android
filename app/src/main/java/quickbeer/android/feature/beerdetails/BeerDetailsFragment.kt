@@ -18,33 +18,68 @@
 package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
+import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
-import androidx.viewpager.widget.ViewPager
-import org.koin.ext.getOrCreateScope
-import quickbeer.android.Constants
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import org.koin.android.ext.android.bind
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
+import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsFragmentBinding
-import quickbeer.android.databinding.BeerDetailsFragmentPagerBinding
-import quickbeer.android.feature.beerdetails.BeerDetailsPagerAdapter
-import quickbeer.android.feature.search.SearchFragmentArgs
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.transformations.BlurTransformation
+import quickbeer.android.ui.transformations.ContainerLabelExtractor
+import quickbeer.android.util.ktx.setMarginTop
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
-class BeerDetailsFragment : BaseFragment(R.layout.beer_details_fragment_pager) {
+class BeerDetailsFragment : BaseFragment(R.layout.beer_details_fragment) {
 
-    private val binding by viewBinding(BeerDetailsFragmentPagerBinding::bind)
     private val args: BeerDetailsFragmentArgs by navArgs()
+    private val binding by viewBinding(BeerDetailsFragmentBinding::bind)
+    private val viewModel by viewModel<BeerDetailsViewModel> { parametersOf(args.id) }
+
+    private val picasso by inject<Picasso>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        ViewCompat.setOnApplyWindowInsetsListener(binding.layout) { _, insets ->
+            binding.toolbar.setMarginTop(insets.systemWindowInsetTop)
+            insets.consumeSystemWindowInsets()
+        }
+
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+    }
+
+    override fun observeViewState() {
+        observe(viewModel.viewState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setBeer(state.value)
+                is State.Error -> Unit
+            }
+        }
+    }
+
+    private fun setBeer(beer: Beer) {
+        binding.collapsingToolbar.title = beer.name
+
+        picasso.load(beer.imageUri())
+            .transform(ContainerLabelExtractor(300, 300))
+            .transform(BlurTransformation(requireContext(), 15))
+            .into(binding.collapsingToolbarBackground, object : Callback.EmptyCallback() {
+                override fun onSuccess() {
+                    binding.toolbarOverlayGradient.visibility = View.VISIBLE
+                    //binding.collapsingToolbarBackground.setOnClickListener { openPhotoView(beer.imageUri()) }
+                }
+            })
     }
 }

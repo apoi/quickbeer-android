@@ -25,6 +25,38 @@
     <string name="about_title">About</string>
     <string name="about_description">About</string>
 
+    <!-- Beer details -->
+    <string name="rating_overall">Overall</string>
+    <string name="rating_style">Style</string>
+
+    <string name="beer_details_reviews">Reviews</string>
+    <string name="beer_details_no_photo">No photo available for this beer</string>
+    <string name="no_description">No description available.</string>
+    <string name="not_available">N/A</string>
+    <string name="not_enough_ratings">Requires more ratings before score can be shown</string>
+
+    <string name="brewer">Brewer</string>
+    <string name="origin">Origin</string>
+    <string name="style">Beer style</string>
+    <string name="abv">ABV</string>
+    <string name="ibu">IBU</string>
+
+    <string name="description_rating_overall">Beer\'s rating relative to all beers on a scale from 0 to 100</string>
+    <string name="description_rating_style">Beer\'s rating relative to beers in the same style category on a scale from 0 to 100</string>
+    <string name="description_abv">Alcohol by volume</string>
+    <string name="description_ibu">International Bittering Units, a measure of beer bitterness</string>
+
+    <!-- Ticking -->
+    <string name="beer_tick_date">You rated this beer on %1$s at %2$s</string>
+    <string name="tick_success">%s rated!</string>
+    <string name="tick_removed">Rating removed!</string>
+    <string name="tick_failure">Rating failed! Try again later.</string>
+    <string name="beer_details_login">Log in to rate this beer</string>
+    <string name="ticks_empty_list">You haven\'t rated any beers yet.</string>
+    <string name="login_dialog_title">Login required</string>
+    <string name="login_to_rate_message">You need to login to rate beers. Login now?</string>
+    <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>
+
     <!-- Reviews -->
     <string name="review_appearance">Appear.</string>
     <string name="review_aroma">Aroma</string>

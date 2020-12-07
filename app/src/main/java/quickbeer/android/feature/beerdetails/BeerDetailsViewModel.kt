@@ -17,10 +17,29 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.state.State
+import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.repository.BeerRepository
 
 class BeerDetailsViewModel(
     beerId: Int,
+    private val repository: BeerRepository
 ) : ViewModel() {
 
+    private val _viewState = MutableLiveData<State<Beer>>()
+    val viewState: LiveData<State<Beer>> = _viewState
+
+    init {
+        viewModelScope.launch {
+            repository.getStream(beerId, Accept())
+                .collect { _viewState.postValue(it) }
+        }
+    }
 }

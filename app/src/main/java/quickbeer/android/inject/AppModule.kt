@@ -39,6 +39,7 @@ import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
+import quickbeer.android.util.ToastProvider
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
@@ -85,6 +86,8 @@ val appModule = module {
             .build()
     }
 
+    single { ToastProvider(get()) }
+
     // Cores
     single<StoreCore<String, IdList>>(named<IdList>()) {
         CachingStoreCore(IdListRoomCore(get()), IdList::key)
@@ -112,5 +115,5 @@ val appModule = module {
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { TopBeersViewModel(get(), get()) }
     viewModel { (query: String) -> SearchViewModel(query, get(), get()) }
-    viewModel { (id: Int) -> BeerDetailsViewModel(id) }
+    viewModel { (id: Int) -> BeerDetailsViewModel(id, get()) }
 }
