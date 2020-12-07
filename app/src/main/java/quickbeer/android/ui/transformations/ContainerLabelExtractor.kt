@@ -22,6 +22,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import com.squareup.picasso.Transformation
+import kotlin.math.abs
 
 class ContainerLabelExtractor(private val width: Int, private val height: Int) : Transformation {
 
@@ -64,13 +65,13 @@ class ContainerLabelExtractor(private val width: Int, private val height: Int) :
 
     private fun getCentralRect(source: Bitmap): Rect {
         // Reference point at 2/3 of the height where we expect the container to be thickest
-        val referenceY = (source.height / 3.0f * 2.0f).toInt()
+        val referenceY = (source.height * LABEL_REFERENCE_Y).toInt()
         val minX = scanFromLeft(source, referenceY)
         val maxX = scanFromRight(source, referenceY)
 
         // Maximum difference we allow from the reference point width scan is 7%
         // Success function: scan doesn't overshoot more than max difference.
-        val diff = (source.width * 0.07f).toInt()
+        val diff = (source.width * ALLOWED_REFERENCE_VARIANCE).toInt()
         val func: (y: Int) -> Boolean = { y -> scanFromLeft(source, y) < minX + diff }
 
         // Do a binary search for the cut points above and below the reference point
@@ -82,35 +83,25 @@ class ContainerLabelExtractor(private val width: Int, private val height: Int) :
     }
 
     private fun binarySearch(from: Int, to: Int, func: (Int) -> Boolean): Int {
-        val middle = Math.max(to, from) - (Math.max(to, from) - Math.min(to, from)) / 2
+        val middle = to.coerceAtLeast(from) - (to.coerceAtLeast(from) - to.coerceAtMost(from)) / 2
 
-        return if (Math.abs(from - to) == 1) {
-            from
-        } else if (func(middle)) {
-            binarySearch(middle, to, func)
-        } else {
-            binarySearch(from, middle, func)
+        return when {
+            abs(from - to) == 1 -> from
+            func(middle) -> binarySearch(middle, to, func)
+            else -> binarySearch(from, middle, func)
         }
     }
 
     private fun scanFromLeft(source: Bitmap, y: Int): Int {
-        for (x in 0 until source.width / 2) {
-            if (!isWhitePixel(source, x, y)) {
-                return x
-            }
-        }
-
-        return 0
+        return (0 until source.width / 2)
+            .firstOrNull { !isWhitePixel(source, it, y) }
+            ?: 0
     }
 
     private fun scanFromRight(source: Bitmap, y: Int): Int {
-        for (x in source.width - 1 downTo source.width / 2 + 1) {
-            if (!isWhitePixel(source, x, y)) {
-                return x
-            }
-        }
-
-        return source.width - 1
+        return (source.width - 1 downTo source.width / 2 + 1)
+            .firstOrNull { !isWhitePixel(source, it, y) }
+            ?: source.width - 1
     }
 
     private fun isWhitePixel(source: Bitmap, x: Int, y: Int): Boolean {
@@ -119,6 +110,12 @@ class ContainerLabelExtractor(private val width: Int, private val height: Int) :
         val g = Color.green(color)
         val b = Color.blue(color)
 
-        return r > 190 && g > 190 && b > 190
+        return r > WHITE_POINT && g > WHITE_POINT && b > WHITE_POINT
+    }
+
+    companion object {
+        private const val LABEL_REFERENCE_Y = 2F / 3F
+        private const val ALLOWED_REFERENCE_VARIANCE = 0.07F
+        private const val WHITE_POINT = 190
     }
 }

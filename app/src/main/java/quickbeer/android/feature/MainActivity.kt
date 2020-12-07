@@ -14,8 +14,7 @@ import quickbeer.android.util.ktx.viewBinding
 
 class MainActivity : AppCompatActivity(R.layout.main_activity) {
 
-    @Suppress("ProtectedMemberInFinalClass")
-    protected val binding by viewBinding(MainActivityBinding::bind)
+    private val binding by viewBinding(MainActivityBinding::bind)
 
     private var currentNavController: LiveData<NavController>? = null
 
@@ -55,10 +54,7 @@ class MainActivity : AppCompatActivity(R.layout.main_activity) {
         )
 
         // Whenever the selected controller changes, setup action bar and other changes
-        controller.observe(this) { navController ->
-            setupFullscreenHandler(navController)
-        }
-
+        controller.observe(this, this::setupFullscreenHandler)
         currentNavController = controller
     }
 

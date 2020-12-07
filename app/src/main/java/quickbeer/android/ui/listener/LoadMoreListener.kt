@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Pagination trigger listener, https://gist.github.com/nesquena/d09dc68ff07e845cc622
  */
-class LoadMoreListener() : RecyclerView.OnScrollListener() {
+class LoadMoreListener : RecyclerView.OnScrollListener() {
 
     // The current offset index of data you have loaded
     private var currentPage = 0
@@ -74,7 +74,7 @@ class LoadMoreListener() : RecyclerView.OnScrollListener() {
     }
 
     companion object {
-        // The minimum amount of items to have below your current scroll position before loading more
+        // The minimum amount of items to have below the current scroll position before loading more
         private const val VISIBLE_THRESHOLD = 5
 
         // Sets the starting page index

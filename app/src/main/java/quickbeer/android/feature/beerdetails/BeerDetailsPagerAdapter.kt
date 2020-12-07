@@ -21,7 +21,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class BeerDetailsPagerAdapter(fm: FragmentManager, private val beerId: Int) : FragmentPagerAdapter(fm) {
+class BeerDetailsPagerAdapter(fm: FragmentManager, private val beerId: Int) :
+    FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
         return 2

@@ -26,10 +26,8 @@ import org.threeten.bp.format.FormatStyle
 import org.threeten.bp.temporal.ChronoUnit
 
 fun ZonedDateTime?.orEpoch(): ZonedDateTime {
-    return if (this.isValidDate())
-        this!!
-    else
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC)
+    return if (isValidDate()) this!!
+    else ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC)
 }
 
 fun ZonedDateTime?.isValidDate(): Boolean {
@@ -42,22 +40,16 @@ fun ZonedDateTime?.within(millis: Long): Boolean {
 }
 
 fun ZonedDateTime?.formatDateTime(template: String): String {
-    val localTime = this.orEpoch().withZoneSameInstant(ZoneId.systemDefault())
+    val localTime = orEpoch().withZoneSameInstant(ZoneId.systemDefault())
     return String.format(
         template,
         localTime.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)),
-        localTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
+        localTime.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+    )
 }
 
 fun ZonedDateTime?.formatDate(): String {
-    return this.orEpoch()
+    return orEpoch()
         .withZoneSameInstant(ZoneId.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-}
-
-fun ZonedDateTime(seconds: Int): ZonedDateTime? {
-    return if (seconds > 0)
-        ZonedDateTime.ofInstant(Instant.ofEpochSecond(seconds.toLong()), ZoneOffset.UTC)
-    else
-        null
 }

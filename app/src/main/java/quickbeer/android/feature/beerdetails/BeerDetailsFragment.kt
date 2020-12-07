@@ -23,7 +23,6 @@ import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import org.koin.android.ext.android.bind
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -70,16 +69,31 @@ class BeerDetailsFragment : BaseFragment(R.layout.beer_details_fragment) {
     }
 
     private fun setBeer(beer: Beer) {
+        val onImageLoadSuccess = {
+            binding.toolbarOverlayGradient.visibility = View.VISIBLE
+            binding.collapsingToolbarBackground.setOnClickListener {
+                // openPhotoView(beer.imageUri())
+            }
+        }
+
         binding.collapsingToolbar.title = beer.name
 
         picasso.load(beer.imageUri())
-            .transform(ContainerLabelExtractor(300, 300))
-            .transform(BlurTransformation(requireContext(), 15))
-            .into(binding.collapsingToolbarBackground, object : Callback.EmptyCallback() {
-                override fun onSuccess() {
-                    binding.toolbarOverlayGradient.visibility = View.VISIBLE
-                    //binding.collapsingToolbarBackground.setOnClickListener { openPhotoView(beer.imageUri()) }
+            .transform(ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT))
+            .transform(BlurTransformation(requireContext(), LABEL_BLUR))
+            .into(
+                binding.collapsingToolbarBackground,
+                object : Callback.EmptyCallback() {
+                    override fun onSuccess() {
+                        onImageLoadSuccess()
+                    }
                 }
-            })
+            )
+    }
+
+    companion object {
+        private const val LABEL_WIDTH = 300
+        private const val LABEL_HEIGHT = 300
+        private const val LABEL_BLUR = 15
     }
 }

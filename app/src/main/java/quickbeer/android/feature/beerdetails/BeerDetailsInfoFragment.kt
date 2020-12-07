@@ -25,22 +25,22 @@ import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import kotlin.math.roundToInt
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerDetailsFragmentBinding
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.viewBinding
-import kotlin.math.roundToInt
 
-class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment),
+class BeerDetailsInfoFragment :
+    BaseFragment(R.layout.beer_details_info_fragment),
     RatingBar.OnRatingBarChangeListener,
     SwipeRefreshLayout.OnRefreshListener {
 
@@ -54,12 +54,23 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.beerRatingOverallColumn.setOnClickListener { showToast(R.string.description_rating_overall) }
-        binding.beerRatingStyleColumn.setOnClickListener { showToast(R.string.description_rating_style) }
-        binding.beerAbvColumn.setOnClickListener { showToast(R.string.description_abv) }
-        binding.beerIbuColumn.setOnClickListener { showToast(R.string.description_ibu) }
+        binding.beerRatingOverallColumn.setOnClickListener {
+            showToast(R.string.description_rating_overall)
+        }
 
-        //binding.ratingCardOverlay.setOnClickListener { showLoginDialog() }
+        binding.beerRatingStyleColumn.setOnClickListener {
+            showToast(R.string.description_rating_style)
+        }
+
+        binding.beerAbvColumn.setOnClickListener {
+            showToast(R.string.description_abv)
+        }
+
+        binding.beerIbuColumn.setOnClickListener {
+            showToast(R.string.description_ibu)
+        }
+
+        // binding.ratingCardOverlay.setOnClickListener { showLoginDialog() }
     }
 
     override fun observeViewState() {

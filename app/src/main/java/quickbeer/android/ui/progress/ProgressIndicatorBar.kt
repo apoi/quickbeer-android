@@ -113,8 +113,8 @@ class ProgressIndicatorBar @JvmOverloads constructor(
             repeatCount = Animation.INFINITE
 
             setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationEnd(animation: Animation) {}
+                override fun onAnimationStart(animation: Animation) = Unit
+                override fun onAnimationEnd(animation: Animation) = Unit
                 override fun onAnimationRepeat(animation: Animation) {
                     if (nextProgress.status !== Status.INDEFINITE) {
                         applyNextStatus()
@@ -141,8 +141,8 @@ class ProgressIndicatorBar @JvmOverloads constructor(
             fillAfter = true
 
             setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationRepeat(animation: Animation) {}
+                override fun onAnimationStart(animation: Animation) = Unit
+                override fun onAnimationRepeat(animation: Animation) = Unit
                 override fun onAnimationEnd(animation: Animation) {
                     barScale = newScale
                     applyNextStatus()
@@ -172,8 +172,8 @@ class ProgressIndicatorBar @JvmOverloads constructor(
             duration = ANIMATION_END_SCALE_DURATION.toLong()
             fillAfter = true
             setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {}
-                override fun onAnimationRepeat(animation: Animation) {}
+                override fun onAnimationStart(animation: Animation) = Unit
+                override fun onAnimationRepeat(animation: Animation) = Unit
                 override fun onAnimationEnd(animation: Animation) {
                     barScale = 1.0f
                     animateToHidden()
@@ -210,8 +210,8 @@ class ProgressIndicatorBar @JvmOverloads constructor(
             if (second == first) return true
 
             // Consider progress only if loading, otherwise matching status is enough
-            return first.status === second.status
-                && (first.status !== Status.LOADING || first == second)
+            return first.status === second.status &&
+                (first.status !== Status.LOADING || first == second)
         }
     }
 }

@@ -13,13 +13,11 @@ import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
-import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.ui.adapter.search.SearchResult
 import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.search.SearchBarInterface
-import timber.log.Timber
 
 class SearchViewModel(
     query: String,
@@ -63,5 +61,5 @@ class SearchViewModel(
     override fun getSuggestionText(position: Int): String {
         // TODO
         return ""
-     }
+    }
 }

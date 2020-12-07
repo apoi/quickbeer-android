@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle.State.INITIALIZED
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -31,10 +30,13 @@ fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> {
             // Observe the View lifecycle of the Fragment
             this@viewLifecycle
                 .viewLifecycleOwnerLiveData
-                .observe(this@viewLifecycle, { owner ->
-                    viewLifecycleOwner.lifecycle.removeObserver(this)
-                    owner.lifecycle.addObserver(this)
-                })
+                .observe(
+                    this@viewLifecycle,
+                    { owner ->
+                        viewLifecycleOwner.lifecycle.removeObserver(this)
+                        owner.lifecycle.addObserver(this)
+                    }
+                )
         }
 
         override fun onCreate(owner: LifecycleOwner) {

@@ -19,11 +19,11 @@ package quickbeer.android.feature.beerdetails
 
 import android.view.View
 import androidx.annotation.StringRes
+import java.lang.String.valueOf
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsReviewBinding
 import quickbeer.android.domain.review.Review
 import quickbeer.android.ui.adapter.simple.ListViewHolder
-import java.lang.String.valueOf
 
 /**
  * View holder for reviews in list
@@ -33,9 +33,11 @@ class BeerReviewsViewHolder(
 ) : ListViewHolder<ReviewModel>(binding.root) {
 
     override fun bind(item: ReviewModel) {
-        val metadata = (item.review.userName +
-            (if (item.review.country != null) ", " + item.review.country else "") +
-            "\n" + item.review.timeEntered)
+        val metadata = (
+            item.review.userName +
+                (if (item.review.country != null) ", " + item.review.country else "") +
+                "\n" + item.review.timeEntered
+            )
 
         binding.user.text = metadata
         binding.score.text = String.format("%.1f", item.review.totalScore)
