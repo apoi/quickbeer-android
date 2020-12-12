@@ -40,9 +40,10 @@ class SearchView @JvmOverloads constructor(
         get() = binding.searchEditText.text.toString()
         set(value) {
             binding.searchEditText.setText(value)
+            binding.searchClear.isVisible = value.isNotEmpty()
         }
 
-    private lateinit var _navigationMode: NavigationMode
+    private var _navigationMode = NavigationMode.SEARCH
     var navigationMode: NavigationMode
         get() = _navigationMode
         set(value) {
@@ -64,8 +65,6 @@ class SearchView @JvmOverloads constructor(
     private val transparent = resources.getColor(R.color.transparent, null)
 
     init {
-        navigationMode = NavigationMode.SEARCH
-
         onGlobalLayout(::initLayout)
     }
 

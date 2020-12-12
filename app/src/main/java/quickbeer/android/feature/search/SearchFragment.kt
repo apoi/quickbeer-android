@@ -11,6 +11,8 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListFragmentBinding
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
+import quickbeer.android.feature.topbeers.TopBeersFragmentDirections
+import quickbeer.android.feature.topbeers.TopBeersViewEffect
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.setClickListener
@@ -54,10 +56,30 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
     override fun observeViewState() {
         observe(viewModel.viewState) { state ->
             when (state) {
-                State.Loading -> Unit
-                State.Empty -> Unit
-                is State.Success -> beersAdapter.setItems(state.value)
-                is State.Error -> Unit
+                State.Loading -> {
+                    beersAdapter.setItems(emptyList())
+                    binding.progress.show()
+                }
+                State.Empty -> {
+                    beersAdapter.setItems(emptyList())
+                    binding.progress.hide()
+                }
+                is State.Success -> {
+                    beersAdapter.setItems(state.value)
+                    binding.progress.hide()
+                }
+                is State.Error -> {
+                    beersAdapter.setItems(emptyList())
+                    binding.progress.hide()
+                }
+            }
+        }
+
+        observe(viewModel.viewEffect) { effect ->
+            when (effect) {
+                is TopBeersViewEffect.Search -> {
+                    navigate(TopBeersFragmentDirections.toSearch(effect.query))
+                }
             }
         }
     }
