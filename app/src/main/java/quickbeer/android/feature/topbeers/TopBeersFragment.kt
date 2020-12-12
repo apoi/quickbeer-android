@@ -20,6 +20,9 @@ import quickbeer.android.util.ktx.viewBinding
 
 class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
+    override fun rootLayout() = binding.layout
+    override fun topInsetView() = binding.layout
+
     private val binding by viewBinding(BeerListFragmentBinding::bind)
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
     private val viewModel by viewModel<TopBeersViewModel>()

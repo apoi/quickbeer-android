@@ -8,7 +8,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import quickbeer.android.R
 
-open class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
+abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
 
     override fun onResume() {
         super.onResume()

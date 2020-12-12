@@ -36,9 +36,23 @@ class SearchView @JvmOverloads constructor(
         .getInteger(android.R.integer.config_shortAnimTime)
         .toLong()
 
+    var query: String
+        get() = binding.searchEditText.text.toString()
+        set(value) {
+            binding.searchEditText.setText(value)
+        }
+
+    private lateinit var _navigationMode: NavigationMode
+    var navigationMode: NavigationMode
+        get() = _navigationMode
+        set(value) {
+            _navigationMode = value
+        }
+
     var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var queryChangedCallback: ((String) -> Unit)? = null
     var querySubmitCallback: ((String) -> Unit)? = null
+    var navigateBackCallback: (() -> Unit)? = null
 
     // Should be moved to attributes and style
     private val black = resources.getColor(R.color.black, null)
@@ -50,6 +64,8 @@ class SearchView @JvmOverloads constructor(
     private val transparent = resources.getColor(R.color.transparent, null)
 
     init {
+        navigationMode = NavigationMode.SEARCH
+
         onGlobalLayout(::initLayout)
     }
 
@@ -62,10 +78,10 @@ class SearchView @JvmOverloads constructor(
         // Navigation
         binding.searchNavigation.apply {
             setOnClickListener {
-                if (binding.searchEditText.hasFocus()) {
-                    binding.searchEditText.clearFocus()
-                } else {
-                    binding.searchEditText.requestFocus()
+                when {
+                    binding.searchEditText.hasFocus() -> binding.searchEditText.clearFocus()
+                    navigationMode == NavigationMode.BACK -> navigateBackCallback?.invoke()
+                    else -> binding.searchEditText.requestFocus()
                 }
             }
         }
@@ -85,7 +101,7 @@ class SearchView @JvmOverloads constructor(
             setOnEditorActionListener { _, _, _ ->
                 querySubmitCallback?.invoke(text.toString())
                 binding.searchEditText.clearFocus()
-                return@setOnEditorActionListener true // true
+                return@setOnEditorActionListener true
             }
 
             setOnFocusChangeListener { _, hasFocus ->
@@ -150,7 +166,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchTopAnchor.setHeight(48.dp())
 
         // Navigation icon
-        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_search, null)
+        val drawable = ResourcesCompat.getDrawable(resources, navigationMode.icon, null)
         binding.searchNavigation.setImageDrawable(drawable)
 
         // Search box
@@ -200,5 +216,10 @@ class SearchView @JvmOverloads constructor(
 
     private fun Int.dp(): Int {
         return (resources.displayMetrics.density * this).roundToInt()
+    }
+
+    enum class NavigationMode(val icon: Int) {
+        SEARCH(R.drawable.ic_search),
+        BACK(R.drawable.ic_back)
     }
 }

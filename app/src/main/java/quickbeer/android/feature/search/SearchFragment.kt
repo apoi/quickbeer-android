@@ -17,9 +17,13 @@ import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.search.SearchBarInterface
 import quickbeer.android.ui.searchview.widget.SearchView
+import quickbeer.android.ui.searchview.widget.SearchView.NavigationMode
 import quickbeer.android.util.ktx.viewBinding
 
 class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
+
+    override fun rootLayout() = binding.layout
+    override fun topInsetView() = binding.layout
 
     private val binding by viewBinding(BeerListFragmentBinding::bind)
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
@@ -31,6 +35,11 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.searchView.apply {
+            query = args.query
+            navigationMode = NavigationMode.BACK
+        }
 
         binding.recyclerView.apply {
             adapter = beersAdapter

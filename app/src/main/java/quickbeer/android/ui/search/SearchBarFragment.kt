@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
-import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.onGlobalLayout
 
-abstract class SearchBarFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
+abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) {
 
     abstract val searchHint: Int
 
@@ -40,6 +40,7 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : BaseFragment(layout) 
             searchFocusChangeCallback = { closeOnBackHandler.isEnabled = it }
             queryChangedCallback = searchViewModel()::onSearchChanged
             querySubmitCallback = searchViewModel()::onSearchSubmit
+            navigateBackCallback = requireActivity()::onBackPressed
         }
     }
 }

@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -11,6 +11,7 @@
         <!-- Color for toolbar icons -->
         <item name="colorControlNormal">@color/icon_light</item>
 
+        <!-- Tab layout -->
         <item name="tabStyle">@style/TabLayoutLight</item>
 
         <!-- App general background -->

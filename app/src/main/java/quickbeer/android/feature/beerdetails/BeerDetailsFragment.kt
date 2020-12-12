@@ -19,7 +19,6 @@ package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.ViewCompat
 import androidx.navigation.fragment.navArgs
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -30,13 +29,15 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.BlurTransformation
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
-import quickbeer.android.util.ktx.setMarginTop
 import quickbeer.android.util.ktx.viewBinding
 
-class BeerDetailsFragment : BaseFragment(R.layout.beer_details_fragment) {
+class BeerDetailsFragment : MainFragment(R.layout.beer_details_fragment) {
+
+    override fun rootLayout() = binding.layout
+    override fun topInsetView() = binding.toolbar
 
     private val args: BeerDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(BeerDetailsFragmentBinding::bind)
@@ -46,11 +47,6 @@ class BeerDetailsFragment : BaseFragment(R.layout.beer_details_fragment) {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.layout) { _, insets ->
-            binding.toolbar.setMarginTop(insets.systemWindowInsetTop)
-            insets.consumeSystemWindowInsets()
-        }
 
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
