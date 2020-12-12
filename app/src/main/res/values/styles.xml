@@ -11,10 +11,14 @@
         <!-- Color for toolbar icons -->
         <item name="colorControlNormal">@color/icon_light</item>
 
+        <item name="tabStyle">@style/TabLayoutLight</item>
+
         <!-- App general background -->
         <item name="android:windowBackground">@drawable/background_dark</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
     </style>
+
+    <!-- Toolbar -->
 
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
@@ -34,6 +38,13 @@
     <style name="ToolbarExpandedText" parent="TextAppearance.AppCompat.Title">
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/text_light</item>
+    </style>
+
+    <!-- Tab layout -->
+
+    <style name="TabLayoutLight" parent="Widget.MaterialComponents.TabLayout">
+        <item name="tabIndicatorColor">?attr/colorAccent</item>
+        <item name="tabTextColor">@color/text_light</item>
     </style>
 
     <!-- Beer details -->
