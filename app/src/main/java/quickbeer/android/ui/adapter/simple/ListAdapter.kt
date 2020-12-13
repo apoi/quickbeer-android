@@ -25,6 +25,10 @@ class ListAdapter<T : ListItem>(
         return items[position]
     }
 
+    fun createPool(): RecyclerView.RecycledViewPool {
+        return typeFactory.createPool()
+    }
+
     override fun getItemCount(): Int {
         return items.size
     }

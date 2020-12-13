@@ -6,7 +6,6 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.searchview.widget.SearchView
-import quickbeer.android.util.ktx.onGlobalLayout
 
 abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) {
 
@@ -31,10 +30,6 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        requireView().onGlobalLayout(::setupSearchView)
-    }
-
-    private fun setupSearchView() {
         searchView().apply {
             setAdapter(searchViewModel().getSearchAdapter())
             searchFocusChangeCallback = { closeOnBackHandler.isEnabled = it }

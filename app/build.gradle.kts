@@ -93,6 +93,9 @@ dependencies {
     implementation(Libraries.ThreeTenABP)
     implementation(Libraries.Timber)
 
+    // Debug
+    debugImplementation(Libraries.LeakCanary)
+
     // Test
     testImplementation(TestingLibraries.JUnit)
 

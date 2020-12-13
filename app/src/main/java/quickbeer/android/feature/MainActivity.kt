@@ -10,9 +10,13 @@ import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.navigation.setupWithNavController
+import quickbeer.android.ui.recyclerview.DefaultRecycledPoolHolder
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.util.ktx.viewBinding
 
-class MainActivity : AppCompatActivity(R.layout.main_activity) {
+class MainActivity :
+    AppCompatActivity(R.layout.main_activity),
+    RecycledPoolHolder by DefaultRecycledPoolHolder() {
 
     private val binding by viewBinding(MainActivityBinding::bind)
 

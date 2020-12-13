@@ -7,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.recentbeers.RecentBeersStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import timber.log.Timber
 
 class RecentBeersViewModel(
     private val recentBeersStore: RecentBeersStore,
@@ -31,7 +29,6 @@ class RecentBeersViewModel(
 
     private fun getRecentBeers(): Flow<List<BeerListModel>> {
         return recentBeersStore.getStream()
-            .onEach { Timber.w("JUU " + it) }
             .map { beers -> beers.map { BeerListModel(it.id, photoStore) } }
     }
 }

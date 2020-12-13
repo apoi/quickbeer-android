@@ -16,10 +16,13 @@ import quickbeer.android.feature.topbeers.TopBeersViewEffect
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.setClickListener
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.search.SearchBarInterface
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.ui.searchview.widget.SearchView.NavigationMode
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
@@ -45,12 +48,24 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
         binding.recyclerView.apply {
             adapter = beersAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context).apply {
+                recycleChildrenOnDetach = true
+            }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onBeerSelected)
+
+            setRecycledViewPool(
+                (activity as RecycledPoolHolder)
+                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
+            )
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.recyclerView.adapter = null
     }
 
     override fun observeViewState() {

@@ -2,7 +2,6 @@ package quickbeer.android.ui.base
 
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -17,10 +16,6 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
     }
 
     open fun observeViewState() = Unit
-
-    fun <T> observe(state: LiveData<T>, observer: (T) -> Unit) {
-        state.observe(this, observer::invoke)
-    }
 
     protected fun navigate(navDirections: NavDirections) {
         val navOptions = NavOptions.Builder()

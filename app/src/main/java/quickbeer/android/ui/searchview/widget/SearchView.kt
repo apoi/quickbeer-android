@@ -140,6 +140,11 @@ class SearchView @JvmOverloads constructor(
         }
     }
 
+    override fun onDetachedFromWindow() {
+        binding.searchRecyclerView.adapter = null
+        super.onDetachedFromWindow()
+    }
+
     fun closeSearchView(): Boolean {
         if (binding.searchEditText.hasFocus()) {
             binding.searchEditText.clearFocus()

@@ -61,6 +61,7 @@ object Versions {
 
     const val Koin = "2.1.6"
     const val Ktlint = "0.39.0"
+    const val LeakCanary = "2.5"
     const val Material = "1.2.1"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.2.4"
@@ -140,6 +141,7 @@ object Libraries {
         const val OkHttpDownloader = "com.jakewharton.picasso:picasso2-okhttp3-downloader:${Versions.Picasso.OkHttpDownloader}"
     }
 
+    const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"
     const val ThreeTenABP = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP}"
     const val Timber = "com.jakewharton.timber:timber:${Versions.Timber}"
 }

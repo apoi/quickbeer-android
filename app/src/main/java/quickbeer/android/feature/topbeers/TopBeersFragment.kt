@@ -13,9 +13,12 @@ import quickbeer.android.feature.topbeers.TopBeersViewEffect.Search
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.setClickListener
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.search.SearchBarInterface
 import quickbeer.android.ui.searchview.widget.SearchView
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
@@ -24,8 +27,8 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
     override fun topInsetView() = binding.layout
 
     private val binding by viewBinding(BeerListFragmentBinding::bind)
-    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
     private val viewModel by viewModel<TopBeersViewModel>()
+    private var beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override val searchHint = R.string.search_hint
 
@@ -34,12 +37,24 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
         binding.recyclerView.apply {
             adapter = beersAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context).apply {
+                recycleChildrenOnDetach = true
+            }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onBeerSelected)
+
+            setRecycledViewPool(
+                (activity as RecycledPoolHolder)
+                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
+            )
         }
+    }
+
+    override fun onDestroyView() {
+        binding.recyclerView.adapter = null
+        super.onDestroyView()
     }
 
     override fun observeViewState() {

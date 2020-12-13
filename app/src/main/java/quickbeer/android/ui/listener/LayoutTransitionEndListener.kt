@@ -13,8 +13,7 @@ class LayoutTransitionEndListener(
         container: ViewGroup?,
         view: View?,
         transitionType: Int
-    ) {
-    }
+    ) = Unit
 
     override fun endTransition(
         transition: LayoutTransition?,

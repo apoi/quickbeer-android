@@ -32,6 +32,7 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.BlurTransformation
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class BeerDetailsFragment : MainFragment(R.layout.beer_details_fragment) {

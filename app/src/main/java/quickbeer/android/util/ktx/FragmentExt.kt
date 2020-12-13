@@ -2,66 +2,31 @@ package quickbeer.android.util.ktx
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.Lifecycle.State.INITIALIZED
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 /**
- * Convenience method for creating ViewBinding from Fragment's view with View
- * lifecycle using `viewLifecycle` extension below.
+ * LiveData observing helper.
  */
-fun <T : ViewBinding> Fragment.viewBinding(bind: (View) -> T) =
-    viewLifecycle { bind(requireView()) }
+fun <T> Fragment.observe(liveData: LiveData<T>, observer: (T) -> Unit) {
+    liveData.observe(this, observer::invoke)
+}
 
 /**
- * Binds a value to View lifecycle. Value is created with the initialization
- * function at View's onCreate, and destroyed at onDestroy.
+ * Keep ViewBinding in View tag for convenient lifecycle management.
  */
-fun <T> Fragment.viewLifecycle(create: () -> T): ReadOnlyProperty<Fragment, T> {
+inline fun <reified T : ViewBinding> Fragment.viewBinding(
+    crossinline bind: (View) -> T
+): ReadOnlyProperty<Fragment, T> = object : ReadOnlyProperty<Fragment, T> {
 
-    return object : ReadOnlyProperty<Fragment, T>, DefaultLifecycleObserver {
+    override fun getValue(thisRef: Fragment, property: KProperty<*>): T {
+        val value = requireView().getTag(property.name.hashCode()) as? T
+        if (value != null) return value
 
-        private var value: T? = null
-
-        init {
-            // Observe the View lifecycle of the Fragment
-            this@viewLifecycle
-                .viewLifecycleOwnerLiveData
-                .observe(
-                    this@viewLifecycle,
-                    { owner ->
-                        viewLifecycleOwner.lifecycle.removeObserver(this)
-                        owner.lifecycle.addObserver(this)
-                    }
-                )
-        }
-
-        override fun onCreate(owner: LifecycleOwner) {
-            super.onCreate(owner)
-            value = create()
-        }
-
-        override fun onDestroy(owner: LifecycleOwner) {
-            super.onDestroy(owner)
-            value = null
-        }
-
-        override fun getValue(
-            thisRef: Fragment,
-            property: KProperty<*>
-        ): T {
-            value?.let { return@getValue it }
-
-            if (!lifecycle.currentState.isAtLeast(INITIALIZED)) {
-                error("View has already been destroyed")
-            }
-
-            return create().also {
-                value = it
-            }
+        return bind(requireView()).also {
+            requireView().setTag(property.name.hashCode(), it)
         }
     }
 }

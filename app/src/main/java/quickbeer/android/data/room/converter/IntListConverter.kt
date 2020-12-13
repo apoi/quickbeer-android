@@ -8,7 +8,9 @@ class IntListConverter {
 
     @TypeConverter
     fun fromString(value: String): List<Int> {
-        return value.split(SEPARATOR).map(String::toInt)
+        return value.split(SEPARATOR)
+            .filter(String::isNotEmpty)
+            .map(String::toInt)
     }
 
     @TypeConverter

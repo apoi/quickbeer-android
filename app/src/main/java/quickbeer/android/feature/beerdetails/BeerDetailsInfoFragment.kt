@@ -37,6 +37,7 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class BeerDetailsInfoFragment :

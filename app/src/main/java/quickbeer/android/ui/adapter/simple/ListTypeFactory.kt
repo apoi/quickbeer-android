@@ -2,6 +2,7 @@ package quickbeer.android.ui.adapter.simple
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
 abstract class ListTypeFactory {
@@ -15,5 +16,13 @@ abstract class ListTypeFactory {
         parent: ViewGroup
     ): T {
         return creator(LayoutInflater.from(parent.context), parent, false)
+    }
+
+    open fun createPool(): RecyclerView.RecycledViewPool {
+        return RecyclerView.RecycledViewPool()
+    }
+
+    companion object {
+        const val DEFAULT_POOL_SIZE = 20
     }
 }

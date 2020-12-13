@@ -9,5 +9,9 @@ abstract class ListViewHolder<in T : ListItem>(
 
     abstract fun bind(item: T)
 
+    fun unbind2() {
+        unbind()
+    }
+
     open fun unbind() = Unit
 }
