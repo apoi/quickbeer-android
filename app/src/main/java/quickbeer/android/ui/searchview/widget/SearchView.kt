@@ -18,6 +18,7 @@ import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.search.SearchResult
 import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.setMargins
@@ -98,8 +99,7 @@ class SearchView @JvmOverloads constructor(
             )
 
             setOnEditorActionListener { _, _, _ ->
-                querySubmitCallback?.invoke(text.toString())
-                binding.searchEditText.clearFocus()
+                submitQuery(text.toString())
                 return@setOnEditorActionListener true
             }
 
@@ -206,6 +206,15 @@ class SearchView @JvmOverloads constructor(
             (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
                 .hideSoftInputFromWindow(windowToken, RESULT_UNCHANGED_SHOWN)
         }
+    }
+
+    private fun submitQuery(query: String) {
+        val listener = LayoutTransitionEndListener {
+            querySubmitCallback?.invoke(query)
+        }
+
+        binding.searchLayout.layoutTransition.addTransitionListener(listener)
+        binding.searchEditText.clearFocus()
     }
 
     private fun View.setHeight(height: Int) {
