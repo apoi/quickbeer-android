@@ -40,7 +40,6 @@ class SearchView @JvmOverloads constructor(
         get() = binding.searchEditText.text.toString()
         set(value) {
             binding.searchEditText.setText(value)
-            binding.searchClear.isVisible = value.isNotEmpty()
         }
 
     private var _navigationMode = NavigationMode.SEARCH
@@ -89,6 +88,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchEditText.apply {
             hint = resources.getString(R.string.search_hint)
             setTextColor(white)
+            clearFocus()
 
             addTextChangedListener(
                 OnTextChangedListener {
@@ -110,8 +110,10 @@ class SearchView @JvmOverloads constructor(
 
         // Clear button
         binding.searchClear.apply {
+            isVisible = query.isNotEmpty()
             setOnClickListener {
                 binding.searchEditText.text?.clear()
+                binding.searchEditText.requestFocus()
             }
         }
 

@@ -14,6 +14,6 @@ fun FrameLayout.setMargins(left: Int, top: Int, right: Int, bottom: Int) {
                 setMargins(left, top, right, bottom)
             }
         }
-        else -> error("Unexpected params")
+        else -> error("Unexpected params $params")
     }
 }
