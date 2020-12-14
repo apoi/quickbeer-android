@@ -39,7 +39,7 @@ fun View.setMargins(left: Int, top: Int, right: Int, bottom: Int) {
 }
 
 fun View.setMarginTop(marginTop: Int) {
-    val menuLayoutParams = this.layoutParams as ViewGroup.MarginLayoutParams
-    menuLayoutParams.setMargins(0, marginTop, 0, 0)
-    this.layoutParams = menuLayoutParams
+    val params = layoutParams as ViewGroup.MarginLayoutParams
+    params.setMargins(0, marginTop, 0, 0)
+    layoutParams = params
 }

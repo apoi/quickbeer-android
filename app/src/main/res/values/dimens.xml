@@ -4,6 +4,7 @@
     <dimen name="spacing_s">4dp</dimen>
     <dimen name="spacing_m">8dp</dimen>
     <dimen name="spacing_l">16dp</dimen>
+    <dimen name="spacing_xl">24dp</dimen>
 
     <dimen name="search_status_text">28sp</dimen>
     <dimen name="progress_indicator_width">50dp</dimen>

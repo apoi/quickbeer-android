@@ -55,19 +55,19 @@ class BeerDetailsInfoFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.beerRatingOverallColumn.setOnClickListener {
+        binding.beerRatingOverall.setOnClickListener {
             showToast(R.string.description_rating_overall)
         }
 
-        binding.beerRatingStyleColumn.setOnClickListener {
+        binding.beerRatingStyle.setOnClickListener {
             showToast(R.string.description_rating_style)
         }
 
-        binding.beerAbvColumn.setOnClickListener {
+        binding.beerRatingAbv.setOnClickListener {
             showToast(R.string.description_abv)
         }
 
-        binding.beerIbuColumn.setOnClickListener {
+        binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
         }
 
@@ -86,28 +86,28 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setBeer(beer: Beer) {
-        binding.beerDescription.text = beer.description
-        binding.brewerName.text = beer.brewerName
+        binding.description.value = beer.description
+        binding.brewer.value = beer.brewerName
 
-        binding.beerRatingOverall.text = beer.overallRating
+        binding.beerRatingOverall.value = beer.overallRating
             ?.takeIf { it > 0 }
             ?.roundToInt()
             ?.toString()
             ?: "?"
 
-        binding.beerRatingStyle.text = beer.styleRating
+        binding.beerRatingStyle.value = beer.styleRating
             ?.takeIf { it > 0 }
             ?.roundToInt()
             ?.toString()
             ?: "?"
 
-        binding.beerAbv.text = beer.alcohol
+        binding.beerRatingAbv.value = beer.alcohol
             ?.takeIf { it > 0 }
             ?.roundToInt()
             ?.toString()
             ?: "?"
 
-        binding.beerIbu.text = beer.ibu
+        binding.beerRatingIbu.value = beer.ibu
             ?.takeIf { it > 0 }
             ?.roundToInt()
             ?.toString()
