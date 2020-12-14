@@ -86,7 +86,7 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setBeer(beer: Beer) {
-        binding.description.value = beer.description
+        binding.description.text = beer.description
         binding.brewer.value = beer.brewerName
 
         binding.beerRatingOverall.value = beer.overallRating

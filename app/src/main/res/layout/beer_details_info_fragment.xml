@@ -145,6 +145,7 @@
                     android:id="@+id/beer_rating_ibu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_l"
                     android:clickable="true"
                     android:focusable="true"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -155,16 +156,17 @@
 
                 <!-- Info fields -->
 
-                <quickbeer.android.ui.view.ValueLabel
+                <TextView
                     android:id="@+id/description"
+                    style="@style/DetailsDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/spacing_l"
+                    android:textIsSelectable="true"
                     app:layout_constraintBottom_toTopOf="@id/style"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/beer_rating_overall_separator"
-                    app:title=""
-                    app:wide="true" />
+                    app:layout_constraintTop_toBottomOf="@id/beer_rating_overall_separator" />
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/style"
@@ -177,8 +179,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/description"
                     app:title="@string/style"
-                    app:top_divider="true"
-                    app:wide="true" />
+                    app:top_divider="true" />
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/brewer"
@@ -191,8 +192,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/style"
                     app:title="@string/brewer"
-                    app:top_divider="true"
-                    app:wide="true" />
+                    app:top_divider="true" />
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/origin"
@@ -204,8 +204,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/brewer"
                     app:title="@string/origin"
-                    app:top_divider="true"
-                    app:wide="true" />
+                    app:top_divider="true" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

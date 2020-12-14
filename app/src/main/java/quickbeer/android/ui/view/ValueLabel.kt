@@ -47,11 +47,10 @@ class ValueLabel @JvmOverloads constructor(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.ValueLabel)
         val title = ta.getString(R.styleable.ValueLabel_title)
         val value = ta.getString(R.styleable.ValueLabel_value)
-        val wide = ta.getBoolean(R.styleable.ValueLabel_wide, false)
         val divider = ta.getBoolean(R.styleable.ValueLabel_top_divider, false)
         val selectable = ta.getBoolean(R.styleable.ValueLabel_selectable, false)
 
-        val backgroundRes = if (wide) {
+        val backgroundRes = if (divider) {
             R.attr.selectableItemBackground
         } else R.attr.selectableItemBackgroundBorderless
 
@@ -64,8 +63,7 @@ class ValueLabel @JvmOverloads constructor(
         binding.bottomDivider.isVisible = divider
         binding.value.setTextIsSelectable(selectable)
 
-        if (divider) setPadding(16.dp(), 0, 16.dp(), 12.dp())
-        else if (wide) setPadding(16.dp(), 16.dp(), 16.dp(), 16.dp())
+        if (divider) setPadding(16.dp(), 0, 16.dp(), 8.dp())
 
         ta.recycle()
     }
