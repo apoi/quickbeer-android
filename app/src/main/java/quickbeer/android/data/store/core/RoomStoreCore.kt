@@ -50,6 +50,14 @@ abstract class RoomStoreCore<K, V, E>(
             .map { it.map(entityMapper::mapTo) }
     }
 
+    override suspend fun getKeys(): List<K> {
+        return coreProxy.getKeys()
+    }
+
+    override fun getKeysStream(): Flow<List<K>> {
+        return coreProxy.getKeysStream()
+    }
+
     override suspend fun put(key: K, value: V): V? {
         return coreProxy.put(key, entityMapper.mapFrom(value))
             ?.let(entityMapper::mapTo)

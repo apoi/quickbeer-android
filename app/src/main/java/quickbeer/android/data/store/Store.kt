@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-interface Store<in K, V> {
+interface Store<K, V> {
 
     /**
      * Returns value for given key, or empty value if key doesn't exist in store.
@@ -23,6 +23,16 @@ interface Store<in K, V> {
      * value if one exists.
      */
     fun getStream(key: K): Flow<V>
+
+    /**
+     * Returns list of all keys.
+     */
+    suspend fun getKeys(): List<K>
+
+    /**
+     * Returns stream of all keys, re-emitting whenever the set of keys changes.
+     */
+    fun getKeysStream(): Flow<List<K>>
 
     /**
      * Puts the value to the store.
@@ -42,7 +52,6 @@ interface Store<in K, V> {
 /**
  * Special case of Store that can only contain a single value.
  *
- * @param <K> Type of keys.
  * @param <V> Type of values.
  */
 interface SingleStore<V> {

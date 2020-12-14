@@ -18,44 +18,53 @@ import quickbeer.android.data.store.StoreCore
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class ItemListStore<in I, out K, V : Any>(
+@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
+open class ItemListStore<I, out K, V : Any>(
     private val getKey: (V) -> K,
     private val indexCore: StoreCore<I, ItemList<I, K>>,
     private val valueCore: StoreCore<K, V>
 ) : Store<I, List<V>> {
 
-    suspend fun getIdList(key: I): List<K> {
+    override suspend fun get(index: I): List<V> {
         return withContext(Dispatchers.IO) {
-            indexCore.get(key)?.values
-                ?: emptyList()
-        }
-    }
-
-    fun getIdListStream(key: I): Flow<List<K>> {
-        return indexCore.getStream(key)
-            .map { it.values }
-            .flowOn(Dispatchers.IO)
-    }
-
-    override suspend fun get(key: I): List<V> {
-        return withContext(Dispatchers.IO) {
-            indexCore.get(key)?.values
+            indexCore.get(index)?.values
                 ?.let { valueCore.get(it) }
                 ?: emptyList()
         }
     }
 
-    override fun getStream(key: I): Flow<List<V>> {
-        return indexCore.getStream(key)
+    override fun getStream(index: I): Flow<List<V>> {
+        return indexCore.getStream(index)
             .map { index -> index.values }
             .map(valueCore::get)
+            .flowOn(Dispatchers.IO)
+    }
+
+    override suspend fun getKeys(): List<I> {
+        return indexCore.getKeys()
+    }
+
+    override fun getKeysStream(): Flow<List<I>> {
+        return indexCore.getKeysStream()
+    }
+
+    suspend fun getValueKeys(index: I): List<K> {
+        return withContext(Dispatchers.IO) {
+            indexCore.get(index)?.values
+                ?: emptyList()
+        }
+    }
+
+    fun getValueKeysStream(index: I): Flow<List<K>> {
+        return indexCore.getStream(index)
+            .map { it.values }
             .flowOn(Dispatchers.IO)
     }
 
     /**
      * Put all values to store, and add index to keep track of all the values.
      */
-    override suspend fun put(key: I, values: List<V>): Boolean {
+    override suspend fun put(index: I, values: List<V>): Boolean {
         return withContext(Dispatchers.IO) {
             // Put values first in case there's a listener for the index. This way values
             // already exist for any listeners to query.
@@ -63,7 +72,7 @@ open class ItemListStore<in I, out K, V : Any>(
                 .map { value -> Pair(getKey(value), value) }
                 .let { items -> valueCore.put(items.toMap()) }
 
-            val indexChanged = indexCore.put(key, ItemList(key, values.map(getKey)))
+            val indexChanged = indexCore.put(index, ItemList(index, values.map(getKey)))
 
             newValues.isNotEmpty() || indexChanged != null
         }
@@ -73,9 +82,9 @@ open class ItemListStore<in I, out K, V : Any>(
      * Deletes key from the index store. Does not delete any of the values,
      * as they may be referenced in other indexes.
      */
-    override suspend fun delete(key: I): Boolean {
+    override suspend fun delete(index: I): Boolean {
         return withContext(Dispatchers.IO) {
-            indexCore.delete(key)
+            indexCore.delete(index)
         }
     }
 }
@@ -96,20 +105,20 @@ open class SingleItemListStore<I, out K, V : Any>(
 
     private val store = ItemListStore(getKey, indexCore, valueCore)
 
-    suspend fun getIdList(): List<K> {
-        return store.getIdList(indexKey)
-    }
-
-    fun getIdListStream(): Flow<List<K>> {
-        return store.getIdListStream(indexKey)
-    }
-
     override suspend fun get(): List<V> {
         return store.get(indexKey)
     }
 
     override fun getStream(): Flow<List<V>> {
         return store.getStream(indexKey)
+    }
+
+    suspend fun getValueKeys(): List<K> {
+        return store.getValueKeys(indexKey)
+    }
+
+    fun getValueKeysStream(): Flow<List<K>> {
+        return store.getValueKeysStream(indexKey)
     }
 
     @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")

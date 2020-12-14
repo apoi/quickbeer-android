@@ -2,7 +2,11 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
+    <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K, V, E&gt; : StoreCore</ID>
     <ID>TooManyFunctions:SearchView.kt$SearchView : MaterialCardView</ID>
     <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K, V&gt;</ID>
   </CurrentIssues>

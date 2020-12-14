@@ -13,9 +13,11 @@ import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
+import quickbeer.android.domain.beersearch.store.BeerListStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.feature.topbeers.TopBeersViewEffect
 import quickbeer.android.ui.adapter.search.SearchResult
+import quickbeer.android.ui.adapter.search.SearchResult.Type
 import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.search.SearchBarInterface
@@ -23,8 +25,9 @@ import quickbeer.android.util.SingleLiveEvent
 
 class SearchViewModel(
     query: String,
-    private val repository: BeerSearchRepository,
-    private val beerStore: BeerRepository
+    private val searchRepository: BeerSearchRepository,
+    private val beerRepository: BeerRepository,
+    private val beerListStore: BeerListStore
 ) : ViewModel(), SearchBarInterface {
 
     private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
@@ -37,13 +40,28 @@ class SearchViewModel(
 
     init {
         search(query)
+        registerQueries()
     }
 
     private fun search(query: String) {
         viewModelScope.launch {
-            repository.getStream(query, Accept())
-                .map(StateListMapper<Beer, BeerListModel> { BeerListModel(it.id, beerStore) }::map)
+            searchRepository.getStream(query, Accept())
+                .map(
+                    StateListMapper<Beer, BeerListModel> {
+                        BeerListModel(it.id, beerRepository)
+                    }::map
+                )
                 .collect { _viewState.postValue(it) }
+        }
+    }
+
+    private fun registerQueries() {
+        viewModelScope.launch {
+            beerListStore.getKeysStream()
+                .map { queryList ->
+                    queryList.map { query -> SearchResult(query.hashCode(), Type.SEARCH, query) }
+                }
+                .collect { searchAdapter.setItems(it) }
         }
     }
 

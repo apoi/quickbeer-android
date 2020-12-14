@@ -7,6 +7,7 @@ import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.store.Merger
 import quickbeer.android.data.store.StoreCore
@@ -58,7 +59,18 @@ open class MemoryStoreCore<K, V>(
 
     override fun getAllStream(): Flow<List<V>> {
         return putStream.asFlow()
+            .combine(deleteStream.asFlow()) { _, _ -> Unit }
             .map { getAll() }
+    }
+
+    override suspend fun getKeys(): List<K> {
+        return cache.keys().toList()
+    }
+
+    override fun getKeysStream(): Flow<List<K>> {
+        return putStream.asFlow()
+            .combine(deleteStream.asFlow()) { _, _ -> Unit }
+            .map { getKeys() }
     }
 
     override suspend fun put(key: K, value: V): V? {

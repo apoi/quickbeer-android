@@ -67,6 +67,14 @@ class CachingStoreCore<K, V>(
         }
     }
 
+    override suspend fun getKeys(): List<K> {
+        return persistingCore.getKeys()
+    }
+
+    override fun getKeysStream(): Flow<List<K>> {
+        return persistingCore.getKeysStream()
+    }
+
     override fun getStream(key: K): Flow<V> {
         return persistingCore.getStream(key)
             .onEach { lock.withLock { cacheCore.put(key, it) } }

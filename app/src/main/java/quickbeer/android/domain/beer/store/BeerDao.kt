@@ -35,6 +35,12 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
     @Query("SELECT * FROM beers")
     abstract fun getAllStream(): Flow<List<BeerEntity>>
 
+    @Query("SELECT id FROM beers")
+    abstract fun getKeys(): List<Int>
+
+    @Query("SELECT id FROM beers")
+    abstract fun getKeysStream(): Flow<List<Int>>
+
     @Transaction
     open suspend fun put(value: BeerEntity): BeerEntity? {
         return putMerged(value, ::get)

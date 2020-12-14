@@ -61,6 +61,20 @@ interface StoreCore<K, V> {
     fun getAllStream(): Flow<List<V>>
 
     /**
+     * Returns list of all stored keys.
+     *
+     * @return All stored keys, or empty list if core contains no values.
+     */
+    suspend fun getKeys(): List<K>
+
+    /**
+     * Returns a Flow that emits all keys, and re-emits all keys whenever stored keys change.
+     *
+     * @return Flow emitting all keys initially and after any change in stored keys.s
+     */
+    fun getKeysStream(): Flow<List<K>>
+
+    /**
      * Takes an identifier to be added, and returns success status of the operation.
      *
      * @param key Key of the persisted item.

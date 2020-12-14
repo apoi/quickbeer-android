@@ -1,5 +1,6 @@
 package quickbeer.android.domain.beer.store
 
+import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
@@ -25,6 +26,10 @@ private class BeerDaoProxy(
     override suspend fun getAll() = dao.getAll()
 
     override fun getAllStream() = dao.getAllStream()
+
+    override suspend fun getKeys(): List<Int> = dao.getKeys()
+
+    override fun getKeysStream(): Flow<List<Int>> = dao.getKeysStream()
 
     override suspend fun put(key: Int, value: BeerEntity) = dao.put(value)
 

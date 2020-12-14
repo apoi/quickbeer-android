@@ -35,6 +35,12 @@ abstract class IdListDao : CoreDao<String, IdListEntity>(
     @Query("SELECT * FROM lists")
     abstract fun getAllStream(): Flow<List<IdListEntity>>
 
+    @Query("SELECT id FROM lists")
+    abstract fun getKeys(): List<String>
+
+    @Query("SELECT id FROM lists")
+    abstract fun getKeysStream(): Flow<List<String>>
+
     @Transaction
     open suspend fun put(value: IdListEntity): IdListEntity? {
         return putMerged(value, ::get)

@@ -1,5 +1,6 @@
 package quickbeer.android.domain.idlist.store
 
+import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
@@ -25,6 +26,10 @@ private class IdListDaoProxy(
     override suspend fun getAll() = dao.getAll()
 
     override fun getAllStream() = dao.getAllStream()
+
+    override suspend fun getKeys(): List<String> = dao.getKeys()
+
+    override fun getKeysStream(): Flow<List<String>> = dao.getKeysStream()
 
     override suspend fun put(key: String, value: IdListEntity) = dao.put(value)
 
