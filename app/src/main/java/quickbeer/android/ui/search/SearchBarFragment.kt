@@ -19,7 +19,7 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
 
     protected abstract fun searchView(): SearchView
 
-    protected abstract fun searchViewModel(): SearchBarInterface
+    protected abstract fun searchActionsHandler(): SearchActionsHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +31,9 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
         super.onViewCreated(view, savedInstanceState)
 
         searchView().apply {
-            setAdapter(searchViewModel().getSearchAdapter())
             searchFocusChangeCallback = { closeOnBackHandler.isEnabled = it }
-            queryChangedCallback = searchViewModel()::onSearchChanged
-            querySubmitCallback = searchViewModel()::onSearchSubmit
+            queryChangedCallback = searchActionsHandler()::onSearchChanged
+            querySubmitCallback = searchActionsHandler()::onSearchSubmit
             navigateBackCallback = requireActivity()::onBackPressed
         }
     }

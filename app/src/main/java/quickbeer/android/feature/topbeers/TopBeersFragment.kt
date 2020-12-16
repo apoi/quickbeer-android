@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListFragmentBinding
+import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
 import quickbeer.android.feature.topbeers.TopBeersViewEffect.Search
@@ -16,21 +18,21 @@ import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.ui.search.SearchBarFragment
-import quickbeer.android.ui.search.SearchBarInterface
+import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
-    override fun rootLayout() = binding.layout
-    override fun topInsetView() = binding.layout
-
     private val binding by viewBinding(BeerListFragmentBinding::bind)
     private val viewModel by viewModel<TopBeersViewModel>()
+    private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
     private var beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override val searchHint = R.string.search_hint
+    override fun rootLayout() = binding.layout
+    override fun topInsetView() = binding.layout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -84,7 +86,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
         return binding.searchView
     }
 
-    override fun searchViewModel(): SearchBarInterface {
-        return viewModel
+    override fun searchActionsHandler(): SearchActionsHandler {
+        return searchViewModel
     }
 }

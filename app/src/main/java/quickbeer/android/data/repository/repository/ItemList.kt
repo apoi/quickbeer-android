@@ -6,7 +6,7 @@ package quickbeer.android.data.repository.repository
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class ItemList<out K, out V>(
+data class ItemList<out K, out V>(
     val key: K,
     val values: List<V>
 )

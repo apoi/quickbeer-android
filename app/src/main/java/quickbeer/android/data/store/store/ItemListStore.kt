@@ -9,6 +9,7 @@ import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.SingleStore
 import quickbeer.android.data.store.Store
 import quickbeer.android.data.store.StoreCore
+import timber.log.Timber
 
 /**
  * Store for lists of items. Keeps index of the items in one core, and items themselves in another
@@ -17,46 +18,60 @@ import quickbeer.android.data.store.StoreCore
  * @param <I> Type of index keys.
  * @param <K> Type of keys.
  * @param <V> Type of values.
+ *
+ * @param indexMapper Mapper class used when persisted indexes must be encoded
+ * @param getKey Function for deriving value's key from value itself
+ * @param indexCore Core storing mapping from index to ItemList
+ * @param valueCore Core storing values matched by keys
  */
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
 open class ItemListStore<I, out K, V : Any>(
+    private val indexMapper: IndexMapper<I>,
     private val getKey: (V) -> K,
     private val indexCore: StoreCore<I, ItemList<I, K>>,
-    private val valueCore: StoreCore<K, V>
+    private val valueCore: StoreCore<K, V>,
 ) : Store<I, List<V>> {
 
     override suspend fun get(index: I): List<V> {
+        Timber.w("GET " + indexMapper.encode(index))
         return withContext(Dispatchers.IO) {
-            indexCore.get(index)?.values
+            indexCore.get(indexMapper.encode(index))?.values
                 ?.let { valueCore.get(it) }
                 ?: emptyList()
         }
     }
 
     override fun getStream(index: I): Flow<List<V>> {
-        return indexCore.getStream(index)
-            .map { index -> index.values }
+        Timber.w("GET STREAM " + indexMapper.encode(index))
+        return indexCore.getStream(indexMapper.encode(index))
+            .map { itemList -> itemList.values }
             .map(valueCore::get)
             .flowOn(Dispatchers.IO)
     }
 
     override suspend fun getKeys(): List<I> {
         return indexCore.getKeys()
+            .filter(indexMapper::matches)
+            .map(indexMapper::decode)
     }
 
     override fun getKeysStream(): Flow<List<I>> {
         return indexCore.getKeysStream()
+            .map {
+                it.filter(indexMapper::matches)
+                    .map(indexMapper::decode)
+            }
     }
 
-    suspend fun getValueKeys(index: I): List<K> {
+    open suspend fun getValueKeys(index: I): List<K> {
         return withContext(Dispatchers.IO) {
-            indexCore.get(index)?.values
+            indexCore.get(indexMapper.encode(index))?.values
                 ?: emptyList()
         }
     }
 
-    fun getValueKeysStream(index: I): Flow<List<K>> {
-        return indexCore.getStream(index)
+    open fun getValueKeysStream(index: I): Flow<List<K>> {
+        return indexCore.getStream(indexMapper.encode(index))
             .map { it.values }
             .flowOn(Dispatchers.IO)
     }
@@ -72,7 +87,9 @@ open class ItemListStore<I, out K, V : Any>(
                 .map { value -> Pair(getKey(value), value) }
                 .let { items -> valueCore.put(items.toMap()) }
 
-            val indexChanged = indexCore.put(index, ItemList(index, values.map(getKey)))
+            val storeIndex = indexMapper.encode(index)
+            val itemList = ItemList(storeIndex, values.map(getKey))
+            val indexChanged = indexCore.put(storeIndex, itemList)
 
             newValues.isNotEmpty() || indexChanged != null
         }
@@ -84,8 +101,39 @@ open class ItemListStore<I, out K, V : Any>(
      */
     override suspend fun delete(index: I): Boolean {
         return withContext(Dispatchers.IO) {
-            indexCore.delete(index)
+            indexCore.delete(indexMapper.encode(index))
         }
+    }
+
+    /**
+     * Interface for mapping index to store persistence key. Useful when multiple stores use the
+     * same core for storing indexes: this allows the stores to have unique persisted values.
+     */
+    interface IndexMapper<I> {
+
+        /**
+         * Encode index to store internal representation.
+         */
+        fun encode(index: I): I
+
+        /**
+         * Decode from store internal representation to index.
+         */
+        fun decode(value: I): I
+
+        /**
+         * Indicates if the value is valid index.
+         */
+        fun matches(value: I): Boolean
+    }
+
+    /**
+     * Mapper returning the value itself.
+     */
+    class Identity<I> : IndexMapper<I> {
+        override fun encode(index: I) = index
+        override fun decode(value: I) = value
+        override fun matches(value: I) = true
     }
 }
 
@@ -103,7 +151,7 @@ open class SingleItemListStore<I, out K, V : Any>(
     valueCore: StoreCore<K, V>
 ) : SingleStore<List<V>> {
 
-    private val store = ItemListStore(getKey, indexCore, valueCore)
+    private val store = ItemListStore(ItemListStore.Identity(), getKey, indexCore, valueCore)
 
     override suspend fun get(): List<V> {
         return store.get(indexKey)

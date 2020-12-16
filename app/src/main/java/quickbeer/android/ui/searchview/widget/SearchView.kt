@@ -17,6 +17,7 @@ import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.search.SearchResult
+import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
@@ -32,6 +33,8 @@ class SearchView @JvmOverloads constructor(
 
     private val binding: SearchViewBinding =
         SearchViewBinding.inflate(LayoutInflater.from(context), this)
+
+    private val searchAdapter = ListAdapter<SearchResult>(SearchResultTypeFactory())
 
     private val transitionDuration = resources
         .getInteger(android.R.integer.config_shortAnimTime)
@@ -66,6 +69,14 @@ class SearchView @JvmOverloads constructor(
 
     init {
         onGlobalLayout(::initLayout)
+
+        binding.searchRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = searchAdapter
+
+            setHasFixedSize(true)
+            addItemDecoration(DividerDecoration(context))
+        }
     }
 
     private fun initLayout() {
@@ -127,16 +138,6 @@ class SearchView @JvmOverloads constructor(
                 enableTransitionType(LayoutTransition.CHANGING)
                 setDuration(transitionDuration)
             }
-        }
-    }
-
-    fun setAdapter(resultAdapter: ListAdapter<SearchResult>) {
-        binding.searchRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = resultAdapter
-
-            setHasFixedSize(true)
-            addItemDecoration(DividerDecoration(context))
         }
     }
 

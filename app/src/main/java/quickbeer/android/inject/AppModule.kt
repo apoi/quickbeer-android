@@ -24,6 +24,7 @@ import quickbeer.android.domain.beersearch.network.TopBeersFetcher
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.domain.beersearch.store.BeerListStore
+import quickbeer.android.domain.beersearch.store.BeerSearchStore
 import quickbeer.android.domain.beersearch.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
@@ -98,7 +99,7 @@ val appModule = module {
 
     // Stores
     factory { BeerStore(get(named<Beer>())) }
-    factory { BeerListStore(get(named<IdList>()), get(named<Beer>())) }
+    factory { BeerSearchStore(get(named<IdList>()), get(named<Beer>())) }
     factory { TopBeersStore(get(named<IdList>()), get(named<Beer>())) }
     factory { RecentBeersStore(get(named<IdList>()), get(named<Beer>())) }
 
