@@ -13,14 +13,22 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.card.MaterialCardView
 import kotlin.math.roundToInt
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.search.SearchResult
 import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
+import quickbeer.android.ui.adapter.search.SearchSuggestion
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
+import quickbeer.android.ui.listener.setClickListener
+import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.setMargins
 
@@ -34,7 +42,8 @@ class SearchView @JvmOverloads constructor(
     private val binding: SearchViewBinding =
         SearchViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val searchAdapter = ListAdapter<SearchResult>(SearchResultTypeFactory())
+    private val searchAdapter = ListAdapter<SearchSuggestion>(SearchResultTypeFactory())
+    private var scope = CoroutineScope(Dispatchers.IO)
 
     private val transitionDuration = resources
         .getInteger(android.R.integer.config_shortAnimTime)
@@ -53,10 +62,12 @@ class SearchView @JvmOverloads constructor(
             _navigationMode = value
         }
 
-    var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
-    var queryChangedCallback: ((String) -> Unit)? = null
+    var suggestionSelectedCallback: ((SearchSuggestion) -> Unit)? = null
     var querySubmitCallback: ((String) -> Unit)? = null
+    var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var navigateBackCallback: (() -> Unit)? = null
+
+    private var queryChangedCallback: ((String) -> Unit)? = null
 
     // Should be moved to attributes and style
     private val black = resources.getColor(R.color.black, null)
@@ -76,6 +87,22 @@ class SearchView @JvmOverloads constructor(
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
+
+            setClickListener<SearchSuggestion> {
+                closeSearchView()
+                binding.searchEditText.setText(it.text)
+                suggestionSelectedCallback?.invoke(it)
+            }
+        }
+    }
+
+    fun connectActions(handler: SearchActionsHandler) {
+        queryChangedCallback = handler::onSearchChanged
+
+        scope.launch {
+            handler.suggestions.collect {
+                withContext(Dispatchers.Main) { searchAdapter.setItems(it) }
+            }
         }
     }
 
@@ -89,7 +116,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchNavigation.apply {
             setOnClickListener {
                 when {
-                    binding.searchEditText.hasFocus() -> binding.searchEditText.clearFocus()
+                    binding.searchEditText.hasFocus() -> closeSearchView()
                     navigationMode == NavigationMode.BACK -> navigateBackCallback?.invoke()
                     else -> binding.searchEditText.requestFocus()
                 }
@@ -142,7 +169,9 @@ class SearchView @JvmOverloads constructor(
     }
 
     override fun onDetachedFromWindow() {
+        scope.cancel()
         binding.searchRecyclerView.adapter = null
+
         super.onDetachedFromWindow()
     }
 
@@ -220,7 +249,7 @@ class SearchView @JvmOverloads constructor(
         }
 
         binding.searchLayout.layoutTransition.addTransitionListener(listener)
-        binding.searchEditText.clearFocus()
+        closeSearchView()
     }
 
     private fun View.setHeight(height: Int) {

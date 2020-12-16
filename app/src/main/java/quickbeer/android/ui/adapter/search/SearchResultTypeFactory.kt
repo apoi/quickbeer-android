@@ -11,7 +11,7 @@ class SearchResultTypeFactory : ListTypeFactory() {
 
     override fun type(item: ListItem): Int {
         return when (item) {
-            is SearchResult -> R.layout.search_view_suggestion
+            is SearchSuggestion -> R.layout.search_view_suggestion
             else -> error("Invalid item")
         }
     }

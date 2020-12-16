@@ -14,7 +14,6 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.util.SingleLiveEvent
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
@@ -23,9 +22,6 @@ class TopBeersViewModel(
 
     private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
     val viewState: LiveData<State<List<BeerListModel>>> = _viewState
-
-    private val _viewEffect = SingleLiveEvent<TopBeersViewEffect>()
-    val viewEffect: LiveData<TopBeersViewEffect> = _viewEffect
 
     init {
         viewModelScope.launch {

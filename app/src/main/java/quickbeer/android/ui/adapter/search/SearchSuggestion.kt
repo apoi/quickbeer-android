@@ -3,7 +3,7 @@ package quickbeer.android.ui.adapter.search
 import quickbeer.android.ui.adapter.simple.ListItem
 import quickbeer.android.ui.adapter.simple.ListTypeFactory
 
-data class SearchResult(
+data class SearchSuggestion(
     val id: Int,
     val type: Type,
     val text: String

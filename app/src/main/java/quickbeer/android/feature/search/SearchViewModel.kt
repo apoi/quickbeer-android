@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -15,9 +17,8 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
 import quickbeer.android.domain.beersearch.store.BeerSearchStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.ui.adapter.search.SearchResult
-import quickbeer.android.ui.adapter.search.SearchResult.Type
-import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.search.SearchSuggestion
+import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
 import quickbeer.android.ui.search.SearchActionsHandler
 
 open class SearchViewModel(
@@ -30,6 +31,9 @@ open class SearchViewModel(
     private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
     val viewState: LiveData<State<List<BeerListModel>>> = _viewState
 
+    private val _suggestions = MutableStateFlow<List<SearchSuggestion>>(emptyList())
+    override val suggestions: StateFlow<List<SearchSuggestion>> get() = _suggestions
+
     init {
         if (initialQuery != null) {
             search(initialQuery)
@@ -38,7 +42,7 @@ open class SearchViewModel(
         registerQueries()
     }
 
-    private fun search(query: String) {
+    fun search(query: String) {
         viewModelScope.launch {
             searchRepository.getStream(query, Accept())
                 .map(
@@ -54,30 +58,15 @@ open class SearchViewModel(
         viewModelScope.launch {
             beerSearchStore.getKeysStream()
                 .map { queryList ->
-                    queryList.map { query -> SearchResult(query.hashCode(), Type.SEARCH, query) }
+                    queryList.map { query ->
+                        SearchSuggestion(query.hashCode(), Type.SEARCH, query)
+                    }
                 }
-                .collect { searchAdapter.setItems(it) }
+                .collect { _suggestions.value = it }
         }
-    }
-
-    override fun getSearchAdapter(): ListAdapter<SearchResult> {
-        return searchAdapter
     }
 
     override fun onSearchChanged(query: String) {
         // TODO
-    }
-
-    override fun onSearchSubmit(query: String) {
-        search(query)
-    }
-
-    override fun onSuggestionClicked(position: Int) {
-        // TODO
-    }
-
-    override fun getSuggestionText(position: Int): String {
-        // TODO
-        return ""
     }
 }

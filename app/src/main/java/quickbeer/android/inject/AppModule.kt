@@ -23,7 +23,6 @@ import quickbeer.android.domain.beersearch.network.BeerSearchFetcher
 import quickbeer.android.domain.beersearch.network.TopBeersFetcher
 import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
 import quickbeer.android.domain.beersearch.repository.TopBeersRepository
-import quickbeer.android.domain.beersearch.store.BeerListStore
 import quickbeer.android.domain.beersearch.store.BeerSearchStore
 import quickbeer.android.domain.beersearch.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList

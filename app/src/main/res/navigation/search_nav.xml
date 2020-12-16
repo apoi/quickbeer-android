@@ -25,11 +25,6 @@
                 android:name="id"
                 app:argType="integer" />
 
-            <argument
-                android:name="fullscreen"
-                android:defaultValue="true"
-                app:argType="boolean" />
-
         </action>
 
     </fragment>
