@@ -103,8 +103,8 @@ class BeerDetailsInfoFragment :
 
         binding.beerRatingAbv.value = beer.alcohol
             ?.takeIf { it > 0 }
-            ?.roundToInt()
             ?.toString()
+            ?.let { "%s%%".format(it) }
             ?: "?"
 
         binding.beerRatingIbu.value = beer.ibu
