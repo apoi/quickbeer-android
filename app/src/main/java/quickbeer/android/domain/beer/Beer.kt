@@ -50,6 +50,31 @@ data class Beer(
     }
 
     companion object {
-        val merger: Merger<Beer> = { _, new -> new }
+        val merger: Merger<Beer> = { old, new ->
+            Beer(
+                id = new.id,
+                name = new.name ?: old.name,
+                brewerId = new.brewerId ?: old.brewerId,
+                brewerName = new.brewerName ?: old.brewerName,
+                contractBrewerId = new.contractBrewerId ?: old.contractBrewerId,
+                contractBrewerName = new.contractBrewerName ?: old.contractBrewerName,
+                averageRating = new.averageRating ?: old.averageRating,
+                overallRating = new.overallRating ?: old.overallRating,
+                styleRating = new.styleRating ?: old.styleRating,
+                rateCount = new.rateCount ?: old.rateCount,
+                countryId = new.countryId ?: old.countryId,
+                styleId = new.styleId ?: old.styleId,
+                styleName = new.styleName ?: old.styleName,
+                alcohol = new.alcohol ?: old.alcohol,
+                ibu = new.ibu ?: old.ibu,
+                description = new.description ?: old.description,
+                isAlias = new.isAlias ?: old.isAlias,
+                isRetired = new.isRetired ?: old.isRetired,
+                isVerified = new.isVerified ?: old.isVerified,
+                unrateable = new.unrateable ?: old.unrateable,
+                tickValue = new.tickValue ?: old.tickValue,
+                tickDate = new.tickDate ?: old.tickDate
+            )
+        }
     }
 }
