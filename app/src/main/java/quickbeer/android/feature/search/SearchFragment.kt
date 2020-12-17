@@ -82,7 +82,6 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
                 }
                 is State.Success -> {
                     beersAdapter.setItems(state.value)
-                    binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
@@ -109,6 +108,8 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
     }
 
     override fun onSearchQuerySubmit(query: String) {
+        beersAdapter.setItems(emptyList())
+        binding.recyclerView.scrollToPosition(0)
         viewModel.search(query)
     }
 }

@@ -77,7 +77,6 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
                 }
                 is State.Success -> {
                     beersAdapter.setItems(state.value)
-                    binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
