@@ -2,6 +2,7 @@ package quickbeer.android.feature.search
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -70,19 +71,25 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_fragment) {
             when (state) {
                 State.Loading -> {
                     beersAdapter.setItems(emptyList())
+                    binding.message.isVisible = false
                     binding.progress.show()
                 }
                 State.Empty -> {
                     beersAdapter.setItems(emptyList())
+                    binding.message.text = getString(R.string.message_empty)
+                    binding.message.isVisible = true
                     binding.progress.hide()
                 }
                 is State.Success -> {
                     beersAdapter.setItems(state.value)
                     binding.recyclerView.scrollToPosition(0)
+                    binding.message.isVisible = false
                     binding.progress.hide()
                 }
                 is State.Error -> {
                     beersAdapter.setItems(emptyList())
+                    binding.message.text = getString(R.string.message_error)
+                    binding.message.isVisible = true
                     binding.progress.hide()
                 }
             }

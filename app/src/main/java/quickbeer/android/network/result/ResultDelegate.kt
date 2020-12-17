@@ -16,21 +16,17 @@ class ResultDelegate<T>(proxy: Call<T>) : CallDelegate<T, ApiResult<T>>(proxy) {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val result = when (val code = response.code()) {
                     in 200 until 300 -> ApiResult.Success(response.body())
-                    else -> ApiResult.HttpError(code, response.message())
+                    else -> ApiResult.HttpError(code, HttpException(response))
                 }
 
                 callback.onResponse(this@ResultDelegate, Response.success(result))
             }
 
             override fun onFailure(call: Call<T>, error: Throwable) {
-                val message = error.message
-                    ?: error.cause?.message
-                    ?: error.javaClass.simpleName
-
                 val result = when (error) {
-                    is HttpException -> ApiResult.HttpError(error.code(), message)
-                    is IOException -> ApiResult.NetworkError(message)
-                    else -> ApiResult.UnknownError(message)
+                    is HttpException -> ApiResult.HttpError(error.code(), error)
+                    is IOException -> ApiResult.NetworkError(error)
+                    else -> ApiResult.UnknownError(error)
                 }
 
                 callback.onResponse(this@ResultDelegate, Response.success(result))

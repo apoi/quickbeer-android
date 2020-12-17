@@ -114,6 +114,6 @@ val appModule = module {
 
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { TopBeersViewModel(get(), get()) }
-    viewModel { (query: String) -> SearchViewModel(query, get(), get(), get()) }
+    viewModel { (query: String?) -> SearchViewModel(query, get(), get(), get()) }
     viewModel { (id: Int) -> BeerDetailsViewModel(id, get()) }
 }

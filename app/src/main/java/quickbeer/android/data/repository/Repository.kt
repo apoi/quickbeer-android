@@ -22,9 +22,7 @@ abstract class Repository<in K, V> {
      */
     suspend fun get(key: K): State<V> {
         return withContext(Dispatchers.IO) {
-            getLocal(key)
-                ?.let { State.Success(it) }
-                ?: State.Empty
+            State.from(getLocal(key))
         }
     }
 
@@ -38,7 +36,7 @@ abstract class Repository<in K, V> {
             // Invalid value triggers fetch. It must not trigger clearing of the
             // value as the value may still be valid for another consumer with
             // a different validator.
-            val isValid = getLocal(key)?.let(validator::validate) == true
+            val isValid = validator.validate(getLocal(key))
 
             if (!isValid) {
                 when (val response = fetchRemote(key)) {
@@ -52,9 +50,9 @@ abstract class Repository<in K, V> {
                         }
                     }
                     // State can be expanded for more detailed error types
-                    is ApiResult.HttpError -> emit(State.Error(response.error))
-                    is ApiResult.NetworkError -> emit(State.Error(response.error))
-                    is ApiResult.UnknownError -> emit(State.Error(response.error))
+                    is ApiResult.HttpError -> emit(State.Error(response.cause))
+                    is ApiResult.NetworkError -> emit(State.Error(response.cause))
+                    is ApiResult.UnknownError -> emit(State.Error(response.cause))
                 }
             }
 
@@ -63,7 +61,7 @@ abstract class Repository<in K, V> {
             emitAll(
                 getLocalStream(key)
                     .filter { validator.validate(it) }
-                    .map { State.Success(it) }
+                    .map { State.from(it) }
             )
         }.flowOn(Dispatchers.IO)
     }

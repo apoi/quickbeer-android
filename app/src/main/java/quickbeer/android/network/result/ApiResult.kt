@@ -13,11 +13,11 @@ sealed class ApiResult<out T> {
 
     data class Success<out T>(val value: T?) : ApiResult<T>()
 
-    data class HttpError(val code: Int, val error: String) : ApiResult<Nothing>()
+    data class HttpError(val code: Int, val cause: Throwable) : ApiResult<Nothing>()
 
-    data class NetworkError(val error: String) : ApiResult<Nothing>()
+    data class NetworkError(val cause: Throwable) : ApiResult<Nothing>()
 
-    data class UnknownError(val error: String) : ApiResult<Nothing>()
+    data class UnknownError(val cause: Throwable) : ApiResult<Nothing>()
 }
 
 /**
@@ -26,9 +26,9 @@ sealed class ApiResult<out T> {
 fun <T, U : List<T>> ApiResult<U>.first(): ApiResult<T> {
     return when (this) {
         is Success -> Success(value?.first())
-        is HttpError -> HttpError(code, error)
-        is NetworkError -> NetworkError(error)
-        is UnknownError -> UnknownError(error)
+        is HttpError -> HttpError(code, cause)
+        is NetworkError -> NetworkError(cause)
+        is UnknownError -> UnknownError(cause)
     }
 }
 
@@ -38,8 +38,8 @@ fun <T, U : List<T>> ApiResult<U>.first(): ApiResult<T> {
 fun <T, U> ApiResult<U>.map(mapper: Mapper<T, U>): ApiResult<T> {
     return when (this) {
         is Success -> Success(value?.let(mapper::mapTo))
-        is HttpError -> HttpError(code, error)
-        is NetworkError -> NetworkError(error)
-        is UnknownError -> UnknownError(error)
+        is HttpError -> HttpError(code, cause)
+        is NetworkError -> NetworkError(cause)
+        is UnknownError -> UnknownError(cause)
     }
 }
