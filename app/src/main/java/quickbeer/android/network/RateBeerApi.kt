@@ -1,6 +1,7 @@
 package quickbeer.android.network
 
 import quickbeer.android.domain.beer.network.BeerJson
+import quickbeer.android.domain.style.network.StyleJson
 import quickbeer.android.network.result.ApiResult
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -41,6 +42,9 @@ interface RateBeerApi {
 
     @GET("/json/style.asp")
     suspend fun beersInStyle(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
+
+    @GET("/json/styles.asp")
+    suspend fun styles(): ApiResult<List<StyleJson>>
 
     /*
     @GET("/json/gr.asp")

@@ -6,16 +6,27 @@ import quickbeer.android.domain.beer.store.BeerDao
 import quickbeer.android.domain.beer.store.BeerEntity
 import quickbeer.android.domain.idlist.store.IdListDao
 import quickbeer.android.domain.idlist.store.IdListEntity
+import quickbeer.android.domain.style.store.StyleDao
+import quickbeer.android.domain.style.store.StyleEntity
 
 const val DATABASE_NAME = "quickbeer.db"
 const val BATCH_SIZE = 999
 
 private const val CURRENT_VERSION = 1
 
-@Database(entities = [IdListEntity::class, BeerEntity::class], version = CURRENT_VERSION)
+@Database(
+    entities = [
+        IdListEntity::class,
+        BeerEntity::class,
+        StyleEntity::class
+    ],
+    version = CURRENT_VERSION
+)
 abstract class Database : RoomDatabase() {
 
     abstract fun idListDao(): IdListDao
 
     abstract fun beerDao(): BeerDao
+
+    abstract fun styleDao(): StyleDao
 }

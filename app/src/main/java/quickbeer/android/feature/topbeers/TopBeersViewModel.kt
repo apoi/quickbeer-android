@@ -12,7 +12,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beersearch.repository.TopBeersRepository
+import quickbeer.android.domain.beerlist.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
 
 class TopBeersViewModel(

@@ -1,4 +1,4 @@
-package quickbeer.android.domain.recentbeers
+package quickbeer.android.domain.beerlist.store
 
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.store.SingleItemListStore

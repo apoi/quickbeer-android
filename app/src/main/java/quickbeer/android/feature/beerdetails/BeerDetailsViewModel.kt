@@ -23,7 +23,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository

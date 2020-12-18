@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.recentbeers.RecentBeersStore
+import quickbeer.android.domain.beerlist.store.RecentBeersStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
 
 class RecentBeersViewModel(

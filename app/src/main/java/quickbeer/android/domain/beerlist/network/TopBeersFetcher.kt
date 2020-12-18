@@ -1,4 +1,4 @@
-package quickbeer.android.domain.beersearch.network
+package quickbeer.android.domain.beerlist.network
 
 import quickbeer.android.data.fetcher.SingleFetcher
 import quickbeer.android.domain.beer.Beer

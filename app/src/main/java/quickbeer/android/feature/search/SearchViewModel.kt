@@ -14,8 +14,8 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beersearch.repository.BeerSearchRepository
-import quickbeer.android.domain.beersearch.store.BeerSearchStore
+import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
+import quickbeer.android.domain.beerlist.store.BeerSearchStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.ui.adapter.search.SearchSuggestion
 import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
