@@ -41,7 +41,7 @@ abstract class Repository<in K, V> {
             if (!isValid) {
                 when (val response = fetchRemote(key)) {
                     is ApiResult.Success -> {
-                        if (response.value != null) {
+                        if (response.value != null && validator.validate(response.value)) {
                             // Response is persisted to be emitted later
                             persist(key, response.value)
                         } else {

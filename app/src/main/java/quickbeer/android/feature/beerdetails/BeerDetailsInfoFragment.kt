@@ -87,7 +87,12 @@ class BeerDetailsInfoFragment :
 
     private fun setBeer(beer: Beer) {
         binding.description.text = beer.description
+            ?.takeIf(String::isNotEmpty)
+            ?: getString(R.string.no_description)
+
+        binding.style.value = beer.styleName
         binding.brewer.value = beer.brewerName
+        binding.origin.value = beer.countryId.toString()
 
         binding.beerRatingOverall.value = beer.overallRating
             ?.takeIf { it > 0 }

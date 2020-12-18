@@ -38,7 +38,7 @@ class BeerDetailsViewModel(
 
     init {
         viewModelScope.launch {
-            repository.getStream(beerId, Accept())
+            repository.getStream(beerId, Beer.DetailsDataValidator())
                 .collect { _viewState.postValue(it) }
         }
     }

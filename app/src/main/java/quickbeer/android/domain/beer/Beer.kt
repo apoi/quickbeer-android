@@ -6,6 +6,7 @@ import kotlin.math.roundToInt
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
+import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
 
 @Parcelize
@@ -75,6 +76,18 @@ data class Beer(
                 tickValue = new.tickValue ?: old.tickValue,
                 tickDate = new.tickDate ?: old.tickDate
             )
+        }
+    }
+
+    open class BasicDataValidator : Validator<Beer> {
+        override fun validate(beer: Beer?): Boolean {
+            return beer?.brewerId != null && beer.styleName != null
+        }
+    }
+
+    class DetailsDataValidator : BasicDataValidator() {
+        override fun validate(beer: Beer?): Boolean {
+            return super.validate(beer) && beer?.description != null
         }
     }
 }
