@@ -1,30 +1,38 @@
-package quickbeer.android.feature.styles
+package quickbeer.android.feature.beersinstyle
 
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListFragmentBinding
+import quickbeer.android.feature.search.SearchFragmentArgs
 import quickbeer.android.feature.search.SearchViewModel
+import quickbeer.android.feature.shared.adapter.BeerListModel
+import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.setClickListener
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class StylesFragment : SearchBarFragment(R.layout.beer_list_fragment) {
+class BeersInStyleFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
     private val binding by viewBinding(BeerListFragmentBinding::bind)
-    private val viewModel by viewModel<StylesViewModel>()
+    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+
+    private val args: BeersInStyleFragmentArgs by navArgs()
+    private val viewModel by viewModel<BeersInStyleViewModel> { parametersOf(Args)}
     private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
-    private val beersAdapter = ListAdapter<StyleItem>(StyleTypeFactory())
 
     override val searchHint = R.string.search_hint
     override fun rootLayout() = binding.layout
@@ -42,6 +50,11 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_fragment) {
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onStyleSelected)
+
+            setRecycledViewPool(
+                (activity as RecycledPoolHolder)
+                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
+            )
         }
     }
 
@@ -87,11 +100,11 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_fragment) {
         return searchViewModel
     }
 
-    fun onStyleSelected(style: StyleItem) {
-        navigate(StylesFragmentDirections.toBeersInStyle(style.style.id))
+    override fun onStyleSelected(beer: BeerListModel) {
+        navigate(BeersInStyleFragmentDirections.toDetails(beer.id))
     }
 
     override fun onSearchQuerySubmit(query: String) {
-        navigate(StylesFragmentDirections.toSearch(query))
+        navigate(BeersInStyleFragmentDirections.toSearch(query))
     }
 }

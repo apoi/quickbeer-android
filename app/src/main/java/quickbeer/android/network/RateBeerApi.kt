@@ -26,7 +26,7 @@ interface RateBeerApi {
     )
 
     @GET("/json/bff.asp")
-    suspend fun getBeer(@Query("bd") id: Int): ApiResult<List<BeerJson>>
+    suspend fun getBeer(@Query("bd") beerId: Int): ApiResult<List<BeerJson>>
 
     @GET("/json/bff.asp")
     suspend fun search(@Query("bn") query: String): ApiResult<List<BeerJson>>
@@ -40,11 +40,11 @@ interface RateBeerApi {
     @GET("/json/tb.asp?m=country")
     suspend fun beersInCountry(@Query("c") id: Int): ApiResult<List<BeerJson>>
 
-    @GET("/json/style.asp")
-    suspend fun beersInStyle(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
-
     @GET("/json/styles.asp")
     suspend fun styles(): ApiResult<List<StyleJson>>
+
+    @GET("/json/style.asp")
+    suspend fun beersInStyle(@Query("s") styleId: String): ApiResult<List<BeerJson>>
 
     /*
     @GET("/json/gr.asp")

@@ -22,8 +22,6 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
 
     protected abstract fun searchActions(): SearchActionsHandler
 
-    protected abstract fun onStyleSelected(beer: BeerListModel)
-
     protected abstract fun onSearchQuerySubmit(query: String)
 
     override fun onCreate(savedInstanceState: Bundle?) {

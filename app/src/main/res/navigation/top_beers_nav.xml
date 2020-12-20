@@ -13,28 +13,21 @@
         android:name="quickbeer.android.feature.topbeers.TopBeersFragment"
         android:label="@string/app_name"
         tools:layout="@layout/beer_list_fragment">
-
         <action
             android:id="@+id/to_details"
             app:destination="@id/details_nav">
-
             <!-- Workaround for bug https://issuetracker.google.com/issues/109505019 -->
             <argument
                 android:name="id"
                 app:argType="integer" />
-
         </action>
-
         <action
             android:id="@+id/to_search"
             app:destination="@id/search_nav">
-
             <argument
                 android:name="query"
                 app:argType="string" />
-
         </action>
-
     </fragment>
 
 </navigation>
