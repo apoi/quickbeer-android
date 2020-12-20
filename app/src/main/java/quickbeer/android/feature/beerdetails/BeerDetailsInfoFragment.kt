@@ -34,6 +34,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.style.Style
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
@@ -75,11 +76,20 @@ class BeerDetailsInfoFragment :
     }
 
     override fun observeViewState() {
-        observe(viewModel.viewState) { state ->
+        observe(viewModel.beerState) { state ->
             when (state) {
                 State.Loading -> Unit
                 State.Empty -> Unit
                 is State.Success -> setBeer(state.value)
+                is State.Error -> Unit
+            }
+        }
+
+        observe(viewModel.styleState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setStyle(state.value)
                 is State.Error -> Unit
             }
         }
@@ -90,7 +100,6 @@ class BeerDetailsInfoFragment :
             ?.takeIf(String::isNotEmpty)
             ?: getString(R.string.no_description)
 
-        binding.style.value = beer.styleName
         binding.brewer.value = beer.brewerName
         binding.origin.value = beer.countryId.toString()
 
@@ -126,6 +135,10 @@ class BeerDetailsInfoFragment :
         binding.tickedDate.text = beer.tickDate
             ?.takeIf { beer.isTicked() }
             ?.formatDateTime(getString(R.string.beer_tick_date))
+    }
+
+    private fun setStyle(style: Style) {
+        binding.style.value = style.name
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {

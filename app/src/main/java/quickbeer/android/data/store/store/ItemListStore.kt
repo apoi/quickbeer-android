@@ -9,7 +9,6 @@ import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.SingleStore
 import quickbeer.android.data.store.Store
 import quickbeer.android.data.store.StoreCore
-import timber.log.Timber
 
 /**
  * Store for lists of items. Keeps index of the items in one core, and items themselves in another
@@ -33,7 +32,6 @@ open class ItemListStore<I, out K, V : Any>(
 ) : Store<I, List<V>> {
 
     override suspend fun get(index: I): List<V> {
-        Timber.w("GET " + indexMapper.encode(index))
         return withContext(Dispatchers.IO) {
             indexCore.get(indexMapper.encode(index))?.values
                 ?.let { valueCore.get(it) }
@@ -42,7 +40,6 @@ open class ItemListStore<I, out K, V : Any>(
     }
 
     override fun getStream(index: I): Flow<List<V>> {
-        Timber.w("GET STREAM " + indexMapper.encode(index))
         return indexCore.getStream(indexMapper.encode(index))
             .map { itemList -> itemList.values }
             .map(valueCore::get)

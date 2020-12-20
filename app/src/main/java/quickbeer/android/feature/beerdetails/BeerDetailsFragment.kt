@@ -55,7 +55,7 @@ class BeerDetailsFragment : MainFragment(R.layout.beer_details_fragment) {
     }
 
     override fun observeViewState() {
-        observe(viewModel.viewState) { state ->
+        observe(viewModel.beerState) { state ->
             when (state) {
                 State.Loading -> Unit
                 State.Empty -> Unit

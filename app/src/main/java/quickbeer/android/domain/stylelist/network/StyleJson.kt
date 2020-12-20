@@ -1,4 +1,4 @@
-package quickbeer.android.domain.style.network
+package quickbeer.android.domain.stylelist.network
 
 import com.squareup.moshi.Json
 

@@ -23,22 +23,41 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.style.Style
+import quickbeer.android.domain.style.repository.StyleRepository
 
 class BeerDetailsViewModel(
     beerId: Int,
-    private val repository: BeerRepository
+    private val beerRepository: BeerRepository,
+    private val styleRepository: StyleRepository
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData<State<Beer>>()
-    val viewState: LiveData<State<Beer>> = _viewState
+    private val _beerState = MutableLiveData<State<Beer>>()
+    val beerState: LiveData<State<Beer>> = _beerState
+
+    private val _styleState = MutableLiveData<State<Style>>()
+    val styleState: LiveData<State<Style>> = _styleState
 
     init {
         viewModelScope.launch {
-            repository.getStream(beerId, Beer.DetailsDataValidator())
-                .collect { _viewState.postValue(it) }
+            beerRepository.getStream(beerId, Beer.DetailsDataValidator())
+                .collect {
+                    _beerState.postValue(it)
+                    if (it is State.Success) getBeerStyle(it.value)
+                }
+        }
+    }
+
+    private fun getBeerStyle(beer: Beer) {
+        if (beer.styleId != null) {
+            viewModelScope.launch {
+                styleRepository.getStream(beer.styleId, Accept())
+                    .collect { _styleState.postValue(it) }
+            }
         }
     }
 }

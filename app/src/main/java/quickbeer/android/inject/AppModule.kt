@@ -28,6 +28,13 @@ import quickbeer.android.domain.beerlist.store.RecentBeersStore
 import quickbeer.android.domain.beerlist.store.TopBeersStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
+import quickbeer.android.domain.style.Style
+import quickbeer.android.domain.style.repository.StyleRepository
+import quickbeer.android.domain.style.store.StyleRoomCore
+import quickbeer.android.domain.style.store.StyleStore
+import quickbeer.android.domain.stylelist.network.StyleListFetcher
+import quickbeer.android.domain.stylelist.repository.StyleListRepository
+import quickbeer.android.domain.stylelist.store.StyleListStore
 import quickbeer.android.feature.beerdetails.BeerDetailsViewModel
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
 import quickbeer.android.feature.search.SearchViewModel
@@ -95,25 +102,33 @@ val appModule = module {
     single<StoreCore<Int, Beer>>(named<Beer>()) {
         CachingStoreCore(BeerRoomCore(get()), Beer::id, Beer.merger)
     }
+    single<StoreCore<Int, Style>>(named<Style>()) {
+        CachingStoreCore(StyleRoomCore(get()), Style::id, Style.merger)
+    }
 
     // Stores
     factory { BeerStore(get(named<Beer>())) }
+    factory { StyleStore(get(named<Style>())) }
     factory { BeerSearchStore(get(named<IdList>()), get(named<Beer>())) }
     factory { TopBeersStore(get(named<IdList>()), get(named<Beer>())) }
     factory { RecentBeersStore(get(named<IdList>()), get(named<Beer>())) }
+    factory { StyleListStore(get(named<IdList>()), get(named<Style>())) }
 
     // Fetchers
     factory { BeerFetcher(get()) }
     factory { TopBeersFetcher(get()) }
     factory { BeerSearchFetcher(get()) }
+    factory { StyleListFetcher(get()) }
 
     // Repositories
     factory { BeerRepository(get(), get()) }
+    factory { StyleRepository(get(), get()) }
     factory { TopBeersRepository(get(), get()) }
     factory { BeerSearchRepository(get(), get()) }
+    factory { StyleListRepository(get(), get()) }
 
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { TopBeersViewModel(get(), get()) }
     viewModel { (query: String?) -> SearchViewModel(query, get(), get(), get()) }
-    viewModel { (id: Int) -> BeerDetailsViewModel(id, get()) }
+    viewModel { (id: Int) -> BeerDetailsViewModel(id, get(), get()) }
 }
