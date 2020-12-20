@@ -47,7 +47,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBeerSelected)
+            setClickListener(::onStyleSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
@@ -98,7 +98,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
         return searchViewModel
     }
 
-    override fun onBeerSelected(beer: BeerListModel) {
+    override fun onStyleSelected(beer: BeerListModel) {
         navigate(TopBeersFragmentDirections.toDetails(beer.id))
     }
 

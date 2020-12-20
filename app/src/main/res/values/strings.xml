@@ -11,8 +11,8 @@
     <string name="top_beers_title">Top 50</string>
     <string name="top_beer_description">Top 50</string>
 
-    <string name="simple_album_title">Simple</string>
-    <string name="simple_album_description">Simple</string>
+    <string name="style_list_title">Styles</string>
+    <string name="style_list_description">Styles</string>
 
     <string name="details_title">Details</string>
     <string name="details_description">Details</string>

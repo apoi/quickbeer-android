@@ -54,7 +54,7 @@ class MainActivity :
         // Setup the bottom navigation view with a list of navigation graphs
         val graphs = listOf(
             R.navigation.top_beers_nav,
-            R.navigation.simple_album_nav,
+            R.navigation.style_nav,
             R.navigation.about_nav
         )
 

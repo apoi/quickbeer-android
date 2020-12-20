@@ -22,7 +22,7 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
 
     protected abstract fun searchActions(): SearchActionsHandler
 
-    protected abstract fun onBeerSelected(beer: BeerListModel)
+    protected abstract fun onStyleSelected(beer: BeerListModel)
 
     protected abstract fun onSearchQuerySubmit(query: String)
 
