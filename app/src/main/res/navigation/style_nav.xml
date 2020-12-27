@@ -5,37 +5,17 @@
     android:id="@+id/style_list"
     app:startDestination="@id/style_list_fragment">
 
-    <include app:graph="@navigation/details_nav" />
+    <include app:graph="@navigation/style_details_nav" />
     <include app:graph="@navigation/search_nav" />
 
     <fragment
         android:id="@+id/style_list_fragment"
         android:name="quickbeer.android.feature.styles.StylesFragment"
         android:label="@string/style_list_title"
-        tools:layout="@layout/beer_list_fragment">
-        <action
-            android:id="@+id/to_beers_in_style"
-            app:destination="@id/beers_in_style_fragment" />
-        <action
-            android:id="@+id/to_search"
-            app:destination="@id/search_nav">
-            <argument
-                android:name="query"
-                app:argType="string" />
-        </action>
-    </fragment>
-
-    <fragment
-        android:id="@+id/beers_in_style_fragment"
-        android:name="quickbeer.android.feature.beersinstyle.BeersInStyleFragment"
-        android:label="@string/style_list_title"
-        tools:layout="@layout/beer_list_fragment">
-        <argument
-            android:name="styleId"
-            app:argType="integer" />
+        tools:layout="@layout/beer_list_standalone_fragment">
         <action
             android:id="@+id/to_details"
-            app:destination="@id/details_nav">
+            app:destination="@id/style_details_nav">
             <argument
                 android:name="id"
                 app:argType="integer" />

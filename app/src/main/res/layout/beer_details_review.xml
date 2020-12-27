@@ -32,7 +32,7 @@
                 tools:text="3.8" />
 
             <include
-                layout="@layout/beer_details_separator_vertical"
+                layout="@layout/details_separator_vertical"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
                 android:layout_alignTop="@id/score"
@@ -79,7 +79,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/beer_details_separator_vertical" />
+            <include layout="@layout/details_separator_vertical" />
 
             <LinearLayout
                 android:id="@+id/aroma_column"
@@ -96,7 +96,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/beer_details_separator_vertical" />
+            <include layout="@layout/details_separator_vertical" />
 
             <LinearLayout
                 android:id="@+id/flavor_column"
@@ -113,7 +113,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/beer_details_separator_vertical" />
+            <include layout="@layout/details_separator_vertical" />
 
             <LinearLayout
                 android:id="@+id/mouthfeel_column"
@@ -130,7 +130,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/beer_details_separator_vertical" />
+            <include layout="@layout/details_separator_vertical" />
 
             <LinearLayout
                 android:id="@+id/overall_column"

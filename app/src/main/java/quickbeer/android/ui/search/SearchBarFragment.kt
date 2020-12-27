@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.LayoutRes
-import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 

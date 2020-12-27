@@ -39,9 +39,9 @@ import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.domain.stylelist.store.StyleListStore
 import quickbeer.android.feature.beerdetails.BeerDetailsViewModel
-import quickbeer.android.feature.beersinstyle.BeersInStyleViewModel
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
 import quickbeer.android.feature.search.SearchViewModel
+import quickbeer.android.feature.styledetails.StyleDetailsViewModel
 import quickbeer.android.feature.styles.StylesViewModel
 import quickbeer.android.feature.topbeers.TopBeersViewModel
 import quickbeer.android.network.NetworkConfig
@@ -137,7 +137,7 @@ val appModule = module {
 
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { TopBeersViewModel(get(), get()) }
-    viewModel { (id: Int) -> BeersInStyleViewModel(id, get(), get()) }
+    viewModel { (id: Int) -> StyleDetailsViewModel(id, get(), get(), get()) }
     viewModel { StylesViewModel(get()) }
     viewModel { (query: String?) -> SearchViewModel(query, get(), get(), get()) }
     viewModel { (id: Int) -> BeerDetailsViewModel(id, get(), get()) }

@@ -19,14 +19,7 @@ class ValueLabel @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
-    private val binding: ValueLabelBinding =
-        ValueLabelBinding.inflate(LayoutInflater.from(context), this)
-
-    var title: String?
-        get() = binding.title.text.toString()
-        set(value) {
-            binding.title.text = value
-        }
+    private val binding = ValueLabelBinding.inflate(LayoutInflater.from(context), this)
 
     var value: String?
         get() = binding.value.text.toString()
@@ -47,6 +40,7 @@ class ValueLabel @JvmOverloads constructor(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.ValueLabel)
         val title = ta.getString(R.styleable.ValueLabel_title)
         val value = ta.getString(R.styleable.ValueLabel_value)
+        val paragraph = ta.getBoolean(R.styleable.ValueLabel_paragraph, false)
         val divider = ta.getBoolean(R.styleable.ValueLabel_top_divider, false)
         val selectable = ta.getBoolean(R.styleable.ValueLabel_selectable, false)
 
@@ -58,12 +52,24 @@ class ValueLabel @JvmOverloads constructor(
         context.theme.resolveAttribute(backgroundRes, outValue, true)
         background = ResourcesCompat.getDrawable(resources, outValue.resourceId, context.theme)
 
-        binding.title.text = title
         binding.value.text = value
-        binding.bottomDivider.isVisible = divider
         binding.value.setTextIsSelectable(selectable)
+        binding.topDivider.isVisible = divider
 
-        if (divider) setPadding(16.dp(), 0, 16.dp(), 8.dp())
+        if (!title.isNullOrEmpty()) {
+            binding.title.text = title
+        } else binding.title.isVisible = false
+
+        if (paragraph) {
+            binding.value.textSize = 14f
+            binding.value.textAlignment = TEXT_ALIGNMENT_TEXT_START
+        }
+
+        if (divider) {
+            setPadding(16.dp(), 0, 16.dp(), 8.dp())
+        } else {
+            setPadding(16.dp(), 8.dp(), 16.dp(), 8.dp())
+        }
 
         ta.recycle()
     }

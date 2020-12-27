@@ -96,7 +96,7 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setBeer(beer: Beer) {
-        binding.description.text = beer.description
+        binding.description.value = beer.description
             ?.takeIf(String::isNotEmpty)
             ?: getString(R.string.no_description)
 

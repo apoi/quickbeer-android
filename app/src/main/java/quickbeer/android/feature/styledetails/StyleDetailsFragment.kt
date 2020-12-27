@@ -15,82 +15,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package quickbeer.android.feature.beerdetails
+package quickbeer.android.feature.styledetails
 
 import android.os.Bundle
-import android.view.View
 import androidx.navigation.fragment.navArgs
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
-import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.style.Style
 import quickbeer.android.ui.base.MainFragment
-import quickbeer.android.ui.transformations.BlurTransformation
-import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
+class StyleDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.toolbar
 
-    private val args: BeerDetailsFragmentArgs by navArgs()
+    private val args: StyleDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(DetailsFragmentBinding::bind)
-    private val viewModel by viewModel<BeerDetailsViewModel> { parametersOf(args.id) }
-
-    private val picasso by inject<Picasso>()
+    private val viewModel by viewModel<StyleDetailsViewModel> { parametersOf(args.id) }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
+        binding.viewPager.adapter = StyleDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
     }
 
     override fun observeViewState() {
-        observe(viewModel.beerState) { state ->
+        observe(viewModel.styleState) { state ->
             when (state) {
                 State.Loading -> Unit
                 State.Empty -> Unit
-                is State.Success -> setBeer(state.value)
+                is State.Success -> setStyle(state.value)
                 is State.Error -> Unit
             }
         }
     }
 
-    private fun setBeer(beer: Beer) {
-        val onImageLoadSuccess = {
-            binding.toolbarOverlayGradient.visibility = View.VISIBLE
-            binding.collapsingToolbarBackground.setOnClickListener {
-                // openPhotoView(beer.imageUri())
-            }
-        }
-
-        binding.collapsingToolbar.title = beer.name
-
-        picasso.load(beer.imageUri())
-            .transform(ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT))
-            .transform(BlurTransformation(requireContext(), LABEL_BLUR))
-            .into(
-                binding.collapsingToolbarBackground,
-                object : Callback.EmptyCallback() {
-                    override fun onSuccess() {
-                        onImageLoadSuccess()
-                    }
-                }
-            )
-    }
-
-    companion object {
-        private const val LABEL_WIDTH = 300
-        private const val LABEL_HEIGHT = 300
-        private const val LABEL_BLUR = 15
+    private fun setStyle(style: Style) {
+        binding.collapsingToolbar.title = style.name
     }
 }

@@ -4,7 +4,6 @@ import quickbeer.android.data.repository.repository.ItemListRepository
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
-import quickbeer.android.domain.beerlist.network.BeersInStyleFetcher
 import quickbeer.android.domain.beerlist.store.BeerSearchStore
 import quickbeer.android.network.RateBeerApi
 

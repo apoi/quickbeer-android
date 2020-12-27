@@ -8,7 +8,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerListFragmentBinding
+import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
@@ -19,9 +19,9 @@ import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class StylesFragment : SearchBarFragment(R.layout.beer_list_fragment) {
+class StylesFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
 
-    private val binding by viewBinding(BeerListFragmentBinding::bind)
+    private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
     private val viewModel by viewModel<StylesViewModel>()
     private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
     private val beersAdapter = ListAdapter<StyleItem>(StyleTypeFactory())
@@ -87,8 +87,8 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_fragment) {
         return searchViewModel
     }
 
-    fun onStyleSelected(style: StyleItem) {
-        navigate(StylesFragmentDirections.toBeersInStyle(style.style.id))
+    private fun onStyleSelected(style: StyleItem) {
+        navigate(StylesFragmentDirections.toDetails(style.style.id))
     }
 
     override fun onSearchQuerySubmit(query: String) {

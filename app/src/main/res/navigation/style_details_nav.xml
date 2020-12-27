@@ -2,19 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/search_nav"
-    app:startDestination="@id/search_fragment">
+    android:id="@+id/style_details_nav"
+    app:startDestination="@id/style_details_fragment">
 
     <include app:graph="@navigation/beer_details_nav" />
 
     <fragment
-        android:id="@+id/search_fragment"
-        android:name="quickbeer.android.feature.search.SearchFragment"
-        android:label="@string/search_title"
-        tools:layout="@layout/beer_list_standalone_fragment">
+        android:id="@+id/style_details_fragment"
+        android:name="quickbeer.android.feature.styledetails.StyleDetailsFragment"
+        android:label="@string/details_title"
+        tools:layout="@layout/details_fragment">
         <argument
-            android:name="query"
-            app:argType="string" />
+            android:name="id"
+            app:argType="integer" />
         <action
             android:id="@+id/to_details"
             app:destination="@id/beer_details_nav">

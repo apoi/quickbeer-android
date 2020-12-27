@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <View
-        android:id="@+id/bottom_divider"
+        android:id="@+id/top_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="12dp"

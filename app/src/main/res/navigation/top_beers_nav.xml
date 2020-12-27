@@ -5,17 +5,17 @@
     android:id="@+id/top_beers"
     app:startDestination="@id/top_beers_fragment">
 
-    <include app:graph="@navigation/details_nav" />
+    <include app:graph="@navigation/beer_details_nav" />
     <include app:graph="@navigation/search_nav" />
 
     <fragment
         android:id="@+id/top_beers_fragment"
         android:name="quickbeer.android.feature.topbeers.TopBeersFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/beer_list_fragment">
+        tools:layout="@layout/beer_list_standalone_fragment">
         <action
             android:id="@+id/to_details"
-            app:destination="@id/details_nav">
+            app:destination="@id/beer_details_nav">
             <!-- Workaround for bug https://issuetracker.google.com/issues/109505019 -->
             <argument
                 android:name="id"

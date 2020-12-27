@@ -8,7 +8,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerListFragmentBinding
+import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.shared.adapter.BeerListModel
 import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
@@ -23,9 +23,9 @@ import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class TopBeersFragment : SearchBarFragment(R.layout.beer_list_fragment) {
+class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
 
-    private val binding by viewBinding(BeerListFragmentBinding::bind)
+    private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
     private val viewModel by viewModel<TopBeersViewModel>()
     private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
