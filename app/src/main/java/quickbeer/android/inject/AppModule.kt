@@ -121,11 +121,11 @@ val appModule = module {
     factory { StyleListStore(get(named<IdList>()), get(named<Style>())) }
 
     // Fetchers
-    factory { BeerFetcher(get()) }
-    factory { BeerSearchFetcher(get()) }
-    factory { TopBeersFetcher(get()) }
-    factory { BeersInStyleFetcher(get()) }
-    factory { StyleListFetcher(get()) }
+    single { BeerFetcher(get()) }
+    single { BeerSearchFetcher(get()) }
+    single { TopBeersFetcher(get()) }
+    single { BeersInStyleFetcher(get()) }
+    single { StyleListFetcher(get()) }
 
     // Repositories
     factory { BeerRepository(get(), get()) }
@@ -137,8 +137,8 @@ val appModule = module {
 
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { TopBeersViewModel(get(), get()) }
-    viewModel { (id: Int) -> StyleDetailsViewModel(id, get(), get(), get()) }
     viewModel { StylesViewModel(get()) }
     viewModel { (query: String?) -> SearchViewModel(query, get(), get(), get()) }
     viewModel { (id: Int) -> BeerDetailsViewModel(id, get(), get()) }
+    viewModel { (id: Int) -> StyleDetailsViewModel(id, get(), get(), get()) }
 }

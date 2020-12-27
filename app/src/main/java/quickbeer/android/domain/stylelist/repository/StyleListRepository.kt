@@ -5,11 +5,8 @@ import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.network.StyleJson
 import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.stylelist.store.StyleListStore
-import quickbeer.android.network.RateBeerApi
 
 class StyleListRepository(
     store: StyleListStore,
-    api: RateBeerApi
-) : SingleItemListRepository<String, Int, Style, StyleJson>(
-    store, StyleListFetcher(api)
-)
+    fetcher: StyleListFetcher
+) : SingleItemListRepository<String, Int, Style, StyleJson>(store, fetcher)
