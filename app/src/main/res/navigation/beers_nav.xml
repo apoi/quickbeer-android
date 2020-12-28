@@ -22,7 +22,7 @@
         android:id="@+id/search_fragment"
         android:name="quickbeer.android.feature.search.SearchFragment"
         android:label="@string/search_title"
-        tools:layout="@layout/beer_list_standalone_fragment">
+        tools:layout="@layout/search_fragment">
         <argument
             android:name="query"
             app:argType="string" />

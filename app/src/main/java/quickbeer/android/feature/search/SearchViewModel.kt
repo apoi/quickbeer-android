@@ -21,7 +21,6 @@ import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
 import quickbeer.android.ui.search.SearchActionsHandler
 
 open class SearchViewModel(
-    initialQuery: String?,
     private val searchRepository: BeerSearchRepository,
     private val beerRepository: BeerRepository,
     private val beerSearchStore: BeerSearchStore
@@ -34,10 +33,6 @@ open class SearchViewModel(
     override val suggestions: StateFlow<List<SearchSuggestion>> get() = _suggestions
 
     init {
-        if (initialQuery != null) {
-            search(initialQuery)
-        }
-
         registerQueries()
     }
 

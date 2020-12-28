@@ -3,6 +3,7 @@ package quickbeer.android
 object Constants {
 
     const val ID = "id"
+    const val QUERY = "query"
 
     // URLS
 

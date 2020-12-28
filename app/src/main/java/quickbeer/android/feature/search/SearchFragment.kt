@@ -2,97 +2,42 @@ package quickbeer.android.feature.search
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
-import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
-import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.feature.shared.adapter.BeerListTypeFactory
-import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.simple.ListAdapter
-import quickbeer.android.ui.listener.setClickListener
-import quickbeer.android.ui.recyclerview.RecycledPoolHolder
-import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
+import quickbeer.android.databinding.SearchFragmentBinding
 import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.ui.searchview.widget.SearchView.NavigationMode
-import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class SearchFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
-
-    private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
-    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     private val args: SearchFragmentArgs by navArgs()
-    private val viewModel by viewModel<SearchViewModel> { parametersOf(args.query) }
+    private val binding by viewBinding(SearchFragmentBinding::bind)
+    private val viewModel by sharedViewModel<SearchViewModel>()
 
     override val searchHint = R.string.search_hint
     override fun rootLayout() = binding.layout
-    override fun topInsetView() = binding.layout
+    override fun topInsetView() = binding.contentLayout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.search(args.query)
 
         binding.searchView.apply {
             query = args.query
             navigationMode = NavigationMode.BACK
         }
-
-        binding.recyclerView.apply {
-            adapter = beersAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                recycleChildrenOnDetach = true
-            }
-
-            setHasFixedSize(true)
-            addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBeerSelected)
-
-            setRecycledViewPool(
-                (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
-            )
-        }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.recyclerView.adapter = null
-    }
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-    override fun observeViewState() {
-        observe(viewModel.viewState) { state ->
-            when (state) {
-                State.Loading -> {
-                    beersAdapter.setItems(emptyList())
-                    binding.message.isVisible = false
-                    binding.progress.show()
-                }
-                State.Empty -> {
-                    beersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_empty)
-                    binding.message.isVisible = true
-                    binding.progress.hide()
-                }
-                is State.Success -> {
-                    beersAdapter.setItems(state.value)
-                    binding.message.isVisible = false
-                    binding.progress.hide()
-                }
-                is State.Error -> {
-                    beersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_error)
-                    binding.message.isVisible = true
-                    binding.progress.hide()
-                }
-            }
-        }
+        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager, args.query)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
     override fun searchView(): SearchView {
@@ -103,13 +48,7 @@ class SearchFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment)
         return viewModel
     }
 
-    private fun onBeerSelected(beer: BeerListModel) {
-        navigate(SearchFragmentDirections.toBeer(beer.id))
-    }
-
     override fun onSearchQuerySubmit(query: String) {
-        beersAdapter.setItems(emptyList())
-        binding.recyclerView.scrollToPosition(0)
         viewModel.search(query)
     }
 }
