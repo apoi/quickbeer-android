@@ -53,9 +53,8 @@ class MainActivity :
     private fun setupBottomNavigationBar() {
         // Setup the bottom navigation view with a list of navigation graphs
         val graphs = listOf(
-            R.navigation.top_beers_nav,
-            R.navigation.style_nav,
-            R.navigation.about_nav
+            R.navigation.beers_nav,
+            R.navigation.more_nav
         )
 
         val controller = binding.mainBottomNav.setupWithNavController(

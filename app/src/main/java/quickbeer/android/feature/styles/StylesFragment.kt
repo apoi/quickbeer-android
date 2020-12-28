@@ -88,7 +88,7 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment)
     }
 
     private fun onStyleSelected(style: StyleItem) {
-        navigate(StylesFragmentDirections.toDetails(style.style.id))
+        navigate(StylesFragmentDirections.toStyle(style.style.id))
     }
 
     override fun onSearchQuerySubmit(query: String) {

@@ -26,12 +26,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.feature.shared.adapter.BeerListModelRatingMapper
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
+import quickbeer.android.feature.shared.adapter.BeerListModelRatingMapper
 
 class StyleDetailsViewModel(
     styleId: Int,

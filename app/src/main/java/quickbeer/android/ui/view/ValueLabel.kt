@@ -41,10 +41,11 @@ class ValueLabel @JvmOverloads constructor(
         val title = ta.getString(R.styleable.ValueLabel_title)
         val value = ta.getString(R.styleable.ValueLabel_value)
         val paragraph = ta.getBoolean(R.styleable.ValueLabel_paragraph, false)
+        val constrained = ta.getBoolean(R.styleable.ValueLabel_constrained, true)
         val divider = ta.getBoolean(R.styleable.ValueLabel_top_divider, false)
         val selectable = ta.getBoolean(R.styleable.ValueLabel_selectable, false)
 
-        val backgroundRes = if (divider) {
+        val backgroundRes = if (constrained) {
             R.attr.selectableItemBackground
         } else R.attr.selectableItemBackgroundBorderless
 

@@ -87,7 +87,7 @@ class StyleDetailsBeersFragment : BaseFragment(R.layout.beer_list_fragment) {
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(StyleDetailsFragmentDirections.toDetails(beer.id))
+        navigate(StyleDetailsFragmentDirections.toBeer(beer.id))
     }
 
     companion object {

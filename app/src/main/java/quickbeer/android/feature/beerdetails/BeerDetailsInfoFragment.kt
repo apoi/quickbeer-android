@@ -139,6 +139,9 @@ class BeerDetailsInfoFragment :
 
     private fun setStyle(style: Style) {
         binding.style.value = style.name
+        binding.style.setOnClickListener {
+            navigate(BeerDetailsFragmentDirections.toStyle(style.id))
+        }
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {

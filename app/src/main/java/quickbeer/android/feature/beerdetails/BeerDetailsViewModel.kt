@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
@@ -29,11 +30,13 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
+import quickbeer.android.domain.stylelist.repository.StyleListRepository
 
 class BeerDetailsViewModel(
     beerId: Int,
     private val beerRepository: BeerRepository,
-    private val styleRepository: StyleRepository
+    private val styleRepository: StyleRepository,
+    private val styleListRepository: StyleListRepository
 ) : ViewModel() {
 
     private val _beerState = MutableLiveData<State<Beer>>()
@@ -53,11 +56,26 @@ class BeerDetailsViewModel(
     }
 
     private fun getBeerStyle(beer: Beer) {
-        if (beer.styleId != null) {
-            viewModelScope.launch {
-                styleRepository.getStream(beer.styleId, Accept())
-                    .collect { _styleState.postValue(it) }
-            }
+        when {
+            beer.styleId != null -> getBeerStyle(beer.styleId)
+            beer.styleName != null -> getBeerStyle(beer.styleName)
+        }
+    }
+
+    private fun getBeerStyle(styleId: Int) {
+        viewModelScope.launch {
+            styleRepository.getStream(styleId, Accept())
+                .collect { _styleState.postValue(it) }
+        }
+    }
+
+    private fun getBeerStyle(styleName: String) {
+        viewModelScope.launch {
+            styleListRepository.getStream(Accept())
+                .firstOrNull { it is State.Success }
+                ?.let { if (it is State.Success) it.value else null }
+                ?.firstOrNull { style -> style.name == styleName }
+                ?.let { getBeerStyle(it.id) }
         }
     }
 }

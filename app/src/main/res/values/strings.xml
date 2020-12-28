@@ -8,8 +8,8 @@
     <string name="home_title">Home</string>
     <string name="home_description">Home</string>
 
-    <string name="top_beers_title">Top 50</string>
-    <string name="top_beer_description">Top 50</string>
+    <string name="top_beers_title">Beers</string>
+    <string name="top_beer_description">Beers</string>
 
     <string name="style_list_title">Styles</string>
     <string name="style_list_description">Styles</string>
@@ -20,8 +20,8 @@
     <string name="search_title">Search</string>
     <string name="search_description">Search</string>
 
-    <string name="about_title">About</string>
-    <string name="about_description">About</string>
+    <string name="more_title">More</string>
+    <string name="more_description">More</string>
 
     <!-- Search bar -->
     <string name="search_hint">Search…</string>

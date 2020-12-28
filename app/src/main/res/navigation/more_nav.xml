@@ -9,7 +9,7 @@
     <fragment
         android:id="@+id/about_fragment"
         android:name="quickbeer.android.feature.about.AboutFragment"
-        android:label="@string/about_title"
+        android:label="@string/more_title"
         tools:layout="@layout/about_fragment" />
 
 </navigation>

@@ -5,6 +5,7 @@
         <attr name="title" format="string" />
         <attr name="value" format="string" />
         <attr name="paragraph" format="boolean" />
+        <attr name="constrained" format="boolean" />
         <attr name="top_divider" format="boolean" />
         <attr name="selectable" format="boolean" />
     </declare-styleable>

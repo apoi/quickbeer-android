@@ -99,7 +99,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(TopBeersFragmentDirections.toDetails(beer.id))
+        navigate(TopBeersFragmentDirections.toBeer(beer.id))
     }
 
     override fun onSearchQuerySubmit(query: String) {
