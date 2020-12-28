@@ -14,10 +14,11 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.TopBeersRepository
 import quickbeer.android.feature.shared.adapter.BeerListModel
+import quickbeer.android.feature.shared.adapter.BeerListModelRatingMapper
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
-    private val beerStore: BeerRepository
+    private val beerRepository: BeerRepository
 ) : ViewModel() {
 
     private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
@@ -31,7 +32,7 @@ class TopBeersViewModel(
 
     private suspend fun getRecentBeers() {
         repository.getStream(Accept())
-            .map(StateListMapper<Beer, BeerListModel> { BeerListModel(it.id, beerStore) }::map)
+            .map(BeerListModelRatingMapper(beerRepository)::map)
             .collect { _viewState.postValue(it) }
     }
 }

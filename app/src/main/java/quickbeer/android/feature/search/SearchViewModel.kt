@@ -11,12 +11,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.data.state.StateListMapper
-import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.beerlist.store.BeerSearchStore
 import quickbeer.android.feature.shared.adapter.BeerListModel
+import quickbeer.android.feature.shared.adapter.BeerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.search.SearchSuggestion
 import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
 import quickbeer.android.ui.search.SearchActionsHandler
@@ -45,11 +44,7 @@ open class SearchViewModel(
     fun search(query: String) {
         viewModelScope.launch {
             searchRepository.getStream(query, Accept())
-                .map(
-                    StateListMapper<Beer, BeerListModel> {
-                        BeerListModel(it.id, beerRepository)
-                    }::map
-                )
+                .map(BeerListModelAlphabeticMapper(beerRepository)::map)
                 .collect { _viewState.postValue(it) }
         }
     }

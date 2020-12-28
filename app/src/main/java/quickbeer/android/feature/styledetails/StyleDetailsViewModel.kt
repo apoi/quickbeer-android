@@ -26,8 +26,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.data.state.StateMapper
-import quickbeer.android.domain.beer.Beer
+import quickbeer.android.feature.shared.adapter.BeerListModelRatingMapper
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
@@ -37,8 +36,8 @@ import quickbeer.android.feature.shared.adapter.BeerListModel
 class StyleDetailsViewModel(
     styleId: Int,
     private val styleRepository: StyleRepository,
-    private val beerRepository: BeersInStyleRepository,
-    private val beerStore: BeerRepository
+    private val beersInStyleRepository: BeersInStyleRepository,
+    private val beerRepository: BeerRepository
 ) : ViewModel() {
 
     private val _styleState = MutableLiveData<State<Style>>()
@@ -60,16 +59,9 @@ class StyleDetailsViewModel(
         }
 
         viewModelScope.launch {
-            beerRepository.getStream(styleId.toString(), Accept())
-                .map(beerRatingSorter()::map)
+            beersInStyleRepository.getStream(styleId.toString(), Accept())
+                .map(BeerListModelRatingMapper(beerRepository)::map)
                 .collect { _beersState.postValue(it) }
-        }
-    }
-
-    private fun beerRatingSorter(): StateMapper<List<Beer>, List<BeerListModel>> {
-        return StateMapper { list ->
-            list.sortedByDescending(Beer::averageRating)
-                .map { BeerListModel(it.id, beerStore) }
         }
     }
 
