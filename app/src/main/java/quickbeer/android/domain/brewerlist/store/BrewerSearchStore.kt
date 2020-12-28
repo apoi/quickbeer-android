@@ -1,13 +1,13 @@
-package quickbeer.android.domain.beerlist.store
+package quickbeer.android.domain.brewerlist.store
 
 import quickbeer.android.data.store.StoreCore
-import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.idlist.IdList
 
-class BeerSearchStore(
+class BrewerSearchStore(
     indexStoreCore: StoreCore<String, IdList>,
-    beerStoreCore: StoreCore<Int, Beer>
-) : BeerListStore(QueryIndexMapper(), indexStoreCore, beerStoreCore) {
+    brewerStoreCore: StoreCore<Int, Brewer>
+) : BrewerListStore(QueryIndexMapper(), indexStoreCore, brewerStoreCore) {
 
     private class QueryIndexMapper : IndexMapper<String> {
 
@@ -24,7 +24,7 @@ class BeerSearchStore(
         }
 
         companion object {
-            const val INDEX_PREFIX = "beerSearch/"
+            const val INDEX_PREFIX = "brewerSearch/"
         }
     }
 }

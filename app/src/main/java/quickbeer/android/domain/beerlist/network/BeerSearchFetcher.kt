@@ -7,5 +7,5 @@ import quickbeer.android.network.RateBeerApi
 
 class BeerSearchFetcher(api: RateBeerApi) :
     Fetcher<String, List<Beer>, List<BeerJson>>(
-        BeerListJsonMapper, { query -> api.search(query) }
+        BeerListJsonMapper, { query -> api.beerSearch(query) }
     )
