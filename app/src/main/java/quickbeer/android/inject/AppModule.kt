@@ -14,6 +14,7 @@ import quickbeer.android.data.room.DATABASE_NAME
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.core.CachingStoreCore
+import quickbeer.android.data.store.core.MemoryStoreCore
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
@@ -40,6 +41,12 @@ import quickbeer.android.domain.brewer.store.BrewerStore
 import quickbeer.android.domain.brewerlist.network.BrewerSearchFetcher
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.brewerlist.store.BrewerSearchStore
+import quickbeer.android.domain.country.Country
+import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.domain.country.store.CountryStore
+import quickbeer.android.domain.countrylist.network.CountryListFetcher
+import quickbeer.android.domain.countrylist.repository.CountryListRepository
+import quickbeer.android.domain.countrylist.store.CountryListStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.style.Style
@@ -63,6 +70,7 @@ import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
+import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ToastProvider
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -110,6 +118,8 @@ val appModule = module {
             .build()
     }
 
+    factory { ResourceProvider(androidContext()) }
+
     single { ToastProvider(get()) }
 
     // Cores
@@ -125,6 +135,9 @@ val appModule = module {
     single<StoreCore<Int, Style>>(named<Style>()) {
         CachingStoreCore(StyleRoomCore(get()), Style::id, Style.merger)
     }
+    single<StoreCore<Int, Country>>(named<Country>()) {
+        MemoryStoreCore(Country.merger)
+    }
 
     // Stores
     factory { BeerStore(get(named<Beer>())) }
@@ -137,6 +150,8 @@ val appModule = module {
     factory { BrewerSearchStore(get(named<IdList>()), get(named<Brewer>())) }
     factory { StyleStore(get(named<Style>())) }
     factory { StyleListStore(get(named<IdList>()), get(named<Style>())) }
+    factory { CountryStore(get(named<Country>())) }
+    factory { CountryListStore(get(named<IdList>()), get(named<Country>())) }
 
     // Fetchers
     single { BeerFetcher(get()) }
@@ -147,6 +162,7 @@ val appModule = module {
     single { BrewerFetcher(get()) }
     single { BrewerSearchFetcher(get()) }
     single { StyleListFetcher(get()) }
+    single { CountryListFetcher(get(), get()) }
 
     // Repositories
     factory { BeerRepository(get(), get()) }
@@ -158,6 +174,8 @@ val appModule = module {
     factory { BrewerSearchRepository(get(), get()) }
     factory { StyleRepository(get(), get()) }
     factory { StyleListRepository(get(), get()) }
+    factory { CountryRepository(get(), get()) }
+    factory { CountryListRepository(get(), get()) }
 
     // ViewModels
     viewModel { RecentBeersViewModel(get(), get()) }
