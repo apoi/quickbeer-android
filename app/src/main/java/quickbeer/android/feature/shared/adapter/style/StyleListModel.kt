@@ -1,10 +1,10 @@
-package quickbeer.android.feature.styles
+package quickbeer.android.feature.shared.adapter.style
 
 import quickbeer.android.domain.style.Style
 import quickbeer.android.ui.adapter.simple.ListItem
 import quickbeer.android.ui.adapter.simple.ListTypeFactory
 
-class StyleItem(val style: Style) : ListItem {
+class StyleListModel(val style: Style) : ListItem {
 
     override fun id() = style.id.toLong()
 

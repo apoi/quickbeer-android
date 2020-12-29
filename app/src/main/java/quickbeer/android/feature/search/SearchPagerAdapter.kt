@@ -15,7 +15,7 @@ class SearchPagerAdapter(fm: FragmentManager, private val query: String?) :
         return when (position) {
             0 -> SearchBeersFragment()
             1 -> SearchBrewersFragment()
-            else -> SearchBeersFragment()
+            else -> SearchStylesFragment()
         }
     }
 

@@ -13,13 +13,14 @@ import quickbeer.android.data.state.State.Success
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
+import quickbeer.android.feature.shared.adapter.style.StyleListModel
 
 class StylesViewModel(
     private val repository: StyleListRepository
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData<State<List<StyleItem>>>()
-    val viewState: LiveData<State<List<StyleItem>>> = _viewState
+    private val _viewState = MutableLiveData<State<List<StyleListModel>>>()
+    val viewState: LiveData<State<List<StyleListModel>>> = _viewState
 
     init {
         viewModelScope.launch {
@@ -30,7 +31,7 @@ class StylesViewModel(
                         else -> state
                     }
                 }
-                .map(StateListMapper(::StyleItem)::map)
+                .map(StateListMapper(::StyleListModel)::map)
                 .collect { _viewState.postValue(it) }
         }
     }

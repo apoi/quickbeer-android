@@ -8,8 +8,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
-import quickbeer.android.feature.shared.adapter.beer.BeerListModel
-import quickbeer.android.feature.shared.adapter.beer.BeerListTypeFactory
+import quickbeer.android.feature.shared.adapter.style.StyleListModel
+import quickbeer.android.feature.shared.adapter.style.StyleTypeFactory
+import quickbeer.android.feature.styles.StylesFragmentDirections
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
@@ -19,28 +20,28 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
+class SearchStylesFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListFragmentBinding::bind)
     private val viewModel by sharedViewModel<SearchViewModel>()
-    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+    private val stylesAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
-            adapter = beersAdapter
+            adapter = stylesAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
             }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBeerSelected)
+            setClickListener(::onStyleSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
+                    .getPool(PoolType.STYLE_LIST, stylesAdapter::createPool)
             )
         }
     }
@@ -51,28 +52,27 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     override fun observeViewState() {
-        observe(viewModel.beerResults) { state ->
+        observe(viewModel.styleResults) { state ->
             when (state) {
                 State.Loading -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
+                    binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                     binding.progress.show()
                 }
                 State.Empty -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
                     binding.progress.hide()
                 }
                 is State.Success -> {
-                    if (beersAdapter.setItems(state.value)) {
-                        binding.recyclerView.scrollToPosition(0)
-                    }
+                    stylesAdapter.setItems(state.value)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
                 is State.Error -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_error)
                     binding.message.isVisible = true
                     binding.progress.hide()
@@ -81,7 +81,7 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
         }
     }
 
-    private fun onBeerSelected(beer: BeerListModel) {
-        navigate(SearchFragmentDirections.toBeer(beer.id))
+    private fun onStyleSelected(style: StyleListModel) {
+        navigate(StylesFragmentDirections.toStyle(style.style.id))
     }
 }

@@ -13,12 +13,13 @@ class ListAdapter<T : ListItem>(
 
     private val items: MutableList<T> = mutableListOf()
 
-    fun setItems(newItems: List<T>) {
-        if (items == newItems) return
+    fun setItems(newItems: List<T>): Boolean {
+        if (items == newItems) return false
 
         items.clear()
         items.addAll(newItems)
         notifyDataSetChanged()
+        return true
     }
 
     fun itemAt(position: Int): T {

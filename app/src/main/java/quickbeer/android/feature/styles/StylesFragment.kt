@@ -10,6 +10,8 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.feature.search.SearchViewModel
+import quickbeer.android.feature.shared.adapter.style.StyleListModel
+import quickbeer.android.feature.shared.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.listener.setClickListener
@@ -24,7 +26,7 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment)
     private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
     private val viewModel by viewModel<StylesViewModel>()
     private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
-    private val beersAdapter = ListAdapter<StyleItem>(StyleTypeFactory())
+    private val beersAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
 
     override val searchHint = R.string.search_hint
     override fun rootLayout() = binding.layout
@@ -87,7 +89,7 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment)
         return searchViewModel
     }
 
-    private fun onStyleSelected(style: StyleItem) {
+    private fun onStyleSelected(style: StyleListModel) {
         navigate(StylesFragmentDirections.toStyle(style.style.id))
     }
 

@@ -22,10 +22,14 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.contentLayout
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         viewModel.search(args.query)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.searchView.apply {
             query = args.query

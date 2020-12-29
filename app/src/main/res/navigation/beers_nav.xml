@@ -29,6 +29,9 @@
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
+        <action
+            android:id="@+id/to_style"
+            app:destination="@id/style_details_fragment" />
     </fragment>
 
     <fragment
