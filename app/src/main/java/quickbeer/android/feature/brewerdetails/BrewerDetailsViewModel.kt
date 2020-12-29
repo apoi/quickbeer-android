@@ -30,8 +30,8 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BrewersBeersRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
-import quickbeer.android.feature.shared.adapter.beer.BeerListModel
-import quickbeer.android.feature.shared.adapter.beer.BeerListModelRatingMapper
+import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
 class BrewerDetailsViewModel(
     brewerId: Int,

@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter.style
+package quickbeer.android.ui.adapter.style
 
 import quickbeer.android.domain.style.Style
 import quickbeer.android.ui.adapter.simple.ListItem

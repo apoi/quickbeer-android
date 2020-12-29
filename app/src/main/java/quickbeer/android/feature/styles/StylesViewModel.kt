@@ -13,7 +13,7 @@ import quickbeer.android.data.state.State.Success
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
-import quickbeer.android.feature.shared.adapter.style.StyleListModel
+import quickbeer.android.ui.adapter.style.StyleListModel
 
 class StylesViewModel(
     private val repository: StyleListRepository

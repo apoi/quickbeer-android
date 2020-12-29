@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter.brewer
+package quickbeer.android.ui.adapter.brewer
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

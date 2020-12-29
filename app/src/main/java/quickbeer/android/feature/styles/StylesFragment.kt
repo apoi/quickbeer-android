@@ -10,10 +10,10 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.feature.search.SearchViewModel
-import quickbeer.android.feature.shared.adapter.style.StyleListModel
-import quickbeer.android.feature.shared.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.ui.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.ui.search.SearchBarFragment

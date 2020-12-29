@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter.beer
+package quickbeer.android.ui.adapter.beer
 
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.state.State

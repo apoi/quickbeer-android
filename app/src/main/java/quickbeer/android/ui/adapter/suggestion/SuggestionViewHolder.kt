@@ -1,4 +1,4 @@
-package quickbeer.android.ui.adapter.search
+package quickbeer.android.ui.adapter.suggestion
 
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewSuggestionBinding
@@ -6,13 +6,13 @@ import quickbeer.android.ui.adapter.simple.ListViewHolder
 
 class SuggestionViewHolder(
     private val binding: SearchViewSuggestionBinding
-) : ListViewHolder<SearchSuggestion>(binding.root) {
+) : ListViewHolder<SuggestionListModel>(binding.root) {
 
-    override fun bind(suggestion: SearchSuggestion) {
+    override fun bind(suggestion: SuggestionListModel) {
         val res = when (suggestion.type) {
-            SearchSuggestion.Type.BEER -> R.drawable.ic_history
-            SearchSuggestion.Type.BREWERY -> R.drawable.ic_history
-            SearchSuggestion.Type.SEARCH -> R.drawable.ic_history
+            SuggestionListModel.Type.BEER -> R.drawable.ic_history
+            SuggestionListModel.Type.BREWERY -> R.drawable.ic_history
+            SuggestionListModel.Type.SEARCH -> R.drawable.ic_history
         }
 
         binding.suggestionText.text = suggestion.text

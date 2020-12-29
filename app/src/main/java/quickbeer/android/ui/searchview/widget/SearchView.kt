@@ -22,9 +22,9 @@ import kotlinx.coroutines.withContext
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.search.SearchResultTypeFactory
-import quickbeer.android.ui.adapter.search.SearchSuggestion
 import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
+import quickbeer.android.ui.adapter.suggestion.SuggestionTypeFactory
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.ui.listener.setClickListener
@@ -42,7 +42,7 @@ class SearchView @JvmOverloads constructor(
     private val binding: SearchViewBinding =
         SearchViewBinding.inflate(LayoutInflater.from(context), this)
 
-    private val searchAdapter = ListAdapter<SearchSuggestion>(SearchResultTypeFactory())
+    private val searchAdapter = ListAdapter<SuggestionListModel>(SuggestionTypeFactory())
     private var scope = CoroutineScope(Dispatchers.IO)
 
     private val transitionDuration = resources
@@ -62,7 +62,7 @@ class SearchView @JvmOverloads constructor(
             _navigationMode = value
         }
 
-    var suggestionSelectedCallback: ((SearchSuggestion) -> Unit)? = null
+    var suggestionSelectedCallback: ((SuggestionListModel) -> Unit)? = null
     var querySubmitCallback: ((String) -> Unit)? = null
     var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var navigateBackCallback: (() -> Unit)? = null
@@ -88,7 +88,7 @@ class SearchView @JvmOverloads constructor(
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
 
-            setClickListener<SearchSuggestion> {
+            setClickListener<SuggestionListModel> {
                 closeSearchView()
                 binding.searchEditText.setText(it.text)
                 suggestionSelectedCallback?.invoke(it)

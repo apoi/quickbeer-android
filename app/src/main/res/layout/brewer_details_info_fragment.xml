@@ -116,6 +116,7 @@
                 android:id="@+id/twitter_container"
                 android:layout_width="@dimen/details_box_width"
                 android:layout_height="@dimen/details_box_height"
+                android:layout_marginEnd="@dimen/spacing_xl"
                 android:alpha="0.4"
                 android:foreground="?android:attr/selectableItemBackgroundBorderless"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +128,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="@dimen/spacing_xl"
                     android:src="@drawable/ic_action_twitter" />
 
             </FrameLayout>

@@ -30,8 +30,8 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
-import quickbeer.android.feature.shared.adapter.beer.BeerListModel
-import quickbeer.android.feature.shared.adapter.beer.BeerListModelRatingMapper
+import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
 class StyleDetailsViewModel(
     styleId: Int,

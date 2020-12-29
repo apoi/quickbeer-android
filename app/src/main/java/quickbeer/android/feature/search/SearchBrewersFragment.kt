@@ -8,9 +8,9 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListModel
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListTypeFactory
 import quickbeer.android.ui.DividerDecoration
+import quickbeer.android.ui.adapter.brewer.BrewerListModel
+import quickbeer.android.ui.adapter.brewer.BrewerListTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener

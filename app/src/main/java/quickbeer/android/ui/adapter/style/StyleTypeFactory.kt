@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter.style
+package quickbeer.android.ui.adapter.style
 
 import android.view.ViewGroup
 import quickbeer.android.R

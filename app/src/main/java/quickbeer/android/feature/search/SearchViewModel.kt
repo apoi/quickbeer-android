@@ -18,13 +18,13 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
-import quickbeer.android.feature.shared.adapter.beer.BeerListModel
-import quickbeer.android.feature.shared.adapter.beer.BeerListModelAlphabeticMapper
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListModel
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListModelAlphabeticMapper
-import quickbeer.android.feature.shared.adapter.style.StyleListModel
-import quickbeer.android.ui.adapter.search.SearchSuggestion
-import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
+import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticMapper
+import quickbeer.android.ui.adapter.brewer.BrewerListModel
+import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
+import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
+import quickbeer.android.ui.adapter.suggestion.SuggestionListModel.Type
 import quickbeer.android.ui.search.SearchActionsHandler
 
 open class SearchViewModel(
@@ -44,8 +44,8 @@ open class SearchViewModel(
     private val _styleResults = MutableLiveData<State<List<StyleListModel>>>()
     val styleResults: LiveData<State<List<StyleListModel>>> = _styleResults
 
-    private val _suggestions = MutableStateFlow<List<SearchSuggestion>>(emptyList())
-    override val suggestions: StateFlow<List<SearchSuggestion>> get() = _suggestions
+    private val _suggestions = MutableStateFlow<List<SuggestionListModel>>(emptyList())
+    override val suggestions: StateFlow<List<SuggestionListModel>> get() = _suggestions
 
     init {
         registerQueries()
@@ -86,7 +86,7 @@ open class SearchViewModel(
             beerSearchRepository.store.getKeysStream()
                 .map { queryList ->
                     queryList.map { query ->
-                        SearchSuggestion(query.hashCode(), Type.SEARCH, query)
+                        SuggestionListModel(query.hashCode(), Type.SEARCH, query)
                     }
                 }
                 .collect { _suggestions.value = it }

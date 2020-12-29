@@ -13,9 +13,9 @@ import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
-import quickbeer.android.feature.shared.adapter.beer.BeerListModel
-import quickbeer.android.feature.shared.adapter.beer.BeerListTypeFactory
 import quickbeer.android.ui.DividerDecoration
+import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
