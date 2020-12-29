@@ -22,6 +22,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
@@ -30,16 +31,20 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
+import quickbeer.android.domain.country.Country
+import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
+import quickbeer.android.feature.beerdetails.model.Address
 
 class BeerDetailsViewModel(
     beerId: Int,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
-    private val styleListRepository: StyleListRepository
+    private val styleListRepository: StyleListRepository,
+    private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     private val _beerState = MutableLiveData<State<Beer>>()
@@ -51,6 +56,9 @@ class BeerDetailsViewModel(
     private val _styleState = MutableLiveData<State<Style>>()
     val styleState: LiveData<State<Style>> = _styleState
 
+    private val _addressState = MutableLiveData<State<Address>>()
+    val addressState: LiveData<State<Address>> = _addressState
+
     init {
         viewModelScope.launch {
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
@@ -59,6 +67,7 @@ class BeerDetailsViewModel(
                     if (it is State.Success) {
                         getBrewer(it.value)
                         getStyle(it.value)
+                        getAddress(it.value)
                     }
                 }
         }
@@ -95,5 +104,24 @@ class BeerDetailsViewModel(
                 ?.firstOrNull { style -> style.name == styleName }
                 ?.let { getStyle(it.id) }
         }
+    }
+
+    private fun getAddress(beer: Beer) {
+        if (beer.brewerId == null || beer.countryId == null) return
+
+        val country = countryRepository.getStream(beer.countryId, Accept())
+        val brewer = brewerRepository.getStream(beer.brewerId, Brewer.DetailsDataValidator())
+
+        viewModelScope.launch {
+            country.combineTransform(brewer) { c, b ->
+                emit(mergeAddress(c, b))
+            }.collect { _addressState.postValue(it) }
+        }
+    }
+
+    private fun mergeAddress(country: State<Country>, brewer: State<Brewer>): State<Address> {
+        return if (country is State.Success && brewer is State.Success) {
+            State.Success(Address.from(country.value, brewer.value))
+        } else State.Loading
     }
 }

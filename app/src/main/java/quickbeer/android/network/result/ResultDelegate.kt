@@ -1,6 +1,5 @@
 package quickbeer.android.network.result
 
-import java.io.IOException
 import quickbeer.android.network.CallDelegate
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,12 +22,7 @@ class ResultDelegate<T>(proxy: Call<T>) : CallDelegate<T, ApiResult<T>>(proxy) {
             }
 
             override fun onFailure(call: Call<T>, error: Throwable) {
-                val result = when (error) {
-                    is HttpException -> ApiResult.HttpError(error.code(), error)
-                    is IOException -> ApiResult.NetworkError(error)
-                    else -> ApiResult.UnknownError(error)
-                }
-
+                val result = ApiResult.mapError<T>(error)
                 callback.onResponse(this@ResultDelegate, Response.success(result))
             }
         }

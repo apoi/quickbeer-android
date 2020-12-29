@@ -36,6 +36,7 @@ import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.style.Style
+import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
@@ -103,6 +104,15 @@ class BeerDetailsInfoFragment :
                 is State.Error -> Unit
             }
         }
+
+        observe(viewModel.addressState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setAddress(state.value)
+                is State.Error -> Unit
+            }
+        }
     }
 
     private fun setBeer(beer: Beer) {
@@ -145,7 +155,6 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setBrewer(brewer: Brewer) {
-        binding.origin.value = brewer.city
         binding.brewer.value = brewer.name
         binding.brewer.setOnClickListener {
             navigate(BeerDetailsFragmentDirections.toBrewer(brewer.id))
@@ -156,6 +165,13 @@ class BeerDetailsInfoFragment :
         binding.style.value = style.name
         binding.style.setOnClickListener {
             navigate(BeerDetailsFragmentDirections.toStyle(style.id))
+        }
+    }
+
+    private fun setAddress(address: Address) {
+        binding.origin.value = address.cityAndCountry()
+        binding.origin.setOnClickListener {
+            navigate(BeerDetailsFragmentDirections.toStyle(address.countryId))
         }
     }
 

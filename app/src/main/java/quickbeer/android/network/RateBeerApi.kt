@@ -28,10 +28,18 @@ interface RateBeerApi {
 
     // BEERS
 
-    @GET("/json/bff.asp")
+    /**
+     * Optional parameters applicable to certain calls:
+     *   SID = style id
+     *   CID = country id
+     *   RC = rate count
+     *   VG = average ratings
+     */
+
+    @GET("/json/bff.asp?sid=1&cid=1&rc=1&vg=1")
     suspend fun beer(@Query("bd") beerId: Int): ApiResult<List<BeerJson>>
 
-    @GET("/json/bff.asp")
+    @GET("/json/bff.asp?rc=1")
     suspend fun beerSearch(@Query("bn") query: String): ApiResult<List<BeerJson>>
 
     @GET("/json/upc.asp")

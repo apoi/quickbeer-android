@@ -19,7 +19,7 @@ import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
-import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticMapper
+import quickbeer.android.ui.adapter.beer.BeerListModelRateCountMapper
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
@@ -54,7 +54,7 @@ open class SearchViewModel(
     fun search(query: String) {
         viewModelScope.launch {
             beerSearchRepository.getStream(query, Accept())
-                .map(BeerListModelAlphabeticMapper(beerRepository)::map)
+                .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collect { _beerResults.postValue(it) }
         }
 

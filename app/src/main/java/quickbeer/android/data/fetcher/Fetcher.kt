@@ -46,7 +46,11 @@ open class Fetcher<in K, out V, E>(
     }
 
     private suspend fun fetchAndResume(key: K): ApiResult<V> {
-        val result = api.invoke(key).map(jsonMapper)
+        val result = try {
+            api.invoke(key).map(jsonMapper)
+        } catch (error: Throwable) {
+            ApiResult.mapError(error)
+        }
 
         lock.withLock {
             map.remove(key)

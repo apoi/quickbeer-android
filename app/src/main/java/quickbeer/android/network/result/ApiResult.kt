@@ -1,10 +1,12 @@
 package quickbeer.android.network.result
 
+import java.io.IOException
 import quickbeer.android.network.result.ApiResult.HttpError
 import quickbeer.android.network.result.ApiResult.NetworkError
 import quickbeer.android.network.result.ApiResult.Success
 import quickbeer.android.network.result.ApiResult.UnknownError
 import quickbeer.android.util.Mapper
+import retrofit2.HttpException
 
 /**
  * Wrapper class for network request results.
@@ -18,6 +20,16 @@ sealed class ApiResult<out T> {
     data class NetworkError(val cause: Throwable) : ApiResult<Nothing>()
 
     data class UnknownError(val cause: Throwable) : ApiResult<Nothing>()
+
+    companion object {
+        fun <T> mapError(error: Throwable): ApiResult<T> {
+            return when (error) {
+                is HttpException -> HttpError(error.code(), error)
+                is IOException -> NetworkError(error)
+                else -> UnknownError(error)
+            }
+        }
+    }
 }
 
 /**

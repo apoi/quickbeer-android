@@ -28,6 +28,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.domain.country.Country
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observe
@@ -49,15 +50,23 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
                 is State.Error -> Unit
             }
         }
+
+        observe(viewModel.countryState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setCountry(state.value)
+                is State.Error -> Unit
+            }
+        }
     }
 
     private fun setBrewer(brewer: Brewer) {
         val notAvailable = getString(R.string.not_available)
 
-        binding.founded.value = brewer.founded?.year?.toString() ?: notAvailable
-        binding.country.value = brewer.countryId?.toString() ?: notAvailable
         binding.city.value = brewer.city ?: notAvailable
         binding.address.value = brewer.address ?: notAvailable
+        binding.founded.value = brewer.founded?.year?.toString() ?: notAvailable
 
         brewer.website
             ?.takeIf(String::isNotEmpty)
@@ -88,6 +97,10 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
             }.ifNull {
                 binding.twitter.alpha = OPAQUE
             }
+    }
+
+    private fun setCountry(country: Country) {
+        binding.country.value = country.name
     }
 
     private fun fixUrl(url: String?): String? {

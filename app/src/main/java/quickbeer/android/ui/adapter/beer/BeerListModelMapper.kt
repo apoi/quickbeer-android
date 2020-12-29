@@ -12,6 +12,18 @@ class BeerListModelRatingMapper(private val beerRepository: BeerRepository) :
         }
     )
 
+class BeerListModelRateCountMapper(private val beerRepository: BeerRepository) :
+    StateMapper<List<Beer>, List<BeerListModel>>(
+        { list ->
+            list.sortedWith(
+                compareByDescending(Beer::rateCount)
+                    .thenByDescending(Beer::averageRating)
+                    .thenBy(Beer::name)
+                    .thenBy(Beer::id)
+            ).map { BeerListModel(it.id, beerRepository) }
+        }
+    )
+
 class BeerListModelAlphabeticMapper(private val beerRepository: BeerRepository) :
     StateMapper<List<Beer>, List<BeerListModel>>(
         { list ->

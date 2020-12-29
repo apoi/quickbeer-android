@@ -17,11 +17,17 @@ class BeerListViewHolder(
 ) : ScopeListViewHolder<BeerListModel>(binding.root) {
 
     override fun bind(item: BeerListModel, scope: CoroutineScope) {
+        clear()
         scope.launch {
             item.getBeer().collect {
                 withContext(Dispatchers.Main) { updateState(it) }
             }
         }
+    }
+
+    override fun unbind() {
+        super.unbind()
+        clear()
     }
 
     private fun updateState(state: State<Beer>) {
@@ -48,9 +54,7 @@ class BeerListViewHolder(
         binding.brewerName.text = beer.brewerName
     }
 
-    override fun unbind() {
-        super.unbind()
-
+    private fun clear() {
         binding.beerName.text = ""
         binding.beerStyle.text = ""
         binding.brewerName.text = ""

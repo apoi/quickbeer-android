@@ -30,14 +30,17 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BrewersBeersRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
+import quickbeer.android.domain.country.Country
+import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
-import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
+import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticMapper
 
 class BrewerDetailsViewModel(
     brewerId: Int,
     private val brewerRepository: BrewerRepository,
     private val brewersBeersRepository: BrewersBeersRepository,
-    private val beerRepository: BeerRepository
+    private val beerRepository: BeerRepository,
+    private val countryRepository: CountryRepository
 ) : ViewModel() {
 
     private val _brewerState = MutableLiveData<State<Brewer>>()
@@ -46,16 +49,31 @@ class BrewerDetailsViewModel(
     private val _beersState = MutableLiveData<State<List<BeerListModel>>>()
     val beersState: LiveData<State<List<BeerListModel>>> = _beersState
 
+    private val _countryState = MutableLiveData<State<Country>>()
+    val countryState: LiveData<State<Country>> = _countryState
+
     init {
         viewModelScope.launch {
             brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
-                .collect { _brewerState.postValue(it) }
+                .collect {
+                    _brewerState.postValue(it)
+                    if (it is State.Success) getCountry(it.value)
+                }
         }
 
         viewModelScope.launch {
             brewersBeersRepository.getStream(brewerId.toString(), Accept())
-                .map(BeerListModelRatingMapper(beerRepository)::map)
+                .map(BeerListModelAlphabeticMapper(beerRepository)::map)
                 .collect { _beersState.postValue(it) }
+        }
+    }
+
+    private fun getCountry(brewer: Brewer) {
+        if (brewer.countryId == null) return
+
+        viewModelScope.launch {
+            countryRepository.getStream(brewer.countryId, Accept())
+                .collect { _countryState.postValue(it) }
         }
     }
 }

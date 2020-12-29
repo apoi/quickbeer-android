@@ -14,7 +14,7 @@ data class BeerJson(
     @field:Json(name = "OverallPctl") val overallRating: Float?,
     @field:Json(name = "StylePctl") val styleRating: Float?,
     @field:Json(name = "RateCount") val rateCount: Int?,
-    @field:Json(name = "BrewerCountryId") val countryId: Int?,
+    @field:Json(name = "BrewerCountryID") val countryId: Int?,
     @field:Json(name = "BeerStyleID") val styleId: Int?,
     @field:Json(name = "BeerStyleName") val styleName: String?,
     @field:Json(name = "Alcohol") val alcohol: Float?,
