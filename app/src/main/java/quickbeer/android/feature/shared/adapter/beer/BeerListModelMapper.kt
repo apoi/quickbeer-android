@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter
+package quickbeer.android.feature.shared.adapter.beer
 
 import quickbeer.android.data.state.StateMapper
 import quickbeer.android.domain.beer.Beer

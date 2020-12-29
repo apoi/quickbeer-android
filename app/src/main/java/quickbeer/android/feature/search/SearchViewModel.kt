@@ -13,21 +13,28 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
-import quickbeer.android.domain.beerlist.store.BeerSearchStore
-import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.feature.shared.adapter.BeerListModelAlphabeticMapper
+import quickbeer.android.domain.brewer.repository.BrewerRepository
+import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
+import quickbeer.android.feature.shared.adapter.beer.BeerListModel
+import quickbeer.android.feature.shared.adapter.beer.BeerListModelAlphabeticMapper
+import quickbeer.android.feature.shared.adapter.brewer.BrewerListModel
+import quickbeer.android.feature.shared.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.search.SearchSuggestion
 import quickbeer.android.ui.adapter.search.SearchSuggestion.Type
 import quickbeer.android.ui.search.SearchActionsHandler
 
 open class SearchViewModel(
-    private val searchRepository: BeerSearchRepository,
     private val beerRepository: BeerRepository,
-    private val beerSearchStore: BeerSearchStore
+    private val beerSearchRepository: BeerSearchRepository,
+    private val brewerRepository: BrewerRepository,
+    private val brewerSearchRepository: BrewerSearchRepository
 ) : ViewModel(), SearchActionsHandler {
 
-    private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
-    val viewState: LiveData<State<List<BeerListModel>>> = _viewState
+    private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
+    val beerResults: LiveData<State<List<BeerListModel>>> = _beerResults
+
+    private val _brewerResults = MutableLiveData<State<List<BrewerListModel>>>()
+    val brewerResults: LiveData<State<List<BrewerListModel>>> = _brewerResults
 
     private val _suggestions = MutableStateFlow<List<SearchSuggestion>>(emptyList())
     override val suggestions: StateFlow<List<SearchSuggestion>> get() = _suggestions
@@ -38,15 +45,21 @@ open class SearchViewModel(
 
     fun search(query: String) {
         viewModelScope.launch {
-            searchRepository.getStream(query, Accept())
+            beerSearchRepository.getStream(query, Accept())
                 .map(BeerListModelAlphabeticMapper(beerRepository)::map)
-                .collect { _viewState.postValue(it) }
+                .collect { _beerResults.postValue(it) }
+        }
+
+        viewModelScope.launch {
+            brewerSearchRepository.getStream(query, Accept())
+                .map(BrewerListModelAlphabeticMapper(brewerRepository)::map)
+                .collect { _brewerResults.postValue(it) }
         }
     }
 
     private fun registerQueries() {
         viewModelScope.launch {
-            beerSearchStore.getKeysStream()
+            beerSearchRepository.store.getKeysStream()
                 .map { queryList ->
                     queryList.map { query ->
                         SearchSuggestion(query.hashCode(), Type.SEARCH, query)

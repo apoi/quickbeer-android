@@ -1,4 +1,4 @@
-package quickbeer.android.feature.shared.adapter
+package quickbeer.android.feature.shared.adapter.beer
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -51,10 +51,9 @@ class BeerListViewHolder(
     override fun unbind() {
         super.unbind()
 
-        binding.beerScore.background = null
-        binding.beerStyle.text = ""
         binding.beerName.text = ""
         binding.beerStyle.text = ""
         binding.brewerName.text = ""
+        binding.beerScore.setBackgroundResource(R.drawable.score_unrated)
     }
 }

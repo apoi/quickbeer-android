@@ -13,9 +13,9 @@ class SearchPagerAdapter(fm: FragmentManager, private val query: String?) :
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> SearchBeersFragment.create(query)
-            1 -> SearchBeersFragment.create(query)
-            else -> SearchBeersFragment.create(query)
+            0 -> SearchBeersFragment()
+            1 -> SearchBrewersFragment()
+            else -> SearchBeersFragment()
         }
     }
 

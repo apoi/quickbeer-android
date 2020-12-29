@@ -10,6 +10,7 @@ interface RecycledPoolHolder {
     ): RecyclerView.RecycledViewPool
 
     enum class PoolType(val id: Int) {
-        BEER_LIST(1)
+        BEER_LIST(1),
+        BREWER_LIST(2)
     }
 }

@@ -11,8 +11,8 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.TopBeersRepository
-import quickbeer.android.feature.shared.adapter.BeerListModel
-import quickbeer.android.feature.shared.adapter.BeerListModelRatingMapper
+import quickbeer.android.feature.shared.adapter.beer.BeerListModel
+import quickbeer.android.feature.shared.adapter.beer.BeerListModelRatingMapper
 
 class TopBeersViewModel(
     private val repository: TopBeersRepository,
