@@ -52,7 +52,7 @@ interface RateBeerApi {
     suspend fun brewerSearch(@Query("bn") query: String): ApiResult<List<BrewerJson>>
 
     @GET("/json/bw.asp")
-    suspend fun brewerBeers(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
+    suspend fun brewerBeers(@Query("b") brewerId: String): ApiResult<List<BeerJson>>
 
     // STYLES
 

@@ -10,6 +10,8 @@
 
     <dimen name="search_status_text">28sp</dimen>
     <dimen name="progress_indicator_width">50dp</dimen>
+    <dimen name="details_box_height">60dp</dimen>
+    <dimen name="details_box_width">80dp</dimen>
 
     <!-- Beer details -->
     <dimen name="beer_details_header_text">30sp</dimen>

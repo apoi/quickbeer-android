@@ -1,7 +1,6 @@
 package quickbeer.android.domain.beer
 
 import android.os.Parcelable
-import java.util.Locale
 import kotlin.math.roundToInt
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
@@ -43,7 +42,7 @@ data class Beer(
     }
 
     fun imageUri(): String {
-        return String.format(Locale.ROOT, Constants.BEER_IMAGE_PATH, id)
+        return Constants.BEER_IMAGE_PATH.format(id)
     }
 
     fun isTicked(): Boolean {

@@ -34,6 +34,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.style.Style
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
@@ -85,6 +86,15 @@ class BeerDetailsInfoFragment :
             }
         }
 
+        observe(viewModel.brewerState) { state ->
+            when (state) {
+                State.Loading -> Unit
+                State.Empty -> Unit
+                is State.Success -> setBrewer(state.value)
+                is State.Error -> Unit
+            }
+        }
+
         observe(viewModel.styleState) { state ->
             when (state) {
                 State.Loading -> Unit
@@ -99,9 +109,6 @@ class BeerDetailsInfoFragment :
         binding.description.value = beer.description
             ?.takeIf(String::isNotEmpty)
             ?: getString(R.string.no_description)
-
-        binding.brewer.value = beer.brewerName
-        binding.origin.value = beer.countryId.toString()
 
         binding.beerRatingOverall.value = beer.overallRating
             ?.takeIf { it > 0 }
@@ -135,6 +142,14 @@ class BeerDetailsInfoFragment :
         binding.tickedDate.text = beer.tickDate
             ?.takeIf { beer.isTicked() }
             ?.formatDateTime(getString(R.string.beer_tick_date))
+    }
+
+    private fun setBrewer(brewer: Brewer) {
+        binding.origin.value = brewer.city
+        binding.brewer.value = brewer.name
+        binding.brewer.setOnClickListener {
+            navigate(BeerDetailsFragmentDirections.toBrewer(brewer.id))
+        }
     }
 
     private fun setStyle(style: Style) {

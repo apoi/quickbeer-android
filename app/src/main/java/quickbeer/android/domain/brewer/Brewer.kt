@@ -1,7 +1,6 @@
 package quickbeer.android.domain.brewer
 
 import android.os.Parcelable
-import java.util.Locale
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
@@ -42,14 +41,14 @@ data class Brewer(
     val regionId: String?
 ) : Parcelable {
 
-    fun getImageUri(): String {
-        return String.format(Locale.ROOT, Constants.BREWER_IMAGE_PATH, id)
+    fun imageUri(): String {
+        return Constants.BREWER_IMAGE_PATH.format(id)
     }
 
     companion object {
         val merger: Merger<Brewer> = { old, new ->
             Brewer(
-                id = new.id ?: old.id,
+                id = new.id,
                 name = new.name ?: old.name,
                 description = new.description ?: old.description,
                 address = new.address ?: old.address,
@@ -86,6 +85,12 @@ data class Brewer(
     open class BasicDataValidator : Validator<Brewer> {
         override fun validate(brewer: Brewer?): Boolean {
             return brewer?.name != null
+        }
+    }
+
+    open class DetailsDataValidator : Validator<Brewer> {
+        override fun validate(brewer: Brewer?): Boolean {
+            return brewer?.countryId != null
         }
     }
 }

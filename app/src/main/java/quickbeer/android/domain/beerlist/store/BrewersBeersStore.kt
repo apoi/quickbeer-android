@@ -4,12 +4,12 @@ import quickbeer.android.data.store.StoreCore
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.idlist.IdList
 
-class RecentBeersStore(
+class BrewersBeersStore(
     indexStoreCore: StoreCore<String, IdList>,
     beerStoreCore: StoreCore<Int, Beer>
-) : SingleBeerListStore(KEY, indexStoreCore, beerStoreCore) {
+) : BeerListStore(INDEX_PREFIX, indexStoreCore, beerStoreCore) {
 
     companion object {
-        private const val KEY = "recentBeers"
+        const val INDEX_PREFIX = "brewer/"
     }
 }

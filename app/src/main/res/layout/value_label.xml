@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/title"
         style="@style/DetailsTitle"
-        android:text="@string/style" />
+        tools:text="@string/style" />
 
     <TextView
         android:id="@+id/value"

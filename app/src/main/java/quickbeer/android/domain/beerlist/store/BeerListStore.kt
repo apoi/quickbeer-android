@@ -7,15 +7,31 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.idlist.IdList
 
 abstract class BeerListStore(
-    indexMapper: IndexMapper<String>,
+    indexPrefix: String,
     indexStoreCore: StoreCore<String, IdList>,
     beerStoreCore: StoreCore<Int, Beer>
 ) : ItemListStore<String, Int, Beer>(
-    indexMapper = indexMapper,
+    indexMapper = QueryIndexMapper(indexPrefix),
     getKey = Beer::id,
     indexCore = indexStoreCore,
     valueCore = beerStoreCore
-)
+) {
+
+    private class QueryIndexMapper(private val indexPrefix: String) : IndexMapper<String> {
+
+        override fun encode(index: String): String {
+            return indexPrefix + index
+        }
+
+        override fun decode(value: String): String {
+            return value.substring(indexPrefix.length)
+        }
+
+        override fun matches(value: String): Boolean {
+            return value.startsWith(indexPrefix)
+        }
+    }
+}
 
 abstract class SingleBeerListStore(
     indexKey: String,

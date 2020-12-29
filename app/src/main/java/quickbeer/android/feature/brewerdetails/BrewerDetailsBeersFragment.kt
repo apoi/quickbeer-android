@@ -1,15 +1,20 @@
-package quickbeer.android.feature.search
+package quickbeer.android.feature.brewerdetails
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListModel
-import quickbeer.android.feature.shared.adapter.brewer.BrewerListTypeFactory
+import quickbeer.android.feature.shared.adapter.beer.BeerListModel
+import quickbeer.android.feature.shared.adapter.beer.BeerListTypeFactory
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
@@ -19,59 +24,60 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
+class BrewerDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListFragmentBinding::bind)
-    private val viewModel by sharedViewModel<SearchViewModel>()
-    private val brewersAdapter = ListAdapter<BrewerListModel>(BrewerListTypeFactory())
+    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+
+    private val args: BrewerDetailsFragmentArgs by navArgs()
+    private val viewModel by viewModel<BrewerDetailsViewModel> { parametersOf(args.id) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
-            adapter = brewersAdapter
+            adapter = beersAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
             }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBrewerSelected)
+            setClickListener(::onBeerSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BREWER_LIST, brewersAdapter::createPool)
+                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
             )
         }
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.recyclerView.adapter = null
+        super.onDestroyView()
     }
 
     override fun observeViewState() {
-        observe(viewModel.brewerResults) { state ->
+        observe(viewModel.beersState) { state ->
             when (state) {
                 State.Loading -> {
-                    brewersAdapter.setItems(emptyList())
-                    binding.recyclerView.scrollToPosition(0)
+                    beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false
                     binding.progress.show()
                 }
                 State.Empty -> {
-                    brewersAdapter.setItems(emptyList())
+                    beersAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
                     binding.progress.hide()
                 }
                 is State.Success -> {
-                    brewersAdapter.setItems(state.value)
+                    beersAdapter.setItems(state.value)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
                 is State.Error -> {
-                    brewersAdapter.setItems(emptyList())
+                    beersAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_error)
                     binding.message.isVisible = true
                     binding.progress.hide()
@@ -80,7 +86,15 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
         }
     }
 
-    private fun onBrewerSelected(brewer: BrewerListModel) {
-        navigate(SearchFragmentDirections.toBrewer(brewer.id))
+    private fun onBeerSelected(beer: BeerListModel) {
+        navigate(BrewerDetailsFragmentDirections.toBeer(beer.id))
+    }
+
+    companion object {
+        fun create(brewerId: Int): Fragment {
+            return BrewerDetailsBeersFragment().apply {
+                arguments = bundleOf(Constants.ID to brewerId)
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/beer_details_view"
+        android:id="@+id/details_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
@@ -27,7 +27,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <RatingBar
-                    android:id="@+id/rating_bar_"
+                    android:id="@+id/rating_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
@@ -49,7 +49,7 @@
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/rating_bar_"
+                    app:layout_constraintTop_toBottomOf="@id/rating_bar"
                     tools:text="You rated this beer last week."
                     tools:visibility="visible" />
 
@@ -66,8 +66,8 @@
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/beer_rating_overall"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/details_box_width"
+                    android:layout_height="@dimen/details_box_height"
                     android:layout_marginStart="@dimen/spacing_xl"
                     android:layout_marginTop="@dimen/spacing_l"
                     android:clickable="true"
@@ -76,8 +76,7 @@
                     app:layout_constraintEnd_toStartOf="@id/beer_rating_overall_separator"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:title="@string/rating_overall"
-                    app:value="100" />
+                    app:title="@string/rating_overall" />
 
                 <View
                     android:id="@+id/beer_rating_overall_separator"
@@ -94,16 +93,15 @@
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/beer_rating_style"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/details_box_width"
+                    android:layout_height="@dimen/details_box_height"
                     android:clickable="true"
                     android:focusable="true"
                     app:constrained="false"
                     app:layout_constraintEnd_toStartOf="@id/beer_rating_style_separator"
                     app:layout_constraintStart_toEndOf="@id/beer_rating_overall_separator"
                     app:layout_constraintTop_toTopOf="@id/beer_rating_overall"
-                    app:title="@string/rating_style"
-                    app:value="100" />
+                    app:title="@string/rating_style" />
 
                 <View
                     android:id="@+id/beer_rating_style_separator"
@@ -120,16 +118,15 @@
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/beer_rating_abv"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/details_box_width"
+                    android:layout_height="@dimen/details_box_height"
                     android:clickable="true"
                     android:focusable="true"
                     app:constrained="false"
                     app:layout_constraintEnd_toStartOf="@id/beer_rating_abv_separator"
                     app:layout_constraintStart_toEndOf="@id/beer_rating_style_separator"
                     app:layout_constraintTop_toTopOf="@id/beer_rating_overall"
-                    app:title="@string/abv"
-                    app:value="100" />
+                    app:title="@string/abv" />
 
                 <View
                     android:id="@+id/beer_rating_abv_separator"
@@ -146,8 +143,8 @@
 
                 <quickbeer.android.ui.view.ValueLabel
                     android:id="@+id/beer_rating_ibu"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/details_box_width"
+                    android:layout_height="@dimen/details_box_height"
                     android:layout_marginEnd="@dimen/spacing_xl"
                     android:clickable="true"
                     android:focusable="true"
@@ -155,8 +152,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/beer_rating_abv_separator"
                     app:layout_constraintTop_toTopOf="@id/beer_rating_overall"
-                    app:title="@string/ibu"
-                    app:value="100" />
+                    app:title="@string/ibu" />
 
                 <!-- Info fields -->
 

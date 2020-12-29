@@ -28,6 +28,8 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
@@ -35,12 +37,16 @@ import quickbeer.android.domain.stylelist.repository.StyleListRepository
 class BeerDetailsViewModel(
     beerId: Int,
     private val beerRepository: BeerRepository,
+    private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository
 ) : ViewModel() {
 
     private val _beerState = MutableLiveData<State<Beer>>()
     val beerState: LiveData<State<Beer>> = _beerState
+
+    private val _brewerState = MutableLiveData<State<Brewer>>()
+    val brewerState: LiveData<State<Brewer>> = _brewerState
 
     private val _styleState = MutableLiveData<State<Style>>()
     val styleState: LiveData<State<Style>> = _styleState
@@ -50,32 +56,44 @@ class BeerDetailsViewModel(
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
                 .collect {
                     _beerState.postValue(it)
-                    if (it is State.Success) getBeerStyle(it.value)
+                    if (it is State.Success) {
+                        getBrewer(it.value)
+                        getStyle(it.value)
+                    }
                 }
         }
     }
 
-    private fun getBeerStyle(beer: Beer) {
-        when {
-            beer.styleId != null -> getBeerStyle(beer.styleId)
-            beer.styleName != null -> getBeerStyle(beer.styleName)
+    private fun getBrewer(beer: Beer) {
+        if (beer.brewerId == null) return
+
+        viewModelScope.launch {
+            brewerRepository.getStream(beer.brewerId, Brewer.BasicDataValidator())
+                .collect { _brewerState.postValue(it) }
         }
     }
 
-    private fun getBeerStyle(styleId: Int) {
+    private fun getStyle(beer: Beer) {
+        when {
+            beer.styleId != null -> getStyle(beer.styleId)
+            beer.styleName != null -> getStyle(beer.styleName)
+        }
+    }
+
+    private fun getStyle(styleId: Int) {
         viewModelScope.launch {
             styleRepository.getStream(styleId, Accept())
                 .collect { _styleState.postValue(it) }
         }
     }
 
-    private fun getBeerStyle(styleName: String) {
+    private fun getStyle(styleName: String) {
         viewModelScope.launch {
             styleListRepository.getStream(Accept())
                 .firstOrNull { it is State.Success }
                 ?.let { if (it is State.Success) it.value else null }
                 ?.firstOrNull { style -> style.name == styleName }
-                ?.let { getBeerStyle(it.id) }
+                ?.let { getStyle(it.id) }
         }
     }
 }
