@@ -7,7 +7,7 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 class BeerListModelRatingMapper(private val beerRepository: BeerRepository) :
     StateMapper<List<Beer>, List<BeerListModel>>(
         { list ->
-            list.sortedByDescending(Beer::averageRating)
+            list.sortedWith(compareByDescending(Beer::averageRating).thenBy(Beer::id))
                 .map { BeerListModel(it.id, beerRepository) }
         }
     )
@@ -15,7 +15,7 @@ class BeerListModelRatingMapper(private val beerRepository: BeerRepository) :
 class BeerListModelAlphabeticMapper(private val beerRepository: BeerRepository) :
     StateMapper<List<Beer>, List<BeerListModel>>(
         { list ->
-            list.sortedBy(Beer::name)
+            list.sortedWith(compareBy(Beer::name, Beer::id))
                 .map { BeerListModel(it.id, beerRepository) }
         }
     )
