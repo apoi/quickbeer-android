@@ -16,6 +16,7 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
+import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
@@ -32,7 +33,8 @@ open class SearchViewModel(
     private val beerSearchRepository: BeerSearchRepository,
     private val brewerRepository: BrewerRepository,
     private val brewerSearchRepository: BrewerSearchRepository,
-    private val styleListRepository: StyleListRepository
+    private val styleListRepository: StyleListRepository,
+    private val countryRepository: CountryRepository
 ) : ViewModel(), SearchActionsHandler {
 
     private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
@@ -60,7 +62,7 @@ open class SearchViewModel(
 
         viewModelScope.launch {
             brewerSearchRepository.getStream(query, Accept())
-                .map(BrewerListModelAlphabeticMapper(brewerRepository)::map)
+                .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
         }
 

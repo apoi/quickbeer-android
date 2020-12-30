@@ -109,19 +109,19 @@ class BeerDetailsViewModel(
     private fun getAddress(beer: Beer) {
         if (beer.brewerId == null || beer.countryId == null) return
 
-        val country = countryRepository.getStream(beer.countryId, Accept())
         val brewer = brewerRepository.getStream(beer.brewerId, Brewer.DetailsDataValidator())
+        val country = countryRepository.getStream(beer.countryId, Accept())
 
         viewModelScope.launch {
-            country.combineTransform(brewer) { c, b ->
-                emit(mergeAddress(c, b))
+            brewer.combineTransform(country) { b, c ->
+                emit(mergeAddress(b, c))
             }.collect { _addressState.postValue(it) }
         }
     }
 
-    private fun mergeAddress(country: State<Country>, brewer: State<Brewer>): State<Address> {
-        return if (country is State.Success && brewer is State.Success) {
-            State.Success(Address.from(country.value, brewer.value))
+    private fun mergeAddress(brewer: State<Brewer>, country: State<Country>): State<Address> {
+        return if (brewer is State.Success && country is State.Success) {
+            State.Success(Address.from(brewer.value, country.value))
         } else State.Loading
     }
 }

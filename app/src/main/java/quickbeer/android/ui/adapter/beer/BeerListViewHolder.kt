@@ -25,11 +25,6 @@ class BeerListViewHolder(
         }
     }
 
-    override fun unbind() {
-        super.unbind()
-        clear()
-    }
-
     private fun updateState(state: State<Beer>) {
         when (state) {
             is State.Success -> setBeer(state.value)

@@ -3,6 +3,10 @@ package quickbeer.android.util.ktx
 import java.text.Normalizer
 import java.util.regex.Pattern
 
+fun String?.nullIfEmpty(): String? {
+    return if (this.isNullOrEmpty()) null else this
+}
+
 fun String?.normalize(): String {
     if (this == null) return ""
 

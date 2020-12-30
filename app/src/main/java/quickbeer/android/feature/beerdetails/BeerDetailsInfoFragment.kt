@@ -31,7 +31,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.Constants
 import quickbeer.android.R
-import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
@@ -40,7 +39,7 @@ import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
-import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.viewBinding
 
 class BeerDetailsInfoFragment :
@@ -78,41 +77,10 @@ class BeerDetailsInfoFragment :
     }
 
     override fun observeViewState() {
-        observe(viewModel.beerState) { state ->
-            when (state) {
-                State.Loading -> Unit
-                State.Empty -> Unit
-                is State.Success -> setBeer(state.value)
-                is State.Error -> Unit
-            }
-        }
-
-        observe(viewModel.brewerState) { state ->
-            when (state) {
-                State.Loading -> Unit
-                State.Empty -> Unit
-                is State.Success -> setBrewer(state.value)
-                is State.Error -> Unit
-            }
-        }
-
-        observe(viewModel.styleState) { state ->
-            when (state) {
-                State.Loading -> Unit
-                State.Empty -> Unit
-                is State.Success -> setStyle(state.value)
-                is State.Error -> Unit
-            }
-        }
-
-        observe(viewModel.addressState) { state ->
-            when (state) {
-                State.Loading -> Unit
-                State.Empty -> Unit
-                is State.Success -> setAddress(state.value)
-                is State.Error -> Unit
-            }
-        }
+        observeSuccess(viewModel.beerState, ::setBeer)
+        observeSuccess(viewModel.brewerState, ::setBrewer)
+        observeSuccess(viewModel.styleState, ::setStyle)
+        observeSuccess(viewModel.addressState, ::setAddress)
     }
 
     private fun setBeer(beer: Beer) {

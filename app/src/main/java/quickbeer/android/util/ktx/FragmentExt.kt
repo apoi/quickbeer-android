@@ -6,12 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+import quickbeer.android.data.state.State
 
 /**
  * LiveData observing helper.
  */
 fun <T> Fragment.observe(liveData: LiveData<T>, observer: (T) -> Unit) {
     liveData.observe(this, observer::invoke)
+}
+
+fun <T> Fragment.observeSuccess(liveData: LiveData<State<T>>, observer: (T) -> Unit) {
+    liveData.observe(this, { if (it is State.Success) observer(it.value) })
 }
 
 /**

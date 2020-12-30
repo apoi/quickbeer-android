@@ -45,6 +45,7 @@ open class Fetcher<in K, out V, E>(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchAndResume(key: K): ApiResult<V> {
         val result = try {
             api.invoke(key).map(jsonMapper)

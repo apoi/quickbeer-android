@@ -2,6 +2,7 @@ package quickbeer.android.feature.beerdetails.model
 
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.country.Country
+import quickbeer.android.util.ktx.nullIfEmpty
 
 data class Address(
     val countryId: Int,
@@ -12,20 +13,20 @@ data class Address(
 
     fun cityAndCountry(): String? {
         return when {
-            city != null && country != null -> "$city, $country"
-            city != null -> city
+            country != null && city != null -> "$city, $country"
             country != null -> country
+            city != null -> city
             else -> null
         }
     }
 
     companion object {
-        fun from(country: Country, brewer: Brewer): Address {
+        fun from(brewer: Brewer, country: Country): Address {
             return Address(
                 countryId = country.id,
-                country = country.name,
-                city = brewer.city,
-                address = brewer.address
+                country = country.name.nullIfEmpty(),
+                city = brewer.city.nullIfEmpty(),
+                address = brewer.address.nullIfEmpty()
             )
         }
     }

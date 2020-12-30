@@ -81,6 +81,6 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun onBrewerSelected(brewer: BrewerListModel) {
-        navigate(SearchFragmentDirections.toBrewer(brewer.id))
+        navigate(SearchFragmentDirections.toBrewer(brewer.brewerId))
     }
 }

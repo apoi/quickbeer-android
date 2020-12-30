@@ -1,13 +1,11 @@
 package quickbeer.android.ui.adapter.brewer
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BrewerListItemBinding
 import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.domain.country.Country
+import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.adapter.simple.ScopeListViewHolder
 
 class BrewerListViewHolder(
@@ -15,31 +13,22 @@ class BrewerListViewHolder(
 ) : ScopeListViewHolder<BrewerListModel>(binding.root) {
 
     override fun bind(item: BrewerListModel, scope: CoroutineScope) {
+        clear()
         scope.launch {
-            item.getBrewer().collect {
-                withContext(Dispatchers.Main) { updateState(it) }
-            }
+            setData(item.getBrewer(item.brewerId), item.getCountry(item.countryId))
         }
     }
 
-    private fun updateState(state: State<Brewer>) {
-        when (state) {
-            is State.Success -> setBrewer(state.value)
-        }
-    }
+    private fun setData(brewer: Brewer?, country: Country?) {
+        if (brewer == null || country == null) return
 
-    private fun setBrewer(brewer: Brewer) {
-        // Don't show anything if the name isn't loaded yet.
-        // This prevents the rating label to be shown with empty details.
-        if (brewer.name.isNullOrEmpty()) return
-
+        val address = Address.from(brewer, country)
         binding.brewerName.text = brewer.name
-        binding.brewerLocation.text = brewer.city
+        binding.brewerLocation.text = address.cityAndCountry()
+        binding.brewerCountry.text = country.code
     }
 
-    override fun unbind() {
-        super.unbind()
-
+    private fun clear() {
         binding.brewerName.text = ""
         binding.brewerLocation.text = ""
     }

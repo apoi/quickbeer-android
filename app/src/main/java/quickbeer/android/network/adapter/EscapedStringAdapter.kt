@@ -9,7 +9,7 @@ import java.util.regex.Pattern
 class EscapedStringAdapter {
 
     @FromJson
-    fun deserialize(json: String): String {
+    fun deserialize(json: String): String? {
         val value = PATTERN.matcher(json).replaceAll(Matcher.quoteReplacement("<p>"))
         return HtmlCompat.fromHtml(value, FROM_HTML_MODE_LEGACY).toString().trim { it <= ' ' }
     }
