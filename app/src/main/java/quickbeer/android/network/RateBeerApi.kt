@@ -48,9 +48,6 @@ interface RateBeerApi {
     @GET("/json/tb.asp?m=top50")
     suspend fun topBeers(): ApiResult<List<BeerJson>>
 
-    @GET("/json/tb.asp?m=country")
-    suspend fun beersInCountry(@Query("c") id: Int): ApiResult<List<BeerJson>>
-
     // BREWERS
 
     @GET("/json/bi.asp")
@@ -69,6 +66,11 @@ interface RateBeerApi {
 
     @GET("/json/style.asp")
     suspend fun beersInStyle(@Query("s") styleId: String): ApiResult<List<BeerJson>>
+
+    // COUNTRIES
+
+    @GET("/json/tb.asp?m=country")
+    suspend fun beersInCountry(@Query("c") countryId: String): ApiResult<List<BeerJson>>
 
     // REVIEWS
 

@@ -139,7 +139,7 @@ class BeerDetailsInfoFragment :
     private fun setAddress(address: Address) {
         binding.origin.value = address.cityAndCountry()
         binding.origin.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toStyle(address.countryId))
+            navigate(BeerDetailsFragmentDirections.toCountry(address.countryId))
         }
     }
 

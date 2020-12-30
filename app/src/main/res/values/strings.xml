@@ -63,6 +63,18 @@
     <string name="brewer_details_no_facebook">Facebook page not available</string>
     <string name="brewer_details_no_twitter">Twitter feed not available</string>
 
+    <!-- Style details -->
+    <string name="style_details_description">Description</string>
+    <string name="style_details_parent">Parent Category</string>
+
+    <!-- Country details -->
+    <string name="country_official_name">Official Name</string>
+    <string name="country_region">Region</string>
+    <string name="country_capital">Capital</string>
+    <string name="country_beer_culture">Beer Culture</string>
+    <string name="country_read_more">Read more</string>
+    <string name="country_wikipedia_note">Includes material from Wikipedia under the CC BY-SA 3.0 license.</string>
+
     <!-- Ticking -->
     <string name="beer_tick_date">You rated this beer on %1$s at %2$s</string>
     <string name="tick_success">%s rated!</string>
@@ -86,9 +98,5 @@
     <string name="review_flavor_hint">How the beer tastes. How does the initial flavour vary from the start, the middle, finish and aftertaste of the beer?</string>
     <string name="review_mouthfeel_hint">The “feel” of the beer inside your mouth and as you swallow it.</string>
     <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
-
-    <!-- Style details -->
-    <string name="style_details_description">Description</string>
-    <string name="style_details_parent">Parent Category</string>
 
 </resources>

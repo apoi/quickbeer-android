@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/details_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/card_view_margin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_m"
+                android:background="@color/gray_80">
+
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/official_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_s"
+                    android:layout_marginBottom="@dimen/spacing_s"
+                    app:layout_constraintBottom_toTopOf="@id/region"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:title="@string/country_official_name"
+                    app:top_divider="false" />
+
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/region"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/official_name"
+                    app:title="@string/country_region"
+                    app:top_divider="true" />
+
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/capital"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/region"
+                    app:title="@string/country_capital"
+                    app:top_divider="true" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/beer_culture_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:constraint_referenced_ids="beer_culture,beer_culture_link" />
+
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/beer_culture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="false"
+                    android:focusable="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/capital"
+                    app:paragraph="true"
+                    app:selectable="true"
+                    app:title="@string/country_beer_culture"
+                    app:top_divider="true" />
+
+                <TextView
+                    android:id="@+id/beer_culture_link"
+                    style="@style/DetailsLink"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_m"
+                    android:drawablePadding="@dimen/spacing_m"
+                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                    android:padding="@dimen/spacing_l"
+                    android:text="@string/country_read_more"
+                    app:drawableEndCompat="@drawable/ic_action_launch_small"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/beer_culture" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                style="@style/DetailsLicense"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="@dimen/spacing_m"
+                android:gravity="center"
+                android:text="@string/country_wikipedia_note" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

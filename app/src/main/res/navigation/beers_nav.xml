@@ -51,6 +51,9 @@
         <action
             android:id="@+id/to_style"
             app:destination="@id/style_details_fragment" />
+        <action
+            android:id="@+id/to_country"
+            app:destination="@id/country_details_fragment" />
     </fragment>
 
     <fragment
@@ -64,6 +67,9 @@
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
+        <action
+            android:id="@+id/to_country"
+            app:destination="@id/country_details_fragment" />
     </fragment>
 
     <fragment
@@ -90,6 +96,19 @@
         <action
             android:id="@+id/to_style"
             app:destination="@id/style_details_fragment" />
+        <action
+            android:id="@+id/to_beer"
+            app:destination="@id/beer_details_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/country_details_fragment"
+        android:name="quickbeer.android.feature.countrydetails.CountryDetailsFragment"
+        android:label="@string/details_title"
+        tools:layout="@layout/details_fragment">
+        <argument
+            android:name="id"
+            app:argType="integer" />
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
