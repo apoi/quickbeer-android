@@ -84,13 +84,13 @@ data class Brewer(
 
     open class BasicDataValidator : Validator<Brewer> {
         override fun validate(brewer: Brewer?): Boolean {
-            return brewer?.name != null
+            return brewer?.name != null && brewer.countryId != null
         }
     }
 
     open class DetailsDataValidator : Validator<Brewer> {
         override fun validate(brewer: Brewer?): Boolean {
-            return brewer?.description != null
+            return brewer?.enteredOn != null
         }
     }
 }
