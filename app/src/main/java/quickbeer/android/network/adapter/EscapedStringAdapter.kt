@@ -15,6 +15,6 @@ class EscapedStringAdapter {
     }
 
     companion object {
-        private val PATTERN = Pattern.compile("<br ?/?>", Pattern.CASE_INSENSITIVE)
+        private val PATTERN = Pattern.compile("<br ?/?>|\n", Pattern.CASE_INSENSITIVE)
     }
 }
