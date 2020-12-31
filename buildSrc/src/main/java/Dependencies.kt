@@ -49,16 +49,12 @@ object Versions {
         const val AndroidSupport = "3.13.1"
     }
 
-    object Picasso {
-        const val Picasso = "2.71828"
-        const val OkHttpDownloader = "1.1.0"
-    }
-
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
         const val Coroutines = "1.3.9"
     }
 
+    const val Coil = "1.1.0"
     const val Koin = "2.1.6"
     const val Ktlint = "0.39.0"
     const val LeakCanary = "2.5"
@@ -136,9 +132,9 @@ object Libraries {
         const val MoshiConverter = "com.squareup.retrofit2:converter-moshi:${Versions.Retrofit}"
     }
 
-    object Picasso {
-        const val Picasso = "com.squareup.picasso:picasso:${Versions.Picasso.Picasso}"
-        const val OkHttpDownloader = "com.jakewharton.picasso:picasso2-okhttp3-downloader:${Versions.Picasso.OkHttpDownloader}"
+    object Coil {
+        const val Coil = "io.coil-kt:coil:${Versions.Coil}"
+        const val Svg = "io.coil-kt:coil-svg:${Versions.Coil}"
     }
 
     const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"

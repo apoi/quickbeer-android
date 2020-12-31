@@ -18,10 +18,11 @@
 package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
-import android.view.View
 import androidx.navigation.fragment.navArgs
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
+import coil.ImageLoader
+import coil.load
+import coil.request.ImageRequest
+import coil.transform.BlurTransformation
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,7 +31,6 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.MainFragment
-import quickbeer.android.ui.transformations.BlurTransformation
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -44,7 +44,7 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModel<BeerDetailsViewModel> { parametersOf(args.id) }
 
-    private val picasso by inject<Picasso>()
+    private val imageLoader by inject<ImageLoader>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -67,7 +67,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private fun setBeer(beer: Beer) {
         val onImageLoadSuccess = {
-            binding.toolbarOverlayGradient.visibility = View.VISIBLE
             binding.collapsingToolbarBackground.setOnClickListener {
                 // openPhotoView(beer.imageUri())
             }
@@ -75,22 +74,23 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
         binding.collapsingToolbar.title = beer.name
 
-        picasso.load(beer.imageUri())
-            .transform(ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT))
-            .transform(BlurTransformation(requireContext(), LABEL_BLUR))
-            .into(
-                binding.collapsingToolbarBackground,
-                object : Callback.EmptyCallback() {
-                    override fun onSuccess() {
-                        onImageLoadSuccess()
-                    }
-                }
+        binding.collapsingToolbarBackground.load(beer.imageUri()) {
+            crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(
+                ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT),
+                BlurTransformation(requireContext(), LABEL_BLUR)
             )
+            listener(object : ImageRequest.Listener {
+                override fun onStart(request: ImageRequest) {
+                    onImageLoadSuccess()
+                }
+            })
+        }
     }
 
     companion object {
         private const val LABEL_WIDTH = 300
         private const val LABEL_HEIGHT = 300
-        private const val LABEL_BLUR = 15
+        private const val LABEL_BLUR = 15f
     }
 }

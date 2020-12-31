@@ -18,11 +18,11 @@
 package quickbeer.android.feature.brewerdetails
 
 import android.os.Bundle
-import android.view.View
 import androidx.navigation.fragment.navArgs
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import org.koin.android.ext.android.inject
+import coil.load
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.transform.BlurTransformation
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
@@ -30,7 +30,6 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.ui.base.MainFragment
-import quickbeer.android.ui.transformations.BlurTransformation
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
@@ -42,8 +41,6 @@ class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
     private val args: BrewerDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModel<BrewerDetailsViewModel> { parametersOf(args.id) }
-
-    private val picasso by inject<Picasso>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -66,7 +63,6 @@ class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private fun setBrewer(brewer: Brewer) {
         val onImageLoadSuccess = {
-            binding.toolbarOverlayGradient.visibility = View.VISIBLE
             binding.collapsingToolbarBackground.setOnClickListener {
                 // openPhotoView(beer.imageUri())
             }
@@ -74,19 +70,18 @@ class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
         binding.collapsingToolbar.title = brewer.name
 
-        picasso.load(brewer.imageUri())
-            .transform(BlurTransformation(requireContext(), IMAGE_BLUR))
-            .into(
-                binding.collapsingToolbarBackground,
-                object : Callback.EmptyCallback() {
-                    override fun onSuccess() {
-                        onImageLoadSuccess()
-                    }
+        binding.collapsingToolbarBackground.load(brewer.imageUri()) {
+            crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(BlurTransformation(requireContext(), IMAGE_BLUR))
+            listener(object : ImageRequest.Listener {
+                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
+                    onImageLoadSuccess()
                 }
-            )
+            })
+        }
     }
 
     companion object {
-        private const val IMAGE_BLUR = 15
+        private const val IMAGE_BLUR = 15f
     }
 }

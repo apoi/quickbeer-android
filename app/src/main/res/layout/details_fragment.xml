@@ -33,8 +33,7 @@
                 android:id="@+id/toolbar_overlay_gradient"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/toolbar_gradient"
-                android:visibility="invisible" />
+                android:background="@drawable/toolbar_gradient" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

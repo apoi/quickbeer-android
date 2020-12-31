@@ -19,8 +19,10 @@ package quickbeer.android.feature.countrydetails
 
 import android.os.Bundle
 import androidx.navigation.fragment.navArgs
+import coil.load
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
@@ -59,5 +61,10 @@ class CountryDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private fun setCountry(country: Country) {
         binding.collapsingToolbar.title = country.name
+
+        val flag = Constants.FLAG_IMAGE_PATH.format(country.refer.toLowerCase())
+        binding.collapsingToolbarBackground.load(flag) {
+            crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
+        }
     }
 }

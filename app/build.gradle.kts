@@ -84,8 +84,8 @@ dependencies {
     implementation(Libraries.OkHttp.AndroidSupport)
     implementation(Libraries.OkHttp.LoggingInterceptor)
 
-    implementation(Libraries.Picasso.Picasso)
-    implementation(Libraries.Picasso.OkHttpDownloader)
+    implementation(Libraries.Coil.Coil)
+    implementation(Libraries.Coil.Svg)
 
     implementation(Libraries.Retrofit.Retrofit)
     implementation(Libraries.Retrofit.MoshiConverter)

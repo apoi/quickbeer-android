@@ -21,20 +21,25 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
-import com.squareup.picasso.Transformation
+import coil.bitmap.BitmapPool
+import coil.size.Size
+import coil.transform.Transformation
 import kotlin.math.abs
 
-class ContainerLabelExtractor(private val width: Int, private val height: Int) : Transformation {
-
-    override fun transform(source: Bitmap): Bitmap {
-        val result = getLabel(source, width, height)
-        source.recycle()
-
-        return result
-    }
+class ContainerLabelExtractor(
+    private val width: Int,
+    private val height: Int
+) : Transformation {
 
     override fun key(): String {
         return "label-%d-%d".format(width, height)
+    }
+
+    override suspend fun transform(pool: BitmapPool, input: Bitmap, size: Size): Bitmap {
+        val result = getLabel(input, width, height)
+        input.recycle()
+
+        return result
     }
 
     private fun getLabel(source: Bitmap, width: Int, height: Int): Bitmap {
@@ -52,14 +57,14 @@ class ContainerLabelExtractor(private val width: Int, private val height: Int) :
         val sourceRatio = source.width().toFloat() / source.height()
         val targetRatio = width.toFloat() / height
 
-        if (sourceRatio > targetRatio) {
+        return if (sourceRatio > targetRatio) {
             // Keep max height of source, cut sides to fit target size
             val diff = (source.width() - source.height() * targetRatio).toInt() / 2
-            return Rect(source.left + diff, source.top, source.right - diff, source.bottom)
+            Rect(source.left + diff, source.top, source.right - diff, source.bottom)
         } else {
             // Keep max width of source, cut top and bottom to fit
             val diff = (source.height() - source.width() / targetRatio).toInt() / 2
-            return Rect(source.left, source.top + diff, source.right, source.bottom - diff)
+            Rect(source.left, source.top + diff, source.right, source.bottom - diff)
         }
     }
 

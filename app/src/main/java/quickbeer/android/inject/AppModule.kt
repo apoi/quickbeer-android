@@ -2,8 +2,6 @@ package quickbeer.android.inject
 
 import androidx.room.Room
 import com.squareup.moshi.Moshi
-import com.squareup.picasso.OkHttp3Downloader
-import com.squareup.picasso.Picasso
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -109,12 +107,6 @@ val appModule = module {
 
     single {
         get<Retrofit>().create(RateBeerApi::class.java)
-    }
-
-    single {
-        Picasso.Builder(get())
-            .downloader(OkHttp3Downloader(get<OkHttpClient>()))
-            .build()
     }
 
     single {
