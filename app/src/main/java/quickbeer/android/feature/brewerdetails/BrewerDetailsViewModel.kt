@@ -32,6 +32,7 @@ import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticMapper
 
@@ -49,15 +50,15 @@ class BrewerDetailsViewModel(
     private val _beersState = MutableLiveData<State<List<BeerListModel>>>()
     val beersState: LiveData<State<List<BeerListModel>>> = _beersState
 
-    private val _countryState = MutableLiveData<State<Country>>()
-    val countryState: LiveData<State<Country>> = _countryState
+    private val _addressState = MutableLiveData<State<Address>>()
+    val addressState: LiveData<State<Address>> = _addressState
 
     init {
         viewModelScope.launch {
             brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
                 .collect {
                     _brewerState.postValue(it)
-                    if (it is State.Success) getCountry(it.value)
+                    if (it is State.Success) getAddress(it.value)
                 }
         }
 
@@ -68,12 +69,19 @@ class BrewerDetailsViewModel(
         }
     }
 
-    private fun getCountry(brewer: Brewer) {
+    private fun getAddress(brewer: Brewer) {
         if (brewer.countryId == null) return
 
         viewModelScope.launch {
             countryRepository.getStream(brewer.countryId, Accept())
-                .collect { _countryState.postValue(it) }
+                .map { mergeAddress(brewer, it) }
+                .collect { _addressState.postValue(it) }
         }
+    }
+
+    private fun mergeAddress(brewer: Brewer, country: State<Country>): State<Address> {
+        return if (country is State.Success) {
+            State.Success(Address.from(brewer, country.value))
+        } else State.Loading
     }
 }

@@ -19,11 +19,9 @@ package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
 import androidx.navigation.fragment.navArgs
-import coil.ImageLoader
 import coil.load
 import coil.request.ImageRequest
 import coil.transform.BlurTransformation
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
@@ -43,8 +41,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
     private val args: BeerDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModel<BeerDetailsViewModel> { parametersOf(args.id) }
-
-    private val imageLoader by inject<ImageLoader>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

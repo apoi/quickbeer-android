@@ -28,8 +28,8 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
-import quickbeer.android.domain.country.Country
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections
+import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observe
@@ -52,11 +52,11 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
             }
         }
 
-        observe(viewModel.countryState) { state ->
+        observe(viewModel.addressState) { state ->
             when (state) {
                 State.Loading -> Unit
                 State.Empty -> Unit
-                is State.Success -> setCountry(state.value)
+                is State.Success -> setAddress(state.value)
                 is State.Error -> Unit
             }
         }
@@ -65,8 +65,6 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
     private fun setBrewer(brewer: Brewer) {
         val notAvailable = getString(R.string.not_available)
 
-        binding.city.value = brewer.city ?: notAvailable
-        binding.address.value = brewer.address ?: notAvailable
         binding.founded.value = brewer.founded?.year?.toString() ?: notAvailable
 
         brewer.website
@@ -100,10 +98,20 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
             }
     }
 
-    private fun setCountry(country: Country) {
-        binding.country.value = country.name
+    private fun setAddress(address: Address) {
+        val notAvailable = getString(R.string.not_available)
+
+        binding.city.value = address.city
+            ?.also { binding.city.setOnClickListener { openWikipedia(address.city) } }
+            ?: notAvailable
+
+        binding.address.value = address.address
+            ?.also { binding.address.setOnClickListener { openMaps(address) } }
+            ?: notAvailable
+
+        binding.country.value = address.country
         binding.country.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toCountry(country.id))
+            navigate(BeerDetailsFragmentDirections.toCountry(address.countryId))
         }
     }
 
@@ -129,6 +137,23 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
     private fun openUri(uri: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        requireContext().startActivity(intent)
+    }
+
+    private fun openWikipedia(article: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.WIKIPEDIA_PATH.format(article)))
+        requireContext().startActivity(intent)
+    }
+
+    private fun openMaps(address: Address) {
+        if (address.address == null) return
+
+        val street = if (address.address.contains(",")) {
+            address.address.split(",")[0]
+        } else address.address
+
+        val link = "%s, %s, %s".format(street, address.city, address.country)
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GOOGLE_MAPS_PATH.format(link)))
         requireContext().startActivity(intent)
     }
 

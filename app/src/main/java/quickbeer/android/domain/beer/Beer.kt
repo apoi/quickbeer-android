@@ -86,7 +86,7 @@ data class Beer(
 
     class DetailsDataValidator : BasicDataValidator() {
         override fun validate(beer: Beer?): Boolean {
-            return super.validate(beer) && beer?.brewerName != null
+            return super.validate(beer) && beer?.brewerName != null && beer.countryId != null
         }
     }
 }
