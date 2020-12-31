@@ -2,6 +2,7 @@ package quickbeer.android.feature
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager.LayoutParams
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
@@ -84,5 +85,11 @@ class MainActivity :
 
     private fun setFullscreen(fullscreen: Boolean) {
         binding.mainBottomNav.isVisible = !fullscreen
+
+        if (fullscreen) {
+            window.setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
+        } else {
+            window.clearFlags(LayoutParams.FLAG_FULLSCREEN)
+        }
     }
 }

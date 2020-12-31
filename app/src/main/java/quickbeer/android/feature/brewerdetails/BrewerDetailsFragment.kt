@@ -64,12 +64,11 @@ class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
     private fun setBrewer(brewer: Brewer) {
         val onImageLoadSuccess = {
             binding.collapsingToolbarBackground.setOnClickListener {
-                // openPhotoView(beer.imageUri())
+                navigate(BrewerDetailsFragmentDirections.toPhoto(brewer.imageUri()))
             }
         }
 
         binding.collapsingToolbar.title = brewer.name
-
         binding.collapsingToolbarBackground.load(brewer.imageUri()) {
             crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
             transformations(BlurTransformation(requireContext(), IMAGE_BLUR))

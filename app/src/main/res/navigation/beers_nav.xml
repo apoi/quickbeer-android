@@ -54,6 +54,9 @@
         <action
             android:id="@+id/to_country"
             app:destination="@id/country_details_fragment" />
+        <action
+            android:id="@+id/to_photo"
+            app:destination="@id/photo_fragment" />
     </fragment>
 
     <fragment
@@ -70,6 +73,9 @@
         <action
             android:id="@+id/to_country"
             app:destination="@id/country_details_fragment" />
+        <action
+            android:id="@+id/to_photo"
+            app:destination="@id/photo_fragment" />
     </fragment>
 
     <fragment
@@ -112,6 +118,23 @@
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
+        <action
+            android:id="@+id/to_photo"
+            app:destination="@id/photo_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/photo_fragment"
+        android:name="quickbeer.android.feature.photo.PhotoFragment"
+        android:label="@string/details_title"
+        tools:layout="@layout/details_fragment">
+        <argument
+            android:name="uri"
+            app:argType="string" />
+        <argument
+            android:name="fullscreen"
+            android:defaultValue="true"
+            app:argType="boolean" />
     </fragment>
 
 </navigation>

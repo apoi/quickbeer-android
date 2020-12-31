@@ -90,6 +90,7 @@ dependencies {
     implementation(Libraries.Retrofit.Retrofit)
     implementation(Libraries.Retrofit.MoshiConverter)
 
+    implementation(Libraries.PhotoView)
     implementation(Libraries.ThreeTenABP)
     implementation(Libraries.Timber)
 

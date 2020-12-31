@@ -59,6 +59,7 @@ object Versions {
     const val Ktlint = "0.39.0"
     const val LeakCanary = "2.5"
     const val Material = "1.2.1"
+    const val PhotoView = "2.0.0"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.2.4"
     const val Timber = "4.7.1"
@@ -138,6 +139,7 @@ object Libraries {
     }
 
     const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"
+    const val PhotoView = "com.github.chrisbanes:PhotoView:${Versions.PhotoView}"
     const val ThreeTenABP = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP}"
     const val Timber = "com.jakewharton.timber:timber:${Versions.Timber}"
 }

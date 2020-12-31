@@ -20,6 +20,8 @@ package quickbeer.android.feature.countrydetails
 import android.os.Bundle
 import androidx.navigation.fragment.navArgs
 import coil.load
+import coil.request.ImageRequest
+import java.util.Locale
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.Constants
@@ -60,11 +62,21 @@ class CountryDetailsFragment : MainFragment(R.layout.details_fragment) {
     }
 
     private fun setCountry(country: Country) {
-        binding.collapsingToolbar.title = country.name
+        val flag = Constants.FLAG_IMAGE_PATH.format(country.refer.toLowerCase(Locale.ROOT))
+        val onImageLoadSuccess = {
+            binding.collapsingToolbarBackground.setOnClickListener {
+                navigate(CountryDetailsFragmentDirections.toPhoto(flag))
+            }
+        }
 
-        val flag = Constants.FLAG_IMAGE_PATH.format(country.refer.toLowerCase())
+        binding.collapsingToolbar.title = country.name
         binding.collapsingToolbarBackground.load(flag) {
             crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
+            listener(object : ImageRequest.Listener {
+                override fun onStart(request: ImageRequest) {
+                    onImageLoadSuccess()
+                }
+            })
         }
     }
 }
