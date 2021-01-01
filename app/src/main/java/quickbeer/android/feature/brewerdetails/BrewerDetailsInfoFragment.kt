@@ -30,6 +30,7 @@ import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observe
@@ -39,7 +40,7 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
     private val binding by viewBinding(BrewerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<BrewerDetailsViewModel> {
-        parametersOf(requireArguments().getInt(Constants.ID))
+        parametersOf(requireArguments().getInt(NavParams.ID))
     }
 
     override fun observeViewState() {
@@ -163,7 +164,7 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
         fun create(brewerId: Int): Fragment {
             return BrewerDetailsInfoFragment().apply {
-                arguments = bundleOf(Constants.ID to brewerId)
+                arguments = bundleOf(NavParams.ID to brewerId)
             }
         }
     }

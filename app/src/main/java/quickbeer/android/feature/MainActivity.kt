@@ -80,12 +80,15 @@ class MainActivity :
     }
 
     private val fullscreenListener = NavController.OnDestinationChangedListener { _, _, arguments ->
-        setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN) == true)
+        showNavBar(arguments?.getBoolean(NavParams.NAVBAR) ?: true)
+        setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN) ?: false)
+    }
+
+    private fun showNavBar(navbar: Boolean) {
+        binding.mainBottomNav.isVisible = navbar
     }
 
     private fun setFullscreen(fullscreen: Boolean) {
-        binding.mainBottomNav.isVisible = !fullscreen
-
         if (fullscreen) {
             window.setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
         } else {

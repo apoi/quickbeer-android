@@ -9,10 +9,10 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
@@ -93,7 +93,7 @@ class StyleDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
     companion object {
         fun create(styleId: Int): Fragment {
             return StyleDetailsBeersFragment().apply {
-                arguments = bundleOf(Constants.ID to styleId)
+                arguments = bundleOf(NavParams.ID to styleId)
             }
         }
     }

@@ -2,8 +2,6 @@ package quickbeer.android
 
 object Constants {
 
-    const val ID = "id"
-    const val QUERY = "query"
     const val QUERY_MIN_LENGTH = 4
 
     // URLS

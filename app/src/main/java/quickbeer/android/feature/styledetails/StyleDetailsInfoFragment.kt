@@ -21,11 +21,11 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.StyleDetailsInfoFragmentBinding
 import quickbeer.android.domain.style.Style
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -34,7 +34,7 @@ class StyleDetailsInfoFragment : BaseFragment(R.layout.style_details_info_fragme
 
     private val binding by viewBinding(StyleDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<StyleDetailsViewModel> {
-        parametersOf(requireArguments().getInt(Constants.ID))
+        parametersOf(requireArguments().getInt(NavParams.ID))
     }
 
     override fun observeViewState() {
@@ -68,7 +68,7 @@ class StyleDetailsInfoFragment : BaseFragment(R.layout.style_details_info_fragme
     companion object {
         fun create(styleId: Int): Fragment {
             return StyleDetailsInfoFragment().apply {
-                arguments = bundleOf(Constants.ID to styleId)
+                arguments = bundleOf(NavParams.ID to styleId)
             }
         }
     }

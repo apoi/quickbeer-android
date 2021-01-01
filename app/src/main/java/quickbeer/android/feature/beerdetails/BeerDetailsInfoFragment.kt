@@ -29,13 +29,13 @@ import kotlin.math.roundToInt
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
@@ -49,7 +49,7 @@ class BeerDetailsInfoFragment :
 
     private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<BeerDetailsViewModel> {
-        parametersOf(requireArguments().getInt(Constants.ID))
+        parametersOf(requireArguments().getInt(NavParams.ID))
     }
 
     private val toastProvider by inject<ToastProvider>()
@@ -158,7 +158,7 @@ class BeerDetailsInfoFragment :
     companion object {
         fun create(beerId: Int): Fragment {
             return BeerDetailsInfoFragment().apply {
-                arguments = bundleOf(Constants.ID to beerId)
+                arguments = bundleOf(NavParams.ID to beerId)
             }
         }
     }

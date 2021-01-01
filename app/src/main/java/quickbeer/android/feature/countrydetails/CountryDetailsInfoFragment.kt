@@ -28,6 +28,7 @@ import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.databinding.CountryDetailsInfoFragmentBinding
 import quickbeer.android.domain.country.Country
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observeSuccess
@@ -37,7 +38,7 @@ class CountryDetailsInfoFragment : BaseFragment(R.layout.country_details_info_fr
 
     private val binding by viewBinding(CountryDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<CountryDetailsViewModel> {
-        parametersOf(requireArguments().getInt(Constants.ID))
+        parametersOf(requireArguments().getInt(NavParams.ID))
     }
 
     override fun observeViewState() {
@@ -77,7 +78,7 @@ class CountryDetailsInfoFragment : BaseFragment(R.layout.country_details_info_fr
     companion object {
         fun create(countryId: Int): Fragment {
             return CountryDetailsInfoFragment().apply {
-                arguments = bundleOf(Constants.ID to countryId)
+                arguments = bundleOf(NavParams.ID to countryId)
             }
         }
     }

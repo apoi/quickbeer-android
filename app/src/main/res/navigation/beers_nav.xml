@@ -67,6 +67,10 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
@@ -99,6 +103,10 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/to_style"
             app:destination="@id/style_details_fragment" />
@@ -115,6 +123,10 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/to_beer"
             app:destination="@id/beer_details_fragment" />
@@ -131,6 +143,10 @@
         <argument
             android:name="uri"
             app:argType="string" />
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <argument
             android:name="fullscreen"
             android:defaultValue="true"

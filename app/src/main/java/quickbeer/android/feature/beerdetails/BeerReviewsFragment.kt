@@ -22,8 +22,8 @@ import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import quickbeer.android.Constants
 import quickbeer.android.R
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.LoadMoreListener
@@ -34,7 +34,7 @@ class BeerReviewsFragment :
 
     private val reviewsAdapter = ListAdapter<ReviewModel>(ReviewTypeFactory())
     private val viewModel by viewModel<BeerDetailsViewModel> {
-        parametersOf(requireArguments().getInt(Constants.ID))
+        parametersOf(requireArguments().getInt(NavParams.ID))
     }
 
     private val loadMoreListener = LoadMoreListener()
@@ -46,7 +46,7 @@ class BeerReviewsFragment :
     companion object {
         fun create(beerId: Int): Fragment {
             return BeerReviewsFragment().apply {
-                arguments = bundleOf(Constants.ID to beerId)
+                arguments = bundleOf(NavParams.ID to beerId)
             }
         }
     }
