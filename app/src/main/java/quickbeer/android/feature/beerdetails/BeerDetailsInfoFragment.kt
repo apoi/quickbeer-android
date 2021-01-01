@@ -35,6 +35,7 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
@@ -125,21 +126,21 @@ class BeerDetailsInfoFragment :
     private fun setBrewer(brewer: Brewer) {
         binding.brewer.value = brewer.name
         binding.brewer.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toBrewer(brewer.id))
+            navigate(Destination.Brewer(brewer.id))
         }
     }
 
     private fun setStyle(style: Style) {
         binding.style.value = style.name
         binding.style.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toStyle(style.id))
+            navigate(Destination.Style(style.id))
         }
     }
 
     private fun setAddress(address: Address) {
         binding.origin.value = address.cityAndCountry()
         binding.origin.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toCountry(address.countryId))
+            navigate(Destination.Country(address.countryId))
         }
     }
 

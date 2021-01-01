@@ -12,6 +12,7 @@ import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
+import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.beer.BeerListModel
@@ -87,7 +88,7 @@ class CountryDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(CountryDetailsFragmentDirections.toBeer(beer.id))
+        navigate(Destination.Beer(beer.id))
     }
 
     companion object {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/details_country_nav"
+    app:startDestination="@id/country_details_fragment">
+
+    <include app:graph="@navigation/details_photo_nav" />
+
+    <fragment
+        android:id="@+id/country_details_fragment"
+        android:name="quickbeer.android.feature.countrydetails.CountryDetailsFragment"
+        android:label="@string/details_title"
+        tools:layout="@layout/details_fragment">
+        <deepLink app:uri="quickbeer://country/{id}" />
+        <deepLink app:uri="www.ratebeer.com/beer/country/.*/{id}/.*" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <action
+            android:id="@+id/to_photo"
+            app:destination="@id/details_photo_nav">
+            <argument
+                android:name="uri"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+</navigation>

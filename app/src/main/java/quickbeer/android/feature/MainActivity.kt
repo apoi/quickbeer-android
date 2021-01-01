@@ -55,6 +55,7 @@ class MainActivity :
         // Setup the bottom navigation view with a list of navigation graphs
         val graphs = listOf(
             R.navigation.discover_nav,
+            R.navigation.details_beer_nav,
             R.navigation.more_nav
         )
 
@@ -64,6 +65,9 @@ class MainActivity :
             containerId = R.id.main_nav_container,
             intent = intent
         )
+
+        // Clear intent after navigation
+        intent.data = null
 
         // Whenever the selected controller changes, setup action bar and other changes
         controller.observe(this, this::setupFullscreenHandler)

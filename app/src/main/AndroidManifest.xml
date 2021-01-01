@@ -27,6 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <nav-graph android:value="@navigation/details_beer_nav" />
+
         </activity>
 
     </application>

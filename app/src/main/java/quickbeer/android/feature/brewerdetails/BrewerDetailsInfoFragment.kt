@@ -28,8 +28,8 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
-import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
@@ -112,7 +112,7 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
         binding.country.value = address.country
         binding.country.setOnClickListener {
-            navigate(BeerDetailsFragmentDirections.toCountry(address.countryId))
+            navigate(Destination.Country(address.countryId))
         }
     }
 
