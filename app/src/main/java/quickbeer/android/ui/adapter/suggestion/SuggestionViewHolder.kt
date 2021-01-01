@@ -10,9 +10,9 @@ class SuggestionViewHolder(
 
     override fun bind(suggestion: SuggestionListModel) {
         val res = when (suggestion.type) {
-            SuggestionListModel.Type.BEER -> R.drawable.ic_history
-            SuggestionListModel.Type.BREWERY -> R.drawable.ic_history
             SuggestionListModel.Type.SEARCH -> R.drawable.ic_history
+            SuggestionListModel.Type.BEER -> R.drawable.ic_action_web
+            SuggestionListModel.Type.BREWER -> R.drawable.ic_search
         }
 
         binding.suggestionText.text = suggestion.text

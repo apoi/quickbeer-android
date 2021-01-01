@@ -61,7 +61,7 @@ class BrewerDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
     override fun observeViewState() {
         observe(viewModel.beersState) { state ->
             when (state) {
-                State.Loading -> {
+                is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false
                     binding.progress.show()

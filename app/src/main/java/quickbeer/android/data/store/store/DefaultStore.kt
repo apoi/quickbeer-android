@@ -15,6 +15,16 @@ import quickbeer.android.data.store.StoreCore
  */
 open class DefaultStore<K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
 
+    override suspend fun get(): List<V> {
+        return withContext(Dispatchers.IO) {
+            core.getAll()
+        }
+    }
+
+    override fun getStream(): Flow<List<V>> {
+        return core.getAllStream()
+    }
+
     override suspend fun get(key: K): V? {
         return withContext(Dispatchers.IO) {
             core.get(key)

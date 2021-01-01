@@ -40,7 +40,7 @@ class StyleDetailsInfoFragment : BaseFragment(R.layout.style_details_info_fragme
     override fun observeViewState() {
         observe(viewModel.styleState) { state ->
             when (state) {
-                State.Loading -> Unit
+                is State.Loading -> Unit
                 State.Empty -> Unit
                 is State.Success -> setStyle(state.value)
                 is State.Error -> Unit
@@ -49,7 +49,7 @@ class StyleDetailsInfoFragment : BaseFragment(R.layout.style_details_info_fragme
 
         observe(viewModel.parentStyleState) { state ->
             when (state) {
-                State.Loading -> Unit
+                is State.Loading -> Unit
                 State.Empty -> Unit
                 is State.Success -> setParentStyle(state.value)
                 is State.Error -> Unit

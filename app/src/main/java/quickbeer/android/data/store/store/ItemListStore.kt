@@ -31,6 +31,23 @@ open class ItemListStore<I, out K, V : Any>(
     private val valueCore: StoreCore<K, V>,
 ) : Store<I, List<V>> {
 
+    override suspend fun get(): List<List<V>> {
+        return withContext(Dispatchers.IO) {
+            indexCore.getAll()
+                .filter { indexMapper.matches(it.key) }
+                .map(ItemList<I, K>::values)
+                .map { valueCore.get(it) }
+        }
+    }
+
+    override fun getStream(): Flow<List<List<V>>> {
+        return indexCore.getAllStream()
+            .map { it.filter { (key) -> indexMapper.matches(key) } }
+            .map { it.map(ItemList<I, K>::values) }
+            .map { it.map { keys -> valueCore.get(keys) } }
+            .flowOn(Dispatchers.IO)
+    }
+
     override suspend fun get(index: I): List<V> {
         return withContext(Dispatchers.IO) {
             indexCore.get(indexMapper.encode(index))?.values

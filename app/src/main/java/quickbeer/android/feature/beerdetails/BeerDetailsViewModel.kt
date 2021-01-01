@@ -122,6 +122,6 @@ class BeerDetailsViewModel(
     private fun mergeAddress(brewer: State<Brewer>, country: State<Country>): State<Address> {
         return if (brewer is State.Success && country is State.Success) {
             State.Success(Address.from(brewer.value, country.value))
-        } else State.Loading
+        } else State.Loading()
     }
 }

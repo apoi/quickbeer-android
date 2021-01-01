@@ -49,7 +49,7 @@ class StyleDetailsFragment : MainFragment(R.layout.details_fragment) {
     override fun observeViewState() {
         observe(viewModel.styleState) { state ->
             when (state) {
-                State.Loading -> Unit
+                is State.Loading -> Unit
                 State.Empty -> Unit
                 is State.Success -> setStyle(state.value)
                 is State.Error -> Unit

@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.card.MaterialCardView
 import kotlin.math.roundToInt
 import kotlinx.coroutines.CoroutineScope
@@ -21,14 +20,13 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
-import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionTypeFactory
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
-import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.search.SearchActionsHandler
+import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.setMargins
 
@@ -80,20 +78,6 @@ class SearchView @JvmOverloads constructor(
 
     init {
         onGlobalLayout(::initLayout)
-
-        binding.searchRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = searchAdapter
-
-            setHasFixedSize(true)
-            addItemDecoration(DividerDecoration(context))
-
-            setClickListener<SuggestionListModel> {
-                closeSearchView()
-                binding.searchEditText.setText(it.text)
-                suggestionSelectedCallback?.invoke(it)
-            }
-        }
     }
 
     fun connectActions(handler: SearchActionsHandler) {
@@ -170,7 +154,6 @@ class SearchView @JvmOverloads constructor(
 
     override fun onDetachedFromWindow() {
         scope.cancel()
-        binding.searchRecyclerView.adapter = null
 
         super.onDetachedFromWindow()
     }
@@ -249,7 +232,7 @@ class SearchView @JvmOverloads constructor(
         }
 
         binding.searchLayout.layoutTransition.addTransitionListener(listener)
-        closeSearchView()
+        binding.searchEditText.hideKeyboard()
     }
 
     private fun View.setHeight(height: Int) {

@@ -4,8 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class SearchPagerAdapter(fm: FragmentManager, private val query: String?) :
-    FragmentPagerAdapter(fm) {
+class SearchPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
         return 3
@@ -16,14 +15,6 @@ class SearchPagerAdapter(fm: FragmentManager, private val query: String?) :
             0 -> SearchBeersFragment()
             1 -> SearchBrewersFragment()
             else -> SearchStylesFragment()
-        }
-    }
-
-    override fun getPageTitle(position: Int): CharSequence {
-        return when (position) {
-            0 -> "Beers"
-            1 -> "Brewers"
-            else -> "Styles"
         }
     }
 }

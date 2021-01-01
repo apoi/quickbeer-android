@@ -23,7 +23,7 @@ private class StyleFetcher(private val styleListRepository: StyleListRepository)
 
     suspend fun fetch(key: Int): ApiResult<Style> {
         val state = styleListRepository.getStream(Accept())
-            .filter { it != State.Loading }
+            .filter { it !is State.Loading }
             .first()
 
         return when (state) {

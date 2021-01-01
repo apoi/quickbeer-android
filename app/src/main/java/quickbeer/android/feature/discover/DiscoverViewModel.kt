@@ -1,4 +1,4 @@
-package quickbeer.android.feature.topbeers
+package quickbeer.android.feature.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +14,7 @@ import quickbeer.android.domain.beerlist.repository.TopBeersRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
-class TopBeersViewModel(
+class DiscoverViewModel(
     private val repository: TopBeersRepository,
     private val beerRepository: BeerRepository
 ) : ViewModel() {

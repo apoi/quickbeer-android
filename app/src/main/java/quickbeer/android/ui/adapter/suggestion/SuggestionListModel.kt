@@ -14,6 +14,6 @@ data class SuggestionListModel(
     override fun type(factory: ListTypeFactory) = factory.type(this)
 
     enum class Type {
-        BEER, BREWERY, SEARCH
+        BEER, BREWER, SEARCH
     }
 }

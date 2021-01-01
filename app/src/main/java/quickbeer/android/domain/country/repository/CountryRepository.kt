@@ -23,7 +23,7 @@ private class CountryFetcher(private val countryListRepository: CountryListRepos
 
     suspend fun fetch(key: Int): ApiResult<Country> {
         val state = countryListRepository.getStream(Accept())
-            .filter { it != State.Loading }
+            .filter { it !is State.Loading }
             .first()
 
         return when (state) {

@@ -7,13 +7,25 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.startWith
 import kotlinx.coroutines.launch
+import quickbeer.android.Constants
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.country.repository.CountryRepository
@@ -25,8 +37,9 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
-import quickbeer.android.ui.adapter.suggestion.SuggestionListModel.Type
 import quickbeer.android.ui.search.SearchActionsHandler
+import quickbeer.android.util.exception.AppException
+import timber.log.Timber
 
 open class SearchViewModel(
     private val beerRepository: BeerRepository,
@@ -36,6 +49,8 @@ open class SearchViewModel(
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel(), SearchActionsHandler {
+
+    private val query = MutableStateFlow("")
 
     private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
     val beerResults: LiveData<State<List<BeerListModel>>> = _beerResults
@@ -50,52 +65,102 @@ open class SearchViewModel(
     override val suggestions: StateFlow<List<SuggestionListModel>> get() = _suggestions
 
     init {
-        registerQueries()
+        searchBeers()
+        searchBrewers()
+        searchStyles()
     }
 
-    fun search(query: String) {
+    private fun searchBeers() {
+        // Launch searches
+        val apiRequest = query
+            .filter { it.length >= Constants.QUERY_MIN_LENGTH }
+            .debounce(500)
+            .flatMapLatest { query -> beerSearchRepository.getStream(query, Accept()) }
+            .onStart { emit(State.Empty) }
+
+        val localRequest = beerRepository.store.getStream()
+            .distinctUntilChanged { a, b -> sameIds(a.map(Beer::id), b.map(Beer::id)) }
+
+        // Beer results
         viewModelScope.launch {
-            beerSearchRepository.getStream(query, Accept())
+            combine(query, localRequest, apiRequest, ::combineResult)
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collect { _beerResults.postValue(it) }
         }
+    }
 
+    private fun combineResult(
+        query: String,
+        local: List<Beer>,
+        remote: State<List<Beer>>
+    ): State<List<Beer>> {
+        return if (query.isEmpty()) {
+            State.Error(AppException.NoSearchEntered())
+        } else if (query.length < Constants.QUERY_MIN_LENGTH) {
+            State.Error(AppException.QueryTooShortException())
+        } else {
+            val result = local.filter { beer -> matcher(query, beer.name) }
+            when {
+                remote is State.Loading -> State.Loading(result)
+                result.isEmpty() && remote is State.Success -> State.Loading()
+                else -> State.from(result)
+            }
+        }
+    }
+
+    private fun searchBrewers() {
         viewModelScope.launch {
-            brewerSearchRepository.getStream(query, Accept())
+            brewerRepository.store.getStream()
+                .distinctUntilChanged { a, b -> sameIds(a.map(Brewer::id), b.map(Brewer::id)) }
+                .combineTransform(query) { brewers, query ->
+                    if (query.length < Constants.QUERY_MIN_LENGTH) {
+                        emit(State.Error(AppException.QueryTooShortException()))
+                    } else {
+                        val result = brewers.filter { brewer -> matcher(query, brewer.name) }
+                        emit(State.from(result))
+                    }
+                }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
         }
 
+        query.debounce(500)
+            .flatMapLatest { query -> brewerSearchRepository.getStream(query, Accept()) }
+            .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
+            .launchIn(viewModelScope)
+    }
+
+    private fun searchStyles() {
         viewModelScope.launch {
-            styleListRepository.getStream(Accept())
-                .map { filterStyles(it, query) }
+            query
+                .flatMapLatest { query ->
+                    styleListRepository.getStream(Accept())
+                        .map { filterStyles(it, query) }
+                }
                 .map(StateListMapper(::StyleListModel)::map)
                 .collect { _styleResults.postValue(it) }
         }
+    }
+
+    override fun onSearchChanged(query: String) {
+        this.query.value = query.trim()
+    }
+
+    private fun sameIds(a: List<Int>, b: List<Int>): Boolean {
+        return a.toSet() == b.toSet()
     }
 
     private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {
         if (state !is State.Success) return state
 
         return state.value.filter { it.parent != null && it.parent > 0 }
-            .filter { it.name.contains(query, ignoreCase = true) }
+            .filter { matcher(query, it.name) }
             .sortedBy(Style::name)
             .let { State.from(it) }
     }
 
-    private fun registerQueries() {
-        viewModelScope.launch {
-            beerSearchRepository.store.getKeysStream()
-                .map { queryList ->
-                    queryList.map { query ->
-                        SuggestionListModel(query.hashCode(), Type.SEARCH, query)
-                    }
-                }
-                .collect { _suggestions.value = it }
-        }
-    }
-
-    override fun onSearchChanged(query: String) {
-        // TODO
+    private fun matcher(query: String, value: String?): Boolean {
+        return query.split(" ")
+            .all { value?.contains(it, ignoreCase = true) == true }
     }
 }

@@ -31,7 +31,7 @@ abstract class Repository<in K, V> {
      */
     fun getStream(key: K, validator: Validator<V>): Flow<State<V>> {
         return flow {
-            emit(State.Loading)
+            emit(State.Loading())
 
             // Invalid value triggers fetch. It must not trigger clearing of the
             // value as the value may still be valid for another consumer with

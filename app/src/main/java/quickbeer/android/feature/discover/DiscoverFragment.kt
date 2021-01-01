@@ -1,14 +1,18 @@
-package quickbeer.android.feature.topbeers
+package quickbeer.android.feature.discover
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
+import quickbeer.android.databinding.DiscoverTabTitleBinding
+import quickbeer.android.feature.search.SearchPagerAdapter
 import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
@@ -23,12 +27,13 @@ import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
+import timber.log.Timber
 
-class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
+class DiscoverFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
 
     private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
-    private val viewModel by viewModel<TopBeersViewModel>()
-    private val searchViewModel by viewModel<SearchViewModel> { parametersOf(null) }
+    private val viewModel by viewModel<DiscoverViewModel>()
+    private val searchViewModel by sharedViewModel<SearchViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override val searchHint = R.string.search_hint
@@ -57,6 +62,24 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
         }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+
+        // Set custom tab layouts to get progress indicators
+        (0 until binding.tabLayout.tabCount).forEach { index ->
+            val layout = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
+            layout.title.text = when (index) {
+                0 -> getString(R.string.search_tab_beers)
+                1 -> getString(R.string.search_tab_brewers)
+                else -> getString(R.string.search_tab_styles)
+            }
+            binding.tabLayout.getTabAt(index)?.customView = layout.layout
+        }
+    }
+
     override fun onDestroyView() {
         binding.recyclerView.adapter = null
         super.onDestroyView()
@@ -65,7 +88,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
     override fun observeViewState() {
         observe(viewModel.viewState) { state ->
             when (state) {
-                State.Loading -> {
+                is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false
                     binding.progress.show()
@@ -89,6 +112,25 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
                 }
             }
         }
+
+        observe(searchViewModel.beerResults) { state ->
+            updateSearchTabProgress(0, state is State.Loading)
+        }
+
+        observe(searchViewModel.brewerResults) { state ->
+            updateSearchTabProgress(1, state is State.Loading)
+        }
+
+        observe(searchViewModel.styleResults) { state ->
+            updateSearchTabProgress(2, state is State.Loading)
+        }
+    }
+
+    private fun updateSearchTabProgress(tab: Int, inProgress: Boolean) {
+        binding.tabLayout.getTabAt(tab)
+            ?.customView
+            ?.findViewById<CircularProgressIndicator>(R.id.progress)
+            ?.isVisible = inProgress
     }
 
     override fun searchView(): SearchView {
@@ -99,11 +141,19 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
         return searchViewModel
     }
 
-    private fun onBeerSelected(beer: BeerListModel) {
-        navigate(Destination.Beer(beer.id))
+    override fun onSearchFocusChanged(hasFocus: Boolean) {
+        super.onSearchFocusChanged(hasFocus)
+
+        binding.mainContent.isVisible = !hasFocus
+        binding.tabLayout.isVisible = hasFocus
+        binding.viewPager.isVisible = hasFocus
     }
 
     override fun onSearchQuerySubmit(query: String) {
-        navigate(TopBeersFragmentDirections.toSearch(query))
+        searchViewModel.onSearchChanged(query)
+    }
+
+    private fun onBeerSelected(beer: BeerListModel) {
+        navigate(Destination.Beer(beer.id))
     }
 }

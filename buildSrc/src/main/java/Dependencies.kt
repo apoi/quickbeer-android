@@ -58,7 +58,7 @@ object Versions {
     const val Koin = "2.1.6"
     const val Ktlint = "0.39.0"
     const val LeakCanary = "2.5"
-    const val Material = "1.2.1"
+    const val Material = "1.3.0-beta01"
     const val PhotoView = "2.0.0"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.2.4"

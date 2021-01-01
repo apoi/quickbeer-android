@@ -5,7 +5,7 @@ package quickbeer.android.data.state
  */
 sealed class State<out T> {
 
-    object Loading : State<Nothing>()
+    data class Loading<out T>(val value: T? = null) : State<T>()
 
     object Empty : State<Nothing>()
 

@@ -56,7 +56,7 @@ class StylesFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment)
     override fun observeViewState() {
         observe(viewModel.viewState) { state ->
             when (state) {
-                State.Loading -> {
+                is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false
                     binding.progress.show()

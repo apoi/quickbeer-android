@@ -25,7 +25,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.search(args.query)
+        // viewModel.search(args.query)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager, args.query)
+        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
     }
 
@@ -53,6 +53,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     }
 
     override fun onSearchQuerySubmit(query: String) {
-        viewModel.search(query)
+        // viewModel.search(query)
     }
 }

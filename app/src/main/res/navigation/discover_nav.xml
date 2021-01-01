@@ -12,7 +12,7 @@
 
     <fragment
         android:id="@+id/top_beers_fragment"
-        android:name="quickbeer.android.feature.topbeers.TopBeersFragment"
+        android:name="quickbeer.android.feature.discover.DiscoverFragment"
         android:label="@string/app_name"
         tools:layout="@layout/beer_list_standalone_fragment">
         <action

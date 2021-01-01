@@ -17,8 +17,10 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
+import quickbeer.android.util.ktx.getMessage
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
+import timber.log.Timber
 
 class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
 
@@ -53,30 +55,28 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     override fun observeViewState() {
         observe(viewModel.beerResults) { state ->
+            Timber.w("STATE IS $state")
             when (state) {
-                State.Loading -> {
-                    beersAdapter.setItems(emptyList())
-                    binding.message.isVisible = false
-                    binding.progress.show()
+                is State.Loading -> {
+                    beersAdapter.setItems(state.value ?: emptyList())
+                    binding.message.text = getString(R.string.search_progress)
+                    binding.message.isVisible = state.value?.isNotEmpty() != true
                 }
                 State.Empty -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
-                    binding.progress.hide()
                 }
                 is State.Success -> {
                     if (beersAdapter.setItems(state.value)) {
                         binding.recyclerView.scrollToPosition(0)
                     }
                     binding.message.isVisible = false
-                    binding.progress.hide()
                 }
                 is State.Error -> {
                     beersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_error)
+                    binding.message.text = state.cause.getMessage(::getString)
                     binding.message.isVisible = true
-                    binding.progress.hide()
                 }
             }
         }

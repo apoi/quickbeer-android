@@ -54,7 +54,7 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     override fun observeViewState() {
         observe(viewModel.brewerResults) { state ->
             when (state) {
-                State.Loading -> {
+                is State.Loading -> {
                     brewersAdapter.setItems(emptyList())
                     binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false

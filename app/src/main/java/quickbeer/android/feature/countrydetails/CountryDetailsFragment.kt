@@ -53,7 +53,7 @@ class CountryDetailsFragment : MainFragment(R.layout.details_fragment) {
     override fun observeViewState() {
         observe(viewModel.countryState) { state ->
             when (state) {
-                State.Loading -> Unit
+                is State.Loading -> Unit
                 State.Empty -> Unit
                 is State.Success -> setCountry(state.value)
                 is State.Error -> Unit

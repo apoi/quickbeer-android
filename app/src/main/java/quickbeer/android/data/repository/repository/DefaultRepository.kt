@@ -5,8 +5,8 @@ import quickbeer.android.data.repository.Repository
 import quickbeer.android.data.store.Store
 import quickbeer.android.network.result.ApiResult
 
-open class DefaultRepository<in K, V>(
-    private val store: Store<K, V>,
+open class DefaultRepository<K, V>(
+    val store: Store<K, V>,
     private val fetcher: suspend (K) -> ApiResult<V>
 ) : Repository<K, V>() {
 

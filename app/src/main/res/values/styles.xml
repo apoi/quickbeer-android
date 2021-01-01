@@ -42,10 +42,18 @@
     </style>
 
     <!-- Tab layout -->
-
     <style name="TabLayoutLight" parent="Widget.MaterialComponents.TabLayout">
         <item name="tabIndicatorColor">?attr/colorAccent</item>
         <item name="tabTextColor">@color/text_light</item>
+        <item name="paddingStart">0dp</item>
+        <item name="paddingEnd">0dp</item>
+    </style>
+
+    <!-- Progress indicator -->
+    <style name="AppTheme.SmallIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
+        <item name="indicatorColor">@color/colorAccent</item>
+        <item name="trackThickness">1.5dp</item>
+        <item name="indicatorSize">15dp</item>
     </style>
 
     <!-- Beer details -->

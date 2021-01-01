@@ -14,6 +14,16 @@ import kotlinx.coroutines.flow.Flow
 interface Store<K, V> {
 
     /**
+     * Returns all values in the store, or empty list if store is empty.
+     */
+    suspend fun get(): List<V>
+
+    /**
+     * Returns stream of future values in the store, starting with the current values.
+     */
+    fun getStream(): Flow<List<V>>
+
+    /**
      * Returns value for given key, or empty value if key doesn't exist in store.
      */
     suspend fun get(key: K): V?
