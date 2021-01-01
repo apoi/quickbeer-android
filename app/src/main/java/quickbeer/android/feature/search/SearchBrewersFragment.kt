@@ -8,6 +8,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
+import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListTypeFactory
@@ -81,6 +82,6 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun onBrewerSelected(brewer: BrewerListModel) {
-        navigate(SearchFragmentDirections.toBrewer(brewer.brewerId))
+        navigate(Destination.Brewer(brewer.brewerId))
     }
 }

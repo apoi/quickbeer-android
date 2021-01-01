@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/discover"
+    app:startDestination="@id/top_beers_fragment">
+
+    <include app:graph="@navigation/details_nav" />
+
+    <fragment
+        android:id="@+id/top_beers_fragment"
+        android:name="quickbeer.android.feature.topbeers.TopBeersFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/beer_list_standalone_fragment">
+        <action
+            android:id="@+id/to_search"
+            app:destination="@id/search_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/search_fragment"
+        android:name="quickbeer.android.feature.search.SearchFragment"
+        android:label="@string/search_title"
+        tools:layout="@layout/search_fragment">
+        <argument
+            android:name="query"
+            app:argType="string" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/style_list_fragment"
+        android:name="quickbeer.android.feature.styles.StylesFragment"
+        android:label="@string/style_list_title"
+        tools:layout="@layout/beer_list_standalone_fragment">
+        <action
+            android:id="@+id/to_search"
+            app:destination="@id/search_fragment" />
+    </fragment>
+
+</navigation>

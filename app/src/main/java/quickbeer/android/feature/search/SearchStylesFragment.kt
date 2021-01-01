@@ -8,7 +8,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
-import quickbeer.android.feature.styles.StylesFragmentDirections
+import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.adapter.style.StyleListModel
@@ -82,6 +82,6 @@ class SearchStylesFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun onStyleSelected(style: StyleListModel) {
-        navigate(StylesFragmentDirections.toStyle(style.style.id))
+        navigate(Destination.Style(style.style.id))
     }
 }

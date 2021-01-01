@@ -6,6 +6,7 @@ import androidx.navigation.NavDirections
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import quickbeer.android.R
+import quickbeer.android.navigation.Destination
 
 abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
 
@@ -18,14 +19,21 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
     open fun observeViewState() = Unit
 
     protected fun navigate(navDirections: NavDirections) {
-        val navOptions = NavOptions.Builder()
+        findNavController()
+            .navigate(navDirections, navOptions())
+    }
+
+    protected fun navigate(destination: Destination) {
+        findNavController()
+            .navigate(destination.uri, navOptions())
+    }
+
+    private fun navOptions(): NavOptions {
+        return NavOptions.Builder()
             .setEnterAnim(R.anim.enter_anim)
             .setExitAnim(R.anim.exit_anim)
             .setPopEnterAnim(R.anim.pop_enter_anim)
             .setPopExitAnim(R.anim.pop_exit_anim)
             .build()
-
-        findNavController()
-            .navigate(navDirections, navOptions)
     }
 }

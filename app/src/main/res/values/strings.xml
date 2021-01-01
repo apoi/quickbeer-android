@@ -8,8 +8,8 @@
     <string name="home_title">Home</string>
     <string name="home_description">Home</string>
 
-    <string name="top_beers_title">Beers</string>
-    <string name="top_beer_description">Beers</string>
+    <string name="discover_title">Discover</string>
+    <string name="discover_description">Discover</string>
 
     <string name="style_list_title">Styles</string>
     <string name="style_list_description">Styles</string>

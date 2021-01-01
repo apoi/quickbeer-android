@@ -10,6 +10,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.feature.search.SearchViewModel
+import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
@@ -99,7 +100,7 @@ class TopBeersFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(TopBeersFragmentDirections.toBeer(beer.id))
+        navigate(Destination.Beer(beer.id))
     }
 
     override fun onSearchQuerySubmit(query: String) {

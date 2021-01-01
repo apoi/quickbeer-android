@@ -54,7 +54,7 @@ class MainActivity :
     private fun setupBottomNavigationBar() {
         // Setup the bottom navigation view with a list of navigation graphs
         val graphs = listOf(
-            R.navigation.beers_nav,
+            R.navigation.discover_nav,
             R.navigation.more_nav
         )
 
@@ -80,8 +80,8 @@ class MainActivity :
     }
 
     private val fullscreenListener = NavController.OnDestinationChangedListener { _, _, arguments ->
-        showNavBar(arguments?.getBoolean(NavParams.NAVBAR) ?: true)
-        setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN) ?: false)
+        showNavBar(arguments?.getBoolean(NavParams.NAVBAR, true) ?: true)
+        setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN, false) ?: false)
     }
 
     private fun showNavBar(navbar: Boolean) {
