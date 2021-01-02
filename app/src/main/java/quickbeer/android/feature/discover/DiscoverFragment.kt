@@ -12,8 +12,6 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
 import quickbeer.android.databinding.DiscoverTabTitleBinding
-import quickbeer.android.feature.search.SearchPagerAdapter
-import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.beer.BeerListModel
@@ -27,7 +25,6 @@ import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.searchview.widget.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
 class DiscoverFragment : SearchBarFragment(R.layout.beer_list_standalone_fragment) {
 

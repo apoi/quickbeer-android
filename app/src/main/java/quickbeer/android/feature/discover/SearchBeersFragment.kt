@@ -1,4 +1,4 @@
-package quickbeer.android.feature.search
+package quickbeer.android.feature.discover
 
 import android.os.Bundle
 import android.view.View
@@ -20,7 +20,6 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.getMessage
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
 class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
 
@@ -55,7 +54,6 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     override fun observeViewState() {
         observe(viewModel.beerResults) { state ->
-            Timber.w("STATE IS $state")
             when (state) {
                 is State.Loading -> {
                     beersAdapter.setItems(state.value ?: emptyList())

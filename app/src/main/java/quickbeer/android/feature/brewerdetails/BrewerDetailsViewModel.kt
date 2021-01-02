@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class BrewerDetailsViewModel(
     val addressState: LiveData<State<Address>> = _addressState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
                 .collect {
                     _brewerState.postValue(it)
@@ -62,7 +63,7 @@ class BrewerDetailsViewModel(
                 }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             brewersBeersRepository.getStream(brewerId.toString(), Accept())
                 .map(BeerListModelAlphabeticMapper(beerRepository)::map)
                 .collect { _beersState.postValue(it) }
@@ -72,7 +73,7 @@ class BrewerDetailsViewModel(
     private fun getAddress(brewer: Brewer) {
         if (brewer.countryId == null) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             countryRepository.getStream(brewer.countryId, Accept())
                 .map { mergeAddress(brewer, it) }
                 .collect { _addressState.postValue(it) }

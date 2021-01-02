@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -50,7 +51,7 @@ class StyleDetailsViewModel(
     val parentStyleState: LiveData<State<Style>> = _parentStyleState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             styleRepository.getStream(styleId, Accept())
                 .collect {
                     if (it is State.Success) getParentStyle(it.value.parent)
@@ -58,7 +59,7 @@ class StyleDetailsViewModel(
                 }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             beersInStyleRepository.getStream(styleId.toString(), Accept())
                 .map(BeerListModelRatingMapper(beerRepository)::map)
                 .collect { _beersState.postValue(it) }
@@ -68,7 +69,7 @@ class StyleDetailsViewModel(
     private fun getParentStyle(parentStyleId: Int?) {
         if (parentStyleId == null) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             styleRepository.getStream(parentStyleId, Accept())
                 .collect { _parentStyleState.postValue(it) }
         }

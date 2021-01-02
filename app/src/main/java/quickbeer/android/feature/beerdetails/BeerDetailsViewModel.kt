@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.firstOrNull
@@ -60,7 +61,7 @@ class BeerDetailsViewModel(
     val addressState: LiveData<State<Address>> = _addressState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
                 .collect {
                     _beerState.postValue(it)
@@ -76,7 +77,7 @@ class BeerDetailsViewModel(
     private fun getBrewer(beer: Beer) {
         if (beer.brewerId == null) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             brewerRepository.getStream(beer.brewerId, Brewer.BasicDataValidator())
                 .collect { _brewerState.postValue(it) }
         }
@@ -90,14 +91,14 @@ class BeerDetailsViewModel(
     }
 
     private fun getStyle(styleId: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             styleRepository.getStream(styleId, Accept())
                 .collect { _styleState.postValue(it) }
         }
     }
 
     private fun getStyle(styleName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             styleListRepository.getStream(Accept())
                 .firstOrNull { it is State.Success }
                 ?.let { if (it is State.Success) it.value else null }
@@ -112,7 +113,7 @@ class BeerDetailsViewModel(
         val brewer = brewerRepository.getStream(beer.brewerId, Brewer.DetailsDataValidator())
         val country = countryRepository.getStream(beer.countryId, Accept())
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             brewer.combineTransform(country) { b, c ->
                 emit(mergeAddress(b, c))
             }.collect { _addressState.postValue(it) }

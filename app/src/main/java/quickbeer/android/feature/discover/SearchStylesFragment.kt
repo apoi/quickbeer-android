@@ -1,4 +1,4 @@
-package quickbeer.android.feature.search
+package quickbeer.android.feature.discover
 
 import android.os.Bundle
 import android.view.View
@@ -10,9 +10,9 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.brewer.BrewerListModel
-import quickbeer.android.ui.adapter.brewer.BrewerListTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.ui.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
@@ -20,28 +20,28 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
+class SearchStylesFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListFragmentBinding::bind)
     private val viewModel by sharedViewModel<SearchViewModel>()
-    private val brewersAdapter = ListAdapter<BrewerListModel>(BrewerListTypeFactory())
+    private val stylesAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
-            adapter = brewersAdapter
+            adapter = stylesAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
             }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBrewerSelected)
+            setClickListener(::onStyleSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BREWER_LIST, brewersAdapter::createPool)
+                    .getPool(PoolType.STYLE_LIST, stylesAdapter::createPool)
             )
         }
     }
@@ -52,27 +52,27 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     override fun observeViewState() {
-        observe(viewModel.brewerResults) { state ->
+        observe(viewModel.styleResults) { state ->
             when (state) {
                 is State.Loading -> {
-                    brewersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                     binding.progress.show()
                 }
                 State.Empty -> {
-                    brewersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
                     binding.progress.hide()
                 }
                 is State.Success -> {
-                    brewersAdapter.setItems(state.value)
+                    stylesAdapter.setItems(state.value)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
                 is State.Error -> {
-                    brewersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_error)
                     binding.message.isVisible = true
                     binding.progress.hide()
@@ -81,7 +81,7 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
         }
     }
 
-    private fun onBrewerSelected(brewer: BrewerListModel) {
-        navigate(Destination.Brewer(brewer.brewerId))
+    private fun onStyleSelected(style: StyleListModel) {
+        navigate(Destination.Style(style.style.id))
     }
 }

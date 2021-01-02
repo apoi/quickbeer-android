@@ -21,6 +21,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -47,12 +48,12 @@ class CountryDetailsViewModel(
     val beersState: LiveData<State<List<BeerListModel>>> = _beersState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             countryRepository.getStream(countryId, Accept())
                 .collect { _countryState.postValue(it) }
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             beersInCountryRepository.getStream(countryId.toString(), Accept())
                 .map(BeerListModelRatingMapper(beerRepository)::map)
                 .collect { _beersState.postValue(it) }

@@ -1,22 +1,20 @@
-package quickbeer.android.feature.search
+package quickbeer.android.feature.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.startWith
 import kotlinx.coroutines.launch
 import quickbeer.android.Constants
 import quickbeer.android.data.repository.Accept
@@ -72,9 +70,9 @@ open class SearchViewModel(
 
     private fun searchBeers() {
         // Launch searches
-        val apiRequest = query
+        val remoteRequest = query
             .filter { it.length >= Constants.QUERY_MIN_LENGTH }
-            .debounce(500)
+            .debounce(SEARCH_DELAY)
             .flatMapLatest { query -> beerSearchRepository.getStream(query, Accept()) }
             .onStart { emit(State.Empty) }
 
@@ -82,56 +80,36 @@ open class SearchViewModel(
             .distinctUntilChanged { a, b -> sameIds(a.map(Beer::id), b.map(Beer::id)) }
 
         // Beer results
-        viewModelScope.launch {
-            combine(query, localRequest, apiRequest, ::combineResult)
+        viewModelScope.launch(Dispatchers.IO) {
+            combine(query, localRequest, remoteRequest) { q, local, remote ->
+                combineResult(q, local, remote, Beer::name)
+            }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collect { _beerResults.postValue(it) }
         }
     }
 
-    private fun combineResult(
-        query: String,
-        local: List<Beer>,
-        remote: State<List<Beer>>
-    ): State<List<Beer>> {
-        return if (query.isEmpty()) {
-            State.Error(AppException.NoSearchEntered())
-        } else if (query.length < Constants.QUERY_MIN_LENGTH) {
-            State.Error(AppException.QueryTooShortException())
-        } else {
-            val result = local.filter { beer -> matcher(query, beer.name) }
-            when {
-                remote is State.Loading -> State.Loading(result)
-                result.isEmpty() && remote is State.Success -> State.Loading()
-                else -> State.from(result)
-            }
-        }
-    }
-
     private fun searchBrewers() {
-        viewModelScope.launch {
-            brewerRepository.store.getStream()
-                .distinctUntilChanged { a, b -> sameIds(a.map(Brewer::id), b.map(Brewer::id)) }
-                .combineTransform(query) { brewers, query ->
-                    if (query.length < Constants.QUERY_MIN_LENGTH) {
-                        emit(State.Error(AppException.QueryTooShortException()))
-                    } else {
-                        val result = brewers.filter { brewer -> matcher(query, brewer.name) }
-                        emit(State.from(result))
-                    }
-                }
+        val remoteRequest = query
+            .filter { it.length >= Constants.QUERY_MIN_LENGTH }
+            .debounce(SEARCH_DELAY)
+            .flatMapLatest { query -> brewerSearchRepository.getStream(query, Accept()) }
+            .onStart { emit(State.Empty) }
+
+        val localRequest = brewerRepository.store.getStream()
+            .distinctUntilChanged { a, b -> sameIds(a.map(Brewer::id), b.map(Brewer::id)) }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            combine(query, localRequest, remoteRequest) { q, local, remote ->
+                combineResult(q, local, remote, Brewer::name)
+            }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
         }
-
-        query.debounce(500)
-            .flatMapLatest { query -> brewerSearchRepository.getStream(query, Accept()) }
-            .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
-            .launchIn(viewModelScope)
     }
 
     private fun searchStyles() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             query
                 .flatMapLatest { query ->
                     styleListRepository.getStream(Accept())
@@ -139,6 +117,28 @@ open class SearchViewModel(
                 }
                 .map(StateListMapper(::StyleListModel)::map)
                 .collect { _styleResults.postValue(it) }
+        }
+    }
+
+    private fun <T> combineResult(
+        query: String,
+        local: List<T>,
+        remote: State<List<T>>,
+        matcherField: (T) -> String?
+    ): State<List<T>> {
+        Timber.w("CT: " + Thread.currentThread())
+
+        return if (query.isEmpty()) {
+            State.Error(AppException.NoSearchEntered())
+        } else if (query.length < Constants.QUERY_MIN_LENGTH) {
+            State.Error(AppException.QueryTooShortException())
+        } else {
+            val result = local.filter { matcher(query, matcherField(it)) }
+            when {
+                remote is State.Loading -> State.Loading(result)
+                result.isEmpty() && remote is State.Success -> State.Loading()
+                else -> State.from(result)
+            }
         }
     }
 
@@ -162,5 +162,9 @@ open class SearchViewModel(
     private fun matcher(query: String, value: String?): Boolean {
         return query.split(" ")
             .all { value?.contains(it, ignoreCase = true) == true }
+    }
+
+    companion object {
+        private const val SEARCH_DELAY = 500L
     }
 }
