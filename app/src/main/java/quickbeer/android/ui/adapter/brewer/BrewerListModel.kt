@@ -1,6 +1,6 @@
 package quickbeer.android.ui.adapter.brewer
 
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.brewer.Brewer
@@ -25,17 +25,11 @@ class BrewerListModel(
         return factory.type(this)
     }
 
-    suspend fun getBrewer(brewerId: Int): Brewer? {
+    fun getBrewer(brewerId: Int): Flow<State<Brewer>> {
         return brewerRepository.getStream(brewerId, Brewer.BasicDataValidator())
-            .firstOrNull { it is State.Success }
-            ?.let { if (it is State.Success) it.value else null }
     }
 
-    suspend fun getCountry(countryId: Int?): Country? {
-        if (countryId == null) return null
-
+    fun getCountry(countryId: Int): Flow<State<Country>> {
         return countryRepository.getStream(countryId, Accept())
-            .firstOrNull { it is State.Success }
-            ?.let { if (it is State.Success) it.value else null }
     }
 }

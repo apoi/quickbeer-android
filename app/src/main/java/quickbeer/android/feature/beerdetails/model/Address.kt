@@ -8,7 +8,8 @@ data class Address(
     val countryId: Int,
     val country: String?,
     val city: String?,
-    val address: String?
+    val address: String?,
+    val code: String?
 ) {
 
     fun cityAndCountry(): String? {
@@ -26,7 +27,8 @@ data class Address(
                 countryId = country.id,
                 country = country.name.nullIfEmpty(),
                 city = brewer.city.nullIfEmpty(),
-                address = brewer.address.nullIfEmpty()
+                address = brewer.address.nullIfEmpty(),
+                code = country.code.nullIfEmpty()
             )
         }
     }
