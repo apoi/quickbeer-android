@@ -13,11 +13,10 @@ import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.core.CachingStoreCore
 import quickbeer.android.data.store.core.MemoryStoreCore
-import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beer.store.BeerRoomCore
 import quickbeer.android.domain.beer.store.BeerStore
+import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeersInCountryFetcher
 import quickbeer.android.domain.beerlist.network.BeersInStyleFetcher
@@ -34,11 +33,10 @@ import quickbeer.android.domain.beerlist.store.BeersInStyleStore
 import quickbeer.android.domain.beerlist.store.BrewersBeersStore
 import quickbeer.android.domain.beerlist.store.RecentBeersStore
 import quickbeer.android.domain.beerlist.store.TopBeersStore
-import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.network.BrewerFetcher
 import quickbeer.android.domain.brewer.repository.BrewerRepository
-import quickbeer.android.domain.brewer.store.BrewerRoomCore
 import quickbeer.android.domain.brewer.store.BrewerStore
+import quickbeer.android.domain.brewer.store.BrewerStoreCore
 import quickbeer.android.domain.brewerlist.network.BrewerSearchFetcher
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.brewerlist.store.BrewerSearchStore
@@ -122,12 +120,8 @@ val appModule = module {
     single<StoreCore<String, IdList>>(named<IdList>()) {
         CachingStoreCore(IdListRoomCore(get()), IdList::key)
     }
-    single<StoreCore<Int, Beer>>(named<Beer>()) {
-        CachingStoreCore(BeerRoomCore(get()), Beer::id, Beer.merger)
-    }
-    single<StoreCore<Int, Brewer>>(named<Brewer>()) {
-        CachingStoreCore(BrewerRoomCore(get()), Brewer::id, Brewer.merger)
-    }
+    single { BeerStoreCore(get<Database>()) }
+    single { BrewerStoreCore(get<Database>()) }
     single<StoreCore<Int, Style>>(named<Style>()) {
         CachingStoreCore(StyleRoomCore(get()), Style::id, Style.merger)
     }
@@ -136,15 +130,15 @@ val appModule = module {
     }
 
     // Stores
-    factory { BeerStore(get(named<Beer>())) }
-    factory { BeerSearchStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { TopBeersStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { BrewersBeersStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { BeersInStyleStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { BeersInCountryStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { RecentBeersStore(get(named<IdList>()), get(named<Beer>())) }
-    factory { BrewerStore(get(named<Brewer>())) }
-    factory { BrewerSearchStore(get(named<IdList>()), get(named<Brewer>())) }
+    factory { BeerStore(get()) }
+    factory { BeerSearchStore(get(named<IdList>()), get()) }
+    factory { TopBeersStore(get(named<IdList>()), get()) }
+    factory { BrewersBeersStore(get(named<IdList>()), get()) }
+    factory { BeersInStyleStore(get(named<IdList>()), get()) }
+    factory { BeersInCountryStore(get(named<IdList>()), get()) }
+    factory { RecentBeersStore(get(named<IdList>()), get()) }
+    factory { BrewerStore(get()) }
+    factory { BrewerSearchStore(get(named<IdList>()), get()) }
     factory { StyleStore(get(named<Style>())) }
     factory { StyleListStore(get(named<IdList>()), get(named<Style>())) }
     factory { CountryStore(get(named<Country>())) }

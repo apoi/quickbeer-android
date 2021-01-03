@@ -17,7 +17,7 @@ import quickbeer.android.data.store.StoreCore
  * StoreCore that takes another core as parameter and adds a caching layer in front of it. This is
  * useful especially if the other core is slow, such as a Room backed core.
  */
-class CachingStoreCore<K, V>(
+open class CachingStoreCore<K, V>(
     private val persistingCore: StoreCore<K, V>,
     private val getKey: (V) -> K,
     merger: Merger<V> = StoreCore.takeNew()
@@ -30,7 +30,7 @@ class CachingStoreCore<K, V>(
         // Permanent subscription to all updates to keep cache up-to-date. This can't achieved with
         // put/delete methods as it's not given that a core isn't modified without going through
         // this cache.
-        GlobalScope.launch(Dispatchers.Default) {
+        GlobalScope.launch(Dispatchers.IO) {
             persistingCore
                 .getPutStream()
                 .collect { value ->

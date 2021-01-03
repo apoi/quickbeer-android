@@ -18,7 +18,7 @@ import quickbeer.android.network.result.ApiResult
  * @param <E> Type of fetcher raw values.
  */
 open class ItemListRepository<I, out K, V : Any, E>(
-    val store: ItemListStore<I, K, V>,
+    open val store: ItemListStore<I, K, V>,
     private val fetcher: Fetcher<I, List<V>, List<E>>
 ) : Repository<I, List<V>>() {
 

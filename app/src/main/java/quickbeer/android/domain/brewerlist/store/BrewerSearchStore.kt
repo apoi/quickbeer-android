@@ -1,13 +1,15 @@
 package quickbeer.android.domain.brewerlist.store
 
 import quickbeer.android.data.store.StoreCore
-import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.domain.brewer.store.BrewerStoreCore
 import quickbeer.android.domain.idlist.IdList
 
 class BrewerSearchStore(
     indexStoreCore: StoreCore<String, IdList>,
-    brewerStoreCore: StoreCore<Int, Brewer>
+    private val brewerStoreCore: BrewerStoreCore
 ) : BrewerListStore(QueryIndexMapper(), indexStoreCore, brewerStoreCore) {
+
+    fun search(query: String) = brewerStoreCore.search(query)
 
     private class QueryIndexMapper : IndexMapper<String> {
 

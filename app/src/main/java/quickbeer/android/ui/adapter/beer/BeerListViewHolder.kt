@@ -27,6 +27,7 @@ class BeerListViewHolder(
 
     private fun updateState(state: State<Beer>) {
         when (state) {
+            is State.Loading -> state.value?.let(::setBeer)
             is State.Success -> setBeer(state.value)
         }
     }

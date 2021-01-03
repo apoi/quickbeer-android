@@ -15,6 +15,18 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
     BeerEntity.merger
 ) {
 
+    @Query(
+        """SELECT * FROM beers
+        WHERE instr(normalized_name, :q1) > 0
+        AND (:q2 IS NULL OR instr(normalized_name, :q2) > 0)
+        AND (:q3 IS NULL OR instr(normalized_name, :q3) > 0)"""
+    )
+    abstract fun search(
+        q1: String,
+        q2: String? = null,
+        q3: String? = null
+    ): Flow<List<BeerEntity>>
+
     @Query("SELECT * FROM beers WHERE id=:key")
     abstract suspend fun get(key: Int): BeerEntity?
 

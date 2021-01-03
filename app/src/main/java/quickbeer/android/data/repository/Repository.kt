@@ -31,12 +31,15 @@ abstract class Repository<in K, V> {
      */
     fun getStream(key: K, validator: Validator<V>): Flow<State<V>> {
         return flow {
-            emit(State.Loading())
+            // Start with local values with the acknowledgement the values may still
+            // be updated. User chooses if to use already loading values or not.
+            val local = getLocal(key)
+            emit(State.Loading(local))
 
             // Invalid value triggers fetch. It must not trigger clearing of the
             // value as the value may still be valid for another consumer with
             // a different validator.
-            val isValid = validator.validate(getLocal(key))
+            val isValid = validator.validate(local)
 
             if (!isValid) {
                 when (val response = fetchRemote(key)) {

@@ -4,12 +4,13 @@ import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.store.ItemListStore
 import quickbeer.android.data.store.store.SingleItemListStore
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.idlist.IdList
 
 abstract class BeerListStore(
     indexPrefix: String,
     indexStoreCore: StoreCore<String, IdList>,
-    beerStoreCore: StoreCore<Int, Beer>
+    beerStoreCore: BeerStoreCore
 ) : ItemListStore<String, Int, Beer>(
     indexMapper = QueryIndexMapper(indexPrefix),
     getKey = Beer::id,
@@ -36,7 +37,7 @@ abstract class BeerListStore(
 abstract class SingleBeerListStore(
     indexKey: String,
     indexStoreCore: StoreCore<String, IdList>,
-    beerStoreCore: StoreCore<Int, Beer>
+    beerStoreCore: BeerStoreCore
 ) : SingleItemListStore<String, Int, Beer>(
     indexKey,
     getKey = Beer::id,

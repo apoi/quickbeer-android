@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.Constants
@@ -37,7 +36,6 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.search.SearchActionsHandler
-import quickbeer.android.util.Timer
 import quickbeer.android.util.exception.AppException
 import quickbeer.android.util.ktx.normalize
 
@@ -71,30 +69,25 @@ open class SearchViewModel(
     }
 
     private fun searchBeers() {
-        val timer = Timer("BEERS")
-
-        // Launch searches
+        // Remote has partial results with loading state
         val remoteRequest = query
             .filter { it.length >= Constants.QUERY_MIN_LENGTH }
             .debounce(SEARCH_DELAY)
             .flatMapLatest { query -> beerSearchRepository.getStream(query, Accept()) }
             .onStart { emit(State.Empty) }
 
-        val localRequest = beerRepository.store.getStream()
+        // Local has all the results, but doesn't know about the state
+        val localRequest = query
+            .flatMapLatest { beerSearchRepository.searchLocal(it.normalize()) }
             .distinctUntilChanged { a, b -> sameIds(a.map(Beer::id), b.map(Beer::id)) }
 
-        // Beer results
+        // Combine to get complete results with state
         viewModelScope.launch(Dispatchers.IO) {
             combine(query, localRequest, remoteRequest) { q, local, remote ->
-                timer.start()
                 combineResult(q, local, remote, Beer::normalizedName)
             }
-                .onEach { timer.stop("combine") }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
-                .collect {
-                    _beerResults.postValue(it)
-                    timer.stop("publish")
-                }
+                .collect { _beerResults.postValue(it) }
         }
     }
 
@@ -105,7 +98,8 @@ open class SearchViewModel(
             .flatMapLatest { query -> brewerSearchRepository.getStream(query, Accept()) }
             .onStart { emit(State.Empty) }
 
-        val localRequest = brewerRepository.store.getStream()
+        val localRequest = query
+            .flatMapLatest { brewerSearchRepository.searchLocal(it.normalize()) }
             .distinctUntilChanged { a, b -> sameIds(a.map(Brewer::id), b.map(Brewer::id)) }
 
         viewModelScope.launch(Dispatchers.IO) {

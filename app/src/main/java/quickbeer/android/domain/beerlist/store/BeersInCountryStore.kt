@@ -1,12 +1,12 @@
 package quickbeer.android.domain.beerlist.store
 
 import quickbeer.android.data.store.StoreCore
-import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.idlist.IdList
 
 class BeersInCountryStore(
     indexStoreCore: StoreCore<String, IdList>,
-    beerStoreCore: StoreCore<Int, Beer>
+    beerStoreCore: BeerStoreCore
 ) : BeerListStore(INDEX_PREFIX, indexStoreCore, beerStoreCore) {
 
     companion object {

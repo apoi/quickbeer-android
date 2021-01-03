@@ -7,6 +7,9 @@ import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
 import quickbeer.android.domain.beerlist.store.BeerSearchStore
 
 class BeerSearchRepository(
-    store: BeerSearchStore,
+    override val store: BeerSearchStore,
     fetcher: BeerSearchFetcher
-) : ItemListRepository<String, Int, Beer, BeerJson>(store, fetcher)
+) : ItemListRepository<String, Int, Beer, BeerJson>(store, fetcher) {
+
+    fun searchLocal(query: String) = store.search(query)
+}
