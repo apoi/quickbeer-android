@@ -36,7 +36,10 @@ object BrewerEntityMapper : Mapper<Brewer, BrewerEntity> {
             headBrewer = source.headBrewer,
             metroId = source.metroId,
             msa = source.msa,
-            regionId = source.regionId
+            regionId = source.regionId,
+            normalizedName = source.normalizedName,
+            updated = source.updated,
+            accessed = source.accessed
         )
     }
 
@@ -71,7 +74,10 @@ object BrewerEntityMapper : Mapper<Brewer, BrewerEntity> {
             headBrewer = source.headBrewer,
             metroId = source.metroId,
             msa = source.msa,
-            regionId = source.regionId
+            regionId = source.regionId,
+            normalizedName = source.normalizedName,
+            updated = source.updated,
+            accessed = source.accessed
         )
     }
 }

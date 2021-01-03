@@ -2,6 +2,7 @@ package quickbeer.android.domain.brewer.store
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import org.threeten.bp.ZonedDateTime
@@ -9,7 +10,7 @@ import quickbeer.android.data.room.converter.ZonedDateTimeConverter
 import quickbeer.android.data.store.Merger
 import quickbeer.android.domain.brewer.Brewer
 
-@Entity(tableName = "brewers")
+@Entity(tableName = "brewers", indices = [Index(value = ["normalized_name", "accessed"])])
 @TypeConverters(ZonedDateTimeConverter::class)
 data class BrewerEntity(
     @PrimaryKey val id: Int,
@@ -41,7 +42,10 @@ data class BrewerEntity(
     @ColumnInfo(name = "head_brewer") val headBrewer: String?,
     @ColumnInfo(name = "metro_id") val metroId: String?,
     @ColumnInfo(name = "msa") val msa: String?,
-    @ColumnInfo(name = "region_id") val regionId: String?
+    @ColumnInfo(name = "region_id") val regionId: String?,
+    @ColumnInfo(name = "normalized_name") val normalizedName: String?,
+    @ColumnInfo(name = "updated") val updated: ZonedDateTime?,
+    @ColumnInfo(name = "accessed") val accessed: ZonedDateTime?
 ) {
 
     companion object {

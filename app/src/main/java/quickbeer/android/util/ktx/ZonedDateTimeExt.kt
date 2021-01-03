@@ -53,3 +53,12 @@ fun ZonedDateTime?.formatDate(): String {
         .withZoneSameInstant(ZoneId.systemDefault())
         .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 }
+
+fun ZonedDateTime?.orLater(other: ZonedDateTime?): ZonedDateTime? {
+    return when {
+        this == null -> other
+        other == null -> this
+        this > other -> this
+        else -> other
+    }
+}

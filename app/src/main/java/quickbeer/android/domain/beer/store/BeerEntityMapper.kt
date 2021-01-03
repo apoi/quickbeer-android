@@ -28,7 +28,10 @@ object BeerEntityMapper : Mapper<Beer, BeerEntity> {
             isVerified = source.isVerified,
             unrateable = source.unrateable,
             tickValue = source.tickValue,
-            tickDate = source.tickDate
+            tickDate = source.tickDate,
+            normalizedName = source.normalizedName,
+            updated = source.updated,
+            accessed = source.accessed
         )
     }
 
@@ -55,7 +58,10 @@ object BeerEntityMapper : Mapper<Beer, BeerEntity> {
             isVerified = source.isVerified,
             unrateable = source.unrateable,
             tickValue = source.tickValue,
-            tickDate = source.tickDate
+            tickDate = source.tickDate,
+            normalizedName = source.normalizedName,
+            updated = source.updated,
+            accessed = source.accessed
         )
     }
 }

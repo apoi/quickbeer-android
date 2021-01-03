@@ -1,5 +1,7 @@
 package quickbeer.android.data.repository.repository
 
+import org.threeten.bp.ZonedDateTime
+
 /**
  * List of items for storing lists in ItemListStore.
  *
@@ -8,5 +10,6 @@ package quickbeer.android.data.repository.repository
  */
 data class ItemList<out K, out V>(
     val key: K,
-    val values: List<V>
+    val values: List<V>,
+    val updated: ZonedDateTime
 )

@@ -1,7 +1,9 @@
 package quickbeer.android.domain.beer.network
 
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.util.Mapper
+import quickbeer.android.util.ktx.normalize
 
 object BeerJsonMapper : Mapper<Beer, BeerJson> {
 
@@ -55,7 +57,10 @@ object BeerJsonMapper : Mapper<Beer, BeerJson> {
             isVerified = source.isVerified,
             unrateable = source.unrateable,
             tickValue = source.tickValue,
-            tickDate = source.tickDate
+            tickDate = source.tickDate,
+            normalizedName = source.name.normalize(),
+            updated = ZonedDateTime.now(),
+            accessed = null
         )
     }
 }

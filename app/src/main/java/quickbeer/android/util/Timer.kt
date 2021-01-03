@@ -10,7 +10,8 @@ class Timer(private val name: String = "Timer") {
         startTime = System.currentTimeMillis()
     }
 
-    fun stop() {
-        Timber.w("$name: ${System.currentTimeMillis() - startTime} ms")
+    fun stop(message: String = "") {
+        val tag = name + message.takeIf(String::isNotEmpty)?.let { "/$it" }
+        Timber.w("$tag: ${System.currentTimeMillis() - startTime} ms")
     }
 }

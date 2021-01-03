@@ -6,6 +6,7 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
+import quickbeer.android.util.ktx.orLater
 
 @Parcelize
 data class Brewer(
@@ -38,7 +39,11 @@ data class Brewer(
     val headBrewer: String?,
     val metroId: String?,
     val msa: String?,
-    val regionId: String?
+    val regionId: String?,
+    // Application fields
+    val normalizedName: String?,
+    val updated: ZonedDateTime?,
+    val accessed: ZonedDateTime?
 ) : Parcelable {
 
     fun imageUri(): String {
@@ -77,7 +82,10 @@ data class Brewer(
                 headBrewer = new.headBrewer ?: old.headBrewer,
                 metroId = new.metroId ?: old.metroId,
                 msa = new.msa ?: old.msa,
-                regionId = new.regionId ?: old.regionId
+                regionId = new.regionId ?: old.regionId,
+                normalizedName = new.normalizedName ?: old.normalizedName,
+                updated = new.updated.orLater(old.updated),
+                accessed = new.accessed.orLater(old.accessed)
             )
         }
     }

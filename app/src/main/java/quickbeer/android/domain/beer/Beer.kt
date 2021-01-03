@@ -7,6 +7,7 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
+import quickbeer.android.util.ktx.orLater
 
 @Parcelize
 data class Beer(
@@ -31,7 +32,11 @@ data class Beer(
     val isVerified: Boolean?,
     val unrateable: Boolean?,
     val tickValue: Int?,
-    val tickDate: ZonedDateTime?
+    val tickDate: ZonedDateTime?,
+    // Application fields
+    val normalizedName: String?,
+    val updated: ZonedDateTime?,
+    val accessed: ZonedDateTime?
 ) : Parcelable {
 
     fun rating(): Int {
@@ -73,7 +78,10 @@ data class Beer(
                 isVerified = new.isVerified ?: old.isVerified,
                 unrateable = new.unrateable ?: old.unrateable,
                 tickValue = new.tickValue ?: old.tickValue,
-                tickDate = new.tickDate ?: old.tickDate
+                tickDate = new.tickDate ?: old.tickDate,
+                normalizedName = new.normalizedName ?: old.normalizedName,
+                updated = new.updated.orLater(old.updated),
+                accessed = new.accessed.orLater(old.accessed)
             )
         }
     }

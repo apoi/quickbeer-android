@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.Constants
@@ -36,6 +37,7 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.search.SearchActionsHandler
+import quickbeer.android.util.Timer
 import quickbeer.android.util.exception.AppException
 import quickbeer.android.util.ktx.normalize
 
@@ -69,6 +71,8 @@ open class SearchViewModel(
     }
 
     private fun searchBeers() {
+        val timer = Timer("BEERS")
+
         // Launch searches
         val remoteRequest = query
             .filter { it.length >= Constants.QUERY_MIN_LENGTH }
@@ -82,10 +86,15 @@ open class SearchViewModel(
         // Beer results
         viewModelScope.launch(Dispatchers.IO) {
             combine(query, localRequest, remoteRequest) { q, local, remote ->
-                combineResult(q, local, remote, Beer::name)
+                timer.start()
+                combineResult(q, local, remote, Beer::normalizedName)
             }
+                .onEach { timer.stop("combine") }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
-                .collect { _beerResults.postValue(it) }
+                .collect {
+                    _beerResults.postValue(it)
+                    timer.stop("publish")
+                }
         }
     }
 
@@ -101,7 +110,7 @@ open class SearchViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             combine(query, localRequest, remoteRequest) { q, local, remote ->
-                combineResult(q, local, remote, Brewer::name)
+                combineResult(q, local, remote, Brewer::normalizedName)
             }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
@@ -162,9 +171,8 @@ open class SearchViewModel(
     private fun matcher(query: String, value: String?): Boolean {
         if (value == null) return false
 
-        val normalizedValue = value.normalize()
         return query.split(" ")
-            .all { normalizedValue.contains(it, ignoreCase = true) }
+            .all { value.contains(it, ignoreCase = true) }
     }
 
     companion object {

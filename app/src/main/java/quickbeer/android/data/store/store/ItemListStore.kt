@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.SingleStore
 import quickbeer.android.data.store.Store
@@ -102,10 +103,11 @@ open class ItemListStore<I, out K, V : Any>(
                 .let { items -> valueCore.put(items.toMap()) }
 
             val storeIndex = indexMapper.encode(index)
-            val itemList = ItemList(storeIndex, values.map(getKey))
-            val indexChanged = indexCore.put(storeIndex, itemList)
+            val oldItemList = indexCore.get(storeIndex)
+            val newItemList = ItemList(storeIndex, values.map(getKey), ZonedDateTime.now())
+            indexCore.put(storeIndex, newItemList)
 
-            newValues.isNotEmpty() || indexChanged != null
+            newValues.isNotEmpty() || newItemList.values != oldItemList?.values
         }
     }
 
