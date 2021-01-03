@@ -32,7 +32,7 @@
 
     <!-- Beer list messages -->
     <string name="message_start">Start by searching for your favourite beer.\n\nCheers!</string>
-    <string name="message_empty">Curious, found nothing with that search.</string>
+    <string name="message_empty">No results.</string>
     <string name="message_error">Error! Try again later.</string>
 
     <!-- Beer details -->

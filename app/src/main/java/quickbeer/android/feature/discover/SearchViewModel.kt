@@ -37,7 +37,7 @@ import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.util.exception.AppException
-import timber.log.Timber
+import quickbeer.android.util.ktx.normalize
 
 open class SearchViewModel(
     private val beerRepository: BeerRepository,
@@ -126,14 +126,14 @@ open class SearchViewModel(
         remote: State<List<T>>,
         matcherField: (T) -> String?
     ): State<List<T>> {
-        Timber.w("CT: " + Thread.currentThread())
+        val normalizedQuery = query.normalize()
 
-        return if (query.isEmpty()) {
+        return if (normalizedQuery.isEmpty()) {
             State.Error(AppException.NoSearchEntered())
-        } else if (query.length < Constants.QUERY_MIN_LENGTH) {
+        } else if (normalizedQuery.length < Constants.QUERY_MIN_LENGTH) {
             State.Error(AppException.QueryTooShortException())
         } else {
-            val result = local.filter { matcher(query, matcherField(it)) }
+            val result = local.filter { matcher(normalizedQuery, matcherField(it)) }
             when {
                 remote is State.Loading -> State.Loading(result)
                 result.isEmpty() && remote is State.Success -> State.Loading()
@@ -160,8 +160,11 @@ open class SearchViewModel(
     }
 
     private fun matcher(query: String, value: String?): Boolean {
+        if (value == null) return false
+
+        val normalizedValue = value.normalize()
         return query.split(" ")
-            .all { value?.contains(it, ignoreCase = true) == true }
+            .all { normalizedValue.contains(it, ignoreCase = true) }
     }
 
     companion object {
