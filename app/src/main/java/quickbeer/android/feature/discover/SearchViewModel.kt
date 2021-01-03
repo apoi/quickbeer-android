@@ -8,22 +8,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.Constants
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
-import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
-import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.country.repository.CountryRepository
@@ -36,8 +29,6 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.search.SearchActionsHandler
-import quickbeer.android.util.exception.AppException
-import quickbeer.android.util.ktx.normalize
 
 open class SearchViewModel(
     private val beerRepository: BeerRepository,
@@ -69,43 +60,24 @@ open class SearchViewModel(
     }
 
     private fun searchBeers() {
-        // Remote has partial results with loading state
-        val remoteRequest = query
-            .filter { it.length >= Constants.QUERY_MIN_LENGTH }
-            .debounce(SEARCH_DELAY)
-            .flatMapLatest { query -> beerSearchRepository.getStream(query, Accept()) }
-            .onStart { emit(State.Empty) }
-
-        // Local has all the results, but doesn't know about the state
-        val localRequest = query
-            .flatMapLatest { beerSearchRepository.searchLocal(it.normalize()) }
-            .distinctUntilChanged { a, b -> sameIds(a.map(Beer::id), b.map(Beer::id)) }
-
-        // Combine to get complete results with state
         viewModelScope.launch(Dispatchers.IO) {
-            combine(query, localRequest, remoteRequest) { q, local, remote ->
-                combineResult(q, local, remote, Beer::normalizedName)
-            }
+            beerSearchRepository
+                .getStream(
+                    query, { it.length >= Constants.QUERY_MIN_LENGTH },
+                    Accept(), SEARCH_DELAY
+                )
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collect { _beerResults.postValue(it) }
         }
     }
 
     private fun searchBrewers() {
-        val remoteRequest = query
-            .filter { it.length >= Constants.QUERY_MIN_LENGTH }
-            .debounce(SEARCH_DELAY)
-            .flatMapLatest { query -> brewerSearchRepository.getStream(query, Accept()) }
-            .onStart { emit(State.Empty) }
-
-        val localRequest = query
-            .flatMapLatest { brewerSearchRepository.searchLocal(it.normalize()) }
-            .distinctUntilChanged { a, b -> sameIds(a.map(Brewer::id), b.map(Brewer::id)) }
-
         viewModelScope.launch(Dispatchers.IO) {
-            combine(query, localRequest, remoteRequest) { q, local, remote ->
-                combineResult(q, local, remote, Brewer::normalizedName)
-            }
+            brewerSearchRepository
+                .getStream(
+                    query, { it.length >= Constants.QUERY_MIN_LENGTH },
+                    Accept(), SEARCH_DELAY
+                )
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
         }
@@ -123,34 +95,8 @@ open class SearchViewModel(
         }
     }
 
-    private fun <T> combineResult(
-        query: String,
-        local: List<T>,
-        remote: State<List<T>>,
-        matcherField: (T) -> String?
-    ): State<List<T>> {
-        val normalizedQuery = query.normalize()
-
-        return if (normalizedQuery.isEmpty()) {
-            State.Error(AppException.NoSearchEntered())
-        } else if (normalizedQuery.length < Constants.QUERY_MIN_LENGTH) {
-            State.Error(AppException.QueryTooShortException())
-        } else {
-            val result = local.filter { matcher(normalizedQuery, matcherField(it)) }
-            when {
-                remote is State.Loading -> State.Loading(result)
-                result.isEmpty() && remote is State.Success -> State.Loading()
-                else -> State.from(result)
-            }
-        }
-    }
-
     override fun onSearchChanged(query: String) {
         this.query.value = query.trim()
-    }
-
-    private fun sameIds(a: List<Int>, b: List<Int>): Boolean {
-        return a.toSet() == b.toSet()
     }
 
     private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {

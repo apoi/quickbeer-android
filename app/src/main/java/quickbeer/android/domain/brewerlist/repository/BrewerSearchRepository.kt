@@ -1,5 +1,6 @@
 package quickbeer.android.domain.brewerlist.repository
 
+import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.repository.repository.ItemListRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.network.BrewerJson
@@ -11,5 +12,7 @@ class BrewerSearchRepository(
     fetcher: BrewerSearchFetcher
 ) : ItemListRepository<String, Int, Brewer, BrewerJson>(store, fetcher) {
 
-    fun searchLocal(query: String) = store.search(query)
+    override fun getFuzzyLocalStream(key: String): Flow<List<Brewer>> {
+        return store.search(key)
+    }
 }

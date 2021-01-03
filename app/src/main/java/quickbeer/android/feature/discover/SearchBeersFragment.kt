@@ -17,6 +17,7 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
+import quickbeer.android.util.exception.AppException
 import quickbeer.android.util.ktx.getMessage
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -73,11 +74,17 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
                 }
                 is State.Error -> {
                     beersAdapter.setItems(emptyList())
-                    binding.message.text = state.cause.getMessage(::getString)
+                    binding.message.text = getError(state.cause)
                     binding.message.isVisible = true
                 }
             }
         }
+    }
+
+    fun getError(error: Throwable): String {
+        return if (error == AppException.RepositoryFilterFailed) {
+            "Query needs to be at least four characters."
+        } else error.getMessage(::getString)
     }
 
     private fun onBeerSelected(beer: BeerListModel) {

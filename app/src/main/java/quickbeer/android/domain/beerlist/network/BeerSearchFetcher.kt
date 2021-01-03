@@ -14,6 +14,6 @@ class BeerSearchFetcher(api: RateBeerApi) :
         BeerListJsonMapper,
         { query ->
             if (query.length >= QUERY_MIN_LENGTH) api.beerSearch(query.normalize())
-            else ApiResult.UnknownError(QueryTooShortException())
+            else ApiResult.UnknownError(QueryTooShortException)
         }
     )

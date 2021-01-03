@@ -1,30 +1,30 @@
 package quickbeer.android.data.repository
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.take
 import quickbeer.android.data.state.State
 import quickbeer.android.network.result.ApiResult
+import quickbeer.android.util.exception.AppException
+import quickbeer.android.util.ktx.takeUntil
 
 /**
  * Repository binds [Store] and [Api] together to a data source that handles
  * data fetching and persisting.
  */
-abstract class Repository<in K, V> {
-
-    /**
-     * Returns the current state without fetching.
-     */
-    suspend fun get(key: K): State<V> {
-        return withContext(Dispatchers.IO) {
-            State.from(getLocal(key))
-        }
-    }
+abstract class Repository<K, V> {
 
     /**
      * Returns a stream of data with fetching if current value is invalid.
@@ -69,13 +69,108 @@ abstract class Repository<in K, V> {
         }.flowOn(Dispatchers.IO)
     }
 
+    /**
+     * Returns a stream of data that reacts to key flow changes by cancelling old requests and
+     * starting again from Loading state.
+     */
+    fun getStream(
+        keyFlow: Flow<K>,
+        keyFilter: ((K) -> Boolean)?,
+        validator: Validator<V>,
+        debounceRemote: Long = 0
+    ): Flow<State<V>> {
+        // Only consider distinct keys.
+        val distinctKey = keyFlow
+            .distinctUntilChanged()
+
+        // Key may be invalid. This error needs to be emitted from Repository as it must cancel
+        // any active flows from previous keys.
+        val errorFlow = distinctKey
+            .filter { keyFilter?.invoke(it) == false }
+            .mapLatest { State.Error(AppException.RepositoryFilterFailed) }
+
+        // Flow containing current value and its validity.
+        val stateFlow = distinctKey
+            .filter { keyFilter == null || keyFilter(it) }
+            .mapLatest {
+                val current = getLocal(it)
+                FlowState(it, current, validator.validate(current))
+            }
+
+        // API request flow. This flow can be debounced if repository expects multiple keys in
+        // quick succession, such as during search input.
+        val remoteFlow = stateFlow
+            .filter { !it.isValid }
+            .flatMapLatest { state ->
+                // Separate flow for cancellability: cancel the delay-fetch flow immediately on new
+                // key as the value isn't needed any more. This should have the same behaviour as
+                // debounce has, with explicit cancellation.
+                flow { emit(state) }
+                    .onEach { delay(debounceRemote) }
+                    .flatMapLatest { fetch(it.key, validator) }
+                    .takeUntil(distinctKey.drop(1))
+            }
+
+        // Local flow emits Loading state with currently cached results while waiting for the API
+        // flow to complete, or Success state if the local data is already valid.
+        val localFlow = stateFlow
+            .flatMapLatest { state ->
+                // Cancel if remote or error emits. In this case the Loading state
+                // with local value is received too late.
+                flow { emit(state) }
+                    .flatMapLatest { getFuzzyLocalStream(state.key) }
+                    .take(1)
+                    .map {
+                        if (state.isValid) State.from(it)
+                        else State.Loading(it)
+                    }
+                    .takeUntil(merge(errorFlow, remoteFlow))
+            }
+
+        return merge(errorFlow, remoteFlow, localFlow)
+            .flowOn(Dispatchers.IO)
+    }
+
+    private fun fetch(key: K, validator: Validator<V>): Flow<State<V>> {
+        return flow {
+            when (val response = fetchRemote(key)) {
+                is ApiResult.Success -> {
+                    if (response.value != null && validator.validate(response.value)) {
+                        // Response is persisted to be emitted later
+                        persist(key, response.value)
+                    } else {
+                        // Empty states don't go through persistence layer
+                        emit(State.Empty)
+                    }
+                }
+                // State can be expanded for more detailed error types
+                is ApiResult.HttpError -> emit(State.Error(response.cause))
+                is ApiResult.NetworkError -> emit(State.Error(response.cause))
+                is ApiResult.UnknownError -> emit(State.Error(response.cause))
+            }
+
+            // Emit current and future values. The values need to be still validated
+            // as otherwise this may emit the existing value in case of failed fetch.
+            emitAll(
+                getFuzzyLocalStream(key)
+                    .distinctUntilChanged()
+                    .filter { validator.validate(it) }
+                    .map { State.from(it) }
+            )
+        }
+    }
+
     protected abstract suspend fun persist(key: K, value: V)
 
     protected abstract suspend fun getLocal(key: K): V?
 
     protected abstract fun getLocalStream(key: K): Flow<V>
 
+    protected open fun getFuzzyLocalStream(key: K) = getLocalStream(key)
+
     protected abstract suspend fun fetchRemote(key: K): ApiResult<V>
+
+    inner class FlowState(val key: K, val value: V?, val isValid: Boolean)
 }
 
 /**
@@ -100,10 +195,6 @@ abstract class SingleRepository<V> {
         override suspend fun fetchRemote(key: Int): ApiResult<V> {
             return this@SingleRepository.fetchRemote()
         }
-    }
-
-    suspend fun get(): State<V> {
-        return repository.get(0)
     }
 
     fun getStream(validator: Validator<V>): Flow<State<V>> {

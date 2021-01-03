@@ -16,6 +16,7 @@ class BeerRoomCore(
 
     constructor(database: Database) : this(database.beerDao())
 
+    @Suppress("MagicNumber")
     fun search(query: String): Flow<List<Beer>> {
         val parts = query.split(" ")
         val tail = parts.drop(3)
