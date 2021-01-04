@@ -13,6 +13,15 @@ sealed class State<out T> {
 
     data class Error(val cause: Throwable) : State<Nothing>()
 
+    fun valueOrNull(): T? {
+        return when (this) {
+            is Loading -> value
+            Empty -> null
+            is Success -> value
+            is Error -> null
+        }
+    }
+
     companion object {
         fun <T> from(value: T?): State<T> {
             return when {

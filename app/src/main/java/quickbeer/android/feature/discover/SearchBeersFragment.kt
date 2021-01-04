@@ -67,9 +67,7 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
                     binding.message.isVisible = true
                 }
                 is State.Success -> {
-                    if (beersAdapter.setItems(state.value)) {
-                        binding.recyclerView.scrollToPosition(0)
-                    }
+                    beersAdapter.setItems(state.value)
                     binding.message.isVisible = false
                 }
                 is State.Error -> {
