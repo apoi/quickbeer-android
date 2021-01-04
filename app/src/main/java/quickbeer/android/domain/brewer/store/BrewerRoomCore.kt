@@ -6,6 +6,7 @@ import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.util.ktx.normalize
 
 class BrewerRoomCore(
     val dao: BrewerDao
@@ -18,7 +19,7 @@ class BrewerRoomCore(
 
     @Suppress("MagicNumber")
     fun search(query: String): Flow<List<Brewer>> {
-        val parts = query.split(" ")
+        val parts = query.normalize().split(" ")
         val tail = parts.drop(3)
 
         // Use three first terms directly in search, filter others programmatically

@@ -5,7 +5,7 @@ import java.util.Locale
 import java.util.regex.Pattern
 
 private val NORMALIZER_PATTERN = Pattern.compile("\\p{M}")
-private val SPECIAL_CHARS = """["“”„…'‘’«»()-.,/|°?!]""".toRegex()
+private val SPECIAL_CHARS = """["“”„…'‘’«»()-.,:;/|¨°%&?!]""".toRegex()
 
 fun String?.nullIfEmpty(): String? {
     return if (this.isNullOrEmpty()) null else this
