@@ -115,7 +115,8 @@ open class SearchViewModel(
     }
 
     private fun <T> sameIds(a: State<List<T>>, b: State<List<T>>, getId: (T) -> Int): Boolean {
-        return a.valueOrNull()?.map(getId)?.toSet() == b.valueOrNull()?.map(getId)?.toSet()
+        return a is State.Success && b is State.Success &&
+            a.value.map(getId).toSet() == b.value.map(getId).toSet()
     }
 
     private fun matcher(query: String, value: String?): Boolean {

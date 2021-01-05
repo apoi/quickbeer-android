@@ -17,6 +17,7 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
+import quickbeer.android.util.exception.AppException
 import quickbeer.android.util.ktx.getMessage
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -57,6 +58,7 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
             when (state) {
                 is State.Loading -> {
                     brewersAdapter.setItems(state.value ?: emptyList())
+                    binding.recyclerView.scrollToPosition(0)
                     binding.message.text = getString(R.string.search_progress)
                     binding.message.isVisible = state.value?.isNotEmpty() != true
                 }
@@ -66,16 +68,25 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
                     binding.message.isVisible = true
                 }
                 is State.Success -> {
+                    val scrollY = binding.recyclerView.computeVerticalScrollOffset()
                     brewersAdapter.setItems(state.value)
+                    // Only reset scrolling if already at the top
+                    if (scrollY == 0) binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                 }
                 is State.Error -> {
                     brewersAdapter.setItems(emptyList())
-                    binding.message.text = state.cause.getMessage(::getString)
+                    binding.message.text = getError(state.cause)
                     binding.message.isVisible = true
                 }
             }
         }
+    }
+
+    private fun getError(error: Throwable): String {
+        return if (error == AppException.RepositoryFilterFailed) {
+            "Query needs to be at least four characters."
+        } else error.getMessage(::getString)
     }
 
     private fun onBrewerSelected(brewer: BrewerListModel) {

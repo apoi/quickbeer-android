@@ -58,6 +58,7 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
             when (state) {
                 is State.Loading -> {
                     beersAdapter.setItems(state.value ?: emptyList())
+                    binding.recyclerView.scrollToPosition(0)
                     binding.message.text = getString(R.string.search_progress)
                     binding.message.isVisible = state.value?.isNotEmpty() != true
                 }
@@ -67,7 +68,10 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
                     binding.message.isVisible = true
                 }
                 is State.Success -> {
+                    val scrollY = binding.recyclerView.computeVerticalScrollOffset()
                     beersAdapter.setItems(state.value)
+                    // Only reset scrolling if already at the top
+                    if (scrollY == 0) binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                 }
                 is State.Error -> {
@@ -79,7 +83,7 @@ class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
         }
     }
 
-    fun getError(error: Throwable): String {
+    private fun getError(error: Throwable): String {
         return if (error == AppException.RepositoryFilterFailed) {
             "Query needs to be at least four characters."
         } else error.getMessage(::getString)

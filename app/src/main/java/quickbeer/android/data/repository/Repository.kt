@@ -4,7 +4,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
@@ -70,6 +69,11 @@ abstract class Repository<K, V> {
         }.flowOn(Dispatchers.IO)
     }
 
+    // TODO something goes wrong with this.
+    fun getStream2(key: K, validator: Validator<V>): Flow<State<V>> {
+        return getStream(flow { emit(key) }, null, validator, 0)
+    }
+
     /**
      * Returns a stream of data that reacts to key flow changes by cancelling old requests and
      * starting again from Loading state.
@@ -116,15 +120,18 @@ abstract class Repository<K, V> {
         // flow to complete, or Success state if the local data is already valid.
         val localFlow = stateFlow
             .flatMapLatest { state ->
-                // Cancel if remote or error emits. In this case the Loading state
-                // with local value is received too late.
                 flow { emit(state) }
                     .flatMapLatest { getFuzzyLocalStream(state.key) }
                     .take(1)
-                    .map {
-                        if (state.isValid) State.from(it)
-                        else State.Loading(it)
+                    .flatMapLatest {
+                        flow {
+                            // Always emit Loading first for consistency
+                            emit(State.Loading(it))
+                            if (state.isValid) emit(State.Success(it))
+                        }
                     }
+                    // Cancel if remote or error emits. In this case the Loading state
+                    // with local value is received too late.
                     .takeUntil(merge(errorFlow, remoteFlow))
             }
 
