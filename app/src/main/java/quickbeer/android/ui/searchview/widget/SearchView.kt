@@ -28,6 +28,7 @@ import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.onGlobalLayout
+import quickbeer.android.util.ktx.onPreDraw
 import quickbeer.android.util.ktx.setMargins
 
 @Suppress("MagicNumber")
@@ -77,7 +78,7 @@ class SearchView @JvmOverloads constructor(
     private val transparent = resources.getColor(R.color.transparent, null)
 
     init {
-        onGlobalLayout(::initLayout)
+        onPreDraw(::initLayout)
     }
 
     fun connectActions(handler: SearchActionsHandler) {
@@ -91,7 +92,7 @@ class SearchView @JvmOverloads constructor(
     }
 
     private fun initLayout() {
-        normalMode()
+        setNormalMode()
 
         // Divider
         binding.searchDivider.setBackgroundColor(light)
@@ -126,7 +127,7 @@ class SearchView @JvmOverloads constructor(
             }
 
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) focusMode() else normalMode()
+                if (hasFocus) setInputMode() else setNormalMode()
             }
         }
 
@@ -167,7 +168,7 @@ class SearchView @JvmOverloads constructor(
         return false
     }
 
-    private fun normalMode() {
+    private fun setNormalMode() {
         hideKeyboard()
         searchFocusChangeCallback?.invoke(false)
 
@@ -192,7 +193,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchEditText.setMargins(2.dp(), 0, 0, 0)
     }
 
-    private fun focusMode() {
+    private fun setInputMode() {
         showKeyboard()
         searchFocusChangeCallback?.invoke(true)
 

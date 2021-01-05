@@ -14,14 +14,6 @@
         android:id="@+id/top_beers_fragment"
         android:name="quickbeer.android.feature.discover.DiscoverFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/beer_list_standalone_fragment">
-    </fragment>
-
-    <fragment
-        android:id="@+id/style_list_fragment"
-        android:name="quickbeer.android.feature.styles.StylesFragment"
-        android:label="@string/style_list_title"
-        tools:layout="@layout/beer_list_standalone_fragment">
-    </fragment>
+        tools:layout="@layout/beer_list_standalone_fragment" />
 
 </navigation>

@@ -2,7 +2,9 @@ package quickbeer.android.util.ktx
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.ViewTreeObserver.OnPreDrawListener
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.SHOW_FORCED
 import androidx.core.content.ContextCompat.getSystemService
@@ -23,6 +25,18 @@ fun View.onGlobalLayout(block: () -> Unit) {
             override fun onGlobalLayout() {
                 viewTreeObserver.removeOnGlobalLayoutListener(this)
                 block()
+            }
+        })
+    }
+}
+
+fun View.onPreDraw(block: () -> Unit) {
+    if (viewTreeObserver.isAlive) {
+        viewTreeObserver.addOnPreDrawListener(object : OnPreDrawListener {
+            override fun onPreDraw(): Boolean {
+                viewTreeObserver.removeOnPreDrawListener(this)
+                block()
+                return false
             }
         })
     }

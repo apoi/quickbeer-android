@@ -67,13 +67,13 @@ class DiscoverFragment : SearchBarFragment(R.layout.beer_list_standalone_fragmen
 
         // Set custom tab layouts to get progress indicators
         (0 until binding.tabLayout.tabCount).forEach { index ->
-            val layout = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
-            layout.title.text = when (index) {
+            val tabBinding = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
+            tabBinding.title.text = when (index) {
                 0 -> getString(R.string.search_tab_beers)
                 1 -> getString(R.string.search_tab_brewers)
                 else -> getString(R.string.search_tab_styles)
             }
-            binding.tabLayout.getTabAt(index)?.customView = layout.layout
+            binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
         }
     }
 

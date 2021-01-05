@@ -2,5 +2,6 @@
 <resources>
 
     <integer name="search_animation_duration">@android:integer/config_shortAnimTime</integer>
+    <integer name="transition_duration">300</integer>
 
 </resources>
