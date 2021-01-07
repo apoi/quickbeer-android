@@ -1,4 +1,4 @@
-package quickbeer.android.feature.discover
+package quickbeer.android.feature.search
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

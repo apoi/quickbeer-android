@@ -6,7 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import quickbeer.android.ui.base.MainFragment
-import quickbeer.android.ui.searchview.widget.SearchView
+import quickbeer.android.ui.view.SearchView
 
 abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) {
 
@@ -18,12 +18,6 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
         }
     }
 
-    protected abstract fun searchView(): SearchView
-
-    protected abstract fun searchActions(): SearchActionsHandler
-
-    protected abstract fun onSearchQuerySubmit(query: String)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,14 +28,18 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
         super.onViewCreated(view, savedInstanceState)
 
         searchView().apply {
-            connectActions(searchActions())
-
+            queryChangedCallback = ::onSearchQueryChanged
             querySubmitCallback = ::onSearchQuerySubmit
-            suggestionSelectedCallback = { onSearchQuerySubmit(it.text) }
             searchFocusChangeCallback = ::onSearchFocusChanged
             navigateBackCallback = requireActivity()::onBackPressed
         }
     }
+
+    protected abstract fun searchView(): SearchView
+
+    protected open fun onSearchQueryChanged(query: String) = Unit
+
+    protected open fun onSearchQuerySubmit(query: String) = Unit
 
     @CallSuper
     protected open fun onSearchFocusChanged(hasFocus: Boolean) {

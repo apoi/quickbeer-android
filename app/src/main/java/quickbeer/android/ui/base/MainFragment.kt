@@ -17,7 +17,9 @@ abstract class MainFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
 
         ViewCompat.setOnApplyWindowInsetsListener(rootLayout()) { _, insets ->
             topInsetView().setMarginTop(insets.systemWindowInsetTop)
-            insets.consumeSystemWindowInsets()
+            insets.replaceSystemWindowInsets(0, 0, 0, insets.systemWindowInsetBottom).apply {
+                ViewCompat.onApplyWindowInsets(requireView(), this)
+            }
         }
     }
 }

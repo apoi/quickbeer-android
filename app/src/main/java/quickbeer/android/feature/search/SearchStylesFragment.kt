@@ -1,13 +1,13 @@
-package quickbeer.android.feature.styles
+package quickbeer.android.feature.search
 
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerListStandaloneFragmentBinding
+import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.simple.ListAdapter
@@ -15,20 +15,22 @@ import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder
+import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class StylesFragment : BaseFragment(R.layout.beer_list_standalone_fragment) {
+class SearchStylesFragment : BaseFragment(R.layout.list_fragment) {
 
-    private val binding by viewBinding(BeerListStandaloneFragmentBinding::bind)
-    private val viewModel by viewModel<StylesViewModel>()
-    private val beersAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
+    private val binding by viewBinding(ListFragmentBinding::bind)
+    private val viewModel by sharedViewModel<SearchViewModel>()
+    private val stylesAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
-            adapter = beersAdapter
+            adapter = stylesAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
             }
@@ -36,35 +38,41 @@ class StylesFragment : BaseFragment(R.layout.beer_list_standalone_fragment) {
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onStyleSelected)
+
+            setRecycledViewPool(
+                (activity as RecycledPoolHolder)
+                    .getPool(PoolType.STYLE_LIST, stylesAdapter::createPool)
+            )
         }
     }
 
     override fun onDestroyView() {
-        binding.recyclerView.adapter = null
         super.onDestroyView()
+        binding.recyclerView.adapter = null
     }
 
     override fun observeViewState() {
-        observe(viewModel.viewState) { state ->
+        observe(viewModel.styleResults) { state ->
             when (state) {
                 is State.Loading -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
+                    binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                     binding.progress.show()
                 }
                 State.Empty -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
                     binding.progress.hide()
                 }
                 is State.Success -> {
-                    beersAdapter.setItems(state.value)
+                    stylesAdapter.setItems(state.value)
                     binding.message.isVisible = false
                     binding.progress.hide()
                 }
                 is State.Error -> {
-                    beersAdapter.setItems(emptyList())
+                    stylesAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_error)
                     binding.message.isVisible = true
                     binding.progress.hide()

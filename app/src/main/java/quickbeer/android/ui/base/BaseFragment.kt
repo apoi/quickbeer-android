@@ -18,22 +18,34 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
 
     open fun observeViewState() = Unit
 
-    protected fun navigate(navDirections: NavDirections) {
+    protected fun navigate(navDirections: NavDirections, anim: NavAnim = NavAnim.DEFAULT) {
         findNavController()
-            .navigate(navDirections, navOptions())
+            .navigate(navDirections, navOptions(anim))
     }
 
-    protected fun navigate(destination: Destination) {
+    protected fun navigate(destination: Destination, anim: NavAnim = NavAnim.DEFAULT) {
         findNavController()
-            .navigate(destination.uri, navOptions())
+            .navigate(destination.uri, navOptions(anim))
     }
 
-    private fun navOptions(): NavOptions {
+    private fun navOptions(anim: NavAnim): NavOptions? {
+        if (anim == NavAnim.NONE) {
+            return NavOptions.Builder()
+                .setExitAnim(R.anim.hold)
+                .setPopEnterAnim(R.anim.hold)
+                .build()
+        }
+
         return NavOptions.Builder()
             .setEnterAnim(R.anim.enter_anim)
             .setExitAnim(R.anim.exit_anim)
             .setPopEnterAnim(R.anim.pop_enter_anim)
             .setPopExitAnim(R.anim.pop_exit_anim)
             .build()
+    }
+
+    enum class NavAnim {
+        DEFAULT,
+        NONE
     }
 }

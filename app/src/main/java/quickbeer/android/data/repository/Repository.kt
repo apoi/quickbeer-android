@@ -80,7 +80,7 @@ abstract class Repository<K, V> {
      */
     fun getStream(
         keyFlow: Flow<K>,
-        keyFilter: ((K) -> Boolean)?,
+        keyValidator: KeyValidator<K>?,
         validator: Validator<V>,
         debounceRemote: Long = 0
     ): Flow<State<V>> {
@@ -91,12 +91,22 @@ abstract class Repository<K, V> {
         // Key may be invalid. This error needs to be emitted from Repository as it must cancel
         // any active flows from previous keys.
         val errorFlow = distinctKey
-            .filter { keyFilter?.invoke(it) == false }
-            .mapLatest { State.Error(AppException.RepositoryFilterFailed) }
+            .filter { keyValidator?.isValid(it) == false }
+            .mapLatest {
+                when {
+                    keyValidator?.isEmpty(it) == true -> {
+                        State.Error(AppException.RepositoryKeyInvalid)
+                    }
+                    keyValidator?.isValid(it) == false -> {
+                        State.Error(AppException.RepositoryKeyInvalid)
+                    }
+                    else -> Error("Unexpected key")
+                }
+            }
 
         // Flow containing current value and its validity.
         val stateFlow = distinctKey
-            .filter { keyFilter == null || keyFilter(it) }
+            .filter { keyValidator == null || keyValidator.isValid(it) }
             .mapLatest {
                 val current = getLocal(it)
                 FlowState(it, current, validator.validate(current))
@@ -179,6 +189,11 @@ abstract class Repository<K, V> {
     protected abstract suspend fun fetchRemote(key: K): ApiResult<V>
 
     inner class FlowState(val key: K, val value: V?, val isValid: Boolean)
+
+    interface KeyValidator<in K> {
+        fun isEmpty(key: K): Boolean
+        fun isValid(key: K): Boolean
+    }
 }
 
 /**

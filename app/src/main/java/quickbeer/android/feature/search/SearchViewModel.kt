@@ -1,4 +1,4 @@
-package quickbeer.android.feature.discover
+package quickbeer.android.feature.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -30,8 +29,6 @@ import quickbeer.android.ui.adapter.beer.BeerListModelRateCountMapper
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
-import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
-import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.util.ktx.normalize
 
 open class SearchViewModel(
@@ -41,9 +38,9 @@ open class SearchViewModel(
     private val brewerSearchRepository: BrewerSearchRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository
-) : ViewModel(), SearchActionsHandler {
+) : ViewModel() {
 
-    private val query = MutableStateFlow("")
+    private val queryFlow = MutableStateFlow("")
 
     private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
     val beerResults: LiveData<State<List<BeerListModel>>> = _beerResults
@@ -54,20 +51,21 @@ open class SearchViewModel(
     private val _styleResults = MutableLiveData<State<List<StyleListModel>>>()
     val styleResults: LiveData<State<List<StyleListModel>>> = _styleResults
 
-    private val _suggestions = MutableStateFlow<List<SuggestionListModel>>(emptyList())
-    override val suggestions: StateFlow<List<SuggestionListModel>> get() = _suggestions
-
     init {
         searchBeers()
         searchBrewers()
         searchStyles()
     }
 
+    fun onSearchChanged(query: String) {
+        queryFlow.value = query.normalize()
+    }
+
     private fun searchBeers() {
         viewModelScope.launch(Dispatchers.IO) {
             beerSearchRepository
                 .getStream(
-                    query, { it.length >= Constants.QUERY_MIN_LENGTH },
+                    queryFlow, { it.length >= Constants.QUERY_MIN_LENGTH },
                     Accept(), SEARCH_DELAY
                 )
                 // Avoid resorting the results if the set of beers didn't change
@@ -81,7 +79,7 @@ open class SearchViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             brewerSearchRepository
                 .getStream(
-                    query, { it.length >= Constants.QUERY_MIN_LENGTH },
+                    queryFlow, { it.length >= Constants.QUERY_MIN_LENGTH },
                     Accept(), SEARCH_DELAY
                 )
                 .distinctUntilChanged { old, new -> sameIds(old, new, Brewer::id) }
@@ -92,7 +90,7 @@ open class SearchViewModel(
 
     private fun searchStyles() {
         viewModelScope.launch(Dispatchers.IO) {
-            query
+            queryFlow
                 .flatMapLatest { query ->
                     styleListRepository.getStream(Accept())
                         .map { filterStyles(it, query) }
@@ -100,10 +98,6 @@ open class SearchViewModel(
                 .map(StateListMapper(::StyleListModel)::map)
                 .collect { _styleResults.postValue(it) }
         }
-    }
-
-    override fun onSearchChanged(query: String) {
-        this.query.value = query.normalize()
     }
 
     private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {

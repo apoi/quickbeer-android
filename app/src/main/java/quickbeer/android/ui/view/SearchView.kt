@@ -1,35 +1,28 @@
-package quickbeer.android.ui.searchview.widget
+package quickbeer.android.ui.view
 
 import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
+import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
-import kotlin.math.roundToInt
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
-import quickbeer.android.ui.adapter.simple.ListAdapter
-import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
-import quickbeer.android.ui.adapter.suggestion.SuggestionTypeFactory
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
-import quickbeer.android.ui.search.SearchActionsHandler
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.onPreDraw
 import quickbeer.android.util.ktx.setMargins
+import kotlin.math.roundToInt
 
 @Suppress("MagicNumber")
 class SearchView @JvmOverloads constructor(
@@ -38,11 +31,7 @@ class SearchView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : MaterialCardView(context, attrs, defStyleAttr) {
 
-    private val binding: SearchViewBinding =
-        SearchViewBinding.inflate(LayoutInflater.from(context), this)
-
-    private val searchAdapter = ListAdapter<SuggestionListModel>(SuggestionTypeFactory())
-    private var scope = CoroutineScope(Dispatchers.IO)
+    private val binding = SearchViewBinding.inflate(LayoutInflater.from(context), this)
 
     private val transitionDuration = resources
         .getInteger(android.R.integer.config_shortAnimTime)
@@ -61,12 +50,10 @@ class SearchView @JvmOverloads constructor(
             _navigationMode = value
         }
 
-    var suggestionSelectedCallback: ((SuggestionListModel) -> Unit)? = null
     var querySubmitCallback: ((String) -> Unit)? = null
     var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var navigateBackCallback: (() -> Unit)? = null
-
-    private var queryChangedCallback: ((String) -> Unit)? = null
+    var queryChangedCallback: ((String) -> Unit)? = null
 
     // Should be moved to attributes and style
     private val black = resources.getColor(R.color.black, null)
@@ -77,18 +64,9 @@ class SearchView @JvmOverloads constructor(
     private val orange = resources.getColor(R.color.orange, null)
     private val transparent = resources.getColor(R.color.transparent, null)
 
-    init {
-        onPreDraw(::initLayout)
-    }
-
-    fun connectActions(handler: SearchActionsHandler) {
-        queryChangedCallback = handler::onSearchChanged
-
-        scope.launch {
-            handler.suggestions.collect {
-                withContext(Dispatchers.Main) { searchAdapter.setItems(it) }
-            }
-        }
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        initLayout()
     }
 
     private fun initLayout() {
@@ -96,17 +74,6 @@ class SearchView @JvmOverloads constructor(
 
         // Divider
         binding.searchDivider.setBackgroundColor(light)
-
-        // Navigation
-        binding.searchNavigation.apply {
-            setOnClickListener {
-                when {
-                    binding.searchEditText.hasFocus() -> closeSearchView()
-                    navigationMode == NavigationMode.BACK -> navigateBackCallback?.invoke()
-                    else -> binding.searchEditText.requestFocus()
-                }
-            }
-        }
 
         // Search box
         binding.searchEditText.apply {
@@ -140,6 +107,16 @@ class SearchView @JvmOverloads constructor(
             }
         }
 
+        // Navigation
+        binding.searchNavigation.apply {
+            setOnClickListener {
+                when (navigationMode) {
+                    NavigationMode.BACK -> navigateBackCallback?.invoke()
+                    else -> searchFocusChangeCallback?.invoke(true)
+                }
+            }
+        }
+
         // Delay adding transition so that it doesn't animate initially
         onGlobalLayout {
             layoutTransition = LayoutTransition().apply {
@@ -151,21 +128,6 @@ class SearchView @JvmOverloads constructor(
                 setDuration(transitionDuration)
             }
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        scope.cancel()
-
-        super.onDetachedFromWindow()
-    }
-
-    fun closeSearchView(): Boolean {
-        if (binding.searchEditText.hasFocus()) {
-            binding.searchEditText.clearFocus()
-            return true
-        }
-
-        return false
     }
 
     private fun setNormalMode() {
@@ -198,8 +160,10 @@ class SearchView @JvmOverloads constructor(
         searchFocusChangeCallback?.invoke(true)
 
         // Card view
-        setHeight(MATCH_PARENT)
+        setHeight(60.dp())
         setMargins(0)
+
+        strokeWidth = 0.dp()
         radius = 0F
 
         // Top element anchor = normal height + margins
@@ -211,6 +175,19 @@ class SearchView @JvmOverloads constructor(
 
         // Search box
         binding.searchEditText.setMargins(8.dp(), 0, 0, 0)
+    }
+
+    fun openSearchView() {
+        binding.searchEditText.requestFocus()
+    }
+
+    fun closeSearchView(): Boolean {
+        if (binding.searchEditText.hasFocus()) {
+            binding.searchEditText.clearFocus()
+            return true
+        }
+
+        return false
     }
 
     private fun showKeyboard() {

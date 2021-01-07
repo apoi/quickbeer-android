@@ -1,4 +1,4 @@
-package quickbeer.android.feature.discover
+package quickbeer.android.feature.search
 
 import android.os.Bundle
 import android.view.View
@@ -10,8 +10,8 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.brewer.BrewerListModel
-import quickbeer.android.ui.adapter.brewer.BrewerListTypeFactory
+import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
 import quickbeer.android.ui.adapter.simple.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
@@ -22,28 +22,28 @@ import quickbeer.android.util.ktx.getMessage
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
+class SearchBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListFragmentBinding::bind)
     private val viewModel by sharedViewModel<SearchViewModel>()
-    private val brewersAdapter = ListAdapter<BrewerListModel>(BrewerListTypeFactory())
+    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.recyclerView.apply {
-            adapter = brewersAdapter
+            adapter = beersAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
             }
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBrewerSelected)
+            setClickListener(::onBeerSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BREWER_LIST, brewersAdapter::createPool)
+                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
             )
         }
     }
@@ -54,28 +54,28 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     override fun observeViewState() {
-        observe(viewModel.brewerResults) { state ->
+        observe(viewModel.beerResults) { state ->
             when (state) {
                 is State.Loading -> {
-                    brewersAdapter.setItems(state.value ?: emptyList())
+                    beersAdapter.setItems(state.value ?: emptyList())
                     binding.recyclerView.scrollToPosition(0)
                     binding.message.text = getString(R.string.search_progress)
                     binding.message.isVisible = state.value?.isNotEmpty() != true
                 }
                 State.Empty -> {
-                    brewersAdapter.setItems(emptyList())
+                    beersAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
                 }
                 is State.Success -> {
                     val scrollY = binding.recyclerView.computeVerticalScrollOffset()
-                    brewersAdapter.setItems(state.value)
+                    beersAdapter.setItems(state.value)
                     // Only reset scrolling if already at the top
                     if (scrollY == 0) binding.recyclerView.scrollToPosition(0)
                     binding.message.isVisible = false
                 }
                 is State.Error -> {
-                    brewersAdapter.setItems(emptyList())
+                    beersAdapter.setItems(emptyList())
                     binding.message.text = getError(state.cause)
                     binding.message.isVisible = true
                 }
@@ -84,12 +84,12 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun getError(error: Throwable): String {
-        return if (error == AppException.RepositoryFilterFailed) {
+        return if (error == AppException.RepositoryKeyInvalid) {
             "Query needs to be at least four characters."
         } else error.getMessage(::getString)
     }
 
-    private fun onBrewerSelected(brewer: BrewerListModel) {
-        navigate(Destination.Brewer(brewer.brewerId))
+    private fun onBeerSelected(beer: BeerListModel) {
+        navigate(Destination.Beer(beer.id))
     }
 }
