@@ -32,6 +32,7 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.suggestion.SuggestionListModel
 import quickbeer.android.ui.search.SearchActionsHandler
+import quickbeer.android.util.ktx.normalize
 
 open class SearchViewModel(
     private val beerRepository: BeerRepository,
@@ -102,7 +103,7 @@ open class SearchViewModel(
     }
 
     override fun onSearchChanged(query: String) {
-        this.query.value = query.trim()
+        this.query.value = query.normalize()
     }
 
     private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {

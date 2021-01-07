@@ -7,13 +7,12 @@ import quickbeer.android.domain.brewer.network.BrewerJson
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.exception.AppException.QueryTooShortException
-import quickbeer.android.util.ktx.normalize
 
 class BrewerSearchFetcher(api: RateBeerApi) :
     Fetcher<String, List<Brewer>, List<BrewerJson>>(
         BrewerListJsonMapper,
         { query ->
-            if (query.length >= QUERY_MIN_LENGTH) api.brewerSearch(query.normalize())
+            if (query.length >= QUERY_MIN_LENGTH) api.brewerSearch(query)
             else ApiResult.UnknownError(QueryTooShortException)
         }
     )

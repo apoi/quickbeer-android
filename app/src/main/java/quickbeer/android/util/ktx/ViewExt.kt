@@ -2,7 +2,6 @@ package quickbeer.android.util.ktx
 
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.ViewTreeObserver.OnPreDrawListener
 import android.view.inputmethod.InputMethodManager
