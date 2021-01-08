@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.Constants
 import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.repository.Repository
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
@@ -51,6 +52,11 @@ open class SearchViewModel(
     private val _styleResults = MutableLiveData<State<List<StyleListModel>>>()
     val styleResults: LiveData<State<List<StyleListModel>>> = _styleResults
 
+    private val queryLengthValidator = object : Repository.KeyValidator<String> {
+        override fun isEmpty(key: String) = key.isEmpty()
+        override fun isValid(key: String) = key.length >= Constants.QUERY_MIN_LENGTH
+    }
+
     init {
         searchBeers()
         searchBrewers()
@@ -64,10 +70,7 @@ open class SearchViewModel(
     private fun searchBeers() {
         viewModelScope.launch(Dispatchers.IO) {
             beerSearchRepository
-                .getStream(
-                    queryFlow, { it.length >= Constants.QUERY_MIN_LENGTH },
-                    Accept(), SEARCH_DELAY
-                )
+                .getStream(queryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 // Avoid resorting the results if the set of beers didn't change
                 .distinctUntilChanged { old, new -> sameIds(old, new, Beer::id) }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
@@ -78,10 +81,7 @@ open class SearchViewModel(
     private fun searchBrewers() {
         viewModelScope.launch(Dispatchers.IO) {
             brewerSearchRepository
-                .getStream(
-                    queryFlow, { it.length >= Constants.QUERY_MIN_LENGTH },
-                    Accept(), SEARCH_DELAY
-                )
+                .getStream(queryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 .distinctUntilChanged { old, new -> sameIds(old, new, Brewer::id) }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }

@@ -17,7 +17,8 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.take
 import quickbeer.android.data.state.State
 import quickbeer.android.network.result.ApiResult
-import quickbeer.android.util.exception.AppException
+import quickbeer.android.util.exception.AppException.RepositoryKeyEmpty
+import quickbeer.android.util.exception.AppException.RepositoryKeyInvalid
 import quickbeer.android.util.ktx.takeUntil
 
 /**
@@ -94,13 +95,9 @@ abstract class Repository<K, V> {
             .filter { keyValidator?.isValid(it) == false }
             .mapLatest {
                 when {
-                    keyValidator?.isEmpty(it) == true -> {
-                        State.Error(AppException.RepositoryKeyInvalid)
-                    }
-                    keyValidator?.isValid(it) == false -> {
-                        State.Error(AppException.RepositoryKeyInvalid)
-                    }
-                    else -> Error("Unexpected key")
+                    keyValidator?.isEmpty(it) == true -> State.Error(RepositoryKeyEmpty)
+                    keyValidator?.isValid(it) == false -> State.Error(RepositoryKeyInvalid)
+                    else -> error("Unexpected key")
                 }
             }
 

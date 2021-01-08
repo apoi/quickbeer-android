@@ -5,24 +5,20 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.view.inputmethod.InputMethodManager
 import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
-import android.widget.FrameLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
+import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.databinding.SearchViewBinding
 import quickbeer.android.ui.listener.LayoutTransitionEndListener
 import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.onGlobalLayout
-import quickbeer.android.util.ktx.onPreDraw
 import quickbeer.android.util.ktx.setMargins
-import kotlin.math.roundToInt
 
 @Suppress("MagicNumber")
 class SearchView @JvmOverloads constructor(

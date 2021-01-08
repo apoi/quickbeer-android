@@ -4,12 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverFragmentBinding
-import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.beer.BeerListModel

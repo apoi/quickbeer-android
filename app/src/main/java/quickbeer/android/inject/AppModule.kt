@@ -59,8 +59,8 @@ import quickbeer.android.feature.beerdetails.BeerDetailsViewModel
 import quickbeer.android.feature.brewerdetails.BrewerDetailsViewModel
 import quickbeer.android.feature.countrydetails.CountryDetailsViewModel
 import quickbeer.android.feature.discover.DiscoverViewModel
-import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
+import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.styledetails.StyleDetailsViewModel
 import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi

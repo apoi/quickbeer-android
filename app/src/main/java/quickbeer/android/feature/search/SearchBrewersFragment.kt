@@ -84,9 +84,11 @@ class SearchBrewersFragment : BaseFragment(R.layout.list_fragment) {
     }
 
     private fun getError(error: Throwable): String {
-        return if (error == AppException.RepositoryKeyInvalid) {
-            "Query needs to be at least four characters."
-        } else error.getMessage(::getString)
+        return when (error) {
+            AppException.RepositoryKeyEmpty -> ""
+            AppException.RepositoryKeyInvalid -> "Query needs to be at least four characters."
+            else -> error.getMessage(::getString)
+        }
     }
 
     private fun onBrewerSelected(brewer: BrewerListModel) {

@@ -27,23 +27,28 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.contentLayout
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        searchViewModel.onSearchChanged("")
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.searchView.navigationMode = SearchView.NavigationMode.BACK
     }
 
+    @Suppress("MagicNumber")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        Handler().postDelayed({
-            binding.searchView.openSearchView()
-        }, 200)
-
+        // Animated background reveal
         binding.searchBackground.animate()
             .scaleY(1.0f)
             .setDuration(300)
             .start()
+
+        // Delay for search field opening animation
+        Handler().postDelayed({ binding.searchView.openSearchView() }, 250)
 
         binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
