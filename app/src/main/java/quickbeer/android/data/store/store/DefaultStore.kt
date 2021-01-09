@@ -1,9 +1,6 @@
 package quickbeer.android.data.store.store
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import quickbeer.android.data.store.Store
 import quickbeer.android.data.store.StoreCore
 
@@ -16,9 +13,7 @@ import quickbeer.android.data.store.StoreCore
 open class DefaultStore<K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
 
     override suspend fun get(): List<V> {
-        return withContext(Dispatchers.IO) {
-            core.getAll()
-        }
+        return core.getAll()
     }
 
     override fun getStream(): Flow<List<V>> {
@@ -26,14 +21,11 @@ open class DefaultStore<K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
     }
 
     override suspend fun get(key: K): V? {
-        return withContext(Dispatchers.IO) {
-            core.get(key)
-        }
+        return core.get(key)
     }
 
     override fun getStream(key: K): Flow<V> {
         return core.getStream(key)
-            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun getKeys(): List<K> {
@@ -45,14 +37,10 @@ open class DefaultStore<K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
     }
 
     override suspend fun put(key: K, value: V): Boolean {
-        return withContext(Dispatchers.IO) {
-            core.put(key, value) != null
-        }
+        return core.put(key, value) != null
     }
 
     override suspend fun delete(key: K): Boolean {
-        return withContext(Dispatchers.IO) {
-            core.delete(key)
-        }
+        return core.delete(key)
     }
 }

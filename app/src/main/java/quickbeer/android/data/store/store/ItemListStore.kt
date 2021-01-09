@@ -1,10 +1,7 @@
 package quickbeer.android.data.store.store
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.SingleStore
@@ -33,12 +30,10 @@ open class ItemListStore<I, out K, V : Any>(
 ) : Store<I, List<V>> {
 
     override suspend fun get(): List<List<V>> {
-        return withContext(Dispatchers.IO) {
-            indexCore.getAll()
-                .filter { indexMapper.matches(it.key) }
-                .map(ItemList<I, K>::values)
-                .map { valueCore.get(it) }
-        }
+        return indexCore.getAll()
+            .filter { indexMapper.matches(it.key) }
+            .map(ItemList<I, K>::values)
+            .map { valueCore.get(it) }
     }
 
     override fun getStream(): Flow<List<List<V>>> {
@@ -46,22 +41,18 @@ open class ItemListStore<I, out K, V : Any>(
             .map { it.filter { (key) -> indexMapper.matches(key) } }
             .map { it.map(ItemList<I, K>::values) }
             .map { it.map { keys -> valueCore.get(keys) } }
-            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun get(index: I): List<V> {
-        return withContext(Dispatchers.IO) {
-            indexCore.get(indexMapper.encode(index))?.values
-                ?.let { valueCore.get(it) }
-                ?: emptyList()
-        }
+        return indexCore.get(indexMapper.encode(index))?.values
+            ?.let { valueCore.get(it) }
+            ?: emptyList()
     }
 
     override fun getStream(index: I): Flow<List<V>> {
         return indexCore.getStream(indexMapper.encode(index))
             .map { itemList -> itemList.values }
             .map(valueCore::get)
-            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun getKeys(): List<I> {
@@ -79,36 +70,31 @@ open class ItemListStore<I, out K, V : Any>(
     }
 
     open suspend fun getValueKeys(index: I): List<K> {
-        return withContext(Dispatchers.IO) {
-            indexCore.get(indexMapper.encode(index))?.values
-                ?: emptyList()
-        }
+        return indexCore.get(indexMapper.encode(index))?.values
+            ?: emptyList()
     }
 
     open fun getValueKeysStream(index: I): Flow<List<K>> {
         return indexCore.getStream(indexMapper.encode(index))
             .map { it.values }
-            .flowOn(Dispatchers.IO)
     }
 
     /**
      * Put all values to store, and add index to keep track of all the values.
      */
     override suspend fun put(index: I, values: List<V>): Boolean {
-        return withContext(Dispatchers.IO) {
-            // Put values first in case there's a listener for the index. This way values
-            // already exist for any listeners to query.
-            val newValues = values
-                .map { value -> Pair(getKey(value), value) }
-                .let { items -> valueCore.put(items.toMap()) }
+        // Put values first in case there's a listener for the index. This way values
+        // already exist for any listeners to query.
+        val newValues = values
+            .map { value -> Pair(getKey(value), value) }
+            .let { items -> valueCore.put(items.toMap()) }
 
-            val storeIndex = indexMapper.encode(index)
-            val oldItemList = indexCore.get(storeIndex)
-            val newItemList = ItemList(storeIndex, values.map(getKey), ZonedDateTime.now())
-            indexCore.put(storeIndex, newItemList)
+        val storeIndex = indexMapper.encode(index)
+        val oldItemList = indexCore.get(storeIndex)
+        val newItemList = ItemList(storeIndex, values.map(getKey), ZonedDateTime.now())
+        indexCore.put(storeIndex, newItemList)
 
-            newValues.isNotEmpty() || newItemList.values != oldItemList?.values
-        }
+        return newValues.isNotEmpty() || newItemList.values != oldItemList?.values
     }
 
     /**
@@ -116,9 +102,7 @@ open class ItemListStore<I, out K, V : Any>(
      * as they may be referenced in other indexes.
      */
     override suspend fun delete(index: I): Boolean {
-        return withContext(Dispatchers.IO) {
-            indexCore.delete(indexMapper.encode(index))
-        }
+        return indexCore.delete(indexMapper.encode(index))
     }
 
     /**

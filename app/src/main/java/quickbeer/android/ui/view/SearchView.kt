@@ -98,7 +98,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchClear.apply {
             isVisible = query.isNotEmpty()
             setOnClickListener {
-                binding.searchEditText.text?.clear()
+                binding.searchEditText.text = null
                 binding.searchEditText.requestFocus()
             }
         }

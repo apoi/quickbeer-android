@@ -25,4 +25,5 @@ fun String?.normalize(): String {
         .replace("æ", "ae")
         .replace("ß", "ss")
         .replace(SPECIAL_CHARS, "")
+        .trim()
 }

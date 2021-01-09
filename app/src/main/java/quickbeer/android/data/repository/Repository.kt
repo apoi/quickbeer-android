@@ -1,6 +1,5 @@
 package quickbeer.android.data.repository
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -9,7 +8,6 @@ import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.merge
@@ -67,7 +65,7 @@ abstract class Repository<K, V> {
                     .filter { validator.validate(it) }
                     .map { State.from(it) }
             )
-        }.flowOn(Dispatchers.IO)
+        }
     }
 
     // TODO something goes wrong with this.
@@ -143,7 +141,6 @@ abstract class Repository<K, V> {
             }
 
         return merge(errorFlow, remoteFlow, localFlow)
-            .flowOn(Dispatchers.IO)
     }
 
     private fun fetch(key: K, validator: Validator<V>): Flow<State<V>> {
