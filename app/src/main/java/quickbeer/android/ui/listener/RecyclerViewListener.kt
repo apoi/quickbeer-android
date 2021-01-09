@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.GestureDetector
 import android.view.MotionEvent
 import androidx.recyclerview.widget.RecyclerView
-import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.base.ListAdapter
 
 class RecyclerViewListener(
     context: Context,

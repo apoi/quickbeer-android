@@ -24,7 +24,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.navigation.NavParams
-import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.LoadMoreListener
 

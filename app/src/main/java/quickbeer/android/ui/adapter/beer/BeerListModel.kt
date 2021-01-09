@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.ui.adapter.simple.ListItem
-import quickbeer.android.ui.adapter.simple.ListTypeFactory
+import quickbeer.android.ui.adapter.base.ListItem
+import quickbeer.android.ui.adapter.base.ListTypeFactory
 
 class BeerListModel(
     val id: Int,

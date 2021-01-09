@@ -3,9 +3,9 @@ package quickbeer.android.ui.adapter.style
 import android.view.ViewGroup
 import quickbeer.android.R
 import quickbeer.android.databinding.SimpleListItemBinding
-import quickbeer.android.ui.adapter.simple.ListItem
-import quickbeer.android.ui.adapter.simple.ListTypeFactory
-import quickbeer.android.ui.adapter.simple.ListViewHolder
+import quickbeer.android.ui.adapter.base.ListItem
+import quickbeer.android.ui.adapter.base.ListTypeFactory
+import quickbeer.android.ui.adapter.base.ListViewHolder
 
 class StyleTypeFactory : ListTypeFactory() {
 

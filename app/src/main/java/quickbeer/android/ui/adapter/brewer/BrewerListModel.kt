@@ -7,8 +7,8 @@ import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.ui.adapter.simple.ListItem
-import quickbeer.android.ui.adapter.simple.ListTypeFactory
+import quickbeer.android.ui.adapter.base.ListItem
+import quickbeer.android.ui.adapter.base.ListTypeFactory
 
 class BrewerListModel(
     val brewerId: Int,

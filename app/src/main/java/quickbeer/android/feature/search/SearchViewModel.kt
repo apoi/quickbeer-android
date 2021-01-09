@@ -22,13 +22,16 @@ import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
+import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.domain.countrylist.repository.CountryListRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRateCountMapper
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
+import quickbeer.android.ui.adapter.country.CountryListModel
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.util.ktx.normalize
 
@@ -38,6 +41,7 @@ open class SearchViewModel(
     private val brewerRepository: BrewerRepository,
     private val brewerSearchRepository: BrewerSearchRepository,
     private val styleListRepository: StyleListRepository,
+    private val countryListRepository: CountryListRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
@@ -52,6 +56,9 @@ open class SearchViewModel(
     private val _styleResults = MutableLiveData<State<List<StyleListModel>>>()
     val styleResults: LiveData<State<List<StyleListModel>>> = _styleResults
 
+    private val _countryResults = MutableLiveData<State<List<CountryListModel>>>()
+    val countryResults: LiveData<State<List<CountryListModel>>> = _countryResults
+
     private val queryLengthValidator = object : Repository.KeyValidator<String> {
         override fun isEmpty(key: String) = key.isEmpty()
         override fun isValid(key: String) = key.length >= Constants.QUERY_MIN_LENGTH
@@ -61,6 +68,7 @@ open class SearchViewModel(
         searchBeers()
         searchBrewers()
         searchStyles()
+        searchCountries()
     }
 
     fun onSearchChanged(query: String) {
@@ -106,6 +114,26 @@ open class SearchViewModel(
         return state.value.filter { it.parent != null && it.parent > 0 }
             .filter { matcher(query, it.name) }
             .sortedBy(Style::name)
+            .let { State.from(it) }
+    }
+
+    private fun searchCountries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            queryFlow
+                .flatMapLatest { query ->
+                    countryListRepository.getStream(Accept())
+                        .map { filterCountries(it, query) }
+                }
+                .map(StateListMapper(::CountryListModel)::map)
+                .collect { _countryResults.postValue(it) }
+        }
+    }
+
+    private fun filterCountries(state: State<List<Country>>, query: String): State<List<Country>> {
+        if (state !is State.Success) return state
+
+        return state.value.filter { matcher(query, it.name) }
+            .sortedBy(Country::name)
             .let { State.from(it) }
     }
 

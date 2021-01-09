@@ -23,7 +23,7 @@ import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import quickbeer.android.R
-import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.listener.LoadMoreListener
 
 class BeerReviewsView @JvmOverloads constructor(

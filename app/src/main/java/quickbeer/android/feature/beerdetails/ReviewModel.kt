@@ -1,8 +1,8 @@
 package quickbeer.android.feature.beerdetails
 
 import quickbeer.android.domain.review.Review
-import quickbeer.android.ui.adapter.simple.ListItem
-import quickbeer.android.ui.adapter.simple.ListTypeFactory
+import quickbeer.android.ui.adapter.base.ListItem
+import quickbeer.android.ui.adapter.base.ListTypeFactory
 
 class ReviewModel(
     val review: Review

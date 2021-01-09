@@ -4,9 +4,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerListItemBinding
-import quickbeer.android.ui.adapter.simple.ListItem
-import quickbeer.android.ui.adapter.simple.ListTypeFactory
-import quickbeer.android.ui.adapter.simple.ListViewHolder
+import quickbeer.android.ui.adapter.base.ListItem
+import quickbeer.android.ui.adapter.base.ListTypeFactory
+import quickbeer.android.ui.adapter.base.ListViewHolder
 
 class BeerListTypeFactory : ListTypeFactory() {
 

@@ -1,4 +1,4 @@
-package quickbeer.android.ui.adapter.simple
+package quickbeer.android.ui.adapter.base
 
 interface ListItem {
 

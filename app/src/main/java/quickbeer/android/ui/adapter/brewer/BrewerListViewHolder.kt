@@ -11,7 +11,7 @@ import quickbeer.android.databinding.BrewerListItemBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.country.Country
 import quickbeer.android.feature.beerdetails.model.Address
-import quickbeer.android.ui.adapter.simple.ScopeListViewHolder
+import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 
 class BrewerListViewHolder(
     private val binding: BrewerListItemBinding

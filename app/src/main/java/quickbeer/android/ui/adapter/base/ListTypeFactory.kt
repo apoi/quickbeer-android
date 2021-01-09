@@ -1,4 +1,4 @@
-package quickbeer.android.ui.adapter.simple
+package quickbeer.android.ui.adapter.base
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

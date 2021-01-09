@@ -29,6 +29,7 @@
     <string name="search_tab_beers">Beers</string>
     <string name="search_tab_brewers">Brewers</string>
     <string name="search_tab_styles">Styles</string>
+    <string name="search_tab_countries">Countries</string>
 
     <!-- Beer list messages -->
     <string name="message_start">Start by searching for your favourite beer.\n\nCheers!</string>

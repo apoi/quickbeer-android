@@ -10,7 +10,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
-import quickbeer.android.ui.adapter.simple.ListAdapter
+import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.ui.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.base.BaseFragment
@@ -81,7 +81,7 @@ class SearchStylesFragment : BaseFragment(R.layout.list_fragment) {
         }
     }
 
-    private fun onStyleSelected(style: StyleListModel) {
-        navigate(Destination.Style(style.style.id))
+    private fun onStyleSelected(styleModel: StyleListModel) {
+        navigate(Destination.Style(styleModel.style.id))
     }
 }

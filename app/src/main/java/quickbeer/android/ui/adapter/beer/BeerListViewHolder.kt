@@ -9,7 +9,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListItemBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.ui.adapter.simple.ScopeListViewHolder
+import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 import quickbeer.android.ui.view.Score
 
 class BeerListViewHolder(

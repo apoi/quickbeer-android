@@ -23,7 +23,7 @@ import java.lang.String.valueOf
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsReviewBinding
 import quickbeer.android.domain.review.Review
-import quickbeer.android.ui.adapter.simple.ListViewHolder
+import quickbeer.android.ui.adapter.base.ListViewHolder
 
 /**
  * View holder for reviews in list

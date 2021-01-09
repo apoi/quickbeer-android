@@ -59,7 +59,8 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
             tabBinding.title.text = when (index) {
                 0 -> getString(R.string.search_tab_beers)
                 1 -> getString(R.string.search_tab_brewers)
-                else -> getString(R.string.search_tab_styles)
+                2 -> getString(R.string.search_tab_styles)
+                else -> getString(R.string.search_tab_countries)
             }
             binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
         }

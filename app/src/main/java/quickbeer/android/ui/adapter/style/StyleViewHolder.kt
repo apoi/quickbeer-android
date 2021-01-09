@@ -1,7 +1,7 @@
 package quickbeer.android.ui.adapter.style
 
 import quickbeer.android.databinding.SimpleListItemBinding
-import quickbeer.android.ui.adapter.simple.ListViewHolder
+import quickbeer.android.ui.adapter.base.ListViewHolder
 
 class StyleViewHolder(
     private val binding: SimpleListItemBinding
