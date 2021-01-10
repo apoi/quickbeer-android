@@ -172,7 +172,7 @@ val appModule = module {
     // ViewModels
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { DiscoverViewModel(get(), get()) }
-    viewModel { SearchViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { SearchViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { (id: Int) -> BeerDetailsViewModel(id, get(), get(), get(), get(), get()) }
     viewModel { (id: Int) -> BrewerDetailsViewModel(id, get(), get(), get(), get()) }
     viewModel { (id: Int) -> StyleDetailsViewModel(id, get(), get(), get()) }

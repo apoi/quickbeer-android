@@ -11,10 +11,10 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverTabTitleBinding
 import quickbeer.android.databinding.SearchFragmentBinding
-import quickbeer.android.navigation.Destination
-import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.ui.listener.OnTabSelected
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.view.SearchView
+import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
@@ -38,20 +38,31 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     }
 
     @Suppress("MagicNumber")
+    override fun onInitialViewCreated() {
+        // Delay for search field opening animation
+        Handler().postDelayed({ binding.searchView.openSearchView() }, 150)
+
+        // Animated background reveal after search is opened
+        binding.searchBackground.animate()
+            .scaleY(1.0f)
+            .setDuration(200)
+            .setStartDelay(350)
+            .start()
+    }
+
+    override fun onRestoreView() {
+        binding.searchView.openSearchView()
+        binding.searchBackground.scaleY = 1.0f
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        // Animated background reveal
-        binding.searchBackground.animate()
-            .scaleY(1.0f)
-            .setDuration(300)
-            .start()
-
-        // Delay for search field opening animation
-        Handler().postDelayed({ binding.searchView.openSearchView() }, 250)
-
         binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.tabLayout.addOnTabSelectedListener(
+            OnTabSelected(binding.searchView::hideKeyboard)
+        )
 
         // Set custom tab layouts to get progress indicators
         (0 until binding.tabLayout.tabCount).forEach { index ->
@@ -78,6 +89,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         observe(searchViewModel.styleResults) { state ->
             updateSearchTabProgress(2, state is State.Loading)
         }
+
+        observe(searchViewModel.countryResults) { state ->
+            updateSearchTabProgress(3, state is State.Loading)
+        }
     }
 
     private fun updateSearchTabProgress(tab: Int, inProgress: Boolean) {
@@ -97,9 +112,5 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     override fun onSearchQuerySubmit(query: String) {
         searchViewModel.onSearchChanged(query)
-    }
-
-    private fun onBeerSelected(beer: BeerListModel) {
-        navigate(Destination.Beer(beer.id))
     }
 }

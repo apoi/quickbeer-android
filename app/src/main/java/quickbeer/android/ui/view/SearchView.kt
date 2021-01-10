@@ -6,8 +6,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.RESULT_UNCHANGED_SHOWN
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
@@ -19,6 +17,7 @@ import quickbeer.android.ui.listener.OnTextChangedListener
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.onGlobalLayout
 import quickbeer.android.util.ktx.setMargins
+import quickbeer.android.util.ktx.showKeyboard
 
 @Suppress("MagicNumber")
 class SearchView @JvmOverloads constructor(
@@ -28,9 +27,10 @@ class SearchView @JvmOverloads constructor(
 ) : MaterialCardView(context, attrs, defStyleAttr) {
 
     private val binding = SearchViewBinding.inflate(LayoutInflater.from(context), this)
+    private val expandable: Boolean
 
     private val transitionDuration = resources
-        .getInteger(android.R.integer.config_shortAnimTime)
+        .getInteger(android.R.integer.config_mediumAnimTime)
         .toLong()
 
     var query: String
@@ -60,6 +60,12 @@ class SearchView @JvmOverloads constructor(
     private val orange = resources.getColor(R.color.orange, null)
     private val transparent = resources.getColor(R.color.transparent, null)
 
+    init {
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.SearchView)
+        expandable = ta.getBoolean(R.styleable.SearchView_expandable, true)
+        ta.recycle()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         initLayout()
@@ -68,8 +74,12 @@ class SearchView @JvmOverloads constructor(
     private fun initLayout() {
         setNormalMode()
 
-        // Divider
-        binding.searchDivider.setBackgroundColor(light)
+        if (!expandable) {
+            binding.searchEditText.isFocusable = false
+            binding.searchEditText.setOnClickListener {
+                searchFocusChangeCallback?.invoke(true)
+            }
+        }
 
         // Search box
         binding.searchEditText.apply {
@@ -137,7 +147,7 @@ class SearchView @JvmOverloads constructor(
 
         strokeColor = light
         strokeWidth = 1.dp()
-        cardElevation = 16.dp().toFloat()
+        cardElevation = 6.dp().toFloat()
         radius = 16.dp().toFloat()
 
         // Top element anchor
@@ -152,8 +162,12 @@ class SearchView @JvmOverloads constructor(
     }
 
     private fun setInputMode() {
-        showKeyboard()
         searchFocusChangeCallback?.invoke(true)
+
+        // Focusing may open another view instead of activating search
+        if (!expandable) return
+
+        showKeyboard()
 
         // Card view
         setHeight(60.dp())
@@ -188,15 +202,13 @@ class SearchView @JvmOverloads constructor(
 
     private fun showKeyboard() {
         if (!isInEditMode) {
-            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .showSoftInput(binding.searchEditText, RESULT_UNCHANGED_SHOWN)
+            binding.searchEditText.showKeyboard()
         }
     }
 
     private fun hideKeyboard() {
         if (!isInEditMode) {
-            (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-                .hideSoftInputFromWindow(windowToken, RESULT_UNCHANGED_SHOWN)
+            binding.searchEditText.hideKeyboard()
         }
     }
 

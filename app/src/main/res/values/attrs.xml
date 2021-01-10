@@ -10,4 +10,8 @@
         <attr name="selectable" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="SearchView">
+        <attr name="expandable" format="boolean" />
+    </declare-styleable>
+
 </resources>

@@ -108,15 +108,6 @@ open class SearchViewModel(
         }
     }
 
-    private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {
-        if (state !is State.Success) return state
-
-        return state.value.filter { it.parent != null && it.parent > 0 }
-            .filter { matcher(query, it.name) }
-            .sortedBy(Style::name)
-            .let { State.from(it) }
-    }
-
     private fun searchCountries() {
         viewModelScope.launch(Dispatchers.IO) {
             queryFlow
@@ -127,6 +118,15 @@ open class SearchViewModel(
                 .map(StateListMapper(::CountryListModel)::map)
                 .collect { _countryResults.postValue(it) }
         }
+    }
+
+    private fun filterStyles(state: State<List<Style>>, query: String): State<List<Style>> {
+        if (state !is State.Success) return state
+
+        return state.value.filter { it.parent != null && it.parent > 0 }
+            .filter { matcher(query, it.name) }
+            .sortedBy(Style::name)
+            .let { State.from(it) }
     }
 
     private fun filterCountries(state: State<List<Country>>, query: String): State<List<Country>> {

@@ -2,14 +2,18 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>LongParameterList:SearchViewModel.kt$SearchViewModel$( private val beerRepository: BeerRepository, private val beerSearchRepository: BeerSearchRepository, private val brewerRepository: BrewerRepository, private val brewerSearchRepository: BrewerSearchRepository, private val styleListRepository: StyleListRepository, private val countryListRepository: CountryListRepository, private val countryRepository: CountryRepository )</ID>
+    <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.COUNTRY_LIST$4</ID>
+    <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>
+    <ID>MagicNumber:SearchFragment.kt$SearchFragment$3</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K, V&gt; : StoreCore</ID>
-    <ID>TooManyFunctions:SearchFragment.kt$DiscoverFragment : SearchBarFragment</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
     <ID>TooManyFunctions:RateBeerApi.kt$RateBeerApi</ID>
     <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K, V, E&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:SearchFragment.kt$SearchFragment : SearchBarFragment</ID>
     <ID>TooManyFunctions:SearchView.kt$SearchView : MaterialCardView</ID>
     <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K, V&gt;</ID>
     <ID>TooManyFunctions:StyleDao.kt$StyleDao : CoreDao</ID>

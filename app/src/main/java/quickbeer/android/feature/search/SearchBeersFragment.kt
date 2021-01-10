@@ -10,9 +10,9 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
+import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
-import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder

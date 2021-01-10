@@ -1,5 +1,7 @@
 package quickbeer.android.ui.base
 
+import android.os.Bundle
+import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavDirections
@@ -10,10 +12,31 @@ import quickbeer.android.navigation.Destination
 
 abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
 
+    private var isInitialView = true
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (isInitialView) {
+            onInitialViewCreated()
+        } else {
+            onRestoreView()
+        }
+    }
+
+    open fun onInitialViewCreated() = Unit
+
+    open fun onRestoreView() = Unit
+
     override fun onResume() {
         super.onResume()
 
         observeViewState()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isInitialView = false
     }
 
     open fun observeViewState() = Unit

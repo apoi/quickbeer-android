@@ -4,15 +4,17 @@
     android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:background="@drawable/background_dark"
+    android:fitsSystemWindows="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <View
         android:id="@+id/search_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="120dp"
         android:background="@color/gray_85"
         android:scaleY="0"
-        android:transformPivotY="0dp"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -31,9 +33,11 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/gray_85"
+            android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/view_pager"
-            app:layout_constraintTop_toBottomOf="@id/search_view" />
+            app:layout_constraintTop_toBottomOf="@id/search_view"
+            app:tabMinWidth="130dp"
+            app:tabMode="scrollable" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
