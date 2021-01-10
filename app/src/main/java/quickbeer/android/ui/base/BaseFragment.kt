@@ -22,17 +22,13 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
         } else {
             onRestoreView()
         }
+
+        observeViewState()
     }
 
     open fun onInitialViewCreated() = Unit
 
     open fun onRestoreView() = Unit
-
-    override fun onResume() {
-        super.onResume()
-
-        observeViewState()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

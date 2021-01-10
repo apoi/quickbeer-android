@@ -37,3 +37,12 @@ inline fun <reified T> RecyclerView.setClickListener(noinline callback: (T) -> U
         }
     )
 }
+
+fun <T> RecyclerView.setSingleTypeClickListener(callback: (T) -> Unit) {
+    addOnItemTouchListener(
+        RecyclerViewListener(context) { position ->
+            ((adapter as ListAdapter<*>).itemAt(position) as? T)
+                ?.let(callback::invoke)
+        }
+    )
+}
