@@ -31,12 +31,12 @@ data class ReviewJson(
     @field:Json(name = "Comments") val comments: String?,
     @field:Json(name = "TimeEntered") val timeEntered: ZonedDateTime?,
     @field:Json(name = "TimeUpdated") val timeUpdated: ZonedDateTime?,
-    @field:Json(name = "UserID") val userID: Int?,
+    @field:Json(name = "UserID") val userId: Int?,
     @field:Json(name = "UserName") val userName: String?,
     @field:Json(name = "City") val city: String?,
-    @field:Json(name = "StateID") val stateID: Int?,
+    @field:Json(name = "StateID") val stateId: Int?,
     @field:Json(name = "State") val state: String?,
-    @field:Json(name = "CountryID") val countryID: Int?,
+    @field:Json(name = "CountryID") val countryId: Int?,
     @field:Json(name = "Country") val country: String?,
     @field:Json(name = "RateCount") val rateCount: Int?
 )

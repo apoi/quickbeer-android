@@ -8,6 +8,8 @@ import quickbeer.android.domain.brewer.store.BrewerDao
 import quickbeer.android.domain.brewer.store.BrewerEntity
 import quickbeer.android.domain.idlist.store.IdListDao
 import quickbeer.android.domain.idlist.store.IdListEntity
+import quickbeer.android.domain.review.store.ReviewDao
+import quickbeer.android.domain.review.store.ReviewEntity
 import quickbeer.android.domain.style.store.StyleDao
 import quickbeer.android.domain.style.store.StyleEntity
 
@@ -21,6 +23,7 @@ private const val CURRENT_VERSION = 1
         IdListEntity::class,
         BeerEntity::class,
         BrewerEntity::class,
+        ReviewEntity::class,
         StyleEntity::class
     ],
     version = CURRENT_VERSION
@@ -32,6 +35,8 @@ abstract class Database : RoomDatabase() {
     abstract fun beerDao(): BeerDao
 
     abstract fun brewerDao(): BrewerDao
+
+    abstract fun reviewDao(): ReviewDao
 
     abstract fun styleDao(): StyleDao
 }

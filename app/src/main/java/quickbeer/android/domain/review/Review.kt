@@ -1,25 +1,9 @@
-/**
- * This file is part of QuickBeer.
- * Copyright (C) 2017 Antti Poikela <antti.poikela@iki.fi>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package quickbeer.android.domain.review
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.data.store.Merger
 
 @Parcelize
 data class Review(
@@ -33,12 +17,38 @@ data class Review(
     val comments: String?,
     val timeEntered: ZonedDateTime?,
     val timeUpdated: ZonedDateTime?,
-    val userID: Int?,
+    val userId: Int?,
     val userName: String?,
     val city: String?,
-    val stateID: Int?,
+    val stateId: Int?,
     val state: String?,
-    val countryID: Int?,
+    val countryId: Int?,
     val country: String?,
     val rateCount: Int?
-) : Parcelable
+) : Parcelable {
+
+    companion object {
+        val merger: Merger<Review> = { old, new ->
+            Review(
+                id = new.id,
+                appearance = new.appearance ?: old.appearance,
+                aroma = new.aroma ?: old.aroma,
+                flavor = new.flavor ?: old.flavor,
+                mouthfeel = new.mouthfeel ?: old.mouthfeel,
+                overall = new.overall ?: old.overall,
+                totalScore = new.totalScore ?: old.totalScore,
+                comments = new.comments ?: old.comments,
+                timeEntered = new.timeEntered ?: old.timeEntered,
+                timeUpdated = new.timeUpdated ?: old.timeUpdated,
+                userId = new.userId ?: old.userId,
+                userName = new.userName ?: old.userName,
+                city = new.city ?: old.city,
+                stateId = new.stateId ?: old.stateId,
+                state = new.state ?: old.state,
+                countryId = new.countryId ?: old.countryId,
+                country = new.country ?: old.country,
+                rateCount = new.rateCount ?: old.rateCount
+            )
+        }
+    }
+}
