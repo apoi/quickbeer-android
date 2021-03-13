@@ -28,7 +28,7 @@ object Versions {
     object Plugin {
         const val Detekt = "1.14.1"
         const val Gradle = "4.1.0"
-        const val Kotlin = "1.4.10"
+        const val Kotlin = "1.4.30"
         const val Ktlint = "9.4.1"
         const val Version = "0.33.0"
     }
