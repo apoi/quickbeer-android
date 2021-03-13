@@ -26,42 +26,42 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.14.1"
-        const val Gradle = "4.1.0"
-        const val Kotlin = "1.4.30"
-        const val Ktlint = "9.4.1"
-        const val Version = "0.33.0"
+        const val Detekt = "1.16.0"
+        const val Gradle = "4.1.2"
+        const val Kotlin = "1.4.31"
+        const val Ktlint = "10.0.0"
+        const val Version = "0.38.0"
     }
 
     object AndroidX {
         const val AppCompat = "1.2.0"
-        const val ConstraintLayout = "2.0.2"
+        const val ConstraintLayout = "2.0.4"
         const val CoreKt = "1.3.2"
-        const val Lifecycle = "2.2.0"
-        const val Navigation = "2.3.1"
+        const val Lifecycle = "2.3.0"
+        const val Navigation = "2.3.4"
         const val RecyclerView = "1.1.0"
-        const val Room = "2.2.5"
+        const val Room = "2.2.6"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object OkHttp {
-        const val OkHttp = "4.9.0"
+        const val OkHttp = "4.9.1"
         const val AndroidSupport = "3.13.1"
     }
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.3.9"
+        const val Coroutines = "1.4.3"
     }
 
-    const val Coil = "1.1.0"
-    const val Koin = "2.1.6"
-    const val Ktlint = "0.39.0"
-    const val LeakCanary = "2.5"
-    const val Material = "1.3.0-beta01"
-    const val PhotoView = "2.0.0"
+    const val Coil = "1.1.1"
+    const val Koin = "2.2.2"
+    const val Ktlint = "0.40.0"
+    const val LeakCanary = "2.6"
+    const val Material = "1.3.0"
+    const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
-    const val ThreeTenABP = "1.2.4"
+    const val ThreeTenABP = "1.3.0"
     const val Timber = "4.7.1"
 
     object Testing {
@@ -71,7 +71,7 @@ object Versions {
         }
 
         const val EspressoCore = "3.3.0"
-        const val JUnit = "4.13.1"
+        const val JUnit = "4.13.2"
     }
 }
 
