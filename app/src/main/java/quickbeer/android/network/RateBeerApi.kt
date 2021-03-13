@@ -2,7 +2,7 @@ package quickbeer.android.network
 
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
-import quickbeer.android.domain.review.Review
+import quickbeer.android.domain.review.network.ReviewJson
 import quickbeer.android.domain.stylelist.network.StyleJson
 import quickbeer.android.network.result.ApiResult
 import retrofit2.http.Field
@@ -79,7 +79,7 @@ interface RateBeerApi {
     suspend fun getReviews(
         @Query("bid") beerId: Int,
         @Query("p") page: Int
-    ): ApiResult<List<Review>>
+    ): ApiResult<List<ReviewJson>>
 
     /*
     @GET("/json/revs.asp")
