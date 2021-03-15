@@ -8,6 +8,7 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.room.DATABASE_NAME
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.StoreCore
@@ -48,6 +49,13 @@ import quickbeer.android.domain.countrylist.repository.CountryListRepository
 import quickbeer.android.domain.countrylist.store.CountryListStore
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
+import quickbeer.android.domain.review.Review
+import quickbeer.android.domain.review.store.ReviewRoomCore
+import quickbeer.android.domain.review.store.ReviewStore
+import quickbeer.android.domain.reviewlist.network.BeerReviewsFetcher
+import quickbeer.android.domain.reviewlist.network.BeerReviewsPageFetcher
+import quickbeer.android.domain.reviewlist.repository.BeerReviewsRepository
+import quickbeer.android.domain.reviewlist.store.BeerReviewsStore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.style.store.StyleRoomCore
@@ -56,6 +64,7 @@ import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.domain.stylelist.store.StyleListStore
 import quickbeer.android.feature.beerdetails.BeerDetailsViewModel
+import quickbeer.android.feature.beerdetails.BeerReviewsViewModel
 import quickbeer.android.feature.brewerdetails.BrewerDetailsViewModel
 import quickbeer.android.feature.countrydetails.CountryDetailsViewModel
 import quickbeer.android.feature.discover.DiscoverViewModel
@@ -125,7 +134,13 @@ val appModule = module {
         CachingStoreCore(StyleRoomCore(get()), Style::id, Style.merger)
     }
     single<StoreCore<Int, Country>>(named<Country>()) {
-        MemoryStoreCore(Country.merger)
+        MemoryStoreCore()
+    }
+    single<StoreCore<String, IdList>>(named("ReviewIdList")) {
+        MemoryStoreCore(ItemList.join())
+    }
+    single<StoreCore<Int, Review>>(named<Review>()) {
+        CachingStoreCore(ReviewRoomCore(get()), Review::id, Review.merger)
     }
 
     // Stores
@@ -142,6 +157,8 @@ val appModule = module {
     factory { StyleListStore(get(named<IdList>()), get(named<Style>())) }
     factory { CountryStore(get(named<Country>())) }
     factory { CountryListStore(get(named<IdList>()), get(named<Country>())) }
+    factory { ReviewStore(get(named<Review>())) }
+    factory { BeerReviewsStore(get(named("ReviewIdList")), get(named<Review>())) }
 
     // Fetchers
     single { BeerFetcher(get()) }
@@ -154,6 +171,8 @@ val appModule = module {
     single { BrewerSearchFetcher(get()) }
     single { StyleListFetcher(get()) }
     single { CountryListFetcher(get(), get()) }
+    single { BeerReviewsFetcher(get()) }
+    single { BeerReviewsPageFetcher(get()) }
 
     // Repositories
     factory { BeerRepository(get(), get()) }
@@ -168,6 +187,7 @@ val appModule = module {
     factory { StyleListRepository(get(), get()) }
     factory { CountryRepository(get(), get()) }
     factory { CountryListRepository(get(), get()) }
+    factory { BeerReviewsRepository(get(), get(), get()) }
 
     // ViewModels
     viewModel { RecentBeersViewModel(get(), get()) }
@@ -177,4 +197,5 @@ val appModule = module {
     viewModel { (id: Int) -> BrewerDetailsViewModel(id, get(), get(), get(), get()) }
     viewModel { (id: Int) -> StyleDetailsViewModel(id, get(), get(), get()) }
     viewModel { (id: Int) -> CountryDetailsViewModel(id, get(), get(), get()) }
+    viewModel { (id: Int) -> BeerReviewsViewModel(id, get()) }
 }

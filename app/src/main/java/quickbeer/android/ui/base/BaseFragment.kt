@@ -31,8 +31,8 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
     open fun onRestoreView() = Unit
 
     override fun onDestroyView() {
-        super.onDestroyView()
         isInitialView = false
+        super.onDestroyView()
     }
 
     open fun observeViewState() = Unit

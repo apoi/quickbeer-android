@@ -1,7 +1,5 @@
 package quickbeer.android.domain.country
 
-import quickbeer.android.data.store.Merger
-
 data class Country(
     val id: Int,
     val name: String,
@@ -14,9 +12,4 @@ data class Country(
     val wikipedia: String,
     val wikipediaBeer: String?,
     val description: String?
-) {
-
-    companion object {
-        val merger: Merger<Country> = { _, new -> new }
-    }
-}
+)

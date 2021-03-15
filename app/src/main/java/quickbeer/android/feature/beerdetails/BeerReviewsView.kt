@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import quickbeer.android.R
 import quickbeer.android.ui.adapter.base.ListAdapter
+import quickbeer.android.ui.adapter.review.ReviewListModel
+import quickbeer.android.ui.adapter.review.ReviewTypeFactory
 import quickbeer.android.ui.listener.LoadMoreListener
 
 class BeerReviewsView @JvmOverloads constructor(
@@ -32,7 +34,7 @@ class BeerReviewsView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
 
-    private val beerReviewsAdapter = ListAdapter<ReviewModel>(ReviewTypeFactory())
+    private val beerReviewsAdapter = ListAdapter<ReviewListModel>(ReviewTypeFactory())
 
     private lateinit var beerReviewsListView: RecyclerView
 
@@ -45,7 +47,7 @@ class BeerReviewsView @JvmOverloads constructor(
         beerReviewsListView.adapter = beerReviewsAdapter
     }
 
-    fun setReviews(reviews: List<ReviewModel>) {
+    fun setReviews(reviews: List<ReviewListModel>) {
         beerReviewsAdapter.setItems(reviews)
     }
 

@@ -7,12 +7,13 @@ import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.CoreDao
 import quickbeer.android.data.room.converter.IntListConverter
+import quickbeer.android.data.store.StoreCore
 
 @Dao
 @TypeConverters(IntListConverter::class)
 abstract class IdListDao : CoreDao<String, IdListEntity>(
     IdListEntity::id,
-    IdListEntity.merger
+    StoreCore.takeNew()
 ) {
 
     @Query("SELECT * FROM lists WHERE id=:key")

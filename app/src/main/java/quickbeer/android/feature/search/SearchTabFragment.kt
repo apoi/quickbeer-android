@@ -52,8 +52,8 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
         binding.recyclerView.adapter = null
+        super.onDestroyView()
     }
 
     override fun observeViewState() {

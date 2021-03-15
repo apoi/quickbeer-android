@@ -7,14 +7,11 @@ import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.review.Review
 
 class ReviewRoomCore(
-    val dao: ReviewDao
+    database: Database
 ) : RoomStoreCore<Int, Review, ReviewEntity>(
     ReviewEntityMapper,
-    ReviewDaoProxy(dao)
-) {
-
-    constructor(database: Database) : this(database.reviewDao())
-}
+    ReviewDaoProxy(database.reviewDao())
+)
 
 private class ReviewDaoProxy(
     private val dao: ReviewDao,

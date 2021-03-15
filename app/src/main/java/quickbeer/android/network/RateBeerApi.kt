@@ -77,7 +77,7 @@ interface RateBeerApi {
 
     @GET("/json/gr.asp")
     suspend fun getReviews(
-        @Query("bid") beerId: Int,
+        @Query("bid") beerId: String,
         @Query("p") page: Int
     ): ApiResult<List<ReviewJson>>
 
