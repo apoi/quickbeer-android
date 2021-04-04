@@ -117,7 +117,7 @@ abstract class Repository<K, V> {
                 // debounce has, with explicit cancellation.
                 flow { emit(state) }
                     .onEach { delay(debounceRemote) }
-                    .flatMapLatest { fetch(it.key, validator) }
+                    .flatMapLatest { fetch(it.key, { fetchRemote(it.key) }, validator) }
                     .takeUntil(distinctKey.drop(1))
             }
 
@@ -143,9 +143,13 @@ abstract class Repository<K, V> {
         return merge(errorFlow, remoteFlow, localFlow)
     }
 
-    private fun fetch(key: K, validator: Validator<V>): Flow<State<V>> {
+    protected fun fetch(
+        key: K,
+        fetchCall: suspend () -> ApiResult<V>,
+        validator: Validator<V>
+    ): Flow<State<V>> {
         return flow {
-            when (val response = fetchRemote(key)) {
+            when (val response = fetchCall()) {
                 is ApiResult.Success -> {
                     if (response.value != null && validator.validate(response.value)) {
                         // Response is persisted to be emitted later

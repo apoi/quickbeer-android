@@ -2,6 +2,7 @@ package quickbeer.android.ui.listener
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import timber.log.Timber
 
 /**
  * Pagination trigger listener, https://gist.github.com/nesquena/d09dc68ff07e845cc622
@@ -16,7 +17,7 @@ class LoadMoreListener : RecyclerView.OnScrollListener() {
 
     // True if we are still waiting for the last set of data to load
     private var loading = true
-    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var layoutManager: LinearLayoutManager? = null
 
     // Invokes with current number of items when more items should be loaded
     var moreItemRequestedCallback: ((Int) -> Unit)? = null
@@ -29,15 +30,17 @@ class LoadMoreListener : RecyclerView.OnScrollListener() {
     // We are given a few useful parameters to help us work out if we need to load some more data,
     // but first we check if we are waiting for the previous load to finish.
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
+        val manager = layoutManager ?: return
+
         // Only handle down scrolls
         if (dy <= 0) {
             return
         }
-        val totalItemCount = layoutManager!!.itemCount
-        val lastVisibleItemPosition =
-            (layoutManager as LinearLayoutManager?)!!.findLastVisibleItemPosition()
 
-        // If the total item count is zero and the previous isn't, assume the
+        val totalItemCount = manager.itemCount
+        val lastVisibleItemPosition = manager.findLastVisibleItemPosition()
+
+        // If the total item count less than the previous count, assume the
         // list is invalidated and should be reset back to initial state
         if (totalItemCount < previousTotalItemCount) {
             currentPage = STARTING_PAGE_INDEX

@@ -51,16 +51,21 @@ class BeerReviewsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val manager = LinearLayoutManager(context)
+
         binding.beersReviewsListView.apply {
             adapter = reviewsAdapter
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = manager
+            addOnScrollListener(loadMoreListener)
         }
 
         loadMoreListener.moreItemRequestedCallback = viewModel::loadPage
+        loadMoreListener.setLayoutManager(manager)
     }
 
     override fun onDestroyView() {
         binding.beersReviewsListView.adapter = null
+        binding.beersReviewsListView.clearOnScrollListeners()
         super.onDestroyView()
     }
 

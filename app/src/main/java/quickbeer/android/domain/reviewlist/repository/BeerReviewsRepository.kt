@@ -6,6 +6,7 @@ import quickbeer.android.domain.review.network.ReviewJson
 import quickbeer.android.domain.reviewlist.network.BeerReviewsFetcher
 import quickbeer.android.domain.reviewlist.network.BeerReviewsPageFetcher
 import quickbeer.android.domain.reviewlist.store.BeerReviewsStore
+import quickbeer.android.network.result.ApiResult
 
 class BeerReviewsRepository(
     store: BeerReviewsStore,
@@ -13,8 +14,14 @@ class BeerReviewsRepository(
     private val pageFetcher: BeerReviewsPageFetcher
 ) : ItemListRepository<String, Int, Review, ReviewJson>(store, fetcher) {
 
-    // TODO persist result
     suspend fun fetch(beerId: String, page: Int) {
-        pageFetcher.fetch(Pair(beerId, page))
+        val response = pageFetcher.fetch(Pair(beerId, page))
+
+        if (response is ApiResult.Success) {
+            if (response.value != null) {
+                // Response is persisted to be emitted later
+                persist(beerId, response.value)
+            }
+        }
     }
 }

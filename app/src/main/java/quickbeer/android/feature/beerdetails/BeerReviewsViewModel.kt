@@ -29,7 +29,7 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.reviewlist.repository.BeerReviewsRepository
 import quickbeer.android.ui.adapter.review.ReviewListModel
-import quickbeer.android.ui.adapter.review.ReviewListModelUpdatedDateMapper
+import quickbeer.android.ui.adapter.review.ReviewListModelDateSortingMapper
 import timber.log.Timber
 
 class BeerReviewsViewModel(
@@ -41,17 +41,25 @@ class BeerReviewsViewModel(
     val reviewsState: LiveData<State<List<ReviewListModel>>> = _reviewsState
 
     init {
-        loadPage(1)
-    }
-
-    fun loadPage(page: Int) {
-        Timber.w("Load page $page")
-
         viewModelScope.launch(Dispatchers.IO) {
             reviewRepository
                 .getStream(beerId.toString(), Accept())
-                .map(ReviewListModelUpdatedDateMapper()::map)
+                .map(ReviewListModelDateSortingMapper()::map)
                 .collect { _reviewsState.postValue(it) }
         }
+    }
+
+    fun loadPage(itemIndex: Int) {
+        if (itemIndex % ITEMS_ON_PAGE != 0) return
+        val page = itemIndex / ITEMS_ON_PAGE + 1
+
+        viewModelScope.launch(Dispatchers.IO) {
+            reviewRepository
+                .fetch(beerId.toString(), page)
+        }
+    }
+
+    companion object {
+        const val ITEMS_ON_PAGE = 10
     }
 }
