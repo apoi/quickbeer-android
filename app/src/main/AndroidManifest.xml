@@ -37,7 +37,7 @@
 
         </activity>
 
-        <activity android:name=".feature.barcode.LiveBarcodeScanningActivity"
+        <activity android:name=".feature.barcode.BarcodeScannerActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
 

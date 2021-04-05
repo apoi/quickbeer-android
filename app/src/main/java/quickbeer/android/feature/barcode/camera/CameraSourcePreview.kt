@@ -18,14 +18,14 @@ package quickbeer.android.feature.barcode.camera
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.widget.FrameLayout
 import com.google.android.gms.common.images.Size
-import quickbeer.android.R
-import quickbeer.android.feature.barcode.utils.Utils
 import java.io.IOException
+import quickbeer.android.R
+import quickbeer.android.feature.barcode.utils.ScannerUtils
+import timber.log.Timber
 
 /** Preview the camera image in the screen.  */
 class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -34,6 +34,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         holder.addCallback(SurfaceCallback())
         addView(this)
     }
+
     private var graphicOverlay: GraphicOverlay? = null
     private var startRequested = false
     private var surfaceAvailable = false
@@ -42,7 +43,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        graphicOverlay = findViewById(R.id.camera_preview_graphic_overlay)
+        graphicOverlay = findViewById(R.id.graphic_overlay)
     }
 
     @Throws(IOException::class)
@@ -66,9 +67,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
             cameraSource?.start(surfaceView.holder)
             requestLayout()
             graphicOverlay?.let { overlay ->
-                cameraSource?.let {
-                    overlay.setCameraInfo(it)
-                }
+                cameraSource?.let(overlay::setCameraInfo)
                 overlay.clear()
             }
             startRequested = false
@@ -82,7 +81,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         cameraSource?.previewSize?.let { cameraPreviewSize = it }
 
         val previewSizeRatio = cameraPreviewSize?.let { size ->
-            if (Utils.isPortraitMode(context)) {
+            if (ScannerUtils.isPortraitMode(context)) {
                 // Camera's natural orientation is landscape, so need to swap width and height.
                 size.height.toFloat() / size.width
             } else {
@@ -93,7 +92,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         // Match the width of the child view to its parent.
         val childHeight = (layoutWidth / previewSizeRatio).toInt()
         if (childHeight <= layoutHeight) {
-            for (i in 0 until childCount) {
+            (0 until childCount).forEach { i ->
                 getChildAt(i).layout(0, 0, layoutWidth, childHeight)
             }
         } else {
@@ -102,25 +101,28 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
             // the size of the parent view to it. Otherwise, we offset the top/bottom position
             // equally to position it in the center of the parent.
             val excessLenInHalf = (childHeight - layoutHeight) / 2
-            for (i in 0 until childCount) {
-                val childView = getChildAt(i)
-                when (childView.id) {
-                    R.id.static_overlay_container -> {
-                        childView.layout(0, 0, layoutWidth, layoutHeight)
-                    }
-                    else -> {
-                        childView.layout(
-                            0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf
-                        )
+
+            (0 until childCount)
+                .asSequence()
+                .map(::getChildAt)
+                .forEach {
+                    when (it.id) {
+                        R.id.static_overlay_container -> {
+                            it.layout(0, 0, layoutWidth, layoutHeight)
+                        }
+                        else -> {
+                            it.layout(
+                                0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf
+                            )
+                        }
                     }
                 }
-            }
         }
 
         try {
             startIfReady()
         } catch (e: IOException) {
-            Log.e(TAG, "Could not start camera source.", e)
+            Timber.e(e, "Could not start camera source.")
         }
     }
 
@@ -130,7 +132,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
             try {
                 startIfReady()
             } catch (e: IOException) {
-                Log.e(TAG, "Could not start camera source.", e)
+                Timber.e(e, "Could not start camera source.")
             }
         }
 
@@ -140,9 +142,5 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
 
         override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         }
-    }
-
-    companion object {
-        private const val TAG = "CameraSourcePreview"
     }
 }

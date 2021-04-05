@@ -21,22 +21,21 @@ import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import quickbeer.android.feature.barcode.InputInfo
-import quickbeer.android.feature.barcode.utils.PreferenceUtils
+import java.io.IOException
+import quickbeer.android.feature.barcode.BarcodeScannerViewModel
 import quickbeer.android.feature.barcode.camera.CameraReticleAnimator
 import quickbeer.android.feature.barcode.camera.FrameProcessorBase
 import quickbeer.android.feature.barcode.camera.GraphicOverlay
-import quickbeer.android.feature.barcode.camera.WorkflowModel
-import quickbeer.android.feature.barcode.camera.WorkflowModel.WorkflowState
 import timber.log.Timber
-import java.io.IOException
 
-/** A processor to run the barcode detector.  */
-class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel: WorkflowModel) :
-    FrameProcessorBase<List<Barcode>>() {
+/** A processor to run the barcode detector. */
+class BarcodeProcessor(
+    graphicOverlay: GraphicOverlay,
+    private val viewModel: BarcodeScannerViewModel
+) : FrameProcessorBase<List<Barcode>>() {
 
     private val scanner = BarcodeScanning.getClient()
-    private val cameraReticleAnimator: CameraReticleAnimator = CameraReticleAnimator(graphicOverlay)
+    private val cameraReticleAnimator = CameraReticleAnimator(graphicOverlay)
 
     override fun detectInImage(image: InputImage): Task<List<Barcode>> {
         return scanner.process(image)
@@ -44,39 +43,21 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
 
     @MainThread
     override fun onSuccess(
-        inputInfo: InputInfo,
         results: List<Barcode>,
         graphicOverlay: GraphicOverlay
     ) {
-        if (!workflowModel.isCameraLive) return
-
-        Timber.w("Barcode result size: ${results.size}")
-
-        // Picks the barcode, if exists, that covers the center of graphic overlay.
-        val barcodeInCenter = results.firstOrNull { barcode ->
-            val boundingBox = barcode.boundingBox ?: return@firstOrNull false
-            val box = graphicOverlay.translateRect(boundingBox)
-            box.contains(graphicOverlay.width / 2f, graphicOverlay.height / 2f)
-        }
+        if (!viewModel.isCameraLive) return
 
         graphicOverlay.clear()
 
-        if (barcodeInCenter == null) {
+        if (results.isEmpty()) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
-            workflowModel.setWorkflowState(WorkflowState.DETECTING)
+            viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTING)
         } else {
             cameraReticleAnimator.cancel()
-            val sizeProgress = PreferenceUtils.getProgressToMeetBarcodeSizeRequirement(graphicOverlay, barcodeInCenter)
-            if (sizeProgress < 1) {
-                // Barcode in the camera view is too small, so prompt user to move camera closer.
-                graphicOverlay.add(BarcodeConfirmingGraphic(graphicOverlay, barcodeInCenter))
-                workflowModel.setWorkflowState(WorkflowState.CONFIRMING)
-            } else {
-                // Barcode size in the camera view is sufficient.
-                workflowModel.setWorkflowState(WorkflowState.DETECTED)
-                workflowModel.detectedBarcode.setValue(barcodeInCenter)
-            }
+            viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTED)
+            viewModel.detectedBarcode.setValue(results.first())
         }
 
         graphicOverlay.invalidate()
@@ -88,6 +69,7 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
 
     override fun stop() {
         super.stop()
+
         try {
             scanner.close()
         } catch (e: IOException) {

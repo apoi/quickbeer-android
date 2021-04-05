@@ -63,6 +63,7 @@ import quickbeer.android.domain.style.store.StyleStore
 import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.domain.stylelist.store.StyleListStore
+import quickbeer.android.feature.barcode.BarcodeScannerViewModel
 import quickbeer.android.feature.beerdetails.BeerDetailsViewModel
 import quickbeer.android.feature.beerdetails.BeerReviewsViewModel
 import quickbeer.android.feature.brewerdetails.BrewerDetailsViewModel
@@ -190,6 +191,7 @@ val appModule = module {
     factory { BeerReviewsRepository(get(), get(), get()) }
 
     // ViewModels
+    viewModel { BarcodeScannerViewModel() }
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { DiscoverViewModel(get(), get()) }
     viewModel { SearchViewModel(get(), get(), get(), get(), get(), get(), get()) }

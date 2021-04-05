@@ -14,38 +14,27 @@
  * limitations under the License.
  */
 
-package quickbeer.android.feature.barcode.camera
+package quickbeer.android.feature.barcode
 
-import android.app.Application
 import androidx.annotation.MainThread
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.google.mlkit.vision.barcode.Barcode
 
-/** View model for handling application workflow based on camera preview.  */
-class WorkflowModel(application: Application) : AndroidViewModel(application) {
+/** View model for handling scanning workflow based on camera preview.  */
+class BarcodeScannerViewModel : ViewModel() {
 
-    val workflowState = MutableLiveData<WorkflowState>()
+    val scannerState = MutableLiveData(ScannerState.NOT_STARTED)
     val detectedBarcode = MutableLiveData<Barcode>()
 
     var isCameraLive = false
         private set
 
-    /**
-     * State set of the application workflow.
-     */
-    enum class WorkflowState {
-        NOT_STARTED,
-        DETECTING,
-        DETECTED,
-        CONFIRMING,
-        SEARCHING,
-        SEARCHED
-    }
-
     @MainThread
-    fun setWorkflowState(workflowState: WorkflowState) {
-        this.workflowState.value = workflowState
+    fun setScannerState(state: ScannerState) {
+        if (scannerState.value != state) {
+            scannerState.value = state
+        }
     }
 
     fun markCameraLive() {
@@ -54,5 +43,17 @@ class WorkflowModel(application: Application) : AndroidViewModel(application) {
 
     fun markCameraFrozen() {
         isCameraLive = false
+    }
+
+    /**
+     * State set of the scanning workflow.
+     */
+    enum class ScannerState {
+        NOT_STARTED,
+        DETECTING,
+        DETECTED,
+        CONFIRMING,
+        SEARCHING,
+        SEARCHED
     }
 }

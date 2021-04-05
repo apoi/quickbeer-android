@@ -16,17 +16,13 @@
 
 package quickbeer.android.feature.barcode.camera
 
-import android.os.SystemClock
 import androidx.annotation.GuardedBy
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.TaskExecutors
-import quickbeer.android.feature.barcode.CameraInputInfo
-import quickbeer.android.feature.barcode.InputInfo
 import com.google.mlkit.vision.common.InputImage
-import quickbeer.android.feature.barcode.utils.ScopedExecutor
-import timber.log.Timber
 import java.nio.ByteBuffer
+import quickbeer.android.feature.barcode.utils.ScopedExecutor
 
 /** Abstract base class of [FrameProcessor].  */
 abstract class FrameProcessorBase<T> : FrameProcessor {
@@ -54,6 +50,7 @@ abstract class FrameProcessorBase<T> : FrameProcessor {
     ) {
         latestFrame = data
         latestFrameMetaData = frameMetadata
+
         if (processingFrame == null && processingFrameMetaData == null) {
             processLatestFrame(graphicOverlay)
         }
@@ -65,6 +62,7 @@ abstract class FrameProcessorBase<T> : FrameProcessor {
         processingFrameMetaData = latestFrameMetaData
         latestFrame = null
         latestFrameMetaData = null
+
         val frame = processingFrame ?: return
         val frameMetaData = processingFrameMetaData ?: return
         val image = InputImage.fromByteBuffer(
@@ -74,14 +72,15 @@ abstract class FrameProcessorBase<T> : FrameProcessor {
             frameMetaData.rotation,
             InputImage.IMAGE_FORMAT_NV21
         )
-        val startMs = SystemClock.elapsedRealtime()
+
         detectInImage(image)
             .addOnSuccessListener(executor) { results: T ->
-                Timber.w("Latency is: ${SystemClock.elapsedRealtime() - startMs}")
-                this@FrameProcessorBase.onSuccess(CameraInputInfo(frame, frameMetaData), results, graphicOverlay)
+                this@FrameProcessorBase.onSuccess(results, graphicOverlay)
                 processLatestFrame(graphicOverlay)
             }
-            .addOnFailureListener(executor) { e -> OnFailureListener { this@FrameProcessorBase.onFailure(it) } }
+            .addOnFailureListener(executor) {
+                OnFailureListener(this@FrameProcessorBase::onFailure)
+            }
     }
 
     override fun stop() {
@@ -90,16 +89,11 @@ abstract class FrameProcessorBase<T> : FrameProcessor {
 
     protected abstract fun detectInImage(image: InputImage): Task<T>
 
-    /** Be called when the detection succeeds.  */
+    /** Be called when the detection succeeds. */
     protected abstract fun onSuccess(
-        inputInfo: InputInfo,
         results: T,
         graphicOverlay: GraphicOverlay
     )
 
     protected abstract fun onFailure(e: Exception)
-
-    companion object {
-        private const val TAG = "FrameProcessorBase"
-    }
 }

@@ -18,22 +18,16 @@ package quickbeer.android.feature.barcode.utils
 
 import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.graphics.Rect
-import android.graphics.YuvImage
+import android.graphics.RectF
 import android.hardware.Camera
-import com.google.mlkit.vision.common.InputImage
-import quickbeer.android.feature.barcode.camera.CameraSizePair
-import timber.log.Timber
-import java.io.ByteArrayOutputStream
-import java.nio.ByteBuffer
 import java.util.ArrayList
 import kotlin.math.abs
+import quickbeer.android.feature.barcode.camera.CameraSizePair
+import quickbeer.android.feature.barcode.camera.GraphicOverlay
+import timber.log.Timber
 
 /** Utility class to provide helper methods.  */
-object Utils {
+object ScannerUtils {
 
     /**
      * If the absolute difference between aspect ratios is less than this tolerance, they are
@@ -45,9 +39,9 @@ object Utils {
         context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
 
     /**
-     * Generates a list of acceptable preview sizes. Preview sizes are not acceptable if there is not
-     * a corresponding picture size of the same aspect ratio. If there is a corresponding picture size
-     * of the same aspect ratio, the picture size is paired up with the preview size.
+     * Generates a list of acceptable preview sizes. Preview sizes are not acceptable if there is
+     * not a corresponding picture size of the same aspect ratio. If there is a corresponding
+     * picture size of the same aspect ratio, the picture size is paired up with the preview size.
      *
      *
      * This is necessary because even if we don't use still pictures, the still picture size must
@@ -74,9 +68,9 @@ object Utils {
             }
         }
 
-        // If there are no picture sizes with the same aspect ratio as any preview sizes, allow all of
-        // the preview sizes and hope that the camera can handle it.  Probably unlikely, but we still
-        // account for it.
+        // If there are no picture sizes with the same aspect ratio as any preview sizes, allow all
+        // of the preview sizes and hope that the camera can handle it.  Probably unlikely, but we
+        // still account for it.
         if (validPreviewSizes.isEmpty()) {
             Timber.w("No preview sizes have a corresponding same-aspect-ratio picture size.")
             // The null picture size will let us know that we shouldn't set a picture size.
@@ -86,27 +80,13 @@ object Utils {
         return validPreviewSizes
     }
 
-    /** Convert NV21 format byte buffer to bitmap. */
-    fun convertToBitmap(data: ByteBuffer, width: Int, height: Int, rotationDegrees: Int): Bitmap? {
-        data.rewind()
-        val imageInBuffer = ByteArray(data.limit())
-        data.get(imageInBuffer, 0, imageInBuffer.size)
-        try {
-            val image = YuvImage(
-                imageInBuffer, InputImage.IMAGE_FORMAT_NV21, width, height, null
-            )
-            val stream = ByteArrayOutputStream()
-            image.compressToJpeg(Rect(0, 0, width, height), 80, stream)
-            val bmp = BitmapFactory.decodeByteArray(stream.toByteArray(), 0, stream.size())
-            stream.close()
-
-            // Rotate the image back to straight.
-            val matrix = Matrix()
-            matrix.postRotate(rotationDegrees.toFloat())
-            return Bitmap.createBitmap(bmp, 0, 0, bmp.width, bmp.height, matrix, true)
-        } catch (error: java.lang.Exception) {
-            Timber.e(error)
-        }
-        return null
+    fun getBarcodeReticleBox(overlay: GraphicOverlay): RectF {
+        val overlayWidth = overlay.width.toFloat()
+        val overlayHeight = overlay.height.toFloat()
+        val boxWidth = overlayWidth * 80 / 100
+        val boxHeight = overlayHeight * 35 / 100
+        val cx = overlayWidth / 2
+        val cy = overlayHeight / 2
+        return RectF(cx - boxWidth / 2, cy - boxHeight / 2, cx + boxWidth / 2, cy + boxHeight / 2)
     }
 }
