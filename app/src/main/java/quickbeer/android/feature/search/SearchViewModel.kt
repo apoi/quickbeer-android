@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -46,6 +47,7 @@ open class SearchViewModel(
 ) : ViewModel() {
 
     private val queryFlow = MutableStateFlow("")
+    private val typeFlow = MutableStateFlow(SearchType.BEER)
 
     private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
     val beerResults: LiveData<State<List<BeerListModel>>> = _beerResults
@@ -71,14 +73,22 @@ open class SearchViewModel(
         searchCountries()
     }
 
-    fun onSearchChanged(query: String) {
+    fun onSearchQueryChanged(query: String) {
         queryFlow.value = query.normalize()
+    }
+
+    fun onSearchTypeChanged(type: SearchType) {
+        typeFlow.value = type
     }
 
     private fun searchBeers() {
         viewModelScope.launch(Dispatchers.IO) {
+            val beerQueryFlow = queryFlow.combineTransform(typeFlow) { query, type ->
+                if (type == SearchType.BEER) emit(query)
+            }
+
             beerSearchRepository
-                .getStream(queryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
+                .getStream(beerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 // Avoid resorting the results if the set of beers didn't change
                 .distinctUntilChanged { old, new -> sameIds(old, new, Beer::id) }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
@@ -88,8 +98,12 @@ open class SearchViewModel(
 
     private fun searchBrewers() {
         viewModelScope.launch(Dispatchers.IO) {
+            val brewerQueryFlow = queryFlow.combineTransform(typeFlow) { query, type ->
+                if (type == SearchType.BREWER) emit(query)
+            }
+
             brewerSearchRepository
-                .getStream(queryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
+                .getStream(brewerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 .distinctUntilChanged { old, new -> sameIds(old, new, Brewer::id) }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collect { _brewerResults.postValue(it) }
@@ -99,6 +113,9 @@ open class SearchViewModel(
     private fun searchStyles() {
         viewModelScope.launch(Dispatchers.IO) {
             queryFlow
+                .combineTransform(typeFlow) { query, type ->
+                    if (type == SearchType.STYLE) emit(query)
+                }
                 .flatMapLatest { query ->
                     styleListRepository.getStream(Accept())
                         .map { filterStyles(it, query) }
@@ -111,6 +128,9 @@ open class SearchViewModel(
     private fun searchCountries() {
         viewModelScope.launch(Dispatchers.IO) {
             queryFlow
+                .combineTransform(typeFlow) { query, type ->
+                    if (type == SearchType.COUNTRY) emit(query)
+                }
                 .flatMapLatest { query ->
                     countryListRepository.getStream(Accept())
                         .map { filterCountries(it, query) }
@@ -147,6 +167,26 @@ open class SearchViewModel(
 
         return query.split(" ")
             .all { value.contains(it, ignoreCase = true) }
+    }
+
+    @Suppress("MagicNumber")
+    enum class SearchType(val value: Int) {
+        BEER(0),
+        BREWER(1),
+        STYLE(2),
+        COUNTRY(3);
+
+        companion object {
+            fun fromValue(value: Int): SearchType {
+                return when (value) {
+                    0 -> BEER
+                    1 -> BREWER
+                    2 -> STYLE
+                    3 -> COUNTRY
+                    else -> error("Invalid value")
+                }
+            }
+        }
     }
 
     companion object {

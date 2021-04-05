@@ -1,7 +1,6 @@
 package quickbeer.android.feature.search
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
@@ -29,7 +28,8 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchViewModel.onSearchChanged("")
+        searchViewModel.onSearchQueryChanged("")
+        searchViewModel.onSearchTypeChanged(SearchViewModel.SearchType.BEER)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,7 +40,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     @Suppress("MagicNumber")
     override fun onInitialViewCreated() {
         // Delay for search field opening animation
-        Handler().postDelayed({ binding.searchView.openSearchView() }, 150)
+        requireView().postDelayed({ binding.searchView.openSearchView() }, 150)
 
         // Animated background reveal after search is opened
         binding.searchBackground.animate()
@@ -61,20 +61,26 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.tabLayout.addOnTabSelectedListener(
-            OnTabSelected(binding.searchView::hideKeyboard)
+            OnTabSelected { index ->
+                val searchType = SearchViewModel.SearchType.fromValue(index)
+                searchViewModel.onSearchTypeChanged(searchType)
+                binding.searchView.hideKeyboard()
+            }
         )
 
         // Set custom tab layouts to get progress indicators
-        (0 until binding.tabLayout.tabCount).forEach { index ->
-            val tabBinding = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
-            tabBinding.title.text = when (index) {
-                0 -> getString(R.string.search_tab_beers)
-                1 -> getString(R.string.search_tab_brewers)
-                2 -> getString(R.string.search_tab_styles)
-                else -> getString(R.string.search_tab_countries)
+        (0 until binding.tabLayout.tabCount)
+            .forEach { index ->
+                val searchType = SearchViewModel.SearchType.fromValue(index)
+                val tabBinding = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
+                tabBinding.title.text = when (searchType) {
+                    SearchViewModel.SearchType.BEER -> getString(R.string.search_tab_beers)
+                    SearchViewModel.SearchType.BREWER -> getString(R.string.search_tab_brewers)
+                    SearchViewModel.SearchType.STYLE -> getString(R.string.search_tab_styles)
+                    SearchViewModel.SearchType.COUNTRY -> getString(R.string.search_tab_countries)
+                }
+                binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
             }
-            binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
-        }
     }
 
     override fun observeViewState() {
@@ -107,10 +113,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     }
 
     override fun onSearchQueryChanged(query: String) {
-        searchViewModel.onSearchChanged(query)
+        searchViewModel.onSearchQueryChanged(query)
     }
 
     override fun onSearchQuerySubmit(query: String) {
-        searchViewModel.onSearchChanged(query)
+        searchViewModel.onSearchQueryChanged(query)
     }
 }

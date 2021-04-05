@@ -2,7 +2,6 @@ package quickbeer.android.ui.listener
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import timber.log.Timber
 
 /**
  * Pagination trigger listener, https://gist.github.com/nesquena/d09dc68ff07e845cc622

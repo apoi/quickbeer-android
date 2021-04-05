@@ -30,7 +30,6 @@ import quickbeer.android.data.state.State
 import quickbeer.android.domain.reviewlist.repository.BeerReviewsRepository
 import quickbeer.android.ui.adapter.review.ReviewListModel
 import quickbeer.android.ui.adapter.review.ReviewListModelDateSortingMapper
-import timber.log.Timber
 
 class BeerReviewsViewModel(
     private val beerId: Int,
