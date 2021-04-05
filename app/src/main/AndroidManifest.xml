@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="quickbeer.android">
 
+    <uses-feature android:name="android.hardware.camera"/>
+
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name="quickbeer.android.MainApplication"
@@ -15,6 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
 
         <activity
             android:name="quickbeer.android.feature.MainActivity"
@@ -30,6 +36,10 @@
             <nav-graph android:value="@navigation/details_beer_nav" />
 
         </activity>
+
+        <activity android:name=".feature.barcode.LiveBarcodeScanningActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
     </application>
 

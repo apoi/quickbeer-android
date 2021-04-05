@@ -7,7 +7,7 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="transparent">#FFFFFFFF</color>
+    <color name="transparent">#00000000</color>
 
     <!-- https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->
     <color name="gray_90">#212121</color>
@@ -33,5 +33,12 @@
 
     <!-- Search -->
     <color name="search_shadow">#99000000</color>
+
+    <!-- Barcode -->
+    <color name="reticle_ripple">#9AFFFFFF</color>
+    <color name="barcode_reticle_background">#99000000</color>
+    <color name="barcode_reticle_stroke">#40000000</color>
+    <color name="barcode_field_value">#797979</color>
+    <color name="barcode_field_box_stroke">#757575</color>
 
 </resources>

@@ -16,6 +16,7 @@ import quickbeer.android.ui.view.SearchView
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
+import timber.log.Timber
 
 class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
@@ -118,5 +119,9 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     override fun onSearchQuerySubmit(query: String) {
         searchViewModel.onSearchQueryChanged(query)
+    }
+
+    override fun onSearchBarcode() {
+        Timber.w("DO BARCODE")
     }
 }

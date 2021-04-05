@@ -35,6 +35,7 @@ object Versions {
 
     object AndroidX {
         const val AppCompat = "1.2.0"
+        const val Camera = "1.0.0-rc04"
         const val ConstraintLayout = "2.0.4"
         const val CoreKt = "1.3.2"
         const val Lifecycle = "2.3.0"
@@ -42,6 +43,11 @@ object Versions {
         const val RecyclerView = "1.1.0"
         const val Room = "2.2.6"
         const val SwipeRefreshLayout = "1.1.0"
+    }
+
+    object Google {
+        const val Material = "1.3.0"
+        const val Barcode = "16.1.1"
     }
 
     object OkHttp {
@@ -58,7 +64,6 @@ object Versions {
     const val Koin = "2.2.2"
     const val Ktlint = "0.40.0"
     const val LeakCanary = "2.6"
-    const val Material = "1.3.0"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.3.0"
@@ -77,6 +82,10 @@ object Versions {
 
 object Libraries {
     object AndroidX {
+        object Camera {
+            const val Core = "androidx.camera:camera-core:${Versions.AndroidX.Camera}"
+        }
+
         object Lifecycle {
             const val Common = "androidx.lifecycle:lifecycle-common-java8:${Versions.AndroidX.Lifecycle}"
             const val LiveData = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.AndroidX.Lifecycle}"
@@ -103,7 +112,8 @@ object Libraries {
     }
 
     object Google {
-        const val Material = "com.google.android.material:material:${Versions.Material}"
+        const val Material = "com.google.android.material:material:${Versions.Google.Material}"
+        const val Barcode = "com.google.mlkit:barcode-scanning:${Versions.Google.Barcode}"
     }
 
     object Koin {

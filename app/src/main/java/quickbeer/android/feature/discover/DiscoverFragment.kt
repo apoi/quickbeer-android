@@ -1,13 +1,17 @@
 package quickbeer.android.feature.discover
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverFragmentBinding
+import quickbeer.android.feature.barcode.LiveBarcodeScanningActivity
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
@@ -95,6 +99,11 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
         super.onSearchFocusChanged(hasFocus)
 
         if (hasFocus) navigate(DiscoverFragmentDirections.toSearch(), NavAnim.NONE)
+    }
+
+    override fun onSearchBarcode() {
+        val intent = Intent(context, LiveBarcodeScanningActivity::class.java)
+        startActivity(intent)
     }
 
     private fun onBeerSelected(beer: BeerListModel) {

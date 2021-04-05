@@ -73,6 +73,10 @@ dependencies {
     implementation(Libraries.AndroidX.SwipeRefreshLayout)
 
     implementation(Libraries.Google.Material)
+    implementation(Libraries.Google.Barcode)
+    implementation("com.google.mlkit:object-detection:16.2.3")
+    implementation("com.google.mlkit:object-detection-custom:16.3.1")
+    api("com.google.guava:guava:30.1-jre")
 
     implementation(Libraries.Koin.Android)
     implementation(Libraries.Koin.Scope)

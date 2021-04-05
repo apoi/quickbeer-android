@@ -50,6 +50,7 @@ class SearchView @JvmOverloads constructor(
     var searchFocusChangeCallback: ((Boolean) -> Unit)? = null
     var navigateBackCallback: (() -> Unit)? = null
     var queryChangedCallback: ((String) -> Unit)? = null
+    var barcodeCallback: (() -> Unit)? = null
 
     // Should be moved to attributes and style
     private val black = resources.getColor(R.color.black, null)
@@ -110,6 +111,14 @@ class SearchView @JvmOverloads constructor(
             setOnClickListener {
                 binding.searchEditText.text = null
                 binding.searchEditText.requestFocus()
+            }
+        }
+
+        // Barcode search
+        binding.searchBarcode.apply {
+            isVisible = query.isEmpty()
+            setOnClickListener {
+                barcodeCallback?.invoke()
             }
         }
 

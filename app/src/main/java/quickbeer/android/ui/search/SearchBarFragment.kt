@@ -32,6 +32,7 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
             querySubmitCallback = ::onSearchQuerySubmit
             searchFocusChangeCallback = ::onSearchFocusChanged
             navigateBackCallback = requireActivity()::onBackPressed
+            barcodeCallback = ::onSearchBarcode
         }
     }
 
@@ -40,6 +41,8 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
     protected open fun onSearchQueryChanged(query: String) = Unit
 
     protected open fun onSearchQuerySubmit(query: String) = Unit
+
+    protected open fun onSearchBarcode() = Unit
 
     @CallSuper
     protected open fun onSearchFocusChanged(hasFocus: Boolean) {
