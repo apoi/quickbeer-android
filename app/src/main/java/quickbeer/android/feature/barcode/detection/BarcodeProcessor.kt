@@ -50,14 +50,15 @@ class BarcodeProcessor(
 
         graphicOverlay.clear()
 
-        if (results.isEmpty()) {
+        val barcode = results.firstOrNull { BARCODE_FORMATS.contains(it.format) }
+        if (barcode == null) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
             viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTING)
         } else {
             cameraReticleAnimator.cancel()
             viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTED)
-            viewModel.detectedBarcode.setValue(results.first())
+            viewModel.detectedBarcode.setValue(barcode)
         }
 
         graphicOverlay.invalidate()
@@ -75,5 +76,16 @@ class BarcodeProcessor(
         } catch (e: IOException) {
             Timber.e(e, "Failed to close barcode detector!")
         }
+    }
+
+    companion object {
+        private val BARCODE_FORMATS = listOf(
+            Barcode.FORMAT_CODE_39,
+            Barcode.FORMAT_CODE_128,
+            Barcode.FORMAT_EAN_8,
+            Barcode.FORMAT_EAN_13,
+            Barcode.FORMAT_UPC_A,
+            Barcode.FORMAT_UPC_E,
+        )
     }
 }

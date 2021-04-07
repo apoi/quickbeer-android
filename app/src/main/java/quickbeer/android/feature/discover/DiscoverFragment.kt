@@ -4,6 +4,7 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.android.ext.android.inject
@@ -116,7 +117,7 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == BarcodeScannerActivity.BARCODE_RESULT && resultCode == RESULT_OK) {
             val barcode = data?.getStringExtra(BarcodeScannerActivity.BARCODE_KEY)
-            toastProvider.showToast("Barcode: $barcode" ?: "No barcode received!")
+            toastProvider.showToast("Barcode: $barcode", Toast.LENGTH_LONG)
         }
     }
 }
