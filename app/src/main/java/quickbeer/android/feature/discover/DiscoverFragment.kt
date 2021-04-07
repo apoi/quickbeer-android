@@ -1,10 +1,12 @@
 package quickbeer.android.feature.discover
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
@@ -20,6 +22,7 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.view.SearchView
+import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
@@ -28,6 +31,8 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
     private val binding by viewBinding(DiscoverFragmentBinding::bind)
     private val viewModel by viewModel<DiscoverViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+
+    private val toastProvider by inject<ToastProvider>()
 
     override val searchHint = R.string.search_hint
     override fun rootLayout() = binding.layout
@@ -101,10 +106,17 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
 
     override fun onSearchBarcode() {
         val intent = Intent(context, BarcodeScannerActivity::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, BarcodeScannerActivity.BARCODE_RESULT)
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
         navigate(Destination.Beer(beer.id))
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == BarcodeScannerActivity.BARCODE_RESULT && resultCode == RESULT_OK) {
+            val barcode = data?.getStringExtra(BarcodeScannerActivity.BARCODE_KEY)
+            toastProvider.showToast("Barcode: $barcode" ?: "No barcode received!")
+        }
     }
 }

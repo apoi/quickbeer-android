@@ -80,6 +80,7 @@ object ScannerUtils {
         return validPreviewSizes
     }
 
+    @Suppress("MagicNumber")
     fun getBarcodeReticleBox(overlay: GraphicOverlay): RectF {
         val overlayWidth = overlay.width.toFloat()
         val overlayHeight = overlay.height.toFloat()

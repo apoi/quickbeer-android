@@ -21,6 +21,7 @@ import android.animation.ValueAnimator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 /** Custom animator for the object or barcode reticle in live camera.  */
+@Suppress("MagicNumber")
 class CameraReticleAnimator(graphicOverlay: GraphicOverlay) {
 
     /** Returns the scale value of ripple alpha ranges in [0, 1].  */

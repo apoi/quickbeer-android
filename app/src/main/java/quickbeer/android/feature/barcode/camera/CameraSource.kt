@@ -127,7 +127,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
             it.setPreviewCallbackWithBuffer(null)
             try {
                 it.setPreviewDisplay(null)
-            } catch (e: Exception) {
+            } catch (e: IOException) {
                 Timber.e(e, "Failed to clear camera preview")
             }
             it.release()
@@ -138,7 +138,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
         bytesToByteBuffer.clear()
     }
 
-    /** Stops the camera and releases the resources of the camera and underlying detector.  */
+    /** Stops the camera and releases the resources of the camera and underlying detector. */
     fun release() {
         graphicOverlay.clear()
         synchronized(processorLock) {
@@ -168,13 +168,16 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
      */
     @Throws(IOException::class)
     private fun createCamera(): Camera {
-        val camera = Camera.open() ?: throw IOException("There is no back-facing camera.")
+        val camera = Camera.open()
+            ?: throw IOException("There is no back-facing camera.")
+
         val parameters = camera.parameters
         setPreviewAndPictureSize(camera, parameters)
         setRotation(camera, parameters)
 
         val previewFpsRange = selectPreviewFpsRange(camera)
             ?: throw IOException("Could not find suitable preview frames per second range.")
+
         parameters.setPreviewFpsRange(
             previewFpsRange[Parameters.PREVIEW_FPS_MIN_INDEX],
             previewFpsRange[Parameters.PREVIEW_FPS_MAX_INDEX]
@@ -245,6 +248,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
      *
      * @param parameters the camera parameters for which to set the rotation.
      */
+    @Suppress("MagicNumber")
     private fun setRotation(camera: Camera, parameters: Parameters) {
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val degrees = when (val deviceRotation = windowManager.defaultDisplay.rotation) {
@@ -271,6 +275,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
      *
      * @return a new preview buffer of the appropriate size for the current camera settings.
      */
+    @Suppress("MagicNumber")
     private fun createPreviewBuffer(previewSize: Size): ByteArray {
         val bitsPerPixel = ImageFormat.getBitsPerPixel(IMAGE_FORMAT)
         val area = previewSize.height.toLong() * previewSize.width.toLong()
@@ -301,7 +306,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
      * associated processing is done for the previous frame, detection on the mostly recently
      * received frame will immediately start on the same thread.
      */
-    private inner class FrameProcessingRunnable() : Runnable {
+    private inner class FrameProcessingRunnable : Runnable {
 
         // This lock guards all of the member variables below.
         private val lock = Object()
@@ -385,6 +390,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
                     pendingFrameData = null
                 }
 
+                @Suppress("TooGenericExceptionCaught")
                 try {
                     synchronized(processorLock) {
                         val frameMetadata = FrameMetadata(
@@ -394,8 +400,8 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
                         )
                         data?.let { frameProcessor?.process(it, frameMetadata, graphicOverlay) }
                     }
-                } catch (t: Exception) {
-                    Timber.e(t, "Exception thrown from receiver.")
+                } catch (e: Exception) {
+                    Timber.e(e, "Exception thrown from receiver.")
                 } finally {
                     data?.let { camera?.addCallbackBuffer(it.array()) }
                 }
@@ -492,6 +498,7 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
          * @param camera the camera to select a frames per second range from
          * @return the selected preview frames per second range
          */
+        @Suppress("MagicNumber")
         internal fun selectPreviewFpsRange(camera: Camera): IntArray? {
             // The camera API uses integers scaled by a factor of 1000 instead of floating-point
             // frame rates.

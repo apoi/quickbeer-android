@@ -18,6 +18,7 @@ package quickbeer.android.feature.barcode
 
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
@@ -27,13 +28,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import java.io.IOException
-import java.util.ArrayList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerActivityBinding
 import quickbeer.android.feature.barcode.BarcodeScannerViewModel.ScannerState
 import quickbeer.android.feature.barcode.camera.CameraSource
-import quickbeer.android.feature.barcode.detection.BarcodeField
 import quickbeer.android.feature.barcode.detection.BarcodeProcessor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -169,13 +168,16 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
         }
 
         observe(viewModel.detectedBarcode) { barcode ->
-            val barcodeFieldList = ArrayList<BarcodeField>()
-            barcodeFieldList.add(BarcodeField("Raw Value", barcode.rawValue ?: ""))
-            Timber.w("GOT RESULT: ${barcode.rawValue}")
+            Timber.d("Barcode result: ${barcode.rawValue}")
+            setResult(RESULT_OK, Intent().apply { putExtra(BARCODE_KEY, barcode.rawValue) })
+            finish()
         }
     }
 
     companion object {
+        const val BARCODE_KEY = "barcode"
+        const val BARCODE_RESULT = 0x200
+
         private const val PERMISSION_CAMERA = "android.permission.CAMERA"
         private const val PERMISSION_RESULT = 0x500
     }

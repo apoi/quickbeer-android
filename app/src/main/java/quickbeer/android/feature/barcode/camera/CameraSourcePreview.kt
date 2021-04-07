@@ -127,6 +127,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
     }
 
     private inner class SurfaceCallback : SurfaceHolder.Callback {
+
         override fun surfaceCreated(surface: SurfaceHolder) {
             surfaceAvailable = true
             try {
@@ -140,7 +141,6 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
             surfaceAvailable = false
         }
 
-        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        }
+        override fun surfaceChanged(holder: SurfaceHolder, f: Int, width: Int, height: Int) = Unit
     }
 }
