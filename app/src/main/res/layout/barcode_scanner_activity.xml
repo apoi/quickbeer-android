@@ -1,83 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_action_bar_scrim"
+        android:translationZ="100dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_close_vd_white_24"
+        app:title="">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/flash_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="@dimen/top_action_button_padding"
+                android:contentDescription="@string/cd_flash_button"
+                app:srcCompat="@drawable/camera_flash" />
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
     <quickbeer.android.feature.barcode.camera.CameraSourcePreview
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <quickbeer.android.feature.barcode.camera.GraphicOverlay
             android:id="@+id/graphic_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <FrameLayout
-            android:id="@+id/static_overlay_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/transparent">
-
-            <ProgressBar
-                android:id="@+id/search_progress_bar"
-                android:layout_width="@dimen/search_progress_bar_size"
-                android:layout_height="@dimen/search_progress_bar_size"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:indeterminateTint="@color/white"
-                android:indeterminateTintMode="src_in"
-                android:visibility="gone" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/bottom_prompt_chip"
-                style="@style/Widget.MaterialComponents.Chip.Entry"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="@dimen/bottom_prompt_chip_margin_bottom"
-                android:checkable="false"
-                android:clickable="false"
-                android:fontFamily="sans-serif"
-                android:textColor="@color/white"
-                android:textSize="@dimen/bottom_prompt_chip_text_size"
-                android:visibility="gone"
-                app:chipCornerRadius="@dimen/bottom_prompt_chip_corner_radius"
-                app:chipSurfaceColor="@color/black"
-                app:closeIconVisible="false" />
-
-        </FrameLayout>
-
     </quickbeer.android.feature.barcode.camera.CameraSourcePreview>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_action_bar_height"
-        android:layout_gravity="top"
-        android:background="@drawable/top_action_bar_scrim"
-        android:paddingStart="@dimen/top_action_bar_padding_horizontal"
-        android:paddingEnd="@dimen/top_action_bar_padding_horizontal">
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <ImageView
-            android:id="@+id/close_button"
+        <com.google.android.material.chip.Chip
+            android:id="@+id/bottom_prompt_chip"
+            style="@style/Widget.MaterialComponents.Chip.Entry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:contentDescription="@string/cd_close_button"
-            android:padding="@dimen/top_action_button_padding"
-            app:srcCompat="@drawable/ic_close_vd_white_24" />
+            android:layout_gravity="center"
+            android:checkable="false"
+            android:clickable="false"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/white"
+            android:textSize="@dimen/bottom_prompt_chip_text_size"
+            android:visibility="gone"
+            app:chipCornerRadius="@dimen/bottom_prompt_chip_corner_radius"
+            app:chipSurfaceColor="@color/black"
+            app:closeIconVisible="false" />
 
-        <ImageView
-            android:id="@+id/flash_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:contentDescription="@string/cd_flash_button"
-            android:padding="@dimen/top_action_button_padding"
-            app:srcCompat="@drawable/camera_flash" />
+    </FrameLayout>
 
-    </RelativeLayout>
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

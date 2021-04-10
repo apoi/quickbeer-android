@@ -1,9 +1,10 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/gray_90</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/orange</item>
+        <item name="colorOnSurface">@color/gray_50</item>
 
         <item name="android:textColor">@color/text_light</item>
         <item name="android:textColorHint">@color/text_hint</item>
@@ -17,13 +18,15 @@
         <!-- App general background -->
         <item name="android:windowBackground">@drawable/background_dark</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
+
+        <!-- Dialogs -->
+        <item name="materialAlertDialogTheme">@style/AppTheme.Dialog</item>
     </style>
 
     <!-- Toolbar -->
-
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:background">@color/gray_90</item>
     </style>
 
     <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
@@ -49,15 +52,25 @@
         <item name="paddingEnd">0dp</item>
     </style>
 
+    <!-- Dialog -->
+    <style name="AppTheme.Dialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/text_hint</item>
+        <item name="colorOnSurface">@color/text_hint</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/AppTheme.Dialog.Body</item>
+    </style>
+
+    <style name="AppTheme.Dialog.Body" parent="@style/MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/text_hint</item>
+    </style>
+
     <!-- Progress indicator -->
     <style name="AppTheme.SmallIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
-        <item name="indicatorColor">@color/colorAccent</item>
+        <item name="indicatorColor">@color/orange</item>
         <item name="trackThickness">1.5dp</item>
         <item name="indicatorSize">15dp</item>
     </style>
 
     <!-- Beer details -->
-
     <style name="DetailsScore">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

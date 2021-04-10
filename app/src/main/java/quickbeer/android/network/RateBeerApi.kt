@@ -44,7 +44,7 @@ interface RateBeerApi {
     suspend fun beerSearch(@Query("bn") query: String): ApiResult<List<BeerJson>>
 
     @GET("/json/upc.asp")
-    suspend fun barcode(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
+    suspend fun barcodeSearch(@Query("upc") query: String): ApiResult<List<BeerJson>>
 
     @GET("/json/tb.asp?m=top50")
     suspend fun topBeers(): ApiResult<List<BeerJson>>

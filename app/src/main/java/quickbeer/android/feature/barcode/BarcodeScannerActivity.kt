@@ -16,9 +16,11 @@
 
 package quickbeer.android.feature.barcode
 
+import android.Manifest.permission.CAMERA
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
@@ -27,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.IOException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
@@ -54,20 +57,28 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
         promptChipAnimator = animatorSet.apply { setTarget(binding.bottomPromptChip) }
         cameraSource = CameraSource(binding.graphicOverlay)
 
-        binding.closeButton.setOnClickListener { onBackPressed() }
         binding.flashButton.setOnClickListener { onFlashPressed() }
-
+        setSupportActionBar(binding.toolbar)
         observeScannerState()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
+    }
 
-        if (ContextCompat.checkSelfPermission(this, PERMISSION_CAMERA) != PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(PERMISSION_CAMERA), PERMISSION_RESULT)
+    override fun onStart() {
+        super.onStart()
+
+        if (ContextCompat.checkSelfPermission(this, CAMERA) != PERMISSION_GRANTED) {
+            requestPermission()
         } else {
             startCamera()
         }
+    }
+
+    private fun requestPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(CAMERA), PERMISSION_RESULT)
     }
 
     override fun onRequestPermissionsResult(
@@ -77,10 +88,27 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == PERMISSION_RESULT && grantResults.first() == PERMISSION_GRANTED) {
-            startCamera()
+        val result = grantResults.firstOrNull()
+        when {
+            requestCode != PERMISSION_RESULT -> finish()
+            result == PERMISSION_GRANTED -> startCamera()
+            result == PERMISSION_DENIED -> showRationale()
+            else -> finish()
+        }
+    }
+
+    private fun showRationale() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA)) {
+            MaterialAlertDialogBuilder(this)
+                .setMessage(R.string.permission_explanation)
+                .setPositiveButton(R.string.action_yes) { _, _ -> requestPermission() }
+                .setNegativeButton(R.string.action_no) { _, _ -> finish() }
+                .show()
         } else {
-            finish()
+            MaterialAlertDialogBuilder(this)
+                .setMessage(R.string.permission_missing)
+                .setPositiveButton(R.string.action_ok) { _, _ -> finish() }
+                .show()
         }
     }
 
@@ -178,7 +206,6 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
         const val BARCODE_KEY = "barcode"
         const val BARCODE_RESULT = 0x200
 
-        private const val PERMISSION_CAMERA = "android.permission.CAMERA"
         private const val PERMISSION_RESULT = 0x500
     }
 }

@@ -20,10 +20,12 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.RectF
 import android.hardware.Camera
+import android.util.TypedValue
 import java.util.ArrayList
 import kotlin.math.abs
 import quickbeer.android.feature.barcode.camera.CameraSizePair
 import quickbeer.android.feature.barcode.camera.GraphicOverlay
+import quickbeer.android.util.ktx.dpToPx
 import timber.log.Timber
 
 /** Utility class to provide helper methods.  */
@@ -84,10 +86,21 @@ object ScannerUtils {
     fun getBarcodeReticleBox(overlay: GraphicOverlay): RectF {
         val overlayWidth = overlay.width.toFloat()
         val overlayHeight = overlay.height.toFloat()
-        val boxWidth = overlayWidth * 80 / 100
-        val boxHeight = overlayHeight * 35 / 100
+
+        val sizeDiff = overlayWidth - overlayWidth * 85 / 100
+        val boxWidth = overlayWidth - sizeDiff
+        val boxHeight = overlayHeight - sizeDiff - toolbarHeight(overlay.context)
         val cx = overlayWidth / 2
         val cy = overlayHeight / 2
         return RectF(cx - boxWidth / 2, cy - boxHeight / 2, cx + boxWidth / 2, cy + boxHeight / 2)
+    }
+
+    @Suppress("MagicNumber")
+    private fun toolbarHeight(context: Context): Int {
+        val value = TypedValue()
+        val attr = android.R.attr.actionBarSize
+        return if (context.theme.resolveAttribute(attr, value, true)) {
+            TypedValue.complexToDimensionPixelSize(value.data, context.resources.displayMetrics)
+        } else context.resources.dpToPx(56)
     }
 }

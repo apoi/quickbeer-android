@@ -24,7 +24,6 @@ import android.widget.FrameLayout
 import com.google.android.gms.common.images.Size
 import java.io.IOException
 import quickbeer.android.R
-import quickbeer.android.feature.barcode.utils.ScannerUtils
 import timber.log.Timber
 
 /** Preview the camera image in the screen.  */
@@ -80,14 +79,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
 
         cameraSource?.previewSize?.let { cameraPreviewSize = it }
 
-        val previewSizeRatio = cameraPreviewSize?.let { size ->
-            if (ScannerUtils.isPortraitMode(context)) {
-                // Camera's natural orientation is landscape, so need to swap width and height.
-                size.height.toFloat() / size.width
-            } else {
-                size.width.toFloat() / size.height
-            }
-        } ?: layoutWidth.toFloat() / layoutHeight.toFloat()
+        val previewSizeRatio = layoutWidth.toFloat() / layoutHeight.toFloat()
 
         // Match the width of the child view to its parent.
         val childHeight = (layoutWidth / previewSizeRatio).toInt()
@@ -107,9 +99,6 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
                 .map(::getChildAt)
                 .forEach {
                     when (it.id) {
-                        R.id.static_overlay_container -> {
-                            it.layout(0, 0, layoutWidth, layoutHeight)
-                        }
                         else -> {
                             it.layout(
                                 0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf

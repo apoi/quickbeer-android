@@ -1,5 +1,6 @@
 package quickbeer.android.feature.search
 
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -155,6 +156,11 @@ open class SearchViewModel(
         return state.value.filter { matcher(query, it.name) }
             .sortedBy(Country::name)
             .let { State.from(it) }
+    }
+
+    private fun isBarcode(query: String): Boolean {
+        // Just a simple sanity check before doing a barcode query
+        return query.isDigitsOnly() && query.length > Constants.BARCODE_MIN_LENGTH
     }
 
     private fun <T> sameIds(a: State<List<T>>, b: State<List<T>>, getId: (T) -> Int): Boolean {

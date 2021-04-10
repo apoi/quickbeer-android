@@ -6,6 +6,7 @@
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.COUNTRY_LIST$4</ID>
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>
     <ID>MagicNumber:SearchFragment.kt$SearchFragment$3</ID>
+    <ID>TooManyFunctions:BarcodeScannerActivity.kt$BarcodeScannerActivity : AppCompatActivity</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K, V&gt; : StoreCore</ID>
@@ -16,6 +17,7 @@
     <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K, V, E&gt; : StoreCore</ID>
     <ID>TooManyFunctions:SearchFragment.kt$SearchFragment : SearchBarFragment</ID>
     <ID>TooManyFunctions:SearchView.kt$SearchView : MaterialCardView</ID>
+    <ID>TooManyFunctions:SearchViewModel.kt$SearchViewModel : ViewModel</ID>
     <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K, V&gt;</ID>
     <ID>TooManyFunctions:StyleDao.kt$StyleDao : CoreDao</ID>
   </CurrentIssues>

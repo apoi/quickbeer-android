@@ -80,8 +80,6 @@ class BarcodeProcessor(
 
     companion object {
         private val BARCODE_FORMATS = listOf(
-            Barcode.FORMAT_CODE_39,
-            Barcode.FORMAT_CODE_128,
             Barcode.FORMAT_EAN_8,
             Barcode.FORMAT_EAN_13,
             Barcode.FORMAT_UPC_A,
