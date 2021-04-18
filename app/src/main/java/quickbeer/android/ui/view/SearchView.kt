@@ -37,6 +37,8 @@ class SearchView @JvmOverloads constructor(
         get() = binding.searchEditText.text.toString()
         set(value) {
             binding.searchEditText.setText(value)
+            binding.searchEditText.setSelection(value.length);
+            queryChangedCallback?.invoke(value)
         }
 
     private var _navigationMode = NavigationMode.SEARCH

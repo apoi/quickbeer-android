@@ -24,7 +24,7 @@ import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
-import android.view.View
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,9 +34,10 @@ import java.io.IOException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerActivityBinding
-import quickbeer.android.feature.barcode.BarcodeScannerViewModel.ScannerState
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.feature.barcode.camera.CameraSource
 import quickbeer.android.feature.barcode.detection.BarcodeProcessor
+import quickbeer.android.feature.barcode.utils.BarcodeValidator
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
@@ -57,6 +58,7 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
         promptChipAnimator = animatorSet.apply { setTarget(binding.bottomPromptChip) }
         cameraSource = CameraSource(binding.graphicOverlay)
 
+        binding.graphicOverlay.setOnClickListener { startCamera() }
         binding.flashButton.setOnClickListener { onFlashPressed() }
         setSupportActionBar(binding.toolbar)
         observeScannerState()
@@ -115,12 +117,12 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
     private fun startCamera() {
         viewModel.markCameraFrozen()
         cameraSource?.setFrameProcessor(BarcodeProcessor(binding.graphicOverlay, viewModel))
-        viewModel.setScannerState(ScannerState.DETECTING)
+        viewModel.setScannerState(ScannerState.Detecting)
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.setScannerState(ScannerState.NOT_STARTED)
+        viewModel.setScannerState(ScannerState.NotStarted)
         stopCameraPreview()
     }
 
@@ -164,46 +166,58 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
     }
 
     private fun observeScannerState() {
-        observe(viewModel.scannerState) { workflowState ->
-            val promptChip = binding.bottomPromptChip
-            val wasPromptChipGone = !promptChip.isVisible
-
-            when (workflowState) {
-                ScannerState.DETECTING -> {
-                    promptChip.visibility = View.VISIBLE
-                    promptChip.setText(R.string.prompt_point_at_a_barcode)
+        observe(viewModel.scannerState) { state ->
+            when (state) {
+                is ScannerState.NotStarted -> Unit
+                is ScannerState.Detecting -> {
+                    showPrompt(getString(R.string.prompt_point_at_a_barcode))
                     startCameraPreview()
                 }
-                ScannerState.CONFIRMING -> {
-                    promptChip.visibility = View.VISIBLE
-                    promptChip.setText(R.string.prompt_move_camera_closer)
+                is ScannerState.Confirming -> {
+                    showPrompt(getString(R.string.prompt_move_camera_closer))
                     startCameraPreview()
                 }
-                ScannerState.SEARCHING -> {
-                    promptChip.visibility = View.VISIBLE
-                    promptChip.setText(R.string.prompt_searching)
+                is ScannerState.Detected -> {
+                    showPrompt(null)
                     stopCameraPreview()
                 }
-                ScannerState.DETECTED, ScannerState.SEARCHED -> {
-                    promptChip.visibility = View.GONE
+                is ScannerState.Searching -> {
+                    showPrompt(getString(R.string.prompt_searching))
                     stopCameraPreview()
                 }
-                else -> promptChip.visibility = View.GONE
+                is ScannerState.Found -> {
+                    setResult(RESULT_OK, Intent().apply {
+                        putExtra(KEY_BARCODE, state.barcode.rawValue)
+                        putParcelableArrayListExtra(KEY_BEERS, ArrayList(state.beers))
+                    })
+                    finish()
+                }
+                is ScannerState.NotFound -> {
+                    showPrompt(getString(R.string.prompt_no_results).format(state.barcode.rawValue))
+                    stopCameraPreview()
+                }
+                is ScannerState.Error -> {
+                    showPrompt(getString(R.string.prompt_error).format(state.barcode.rawValue))
+                    stopCameraPreview()
+                }
             }
-
-            val shouldAnimateChip = wasPromptChipGone && promptChip.isVisible
-            if (shouldAnimateChip && !promptChipAnimator.isRunning) promptChipAnimator.start()
-        }
-
-        observe(viewModel.detectedBarcode) { barcode ->
-            Timber.d("Barcode result: ${barcode.rawValue}")
-            setResult(RESULT_OK, Intent().apply { putExtra(BARCODE_KEY, barcode.rawValue) })
-            finish()
         }
     }
 
+    private fun showPrompt(message: String?) {
+        val promptChip = binding.bottomPromptChip
+        val wasPromptChipGone = !promptChip.isVisible
+
+        message?.let(promptChip::setText)
+        promptChip.isVisible = message != null
+
+        val shouldAnimateChip = wasPromptChipGone && promptChip.isVisible
+        if (shouldAnimateChip && !promptChipAnimator.isRunning) promptChipAnimator.start()
+    }
+
     companion object {
-        const val BARCODE_KEY = "barcode"
+        const val KEY_BARCODE = "barcode"
+        const val KEY_BEERS = "beers"
         const val BARCODE_RESULT = 0x200
 
         private const val PERMISSION_RESULT = 0x500

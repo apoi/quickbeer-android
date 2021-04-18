@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverTabTitleBinding
 import quickbeer.android.databinding.SearchFragmentBinding
+import quickbeer.android.domain.beer.Beer
+import quickbeer.android.feature.beerdetails.BeerDetailsFragmentArgs
+import quickbeer.android.feature.discover.DiscoverFragmentDirections
+import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.listener.OnTabSelected
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.view.SearchView
@@ -23,18 +28,20 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     private val binding by viewBinding(SearchFragmentBinding::bind)
     private val searchViewModel by sharedViewModel<SearchViewModel>()
 
+    private val args: SearchFragmentArgs by navArgs()
     override val searchHint = R.string.search_hint
     override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.contentLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        searchViewModel.onSearchQueryChanged("")
+        searchViewModel.onSearchQueryChanged(args.barcode.orEmpty())
         searchViewModel.onSearchTypeChanged(SearchViewModel.SearchType.BEER)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.searchView.query = args.barcode.orEmpty()
         binding.searchView.navigationMode = SearchView.NavigationMode.BACK
     }
 
@@ -121,7 +128,12 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         searchViewModel.onSearchQueryChanged(query)
     }
 
-    override fun onSearchBarcode() {
-        Timber.w("DO BARCODE")
+    override fun onBarcodeScanResult(barcode: String, beers: List<Beer>) {
+        binding.searchView.query = barcode
+        searchViewModel.onSearchQueryChanged(barcode)
+
+        if (beers.size == 1) {
+            navigate(Destination.Beer(beers.first().id))
+        }
     }
 }

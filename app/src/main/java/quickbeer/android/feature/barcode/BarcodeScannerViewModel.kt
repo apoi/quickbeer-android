@@ -16,24 +16,54 @@
 
 package quickbeer.android.feature.barcode
 
-import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.Barcode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.state.State
+import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 
-/** View model for handling scanning workflow based on camera preview.  */
-class BarcodeScannerViewModel : ViewModel() {
+class BarcodeScannerViewModel(
+    private val beerSearchRepository: BeerSearchRepository
+) : ViewModel() {
 
-    val scannerState = MutableLiveData(ScannerState.NOT_STARTED)
-    val detectedBarcode = MutableLiveData<Barcode>()
+    private val detectedBarcode = MutableSharedFlow<Barcode>()
+
+    private val _scannerState = MutableLiveData<ScannerState>(ScannerState.NotStarted)
+    val scannerState: LiveData<ScannerState> = _scannerState
 
     var isCameraLive = false
         private set
 
-    @MainThread
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            detectedBarcode
+                .flatMapLatest { barcode ->
+                    beerSearchRepository.getStream(barcode.rawValue, Accept())
+                        .mapNotNull { state -> mapResult(barcode, state) }
+                }
+                .collect { _scannerState.postValue(it) }
+        }
+    }
+
     fun setScannerState(state: ScannerState) {
-        if (scannerState.value != state) {
-            scannerState.value = state
+        viewModelScope.launch(Dispatchers.IO) {
+            if (_scannerState.value != state) {
+                _scannerState.postValue(state)
+            }
+
+            if (state is ScannerState.Detected) {
+                detectedBarcode.emit(state.barcode)
+            }
         }
     }
 
@@ -45,15 +75,12 @@ class BarcodeScannerViewModel : ViewModel() {
         isCameraLive = false
     }
 
-    /**
-     * State set of the scanning workflow.
-     */
-    enum class ScannerState {
-        NOT_STARTED,
-        DETECTING,
-        DETECTED,
-        CONFIRMING,
-        SEARCHING,
-        SEARCHED
+    private fun mapResult(barcode: Barcode, state: State<List<Beer>>): ScannerState? {
+        return when (state) {
+            is State.Loading -> ScannerState.Searching(barcode)
+            is State.Success -> ScannerState.Found(barcode, state.value)
+            is State.Empty -> ScannerState.NotFound(barcode)
+            is State.Error -> ScannerState.Error(barcode)
+        }
     }
 }

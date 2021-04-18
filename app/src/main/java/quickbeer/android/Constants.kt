@@ -3,7 +3,6 @@ package quickbeer.android
 object Constants {
 
     const val QUERY_MIN_LENGTH = 4
-    const val BARCODE_MIN_LENGTH = 6
 
     // URLS
 

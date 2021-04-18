@@ -18,16 +18,19 @@ import quickbeer.android.domain.beer.network.BeerFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.beer.store.BeerStoreCore
+import quickbeer.android.domain.beerlist.network.BarcodeSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeersInCountryFetcher
 import quickbeer.android.domain.beerlist.network.BeersInStyleFetcher
 import quickbeer.android.domain.beerlist.network.BrewersBeersFetcher
 import quickbeer.android.domain.beerlist.network.TopBeersFetcher
+import quickbeer.android.domain.beerlist.repository.BarcodeSearchRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.beerlist.repository.BeersInCountryRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.beerlist.repository.BrewersBeersRepository
 import quickbeer.android.domain.beerlist.repository.TopBeersRepository
+import quickbeer.android.domain.beerlist.store.BarcodeSearchStore
 import quickbeer.android.domain.beerlist.store.BeerSearchStore
 import quickbeer.android.domain.beerlist.store.BeersInCountryStore
 import quickbeer.android.domain.beerlist.store.BeersInStyleStore
@@ -147,6 +150,7 @@ val appModule = module {
     // Stores
     factory { BeerStore(get()) }
     factory { BeerSearchStore(get(named<IdList>()), get()) }
+    factory { BarcodeSearchStore(get(named<IdList>()), get()) }
     factory { TopBeersStore(get(named<IdList>()), get()) }
     factory { BrewersBeersStore(get(named<IdList>()), get()) }
     factory { BeersInStyleStore(get(named<IdList>()), get()) }
@@ -164,6 +168,7 @@ val appModule = module {
     // Fetchers
     single { BeerFetcher(get()) }
     single { BeerSearchFetcher(get()) }
+    single { BarcodeSearchFetcher(get()) }
     single { TopBeersFetcher(get()) }
     single { BrewersBeersFetcher(get()) }
     single { BeersInStyleFetcher(get()) }
@@ -178,6 +183,7 @@ val appModule = module {
     // Repositories
     factory { BeerRepository(get(), get()) }
     factory { BeerSearchRepository(get(), get()) }
+    factory { BarcodeSearchRepository(get(), get()) }
     factory { TopBeersRepository(get(), get()) }
     factory { BrewersBeersRepository(get(), get()) }
     factory { BeersInStyleRepository(get(), get()) }
@@ -191,7 +197,7 @@ val appModule = module {
     factory { BeerReviewsRepository(get(), get(), get()) }
 
     // ViewModels
-    viewModel { BarcodeScannerViewModel() }
+    viewModel { BarcodeScannerViewModel(get()) }
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { DiscoverViewModel(get(), get()) }
     viewModel { SearchViewModel(get(), get(), get(), get(), get(), get(), get()) }

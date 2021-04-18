@@ -26,6 +26,11 @@
         android:label="@string/app_name"
         tools:layout="@layout/discover_fragment">
         <argument
+            android:name="barcode"
+            android:defaultValue="@null"
+            app:nullable="true"
+            app:argType="string" />
+        <argument
             android:name="navbar"
             android:defaultValue="false"
             app:argType="boolean" />

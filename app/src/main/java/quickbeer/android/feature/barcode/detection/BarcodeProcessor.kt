@@ -23,9 +23,11 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
 import java.io.IOException
 import quickbeer.android.feature.barcode.BarcodeScannerViewModel
+import quickbeer.android.feature.barcode.ScannerState
 import quickbeer.android.feature.barcode.camera.CameraReticleAnimator
 import quickbeer.android.feature.barcode.camera.FrameProcessorBase
 import quickbeer.android.feature.barcode.camera.GraphicOverlay
+import quickbeer.android.feature.barcode.utils.BarcodeValidator
 import timber.log.Timber
 
 /** A processor to run the barcode detector. */
@@ -50,15 +52,14 @@ class BarcodeProcessor(
 
         graphicOverlay.clear()
 
-        val barcode = results.firstOrNull { BARCODE_FORMATS.contains(it.format) }
+        val barcode = results.firstOrNull(BarcodeValidator::isValidBarcode)
         if (barcode == null) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
-            viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTING)
+            viewModel.setScannerState(ScannerState.Detecting)
         } else {
             cameraReticleAnimator.cancel()
-            viewModel.setScannerState(BarcodeScannerViewModel.ScannerState.DETECTED)
-            viewModel.detectedBarcode.setValue(barcode)
+            viewModel.setScannerState(ScannerState.Detected(barcode))
         }
 
         graphicOverlay.invalidate()
@@ -76,14 +77,5 @@ class BarcodeProcessor(
         } catch (e: IOException) {
             Timber.e(e, "Failed to close barcode detector!")
         }
-    }
-
-    companion object {
-        private val BARCODE_FORMATS = listOf(
-            Barcode.FORMAT_EAN_8,
-            Barcode.FORMAT_EAN_13,
-            Barcode.FORMAT_UPC_A,
-            Barcode.FORMAT_UPC_E,
-        )
     }
 }

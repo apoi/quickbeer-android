@@ -1,6 +1,5 @@
 package quickbeer.android.feature.search
 
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,6 +19,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.beerlist.repository.BarcodeSearchRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
@@ -90,7 +90,7 @@ open class SearchViewModel(
 
             beerSearchRepository
                 .getStream(beerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
-                // Avoid resorting the results if the set of beers didn't change
+                // Avoid re-sorting the results if the set of beers didn't change
                 .distinctUntilChanged { old, new -> sameIds(old, new, Beer::id) }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collect { _beerResults.postValue(it) }
@@ -156,11 +156,6 @@ open class SearchViewModel(
         return state.value.filter { matcher(query, it.name) }
             .sortedBy(Country::name)
             .let { State.from(it) }
-    }
-
-    private fun isBarcode(query: String): Boolean {
-        // Just a simple sanity check before doing a barcode query
-        return query.isDigitsOnly() && query.length > Constants.BARCODE_MIN_LENGTH
     }
 
     private fun <T> sameIds(a: State<List<T>>, b: State<List<T>>, getId: (T) -> Int): Boolean {
