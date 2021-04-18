@@ -1,6 +1,6 @@
 package quickbeer.android.ui.search
 
-import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -54,7 +54,7 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == BarcodeScannerActivity.BARCODE_RESULT && resultCode == Activity.RESULT_OK) {
+        if (requestCode == BarcodeScannerActivity.BARCODE_RESULT && resultCode == RESULT_OK) {
             val barcode = data?.getStringExtra(BarcodeScannerActivity.KEY_BARCODE)
             val beers = data?.getParcelableArrayListExtra<Beer>(BarcodeScannerActivity.KEY_BEERS)
             if (barcode != null) onBarcodeScanResult(barcode, beers?.toList().orEmpty())

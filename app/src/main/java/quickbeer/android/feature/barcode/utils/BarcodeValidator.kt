@@ -2,6 +2,7 @@ package quickbeer.android.feature.barcode.utils
 
 import com.google.mlkit.vision.barcode.Barcode
 
+@Suppress("MagicNumber")
 object BarcodeValidator {
 
     private val PATTERN = "^(\\d{8}|\\d{12,14})$".toRegex()

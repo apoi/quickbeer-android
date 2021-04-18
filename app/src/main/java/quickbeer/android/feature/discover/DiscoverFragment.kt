@@ -1,7 +1,5 @@
 package quickbeer.android.feature.discover
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -11,7 +9,6 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverFragmentBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.feature.barcode.BarcodeScannerActivity
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter

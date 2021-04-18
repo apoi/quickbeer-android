@@ -24,7 +24,6 @@ import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,10 +33,8 @@ import java.io.IOException
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerActivityBinding
-import quickbeer.android.domain.beer.Beer
 import quickbeer.android.feature.barcode.camera.CameraSource
 import quickbeer.android.feature.barcode.detection.BarcodeProcessor
-import quickbeer.android.feature.barcode.utils.BarcodeValidator
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
@@ -77,6 +74,16 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
         } else {
             startCamera()
         }
+
+        // Emulator testing
+        // 036000291452
+        // 4036328000015
+        /*
+        setResult(RESULT_OK, Intent().apply {
+            putExtra(KEY_BARCODE, "4036328000015")
+        })
+        finish()
+        */
     }
 
     private fun requestPermission() {
@@ -186,10 +193,11 @@ class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activi
                     stopCameraPreview()
                 }
                 is ScannerState.Found -> {
-                    setResult(RESULT_OK, Intent().apply {
+                    val intent = Intent().apply {
                         putExtra(KEY_BARCODE, state.barcode.rawValue)
                         putParcelableArrayListExtra(KEY_BEERS, ArrayList(state.beers))
-                    })
+                    }
+                    setResult(RESULT_OK, intent)
                     finish()
                 }
                 is ScannerState.NotFound -> {

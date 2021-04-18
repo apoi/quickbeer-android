@@ -19,7 +19,6 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beerlist.repository.BarcodeSearchRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository

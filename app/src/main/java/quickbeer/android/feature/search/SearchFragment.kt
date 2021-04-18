@@ -12,8 +12,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverTabTitleBinding
 import quickbeer.android.databinding.SearchFragmentBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.feature.beerdetails.BeerDetailsFragmentArgs
-import quickbeer.android.feature.discover.DiscoverFragmentDirections
+import quickbeer.android.feature.barcode.utils.BarcodeValidator
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.listener.OnTabSelected
 import quickbeer.android.ui.search.SearchBarFragment
@@ -21,7 +20,6 @@ import quickbeer.android.ui.view.SearchView
 import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
 class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
@@ -48,7 +46,12 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     @Suppress("MagicNumber")
     override fun onInitialViewCreated() {
         // Delay for search field opening animation
-        requireView().postDelayed({ binding.searchView.openSearchView() }, 150)
+        requireView().postDelayed(
+            {
+                binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
+            },
+            150
+        )
 
         // Animated background reveal after search is opened
         binding.searchBackground.animate()
@@ -59,8 +62,13 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     }
 
     override fun onRestoreView() {
-        binding.searchView.openSearchView()
+        binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
         binding.searchBackground.scaleY = 1.0f
+    }
+
+    override fun onPause() {
+        binding.searchView.hideKeyboard()
+        super.onPause()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -116,6 +124,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
             ?.isVisible = inProgress
     }
 
+    private fun isBarcodeSearch(): Boolean {
+        return BarcodeValidator.isValidBarcode(binding.searchView.query)
+    }
+
     override fun searchView(): SearchView {
         return binding.searchView
     }
@@ -130,7 +142,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     override fun onBarcodeScanResult(barcode: String, beers: List<Beer>) {
         binding.searchView.query = barcode
-        searchViewModel.onSearchQueryChanged(barcode)
 
         if (beers.size == 1) {
             navigate(Destination.Beer(beers.first().id))

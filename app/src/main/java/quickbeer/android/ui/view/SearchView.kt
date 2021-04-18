@@ -37,7 +37,7 @@ class SearchView @JvmOverloads constructor(
         get() = binding.searchEditText.text.toString()
         set(value) {
             binding.searchEditText.setText(value)
-            binding.searchEditText.setSelection(value.length);
+            binding.searchEditText.setSelection(value.length)
             queryChangedCallback?.invoke(value)
         }
 
@@ -103,7 +103,7 @@ class SearchView @JvmOverloads constructor(
             }
 
             setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) setInputMode() else setNormalMode()
+                if (hasFocus) setInputMode(true) else setNormalMode()
             }
         }
 
@@ -172,13 +172,14 @@ class SearchView @JvmOverloads constructor(
         binding.searchEditText.setMargins(2.dp(), 0, 0, 0)
     }
 
-    private fun setInputMode() {
+    private fun setInputMode(showKeyboard: Boolean) {
         searchFocusChangeCallback?.invoke(true)
 
         // Focusing may open another view instead of activating search
         if (!expandable) return
 
-        showKeyboard()
+        // We may want to just expand the search box without keyboard
+        if (showKeyboard) showKeyboard()
 
         // Card view
         setHeight(60.dp())
@@ -198,8 +199,12 @@ class SearchView @JvmOverloads constructor(
         binding.searchEditText.setMargins(8.dp(), 0, 0, 0)
     }
 
-    fun openSearchView() {
-        binding.searchEditText.requestFocus()
+    fun openSearchView(showKeyboard: Boolean = true) {
+        if (showKeyboard) {
+            binding.searchEditText.requestFocus()
+        } else {
+            setInputMode(false)
+        }
     }
 
     fun closeSearchView(): Boolean {
