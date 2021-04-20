@@ -19,7 +19,7 @@
             app:argType="integer" />
         <argument
             android:name="navbar"
-            android:defaultValue="false"
+            android:defaultValue="true"
             app:argType="boolean" />
         <action
             android:id="@+id/to_photo"

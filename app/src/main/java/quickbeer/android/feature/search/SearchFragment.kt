@@ -47,23 +47,14 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onInitialViewCreated() {
         // Delay for search field opening animation
         requireView().postDelayed(
-            {
-                binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
-            },
+            { binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch()) },
             150
         )
-
-        // Animated background reveal after search is opened
-        binding.searchBackground.animate()
-            .scaleY(1.0f)
-            .setDuration(200)
-            .setStartDelay(350)
-            .start()
     }
 
     override fun onRestoreView() {
+        // Open without delay on restore. TODO SearchView should store its state instead.
         binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
-        binding.searchBackground.scaleY = 1.0f
     }
 
     override fun onPause() {

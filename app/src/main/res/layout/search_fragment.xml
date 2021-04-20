@@ -5,17 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_dark"
-    android:fitsSystemWindows="true"
     android:focusable="true"
     android:focusableInTouchMode="true">
-
-    <View
-        android:id="@+id/search_background"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="@color/gray_85"
-        android:scaleY="0"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_layout"

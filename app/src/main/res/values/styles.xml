@@ -16,6 +16,7 @@
         <item name="tabStyle">@style/TabLayoutLight</item>
 
         <!-- App general background -->
+        <item name="android:navigationBarColor">@color/gray_90</item>
         <item name="android:windowBackground">@drawable/background_dark</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
 
