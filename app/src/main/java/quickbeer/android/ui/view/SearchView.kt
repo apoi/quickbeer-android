@@ -101,10 +101,6 @@ class SearchView @JvmOverloads constructor(
                 submitQuery(text.toString())
                 return@setOnEditorActionListener true
             }
-
-            setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) setInputMode(true) else setNormalMode()
-            }
         }
 
         // Clear button
@@ -201,7 +197,7 @@ class SearchView @JvmOverloads constructor(
 
     fun openSearchView(showKeyboard: Boolean = true) {
         if (showKeyboard) {
-            binding.searchEditText.requestFocus()
+            setInputMode(true)
         } else {
             setInputMode(false)
         }
@@ -217,15 +213,13 @@ class SearchView @JvmOverloads constructor(
     }
 
     private fun showKeyboard() {
-        if (!isInEditMode) {
-            binding.searchEditText.showKeyboard()
-        }
+        binding.searchEditText.showKeyboard()
+        binding.searchEditText.requestFocus()
     }
 
     private fun hideKeyboard() {
-        if (!isInEditMode) {
-            binding.searchEditText.hideKeyboard()
-        }
+        binding.searchEditText.hideKeyboard()
+        binding.searchEditText.clearFocus()
     }
 
     private fun submitQuery(query: String) {

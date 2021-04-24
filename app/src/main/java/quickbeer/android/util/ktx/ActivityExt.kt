@@ -5,6 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 
+fun Activity.hideKeyboard() {
+    hideKeyboard(currentFocus ?: View(this))
+}
+
 /**
  * Lazy ViewBinding creator for Activities that use the alternative
  * constructor with layout passed in arguments.

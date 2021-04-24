@@ -14,8 +14,7 @@ fun View.showKeyboard() {
 }
 
 fun View.hideKeyboard() {
-    getSystemService(context, InputMethodManager::class.java)
-        ?.hideSoftInputFromWindow(windowToken, 0)
+    context.hideKeyboard(this)
 }
 
 fun View.onGlobalLayout(block: () -> Unit) {
