@@ -2,7 +2,7 @@ package quickbeer.android.feature
 
 import android.os.Bundle
 import android.view.View
-import android.view.WindowManager.LayoutParams
+import android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
@@ -92,15 +92,18 @@ class MainActivity :
         setFullscreen(arguments?.getBoolean(NavParams.FULLSCREEN, false) ?: false)
     }
 
-    private fun showNavBar(navbar: Boolean) {
-        binding.mainBottomNav.isVisible = navbar
+    private fun showNavBar(showNavBar: Boolean) {
+        if (binding.mainBottomNav.isVisible != showNavBar) {
+            binding.mainBottomNav.isVisible = showNavBar
+        }
     }
 
-    private fun setFullscreen(fullscreen: Boolean) {
-        if (fullscreen) {
-            window.setFlags(LayoutParams.FLAG_FULLSCREEN, LayoutParams.FLAG_FULLSCREEN)
-        } else {
-            window.clearFlags(LayoutParams.FLAG_FULLSCREEN)
+    private fun setFullscreen(showFullscreen: Boolean) {
+        val isFullscreen = (window.attributes.flags and FLAG_FULLSCREEN) != 0
+        when {
+            isFullscreen == showFullscreen -> Unit
+            showFullscreen -> window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
+            else -> window.clearFlags(FLAG_FULLSCREEN)
         }
     }
 }

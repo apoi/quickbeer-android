@@ -15,7 +15,7 @@
             app:argType="string" />
         <argument
             android:name="navbar"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:argType="boolean" />
         <argument
             android:name="fullscreen"

@@ -58,7 +58,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     }
 
     override fun onPause() {
-        binding.searchView.hideKeyboard()
+        hideKeyboard()
         super.onPause()
     }
 

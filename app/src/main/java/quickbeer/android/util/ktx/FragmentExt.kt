@@ -1,6 +1,8 @@
 package quickbeer.android.util.ktx
 
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
@@ -18,6 +20,11 @@ fun <T> LifecycleOwner.observe(liveData: LiveData<T>, observer: (T) -> Unit) {
 
 fun <T> LifecycleOwner.observeSuccess(liveData: LiveData<State<T>>, observer: (T) -> Unit) {
     liveData.observe(this, { if (it is State.Success) observer(it.value) })
+}
+
+fun Fragment.hideKeyboard() {
+    ContextCompat.getSystemService(requireContext(), InputMethodManager::class.java)
+        ?.hideSoftInputFromWindow(requireView().windowToken, 0)
 }
 
 /**

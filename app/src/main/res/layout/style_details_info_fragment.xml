@@ -1,53 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_refresh_layout"
+    android:id="@+id/details_view"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/card_view_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/details_view"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="@dimen/card_view_margin"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_m"
+        android:background="@color/gray_80">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <quickbeer.android.ui.view.ValueLabel
+            android:id="@+id/parent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/spacing_m"
-            android:background="@color/gray_80">
+            android:layout_marginTop="@dimen/spacing_s"
+            android:layout_marginBottom="@dimen/spacing_s"
+            app:layout_constraintBottom_toTopOf="@id/description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/style_details_parent"
+            app:top_divider="false" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/parent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_s"
-                android:layout_marginBottom="@dimen/spacing_s"
-                app:layout_constraintBottom_toTopOf="@id/description"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/style_details_parent"
-                app:top_divider="false" />
+        <quickbeer.android.ui.view.ValueLabel
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/parent"
+            app:paragraph="true"
+            app:selectable="true"
+            app:title="@string/style_details_description"
+            app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:focusable="false"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/parent"
-                app:paragraph="true"
-                app:selectable="true"
-                app:title="@string/style_details_description"
-                app:top_divider="true" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</androidx.core.widget.NestedScrollView>

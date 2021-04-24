@@ -24,7 +24,6 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlin.math.roundToInt
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -45,8 +44,7 @@ import quickbeer.android.util.ktx.viewBinding
 
 class BeerDetailsInfoFragment :
     BaseFragment(R.layout.beer_details_info_fragment),
-    RatingBar.OnRatingBarChangeListener,
-    SwipeRefreshLayout.OnRefreshListener {
+    RatingBar.OnRatingBarChangeListener {
 
     private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModel<BeerDetailsViewModel> {
@@ -145,10 +143,6 @@ class BeerDetailsInfoFragment :
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRefresh() {
         TODO("Not yet implemented")
     }
 

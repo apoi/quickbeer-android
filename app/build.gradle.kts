@@ -70,7 +70,6 @@ dependencies {
     implementation(Libraries.AndroidX.Room.Runtime)
     kapt(Libraries.AndroidX.Room.Compiler)
     implementation(Libraries.AndroidX.Room.Extensions)
-    implementation(Libraries.AndroidX.SwipeRefreshLayout)
 
     implementation(Libraries.Google.Material)
     implementation(Libraries.Google.Barcode)
