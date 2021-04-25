@@ -9,3 +9,9 @@ class Accept<in V> : Validator<V> {
         return value != null
     }
 }
+
+class NoFetch<in V> : Validator<V> {
+    override fun validate(value: V?): Boolean {
+        return true
+    }
+}

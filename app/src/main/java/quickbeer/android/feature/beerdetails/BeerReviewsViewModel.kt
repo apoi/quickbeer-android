@@ -25,7 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.reviewlist.repository.BeerReviewsRepository
 import quickbeer.android.ui.adapter.review.ReviewListModel
@@ -42,13 +42,20 @@ class BeerReviewsViewModel(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             reviewRepository
-                .getStream(beerId.toString(), Accept())
+                .getStream(beerId.toString(), NoFetch())
                 .map(ReviewListModelDateSortingMapper()::map)
                 .collect { _reviewsState.postValue(it) }
         }
     }
 
-    fun loadPage(itemIndex: Int) {
+    fun loadInitialReviews() {
+        val state = _reviewsState.value
+        if (state !is State.Success || state.value.isEmpty()) {
+            loadReviewPage(0)
+        }
+    }
+
+    fun loadReviewPage(itemIndex: Int) {
         if (itemIndex % ITEMS_ON_PAGE != 0) return
         val page = itemIndex / ITEMS_ON_PAGE + 1
 

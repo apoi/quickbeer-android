@@ -57,7 +57,7 @@ class BeerReviewsFragment :
             addOnScrollListener(loadMoreListener)
         }
 
-        loadMoreListener.moreItemRequestedCallback = viewModel::loadPage
+        loadMoreListener.moreItemRequestedCallback = viewModel::loadReviewPage
         loadMoreListener.setLayoutManager(manager)
     }
 
@@ -65,6 +65,11 @@ class BeerReviewsFragment :
         binding.beersReviewsListView.adapter = null
         binding.beersReviewsListView.clearOnScrollListeners()
         super.onDestroyView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadInitialReviews()
     }
 
     override fun observeViewState() {
