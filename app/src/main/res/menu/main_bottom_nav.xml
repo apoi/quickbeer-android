@@ -6,7 +6,7 @@
         android:contentDescription="@string/discover_description"
         android:title="@string/discover_title" />
     <item
-        android:id="@+id/about"
+        android:id="@+id/more"
         android:icon="@drawable/ic_list"
         android:contentDescription="@string/more_description"
         android:title="@string/more_title" />

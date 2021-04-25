@@ -25,9 +25,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     private val binding by viewBinding(SearchFragmentBinding::bind)
     private val searchViewModel by sharedViewModel<SearchViewModel>()
+    private val args by navArgs<SearchFragmentArgs>()
 
-    private val args: SearchFragmentArgs by navArgs()
     override val searchHint = R.string.search_hint
+
     override fun topInsetView() = binding.contentLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {

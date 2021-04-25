@@ -58,31 +58,33 @@ android {
 }
 
 dependencies {
+    implementation(Libraries.Kotlin.Coroutines.Core)
+    implementation(Libraries.Kotlin.Coroutines.Android)
+
     implementation(Libraries.AndroidX.AppCompat)
     implementation(Libraries.AndroidX.ConstraintLayout)
     implementation(Libraries.AndroidX.CoreKtx)
+    implementation(Libraries.AndroidX.Crypto)
+    implementation(Libraries.AndroidX.Fragment)
+    implementation(Libraries.AndroidX.RecyclerView)
+
     implementation(Libraries.AndroidX.Lifecycle.Common)
     implementation(Libraries.AndroidX.Lifecycle.LiveData)
     implementation(Libraries.AndroidX.Lifecycle.ViewModel)
+
     implementation(Libraries.AndroidX.Navigation.Fragment)
     implementation(Libraries.AndroidX.Navigation.Ui)
-    implementation(Libraries.AndroidX.RecyclerView)
-    implementation(Libraries.AndroidX.Room.Runtime)
+
     kapt(Libraries.AndroidX.Room.Compiler)
+    implementation(Libraries.AndroidX.Room.Runtime)
     implementation(Libraries.AndroidX.Room.Extensions)
 
     implementation(Libraries.Google.Material)
     implementation(Libraries.Google.Barcode)
-    implementation("com.google.mlkit:object-detection:16.2.3")
-    implementation("com.google.mlkit:object-detection-custom:16.3.1")
-    api("com.google.guava:guava:30.1-jre")
 
     implementation(Libraries.Koin.Android)
     implementation(Libraries.Koin.Scope)
     implementation(Libraries.Koin.ViewModel)
-
-    implementation(Libraries.Kotlin.Coroutines.Core)
-    implementation(Libraries.Kotlin.Coroutines.Android)
 
     implementation(Libraries.OkHttp.OkHttp)
     implementation(Libraries.OkHttp.AndroidSupport)

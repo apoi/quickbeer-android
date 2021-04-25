@@ -25,7 +25,8 @@
 
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>
-    <color name="orange_dark">#B76E06</color>
+    <color name="orange_dark">#AE6D0F</color>
+    <color name="orange3">#8E5505</color>
 
     <!-- Search -->
     <color name="search_shadow">#99000000</color>

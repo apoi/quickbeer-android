@@ -38,6 +38,8 @@ object Versions {
         const val Camera = "1.0.0-rc04"
         const val ConstraintLayout = "2.0.4"
         const val CoreKt = "1.3.2"
+        const val Crypto = "1.0.0"
+        const val Fragment = "1.3.3"
         const val Lifecycle = "2.3.0"
         const val Navigation = "2.3.4"
         const val RecyclerView = "1.1.0"
@@ -107,6 +109,8 @@ object Libraries {
         const val AppCompat = "androidx.appcompat:appcompat:${Versions.AndroidX.AppCompat}"
         const val ConstraintLayout = "com.android.support.constraint:constraint-layout:${Versions.AndroidX.ConstraintLayout}"
         const val CoreKtx = "androidx.core:core-ktx:${Versions.AndroidX.CoreKt}"
+        const val Crypto = "androidx.security:security-crypto:${Versions.AndroidX.Crypto}"
+        const val Fragment = "androidx.fragment:fragment:${Versions.AndroidX.Fragment}"
         const val RecyclerView = "androidx.recyclerview:recyclerview:${Versions.AndroidX.RecyclerView}"
         const val SwipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:${Versions.AndroidX.SwipeRefreshLayout}"
     }

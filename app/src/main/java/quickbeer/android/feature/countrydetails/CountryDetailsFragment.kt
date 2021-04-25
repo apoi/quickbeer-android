@@ -35,11 +35,11 @@ import quickbeer.android.util.ktx.viewBinding
 
 class CountryDetailsFragment : MainFragment(R.layout.details_fragment) {
 
-    override fun topInsetView() = binding.toolbar
-
-    private val args: CountryDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModel<CountryDetailsViewModel> { parametersOf(args.id) }
+    private val args by navArgs<CountryDetailsFragmentArgs>()
+
+    override fun topInsetView() = binding.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

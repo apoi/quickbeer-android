@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/about"
-    app:startDestination="@id/about_fragment">
+    android:id="@+id/more"
+    app:startDestination="@id/more_fragment">
+
+    <fragment
+        android:id="@+id/more_fragment"
+        android:name="quickbeer.android.feature.more.MoreFragment"
+        android:label="@string/more_title"
+        tools:layout="@layout/more_fragment">
+        <action
+            android:id="@+id/to_login"
+            app:destination="@id/login_dialog" />
+    </fragment>
 
     <fragment
         android:id="@+id/about_fragment"
         android:name="quickbeer.android.feature.about.AboutFragment"
         android:label="@string/more_title"
         tools:layout="@layout/about_fragment" />
+
+    <dialog
+        android:id="@+id/login_dialog"
+        android:name="quickbeer.android.feature.login.LoginDialog"
+        android:label="@string/more_title"
+        tools:layout="@layout/login_dialog_fragment" />
 
 </navigation>

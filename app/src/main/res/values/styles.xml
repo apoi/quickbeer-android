@@ -65,6 +65,25 @@
         <item name="android:textColor">@color/text_hint</item>
     </style>
 
+    <!-- Button -->
+    <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:height">56dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+
+    <style name="AppTheme.Button.Primary">
+        <item name="backgroundTint">@color/orange_dark</item>
+    </style>
+
+    <!-- Text input -->
+    <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorOnSurface">@color/orange</item>
+    </style>
+
     <!-- Progress indicator -->
     <style name="AppTheme.SmallIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
         <item name="indicatorColor">@color/orange</item>
