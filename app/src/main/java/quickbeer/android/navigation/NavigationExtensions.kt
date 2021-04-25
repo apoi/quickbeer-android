@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import quickbeer.android.R
+import quickbeer.android.ui.base.Resetable
 
 /**
  * Manages the various graphs needed for a [BottomNavigationView].
@@ -192,11 +193,15 @@ private fun BottomNavigationView.setupItemReselected(
         val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
             as NavHostFragment
         val navController = selectedFragment.navController
-        // Pop the back stack to the start destination of the current navController graph
-        navController.popBackStack(
-            navController.graph.startDestination,
-            false
-        )
+
+        if (navController.graph.startDestination != navController.currentDestination?.id) {
+            // Pop the back stack to the start destination of the current navController graph
+            navController.popBackStack(navController.graph.startDestination, false)
+        } else {
+            // Already at the start destination, reset the fragment
+            val currentFragment = selectedFragment.childFragmentManager.fragments.lastOrNull()
+            (currentFragment as? Resetable)?.onReset()
+        }
     }
 }
 

@@ -14,6 +14,7 @@ import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
+import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
@@ -22,7 +23,7 @@ import quickbeer.android.ui.view.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
-class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
+class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetable {
 
     private val binding by viewBinding(DiscoverFragmentBinding::bind)
     private val viewModel by viewModel<DiscoverViewModel>()
@@ -95,6 +96,10 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
         super.onSearchFocusChanged(hasFocus)
 
         if (hasFocus) navigate(DiscoverFragmentDirections.toSearch(), NavAnim.NONE)
+    }
+
+    override fun onReset() {
+        binding.recyclerView.smoothScrollToPosition(0)
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
