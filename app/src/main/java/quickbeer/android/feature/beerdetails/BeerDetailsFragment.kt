@@ -35,7 +35,6 @@ import quickbeer.android.util.ktx.viewBinding
 
 class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
-    override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.toolbar
 
     private val args: BeerDetailsFragmentArgs by navArgs()

@@ -28,7 +28,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     private val args: SearchFragmentArgs by navArgs()
     override val searchHint = R.string.search_hint
-    override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.contentLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,11 +54,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onRestoreView() {
         // Open without delay on restore. TODO SearchView should store its state instead.
         binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
-    }
-
-    override fun onPause() {
-        hideKeyboard()
-        super.onPause()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

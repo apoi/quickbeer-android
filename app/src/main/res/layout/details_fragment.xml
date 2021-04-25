@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="224dp">
+        android:layout_height="224dp"
+        android:fitsSystemWindows="true">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/ToolbarCollapsedText"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="20dp"
@@ -26,6 +29,7 @@
                 android:id="@+id/collapsing_toolbar_background"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax" />
 
@@ -33,7 +37,8 @@
                 android:id="@+id/toolbar_overlay_gradient"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/toolbar_gradient" />
+                android:background="@drawable/toolbar_gradient"
+                android:fitsSystemWindows="true" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

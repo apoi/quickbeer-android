@@ -29,7 +29,6 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment) {
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override val searchHint = R.string.search_hint
-    override fun rootLayout() = binding.layout
     override fun topInsetView() = binding.layout
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
