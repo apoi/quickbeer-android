@@ -3,11 +3,11 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
         <item name="colorPrimary">@color/gray_90</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/orange</item>
+        <item name="colorAccent">@color/orange_dark</item>
         <item name="colorOnSurface">@color/gray_50</item>
 
         <item name="android:textColor">@color/text_light</item>
-        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="android:textColorHint">?attr/colorOnSurface</item>
 
         <!-- Color for toolbar icons -->
         <item name="colorControlNormal">@color/icon_light</item>
@@ -17,7 +17,7 @@
 
         <!-- App general background -->
         <item name="android:statusBarColor">@color/transparent</item>
-        <item name="android:navigationBarColor">@color/gray_90</item>
+        <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:windowBackground">@drawable/background_dark</item>
         <item name="toolbarNavigationButtonStyle">@style/TintedNavigation</item>
 
@@ -33,7 +33,7 @@
     <!-- Toolbar -->
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
-        <item name="android:background">@color/gray_90</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
     <style name="TintedNavigation" parent="Widget.AppCompat.Toolbar.Button.Navigation">
@@ -80,23 +80,23 @@
     </style>
 
     <style name="AppTheme.Button.Primary">
-        <item name="backgroundTint">@color/orange_dark</item>
+        <item name="backgroundTint">?attr/colorAccent</item>
     </style>
 
     <!-- Text input -->
     <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorOnSurface">@color/orange</item>
+        <item name="colorPrimary">?attr/colorAccent</item>
+        <item name="colorOnSurface">?attr/colorAccent</item>
     </style>
 
     <!-- Progress indicator -->
     <style name="AppTheme.Progress.Normal" parent="Widget.MaterialComponents.CircularProgressIndicator.Medium">
-        <item name="indicatorColor">@color/orange</item>
+        <item name="indicatorColor">?attr/colorAccent</item>
         <item name="android:indeterminate">true</item>
     </style>
 
     <style name="AppTheme.Progress.Small" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
-        <item name="indicatorColor">@color/orange</item>
+        <item name="indicatorColor">?attr/colorAccent</item>
         <item name="trackThickness">1.5dp</item>
         <item name="indicatorSize">15dp</item>
         <item name="android:indeterminate">true</item>

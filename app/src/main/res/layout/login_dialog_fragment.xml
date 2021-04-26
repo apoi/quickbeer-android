@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/gray_90"
+    android:background="?attr/colorPrimary"
     android:minWidth="300dp"
     android:orientation="vertical"
     android:padding="@dimen/spacing_xl">
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_m"
-        android:text="Log in using your RateBeer credentials." />
+        android:text="Log in using your RateBeer credentials" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/username_layout"

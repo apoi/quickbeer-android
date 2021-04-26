@@ -16,17 +16,16 @@
 
     <!-- Icons -->
     <color name="icon_light">@color/white</color>
-    <color name="icon_dark">@color/gray_50</color>
+    <color name="icon_dark">?attr/colorOnSurface</color>
 
     <!-- Text -->
     <color name="text_dark">@color/black</color>
     <color name="text_light">@color/white</color>
-    <color name="text_hint">@color/gray_50</color>
+    <color name="text_hint">?attr/colorOnSurface</color>
 
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>
-    <color name="orange_dark">#AE6D0F</color>
-    <color name="orange3">#8E5505</color>
+    <color name="orange_dark">#C17D1C</color>
 
     <!-- Search -->
     <color name="search_shadow">#99000000</color>

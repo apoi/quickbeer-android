@@ -19,6 +19,7 @@
         <path
             android:pathData="M26.5,14A12.5,12.5 0,0 1,14 26.5"
             android:strokeWidth="3"
+            android:strokeAlpha="0.75"
             android:strokeColor="@color/black" />
 
     </group>
