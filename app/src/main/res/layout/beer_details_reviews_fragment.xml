@@ -1,16 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<quickbeer.android.feature.beerdetails.BeerReviewsView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/beer_reviews_view"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/beers_reviews_list_view"
+        android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="20dp"
         android:scrollbars="vertical" />
 
-</quickbeer.android.feature.beerdetails.BeerReviewsView>
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progress"
+        style="@style/AppTheme.Progress.Normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/spacing_xl"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:visibility="gone"
+        tools:text="Show reviews"
+        tools:visibility="visible" />
+
+</FrameLayout>

@@ -85,10 +85,16 @@
     </style>
 
     <!-- Progress indicator -->
-    <style name="AppTheme.SmallIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
+    <style name="AppTheme.Progress.Normal" parent="Widget.MaterialComponents.CircularProgressIndicator.Medium">
+        <item name="indicatorColor">@color/orange</item>
+        <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="AppTheme.Progress.Small" parent="Widget.MaterialComponents.CircularProgressIndicator.ExtraSmall">
         <item name="indicatorColor">@color/orange</item>
         <item name="trackThickness">1.5dp</item>
         <item name="indicatorSize">15dp</item>
+        <item name="android:indeterminate">true</item>
     </style>
 
     <!-- Beer details -->

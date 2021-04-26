@@ -112,6 +112,10 @@
     <string name="review_mouthfeel_hint">The “feel” of the beer inside your mouth and as you swallow it.</string>
     <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
+    <!-- Review list messages -->
+    <string name="review_list_empty">This beer hasn\'t been reviewed yet.</string>
+    <string name="review_list_error">Error! Try again later.</string>
+
     <!-- Barcode -->
     <string name="cd_close_button">Back</string>
     <string name="cd_flash_button">Toggle camera flash</string>

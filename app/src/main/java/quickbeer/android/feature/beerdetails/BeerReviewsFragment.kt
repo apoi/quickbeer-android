@@ -20,11 +20,13 @@ package quickbeer.android.feature.beerdetails
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
+import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsReviewsFragmentBinding
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.base.ListAdapter
@@ -32,7 +34,7 @@ import quickbeer.android.ui.adapter.review.ReviewListModel
 import quickbeer.android.ui.adapter.review.ReviewTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.LoadMoreListener
-import quickbeer.android.util.ktx.observeSuccess
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class BeerReviewsFragment :
@@ -51,7 +53,7 @@ class BeerReviewsFragment :
 
         val manager = LinearLayoutManager(context)
 
-        binding.beersReviewsListView.apply {
+        binding.list.apply {
             adapter = reviewsAdapter
             layoutManager = manager
             addOnScrollListener(loadMoreListener)
@@ -62,8 +64,8 @@ class BeerReviewsFragment :
     }
 
     override fun onDestroyView() {
-        binding.beersReviewsListView.adapter = null
-        binding.beersReviewsListView.clearOnScrollListeners()
+        binding.list.adapter = null
+        binding.list.clearOnScrollListeners()
         super.onDestroyView()
     }
 
@@ -73,11 +75,31 @@ class BeerReviewsFragment :
     }
 
     override fun observeViewState() {
-        observeSuccess(viewModel.reviewsState, ::setReviews)
-    }
-
-    private fun setReviews(reviews: List<ReviewListModel>) {
-        reviewsAdapter.setItems(reviews)
+        observe(viewModel.reviewsState) { state ->
+            when (state) {
+                is State.Loading -> {
+                    binding.message.isVisible = false
+                    binding.progress.show()
+                }
+                is State.Empty -> {
+                    reviewsAdapter.setItems(emptyList())
+                    binding.message.text = getString(R.string.review_list_empty)
+                    binding.message.isVisible = true
+                    binding.progress.hide()
+                }
+                is State.Success -> {
+                    reviewsAdapter.setItems(state.value)
+                    binding.message.isVisible = false
+                    binding.progress.hide()
+                }
+                is State.Error -> {
+                    reviewsAdapter.setItems(emptyList())
+                    binding.message.text = getString(R.string.review_list_error)
+                    binding.message.isVisible = true
+                    binding.progress.hide()
+                }
+            }
+        }
     }
 
     companion object {
