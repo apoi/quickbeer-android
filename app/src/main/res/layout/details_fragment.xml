@@ -23,7 +23,8 @@
             app:expandedTitleMarginStart="20dp"
             app:expandedTitleTextAppearance="@style/ToolbarExpandedText"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:maxLines="3">
+            app:maxLines="3"
+            app:statusBarScrim="?attr/colorPrimary">
 
             <ImageView
                 android:id="@+id/collapsing_toolbar_background"
