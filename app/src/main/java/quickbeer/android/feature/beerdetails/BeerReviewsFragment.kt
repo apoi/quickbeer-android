@@ -27,7 +27,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BeerDetailsReviewsFragmentBinding
+import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.review.ReviewListModel
@@ -38,9 +38,10 @@ import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class BeerReviewsFragment :
-    BaseFragment(R.layout.beer_details_reviews_fragment) {
+    BaseFragment(R.layout.list_fragment) {
 
-    private val binding by viewBinding(BeerDetailsReviewsFragmentBinding::bind)
+    private val binding by viewBinding(ListContentBinding::bind)
+
     private val reviewsAdapter = ListAdapter<ReviewListModel>(ReviewTypeFactory())
     private val viewModel by viewModel<BeerReviewsViewModel> {
         parametersOf(requireArguments().getInt(NavParams.ID))
@@ -53,7 +54,7 @@ class BeerReviewsFragment :
 
         val manager = LinearLayoutManager(context)
 
-        binding.list.apply {
+        binding.recyclerView.apply {
             adapter = reviewsAdapter
             layoutManager = manager
             addOnScrollListener(loadMoreListener)
@@ -64,8 +65,8 @@ class BeerReviewsFragment :
     }
 
     override fun onDestroyView() {
-        binding.list.adapter = null
-        binding.list.clearOnScrollListeners()
+        binding.recyclerView.adapter = null
+        binding.recyclerView.clearOnScrollListeners()
         super.onDestroyView()
     }
 

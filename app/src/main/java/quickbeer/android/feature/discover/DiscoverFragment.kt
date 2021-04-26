@@ -8,6 +8,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverFragmentBinding
+import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
@@ -26,6 +27,8 @@ import quickbeer.android.util.ktx.viewBinding
 class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetable {
 
     private val binding by viewBinding(DiscoverFragmentBinding::bind)
+    private val listBinding by viewBinding(ListContentBinding::bind)
+
     private val viewModel by viewModel<DiscoverViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
@@ -36,9 +39,9 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.message.text = getString(R.string.message_start)
+        listBinding.message.text = getString(R.string.message_start)
 
-        binding.recyclerView.apply {
+        listBinding.recyclerView.apply {
             adapter = beersAdapter
             layoutManager = LinearLayoutManager(context).apply {
                 recycleChildrenOnDetach = true
@@ -56,7 +59,7 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
     }
 
     override fun onDestroyView() {
-        binding.recyclerView.adapter = null
+        listBinding.recyclerView.adapter = null
         super.onDestroyView()
     }
 
@@ -65,25 +68,25 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
             when (state) {
                 is State.Loading -> {
                     beersAdapter.setItems(emptyList())
-                    binding.message.isVisible = false
-                    binding.progress.show()
+                    listBinding.message.isVisible = false
+                    listBinding.progress.show()
                 }
                 State.Empty -> {
                     beersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_empty)
-                    binding.message.isVisible = true
-                    binding.progress.hide()
+                    listBinding.message.text = getString(R.string.message_empty)
+                    listBinding.message.isVisible = true
+                    listBinding.progress.hide()
                 }
                 is State.Success -> {
                     beersAdapter.setItems(state.value)
-                    binding.message.isVisible = false
-                    binding.progress.hide()
+                    listBinding.message.isVisible = false
+                    listBinding.progress.hide()
                 }
                 is State.Error -> {
                     beersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_error)
-                    binding.message.isVisible = true
-                    binding.progress.hide()
+                    listBinding.message.text = getString(R.string.message_error)
+                    listBinding.message.isVisible = true
+                    listBinding.progress.hide()
                 }
             }
         }
@@ -100,7 +103,7 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
     }
 
     override fun onReset() {
-        binding.recyclerView.smoothScrollToPosition(0)
+        listBinding.recyclerView.smoothScrollToPosition(0)
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
