@@ -26,7 +26,7 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.16.0"
+        const val Detekt = "1.17.0-RC2"
         const val Gradle = "4.1.2"
         const val Kotlin = "1.4.31"
         const val Ktlint = "10.0.0"
@@ -63,6 +63,7 @@ object Versions {
     }
 
     const val Coil = "1.1.1"
+    const val CookieJar = "v1.0.1"
     const val Koin = "2.2.2"
     const val Ktlint = "0.40.0"
     const val LeakCanary = "2.6"
@@ -121,12 +122,12 @@ object Libraries {
     }
 
     object Koin {
-        const val Core = "org.koin:koin-core:${Versions.Koin}"
-        const val Android = "org.koin:koin-android:${Versions.Koin}"
-        const val Scope = "org.koin:koin-androidx-scope:${Versions.Koin}"
-        const val ViewModel = "org.koin:koin-androidx-viewmodel:${Versions.Koin}"
-        const val Extension = "org.koin:koin-androidx-ext:${Versions.Koin}"
-        const val Test = "org.koin:koin-test:${Versions.Koin}"
+        const val Core = "io.insert-koin:koin-core:${Versions.Koin}"
+        const val Android = "io.insert-koin:koin-android:${Versions.Koin}"
+        const val Scope = "io.insert-koin:koin-androidx-scope:${Versions.Koin}"
+        const val ViewModel = "io.insert-koin:koin-androidx-viewmodel:${Versions.Koin}"
+        const val Extension = "io.insert-koin:koin-androidx-ext:${Versions.Koin}"
+        const val Test = "io.insert-koin:koin-test:${Versions.Koin}"
     }
 
     object Kotlin {
@@ -152,6 +153,7 @@ object Libraries {
         const val Svg = "io.coil-kt:coil-svg:${Versions.Coil}"
     }
 
+    const val CookieJar = "com.github.franmontiel:PersistentCookieJar:${Versions.CookieJar}"
     const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"
     const val PhotoView = "com.github.chrisbanes:PhotoView:${Versions.PhotoView}"
     const val ThreeTenABP = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP}"

@@ -99,6 +99,7 @@ dependencies {
     implementation(Libraries.PhotoView)
     implementation(Libraries.ThreeTenABP)
     implementation(Libraries.Timber)
+    implementation(Libraries.CookieJar)
 
     // Debug
     debugImplementation(Libraries.LeakCanary)

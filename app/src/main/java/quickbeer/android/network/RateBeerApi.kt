@@ -1,5 +1,6 @@
 package quickbeer.android.network
 
+import okhttp3.ResponseBody
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
 import quickbeer.android.domain.review.network.ReviewJson
@@ -14,18 +15,15 @@ import retrofit2.http.QueryMap
 
 interface RateBeerApi {
 
+    // LOGIN
+
     @FormUrlEncoded
     @POST("/Signin_r.asp")
     suspend fun login(
-        @Field("username")
-        username: String,
-
-        @Field("pwd")
-        password: String,
-
-        @Field("saveinfo")
-        saveinfo: String
-    )
+        @Field("username") username: String,
+        @Field("pwd") password: String,
+        @Field("saveinfo") saveinfo: String
+    ): ApiResult<ResponseBody>
 
     // BEERS
 

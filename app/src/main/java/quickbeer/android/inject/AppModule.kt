@@ -72,6 +72,7 @@ import quickbeer.android.feature.beerdetails.BeerReviewsViewModel
 import quickbeer.android.feature.brewerdetails.BrewerDetailsViewModel
 import quickbeer.android.feature.countrydetails.CountryDetailsViewModel
 import quickbeer.android.feature.discover.DiscoverViewModel
+import quickbeer.android.feature.login.LoginViewModel
 import quickbeer.android.feature.recentbeers.RecentBeersViewModel
 import quickbeer.android.feature.search.SearchViewModel
 import quickbeer.android.feature.styledetails.StyleDetailsViewModel
@@ -81,6 +82,7 @@ import quickbeer.android.network.adapter.EscapedStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
+import quickbeer.android.network.interceptor.LoginRedirectInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
 import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ToastProvider
@@ -96,6 +98,7 @@ val appModule = module {
             .cache(Cache(androidContext().cacheDir, TEN_MEGABYTES))
             .addInterceptor(AppKeyInterceptor())
             .addInterceptor(LoggingInterceptor.create())
+            .addInterceptor(LoginRedirectInterceptor())
             .build()
     }
 
@@ -197,6 +200,7 @@ val appModule = module {
     factory { BeerReviewsRepository(get(), get(), get()) }
 
     // ViewModels
+    viewModel { LoginViewModel(get()) }
     viewModel { BarcodeScannerViewModel(get()) }
     viewModel { RecentBeersViewModel(get(), get()) }
     viewModel { DiscoverViewModel(get(), get()) }
