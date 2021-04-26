@@ -10,7 +10,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
-import quickbeer.android.databinding.ListFragmentBinding
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.base.ListItem

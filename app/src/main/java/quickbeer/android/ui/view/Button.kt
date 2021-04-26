@@ -25,6 +25,7 @@ class Button @JvmOverloads constructor(
         set(value) {
             if (value != _isLoading) {
                 _isLoading = value
+                if (_isLoading) isEnabled = false
                 updateText()
                 updateIcon()
             }

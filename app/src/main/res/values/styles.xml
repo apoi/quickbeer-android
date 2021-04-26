@@ -1,10 +1,18 @@
 <resources>
 
     <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary elements, such as background -->
         <item name="colorPrimary">@color/gray_90</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/orange_dark</item>
+
+        <!-- Secondary elements, such as unfocused/disabled -->
+        <item name="colorSecondary">@color/gray_70</item>
+
+        <!-- Elements on top of primary/secondary -->
         <item name="colorOnSurface">@color/gray_50</item>
+
+        <!-- Action/active elements -->
+        <item name="colorAccent">@color/orange_dark</item>
 
         <item name="android:textColor">@color/text_light</item>
         <item name="android:textColorHint">?attr/colorOnSurface</item>
@@ -80,13 +88,19 @@
     </style>
 
     <style name="AppTheme.Button.Primary">
-        <item name="backgroundTint">?attr/colorAccent</item>
+        <item name="backgroundTint">@color/button_primary_color</item>
     </style>
 
     <!-- Text input -->
-    <style name="AppTheme.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="colorPrimary">?attr/colorAccent</item>
-        <item name="colorOnSurface">?attr/colorAccent</item>
+    <style name="AppTheme.TextInput.Cursor" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="colorControlActivated">@color/gray_30</item>
+    </style>
+
+    <style name="AppTheme.TextInput.Layout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/text_input_outline_color</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="hintTextColor">@color/gray_30</item>
+        <item name="materialThemeOverlay">@style/AppTheme.TextInput.Cursor</item>
     </style>
 
     <!-- Progress indicator -->
