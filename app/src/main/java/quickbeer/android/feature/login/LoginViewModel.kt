@@ -1,10 +1,10 @@
 package quickbeer.android.feature.login
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
 import quickbeer.android.network.RateBeerApi
@@ -14,8 +14,8 @@ class LoginViewModel(
     private val api: RateBeerApi
 ) : ViewModel() {
 
-    private val _loginState = MutableLiveData<State<Boolean>>()
-    val loginState: LiveData<State<Boolean>> = _loginState
+    private val _loginState = MutableStateFlow<State<Boolean>>(State.Empty)
+    val loginState: Flow<State<Boolean>> = _loginState
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {

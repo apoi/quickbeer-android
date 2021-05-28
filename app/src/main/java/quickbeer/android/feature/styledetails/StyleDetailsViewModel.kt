@@ -17,12 +17,13 @@
  */
 package quickbeer.android.feature.styledetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
@@ -41,28 +42,28 @@ class StyleDetailsViewModel(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val _styleState = MutableLiveData<State<Style>>()
-    val styleState: LiveData<State<Style>> = _styleState
+    private val _styleState = MutableStateFlow<State<Style>>(State.Empty)
+    val styleState: Flow<State<Style>> = _styleState
 
-    private val _beersState = MutableLiveData<State<List<BeerListModel>>>()
-    val beersState: LiveData<State<List<BeerListModel>>> = _beersState
+    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    val beersState: Flow<State<List<BeerListModel>>> = _beersState
 
-    private val _parentStyleState = MutableLiveData<State<Style>>()
-    val parentStyleState: LiveData<State<Style>> = _parentStyleState
+    private val _parentStyleState = MutableStateFlow<State<Style>>(State.Empty)
+    val parentStyleState: Flow<State<Style>> = _parentStyleState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             styleRepository.getStream(styleId, Accept())
                 .collect {
                     if (it is State.Success) getParentStyle(it.value.parent)
-                    _styleState.postValue(it)
+                    _styleState.emit(it)
                 }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             beersInStyleRepository.getStream(styleId.toString(), Accept())
                 .map(BeerListModelRatingMapper(beerRepository)::map)
-                .collect { _beersState.postValue(it) }
+                .collectLatest(_beersState::emit)
         }
     }
 
@@ -71,7 +72,7 @@ class StyleDetailsViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             styleRepository.getStream(parentStyleId, Accept())
-                .collect { _parentStyleState.postValue(it) }
+                .collectLatest(_parentStyleState::emit)
         }
     }
 }

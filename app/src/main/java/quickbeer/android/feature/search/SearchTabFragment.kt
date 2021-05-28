@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.coroutines.flow.Flow
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
@@ -29,7 +29,7 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
 
     protected abstract val resultAdapter: ListAdapter<T>
     protected abstract val resultPoolType: PoolType
-    protected abstract fun resultFlow(): LiveData<State<List<T>>>
+    protected abstract fun resultFlow(): Flow<State<List<T>>>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.recyclerView.apply {

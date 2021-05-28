@@ -16,14 +16,14 @@
 
 package quickbeer.android.feature.barcode
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.Barcode
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
@@ -38,8 +38,8 @@ class BarcodeScannerViewModel(
 
     private val detectedBarcode = MutableSharedFlow<Barcode>()
 
-    private val _scannerState = MutableLiveData<ScannerState>(ScannerState.NotStarted)
-    val scannerState: LiveData<ScannerState> = _scannerState
+    private val _scannerState = MutableStateFlow<ScannerState>(ScannerState.NotStarted)
+    val scannerState: Flow<ScannerState> = _scannerState
 
     var isCameraLive = false
         private set
@@ -51,14 +51,14 @@ class BarcodeScannerViewModel(
                     beerSearchRepository.getStream(barcode.rawValue, Accept())
                         .mapNotNull { state -> mapResult(barcode, state) }
                 }
-                .collect { _scannerState.postValue(it) }
+                .collectLatest(_scannerState::emit)
         }
     }
 
     fun setScannerState(state: ScannerState) {
         viewModelScope.launch(Dispatchers.IO) {
             if (_scannerState.value != state) {
-                _scannerState.postValue(state)
+                _scannerState.emit(state)
             }
 
             if (state is ScannerState.Detected) {

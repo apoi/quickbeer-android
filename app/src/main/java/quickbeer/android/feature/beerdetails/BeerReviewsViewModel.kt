@@ -17,12 +17,12 @@
  */
 package quickbeer.android.feature.beerdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.NoFetch
@@ -36,15 +36,15 @@ class BeerReviewsViewModel(
     private val reviewRepository: BeerReviewsRepository
 ) : ViewModel() {
 
-    private val _reviewsState = MutableLiveData<State<List<ReviewListModel>>>()
-    val reviewsState: LiveData<State<List<ReviewListModel>>> = _reviewsState
+    private val _reviewsState = MutableStateFlow<State<List<ReviewListModel>>>(State.Empty)
+    val reviewsState: Flow<State<List<ReviewListModel>>> = _reviewsState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             reviewRepository
                 .getStream(beerId.toString(), NoFetch())
                 .map(ReviewListModelDateSortingMapper()::map)
-                .collect { _reviewsState.postValue(it) }
+                .collectLatest(_reviewsState::emit)
         }
     }
 

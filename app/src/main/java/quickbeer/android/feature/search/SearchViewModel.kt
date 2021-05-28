@@ -1,12 +1,11 @@
 package quickbeer.android.feature.search
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
@@ -49,17 +48,17 @@ open class SearchViewModel(
     private val queryFlow = MutableStateFlow("")
     private val typeFlow = MutableStateFlow(SearchType.BEER)
 
-    private val _beerResults = MutableLiveData<State<List<BeerListModel>>>()
-    val beerResults: LiveData<State<List<BeerListModel>>> = _beerResults
+    private val _beerResults = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    val beerResults: Flow<State<List<BeerListModel>>> = _beerResults
 
-    private val _brewerResults = MutableLiveData<State<List<BrewerListModel>>>()
-    val brewerResults: LiveData<State<List<BrewerListModel>>> = _brewerResults
+    private val _brewerResults = MutableStateFlow<State<List<BrewerListModel>>>(State.Empty)
+    val brewerResults: Flow<State<List<BrewerListModel>>> = _brewerResults
 
-    private val _styleResults = MutableLiveData<State<List<StyleListModel>>>()
-    val styleResults: LiveData<State<List<StyleListModel>>> = _styleResults
+    private val _styleResults = MutableStateFlow<State<List<StyleListModel>>>(State.Empty)
+    val styleResults: Flow<State<List<StyleListModel>>> = _styleResults
 
-    private val _countryResults = MutableLiveData<State<List<CountryListModel>>>()
-    val countryResults: LiveData<State<List<CountryListModel>>> = _countryResults
+    private val _countryResults = MutableStateFlow<State<List<CountryListModel>>>(State.Empty)
+    val countryResults: Flow<State<List<CountryListModel>>> = _countryResults
 
     private val queryLengthValidator = object : Repository.KeyValidator<String> {
         override fun isEmpty(key: String) = key.isEmpty()
@@ -92,7 +91,7 @@ open class SearchViewModel(
                 // Avoid re-sorting the results if the set of beers didn't change
                 .distinctUntilChanged { old, new -> sameIds(old, new, Beer::id) }
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
-                .collect { _beerResults.postValue(it) }
+                .collectLatest(_beerResults::emit)
         }
     }
 
@@ -106,7 +105,7 @@ open class SearchViewModel(
                 .getStream(brewerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 .distinctUntilChanged { old, new -> sameIds(old, new, Brewer::id) }
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
-                .collect { _brewerResults.postValue(it) }
+                .collectLatest(_brewerResults::emit)
         }
     }
 
@@ -121,7 +120,7 @@ open class SearchViewModel(
                         .map { filterStyles(it, query) }
                 }
                 .map(StateListMapper(::StyleListModel)::map)
-                .collect { _styleResults.postValue(it) }
+                .collectLatest(_styleResults::emit)
         }
     }
 
@@ -136,7 +135,7 @@ open class SearchViewModel(
                         .map { filterCountries(it, query) }
                 }
                 .map(StateListMapper(::CountryListModel)::map)
-                .collect { _countryResults.postValue(it) }
+                .collectLatest(_countryResults::emit)
         }
     }
 

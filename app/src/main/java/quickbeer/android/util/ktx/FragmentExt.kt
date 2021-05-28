@@ -3,21 +3,27 @@ package quickbeer.android.util.ktx
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.coroutineScope
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
 import quickbeer.android.data.state.State
 
 /**
- * LiveData observing helper.
+ * Flow observing helper.
  */
-fun <T> LifecycleOwner.observe(liveData: LiveData<T>, observer: (T) -> Unit) {
-    liveData.observe(this, observer::invoke)
+fun <T> LifecycleOwner.observe(flow: Flow<T>, observer: (T) -> Unit) {
+    lifecycle.coroutineScope.launchWhenStarted {
+        flow.collectLatest { observer.invoke(it) }
+    }
 }
 
-fun <T> LifecycleOwner.observeSuccess(liveData: LiveData<State<T>>, observer: (T) -> Unit) {
-    liveData.observe(this, { if (it is State.Success) observer(it.value) })
+fun <T> LifecycleOwner.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
+    lifecycle.coroutineScope.launchWhenStarted {
+        flow.collectLatest { if (it is State.Success) observer(it.value) }
+    }
 }
 
 fun Fragment.hideKeyboard() {

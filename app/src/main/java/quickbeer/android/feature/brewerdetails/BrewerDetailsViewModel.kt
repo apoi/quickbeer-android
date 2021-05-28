@@ -17,12 +17,13 @@
  */
 package quickbeer.android.feature.brewerdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
@@ -45,20 +46,20 @@ class BrewerDetailsViewModel(
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
-    private val _brewerState = MutableLiveData<State<Brewer>>()
-    val brewerState: LiveData<State<Brewer>> = _brewerState
+    private val _brewerState = MutableStateFlow<State<Brewer>>(State.Empty)
+    val brewerState: Flow<State<Brewer>> = _brewerState
 
-    private val _beersState = MutableLiveData<State<List<BeerListModel>>>()
-    val beersState: LiveData<State<List<BeerListModel>>> = _beersState
+    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    val beersState: Flow<State<List<BeerListModel>>> = _beersState
 
-    private val _addressState = MutableLiveData<State<Address>>()
-    val addressState: LiveData<State<Address>> = _addressState
+    private val _addressState = MutableStateFlow<State<Address>>(State.Empty)
+    val addressState: Flow<State<Address>> = _addressState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
                 .collect {
-                    _brewerState.postValue(it)
+                    _brewerState.emit(it)
                     if (it is State.Success) getAddress(it.value)
                 }
         }
@@ -66,7 +67,7 @@ class BrewerDetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             brewersBeersRepository.getStream(brewerId.toString(), Accept())
                 .map(BeerListModelAlphabeticMapper(beerRepository)::map)
-                .collect { _beersState.postValue(it) }
+                .collectLatest(_beersState::emit)
         }
     }
 
@@ -76,7 +77,7 @@ class BrewerDetailsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             countryRepository.getStream(brewer.countryId, Accept())
                 .map { mergeAddress(brewer, it) }
-                .collect { _addressState.postValue(it) }
+                .collectLatest(_addressState::emit)
         }
     }
 

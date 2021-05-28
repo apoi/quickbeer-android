@@ -17,12 +17,12 @@
  */
 package quickbeer.android.feature.countrydetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
@@ -41,22 +41,22 @@ class CountryDetailsViewModel(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val _countryState = MutableLiveData<State<Country>>()
-    val countryState: LiveData<State<Country>> = _countryState
+    private val _countryState = MutableStateFlow<State<Country>>(State.Empty)
+    val countryState: Flow<State<Country>> = _countryState
 
-    private val _beersState = MutableLiveData<State<List<BeerListModel>>>()
-    val beersState: LiveData<State<List<BeerListModel>>> = _beersState
+    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    val beersState: Flow<State<List<BeerListModel>>> = _beersState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
             countryRepository.getStream(countryId, Accept())
-                .collect { _countryState.postValue(it) }
+                .collectLatest(_countryState::emit)
         }
 
         viewModelScope.launch(Dispatchers.IO) {
             beersInCountryRepository.getStream(countryId.toString(), Accept())
                 .map(BeerListModelRatingMapper(beerRepository)::map)
-                .collect { _beersState.postValue(it) }
+                .collectLatest(_beersState::emit)
         }
     }
 }

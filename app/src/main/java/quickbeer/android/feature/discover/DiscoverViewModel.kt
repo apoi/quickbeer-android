@@ -1,11 +1,11 @@
 package quickbeer.android.feature.discover
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
@@ -20,18 +20,14 @@ class DiscoverViewModel(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val _viewState = MutableLiveData<State<List<BeerListModel>>>()
-    val viewState: LiveData<State<List<BeerListModel>>> = _viewState
+    private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    val viewState: StateFlow<State<List<BeerListModel>>> = _viewState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            getRecentBeers()
+            repository.getStream(Accept())
+                .map(BeerListModelRatingMapper(beerRepository)::map)
+                .collectLatest(_viewState::emit)
         }
-    }
-
-    private suspend fun getRecentBeers() {
-        repository.getStream(Accept())
-            .map(BeerListModelRatingMapper(beerRepository)::map)
-            .collect { _viewState.postValue(it) }
     }
 }
