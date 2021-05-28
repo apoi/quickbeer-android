@@ -1,7 +1,7 @@
 object Sdk {
     const val MinSdkVersion = 23
-    const val TargetSdkVersion = 29
-    const val CompileSdkVersion = 29
+    const val TargetSdkVersion = 30
+    const val CompileSdkVersion = 30
 }
 
 object Plugins {
@@ -26,30 +26,30 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.17.0-RC2"
-        const val Gradle = "4.1.2"
-        const val Kotlin = "1.4.31"
+        const val Detekt = "1.17.1"
+        const val Gradle = "4.2.1"
+        const val Kotlin = "1.5.10"
         const val Ktlint = "10.0.0"
-        const val Version = "0.38.0"
+        const val Version = "0.39.0"
     }
 
     object AndroidX {
-        const val AppCompat = "1.2.0"
+        const val AppCompat = "1.3.0"
         const val Camera = "1.0.0-rc04"
         const val ConstraintLayout = "2.0.4"
-        const val CoreKt = "1.3.2"
+        const val CoreKt = "1.5.0"
         const val Crypto = "1.0.0"
-        const val Fragment = "1.3.3"
-        const val Lifecycle = "2.3.0"
-        const val Navigation = "2.3.4"
-        const val RecyclerView = "1.1.0"
-        const val Room = "2.2.6"
+        const val Fragment = "1.3.4"
+        const val Lifecycle = "2.3.1"
+        const val Navigation = "2.3.5"
+        const val RecyclerView = "1.2.0"
+        const val Room = "2.3.0"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object Google {
         const val Material = "1.3.0"
-        const val Barcode = "16.1.1"
+        const val Barcode = "16.1.2"
     }
 
     object OkHttp {
@@ -59,17 +59,17 @@ object Versions {
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.4.3"
+        const val Coroutines = "1.5.0"
     }
 
-    const val Coil = "1.1.1"
-    const val CookieJar = "v1.0.1"
+    const val Coil = "1.2.1"
+    const val CookieJar = "1.0.1"
     const val Koin = "2.2.2"
-    const val Ktlint = "0.40.0"
-    const val LeakCanary = "2.6"
+    const val Ktlint = "0.41.0"
+    const val LeakCanary = "2.7"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
-    const val ThreeTenABP = "1.3.0"
+    const val ThreeTenABP = "1.3.1"
     const val Timber = "4.7.1"
 
     object Testing {
