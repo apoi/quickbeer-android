@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import kotlinx.coroutines.flow.StateFlow
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
 import quickbeer.android.navigation.NavParams
@@ -14,6 +14,7 @@ import quickbeer.android.navigation.setupWithNavController
 import quickbeer.android.ui.recyclerview.DefaultRecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.util.ktx.hideKeyboard
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 class MainActivity :
@@ -23,7 +24,7 @@ class MainActivity :
 
     private val binding by viewBinding(MainActivityBinding::bind)
 
-    private var currentNavController: LiveData<NavController>? = null
+    private var currentNavController: StateFlow<NavController>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +64,7 @@ class MainActivity :
         intent.data = null
 
         // Whenever the selected controller changes, setup action bar and other changes
-        controller.observe(this) {
+        observe(controller) {
             it.removeOnDestinationChangedListener(this)
             it.addOnDestinationChangedListener(this)
         }

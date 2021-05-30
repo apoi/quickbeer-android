@@ -20,7 +20,7 @@ class DiscoverViewModel(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
     val viewState: StateFlow<State<List<BeerListModel>>> = _viewState
 
     init {

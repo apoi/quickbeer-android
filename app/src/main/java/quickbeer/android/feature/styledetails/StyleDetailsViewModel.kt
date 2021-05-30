@@ -42,13 +42,13 @@ class StyleDetailsViewModel(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val _styleState = MutableStateFlow<State<Style>>(State.Empty)
+    private val _styleState = MutableStateFlow<State<Style>>(State.Initial)
     val styleState: Flow<State<Style>> = _styleState
 
-    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
     val beersState: Flow<State<List<BeerListModel>>> = _beersState
 
-    private val _parentStyleState = MutableStateFlow<State<Style>>(State.Empty)
+    private val _parentStyleState = MutableStateFlow<State<Style>>(State.Initial)
     val parentStyleState: Flow<State<Style>> = _parentStyleState
 
     init {

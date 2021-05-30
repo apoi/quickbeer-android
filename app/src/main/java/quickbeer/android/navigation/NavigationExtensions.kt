@@ -21,11 +21,11 @@ import android.util.SparseArray
 import androidx.core.util.forEach
 import androidx.core.util.set
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import quickbeer.android.R
 import quickbeer.android.ui.base.Resetable
 
@@ -40,13 +40,14 @@ fun BottomNavigationView.setupWithNavController(
     fragmentManager: FragmentManager,
     containerId: Int,
     intent: Intent
-): LiveData<NavController> {
+): StateFlow<NavController> {
     // Map of tags
     val graphIdToTagMap = SparseArray<String>()
     // Result. Mutable live data with the selected controlled
-    val selectedNavController = MutableLiveData<NavController>()
+    val selectedNavController: MutableStateFlow<NavController>
 
     var firstFragmentGraphId = 0
+    var initialNavController: NavController? = null
 
     // First create a NavHostFragment for each NavGraph ID
     navGraphIds.forEachIndexed { index, navGraphId ->
@@ -72,13 +73,17 @@ fun BottomNavigationView.setupWithNavController(
 
         // Attach or detach nav host fragment depending on whether it's the selected item.
         if (this.selectedItemId == graphId) {
-            // Update livedata with the selected graph
-            selectedNavController.value = navHostFragment.navController
+            // Update flow with the selected graph
+            initialNavController = navHostFragment.navController
             attachNavHostFragment(fragmentManager, navHostFragment, index == 0)
         } else {
             detachNavHostFragment(fragmentManager, navHostFragment)
         }
     }
+
+    selectedNavController = initialNavController
+        ?.let(::MutableStateFlow)
+        ?: error("Can't find initial NavController")
 
     // Now connect selecting an item with swapping Fragments
     var selectedItemTag = graphIdToTagMap[this.selectedItemId]

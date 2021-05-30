@@ -14,7 +14,7 @@ class LoginViewModel(
     private val api: RateBeerApi
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<State<Boolean>>(State.Empty)
+    private val _loginState = MutableStateFlow<State<Boolean>>(State.Initial)
     val loginState: Flow<State<Boolean>> = _loginState
 
     fun login(username: String, password: String) {

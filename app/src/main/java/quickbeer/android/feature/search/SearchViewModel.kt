@@ -48,16 +48,16 @@ open class SearchViewModel(
     private val queryFlow = MutableStateFlow("")
     private val typeFlow = MutableStateFlow(SearchType.BEER)
 
-    private val _beerResults = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    private val _beerResults = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
     val beerResults: Flow<State<List<BeerListModel>>> = _beerResults
 
-    private val _brewerResults = MutableStateFlow<State<List<BrewerListModel>>>(State.Empty)
+    private val _brewerResults = MutableStateFlow<State<List<BrewerListModel>>>(State.Initial)
     val brewerResults: Flow<State<List<BrewerListModel>>> = _brewerResults
 
-    private val _styleResults = MutableStateFlow<State<List<StyleListModel>>>(State.Empty)
+    private val _styleResults = MutableStateFlow<State<List<StyleListModel>>>(State.Initial)
     val styleResults: Flow<State<List<StyleListModel>>> = _styleResults
 
-    private val _countryResults = MutableStateFlow<State<List<CountryListModel>>>(State.Empty)
+    private val _countryResults = MutableStateFlow<State<List<CountryListModel>>>(State.Initial)
     val countryResults: Flow<State<List<CountryListModel>>> = _countryResults
 
     private val queryLengthValidator = object : Repository.KeyValidator<String> {

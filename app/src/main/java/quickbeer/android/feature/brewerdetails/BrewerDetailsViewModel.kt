@@ -46,13 +46,13 @@ class BrewerDetailsViewModel(
     private val countryRepository: CountryRepository
 ) : ViewModel() {
 
-    private val _brewerState = MutableStateFlow<State<Brewer>>(State.Empty)
+    private val _brewerState = MutableStateFlow<State<Brewer>>(State.Initial)
     val brewerState: Flow<State<Brewer>> = _brewerState
 
-    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Empty)
+    private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
     val beersState: Flow<State<List<BeerListModel>>> = _beersState
 
-    private val _addressState = MutableStateFlow<State<Address>>(State.Empty)
+    private val _addressState = MutableStateFlow<State<Address>>(State.Initial)
     val addressState: Flow<State<Address>> = _addressState
 
     init {

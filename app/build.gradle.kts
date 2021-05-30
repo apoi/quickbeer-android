@@ -69,7 +69,6 @@ dependencies {
     implementation(Libraries.AndroidX.RecyclerView)
 
     implementation(Libraries.AndroidX.Lifecycle.Common)
-    implementation(Libraries.AndroidX.Lifecycle.LiveData)
     implementation(Libraries.AndroidX.Lifecycle.ViewModel)
 
     implementation(Libraries.AndroidX.Navigation.Fragment)

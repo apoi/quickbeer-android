@@ -36,7 +36,7 @@ class BeerReviewsViewModel(
     private val reviewRepository: BeerReviewsRepository
 ) : ViewModel() {
 
-    private val _reviewsState = MutableStateFlow<State<List<ReviewListModel>>>(State.Empty)
+    private val _reviewsState = MutableStateFlow<State<List<ReviewListModel>>>(State.Initial)
     val reviewsState: Flow<State<List<ReviewListModel>>> = _reviewsState
 
     init {

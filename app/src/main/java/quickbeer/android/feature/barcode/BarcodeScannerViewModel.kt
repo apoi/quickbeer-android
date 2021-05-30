@@ -75,8 +75,9 @@ class BarcodeScannerViewModel(
         isCameraLive = false
     }
 
-    private fun mapResult(barcode: Barcode, state: State<List<Beer>>): ScannerState? {
+    private fun mapResult(barcode: Barcode, state: State<List<Beer>>): ScannerState {
         return when (state) {
+            is State.Initial -> ScannerState.NotStarted
             is State.Loading -> ScannerState.Searching(barcode)
             is State.Success -> ScannerState.Found(barcode, state.value)
             is State.Empty -> ScannerState.NotFound(barcode)
