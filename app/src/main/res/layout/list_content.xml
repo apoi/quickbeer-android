@@ -22,12 +22,12 @@
 
     <TextView
         android:id="@+id/message"
+        style="@style/AppTheme.Text.Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/spacing_xl"
         android:gravity="center"
-        android:textSize="24sp"
         android:visibility="gone"
         tools:text="Message goes here"
         tools:visibility="visible" />

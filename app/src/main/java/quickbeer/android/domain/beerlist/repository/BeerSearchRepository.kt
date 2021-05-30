@@ -1,8 +1,8 @@
 package quickbeer.android.domain.beerlist.repository
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.merge
 import quickbeer.android.data.repository.repository.ItemListRepository
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerJson
@@ -19,7 +19,7 @@ class BeerSearchRepository(
      * matching search that may find additional results from local database.
      */
     override fun getFuzzyLocalStream(key: String): Flow<List<Beer>> {
-        return merge(store.getStream(key), store.search(key))
+        return combine(store.getStream(key), store.search(key)) { a, b -> a + b }
             .map { it.distinctBy(Beer::id) }
     }
 }
