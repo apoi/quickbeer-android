@@ -34,9 +34,9 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInCountryRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
+import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class CountryDetailsViewModel @Inject constructor(
@@ -46,7 +46,7 @@ class CountryDetailsViewModel @Inject constructor(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val countryId = savedStateHandle.get<Int>(NavParams.ID)!!
+    private val countryId = savedStateHandle.navId()
 
     private val _countryState = MutableStateFlow<State<Country>>(State.Initial)
     val countryState: Flow<State<Country>> = _countryState

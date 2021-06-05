@@ -35,9 +35,9 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
-import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
+import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class StyleDetailsViewModel @Inject constructor(
@@ -47,7 +47,7 @@ class StyleDetailsViewModel @Inject constructor(
     private val beerRepository: BeerRepository
 ) : ViewModel() {
 
-    private val styleId = savedStateHandle.get<Int>(NavParams.ID)!!
+    private val styleId = savedStateHandle.navId()
 
     private val _styleState = MutableStateFlow<State<Style>>(State.Initial)
     val styleState: Flow<State<Style>> = _styleState

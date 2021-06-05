@@ -31,9 +31,9 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.reviewlist.repository.BeerReviewsRepository
-import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.review.ReviewListModel
 import quickbeer.android.ui.adapter.review.ReviewListModelDateSortingMapper
+import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerReviewsViewModel @Inject constructor(
@@ -41,7 +41,7 @@ class BeerReviewsViewModel @Inject constructor(
     private val reviewRepository: BeerReviewsRepository
 ) : ViewModel() {
 
-    private val beerId = savedStateHandle.get<Int>(NavParams.ID)!!
+    private val beerId = savedStateHandle.navId()
 
     private val _reviewsState = MutableStateFlow<State<List<ReviewListModel>>>(State.Initial)
     val reviewsState: Flow<State<List<ReviewListModel>>> = _reviewsState
