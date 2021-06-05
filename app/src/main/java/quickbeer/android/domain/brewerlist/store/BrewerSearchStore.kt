@@ -1,11 +1,13 @@
 package quickbeer.android.domain.brewerlist.store
 
+import javax.inject.Inject
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.domain.brewer.store.BrewerStoreCore
 import quickbeer.android.domain.idlist.IdList
+import quickbeer.android.inject.IdListPersistedCore
 
-class BrewerSearchStore(
-    indexStoreCore: StoreCore<String, IdList>,
+class BrewerSearchStore @Inject constructor(
+    @IdListPersistedCore indexStoreCore: StoreCore<String, IdList>,
     private val brewerStoreCore: BrewerStoreCore
 ) : BrewerListStore(QueryIndexMapper(), indexStoreCore, brewerStoreCore) {
 

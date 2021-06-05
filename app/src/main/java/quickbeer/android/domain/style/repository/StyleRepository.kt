@@ -1,5 +1,6 @@
 package quickbeer.android.domain.style.repository
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import quickbeer.android.data.repository.Accept
@@ -10,7 +11,7 @@ import quickbeer.android.domain.style.store.StyleStore
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.network.result.ApiResult
 
-class StyleRepository(
+class StyleRepository @Inject constructor(
     store: StyleStore,
     styleListRepository: StyleListRepository
 ) : DefaultRepository<Int, Style>(store, StyleFetcher(styleListRepository)::fetch)

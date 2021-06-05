@@ -19,6 +19,8 @@ package quickbeer.android.feature.barcode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.barcode.Barcode
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -32,7 +34,8 @@ import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 
-class BarcodeScannerViewModel(
+@HiltViewModel
+class BarcodeScannerViewModel @Inject constructor(
     private val beerSearchRepository: BeerSearchRepository
 ) : ViewModel() {
 

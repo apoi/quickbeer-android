@@ -4,17 +4,19 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.fragment.app.DialogFragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.LoginDialogFragmentBinding
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
 
     private val binding by viewBinding(LoginDialogFragmentBinding::bind)
-    private val viewModel by viewModel<LoginViewModel>()
+    private val viewModel by viewModels<LoginViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -3,10 +3,10 @@ package quickbeer.android.feature.search
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.flow.Flow
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
@@ -25,7 +25,7 @@ import quickbeer.android.util.ktx.viewBinding
 abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListContentBinding::bind)
-    protected val viewModel by sharedViewModel<SearchViewModel>()
+    protected val viewModel by activityViewModels<SearchViewModel>()
 
     protected abstract val resultAdapter: ListAdapter<T>
     protected abstract val resultPoolType: PoolType

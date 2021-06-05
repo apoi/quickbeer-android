@@ -8,11 +8,12 @@ import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.exception.AppException.QueryTooShortException
 
-class BarcodeSearchFetcher(api: RateBeerApi) :
-    Fetcher<String, List<Beer>, List<BeerJson>>(
-        BeerListJsonMapper,
-        { query ->
-            if (query.length >= QUERY_MIN_LENGTH) api.barcodeSearch(query)
-            else ApiResult.UnknownError(QueryTooShortException)
-        }
-    )
+class BarcodeSearchFetcher(
+    api: RateBeerApi
+) : Fetcher<String, List<Beer>, List<BeerJson>>(
+    BeerListJsonMapper,
+    { query ->
+        if (query.length >= QUERY_MIN_LENGTH) api.barcodeSearch(query)
+        else ApiResult.UnknownError(QueryTooShortException)
+    }
+)

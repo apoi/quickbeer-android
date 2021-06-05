@@ -11,6 +11,7 @@
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
     <ID>TooManyFunctions:RateBeerApi.kt$RateBeerApi</ID>

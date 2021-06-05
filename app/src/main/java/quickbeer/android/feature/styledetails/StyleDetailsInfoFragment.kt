@@ -19,8 +19,8 @@ package quickbeer.android.feature.styledetails
 
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.StyleDetailsInfoFragmentBinding
@@ -30,12 +30,11 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class StyleDetailsInfoFragment : BaseFragment(R.layout.style_details_info_fragment) {
 
     private val binding by viewBinding(StyleDetailsInfoFragmentBinding::bind)
-    private val viewModel by viewModel<StyleDetailsViewModel> {
-        parametersOf(requireArguments().getInt(NavParams.ID))
-    }
+    private val viewModel by viewModels<StyleDetailsViewModel>()
 
     override fun observeViewState() {
         observe(viewModel.styleState) { state ->

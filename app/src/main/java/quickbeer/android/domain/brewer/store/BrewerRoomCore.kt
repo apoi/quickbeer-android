@@ -1,5 +1,6 @@
 package quickbeer.android.domain.brewer.store
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.room.Database
@@ -7,14 +8,12 @@ import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.brewer.Brewer
 
-class BrewerRoomCore(
-    val dao: BrewerDao
+class BrewerRoomCore @Inject constructor(
+    val database: Database
 ) : RoomStoreCore<Int, Brewer, BrewerEntity>(
     BrewerEntityMapper,
-    BrewerDaoProxy(dao)
+    BrewerDaoProxy(database.brewerDao())
 ) {
-
-    constructor(database: Database) : this(database.brewerDao())
 
     @Suppress("MagicNumber")
     fun search(query: String): Flow<List<Brewer>> {
@@ -22,7 +21,7 @@ class BrewerRoomCore(
         val tail = parts.drop(3)
 
         // Use three first terms directly in search, filter others programmatically
-        return dao.search(parts.first(), parts.getOrNull(1), parts.getOrNull(2))
+        return database.brewerDao().search(parts.first(), parts.getOrNull(1), parts.getOrNull(2))
             .map { it.filter { entity -> contains(entity, tail) } }
             .map { it.map(BrewerEntityMapper::mapTo) }
     }

@@ -17,8 +17,11 @@
  */
 package quickbeer.android.feature.brewerdetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,16 +38,20 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticMapper
 
-class BrewerDetailsViewModel(
-    brewerId: Int,
+@HiltViewModel
+class BrewerDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val brewerRepository: BrewerRepository,
     private val brewersBeersRepository: BrewersBeersRepository,
     private val beerRepository: BeerRepository,
     private val countryRepository: CountryRepository
 ) : ViewModel() {
+
+    private val brewerId = savedStateHandle.get<Int>(NavParams.ID)!!
 
     private val _brewerState = MutableStateFlow<State<Brewer>>(State.Initial)
     val brewerState: Flow<State<Brewer>> = _brewerState

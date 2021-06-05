@@ -4,6 +4,7 @@ plugins {
     kotlin(Plugins.Id.Kotlin.AndroidExtensions)
     kotlin(Plugins.Id.Kotlin.Kapt)
     id(Plugins.Id.SafeArgs)
+    id(Plugins.Id.Hilt)
 }
 
 android {
@@ -81,9 +82,8 @@ dependencies {
     implementation(Libraries.Google.Material)
     implementation(Libraries.Google.Barcode)
 
-    implementation(Libraries.Koin.Android)
-    implementation(Libraries.Koin.Scope)
-    implementation(Libraries.Koin.ViewModel)
+    implementation(Libraries.Hilt.Android)
+    kapt(Libraries.Hilt.Compiler)
 
     implementation(Libraries.OkHttp.OkHttp)
     implementation(Libraries.OkHttp.AndroidSupport)

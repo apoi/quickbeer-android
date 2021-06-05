@@ -5,18 +5,16 @@ import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.SvgDecoder
 import com.jakewharton.threetenabp.AndroidThreeTen
-import org.koin.android.ext.koin.androidContext
-import org.koin.core.context.startKoin
-import quickbeer.android.inject.appModule
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class MainApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
 
         initThreeTenAbp()
-        initKoin()
         initTimber()
 
         Timber.d("App running!")
@@ -24,13 +22,6 @@ class MainApplication : Application(), ImageLoaderFactory {
 
     private fun initThreeTenAbp() {
         AndroidThreeTen.init(this)
-    }
-
-    private fun initKoin() {
-        startKoin {
-            androidContext(this@MainApplication)
-            modules(appModule)
-        }
     }
 
     private fun initTimber() {

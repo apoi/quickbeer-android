@@ -18,12 +18,12 @@
 package quickbeer.android.feature.countrydetails
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
@@ -33,10 +33,11 @@ import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class CountryDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private val binding by viewBinding(DetailsFragmentBinding::bind)
-    private val viewModel by viewModel<CountryDetailsViewModel> { parametersOf(args.id) }
+    private val viewModel by viewModels<CountryDetailsViewModel>()
     private val args by navArgs<CountryDetailsFragmentArgs>()
 
     override fun topInsetView() = binding.toolbar

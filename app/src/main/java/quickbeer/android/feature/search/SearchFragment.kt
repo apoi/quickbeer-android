@@ -4,9 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.progressindicator.CircularProgressIndicator
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverTabTitleBinding
@@ -21,10 +22,11 @@ import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     private val binding by viewBinding(SearchFragmentBinding::bind)
-    private val searchViewModel by sharedViewModel<SearchViewModel>()
+    private val searchViewModel by activityViewModels<SearchViewModel>()
     private val args by navArgs<SearchFragmentArgs>()
 
     override val searchHint = R.string.search_hint

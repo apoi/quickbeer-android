@@ -1,5 +1,6 @@
 package quickbeer.android.domain.country.repository
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import quickbeer.android.data.repository.Accept
@@ -10,7 +11,7 @@ import quickbeer.android.domain.country.store.CountryStore
 import quickbeer.android.domain.countrylist.repository.CountryListRepository
 import quickbeer.android.network.result.ApiResult
 
-class CountryRepository(
+class CountryRepository @Inject constructor(
     store: CountryStore,
     countryListRepository: CountryListRepository
 ) : DefaultRepository<Int, Country>(store, CountryFetcher(countryListRepository)::fetch)

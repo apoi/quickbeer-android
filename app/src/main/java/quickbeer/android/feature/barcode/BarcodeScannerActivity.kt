@@ -24,13 +24,14 @@ import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerActivityBinding
 import quickbeer.android.feature.barcode.camera.CameraSource
@@ -39,10 +40,11 @@ import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
 
+@AndroidEntryPoint
 class BarcodeScannerActivity : AppCompatActivity(R.layout.barcode_scanner_activity) {
 
     private val binding by viewBinding(BarcodeScannerActivityBinding::bind)
-    private val viewModel by viewModel<BarcodeScannerViewModel>()
+    private val viewModel by viewModels<BarcodeScannerViewModel>()
 
     private var cameraSource: CameraSource? = null
     private lateinit var promptChipAnimator: AnimatorSet

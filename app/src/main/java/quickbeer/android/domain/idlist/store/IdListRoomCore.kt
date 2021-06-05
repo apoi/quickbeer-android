@@ -1,12 +1,13 @@
 package quickbeer.android.domain.idlist.store
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.idlist.IdList
 
-class IdListRoomCore(
+class IdListRoomCore @Inject constructor(
     database: Database
 ) : RoomStoreCore<String, IdList, IdListEntity>(
     IdListEntityMapper,

@@ -5,5 +5,6 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.result.first
 
-class BeerFetcher(api: RateBeerApi) :
-    Fetcher<Int, Beer, BeerJson>(BeerJsonMapper, { key -> api.beer(key).first() })
+class BeerFetcher(
+    api: RateBeerApi
+) : Fetcher<Int, Beer, BeerJson>(BeerJsonMapper, { key -> api.beer(key).first() })

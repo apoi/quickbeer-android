@@ -3,8 +3,9 @@ package quickbeer.android.feature.discover
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DiscoverFragmentBinding
@@ -24,12 +25,12 @@ import quickbeer.android.ui.view.SearchView
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetable {
 
     private val binding by viewBinding(DiscoverFragmentBinding::bind)
     private val listBinding by viewBinding(ListContentBinding::bind)
-
-    private val viewModel by viewModel<DiscoverViewModel>()
+    private val viewModel by viewModels<DiscoverViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override val searchHint = R.string.search_hint

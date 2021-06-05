@@ -2,6 +2,8 @@ package quickbeer.android.feature.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +12,8 @@ import quickbeer.android.data.state.State
 import quickbeer.android.network.RateBeerApi
 import timber.log.Timber
 
-class LoginViewModel(
+@HiltViewModel
+class LoginViewModel @Inject constructor(
     private val api: RateBeerApi
 ) : ViewModel() {
 

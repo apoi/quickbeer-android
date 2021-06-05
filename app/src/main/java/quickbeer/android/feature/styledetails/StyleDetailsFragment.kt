@@ -18,9 +18,9 @@
 package quickbeer.android.feature.styledetails
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
@@ -29,13 +29,14 @@ import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class StyleDetailsFragment : MainFragment(R.layout.details_fragment) {
 
-    override fun topInsetView() = binding.toolbar
-
-    private val args: StyleDetailsFragmentArgs by navArgs()
     private val binding by viewBinding(DetailsFragmentBinding::bind)
-    private val viewModel by viewModel<StyleDetailsViewModel> { parametersOf(args.id) }
+    private val viewModel by viewModels<StyleDetailsViewModel>()
+    private val args: StyleDetailsFragmentArgs by navArgs()
+
+    override fun topInsetView() = binding.toolbar
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

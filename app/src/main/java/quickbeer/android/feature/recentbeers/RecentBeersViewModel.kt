@@ -2,6 +2,8 @@ package quickbeer.android.feature.recentbeers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +14,8 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.store.RecentBeersStore
 import quickbeer.android.ui.adapter.beer.BeerListModel
 
-class RecentBeersViewModel(
+@HiltViewModel
+class RecentBeersViewModel @Inject constructor(
     private val recentBeersStore: RecentBeersStore,
     private val beerRepository: BeerRepository
 ) : ViewModel() {

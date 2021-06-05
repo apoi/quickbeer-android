@@ -2,6 +2,8 @@ package quickbeer.android.feature.discover
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,7 +17,8 @@ import quickbeer.android.domain.beerlist.repository.TopBeersRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
-class DiscoverViewModel(
+@HiltViewModel
+class DiscoverViewModel @Inject constructor(
     private val repository: TopBeersRepository,
     private val beerRepository: BeerRepository
 ) : ViewModel() {

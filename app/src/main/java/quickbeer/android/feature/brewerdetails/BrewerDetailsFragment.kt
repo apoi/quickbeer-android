@@ -18,13 +18,13 @@
 package quickbeer.android.feature.brewerdetails
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.BlurTransformation
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
@@ -33,10 +33,11 @@ import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private val binding by viewBinding(DetailsFragmentBinding::bind)
-    private val viewModel by viewModel<BrewerDetailsViewModel> { parametersOf(args.id) }
+    private val viewModel by viewModels<BrewerDetailsViewModel>()
     private val args by navArgs<BrewerDetailsFragmentArgs>()
 
     override fun topInsetView() = binding.toolbar

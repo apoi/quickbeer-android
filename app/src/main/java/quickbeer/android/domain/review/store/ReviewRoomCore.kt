@@ -1,12 +1,13 @@
 package quickbeer.android.domain.review.store
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.review.Review
 
-class ReviewRoomCore(
+class ReviewRoomCore @Inject constructor(
     database: Database
 ) : RoomStoreCore<Int, Review, ReviewEntity>(
     ReviewEntityMapper,

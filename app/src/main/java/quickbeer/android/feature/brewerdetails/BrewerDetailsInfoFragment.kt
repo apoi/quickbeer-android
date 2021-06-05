@@ -21,8 +21,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
@@ -36,12 +36,11 @@ import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_fragment) {
 
     private val binding by viewBinding(BrewerDetailsInfoFragmentBinding::bind)
-    private val viewModel by viewModel<BrewerDetailsViewModel> {
-        parametersOf(requireArguments().getInt(NavParams.ID))
-    }
+    private val viewModel by viewModels<BrewerDetailsViewModel>()
 
     override fun observeViewState() {
         observe(viewModel.brewerState) { state ->

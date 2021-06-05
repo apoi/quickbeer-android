@@ -17,8 +17,11 @@
  */
 package quickbeer.android.feature.countrydetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,15 +34,19 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInCountryRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
-class CountryDetailsViewModel(
-    countryId: Int,
+@HiltViewModel
+class CountryDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val countryRepository: CountryRepository,
     private val beersInCountryRepository: BeersInCountryRepository,
     private val beerRepository: BeerRepository
 ) : ViewModel() {
+
+    private val countryId = savedStateHandle.get<Int>(NavParams.ID)!!
 
     private val _countryState = MutableStateFlow<State<Country>>(State.Initial)
     val countryState: Flow<State<Country>> = _countryState

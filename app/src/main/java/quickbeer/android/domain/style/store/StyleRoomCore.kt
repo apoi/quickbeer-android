@@ -1,12 +1,13 @@
 package quickbeer.android.domain.style.store
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.style.Style
 
-class StyleRoomCore(
+class StyleRoomCore @Inject constructor(
     database: Database
 ) : RoomStoreCore<Int, Style, StyleEntity>(
     StyleEntityMapper,

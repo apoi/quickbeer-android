@@ -2,6 +2,8 @@ package quickbeer.android.feature.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +37,8 @@ import quickbeer.android.ui.adapter.country.CountryListModel
 import quickbeer.android.ui.adapter.style.StyleListModel
 import quickbeer.android.util.ktx.normalize
 
-open class SearchViewModel(
+@HiltViewModel
+class SearchViewModel @Inject constructor(
     private val beerRepository: BeerRepository,
     private val beerSearchRepository: BeerSearchRepository,
     private val brewerRepository: BrewerRepository,

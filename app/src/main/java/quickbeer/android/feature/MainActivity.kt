@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
@@ -17,6 +18,7 @@ import quickbeer.android.util.ktx.hideKeyboard
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class MainActivity :
     AppCompatActivity(R.layout.main_activity),
     NavController.OnDestinationChangedListener,

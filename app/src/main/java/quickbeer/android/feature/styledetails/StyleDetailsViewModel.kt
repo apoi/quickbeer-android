@@ -17,8 +17,11 @@
  */
 package quickbeer.android.feature.styledetails
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,15 +35,19 @@ import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
+import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingMapper
 
-class StyleDetailsViewModel(
-    styleId: Int,
+@HiltViewModel
+class StyleDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val styleRepository: StyleRepository,
     private val beersInStyleRepository: BeersInStyleRepository,
     private val beerRepository: BeerRepository
 ) : ViewModel() {
+
+    private val styleId = savedStateHandle.get<Int>(NavParams.ID)!!
 
     private val _styleState = MutableStateFlow<State<Style>>(State.Initial)
     val styleState: Flow<State<Style>> = _styleState

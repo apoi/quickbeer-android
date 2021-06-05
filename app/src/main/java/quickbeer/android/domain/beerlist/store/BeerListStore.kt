@@ -6,10 +6,11 @@ import quickbeer.android.data.store.store.SingleItemListStore
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.idlist.IdList
+import quickbeer.android.inject.IdListPersistedCore
 
 abstract class BeerListStore(
     indexPrefix: String,
-    indexStoreCore: StoreCore<String, IdList>,
+    @IdListPersistedCore indexStoreCore: StoreCore<String, IdList>,
     beerStoreCore: BeerStoreCore
 ) : ItemListStore<String, Int, Beer>(
     indexMapper = QueryIndexMapper(indexPrefix),

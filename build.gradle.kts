@@ -16,6 +16,7 @@ buildscript {
 
     dependencies {
         classpath(Libraries.AndroidX.Navigation.SafeArgs)
+        classpath(Libraries.Hilt.Gradle)
     }
 }
 

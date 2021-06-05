@@ -24,10 +24,10 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlin.math.roundToInt
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
@@ -42,16 +42,16 @@ import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class BeerDetailsInfoFragment :
     BaseFragment(R.layout.beer_details_info_fragment),
     RatingBar.OnRatingBarChangeListener {
 
-    private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
-    private val viewModel by viewModel<BeerDetailsViewModel> {
-        parametersOf(requireArguments().getInt(NavParams.ID))
-    }
+    @Inject
+    lateinit var toastProvider: ToastProvider
 
-    private val toastProvider by inject<ToastProvider>()
+    private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
+    private val viewModel by viewModels<BeerDetailsViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -5,10 +5,9 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
@@ -25,13 +24,12 @@ import quickbeer.android.ui.recyclerview.RecycledPoolHolder.PoolType
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
+@AndroidEntryPoint
 class StyleDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListContentBinding::bind)
+    private val viewModel by viewModels<StyleDetailsViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
-
-    private val args: StyleDetailsFragmentArgs by navArgs()
-    private val viewModel by viewModel<StyleDetailsViewModel> { parametersOf(args.id) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

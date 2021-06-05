@@ -18,6 +18,7 @@ object Plugins {
         }
 
         const val Detekt = "io.gitlab.arturbosch.detekt"
+        const val Hilt = "dagger.hilt.android.plugin"
         const val Ktlint = "org.jlleitschuh.gradle.ktlint"
         const val Version = "com.github.ben-manes.versions"
         const val SafeArgs = "androidx.navigation.safeargs.kotlin"
@@ -64,7 +65,7 @@ object Versions {
 
     const val Coil = "1.2.1"
     const val CookieJar = "1.0.1"
-    const val Koin = "2.2.2"
+    const val Hilt = "2.36"
     const val Ktlint = "0.41.0"
     const val LeakCanary = "2.7"
     const val PhotoView = "2.3.0"
@@ -120,13 +121,10 @@ object Libraries {
         const val Barcode = "com.google.mlkit:barcode-scanning:${Versions.Google.Barcode}"
     }
 
-    object Koin {
-        const val Core = "io.insert-koin:koin-core:${Versions.Koin}"
-        const val Android = "io.insert-koin:koin-android:${Versions.Koin}"
-        const val Scope = "io.insert-koin:koin-androidx-scope:${Versions.Koin}"
-        const val ViewModel = "io.insert-koin:koin-androidx-viewmodel:${Versions.Koin}"
-        const val Extension = "io.insert-koin:koin-androidx-ext:${Versions.Koin}"
-        const val Test = "io.insert-koin:koin-test:${Versions.Koin}"
+    object Hilt {
+        const val Android = "com.google.dagger:hilt-android:${Versions.Hilt}"
+        const val Compiler = "com.google.dagger:hilt-android-compiler:${Versions.Hilt}"
+        const val Gradle = "com.google.dagger:hilt-android-gradle-plugin:${Versions.Hilt}"
     }
 
     object Kotlin {
