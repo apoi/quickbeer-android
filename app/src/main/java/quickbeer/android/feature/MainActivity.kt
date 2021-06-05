@@ -1,7 +1,6 @@
 package quickbeer.android.feature
 
 import android.os.Bundle
-import android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
@@ -99,11 +98,7 @@ class MainActivity :
     }
 
     private fun setFullscreen(showFullscreen: Boolean) {
-        val isFullscreen = (window.attributes.flags and FLAG_FULLSCREEN) != 0
-        when {
-            isFullscreen == showFullscreen -> Unit
-            showFullscreen -> window.setFlags(FLAG_FULLSCREEN, FLAG_FULLSCREEN)
-            else -> window.clearFlags(FLAG_FULLSCREEN)
-        }
+        // Nothing to do now. Status bar shows, but it's fine in the
+        // current fullscreen photo views.
     }
 }

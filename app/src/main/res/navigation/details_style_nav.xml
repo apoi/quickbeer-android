@@ -12,7 +12,6 @@
         tools:layout="@layout/details_fragment">
         <deepLink app:uri="quickbeer://style/{id}" />
         <deepLink app:uri="www.ratebeer.com/beerstyles/.*/{id}/.*" />
-        "https://www.ratebeer.com/beerstyles/weissbier-hefeweizen/7/"
         <argument
             android:name="id"
             app:argType="integer" />
