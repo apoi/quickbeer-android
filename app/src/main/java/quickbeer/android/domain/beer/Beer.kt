@@ -1,13 +1,13 @@
 package quickbeer.android.domain.beer
 
-import android.os.Parcelable
-import kotlin.math.roundToInt
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
+import quickbeer.android.data.pojo.Dateable
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
 import quickbeer.android.util.ktx.orLater
+import kotlin.math.roundToInt
 
 @Parcelize
 data class Beer(
@@ -35,9 +35,9 @@ data class Beer(
     val tickDate: ZonedDateTime?,
     // Application fields
     val normalizedName: String?,
-    val updated: ZonedDateTime?,
-    val accessed: ZonedDateTime?
-) : Parcelable {
+    override val updated: ZonedDateTime?,
+    override val accessed: ZonedDateTime?
+) : Dateable {
 
     fun rating(): Int {
         return overallRating
