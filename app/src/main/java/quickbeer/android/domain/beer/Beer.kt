@@ -1,5 +1,6 @@
 package quickbeer.android.domain.beer
 
+import kotlin.math.roundToInt
 import kotlinx.android.parcel.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
@@ -7,7 +8,6 @@ import quickbeer.android.data.pojo.Dateable
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
 import quickbeer.android.util.ktx.orLater
-import kotlin.math.roundToInt
 
 @Parcelize
 data class Beer(

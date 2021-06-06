@@ -126,7 +126,7 @@ abstract class Repository<K, V> {
         val localFlow = stateFlow
             .flatMapLatest { state ->
                 flow { emit(state) }
-                    .flatMapLatest { getFuzzyLocalStream(state.key) }
+                    .flatMapLatest { getLocalStream(state.key) }
                     .take(1)
                     .flatMapLatest {
                         flow {
@@ -168,7 +168,7 @@ abstract class Repository<K, V> {
             // Emit current and future values. The values need to be still validated
             // as otherwise this may emit the existing value in case of failed fetch.
             emitAll(
-                getFuzzyLocalStream(key)
+                getLocalStream(key)
                     .distinctUntilChanged()
                     .filter { validator.validate(it) }
                     .map { State.from(it) }
@@ -181,8 +181,6 @@ abstract class Repository<K, V> {
     protected abstract suspend fun getLocal(key: K): V?
 
     protected abstract fun getLocalStream(key: K): Flow<V>
-
-    protected open fun getFuzzyLocalStream(key: K) = getLocalStream(key)
 
     protected abstract suspend fun fetchRemote(key: K): ApiResult<V>
 

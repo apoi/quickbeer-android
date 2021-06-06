@@ -29,8 +29,7 @@ interface Store<K, V> {
     suspend fun get(key: K): V?
 
     /**
-     * Returns stream of future values for given key, starting with the current
-     * value if one exists.
+     * Returns stream of values for given key, starting with the current value if one exists.
      */
     fun getStream(key: K): Flow<V>
 

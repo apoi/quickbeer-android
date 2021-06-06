@@ -86,7 +86,7 @@ open class ItemListStore<I, out K, V : Any>(
         // Put values first in case there's a listener for the index. This way values
         // already exist for any listeners to query.
         val newValues = values
-            .map { value -> Pair(getKey(value), value) }
+            .map { value -> getKey(value) to value }
             .let { items -> valueCore.put(items.toMap()) }
 
         val storeIndex = indexMapper.encode(index)
