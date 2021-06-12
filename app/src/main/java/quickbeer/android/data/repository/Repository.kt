@@ -176,7 +176,7 @@ abstract class Repository<K, V> {
         }
     }
 
-    protected abstract suspend fun persist(key: K, value: V)
+    abstract suspend fun persist(key: K, value: V)
 
     protected abstract suspend fun getLocal(key: K): V?
 

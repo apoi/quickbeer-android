@@ -26,6 +26,10 @@ class BeerRoomCore @Inject constructor(
             .map { it.map(BeerEntityMapper::mapTo) }
     }
 
+    fun lastAccessed(): Flow<List<Int>> {
+        return database.beerDao().lastAccessed()
+    }
+
     private fun contains(entity: BeerEntity, queries: List<String>): Boolean {
         return queries.all { q -> entity.normalizedName?.contains(q) == true }
     }

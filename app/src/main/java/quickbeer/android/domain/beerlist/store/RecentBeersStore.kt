@@ -1,17 +1,28 @@
 package quickbeer.android.domain.beerlist.store
 
 import javax.inject.Inject
-import quickbeer.android.data.store.StoreCore
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import quickbeer.android.data.store.SingleStore
 import quickbeer.android.domain.beer.store.BeerStoreCore
-import quickbeer.android.domain.idlist.IdList
-import quickbeer.android.inject.IdListPersistedCore
 
 class RecentBeersStore @Inject constructor(
-    @IdListPersistedCore indexStoreCore: StoreCore<String, IdList>,
-    beerStoreCore: BeerStoreCore
-) : SingleBeerListStore(KEY, indexStoreCore, beerStoreCore) {
+    private val beerStoreCore: BeerStoreCore
+) : SingleStore<List<Int>> {
 
-    companion object {
-        private const val KEY = "recentBeers"
+    override suspend fun get(): List<Int> {
+        return beerStoreCore.lastAccessed().first()
+    }
+
+    override fun getStream(): Flow<List<Int>> {
+        return beerStoreCore.lastAccessed()
+    }
+
+    override suspend fun put(value: List<Int>): Boolean {
+        error("This store is read only")
+    }
+
+    override suspend fun delete(): Boolean {
+        error("This store is read only")
     }
 }

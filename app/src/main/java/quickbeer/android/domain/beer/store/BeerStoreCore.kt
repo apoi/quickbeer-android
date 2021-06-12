@@ -11,4 +11,6 @@ class BeerStoreCore(
     constructor(database: Database) : this(BeerRoomCore(database))
 
     fun search(query: String) = roomCore.search(query)
+
+    fun lastAccessed() = roomCore.lastAccessed()
 }

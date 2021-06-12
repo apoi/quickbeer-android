@@ -42,6 +42,11 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     override fun topInsetView() = binding.toolbar
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.updateAccessed()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -53,8 +58,9 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
     override fun observeViewState() {
         observe(viewModel.beerState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> Unit
-                State.Empty -> Unit
+                is State.Empty -> Unit
                 is State.Success -> setBeer(state.value)
                 is State.Error -> Unit
             }

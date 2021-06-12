@@ -25,10 +25,15 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
@@ -42,6 +47,7 @@ import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.util.ktx.navId
+import timber.log.Timber
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
@@ -77,6 +83,20 @@ class BeerDetailsViewModel @Inject constructor(
                         getStyle(it.value)
                         getAddress(it.value)
                     }
+                }
+        }
+    }
+
+    fun updateAccessed() {
+        viewModelScope.launch(Dispatchers.IO) {
+            beerRepository.getStream(beerId, Accept())
+                .filterIsInstance<State.Success<Beer>>()
+                .map { it.value }
+                .take(1)
+                .collect { beer ->
+                    val accessed = beer.copy(accessed = ZonedDateTime.now())
+                    Timber.w("PERSIST $accessed")
+                    beerRepository.persist(beer.id, accessed)
                 }
         }
     }
