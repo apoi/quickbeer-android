@@ -1,6 +1,8 @@
 package quickbeer.android.inject
 
 import android.content.Context
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -9,11 +11,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import okhttp3.Cache
+import okhttp3.CookieJar
 import okhttp3.OkHttpClient
+import quickbeer.android.domain.login.LoginFetcher
+import quickbeer.android.domain.login.LoginMapper
 import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.adapter.EscapedStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
+import quickbeer.android.network.cookie.SessionPersistingCookieJar
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
 import quickbeer.android.network.interceptor.LoginRedirectInterceptor
@@ -29,9 +35,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(@ApplicationContext context: Context): OkHttpClient {
+    fun provideOkHttp(
+        @ApplicationContext context: Context,
+        cookieJar: CookieJar
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .cache(Cache(context.cacheDir, TEN_MEGABYTES))
+            .cookieJar(cookieJar)
             .addInterceptor(AppKeyInterceptor())
             .addInterceptor(LoggingInterceptor.create())
             .addInterceptor(LoginRedirectInterceptor())
@@ -62,5 +72,17 @@ object NetworkModule {
     @Singleton
     fun provideRateBeerApi(retrofit: Retrofit): RateBeerApi {
         return retrofit.create(RateBeerApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCookieJar(@ApplicationContext context: Context): CookieJar {
+        return SessionPersistingCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
+    }
+
+    @Provides
+    @Singleton
+    fun loginFetcher(rateBeerApi: RateBeerApi, cookieJar: CookieJar): LoginFetcher {
+        return LoginFetcher(rateBeerApi, LoginMapper(cookieJar))
     }
 }

@@ -11,6 +11,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.LoginDialogFragmentBinding
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
@@ -38,7 +39,9 @@ class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
 
     private fun observeViewState() {
         observe(viewModel.loginState) { state ->
+            Timber.w("GOT STATE $state")
             when (state) {
+                is State.Initial -> binding.button.isLoading = false
                 is State.Loading -> binding.button.isLoading = true
                 is State.Empty -> binding.button.isLoading = false
                 is State.Error -> binding.button.isLoading = false
