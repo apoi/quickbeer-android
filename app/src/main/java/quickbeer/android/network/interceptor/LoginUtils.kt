@@ -24,6 +24,10 @@ import quickbeer.android.Constants
 
 object LoginUtils {
 
+    const val SIGN_IN_PAGE = "Signin_r.asp"
+    const val HTTP_OK = 200
+    const val HTTP_FORBIDDEN = 403
+
     private const val USER_ID_KEY = "UserID"
 
     private val ID_PATTERN = "UserID=([0-9]+);".toRegex()

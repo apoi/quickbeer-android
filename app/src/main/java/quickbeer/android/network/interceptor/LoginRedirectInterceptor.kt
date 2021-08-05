@@ -36,7 +36,7 @@ class LoginRedirectInterceptor : Interceptor {
     }
 
     private fun isLoginRequest(request: Request): Boolean {
-        return request.url.encodedPath.endsWith(SIGN_IN_PAGE)
+        return request.url.encodedPath.endsWith(LoginUtils.SIGN_IN_PAGE)
     }
 
     private fun handleLoginResponse(
@@ -48,17 +48,17 @@ class LoginRedirectInterceptor : Interceptor {
         val body = response.body?.byteString()?.utf8()
 
         val code = when {
-            isSuccessfulLogin(request, response) -> HTTP_OK
-            isKnownLoginFailure(body) -> HTTP_FORBIDDEN
-            else -> HTTP_FORBIDDEN
+            isSuccessfulLogin(request, response) -> LoginUtils.HTTP_OK
+            isKnownLoginFailure(body) -> LoginUtils.HTTP_FORBIDDEN
+            else -> LoginUtils.HTTP_FORBIDDEN
         }
 
         return createResponse(response, contentType, body, code)
     }
 
     private fun isSuccessfulLogin(request: Request, response: Response): Boolean {
-        return if (response.code == HTTP_OK &&
-            request.url.encodedPath.endsWith(SIGN_IN_PAGE) &&
+        return if (response.code == LoginUtils.HTTP_OK &&
+            request.url.encodedPath.endsWith(LoginUtils.SIGN_IN_PAGE) &&
             LoginUtils.idFromStringList(response.headers("set-cookie")) != null
         ) {
             // Success with id in a cookie header
@@ -89,11 +89,5 @@ class LoginRedirectInterceptor : Interceptor {
             .body(body?.toResponseBody(contentType))
             .code(code)
             .build()
-    }
-
-    companion object {
-        private const val SIGN_IN_PAGE = "Signin_r.asp"
-        private const val HTTP_OK = 200
-        private const val HTTP_FORBIDDEN = 403
     }
 }

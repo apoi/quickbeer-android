@@ -6,15 +6,19 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.LoginDialogFragmentBinding
+import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
 @AndroidEntryPoint
 class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
+
+    @Inject
+    lateinit var toastProvider: ToastProvider
 
     private val binding by viewBinding(LoginDialogFragmentBinding::bind)
     private val viewModel by viewModels<LoginViewModel>()
@@ -39,14 +43,21 @@ class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
 
     private fun observeViewState() {
         observe(viewModel.loginState) { state ->
-            Timber.w("GOT STATE $state")
+            binding.button.isLoading = state is State.Loading
+
             when (state) {
-                is State.Initial -> binding.button.isLoading = false
-                is State.Loading -> binding.button.isLoading = true
-                is State.Empty -> binding.button.isLoading = false
-                is State.Error -> binding.button.isLoading = false
-                is State.Success -> binding.button.isLoading = false
+                is State.Initial, is State.Loading -> Unit
+                is State.Error -> showError(state.cause)
+                is State.Success -> dismiss()
+                is State.Empty -> showError(LoginError.UnknownError)
             }
+        }
+    }
+
+    private fun showError(error: Throwable) {
+        when (error) {
+            is LoginError.InvalidCredentials -> toastProvider.showToast(R.string.login_failed)
+            else -> toastProvider.showToast(R.string.login_error)
         }
     }
 }

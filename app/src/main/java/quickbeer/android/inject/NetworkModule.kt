@@ -1,6 +1,7 @@
 package quickbeer.android.inject
 
 import android.content.Context
+import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.squareup.moshi.Moshi
@@ -76,8 +77,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCookieJar(@ApplicationContext context: Context): CookieJar {
+    fun provideClearableCookieJar(@ApplicationContext context: Context): ClearableCookieJar {
         return SessionPersistingCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
+    }
+
+    @Provides
+    fun provideCookieJar(clearableCookieJar: ClearableCookieJar): CookieJar {
+        return clearableCookieJar
     }
 
     @Provides

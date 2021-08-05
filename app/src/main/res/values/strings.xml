@@ -140,5 +140,4 @@
     <string name="login_failed">Login failed. Check your username and password.</string>
     <string name="login_error">Error logging in. Please try again later.</string>
 
-
 </resources>
