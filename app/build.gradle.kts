@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion(Sdk.CompileSdkVersion)
+    compileSdk = Sdk.CompileSdkVersion
 
     defaultConfig {
-        minSdkVersion(Sdk.MinSdkVersion)
-        targetSdkVersion(Sdk.TargetSdkVersion)
+        minSdk = Sdk.MinSdkVersion
+        targetSdk = Sdk.TargetSdkVersion
 
         applicationId = App.AppId
         versionCode = appBuildVersion()
@@ -31,7 +31,6 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
-        useIR = true
     }
 
     androidExtensions {
@@ -52,7 +51,7 @@ android {
         viewBinding = true
     }
 
-    lintOptions {
+    lint {
         isWarningsAsErrors = true
         isAbortOnError = true
     }

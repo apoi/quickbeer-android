@@ -28,29 +28,28 @@ object Plugins {
 object Versions {
     object Plugin {
         const val Detekt = "1.17.1"
-        const val Gradle = "4.2.1"
-        const val Kotlin = "1.5.10"
-        const val Ktlint = "10.0.0"
+        const val Gradle = "7.0.0"
+        const val Kotlin = "1.5.21"
+        const val Ktlint = "10.1.0"
         const val Version = "0.39.0"
     }
 
     object AndroidX {
-        const val AppCompat = "1.3.0"
-        const val Camera = "1.0.0-rc04"
+        const val AppCompat = "1.3.1"
         const val ConstraintLayout = "2.0.4"
-        const val CoreKt = "1.5.0"
+        const val CoreKt = "1.6.0"
         const val Crypto = "1.0.0"
-        const val Fragment = "1.3.4"
+        const val Fragment = "1.3.6"
         const val Lifecycle = "2.3.1"
         const val Navigation = "2.3.5"
-        const val RecyclerView = "1.2.0"
+        const val RecyclerView = "1.2.1"
         const val Room = "2.3.0"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object Google {
-        const val Material = "1.3.0"
-        const val Barcode = "16.1.2"
+        const val Material = "1.4.0"
+        const val Barcode = "16.2.0"
     }
 
     object OkHttp {
@@ -60,13 +59,13 @@ object Versions {
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.5.0"
+        const val Coroutines = "1.5.1"
     }
 
-    const val Coil = "1.2.1"
+    const val Coil = "1.3.1"
     const val CookieJar = "1.0.1"
-    const val Hilt = "2.36"
-    const val Ktlint = "0.41.0"
+    const val Hilt = "2.38.1"
+    const val Ktlint = "0.42.0"
     const val LeakCanary = "2.7"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
@@ -75,21 +74,17 @@ object Versions {
 
     object Testing {
         object AndroidX {
-            const val Test = "1.3.0"
-            const val TestExt = "1.1.2"
+            const val Test = "1.4.0"
+            const val TestExt = "1.1.3"
         }
 
-        const val EspressoCore = "3.3.0"
+        const val EspressoCore = "3.4.0"
         const val JUnit = "4.13.2"
     }
 }
 
 object Libraries {
     object AndroidX {
-        object Camera {
-            const val Core = "androidx.camera:camera-core:${Versions.AndroidX.Camera}"
-        }
-
         object Lifecycle {
             const val Common = "androidx.lifecycle:lifecycle-common-java8:${Versions.AndroidX.Lifecycle}"
             const val ViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Lifecycle}"
