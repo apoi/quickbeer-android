@@ -14,9 +14,9 @@ import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.CookieJar
 import okhttp3.OkHttpClient
+import quickbeer.android.Constants
 import quickbeer.android.domain.login.LoginFetcher
 import quickbeer.android.domain.login.LoginMapper
-import quickbeer.android.network.NetworkConfig
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.adapter.EscapedStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
@@ -64,7 +64,7 @@ object NetworkModule {
         return Retrofit.Builder()
             .addCallAdapterFactory(ResultCallAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .baseUrl(NetworkConfig.API_ENDPOINT)
+            .baseUrl(Constants.API_URL)
             .client(okHttpClient)
             .build()
     }

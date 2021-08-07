@@ -1,4 +1,4 @@
-package quickbeer.android.feature.login
+package quickbeer.android.domain.login
 
 sealed class LoginError : Throwable() {
     object InvalidCredentials : LoginError()

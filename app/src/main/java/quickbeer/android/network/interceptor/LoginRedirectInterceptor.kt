@@ -23,6 +23,7 @@ import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import quickbeer.android.network.HttpCode
 
 class LoginRedirectInterceptor : Interceptor {
 
@@ -36,7 +37,7 @@ class LoginRedirectInterceptor : Interceptor {
     }
 
     private fun isLoginRequest(request: Request): Boolean {
-        return request.url.encodedPath.endsWith(LoginUtils.SIGN_IN_PAGE)
+        return request.url.encodedPath.endsWith(SIGN_IN_PAGE)
     }
 
     private fun handleLoginResponse(
@@ -48,18 +49,18 @@ class LoginRedirectInterceptor : Interceptor {
         val body = response.body?.byteString()?.utf8()
 
         val code = when {
-            isSuccessfulLogin(request, response) -> LoginUtils.HTTP_OK
-            isKnownLoginFailure(body) -> LoginUtils.HTTP_FORBIDDEN
-            else -> LoginUtils.HTTP_FORBIDDEN
+            isSuccessfulLogin(request, response) -> HttpCode.OK
+            isKnownLoginFailure(body) -> HttpCode.FORBIDDEN
+            else -> HttpCode.FORBIDDEN
         }
 
         return createResponse(response, contentType, body, code)
     }
 
     private fun isSuccessfulLogin(request: Request, response: Response): Boolean {
-        return if (response.code == LoginUtils.HTTP_OK &&
-            request.url.encodedPath.endsWith(LoginUtils.SIGN_IN_PAGE) &&
-            LoginUtils.idFromStringList(response.headers("set-cookie")) != null
+        return if (response.code == HttpCode.OK &&
+            request.url.encodedPath.endsWith(SIGN_IN_PAGE) &&
+            idFromStringList(response.headers("set-cookie")) != null
         ) {
             // Success with id in a cookie header
             true
@@ -72,6 +73,13 @@ class LoginRedirectInterceptor : Interceptor {
 
     private fun isKnownLoginFailure(body: String?): Boolean {
         return body?.contains("failed login") == true
+    }
+
+    private fun idFromStringList(values: List<String>): String? {
+        return values
+            .asSequence()
+            .mapNotNull { ID_PATTERN.find(it)?.groupValues?.get(1) }
+            .firstOrNull()
     }
 
     /**
@@ -89,5 +97,10 @@ class LoginRedirectInterceptor : Interceptor {
             .body(body?.toResponseBody(contentType))
             .code(code)
             .build()
+    }
+
+    companion object {
+        private const val SIGN_IN_PAGE = "Signin_r.asp"
+        private val ID_PATTERN = "UserID=([0-9]+);".toRegex()
     }
 }

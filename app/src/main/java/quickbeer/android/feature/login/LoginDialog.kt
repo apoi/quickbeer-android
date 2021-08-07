@@ -10,6 +10,7 @@ import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.LoginDialogFragmentBinding
+import quickbeer.android.domain.login.LoginError
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding

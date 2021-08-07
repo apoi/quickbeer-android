@@ -30,7 +30,7 @@ class Preferences(context: Context) {
     }
 
     private fun setString(key: String, value: String?) {
-        return pref.edit { putString(PASSWORD, value) }
+        return pref.edit { putString(key, value) }
     }
 
     companion object {
