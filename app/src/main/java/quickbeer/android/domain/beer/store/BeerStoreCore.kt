@@ -12,5 +12,7 @@ class BeerStoreCore(
 
     fun search(query: String) = roomCore.search(query)
 
+    fun tickedBeers() = roomCore.tickedBeers()
+
     fun lastAccessed() = roomCore.lastAccessed()
 }

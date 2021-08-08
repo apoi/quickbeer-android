@@ -17,6 +17,10 @@ class Preferences(context: Context) {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
 
+    var userId: Int?
+        get() = getInt(USERID)
+        set(value) = setInt(USERID, value)
+
     var username: String?
         get() = getString(USERNAME)
         set(value) = setString(USERNAME, value)
@@ -30,10 +34,22 @@ class Preferences(context: Context) {
     }
 
     private fun setString(key: String, value: String?) {
-        return pref.edit { putString(key, value) }
+        if (value != null) pref.edit { putString(key, value) }
+        else pref.edit { remove(key) }
+    }
+
+    private fun getInt(key: String): Int? {
+        return pref.getInt(key, Int.MIN_VALUE)
+            .takeIf { it != Int.MIN_VALUE }
+    }
+
+    private fun setInt(key: String, value: Int?) {
+        if (value != null) pref.edit { putInt(key, value) }
+        else pref.edit { remove(key) }
     }
 
     companion object {
+        private const val USERID = "PREF_USERID"
         private const val USERNAME = "PREF_USERNAME"
         private const val PASSWORD = "PREF_PASSWORD"
     }

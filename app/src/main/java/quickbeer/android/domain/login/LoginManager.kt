@@ -13,6 +13,14 @@ class LoginManager @Inject constructor(
     private val preferences: Preferences
 ) {
 
+    fun isLoggedIn(): Boolean {
+        return preferences.userId != null
+    }
+
+    fun getUserId(): Int? {
+        return preferences.userId
+    }
+
     suspend fun login(username: String, password: String): State<Boolean> {
         logout()
 
@@ -25,6 +33,7 @@ class LoginManager @Inject constructor(
     }
 
     fun logout() {
+        preferences.userId = null
         preferences.username = null
         preferences.password = null
         cookieJar.clear()
@@ -39,8 +48,10 @@ class LoginManager @Inject constructor(
             return State.Error(LoginError.UnknownError)
         }
 
+        preferences.userId = userId
         preferences.username = username
         preferences.password = password
+
         return State.Success(true)
     }
 

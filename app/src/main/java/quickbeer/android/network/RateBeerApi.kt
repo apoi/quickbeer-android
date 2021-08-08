@@ -84,8 +84,8 @@ interface RateBeerApi {
     suspend fun getUserReviews(@QueryMap params: Map<String, String>): ApiResult<List<Review>>
     */
 
-    @GET("/json/bt.asp")
-    suspend fun getTicks(@QueryMap params: Map<String, String>): ApiResult<List<BeerJson>>
+    @GET("/json/bt.asp?m=1")
+    suspend fun getTicks(): ApiResult<List<BeerJson>>
 
     @GET("/json/bt.asp")
     suspend fun tickBeer(@QueryMap params: Map<String, String>)

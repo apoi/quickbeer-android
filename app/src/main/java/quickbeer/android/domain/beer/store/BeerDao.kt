@@ -27,6 +27,9 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
         q3: String? = null
     ): Flow<List<BeerEntity>>
 
+    @Query("SELECT * FROM beers WHERE liked IS NOT NULL")
+    abstract fun tickedBeers(): Flow<List<BeerEntity>>
+
     @Query("SELECT id FROM beers WHERE accessed IS NOT NULL ORDER BY accessed DESC")
     abstract fun lastAccessed(): Flow<List<Int>>
 

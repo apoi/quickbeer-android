@@ -2,6 +2,7 @@ package quickbeer.android.domain.beer.store
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
@@ -23,6 +24,12 @@ class BeerRoomCore @Inject constructor(
         // Use three first terms directly in search, filter others programmatically
         return database.beerDao().search(parts.first(), parts.getOrNull(1), parts.getOrNull(2))
             .map { it.filter { entity -> contains(entity, tail) } }
+            .map { it.map(BeerEntityMapper::mapTo) }
+    }
+
+    fun tickedBeers(): Flow<List<Beer>> {
+        return database.beerDao().tickedBeers()
+            .distinctUntilChanged()
             .map { it.map(BeerEntityMapper::mapTo) }
     }
 
