@@ -8,12 +8,10 @@ import quickbeer.android.inject.IdListPersistedCore
 
 class TickedBeersStore @Inject constructor(
     @IdListPersistedCore indexStoreCore: StoreCore<String, IdList>,
-    private val beerStoreCore: BeerStoreCore
-) : SingleBeerListStore(KEY, indexStoreCore, beerStoreCore) {
-
-    fun search(query: String) = beerStoreCore.search(query)
+    beerStoreCore: BeerStoreCore
+) : BeerListStore(INDEX_PREFIX, indexStoreCore, beerStoreCore) {
 
     companion object {
-        private const val KEY = "ticks"
+        private const val INDEX_PREFIX = "ticks/"
     }
 }

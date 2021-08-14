@@ -21,6 +21,7 @@ import quickbeer.android.domain.review.Review
 import quickbeer.android.domain.review.store.ReviewRoomCore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.store.StyleRoomCore
+import quickbeer.android.domain.user.User
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -76,5 +77,11 @@ object RepositoryModule {
     @Singleton
     fun provideReviewCore(roomCore: ReviewRoomCore): StoreCore<Int, Review> {
         return CachingStoreCore(roomCore, Review::id, Review.merger)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserCore(): StoreCore<Int, User> {
+        return MemoryStoreCore()
     }
 }

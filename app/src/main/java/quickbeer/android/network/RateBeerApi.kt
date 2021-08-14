@@ -5,6 +5,7 @@ import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
 import quickbeer.android.domain.review.network.ReviewJson
 import quickbeer.android.domain.stylelist.network.StyleJson
+import quickbeer.android.domain.user.network.RateCountJson
 import quickbeer.android.network.result.ApiResult
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -85,8 +86,17 @@ interface RateBeerApi {
     */
 
     @GET("/json/bt.asp?m=1")
-    suspend fun getTicks(): ApiResult<List<BeerJson>>
+    suspend fun getTicks(
+        @Query("u") userId: String
+    ): ApiResult<List<BeerJson>>
 
     @GET("/json/bt.asp")
     suspend fun tickBeer(@QueryMap params: Map<String, String>)
+
+    // USER DETAILS
+
+    @GET("/json/rc.asp")
+    suspend fun getUserRateCount(
+        @Query("uid") userId: String
+    ): ApiResult<List<RateCountJson>>
 }

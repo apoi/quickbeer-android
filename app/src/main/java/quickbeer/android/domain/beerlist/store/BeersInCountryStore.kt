@@ -12,6 +12,6 @@ class BeersInCountryStore @Inject constructor(
 ) : BeerListStore(INDEX_PREFIX, indexStoreCore, beerStoreCore) {
 
     companion object {
-        const val INDEX_PREFIX = "country/"
+        private const val INDEX_PREFIX = "country/"
     }
 }
