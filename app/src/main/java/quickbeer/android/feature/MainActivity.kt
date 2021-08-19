@@ -51,7 +51,7 @@ class MainActivity :
         // Setup the bottom navigation view with a list of navigation graphs
         val graphs = listOf(
             R.navigation.discover_nav,
-            R.navigation.more_nav
+            R.navigation.profile_nav
         )
 
         val controller = binding.mainBottomNav.setupWithNavController(

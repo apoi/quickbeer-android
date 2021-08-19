@@ -25,8 +25,8 @@
     <string name="search_title">Search</string>
     <string name="search_description">Search</string>
 
-    <string name="more_title">More</string>
-    <string name="more_description">More</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_description">Profile</string>
 
     <string name="login_title">Login</string>
     <string name="login_description">Login</string>

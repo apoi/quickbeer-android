@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/more"
-    app:startDestination="@id/more_fragment">
+    app:startDestination="@id/profile_fragment">
 
     <fragment
-        android:id="@+id/more_fragment"
-        android:name="quickbeer.android.feature.more.MoreFragment"
-        android:label="@string/more_title"
-        tools:layout="@layout/more_fragment">
+        android:id="@+id/profile_fragment"
+        android:name="quickbeer.android.feature.profile.ProfileFragment"
+        android:label="@string/profile_title"
+        tools:layout="@layout/profile_fragment">
         <action
             android:id="@+id/to_login"
             app:destination="@id/login_dialog" />
@@ -18,13 +18,13 @@
     <fragment
         android:id="@+id/about_fragment"
         android:name="quickbeer.android.feature.about.AboutFragment"
-        android:label="@string/more_title"
+        android:label="@string/profile_title"
         tools:layout="@layout/about_fragment" />
 
     <dialog
         android:id="@+id/login_dialog"
         android:name="quickbeer.android.feature.login.LoginDialog"
-        android:label="@string/more_title"
+        android:label="@string/profile_title"
         tools:layout="@layout/login_dialog_fragment" />
 
 </navigation>

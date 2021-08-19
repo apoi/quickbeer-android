@@ -1,15 +1,15 @@
-package quickbeer.android.feature.more
+package quickbeer.android.feature.profile
 
 import android.os.Bundle
 import android.view.View
 import quickbeer.android.R
-import quickbeer.android.databinding.MoreFragmentBinding
+import quickbeer.android.databinding.ProfileFragmentBinding
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.viewBinding
 
-class MoreFragment : MainFragment(R.layout.more_fragment) {
+class ProfileFragment : MainFragment(R.layout.profile_fragment) {
 
-    private val binding by viewBinding(MoreFragmentBinding::bind)
+    private val binding by viewBinding(ProfileFragmentBinding::bind)
 
     override fun topInsetView() = binding.layout
 
@@ -17,7 +17,7 @@ class MoreFragment : MainFragment(R.layout.more_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginButton.setOnClickListener {
-            navigate(MoreFragmentDirections.toLogin())
+            navigate(ProfileFragmentDirections.toLogin())
         }
     }
 }
