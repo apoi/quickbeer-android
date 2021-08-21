@@ -32,4 +32,22 @@ object Constants {
 
     const val GOOGLE_MAPS_PATH =
         "https://www.google.com/maps/place/%s"
+
+    const val PLAY_STORE =
+        "https://play.google.com/store/apps/details?id=quickbeer.android"
+
+    const val QUICKBEER_GITHUB =
+        "https://github.com/apoi/quickbeer-android"
+
+    const val QUICKBEER_LICENSE =
+        "https://ztesch.fi/quickbeer/license/"
+
+    const val OPEN_SOURCE_LICENSES =
+        "https://ztesch.fi/quickbeer/open-source"
+
+    const val GRAPHICS_ASSET_LICENSES =
+        "https://ztesch.fi/quickbeer/graphics-assets"
+
+    const val PRIVACY_POLICY =
+        "https://ztesch.fi/quickbeer/privacy-policy"
 }

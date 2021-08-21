@@ -5,7 +5,7 @@ object App {
     const val AppId = "quickbeer.android.v4"
 
     object Version {
-        internal const val Major = 1
+        internal const val Major = 4
         internal const val Minor = 0
     }
 }

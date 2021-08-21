@@ -14,4 +14,19 @@
         <attr name="expandable" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="GroupItem">
+        <attr name="applyTopMargin" format="boolean" />
+        <attr name="position" format="enum">
+            <enum name="ONLY" value="0" />
+            <enum name="FIRST" value="1" />
+            <enum name="MIDDLE" value="2" />
+            <enum name="LAST" value="3" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="GroupLink">
+        <attr name="icon" format="reference" />
+        <attr name="label" format="reference" />
+    </declare-styleable>
+
 </resources>

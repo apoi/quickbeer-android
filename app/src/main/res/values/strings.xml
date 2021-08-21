@@ -140,4 +140,15 @@
     <string name="login_failed">Login failed. Check your username and password.</string>
     <string name="login_error">Error logging in. Please try again later.</string>
 
+    <!-- About application -->
+    <string name="about">About</string>
+    <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it on Google Play if you like the app. Thanks!</string>
+    <string name="about_google_play">QuickBeer on Google Play</string>
+    <string name="about_open_source_licenses">Open Source Licenses</string>
+    <string name="about_graphic_asset_licenses">Graphics Asset Licenses</string>
+    <string name="about_privacy_policy">Privacy Policy</string>
+    <string name="about_source_code">Source Code</string>
+    <string name="about_quickbeer_license">QuickBeer License</string>
+    <string name="about_version">Version %s</string>
+
 </resources>

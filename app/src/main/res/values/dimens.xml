@@ -8,10 +8,15 @@
     <dimen name="spacing_xxl">20dp</dimen>
     <dimen name="spacing_3xxl">24dp</dimen>
 
+    <dimen name="radius_m">4dp</dimen>
+    <dimen name="radius_l">8dp</dimen>
+
+    <dimen name="divider_height">0.5dp</dimen>
     <dimen name="search_status_text">28sp</dimen>
     <dimen name="progress_indicator_width">50dp</dimen>
     <dimen name="details_box_height">60dp</dimen>
     <dimen name="details_box_width">80dp</dimen>
+    <dimen name="group_item_height">48dp</dimen>
 
     <!-- Beer details -->
     <dimen name="beer_details_header_text">30sp</dimen>
