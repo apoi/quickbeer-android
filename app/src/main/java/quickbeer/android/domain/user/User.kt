@@ -8,10 +8,10 @@ import quickbeer.android.data.store.Merger
 @Parcelize
 data class User(
     val id: Int?,
-    val username: String?,
-    val rateCount: Int?,
-    val tickCount: Int?,
-    val placeCount: Int?
+    val username: String? = null,
+    val rateCount: Int? = null,
+    val tickCount: Int? = null,
+    val placeCount: Int? = null
 ) : Parcelable {
 
     companion object {

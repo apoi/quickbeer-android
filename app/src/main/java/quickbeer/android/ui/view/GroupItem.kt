@@ -14,22 +14,33 @@ open class GroupItem @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : MaterialCardView(context, attrs, defStyleAttr) {
 
-    private val position: Position
     private val applyTopMargin: Boolean
+
+    private var _position: Position = Position.ONLY
+    var position: Position
+        get() = _position
+        set(value) {
+            if (_position != value) {
+                _position = value
+                updateShape()
+                updateDivider()
+                updateMargins()
+            }
+        }
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupItem)
-        position = Position.values()[ta.getInt(R.styleable.GroupItem_position, 0)]
+        _position = Position.values()[ta.getInt(R.styleable.GroupItem_position, 0)]
         applyTopMargin = ta.getBoolean(R.styleable.GroupItem_applyTopMargin, true)
         ta.recycle()
-
-        updateShape()
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        updateMargins()
+
+        updateShape()
         updateDivider()
+        updateMargins()
     }
 
     private fun updateShape() {

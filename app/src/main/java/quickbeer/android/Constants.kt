@@ -45,7 +45,7 @@ object Constants {
     const val OPEN_SOURCE_LICENSES =
         "https://ztesch.fi/quickbeer/open-source"
 
-    const val GRAPHICS_ASSET_LICENSES =
+    const val GRAPHICS_LICENSES =
         "https://ztesch.fi/quickbeer/graphics-assets"
 
     const val PRIVACY_POLICY =

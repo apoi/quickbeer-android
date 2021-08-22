@@ -140,6 +140,10 @@
     <string name="login_failed">Login failed. Check your username and password.</string>
     <string name="login_error">Error logging in. Please try again later.</string>
 
+    <!-- Profile -->
+    <string name="profile_reviews">Reviews: %s</string>
+    <string name="profile_ticks">Ticks: %s</string>
+
     <!-- About application -->
     <string name="about">About</string>
     <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it on Google Play if you like the app. Thanks!</string>

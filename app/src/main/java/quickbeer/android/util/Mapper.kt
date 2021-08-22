@@ -5,7 +5,7 @@ package quickbeer.android.util
  */
 interface Mapper<T, U> {
 
-    fun mapFrom(source: T): U
-
     fun mapTo(source: U): T
+
+    fun mapFrom(source: T): U
 }

@@ -19,6 +19,7 @@ import quickbeer.android.domain.countrylist.network.CountryListFetcher
 import quickbeer.android.domain.reviewlist.network.BeerReviewsFetcher
 import quickbeer.android.domain.reviewlist.network.BeerReviewsPageFetcher
 import quickbeer.android.domain.stylelist.network.StyleListFetcher
+import quickbeer.android.domain.user.network.RateCountFetcher
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.util.ResourceProvider
 
@@ -105,5 +106,11 @@ object FetcherModule {
     @Singleton
     fun provideBeerReviewsPageFetcher(api: RateBeerApi): BeerReviewsPageFetcher {
         return BeerReviewsPageFetcher(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRateCountFetcher(api: RateBeerApi): RateCountFetcher {
+        return RateCountFetcher(api)
     }
 }
