@@ -17,10 +17,10 @@ import quickbeer.android.util.Preferences
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     userRepository: UserRepository,
-    preferences: Preferences
+    private val preferences: Preferences
 ) : ViewModel() {
 
-    val userId: Int? = preferences.userId
+    var userId: Int? = preferences.userId
 
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
     val userState: Flow<State<User>> = _userState
@@ -30,7 +30,7 @@ class ProfileViewModel @Inject constructor(
             if (userId == null) {
                 _userState.emit(State.Empty)
             } else {
-                userRepository.getStream(userId, UserRepository.RateCountValidator())
+                userRepository.getStream(userId!!, UserRepository.RateCountValidator())
                     .collectLatest(_userState::emit)
             }
         }
@@ -38,5 +38,11 @@ class ProfileViewModel @Inject constructor(
 
     fun requireUserId(): Int {
         return userId ?: error("Invalid access to user ID")
+    }
+
+    fun logout() {
+        preferences.userId = null
+        preferences.username = null
+        preferences.password = null
     }
 }

@@ -14,7 +14,6 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ProfileFragmentBinding
 import quickbeer.android.domain.user.User
 import quickbeer.android.ui.base.MainFragment
-import quickbeer.android.ui.view.GroupItem
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
@@ -29,8 +28,14 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.loginButton.setOnClickListener {
+        setProfileButtons(viewModel.userId != null)
+
+        binding.profileLogin.setOnClickListener {
             navigate(ProfileFragmentDirections.toLogin())
+        }
+
+        binding.profileLogout.setOnClickListener {
+            viewModel.logout()
         }
 
         binding.profileTicks.setOnClickListener {
@@ -51,36 +56,42 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     override fun observeViewState() {
         observe(viewModel.userState) { state ->
             when (state) {
-                is State.Initial, is State.Loading -> setLoading()
-                is State.Success -> setUser(state.value)
-                is State.Empty, is State.Error -> setEmpty()
+                is State.Initial, is State.Loading -> setStateLoading()
+                is State.Success -> setStateContent(state.value)
+                is State.Empty, is State.Error -> setStateEmpty()
             }
         }
     }
 
-    private fun setLoading() {
+    private fun setProfileButtons(hasUser: Boolean) {
+        binding.profileReviews.isVisible = hasUser
+        binding.profileTicks.isVisible = hasUser
+        binding.profileLogout.isVisible = hasUser
+        binding.profileLogin.isVisible = !hasUser
+    }
+
+    private fun setStateLoading() {
         binding.profileUsername.text = "Loading..."
+
+        binding.profileReviews.label.text =
+            getString(R.string.profile_reviews).format("loading")
+
+        binding.profileTicks.label.text =
+            getString(R.string.profile_ticks).format("loading")
     }
 
-    private fun setUser(user: User) {
-        binding.profileItem.position = GroupItem.Position.FIRST
+    private fun setStateContent(user: User) {
         binding.profileUsername.text = user.username
-        binding.loginButton.isVisible = true
 
-        binding.profileReviews.apply {
-            label.text = getString(R.string.profile_reviews).format(user.rateCount)
-            isVisible = true
-        }
+        binding.profileReviews.label.text =
+            getString(R.string.profile_reviews).format(user.rateCount)
 
-        binding.profileTicks.apply {
-            label.text = getString(R.string.profile_ticks).format(user.tickCount)
-            isVisible = true
-        }
+        binding.profileTicks.label.text =
+            getString(R.string.profile_ticks).format(user.tickCount)
     }
 
-    private fun setEmpty() {
+    private fun setStateEmpty() {
         binding.profileUsername.text = "Not logged in"
-        binding.loginButton.isVisible = true
     }
 
     private fun openLink(uri: String) {

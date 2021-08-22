@@ -32,8 +32,7 @@
                 android:id="@+id/profile_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:position="ONLY"
-                tools:position="FIRST">
+                app:position="FIRST">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -73,16 +72,6 @@
                         app:layout_constraintTop_toBottomOf="@id/profile_username"
                         tools:text="Berlin, Germany" />
 
-                    <quickbeer.android.ui.view.Button
-                        android:id="@+id/login_button"
-                        style="@style/AppTheme.Button.Primary"
-                        android:layout_marginTop="@dimen/spacing_l"
-                        android:text="@string/login_button_label"
-                        android:visibility="gone"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/profile_icon"
-                        tools:visibility="visible" />
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </quickbeer.android.ui.view.GroupItem>
@@ -106,6 +95,27 @@
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_noun_rating"
                 app:label="@string/profile_ticks"
+                app:position="MIDDLE"
+                tools:visibility="visible" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/profile_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_profile"
+                app:label="@string/profile_login"
+                app:position="LAST" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/profile_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_profile"
+                app:label="@string/profile_logout"
                 app:position="LAST"
                 tools:visibility="visible" />
 

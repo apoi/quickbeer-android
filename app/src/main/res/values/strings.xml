@@ -146,6 +146,8 @@
     <!-- Profile -->
     <string name="profile_reviews">Reviews: %s</string>
     <string name="profile_ticks">Ticks: %s</string>
+    <string name="profile_login">Login</string>
+    <string name="profile_logout">Logout</string>
 
     <!-- About application -->
     <string name="about">About</string>

@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.store.Merger
 import quickbeer.android.data.store.StoreCore
-import timber.log.Timber
 
 /**
  * StoreCore with memory as the backing store. This store does not persist anything across
