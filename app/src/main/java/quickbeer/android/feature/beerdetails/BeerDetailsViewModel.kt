@@ -47,7 +47,6 @@ import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.util.ktx.navId
-import timber.log.Timber
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
@@ -95,7 +94,6 @@ class BeerDetailsViewModel @Inject constructor(
                 .take(1)
                 .collect { beer ->
                     val accessed = beer.copy(accessed = ZonedDateTime.now())
-                    Timber.w("PERSIST $accessed")
                     beerRepository.persist(beer.id, accessed)
                 }
         }

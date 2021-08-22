@@ -2,9 +2,7 @@ package quickbeer.android.domain.user
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
-import timber.log.Timber
 
 @Parcelize
 data class User(
@@ -17,7 +15,6 @@ data class User(
 
     companion object {
         val merger: Merger<User> = { old, new ->
-            Timber.w("MERGE $old, $new")
             User(
                 id = new.id,
                 username = new.username ?: old.username,
@@ -25,12 +22,6 @@ data class User(
                 tickCount = new.tickCount ?: old.tickCount,
                 placeCount = new.placeCount ?: old.placeCount,
             )
-        }
-    }
-
-    open class RateCountValidator : Validator<User> {
-        override suspend fun validate(user: User?): Boolean {
-            return user?.rateCount != null
         }
     }
 }

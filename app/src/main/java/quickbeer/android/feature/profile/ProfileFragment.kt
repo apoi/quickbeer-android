@@ -33,8 +33,9 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
             navigate(ProfileFragmentDirections.toLogin())
         }
 
-        binding.aboutVersion.text =
-            getString(R.string.about_version).format(BuildConfig.VERSION_NAME)
+        binding.profileTicks.setOnClickListener {
+            navigate(ProfileFragmentDirections.toTicksList(viewModel.requireUserId()))
+        }
 
         binding.linkPlayStore.setOnClickListener { openLink(Constants.PLAY_STORE) }
         binding.linkPrivacy.setOnClickListener { openLink(Constants.PRIVACY_POLICY) }
@@ -42,6 +43,9 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
         binding.linkLicense.setOnClickListener { openLink(Constants.QUICKBEER_LICENSE) }
         binding.linkOpenSource.setOnClickListener { openLink(Constants.OPEN_SOURCE_LICENSES) }
         binding.linkGraphicsAssets.setOnClickListener { openLink(Constants.GRAPHICS_LICENSES) }
+
+        binding.aboutVersion.text =
+            getString(R.string.about_version).format(BuildConfig.VERSION_NAME)
     }
 
     override fun observeViewState() {
@@ -61,6 +65,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     private fun setUser(user: User) {
         binding.profileItem.position = GroupItem.Position.FIRST
         binding.profileUsername.text = user.username
+        binding.loginButton.isVisible = true
 
         binding.profileReviews.apply {
             label.text = getString(R.string.profile_reviews).format(user.rateCount)

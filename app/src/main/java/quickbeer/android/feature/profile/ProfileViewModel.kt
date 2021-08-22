@@ -20,19 +20,23 @@ class ProfileViewModel @Inject constructor(
     preferences: Preferences
 ) : ViewModel() {
 
+    val userId: Int? = preferences.userId
+
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
     val userState: Flow<State<User>> = _userState
 
     init {
-        val userId = preferences.userId
-
         viewModelScope.launch(Dispatchers.IO) {
             if (userId == null) {
                 _userState.emit(State.Empty)
             } else {
-                userRepository.getStream(userId, User.RateCountValidator())
+                userRepository.getStream(userId, UserRepository.RateCountValidator())
                     .collectLatest(_userState::emit)
             }
         }
+    }
+
+    fun requireUserId(): Int {
+        return userId ?: error("Invalid access to user ID")
     }
 }

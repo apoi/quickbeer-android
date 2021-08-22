@@ -31,6 +31,9 @@
     <string name="login_title">Login</string>
     <string name="login_description">Login</string>
 
+    <string name="ticks_list_title">Ticked Beers</string>
+    <string name="ticks_list_description">Ticked Beers</string>
+
     <!-- Search bar -->
     <string name="search_hint">Search…</string>
     <string name="search_progress">Searching…</string>

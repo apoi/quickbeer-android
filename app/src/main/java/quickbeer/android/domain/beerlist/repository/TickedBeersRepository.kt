@@ -1,16 +1,13 @@
 package quickbeer.android.domain.beerlist.repository
 
 import javax.inject.Inject
-import kotlinx.coroutines.flow.first
-import quickbeer.android.data.repository.Reject
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.repository.repository.ItemListRepository
-import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.beerlist.network.TickedBeersFetcher
 import quickbeer.android.domain.beerlist.store.TickedBeersStore
-import quickbeer.android.domain.user.repository.UserRepository
+import quickbeer.android.domain.user.store.UserStore
 
 class TickedBeersRepository @Inject constructor(
     store: TickedBeersStore,
@@ -19,7 +16,7 @@ class TickedBeersRepository @Inject constructor(
 
     class CurrentTickCountValidator(
         private val userId: Int,
-        private val userRepository: UserRepository
+        private val userStore: UserStore,
     ) : Validator<List<Beer>> {
 
         /**
@@ -28,11 +25,8 @@ class TickedBeersRepository @Inject constructor(
         override suspend fun validate(value: List<Beer>?): Boolean {
             if (value == null || value.isEmpty()) return false
 
-            val result = userRepository.getStream(userId, Reject()).first()
-            val rateCount = (result as? State.Success)?.value?.tickCount
-            val localCount = value.size
-
-            return rateCount == localCount
+            val localCount = userStore.get(userId)?.tickCount
+            return localCount == null || value.size > localCount
         }
     }
 }

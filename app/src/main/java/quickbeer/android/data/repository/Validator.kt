@@ -10,12 +10,6 @@ class Accept<in V> : Validator<V> {
     }
 }
 
-class Reject<in V> : Validator<V> {
-    override suspend fun validate(value: V?): Boolean {
-        return false
-    }
-}
-
 class NoFetch<in V> : Validator<V> {
     override suspend fun validate(value: V?): Boolean {
         return true

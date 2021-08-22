@@ -12,6 +12,7 @@ import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeersInCountryFetcher
 import quickbeer.android.domain.beerlist.network.BeersInStyleFetcher
 import quickbeer.android.domain.beerlist.network.BrewersBeersFetcher
+import quickbeer.android.domain.beerlist.network.TickedBeersFetcher
 import quickbeer.android.domain.beerlist.network.TopBeersFetcher
 import quickbeer.android.domain.brewer.network.BrewerFetcher
 import quickbeer.android.domain.brewerlist.network.BrewerSearchFetcher
@@ -112,5 +113,11 @@ object FetcherModule {
     @Singleton
     fun provideRateCountFetcher(api: RateBeerApi): RateCountFetcher {
         return RateCountFetcher(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTickedBeersFetcher(api: RateBeerApi): TickedBeersFetcher {
+        return TickedBeersFetcher(api)
     }
 }

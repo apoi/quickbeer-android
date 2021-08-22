@@ -72,7 +72,7 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
                     listBinding.message.isVisible = false
                     listBinding.progress.show()
                 }
-                State.Empty -> {
+                is State.Empty -> {
                     beersAdapter.setItems(emptyList())
                     listBinding.message.text = getString(R.string.message_empty)
                     listBinding.message.isVisible = true

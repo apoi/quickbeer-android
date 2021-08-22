@@ -24,6 +24,17 @@ class BeerListModelRateCountMapper(private val beerRepository: BeerRepository) :
         }
     )
 
+class BeerListModelTickDateMapper(private val beerRepository: BeerRepository) :
+    StateMapper<List<Beer>, List<BeerListModel>>(
+        { list ->
+            list.sortedWith(
+                compareByDescending(Beer::tickDate)
+                    .thenBy(Beer::name)
+                    .thenBy(Beer::id)
+            ).map { BeerListModel(it.id, beerRepository) }
+        }
+    )
+
 class BeerListModelAlphabeticMapper(private val beerRepository: BeerRepository) :
     StateMapper<List<Beer>, List<BeerListModel>>(
         { list ->

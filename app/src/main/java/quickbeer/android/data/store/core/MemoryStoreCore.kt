@@ -76,8 +76,6 @@ open class MemoryStoreCore<K, V>(
     override suspend fun put(key: K, value: V): V? {
         lock.lock()
 
-        Timber.w("PUT $key: $value")
-
         val (newValue, valuesDiffer) = mergeValues(cache[key], value, merger)
 
         if (!valuesDiffer) {

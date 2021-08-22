@@ -15,8 +15,8 @@ import quickbeer.android.util.JsonMapper
  * the ongoing call.
  *
  * @param <K> Type of keys.
- * @param <V> Type of values.
- * @param <J> Type of JSON data.
+ * @param <V> Type of domain values.
+ * @param <J> Type of result data, mostly Json objects.
  */
 open class Fetcher<in K, out V, J>(
     private val jsonMapper: JsonMapper<K, V, J>,
