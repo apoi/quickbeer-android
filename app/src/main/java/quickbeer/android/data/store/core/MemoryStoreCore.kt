@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.store.Merger
 import quickbeer.android.data.store.StoreCore
-import quickbeer.android.data.store.StoreCore.Companion.takeNew
+import timber.log.Timber
 
 /**
  * StoreCore with memory as the backing store. This store does not persist anything across
@@ -21,7 +21,7 @@ import quickbeer.android.data.store.StoreCore.Companion.takeNew
  * @param <V> Type of values.
  */
 open class MemoryStoreCore<K, V>(
-    private val merger: Merger<V> = takeNew()
+    private val merger: Merger<V>
 ) : StoreCore<K, V> {
 
     // All values in the store
@@ -75,6 +75,8 @@ open class MemoryStoreCore<K, V>(
 
     override suspend fun put(key: K, value: V): V? {
         lock.lock()
+
+        Timber.w("PUT $key: $value")
 
         val (newValue, valuesDiffer) = mergeValues(cache[key], value, merger)
 

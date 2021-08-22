@@ -8,11 +8,11 @@ import quickbeer.android.network.RateBeerApi
 class BeerReviewsFetcher(
     api: RateBeerApi
 ) : Fetcher<String, List<Review>, List<ReviewJson>>(
-    ReviewListJsonMapper, { beerId -> api.getReviews(beerId, 1) }
+    ReviewListJsonMapper(), { beerId -> api.getReviews(beerId, 1) }
 )
 
 class BeerReviewsPageFetcher(
     api: RateBeerApi
 ) : Fetcher<Pair<String, Int>, List<Review>, List<ReviewJson>>(
-    ReviewListJsonMapper, { (beerId, page) -> api.getReviews(beerId, page) }
+    ReviewListJsonMapper(), { (beerId, page) -> api.getReviews(beerId, page) }
 )

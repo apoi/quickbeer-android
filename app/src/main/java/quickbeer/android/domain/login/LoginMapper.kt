@@ -6,17 +6,13 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.ResponseBody
 import quickbeer.android.Constants
-import quickbeer.android.util.Mapper
+import quickbeer.android.util.JsonMapper
 
 class LoginMapper @Inject constructor(
     private val cookieJar: CookieJar
-) : Mapper<Int, ResponseBody> {
+) : JsonMapper<Pair<String, String>, Int, ResponseBody> {
 
-    override fun mapFrom(source: Int): ResponseBody {
-        error("Not implemented")
-    }
-
-    override fun mapTo(source: ResponseBody): Int {
+    override fun map(key: Pair<String, String>, source: ResponseBody): Int {
         // User ID was extracted from headers with interceptor
         return getUserId(cookieJar)
             ?: error("Failed to process login result")

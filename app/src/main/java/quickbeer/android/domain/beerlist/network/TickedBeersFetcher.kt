@@ -8,5 +8,5 @@ import quickbeer.android.network.RateBeerApi
 class TickedBeersFetcher(
     api: RateBeerApi
 ) : Fetcher<String, List<Beer>, List<BeerJson>>(
-    BeerListJsonMapper, { userId -> api.getTicks(userId) }
+    BeerListJsonMapper(), { userId -> api.getTicks(userId) }
 )

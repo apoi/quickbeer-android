@@ -70,7 +70,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideCountryCore(): StoreCore<Int, Country> {
-        return MemoryStoreCore()
+        return MemoryStoreCore(StoreCore.takeNew())
     }
 
     @Provides
@@ -82,6 +82,6 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideUserCore(): StoreCore<Int, User> {
-        return MemoryStoreCore()
+        return MemoryStoreCore(User.merger)
     }
 }

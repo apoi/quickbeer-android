@@ -1,17 +1,13 @@
 package quickbeer.android.domain.user.network
 
 import quickbeer.android.domain.user.User
-import quickbeer.android.util.Mapper
+import quickbeer.android.util.JsonMapper
 
-object RateCountJsonMapper : Mapper<User, RateCountJson> {
+object RateCountJsonMapper : JsonMapper<Int, User, RateCountJson> {
 
-    override fun mapFrom(source: User): RateCountJson {
-        error("Not implemented")
-    }
-
-    override fun mapTo(source: RateCountJson): User {
+    override fun map(key: Int, source: RateCountJson): User {
         return User(
-            id = null,
+            id = key,
             username = null,
             rateCount = source.rateCount,
             tickCount = source.tickCount,

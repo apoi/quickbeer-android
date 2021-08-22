@@ -7,16 +7,20 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.suspendCoroutine
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.network.result.map
-import quickbeer.android.util.Mapper
+import quickbeer.android.util.JsonMapper
 
 /**
  * Fetcher fetches a remote value for a specific type. Deduplicates calls so that all new
  * invocations made during an existing fetch operation will suspend and wait for the result of
  * the ongoing call.
+ *
+ * @param <K> Type of keys.
+ * @param <V> Type of values.
+ * @param <J> Type of JSON data.
  */
-open class Fetcher<in K, out V, E>(
-    private val jsonMapper: Mapper<V, E>,
-    private val api: suspend (K) -> ApiResult<E>
+open class Fetcher<in K, out V, J>(
+    private val jsonMapper: JsonMapper<K, V, J>,
+    private val api: suspend (K) -> ApiResult<J>
 ) {
 
     // Map of suspended fetcher invocations waiting for result
@@ -48,7 +52,7 @@ open class Fetcher<in K, out V, E>(
     @Suppress("TooGenericExceptionCaught")
     private suspend fun fetchAndResume(key: K): ApiResult<V> {
         val result = try {
-            api.invoke(key).map(jsonMapper)
+            api.invoke(key).map(key, jsonMapper)
         } catch (error: Throwable) {
             ApiResult.mapError(error)
         }
@@ -65,14 +69,14 @@ open class Fetcher<in K, out V, E>(
 /**
  * Fetcher that has no key for the Api.
  */
-open class SingleFetcher<out V, E>(
-    jsonMapper: Mapper<V, E>,
-    private val api: suspend () -> ApiResult<E>
+open class SingleFetcher<out V, J>(
+    jsonMapper: JsonMapper<Unit, V, J>,
+    private val api: suspend () -> ApiResult<J>
 ) {
 
-    private val fetcher = Fetcher<Int, V, E>(jsonMapper) { api.invoke() }
+    private val fetcher = Fetcher(jsonMapper) { api.invoke() }
 
     suspend fun fetch(): ApiResult<V> {
-        return fetcher.fetch(0)
+        return fetcher.fetch(Unit)
     }
 }

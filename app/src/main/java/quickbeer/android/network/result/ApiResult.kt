@@ -5,7 +5,7 @@ import quickbeer.android.network.result.ApiResult.HttpError
 import quickbeer.android.network.result.ApiResult.NetworkError
 import quickbeer.android.network.result.ApiResult.Success
 import quickbeer.android.network.result.ApiResult.UnknownError
-import quickbeer.android.util.Mapper
+import quickbeer.android.util.JsonMapper
 import retrofit2.HttpException
 
 /**
@@ -35,7 +35,7 @@ sealed class ApiResult<out T> {
 /**
  * Result mapper for API calls where a single item is returned as list.
  */
-fun <T, U : List<T>> ApiResult<U>.first(): ApiResult<T> {
+fun <U : List<T>, T> ApiResult<U>.first(): ApiResult<T> {
     return when (this) {
         is Success -> Success(value?.first())
         is HttpError -> HttpError(code, cause)
@@ -47,9 +47,9 @@ fun <T, U : List<T>> ApiResult<U>.first(): ApiResult<T> {
 /**
  * Result mapper from one type to another.
  */
-fun <T, U> ApiResult<U>.map(mapper: Mapper<T, U>): ApiResult<T> {
+fun <K, V, J> ApiResult<J>.map(key: K, mapper: JsonMapper<K, V, J>): ApiResult<V> {
     return when (this) {
-        is Success -> Success(value?.let(mapper::mapTo))
+        is Success -> Success(value?.let { mapper.map(key, it) })
         is HttpError -> HttpError(code, cause)
         is NetworkError -> NetworkError(cause)
         is UnknownError -> UnknownError(cause)

@@ -8,5 +8,5 @@ import quickbeer.android.network.RateBeerApi
 class BrewersBeersFetcher(
     api: RateBeerApi
 ) : Fetcher<String, List<Beer>, List<BeerJson>>(
-    BeerListJsonMapper, { brewerId -> api.brewerBeers(brewerId) }
+    BeerListJsonMapper(), { brewerId -> api.brewerBeers(brewerId) }
 )

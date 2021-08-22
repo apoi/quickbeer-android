@@ -12,7 +12,7 @@ import quickbeer.android.util.exception.AppException.QueryTooShortException
 class BeerSearchFetcher(
     api: RateBeerApi
 ) : Fetcher<String, List<Beer>, List<BeerJson>>(
-    BeerListJsonMapper,
+    BeerListJsonMapper(),
     { query ->
         when {
             BarcodeValidator.isValidBarcode(query) -> api.barcodeSearch(query)

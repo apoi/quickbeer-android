@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
+import timber.log.Timber
 
 @Parcelize
 data class User(
@@ -16,6 +17,7 @@ data class User(
 
     companion object {
         val merger: Merger<User> = { old, new ->
+            Timber.w("MERGE $old, $new")
             User(
                 id = new.id,
                 username = new.username ?: old.username,
