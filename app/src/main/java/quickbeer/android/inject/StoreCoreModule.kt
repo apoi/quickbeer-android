@@ -12,9 +12,7 @@ import javax.inject.Singleton
 import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.core.CachingStoreCore
-import quickbeer.android.data.store.core.IntPreferenceDataStoreCore
 import quickbeer.android.data.store.core.MemoryStoreCore
-import quickbeer.android.data.store.core.StringPreferenceDataStoreCore
 import quickbeer.android.domain.beer.store.BeerRoomCore
 import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.brewer.store.BrewerRoomCore
@@ -22,6 +20,8 @@ import quickbeer.android.domain.brewer.store.BrewerStoreCore
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
+import quickbeer.android.domain.preferences.core.IntPreferenceStoreCore
+import quickbeer.android.domain.preferences.core.StringPreferenceStoreCore
 import quickbeer.android.domain.review.Review
 import quickbeer.android.domain.review.store.ReviewRoomCore
 import quickbeer.android.domain.style.Style
@@ -35,14 +35,6 @@ annotation class IdListPersistedCore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class IdListMemoryCore
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class IntPreferenceCore
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class StringPreferenceCore
 
 // Each preference type needs separate DataStore for type safety
 private val Context.stringStore by preferencesDataStore("quickbeer_datastore_string")
@@ -104,15 +96,13 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    @StringPreferenceCore
-    fun provideStringPrefCore(@ApplicationContext context: Context): StoreCore<String, String> {
-        return StringPreferenceDataStoreCore(context.stringStore)
+    fun provideStringPrefCore(@ApplicationContext context: Context): StringPreferenceStoreCore {
+        return StringPreferenceStoreCore(context.stringStore)
     }
 
     @Provides
     @Singleton
-    @IntPreferenceCore
-    fun provideIntPrefCore(@ApplicationContext context: Context): StoreCore<String, Int> {
-        return IntPreferenceDataStoreCore(context.intStore)
+    fun provideIntPrefCore(@ApplicationContext context: Context): IntPreferenceStoreCore {
+        return IntPreferenceStoreCore(context.intStore)
     }
 }

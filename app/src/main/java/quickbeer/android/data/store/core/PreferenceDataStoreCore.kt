@@ -3,8 +3,6 @@ package quickbeer.android.data.store.core
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
@@ -128,25 +126,5 @@ abstract class PreferenceDataStoreCore<V>(
 
     override fun getDeleteStream(): Flow<String> {
         return deleteStream
-    }
-}
-
-class StringPreferenceDataStoreCore(
-    dataStore: DataStore<Preferences>,
-    merger: Merger<String> = StoreCore.takeNew()
-) : PreferenceDataStoreCore<String>(dataStore, merger) {
-
-    override fun String.dataKey(): Preferences.Key<String> {
-        return stringPreferencesKey(this)
-    }
-}
-
-class IntPreferenceDataStoreCore(
-    dataStore: DataStore<Preferences>,
-    merger: Merger<Int> = StoreCore.takeNew()
-) : PreferenceDataStoreCore<Int>(dataStore, merger) {
-
-    override fun String.dataKey(): Preferences.Key<Int> {
-        return intPreferencesKey(this)
     }
 }

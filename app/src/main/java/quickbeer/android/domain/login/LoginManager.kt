@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.preferences.IntPreferenceStore
-import quickbeer.android.domain.preferences.StringPreferenceStore
+import quickbeer.android.domain.preferences.store.IntPreferenceStore
+import quickbeer.android.domain.preferences.store.StringPreferenceStore
 import quickbeer.android.network.HttpCode
 import quickbeer.android.network.result.ApiResult
 
