@@ -2,24 +2,29 @@ package quickbeer.android.domain.login
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.preferences.IntPreferenceStore
+import quickbeer.android.domain.preferences.StringPreferenceStore
 import quickbeer.android.network.HttpCode
 import quickbeer.android.network.result.ApiResult
-import quickbeer.android.util.Preferences
 
 class LoginManager @Inject constructor(
     private val loginFetcher: LoginFetcher,
     private val cookieJar: ClearableCookieJar,
-    private val preferences: Preferences
+    private val stringPreferenceStore: StringPreferenceStore,
+    private val intPreferenceStore: IntPreferenceStore
 ) {
 
-    fun isLoggedIn(): Boolean {
-        return preferences.userId != null
-    }
+    val isLoggedIn: Flow<Boolean> = intPreferenceStore.getKeysStream()
+        .map { it.contains(USERID) }
+        .distinctUntilChanged()
 
-    fun getUserId(): Int? {
-        return preferences.userId
-    }
+    val userId: Flow<Int?> = intPreferenceStore.getKeysStream()
+        .map { intPreferenceStore.get(USERID) }
+        .distinctUntilChanged()
 
     suspend fun login(username: String, password: String): State<Boolean> {
         logout()
@@ -32,14 +37,14 @@ class LoginManager @Inject constructor(
         }
     }
 
-    fun logout() {
-        preferences.userId = null
-        preferences.username = null
-        preferences.password = null
+    suspend fun logout() {
+        intPreferenceStore.delete(USERID)
+        stringPreferenceStore.delete(USERNAME)
+        stringPreferenceStore.delete(PASSWORD)
         cookieJar.clear()
     }
 
-    private fun handleSuccess(
+    private suspend fun handleSuccess(
         userId: Int?,
         username: String,
         password: String
@@ -48,9 +53,9 @@ class LoginManager @Inject constructor(
             return State.Error(LoginError.UnknownError)
         }
 
-        preferences.userId = userId
-        preferences.username = username
-        preferences.password = password
+        intPreferenceStore.put(USERID, userId)
+        stringPreferenceStore.put(USERNAME, username)
+        stringPreferenceStore.put(PASSWORD, password)
 
         return State.Success(true)
     }
@@ -60,5 +65,11 @@ class LoginManager @Inject constructor(
             HttpCode.FORBIDDEN -> State.Error(LoginError.InvalidCredentials)
             else -> State.Error(LoginError.UnknownError)
         }
+    }
+
+    companion object {
+        const val USERID = "PREF_USERID"
+        const val USERNAME = "PREF_USERNAME"
+        const val PASSWORD = "PREF_PASSWORD"
     }
 }

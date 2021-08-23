@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import quickbeer.android.BuildConfig
 import quickbeer.android.Constants
 import quickbeer.android.R
@@ -28,18 +30,12 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setProfileButtons(viewModel.userId != null)
-
         binding.profileLogin.setOnClickListener {
             navigate(ProfileFragmentDirections.toLogin())
         }
 
         binding.profileLogout.setOnClickListener {
-            viewModel.logout()
-        }
-
-        binding.profileTicks.setOnClickListener {
-            navigate(ProfileFragmentDirections.toTicksList(viewModel.requireUserId()))
+            lifecycleScope.launch { viewModel.logout() }
         }
 
         binding.linkPlayStore.setOnClickListener { openLink(Constants.PLAY_STORE) }
@@ -54,6 +50,8 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     }
 
     override fun observeViewState() {
+        observe(viewModel.hasUser, ::setProfileButtons)
+
         observe(viewModel.userState) { state ->
             when (state) {
                 is State.Initial, is State.Loading -> setStateLoading()
@@ -88,6 +86,10 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
 
         binding.profileTicks.label.text =
             getString(R.string.profile_ticks).format(user.tickCount)
+
+        binding.profileTicks.setOnClickListener {
+            navigate(ProfileFragmentDirections.toTicksList(user.id))
+        }
     }
 
     private fun setStateEmpty() {

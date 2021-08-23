@@ -11,7 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import quickbeer.android.data.room.DATABASE_NAME
 import quickbeer.android.data.room.Database
-import quickbeer.android.util.Preferences
+import quickbeer.android.util.LegacyPreferences
 import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ToastProvider
 
@@ -40,7 +40,7 @@ object ApplicationModule {
 
     @Provides
     @Reusable
-    fun providePreferences(@ApplicationContext context: Context): Preferences {
-        return Preferences(context)
+    fun providePreferences(@ApplicationContext context: Context): LegacyPreferences {
+        return LegacyPreferences(context)
     }
 }

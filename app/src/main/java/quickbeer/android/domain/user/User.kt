@@ -6,7 +6,7 @@ import quickbeer.android.data.store.Merger
 
 @Parcelize
 data class User(
-    val id: Int?,
+    val id: Int,
     val username: String? = null,
     val rateCount: Int? = null,
     val tickCount: Int? = null,

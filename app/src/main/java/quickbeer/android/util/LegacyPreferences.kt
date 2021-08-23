@@ -1,21 +1,14 @@
 package quickbeer.android.util
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.core.content.edit
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 
-class Preferences(context: Context) {
+class LegacyPreferences(context: Context) {
 
-    private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
-
-    private val pref = EncryptedSharedPreferences.create(
-        "quickbeer_preferences",
-        masterKeyAlias,
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-    )
+    private val pref = createPreferences(context)
 
     var userId: Int?
         get() = getInt(USERID)
@@ -52,5 +45,17 @@ class Preferences(context: Context) {
         private const val USERID = "PREF_USERID"
         private const val USERNAME = "PREF_USERNAME"
         private const val PASSWORD = "PREF_PASSWORD"
+
+        private val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+
+        fun createPreferences(context: Context): SharedPreferences {
+            return EncryptedSharedPreferences.create(
+                "quickbeer_preferences",
+                masterKeyAlias,
+                context,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+        }
     }
 }

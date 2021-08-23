@@ -1,4 +1,4 @@
-package quickbeer.android.domain.user.store
+package quickbeer.android.domain.login.store
 
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
@@ -10,7 +10,7 @@ import quickbeer.android.data.store.store.DefaultStore
 import quickbeer.android.domain.user.User
 import quickbeer.android.util.LegacyPreferences
 
-class UserStore @Inject constructor(
+class LoginStore @Inject constructor(
     userStoreCore: StoreCore<Int, User>,
     preferences: LegacyPreferences
 ) : DefaultStore<Int, User>(userStoreCore) {

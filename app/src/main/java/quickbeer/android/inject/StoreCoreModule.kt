@@ -1,15 +1,20 @@
 package quickbeer.android.inject
 
+import android.content.Context
+import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import quickbeer.android.data.repository.repository.ItemList
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.core.CachingStoreCore
+import quickbeer.android.data.store.core.IntPreferenceDataStoreCore
 import quickbeer.android.data.store.core.MemoryStoreCore
+import quickbeer.android.data.store.core.StringPreferenceDataStoreCore
 import quickbeer.android.domain.beer.store.BeerRoomCore
 import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.brewer.store.BrewerRoomCore
@@ -30,6 +35,18 @@ annotation class IdListPersistedCore
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class IdListMemoryCore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IntPreferenceCore
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class StringPreferenceCore
+
+// Each preference type needs separate DataStore for type safety
+private val Context.stringStore by preferencesDataStore("quickbeer_datastore_string")
+private val Context.intStore by preferencesDataStore("quickbeer_datastore_int")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -83,5 +100,19 @@ object RepositoryModule {
     @Singleton
     fun provideUserCore(): StoreCore<Int, User> {
         return MemoryStoreCore(User.merger)
+    }
+
+    @Provides
+    @Singleton
+    @StringPreferenceCore
+    fun provideStringPrefCore(@ApplicationContext context: Context): StoreCore<String, String> {
+        return StringPreferenceDataStoreCore(context.stringStore)
+    }
+
+    @Provides
+    @Singleton
+    @IntPreferenceCore
+    fun provideIntPrefCore(@ApplicationContext context: Context): StoreCore<String, Int> {
+        return IntPreferenceDataStoreCore(context.intStore)
     }
 }

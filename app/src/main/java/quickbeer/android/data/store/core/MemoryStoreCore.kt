@@ -19,7 +19,7 @@ import quickbeer.android.data.store.StoreCore
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class MemoryStoreCore<K, V>(
+class MemoryStoreCore<K, V>(
     private val merger: Merger<V>
 ) : StoreCore<K, V> {
 

@@ -65,6 +65,7 @@ dependencies {
     implementation(Libraries.AndroidX.ConstraintLayout)
     implementation(Libraries.AndroidX.CoreKtx)
     implementation(Libraries.AndroidX.Crypto)
+    implementation(Libraries.AndroidX.DataStore)
     implementation(Libraries.AndroidX.Fragment)
     implementation(Libraries.AndroidX.RecyclerView)
 
