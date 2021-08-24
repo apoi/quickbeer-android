@@ -1,6 +1,7 @@
 package quickbeer.android.inject
 
 import android.content.Context
+import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.preferencesDataStore
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,7 @@ import quickbeer.android.domain.review.store.ReviewRoomCore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.store.StyleRoomCore
 import quickbeer.android.domain.user.User
+import quickbeer.android.util.LegacyPreferences
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -36,9 +38,12 @@ annotation class IdListPersistedCore
 @Retention(AnnotationRetention.BINARY)
 annotation class IdListMemoryCore
 
-// Each preference type needs separate DataStore for type safety
-private val Context.stringStore by preferencesDataStore("quickbeer_datastore_string")
-private val Context.intStore by preferencesDataStore("quickbeer_datastore_int")
+private val Context.dataStore by preferencesDataStore(
+    name = "quickbeer_datastore",
+    produceMigrations = { context ->
+        listOf(SharedPreferencesMigration({ LegacyPreferences.createPreferences(context) }))
+    }
+)
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -97,12 +102,12 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideStringPrefCore(@ApplicationContext context: Context): StringPreferenceStoreCore {
-        return StringPreferenceStoreCore(context.stringStore)
+        return StringPreferenceStoreCore(context.dataStore)
     }
 
     @Provides
     @Singleton
     fun provideIntPrefCore(@ApplicationContext context: Context): IntPreferenceStoreCore {
-        return IntPreferenceStoreCore(context.intStore)
+        return IntPreferenceStoreCore(context.dataStore)
     }
 }

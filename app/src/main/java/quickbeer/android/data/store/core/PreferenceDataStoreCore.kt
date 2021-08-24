@@ -12,15 +12,12 @@ import quickbeer.android.data.store.Merger
 import quickbeer.android.data.store.StoreCore
 
 /**
- * StoreCore with Preferences DataStore as the backing store. For type safety reasons the store
- * must be exclusive for each Core -- we can't enumerate all values of a single type from a mixed
- * store.
+ * StoreCore with Preferences DataStore as the backing store.
  *
  * @param <V> Type of values.
  */
 abstract class PreferenceDataStoreCore<V>(
-    private val dataStore: DataStore<Preferences>,
-    private val merger: Merger<V> = StoreCore.takeNew()
+    private val dataStore: DataStore<Preferences>
 ) : StoreCore<String, V> {
 
     // Type specific getter for keys
@@ -31,6 +28,9 @@ abstract class PreferenceDataStoreCore<V>(
 
     // Flow of all deleted keys
     private val deleteStream = MutableSharedFlow<String>()
+
+    // No value merging needed for primitive values, just take the new one
+    private val merger: Merger<V> = StoreCore.takeNew()
 
     override suspend fun get(key: String): V? {
         return dataStore.data.first()[key.dataKey()]
@@ -45,9 +45,10 @@ abstract class PreferenceDataStoreCore<V>(
         return dataStore.data.mapNotNull { it[key.dataKey()] }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override suspend fun getAll(): List<V> {
-        return getAllStream().first()
+        // Preferences DataStore can't list all values of a given type. This shouldn't be an
+        // issue as listing all values of a primitive type key-value store isn't useful anyway.
+        error("This core does not support enumeration of all values")
     }
 
     @Suppress("UNCHECKED_CAST")
