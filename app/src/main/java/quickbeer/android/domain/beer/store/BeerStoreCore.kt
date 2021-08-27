@@ -14,5 +14,7 @@ class BeerStoreCore(
 
     fun tickedBeers() = roomCore.tickedBeers()
 
+    suspend fun clearTicks() = roomCore.clearTicks()
+
     fun lastAccessed() = roomCore.lastAccessed()
 }

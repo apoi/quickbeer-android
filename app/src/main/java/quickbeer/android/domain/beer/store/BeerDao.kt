@@ -30,6 +30,9 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
     @Query("SELECT * FROM beers WHERE liked IS NOT NULL")
     abstract fun tickedBeers(): Flow<List<BeerEntity>>
 
+    @Query("UPDATE beers SET liked = null, time_entered = null")
+    abstract suspend fun clearTicks()
+
     @Query("SELECT id FROM beers WHERE accessed IS NOT NULL ORDER BY accessed DESC")
     abstract fun lastAccessed(): Flow<List<Int>>
 

@@ -1,7 +1,7 @@
 package quickbeer.android.data.store.core
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -24,19 +24,22 @@ open class CachingStoreCore<K, V>(
 ) : StoreCore<K, V> {
 
     private val cacheCore = MemoryStoreCore<K, V>(merger)
+    private val monitoringContext = CoroutineScope(Dispatchers.IO)
     private val lock = Mutex(false)
 
     init {
         // Permanent subscription to all updates to keep cache up-to-date. This can't achieved with
         // put/delete methods as it's not given that a core isn't modified without going through
         // this cache.
-        GlobalScope.launch(Dispatchers.IO) {
+        monitoringContext.launch {
             persistingCore
                 .getPutStream()
                 .collect { value ->
                     lock.withLock { cacheCore.put(getKey(value), value) }
                 }
+        }
 
+        monitoringContext.launch {
             persistingCore
                 .getDeleteStream()
                 .collect { key ->

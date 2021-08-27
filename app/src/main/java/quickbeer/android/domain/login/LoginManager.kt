@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.beerlist.store.TickedBeersStore
 import quickbeer.android.domain.preferences.store.IntPreferenceStore
 import quickbeer.android.domain.preferences.store.StringPreferenceStore
 import quickbeer.android.domain.user.User
@@ -20,6 +21,7 @@ class LoginManager @Inject constructor(
     private val loginFetcher: LoginFetcher,
     private val cookieJar: LoginCookieJar,
     private val userStore: UserStore,
+    private val tickedBeersStore: TickedBeersStore,
     private val stringPreferenceStore: StringPreferenceStore,
     private val intPreferenceStore: IntPreferenceStore
 ) {
@@ -47,15 +49,21 @@ class LoginManager @Inject constructor(
         }
     }
 
-    suspend fun login(): State<Boolean> {
+    suspend fun autoLogin(): ApiResult<Int> {
         val username = stringPreferenceStore.get(USERNAME)
         val password = stringPreferenceStore.get(PASSWORD)
 
-        return if (username != null && password != null) {
-            login(username, password)
-        } else {
-            State.Error(IllegalStateException("Username or password missing"))
+        if (username == null || password == null) {
+            return ApiResult.UnknownError(IllegalStateException("Username or password missing"))
         }
+
+        val result = loginFetcher.fetch(username, password)
+        when (result) {
+            is ApiResult.Success -> handleSuccess(result.value, username, password)
+            is ApiResult.HttpError -> handleHttpError(result)
+        }
+
+        return result
     }
 
     suspend fun login(username: String, password: String): State<Boolean> {
@@ -70,10 +78,15 @@ class LoginManager @Inject constructor(
     }
 
     suspend fun logout() {
+        val id = intPreferenceStore.get(USERID)
+
         clearLogin()
 
         stringPreferenceStore.delete(USERNAME)
         stringPreferenceStore.delete(PASSWORD)
+
+        if (id != null) tickedBeersStore.delete(id.toString())
+        tickedBeersStore.clearTicks()
     }
 
     private suspend fun clearLogin() {

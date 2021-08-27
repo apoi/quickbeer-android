@@ -1,7 +1,6 @@
 package quickbeer.android.domain.login
 
 import quickbeer.android.data.fetcher.Fetcher
-import quickbeer.android.data.state.State
 import quickbeer.android.network.HttpCode
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.JsonMapper
@@ -25,8 +24,8 @@ open class LoginAndRetryFetcher<in K, out V, J>(
         // Retry login for errors that were flagged as potentially unauthorized.
         // See [AuthorizationErrorInterceptor] for unauthorized call recognition.
         if (result is ApiResult.HttpError && result.code == HttpCode.UNAUTHORIZED) {
-            val loginResult = loginManager.login()
-            if (loginResult is State.Success) {
+            val loginResult = loginManager.autoLogin()
+            if (loginResult is ApiResult.Success) {
                 return super.fetch(key)
             }
         }

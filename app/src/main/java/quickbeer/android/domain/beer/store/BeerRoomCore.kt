@@ -33,6 +33,10 @@ class BeerRoomCore @Inject constructor(
             .map { it.map(BeerEntityMapper::mapTo) }
     }
 
+    suspend fun clearTicks() {
+        database.beerDao().clearTicks()
+    }
+
     fun lastAccessed(): Flow<List<Int>> {
         return database.beerDao().lastAccessed()
     }

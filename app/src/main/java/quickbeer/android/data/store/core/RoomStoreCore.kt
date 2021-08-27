@@ -1,8 +1,7 @@
 package quickbeer.android.data.store.core
 
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
@@ -21,9 +20,9 @@ abstract class RoomStoreCore<K, V, E>(
     private val coreProxy: StoreCore<K, E>
 ) : StoreCore<K, V> {
 
-    private val putStream = ConflatedBroadcastChannel<V>()
+    private val putStream = MutableSharedFlow<V>()
 
-    private val deleteStream = ConflatedBroadcastChannel<K>()
+    private val deleteStream = MutableSharedFlow<K>()
 
     override suspend fun get(key: K): V? {
         return coreProxy.get(key)?.let(entityMapper::mapTo)
@@ -61,25 +60,25 @@ abstract class RoomStoreCore<K, V, E>(
     override suspend fun put(key: K, value: V): V? {
         return coreProxy.put(key, entityMapper.mapFrom(value))
             ?.let(entityMapper::mapTo)
-            ?.also { putStream.send(it) }
+            ?.also { putStream.emit(it) }
     }
 
     override suspend fun put(items: Map<K, V>): List<V> {
         return coreProxy.put(items.mapValues { entityMapper.mapFrom(it.value) })
             .map(entityMapper::mapTo)
-            .also { values -> values.forEach { putStream.send(it) } }
+            .also { values -> values.forEach { putStream.emit(it) } }
     }
 
     override fun getPutStream(): Flow<V> {
-        return putStream.asFlow()
+        return putStream
     }
 
     override suspend fun delete(key: K): Boolean {
         return coreProxy.delete(key)
-            .also { if (it) deleteStream.send(key) }
+            .also { if (it) deleteStream.emit(key) }
     }
 
     override fun getDeleteStream(): Flow<K> {
-        return deleteStream.asFlow()
+        return deleteStream
     }
 }

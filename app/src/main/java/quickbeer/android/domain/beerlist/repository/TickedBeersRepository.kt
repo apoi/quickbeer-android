@@ -14,7 +14,7 @@ class TickedBeersRepository @Inject constructor(
     fetcher: TickedBeersFetcher,
 ) : ItemListRepository<String, Int, Beer, BeerJson>(store, fetcher) {
 
-    class CurrentTickCountValidator(
+    class TickCountValidator(
         private val userId: Int,
         private val userStore: UserStore,
     ) : Validator<List<Beer>> {

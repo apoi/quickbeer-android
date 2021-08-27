@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
-import quickbeer.android.domain.beerlist.repository.TickedBeersRepository.CurrentTickCountValidator
+import quickbeer.android.domain.beerlist.repository.TickedBeersRepository.TickCountValidator
 import quickbeer.android.domain.user.store.UserStore
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelTickDateMapper
@@ -36,7 +36,7 @@ class TickedBeersViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             tickedBeersRepository
-                .getStream(userId.toString(), CurrentTickCountValidator(userId, userStore))
+                .getStream(userId.toString(), TickCountValidator(userId, userStore))
                 .map(BeerListModelTickDateMapper(beerRepository)::map)
                 .collectLatest(_viewState::emit)
         }

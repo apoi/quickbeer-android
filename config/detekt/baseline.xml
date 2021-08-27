@@ -14,6 +14,7 @@
     <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:PreferenceDataStoreCore.kt$PreferenceDataStoreCore&lt;V&gt; : StoreCore</ID>
     <ID>TooManyFunctions:RateBeerApi.kt$RateBeerApi</ID>
     <ID>TooManyFunctions:ReviewDao.kt$ReviewDao : CoreDao</ID>
     <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K, V, E&gt; : StoreCore</ID>
