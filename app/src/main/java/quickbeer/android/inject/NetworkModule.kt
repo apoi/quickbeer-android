@@ -1,7 +1,6 @@
 package quickbeer.android.inject
 
 import android.content.Context
-import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.squareup.moshi.Moshi
@@ -12,16 +11,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import okhttp3.Cache
-import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import quickbeer.android.Constants
+import quickbeer.android.domain.login.LoginCookieJar
 import quickbeer.android.domain.login.LoginFetcher
 import quickbeer.android.domain.login.LoginMapper
 import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.adapter.EscapedStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
-import quickbeer.android.network.cookie.SessionPersistingCookieJar
 import quickbeer.android.network.interceptor.AppKeyInterceptor
+import quickbeer.android.network.interceptor.AuthorizationErrorInterceptor
 import quickbeer.android.network.interceptor.LoggingInterceptor
 import quickbeer.android.network.interceptor.LoginRedirectInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
@@ -38,11 +37,12 @@ object NetworkModule {
     @Singleton
     fun provideOkHttp(
         @ApplicationContext context: Context,
-        cookieJar: CookieJar
+        cookieJar: LoginCookieJar
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .cache(Cache(context.cacheDir, TEN_MEGABYTES))
             .cookieJar(cookieJar)
+            .addInterceptor(AuthorizationErrorInterceptor(cookieJar))
             .addInterceptor(AppKeyInterceptor())
             .addInterceptor(LoggingInterceptor.create())
             .addInterceptor(LoginRedirectInterceptor())
@@ -77,18 +77,13 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideClearableCookieJar(@ApplicationContext context: Context): ClearableCookieJar {
-        return SessionPersistingCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
-    }
-
-    @Provides
-    fun provideCookieJar(clearableCookieJar: ClearableCookieJar): CookieJar {
-        return clearableCookieJar
+    fun provideLoginCookieJar(@ApplicationContext context: Context): LoginCookieJar {
+        return LoginCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(context))
     }
 
     @Provides
     @Singleton
-    fun loginFetcher(rateBeerApi: RateBeerApi, cookieJar: CookieJar): LoginFetcher {
+    fun loginFetcher(rateBeerApi: RateBeerApi, cookieJar: LoginCookieJar): LoginFetcher {
         return LoginFetcher(rateBeerApi, LoginMapper(cookieJar))
     }
 }

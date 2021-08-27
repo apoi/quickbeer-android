@@ -17,17 +17,16 @@
  */
 package quickbeer.android.network.interceptor
 
-import java.io.IOException
 import okhttp3.Interceptor
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
+import quickbeer.android.Constants
 import quickbeer.android.network.HttpCode
 
 class LoginRedirectInterceptor : Interceptor {
 
-    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
 
@@ -37,7 +36,7 @@ class LoginRedirectInterceptor : Interceptor {
     }
 
     private fun isLoginRequest(request: Request): Boolean {
-        return request.url.encodedPath.endsWith(SIGN_IN_PAGE)
+        return request.url.encodedPath.endsWith(Constants.API_LOGIN_PAGE)
     }
 
     private fun handleLoginResponse(
@@ -59,7 +58,7 @@ class LoginRedirectInterceptor : Interceptor {
 
     private fun isSuccessfulLogin(request: Request, response: Response): Boolean {
         return if (response.code == HttpCode.OK &&
-            request.url.encodedPath.endsWith(SIGN_IN_PAGE) &&
+            request.url.encodedPath.endsWith(Constants.API_LOGIN_PAGE) &&
             idFromStringList(response.headers("set-cookie")) != null
         ) {
             // Success with id in a cookie header
@@ -100,7 +99,6 @@ class LoginRedirectInterceptor : Interceptor {
     }
 
     companion object {
-        private const val SIGN_IN_PAGE = "Signin_r.asp"
         private val ID_PATTERN = "UserID=([0-9]+);".toRegex()
     }
 }

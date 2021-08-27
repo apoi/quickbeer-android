@@ -1,6 +1,5 @@
 package quickbeer.android.domain.login
 
-import com.franmontiel.persistentcookiejar.ClearableCookieJar
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +18,7 @@ import quickbeer.android.network.result.ApiResult
 
 class LoginManager @Inject constructor(
     private val loginFetcher: LoginFetcher,
-    private val cookieJar: ClearableCookieJar,
+    private val cookieJar: LoginCookieJar,
     private val userStore: UserStore,
     private val stringPreferenceStore: StringPreferenceStore,
     private val intPreferenceStore: IntPreferenceStore
@@ -48,8 +47,19 @@ class LoginManager @Inject constructor(
         }
     }
 
+    suspend fun login(): State<Boolean> {
+        val username = stringPreferenceStore.get(USERNAME)
+        val password = stringPreferenceStore.get(PASSWORD)
+
+        return if (username != null && password != null) {
+            login(username, password)
+        } else {
+            State.Error(IllegalStateException("Username or password missing"))
+        }
+    }
+
     suspend fun login(username: String, password: String): State<Boolean> {
-        logout()
+        clearLogin()
 
         return when (val result = loginFetcher.fetch(username, password)) {
             is ApiResult.Success -> handleSuccess(result.value, username, password)
@@ -60,9 +70,14 @@ class LoginManager @Inject constructor(
     }
 
     suspend fun logout() {
-        intPreferenceStore.delete(USERID)
+        clearLogin()
+
         stringPreferenceStore.delete(USERNAME)
         stringPreferenceStore.delete(PASSWORD)
+    }
+
+    private suspend fun clearLogin() {
+        intPreferenceStore.delete(USERID)
         cookieJar.clear()
     }
 

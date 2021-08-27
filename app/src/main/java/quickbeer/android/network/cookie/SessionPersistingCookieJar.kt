@@ -25,7 +25,7 @@ import okhttp3.HttpUrl
 /**
  * Cookie jar that persists also session cookies.
  */
-class SessionPersistingCookieJar(
+open class SessionPersistingCookieJar(
     private val cache: CookieCache,
     private val persistor: CookiePersistor
 ) : ClearableCookieJar {

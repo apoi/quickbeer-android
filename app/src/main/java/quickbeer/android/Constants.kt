@@ -9,6 +9,9 @@ object Constants {
     const val API_URL =
         "https://www.ratebeer.com"
 
+    const val API_LOGIN_PAGE =
+        "Signin_r.asp"
+
     const val BEER_PATH =
         "https://ratebeer.com/beer/%d/"
 

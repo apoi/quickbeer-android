@@ -29,7 +29,7 @@ open class Fetcher<in K, out V, J>(
     // Lock for guaranteeing correct map modification order
     private val lock = ReentrantLock()
 
-    suspend fun fetch(key: K): ApiResult<V> {
+    open suspend fun fetch(key: K): ApiResult<V> {
         lock.lock()
 
         val continuations = map[key]
