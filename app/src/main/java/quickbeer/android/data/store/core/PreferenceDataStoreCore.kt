@@ -16,7 +16,7 @@ import quickbeer.android.data.store.StoreCore
  *
  * @param <V> Type of values.
  */
-abstract class PreferenceDataStoreCore<V>(
+abstract class PreferenceDataStoreCore<V : Any>(
     private val dataStore: DataStore<Preferences>
 ) : StoreCore<String, V> {
 

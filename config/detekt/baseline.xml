@@ -10,17 +10,17 @@
     <ID>TooManyFunctions:BarcodeScannerActivity.kt$BarcodeScannerActivity : AppCompatActivity</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
-    <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K, V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
-    <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K, V&gt; : StoreCore</ID>
-    <ID>TooManyFunctions:PreferenceDataStoreCore.kt$PreferenceDataStoreCore&lt;V&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:PreferenceDataStoreCore.kt$PreferenceDataStoreCore&lt;V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:RateBeerApi.kt$RateBeerApi</ID>
     <ID>TooManyFunctions:ReviewDao.kt$ReviewDao : CoreDao</ID>
-    <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K, V, E&gt; : StoreCore</ID>
+    <ID>TooManyFunctions:RoomStoreCore.kt$RoomStoreCore&lt;K : Any, V : Any, E : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:SearchFragment.kt$SearchFragment : SearchBarFragment</ID>
     <ID>TooManyFunctions:SearchView.kt$SearchView : MaterialCardView</ID>
-    <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K, V&gt;</ID>
+    <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K : Any, V : Any&gt;</ID>
     <ID>TooManyFunctions:StyleDao.kt$StyleDao : CoreDao</ID>
   </CurrentIssues>
 </SmellBaseline>

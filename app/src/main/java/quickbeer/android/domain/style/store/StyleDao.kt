@@ -24,7 +24,7 @@ abstract class StyleDao : CoreDao<Int, StyleEntity>(
     abstract suspend fun getList(keys: List<Int>): List<StyleEntity>
 
     @Query("SELECT * FROM styles WHERE id=:key")
-    abstract fun getStream(key: Int): Flow<StyleEntity>
+    abstract fun getStream(key: Int): Flow<StyleEntity?>
 
     @Query("SELECT * FROM styles")
     abstract suspend fun getAll(): List<StyleEntity>

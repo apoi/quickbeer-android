@@ -10,7 +10,7 @@ import quickbeer.android.data.store.StoreCore
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class DefaultStore<K, V>(private val core: StoreCore<K, V>) : Store<K, V> {
+open class DefaultStore<K : Any, V : Any>(private val core: StoreCore<K, V>) : Store<K, V> {
 
     override suspend fun get(): List<V> {
         return core.getAll()

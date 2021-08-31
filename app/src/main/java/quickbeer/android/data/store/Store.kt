@@ -19,17 +19,19 @@ interface Store<K, V> {
     suspend fun get(): List<V>
 
     /**
-     * Returns stream of future values in the store, starting with the current values.
+     * Returns stream of future values in the store, starting with the current values. Emits an
+     * empty list if store is empty.
      */
     fun getStream(): Flow<List<V>>
 
     /**
-     * Returns value for given key, or empty value if key doesn't exist in store.
+     * Returns value for given key, or null if key doesn't exist in store.
      */
     suspend fun get(key: K): V?
 
     /**
-     * Returns stream of values for given key, starting with the current value if one exists.
+     * Returns stream of values for given key, starting with the current value if one exists. Does
+     * not emit anything if item matching the key doesn't exist. Does not emit on deletes.
      */
     fun getStream(key: K): Flow<V>
 

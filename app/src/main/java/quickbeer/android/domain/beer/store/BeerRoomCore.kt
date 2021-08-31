@@ -3,6 +3,7 @@ package quickbeer.android.domain.beer.store
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
@@ -54,7 +55,7 @@ private class BeerDaoProxy(
 
     override suspend fun get(keys: List<Int>) = dao.get(keys)
 
-    override fun getStream(key: Int) = dao.getStream(key)
+    override fun getStream(key: Int) = dao.getStream(key).filterNotNull()
 
     override suspend fun getAll() = dao.getAll()
 

@@ -48,7 +48,7 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
     abstract suspend fun getList(keys: List<Int>): List<BeerEntity>
 
     @Query("SELECT * FROM beers WHERE id=:key")
-    abstract fun getStream(key: Int): Flow<BeerEntity>
+    abstract fun getStream(key: Int): Flow<BeerEntity?>
 
     @Query("SELECT * FROM beers")
     abstract suspend fun getAll(): List<BeerEntity>

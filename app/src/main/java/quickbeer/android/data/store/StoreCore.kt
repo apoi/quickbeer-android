@@ -21,7 +21,7 @@ typealias Merger<V> = (V, V) -> V
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-interface StoreCore<K, V> {
+interface StoreCore<K : Any, V : Any> {
 
     /**
      * Takes a key and returns the matching value, or null if the value isn't stored.
@@ -39,7 +39,8 @@ interface StoreCore<K, V> {
 
     /**
      * Takes a key and returns a Flow that emits any matching current item, and all future items
-     * with the key.
+     * with the key. Does not emit anything if item matching the key doesn't exist. Does not emit
+     * on deletes.
      *
      * @param key Key for the stream of data items.
      * @return Flow emitting the current and all future values for the key.

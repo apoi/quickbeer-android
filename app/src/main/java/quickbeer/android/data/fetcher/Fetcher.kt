@@ -18,7 +18,7 @@ import quickbeer.android.util.JsonMapper
  * @param <V> Type of domain values.
  * @param <J> Type of result data, mostly Json objects.
  */
-open class Fetcher<in K, out V, J>(
+open class Fetcher<in K : Any, out V : Any, J : Any>(
     private val jsonMapper: JsonMapper<K, V, J>,
     private val api: suspend (K) -> ApiResult<J>
 ) {
@@ -69,7 +69,7 @@ open class Fetcher<in K, out V, J>(
 /**
  * Fetcher that has no key for the Api.
  */
-open class SingleFetcher<out V, J>(
+open class SingleFetcher<out V : Any, J : Any>(
     jsonMapper: JsonMapper<Unit, V, J>,
     private val api: suspend () -> ApiResult<J>
 ) {

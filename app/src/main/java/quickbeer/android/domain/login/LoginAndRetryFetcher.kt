@@ -12,7 +12,7 @@ import quickbeer.android.util.JsonMapper
  * @param <V> Type of domain values.
  * @param <J> Type of result data, mostly Json objects.
  */
-open class LoginAndRetryFetcher<in K, out V, J>(
+open class LoginAndRetryFetcher<in K : Any, out V : Any, J : Any>(
     jsonMapper: JsonMapper<K, V, J>,
     api: suspend (K) -> ApiResult<J>,
     private val loginManager: LoginManager

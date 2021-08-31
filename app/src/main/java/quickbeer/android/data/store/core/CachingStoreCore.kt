@@ -17,7 +17,7 @@ import quickbeer.android.data.store.StoreCore
  * StoreCore that takes another core as parameter and adds a caching layer in front of it. This is
  * useful especially if the other core is slow, such as a Room backed core.
  */
-open class CachingStoreCore<K, V>(
+open class CachingStoreCore<K : Any, V : Any>(
     private val persistingCore: StoreCore<K, V>,
     private val getKey: (V) -> K,
     merger: Merger<V> = StoreCore.takeNew()

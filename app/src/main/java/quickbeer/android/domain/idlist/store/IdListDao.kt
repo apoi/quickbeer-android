@@ -28,7 +28,7 @@ abstract class IdListDao : CoreDao<String, IdListEntity>(
     abstract suspend fun getList(keys: List<String>): List<IdListEntity>
 
     @Query("SELECT * FROM lists WHERE id=:key")
-    abstract fun getStream(key: String): Flow<IdListEntity>
+    abstract fun getStream(key: String): Flow<IdListEntity?>
 
     @Query("SELECT * FROM lists")
     abstract suspend fun getAll(): List<IdListEntity>

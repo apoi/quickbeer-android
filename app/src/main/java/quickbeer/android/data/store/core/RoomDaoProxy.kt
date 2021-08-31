@@ -9,7 +9,7 @@ import quickbeer.android.data.store.StoreCore
  * Put and delete streams can't be implemented by DAO, so the proxy will not provide these. The
  * streams must be implemented by the StoreCore that uses the proxy.
  */
-abstract class RoomDaoProxy<K, V> : StoreCore<K, V> {
+abstract class RoomDaoProxy<K : Any, V : Any> : StoreCore<K, V> {
 
     final override fun getPutStream() = error("Not implemented")
 

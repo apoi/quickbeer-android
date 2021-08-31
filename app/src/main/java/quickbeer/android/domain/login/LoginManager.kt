@@ -26,10 +26,6 @@ class LoginManager @Inject constructor(
     private val intPreferenceStore: IntPreferenceStore
 ) {
 
-    val isLoggedIn: Flow<Boolean> = intPreferenceStore.getKeysStream()
-        .map { it.contains(USERID) }
-        .distinctUntilChanged()
-
     val userId: Flow<Int?> = intPreferenceStore.getKeysStream()
         .map { intPreferenceStore.get(USERID) }
         .distinctUntilChanged()

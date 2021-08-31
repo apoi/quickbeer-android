@@ -3,7 +3,6 @@ package quickbeer.android.data.store.core
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.util.Mapper
@@ -15,7 +14,7 @@ import quickbeer.android.util.Mapper
  * @param <V> Type of values. Value is the domain model.
  * @param <E> Type of entities. Entity is the database representation of value.
  */
-abstract class RoomStoreCore<K, V, E>(
+abstract class RoomStoreCore<K : Any, V : Any, E : Any>(
     private val entityMapper: Mapper<V, E>,
     private val coreProxy: StoreCore<K, E>
 ) : StoreCore<K, V> {
@@ -34,7 +33,6 @@ abstract class RoomStoreCore<K, V, E>(
 
     override fun getStream(key: K): Flow<V> {
         return coreProxy.getStream(key)
-            .filter { it != null }
             .distinctUntilChanged()
             .map(entityMapper::mapTo)
     }

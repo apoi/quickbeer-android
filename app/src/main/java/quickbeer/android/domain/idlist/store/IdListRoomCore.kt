@@ -2,6 +2,7 @@ package quickbeer.android.domain.idlist.store
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
@@ -22,7 +23,7 @@ private class IdListDaoProxy(
 
     override suspend fun get(keys: List<String>) = dao.get(keys)
 
-    override fun getStream(key: String) = dao.getStream(key)
+    override fun getStream(key: String) = dao.getStream(key).filterNotNull()
 
     override suspend fun getAll() = dao.getAll()
 

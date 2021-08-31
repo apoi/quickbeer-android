@@ -22,7 +22,7 @@ import quickbeer.android.data.store.StoreCore
  * @param valueCore Core storing values matched by keys
  */
 @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
-open class ItemListStore<I, out K, V : Any>(
+open class ItemListStore<I : Any, out K : Any, V : Any>(
     private val indexMapper: IndexMapper<I>,
     private val getKey: (V) -> K,
     private val indexCore: StoreCore<I, ItemList<I, K>>,
@@ -144,7 +144,7 @@ open class ItemListStore<I, out K, V : Any>(
  * @param <K> Type of keys.
  * @param <V> Type of values.
  */
-open class SingleItemListStore<I, out K, V : Any>(
+open class SingleItemListStore<I : Any, out K : Any, V : Any>(
     private val indexKey: I,
     getKey: (V) -> K,
     indexCore: StoreCore<I, ItemList<I, K>>,

@@ -62,7 +62,7 @@ abstract class Repository<K, V> {
             // as otherwise this may emit the existing value in case of failed fetch.
             emitAll(
                 getLocalStream(key)
-                    .filter { validator.validate(it) }
+                    .filter(validator::validate)
                     .map { State.from(it) }
             )
         }

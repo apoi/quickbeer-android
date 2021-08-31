@@ -27,7 +27,7 @@ abstract class ReviewDao : CoreDao<Int, ReviewEntity>(
     abstract suspend fun getList(keys: List<Int>): List<ReviewEntity>
 
     @Query("SELECT * FROM reviews WHERE id=:key")
-    abstract fun getStream(key: Int): Flow<ReviewEntity>
+    abstract fun getStream(key: Int): Flow<ReviewEntity?>
 
     @Query("SELECT * FROM reviews")
     abstract suspend fun getAll(): List<ReviewEntity>
