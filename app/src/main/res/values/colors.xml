@@ -3,7 +3,7 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="white_50">#26FFFFFF</color>
+    <color name="white_10">#1AFFFFFF</color>
     <color name="transparent">#00000000</color>
 
     <!-- https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->

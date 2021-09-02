@@ -4,10 +4,10 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import quickbeer.android.data.repository.Accept
@@ -29,13 +29,11 @@ class ProfileViewModel @Inject constructor(
         .map { it != null }
 
     val userState: Flow<State<User>> = loginManager.userId
-        .map { it ?: throw NoUserError() }
-        .flatMapLatest { userRepository.getStream(it, UserRepository.RateCountValidator()) }
-        .onStart { emit(State.Initial) }
-        .catch {
-            if (it is NoUserError) emit(State.Empty)
-            else emit(State.Error(it))
+        .flatMapLatest {
+            if (it != null) userRepository.getStream(it, Accept())
+            else flow { emit(State.Empty) }
         }
+        .onStart { emit(State.Initial) }
 
     val tickCount: Flow<State<Int>> = loginManager.userId
         .filterNotNull()
@@ -49,5 +47,3 @@ class ProfileViewModel @Inject constructor(
         loginManager.logout()
     }
 }
-
-private class NoUserError : Throwable()

@@ -2,6 +2,7 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>LongParameterList:BeerDetailsViewModel.kt$BeerDetailsViewModel$( savedStateHandle: SavedStateHandle, private val loginManager: LoginManager, private val beerRepository: BeerRepository, private val brewerRepository: BrewerRepository, private val styleRepository: StyleRepository, private val styleListRepository: StyleListRepository, private val countryRepository: CountryRepository, private val beerTickFetcher: BeerTickFetcher, private val resourceProvider: ResourceProvider, private val toastProvider: ToastProvider )</ID>
     <ID>LongParameterList:SearchViewModel.kt$SearchViewModel$( private val beerRepository: BeerRepository, private val beerSearchRepository: BeerSearchRepository, private val brewerRepository: BrewerRepository, private val brewerSearchRepository: BrewerSearchRepository, private val styleListRepository: StyleListRepository, private val countryListRepository: CountryListRepository, private val countryRepository: CountryRepository )</ID>
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.COUNTRY_LIST$4</ID>
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>

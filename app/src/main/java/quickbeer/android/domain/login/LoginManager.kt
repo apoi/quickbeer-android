@@ -37,7 +37,7 @@ class LoginManager @Inject constructor(
     private var job: Job? = null
 
     init {
-        // User store doesn't persist, so init with locally store user details.
+        // User store doesn't persist, so init with locally stored user details.
         // Alternatively username could be fetched from backend on demand.
         job = CoroutineScope(Dispatchers.IO).launch {
             val userId = intPreferenceStore.get(LoginManager.USERID)

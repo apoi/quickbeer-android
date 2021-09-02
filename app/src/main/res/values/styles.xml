@@ -8,6 +8,10 @@
         <!-- Secondary elements, such as unfocused/disabled -->
         <item name="colorSecondary">@color/gray_70</item>
 
+        <!-- Color of (text) on primary/secondary elements -->
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/white</item>
+
         <!-- Elements on top of primary/secondary -->
         <item name="colorOnSurface">@color/gray_50</item>
 
@@ -41,6 +45,11 @@
     <!-- Toolbar -->
     <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline6</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <!-- Static AppBar to set statusbar background -->
+    <style name="AppTheme.AppBar" parent="Widget.MaterialComponents.AppBarLayout.Primary">
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 

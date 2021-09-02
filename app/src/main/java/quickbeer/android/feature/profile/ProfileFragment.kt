@@ -25,7 +25,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     private val binding by viewBinding(ProfileFragmentBinding::bind)
     private val viewModel by viewModels<ProfileViewModel>()
 
-    override fun topInsetView() = binding.layout
+    override fun topInsetView() = binding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

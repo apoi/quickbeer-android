@@ -27,7 +27,7 @@ class TickedBeersFragment : MainFragment(R.layout.ticked_beers_fragment) {
     private val viewModel by viewModels<TickedBeersViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
-    override fun topInsetView() = binding.layout
+    override fun topInsetView() = binding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
