@@ -51,6 +51,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
 
     override fun observeViewState() {
         observe(viewModel.hasUser, ::setProfileButtons)
+        observe(viewModel.tickCount, ::setStateTickCount)
 
         observe(viewModel.userState) { state ->
             when (state) {
@@ -73,9 +74,16 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
 
         binding.profileReviews.label.text =
             getString(R.string.profile_reviews).format("loading")
+    }
 
-        binding.profileTicks.label.text =
-            getString(R.string.profile_ticks).format("loading")
+    private fun setStateTickCount(state: State<Int>) {
+        if (state is State.Success) {
+            binding.profileTicks.label.text =
+                getString(R.string.profile_ticks).format(state.value)
+        } else {
+            binding.profileTicks.label.text =
+                getString(R.string.profile_ticks).format("loading")
+        }
     }
 
     private fun setStateContent(user: User) {
@@ -83,9 +91,6 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
 
         binding.profileReviews.label.text =
             getString(R.string.profile_reviews).format(user.rateCount)
-
-        binding.profileTicks.label.text =
-            getString(R.string.profile_ticks).format(user.tickCount)
 
         binding.profileTicks.setOnClickListener {
             navigate(ProfileFragmentDirections.toTicksList(user.id))

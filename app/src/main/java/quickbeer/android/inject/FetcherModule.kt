@@ -7,6 +7,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import quickbeer.android.domain.beer.network.BeerFetcher
+import quickbeer.android.domain.beer.network.BeerTickFetcher
 import quickbeer.android.domain.beerlist.network.BarcodeSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeerSearchFetcher
 import quickbeer.android.domain.beerlist.network.BeersInCountryFetcher
@@ -33,6 +34,12 @@ object FetcherModule {
     @Singleton
     fun provideBeerFetcher(api: RateBeerApi): BeerFetcher {
         return BeerFetcher(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBeerTickFetcher(api: RateBeerApi, loginManager: LoginManager): BeerTickFetcher {
+        return BeerTickFetcher(api, loginManager)
     }
 
     @Provides

@@ -41,25 +41,16 @@ abstract class Repository<K, V> {
             val isValid = validator.validate(local)
 
             if (!isValid) {
-                when (val response = fetchRemote(key)) {
-                    is ApiResult.Success -> {
-                        if (response.value != null && validator.validate(response.value)) {
-                            // Response is persisted to be emitted later
-                            persist(key, response.value)
-                        } else {
-                            // Empty states don't go through persistence layer
-                            emit(State.Empty)
-                        }
-                    }
-                    // State can be expanded for more detailed error types
-                    is ApiResult.HttpError -> emit(State.Error(response.cause))
-                    is ApiResult.NetworkError -> emit(State.Error(response.cause))
-                    is ApiResult.UnknownError -> emit(State.Error(response.cause))
+                val result = fetch(key)
+
+                // Success is emitted through local stream after merging
+                if (result !is State.Success) {
+                    emit(result)
                 }
             }
 
             // Emit current and future values. The values need to be still validated
-            // as otherwise this may emit the existing value in case of failed fetch.
+            // as otherwise this may emit outdated local value in case of failed fetch.
             emitAll(
                 getLocalStream(key)
                     .filter(validator::validate)
@@ -117,7 +108,7 @@ abstract class Repository<K, V> {
                 // debounce has, with explicit cancellation.
                 flow { emit(state) }
                     .onEach { delay(debounceRemote) }
-                    .flatMapLatest { fetch(it.key, { fetchRemote(it.key) }, validator) }
+                    .flatMapLatest { fetchAndStream(it.key, validator) }
                     .takeUntil(distinctKey.drop(1))
             }
 
@@ -143,46 +134,55 @@ abstract class Repository<K, V> {
         return merge(errorFlow, remoteFlow, localFlow)
     }
 
-    protected fun fetch(
+    suspend fun fetch(
         key: K,
-        fetchCall: suspend () -> ApiResult<V>,
+        validator: Validator<V>? = null
+    ): State<V> {
+        return when (val response = fetchRemote(key)) {
+            is ApiResult.Success -> {
+                val result = response.value
+                if (result != null && validator?.validate(result) != false) {
+                    persist(key, result) // Always persist new valid values
+                    State.Success(result)
+                } else {
+                    State.Empty
+                }
+            }
+            is ApiResult.HttpError -> State.Error(response.cause)
+            is ApiResult.NetworkError -> State.Error(response.cause)
+            is ApiResult.UnknownError -> State.Error(response.cause)
+        }
+    }
+
+    private fun fetchAndStream(
+        key: K,
         validator: Validator<V>
     ): Flow<State<V>> {
         return flow {
-            when (val response = fetchCall()) {
-                is ApiResult.Success -> {
-                    if (response.value != null && validator.validate(response.value)) {
-                        // Response is persisted to be emitted later
-                        persist(key, response.value)
-                    } else {
-                        // Empty states don't go through persistence layer
-                        emit(State.Empty)
-                    }
-                }
-                // State can be expanded for more detailed error types
-                is ApiResult.HttpError -> emit(State.Error(response.cause))
-                is ApiResult.NetworkError -> emit(State.Error(response.cause))
-                is ApiResult.UnknownError -> emit(State.Error(response.cause))
+            val result = fetch(key)
+
+            // Success is emitted through local stream after merging
+            if (result !is State.Success) {
+                emit(result)
             }
 
             // Emit current and future values. The values need to be still validated
-            // as otherwise this may emit the existing value in case of failed fetch.
+            // as otherwise this may emit outdated local value in case of failed fetch.
             emitAll(
                 getLocalStream(key)
-                    .distinctUntilChanged()
-                    .filter { validator.validate(it) }
+                    .filter(validator::validate)
                     .map { State.from(it) }
             )
         }
     }
+
+    abstract suspend fun fetchRemote(key: K): ApiResult<V>
 
     abstract suspend fun persist(key: K, value: V)
 
     protected abstract suspend fun getLocal(key: K): V?
 
     protected abstract fun getLocalStream(key: K): Flow<V>
-
-    protected abstract suspend fun fetchRemote(key: K): ApiResult<V>
 
     inner class FlowState(val key: K, val value: V?, val isValid: Boolean)
 

@@ -1,20 +1,18 @@
 package quickbeer.android.feature.profile
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.user.User
@@ -39,15 +37,13 @@ class ProfileViewModel @Inject constructor(
             else emit(State.Error(it))
         }
 
-    init {
-        // Fetch ticks for the logged-in user if not stored yet
-        viewModelScope.launch(Dispatchers.IO) {
-            loginManager.userId
-                .filterNotNull()
-                .flatMapLatest { tickedBeersRepository.getStream(it.toString(), Accept()) }
-                .collect()
-        }
-    }
+    val tickCount: Flow<State<Int>> = loginManager.userId
+        .filterNotNull()
+        .flatMapLatest { tickedBeersRepository.getStream(it.toString(), Accept()) }
+        .filter { it is State.Success }
+        .flatMapLatest { tickedBeersRepository.store.getLocalTicks() }
+        .map<List<Beer>, State<Int>> { State.Success(it.size) }
+        .onStart { emit(State.Loading()) }
 
     suspend fun logout() {
         loginManager.logout()

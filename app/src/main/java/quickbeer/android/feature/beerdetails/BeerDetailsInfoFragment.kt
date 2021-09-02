@@ -17,12 +17,15 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +42,10 @@ import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.observeSuccess
+import quickbeer.android.util.ktx.setNegativeAction
+import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -56,6 +62,12 @@ class BeerDetailsInfoFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.ratingBar.onRatingBarChangeListener = this
+
+        binding.ratingLoginOverlay.setOnClickListener {
+            showLoginDialog()
+        }
+
         binding.beerRatingOverall.setOnClickListener {
             showToast(R.string.description_rating_overall)
         }
@@ -71,11 +83,13 @@ class BeerDetailsInfoFragment :
         binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
         }
-
-        // binding.ratingCardOverlay.setOnClickListener { showLoginDialog() }
     }
 
     override fun observeViewState() {
+        observe(viewModel.isLoggedIn) { isLoggedIn ->
+            binding.ratingLoginOverlay.isVisible = !isLoggedIn
+        }
+
         observeSuccess(viewModel.beerState, ::setBeer)
         observeSuccess(viewModel.brewerState, ::setBrewer)
         observeSuccess(viewModel.styleState, ::setStyle)
@@ -119,6 +133,7 @@ class BeerDetailsInfoFragment :
         binding.tickedDate.text = beer.tickDate
             ?.takeIf { beer.isTicked() }
             ?.formatDateTime(getString(R.string.beer_tick_date))
+            .also { binding.tickedDate.isVisible = it != null }
     }
 
     private fun setBrewer(brewer: Brewer) {
@@ -142,8 +157,19 @@ class BeerDetailsInfoFragment :
         }
     }
 
+    private fun showLoginDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.login_dialog_title)
+            .setMessage(R.string.login_to_rate_message)
+            .setPositiveAction(R.string.action_yes, BeerDetailsFragmentDirections::toLogin)
+            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
+            .show()
+    }
+
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
-        TODO("Not yet implemented")
+        if (fromUser) {
+            viewModel.tickBeer(rating.toInt())
+        }
     }
 
     private fun showToast(@StringRes resource: Int) {

@@ -29,36 +29,50 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.R
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.network.BeerTickFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.network.result.ApiResult
+import quickbeer.android.util.ResourceProvider
+import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val loginManager: LoginManager,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
-    private val countryRepository: CountryRepository
+    private val countryRepository: CountryRepository,
+    private val beerTickFetcher: BeerTickFetcher,
+    private val resourceProvider: ResourceProvider,
+    private val toastProvider: ToastProvider
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
+
+    val isLoggedIn: Flow<Boolean> = loginManager.isLoggedIn
 
     private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
     val beerState: Flow<State<Beer>> = _beerState
@@ -149,5 +163,29 @@ class BeerDetailsViewModel @Inject constructor(
         return if (brewer is State.Success && country is State.Success) {
             State.Success(Address.from(brewer.value, country.value))
         } else State.Loading()
+    }
+
+    fun tickBeer(tick: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val beer = beerRepository.store.get(beerId) ?: error("No beer found!")
+            val userId = loginManager.userId.first() ?: error("Not logged in!")
+            val fetchKey = BeerTickFetcher.TickKey(beerId, userId, tick)
+            val result = beerTickFetcher.fetch(fetchKey)
+
+            if (result is ApiResult.Success) {
+                val update = beer.copy(tickValue = tick, tickDate = ZonedDateTime.now())
+                beerRepository.persist(beerId, update)
+            }
+
+            val message = when {
+                result !is ApiResult.Success -> resourceProvider.getString(R.string.tick_failure)
+                tick > 0 -> resourceProvider.getString(R.string.tick_success).format(beer.name)
+                else -> resourceProvider.getString(R.string.tick_removed)
+            }
+
+            withContext(Dispatchers.Main) {
+                toastProvider.showToast(message)
+            }
+        }
     }
 }

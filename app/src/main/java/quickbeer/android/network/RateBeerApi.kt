@@ -12,7 +12,6 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 interface RateBeerApi {
 
@@ -91,7 +90,12 @@ interface RateBeerApi {
     ): ApiResult<List<BeerJson>>
 
     @GET("/json/bt.asp")
-    suspend fun tickBeer(@QueryMap params: Map<String, String>)
+    suspend fun tickBeer(
+        @Query("b") beerId: Int,
+        @Query("u") userId: Int,
+        @Query("m") mode: Int,
+        @Query("l") tick: Int?
+    ): ApiResult<ResponseBody>
 
     // USER DETAILS
 

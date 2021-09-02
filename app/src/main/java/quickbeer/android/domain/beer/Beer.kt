@@ -51,7 +51,7 @@ data class Beer(
     }
 
     fun isTicked(): Boolean {
-        return tickValue != null
+        return tickValue != null && tickValue > 0
     }
 
     companion object {
