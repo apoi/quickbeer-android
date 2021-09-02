@@ -63,7 +63,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
     }
 
     private fun setProfileButtons(hasUser: Boolean) {
-        binding.profileReviews.isVisible = hasUser
+        binding.profileReviews.isVisible = false // Reviews hidden
         binding.profileTicks.isVisible = hasUser
         binding.profileLogout.isVisible = hasUser
         binding.profileLogin.isVisible = !hasUser
@@ -73,7 +73,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
         binding.profileUsername.text = "Loading..."
 
         binding.profileReviews.label.text =
-            getString(R.string.profile_reviews).format("loading")
+            getString(R.string.profile_reviews).format("loading...")
     }
 
     private fun setStateTickCount(state: State<Int>) {
@@ -82,7 +82,7 @@ class ProfileFragment : MainFragment(R.layout.profile_fragment) {
                 getString(R.string.profile_ticks).format(state.value)
         } else {
             binding.profileTicks.label.text =
-                getString(R.string.profile_ticks).format("loading")
+                getString(R.string.profile_ticks).format("loading...")
         }
     }
 

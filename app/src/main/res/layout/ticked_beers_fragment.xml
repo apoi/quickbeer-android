@@ -12,8 +12,10 @@
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_back"
             app:title="@string/profile_title" />
 
     </com.google.android.material.appbar.AppBarLayout>

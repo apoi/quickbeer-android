@@ -32,7 +32,9 @@ class TickedBeersFragment : MainFragment(R.layout.ticked_beers_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.message.text = getString(R.string.message_start)
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
         binding.recyclerView.apply {
             adapter = beersAdapter
