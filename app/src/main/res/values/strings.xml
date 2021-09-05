@@ -25,6 +25,9 @@
     <string name="search_title">Search</string>
     <string name="search_description">Search</string>
 
+    <string name="barcode_scanner_title">Scanner</string>
+    <string name="barcode_scanner_description">Barcode scanner</string>
+
     <string name="profile_title">Profile</string>
     <string name="profile_description">Profile</string>
 

@@ -1,43 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:keepScreenOn="true">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        style="@style/AppTheme.AppBar.Gradient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/top_action_bar_scrim"
-        android:translationZ="100dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_close"
-        app:title="">
+        android:stateListAnimator="@null"
+        android:elevation="100dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_close"
+            app:title="">
 
-            <ImageView
-                android:id="@+id/flash_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="@dimen/top_action_button_padding"
-                android:contentDescription="@string/cd_flash_button"
-                app:srcCompat="@drawable/camera_flash" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        </FrameLayout>
+                <ImageView
+                    android:id="@+id/flash_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="@dimen/top_action_button_padding"
+                    android:contentDescription="@string/cd_flash_button"
+                    app:srcCompat="@drawable/camera_flash" />
 
-    </com.google.android.material.appbar.MaterialToolbar>
+            </FrameLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <quickbeer.android.feature.barcode.camera.CameraSourcePreview
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@id/app_bar_layout">
 
         <quickbeer.android.feature.barcode.camera.GraphicOverlay
             android:id="@+id/graphic_overlay"

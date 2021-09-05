@@ -14,20 +14,18 @@ import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
-import quickbeer.android.ui.base.MainFragment
+import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class TickedBeersFragment : MainFragment(R.layout.ticked_beers_fragment) {
+class TickedBeersFragment : BaseFragment(R.layout.ticked_beers_fragment) {
 
     private val binding by viewBinding(TickedBeersFragmentBinding::bind)
     private val viewModel by viewModels<TickedBeersViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
-
-    override fun topInsetView() = binding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

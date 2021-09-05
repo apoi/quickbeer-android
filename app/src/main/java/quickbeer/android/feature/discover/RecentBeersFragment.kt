@@ -25,7 +25,7 @@ import quickbeer.android.util.ktx.viewBinding
 class RecentBeersFragment : BaseFragment(R.layout.list_fragment) {
 
     private val binding by viewBinding(ListContentBinding::bind)
-    private val viewModel by viewModels<DiscoverViewModel>()
+    private val viewModel by viewModels<RecentBeersViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

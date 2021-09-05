@@ -86,13 +86,20 @@ object ScannerUtils {
     fun getBarcodeReticleBox(overlay: GraphicOverlay): RectF {
         val overlayWidth = overlay.width.toFloat()
         val overlayHeight = overlay.height.toFloat()
+        val statusBarHeight = overlay.rootWindowInsets.systemWindowInsetTop
 
         val sizeDiff = overlayWidth - overlayWidth * 85 / 100
         val boxWidth = overlayWidth - sizeDiff
-        val boxHeight = overlayHeight - sizeDiff - toolbarHeight(overlay.context)
+        val boxHeight = overlayHeight - sizeDiff - toolbarHeight(overlay.context) - statusBarHeight
         val cx = overlayWidth / 2
         val cy = overlayHeight / 2
-        return RectF(cx - boxWidth / 2, cy - boxHeight / 2, cx + boxWidth / 2, cy + boxHeight / 2)
+
+        return RectF(
+            cx - boxWidth / 2,
+            cy - boxHeight / 2 + statusBarHeight / 2,
+            cx + boxWidth / 2,
+            cy + boxHeight / 2 + statusBarHeight / 2
+        )
     }
 
     @Suppress("MagicNumber")

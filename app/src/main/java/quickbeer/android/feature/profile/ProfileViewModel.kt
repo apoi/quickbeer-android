@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
@@ -37,8 +36,6 @@ class ProfileViewModel @Inject constructor(
 
     val tickCount: Flow<State<Int>> = loginManager.userId
         .filterNotNull()
-        .flatMapLatest { tickedBeersRepository.getStream(it.toString(), Accept()) }
-        .filter { it is State.Success }
         .flatMapLatest { tickedBeersRepository.store.getLocalTicks() }
         .map<List<Beer>, State<Int>> { State.Success(it.size) }
         .onStart { emit(State.Loading()) }

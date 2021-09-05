@@ -15,17 +15,15 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ProfileFragmentBinding
 import quickbeer.android.domain.user.User
-import quickbeer.android.ui.base.MainFragment
+import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class ProfileFragment : MainFragment(R.layout.profile_fragment) {
+class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
 
     private val binding by viewBinding(ProfileFragmentBinding::bind)
     private val viewModel by viewModels<ProfileViewModel>()
-
-    override fun topInsetView() = binding.toolbar
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/barcode"
+    app:startDestination="@id/barcode_scanner_fragment">
+
+    <include app:graph="@navigation/details_beer_nav" />
+    <include app:graph="@navigation/details_brewer_nav" />
+    <include app:graph="@navigation/details_style_nav" />
+    <include app:graph="@navigation/details_country_nav" />
+
+    <fragment
+        android:id="@+id/barcode_scanner_fragment"
+        android:name="quickbeer.android.feature.barcode.BarcodeScannerFragment"
+        android:label="@string/barcode_scanner_title"
+        tools:layout="@layout/barcode_scanner_fragment">
+
+        <argument
+            android:name="navbar"
+            android:defaultValue="false"
+            app:argType="boolean" />
+
+        <argument
+            android:name="fullscreen"
+            android:defaultValue="true"
+            app:argType="boolean" />
+
+    </fragment>
+
+</navigation>
