@@ -7,31 +7,34 @@
     android:focusable="true"
     android:focusableInTouchMode="true">
 
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/content_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:translationZ="100dp">
+        android:layout_height="match_parent">
 
         <quickbeer.android.ui.view.SearchView
             android:id="@+id/search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:expandable="false" />
+            app:expandable="false"
+            app:layout_constraintBottom_toTopOf="@id/tab_layout"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </FrameLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            app:layout_constraintBottom_toTopOf="@id/view_pager"
+            app:layout_constraintTop_toBottomOf="@id/search_view" />
 
-    <FrameLayout
-        android:id="@+id/main_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="6dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:paddingTop="50dp">
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tab_layout" />
 
-        <include layout="@layout/list_content" />
-
-    </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

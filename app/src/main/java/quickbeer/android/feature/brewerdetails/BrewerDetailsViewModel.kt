@@ -27,8 +27,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
@@ -63,6 +66,8 @@ class BrewerDetailsViewModel @Inject constructor(
     val addressState: Flow<State<Address>> = _addressState
 
     init {
+        updateAccessedBrewer(brewerId)
+
         viewModelScope.launch(Dispatchers.IO) {
             brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
                 .collect {
@@ -75,6 +80,19 @@ class BrewerDetailsViewModel @Inject constructor(
             brewersBeersRepository.getStream(brewerId.toString(), Accept())
                 .map(BeerListModelAlphabeticMapper(beerRepository)::map)
                 .collectLatest(_beersState::emit)
+        }
+    }
+
+    private fun updateAccessedBrewer(brewerId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            brewerRepository.getStream(brewerId, Accept())
+                .filterIsInstance<State.Success<Brewer>>()
+                .map { it.value }
+                .take(1)
+                .collect { brewer ->
+                    val accessed = brewer.copy(accessed = ZonedDateTime.now())
+                    brewerRepository.persist(brewer.id, accessed)
+                }
         }
     }
 

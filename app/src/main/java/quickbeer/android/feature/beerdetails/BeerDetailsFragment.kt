@@ -18,6 +18,7 @@
 package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -42,13 +43,8 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     override fun topInsetView() = binding.toolbar
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.updateAccessed()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)

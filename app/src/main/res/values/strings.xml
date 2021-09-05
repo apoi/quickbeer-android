@@ -42,6 +42,10 @@
     <string name="search_tab_styles">Styles</string>
     <string name="search_tab_countries">Countries</string>
 
+    <!-- Discover -->
+    <string name="recent_beers">Recent beers</string>
+    <string name="recent_brewers">Recent brewers</string>
+
     <!-- Beer list messages -->
     <string name="message_start">Start by searching for your favourite beer.\n\nCheers!</string>
     <string name="message_empty">No results.</string>

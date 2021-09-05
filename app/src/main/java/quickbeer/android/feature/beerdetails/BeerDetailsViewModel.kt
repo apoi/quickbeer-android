@@ -87,10 +87,13 @@ class BeerDetailsViewModel @Inject constructor(
     val addressState: Flow<State<Address>> = _addressState
 
     init {
+        updateAccessedBeer(beerId)
+
         viewModelScope.launch(Dispatchers.IO) {
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
                 .collectLatest {
                     _beerState.emit(it)
+
                     if (it is State.Success) {
                         getBrewer(it.value)
                         getStyle(it.value)
@@ -100,7 +103,7 @@ class BeerDetailsViewModel @Inject constructor(
         }
     }
 
-    fun updateAccessed() {
+    private fun updateAccessedBeer(beerId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             beerRepository.getStream(beerId, Accept())
                 .filterIsInstance<State.Success<Beer>>()
@@ -113,8 +116,23 @@ class BeerDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun updateAccessedBrewer(brewerId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            brewerRepository.getStream(brewerId, Accept())
+                .filterIsInstance<State.Success<Brewer>>()
+                .map { it.value }
+                .take(1)
+                .collect { brewer ->
+                    val accessed = brewer.copy(accessed = ZonedDateTime.now())
+                    brewerRepository.persist(brewer.id, accessed)
+                }
+        }
+    }
+
     private fun getBrewer(beer: Beer) {
         if (beer.brewerId == null) return
+
+        updateAccessedBrewer(beer.brewerId)
 
         viewModelScope.launch(Dispatchers.IO) {
             brewerRepository.getStream(beer.brewerId, Brewer.BasicDataValidator())

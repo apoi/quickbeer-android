@@ -27,6 +27,9 @@ abstract class BrewerDao : CoreDao<Int, BrewerEntity>(
         q3: String? = null
     ): Flow<List<BrewerEntity>>
 
+    @Query("SELECT id FROM brewers WHERE accessed IS NOT NULL ORDER BY accessed DESC")
+    abstract fun lastAccessed(): Flow<List<Int>>
+
     @Query("SELECT * FROM brewers WHERE id=:key")
     abstract suspend fun get(key: Int): BrewerEntity?
 
