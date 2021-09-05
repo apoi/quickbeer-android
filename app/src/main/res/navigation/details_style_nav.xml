@@ -10,15 +10,19 @@
         android:name="quickbeer.android.feature.styledetails.StyleDetailsFragment"
         android:label="@string/details_title"
         tools:layout="@layout/details_fragment">
+
         <deepLink app:uri="quickbeer://style/{id}" />
         <deepLink app:uri="www.ratebeer.com/beerstyles/.*/{id}/.*" />
+
         <argument
             android:name="id"
             app:argType="integer" />
+
         <argument
             android:name="navbar"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:argType="boolean" />
+
     </fragment>
 
 </navigation>

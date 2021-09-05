@@ -12,22 +12,29 @@
         android:name="quickbeer.android.feature.countrydetails.CountryDetailsFragment"
         android:label="@string/details_title"
         tools:layout="@layout/details_fragment">
+
         <deepLink app:uri="quickbeer://country/{id}" />
         <deepLink app:uri="www.ratebeer.com/beer/country/.*/{id}/.*" />
+
         <argument
             android:name="id"
             app:argType="integer" />
+
         <argument
             android:name="navbar"
-            android:defaultValue="true"
+            android:defaultValue="false"
             app:argType="boolean" />
+
         <action
             android:id="@+id/to_photo"
             app:destination="@id/details_photo_nav">
+
             <argument
                 android:name="uri"
                 app:argType="string" />
+
         </action>
+
     </fragment>
 
 </navigation>
