@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package quickbeer.android.feature.barcode.detection
+package quickbeer.android.feature.barcode.graphic
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -24,11 +24,10 @@ import android.graphics.PorterDuffXfermode
 import android.graphics.RectF
 import androidx.core.content.ContextCompat
 import quickbeer.android.R
-import quickbeer.android.feature.barcode.camera.GraphicOverlay
-import quickbeer.android.feature.barcode.camera.GraphicOverlay.Graphic
+import quickbeer.android.feature.barcode.graphic.GraphicOverlay.Graphic
 import quickbeer.android.feature.barcode.utils.ScannerUtils
 
-internal abstract class BarcodeGraphicBase(overlay: GraphicOverlay) : Graphic(overlay) {
+abstract class BarcodeGraphicBase(overlay: GraphicOverlay) : Graphic(overlay) {
 
     private val boxPaint: Paint = Paint().apply {
         color = ContextCompat.getColor(context, R.color.barcode_reticle_stroke)

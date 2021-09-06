@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package quickbeer.android.feature.barcode.detection
+package quickbeer.android.feature.barcode.graphic
 
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -22,14 +22,12 @@ import android.graphics.Paint.Style
 import android.graphics.RectF
 import androidx.core.content.ContextCompat
 import quickbeer.android.R
-import quickbeer.android.feature.barcode.camera.CameraReticleAnimator
-import quickbeer.android.feature.barcode.camera.GraphicOverlay
 
 /**
  * A camera reticle that locates at the center of canvas to indicate the system is active but has
  * not detected a barcode yet.
  */
-internal class BarcodeReticleGraphic(
+class BarcodeReticleGraphic(
     overlay: GraphicOverlay,
     private val animator: CameraReticleAnimator
 ) : BarcodeGraphicBase(overlay) {

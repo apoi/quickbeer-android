@@ -24,7 +24,7 @@ import android.util.TypedValue
 import java.util.ArrayList
 import kotlin.math.abs
 import quickbeer.android.feature.barcode.camera.CameraSizePair
-import quickbeer.android.feature.barcode.camera.GraphicOverlay
+import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 import quickbeer.android.util.ktx.dpToPx
 import timber.log.Timber
 

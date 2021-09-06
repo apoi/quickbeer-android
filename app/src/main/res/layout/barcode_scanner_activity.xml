@@ -39,7 +39,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <quickbeer.android.feature.barcode.camera.GraphicOverlay
+        <quickbeer.android.feature.barcode.graphic.GraphicOverlay
             android:id="@+id/graphic_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

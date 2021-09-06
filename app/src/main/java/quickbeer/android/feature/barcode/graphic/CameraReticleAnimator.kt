@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package quickbeer.android.feature.barcode.camera
+package quickbeer.android.feature.barcode.graphic
 
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator

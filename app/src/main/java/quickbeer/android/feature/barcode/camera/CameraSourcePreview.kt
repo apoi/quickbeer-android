@@ -24,6 +24,7 @@ import android.widget.FrameLayout
 import com.google.android.gms.common.images.Size
 import java.io.IOException
 import quickbeer.android.R
+import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 import timber.log.Timber
 
 /** Preview the camera image in the screen.  */

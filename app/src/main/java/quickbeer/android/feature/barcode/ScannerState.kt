@@ -9,7 +9,7 @@ sealed class ScannerState {
     data class Detected(val barcode: Barcode) : ScannerState()
     data class Confirming(val barcode: Barcode) : ScannerState()
     data class Searching(val barcode: Barcode) : ScannerState()
-    data class Found(val barcode: Barcode, val beers: List<Beer>) : ScannerState()
+    data class Found(val beers: List<Beer>) : ScannerState()
     data class NotFound(val barcode: Barcode) : ScannerState()
     data class Error(val barcode: Barcode) : ScannerState()
 }

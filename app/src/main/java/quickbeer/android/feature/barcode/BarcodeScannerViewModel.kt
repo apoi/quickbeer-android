@@ -22,40 +22,54 @@ import com.google.mlkit.vision.barcode.Barcode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.delayEach
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
+import quickbeer.android.feature.barcode.detection.BarcodeProcessor
+import java.util.Scanner
 
 @HiltViewModel
 class BarcodeScannerViewModel @Inject constructor(
     private val beerSearchRepository: BeerSearchRepository
 ) : ViewModel() {
 
-    private val detectedBarcode = MutableSharedFlow<Barcode>()
-
-    private val _scannerState = MutableStateFlow<ScannerState>(ScannerState.NotStarted)
-    val scannerState: Flow<ScannerState> = _scannerState
-
     var isCameraLive = false
         private set
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            detectedBarcode
-                .flatMapLatest { barcode ->
-                    beerSearchRepository.getStream(barcode.rawValue, Accept())
-                        .mapNotNull { state -> mapResult(barcode, state) }
-                }
-                .collectLatest(_scannerState::emit)
         }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            beerSearchRepository.getStream("4036328000015", Accept())
+                .filterIsInstance<State.Success<List<Beer>>>()
+                .mapNotNull { state -> ScannerState.Found(state.value) }
+                .onEach { delay(1000) }
+                .collectLatest { _scannerState.emit(it) }
+        }
+    }
+
+    fun scan(scannerState: Flow<ScannerState>): Flow<State<ScannerState>> {
+        return scannerState
+        detectedBarcode
+            .flatMapLatest { barcode ->
+                beerSearchRepository.getStream(barcode.rawValue, Accept())
+                    .mapNotNull { state -> mapResult(barcode, state) }
+            }
+            .collectLatest(_scannerState::emit)
     }
 
     fun setScannerState(state: ScannerState) {
@@ -82,7 +96,7 @@ class BarcodeScannerViewModel @Inject constructor(
         return when (state) {
             is State.Initial -> ScannerState.NotStarted
             is State.Loading -> ScannerState.Searching(barcode)
-            is State.Success -> ScannerState.Found(barcode, state.value)
+            is State.Success -> ScannerState.Found(state.value)
             is State.Empty -> ScannerState.NotFound(barcode)
             is State.Error -> ScannerState.Error(barcode)
         }
