@@ -36,20 +36,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
-            android:id="@+id/search_barcode"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="centerInside"
-            android:src="@drawable/ic_action_barcode"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@id/search_top_anchor"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/search_edit_text"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
-        <ImageButton
             android:id="@+id/search_clear"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -58,7 +44,8 @@
             android:src="@drawable/ic_clear"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/search_top_anchor"
-            app:layout_constraintEnd_toEndOf="@id/search_edit_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/search_edit_text"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 

@@ -25,14 +25,14 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
 import com.google.android.gms.common.images.Size
-import quickbeer.android.feature.barcode.detection.FrameMetadata
-import quickbeer.android.feature.barcode.detection.FrameProcessor
-import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.IdentityHashMap
 import kotlin.math.abs
 import kotlin.math.ceil
+import quickbeer.android.feature.barcode.detection.FrameMetadata
+import quickbeer.android.feature.barcode.detection.FrameProcessor
+import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 import quickbeer.android.feature.barcode.utils.ScannerUtils
 import timber.log.Timber
 

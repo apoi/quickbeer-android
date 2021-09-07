@@ -16,8 +16,8 @@
 
 package quickbeer.android.feature.barcode.detection
 
-import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 import java.nio.ByteBuffer
+import quickbeer.android.feature.barcode.graphic.GraphicOverlay
 
 /** An interface to process the input camera frame and perform detection on it.  */
 interface FrameProcessor {

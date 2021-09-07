@@ -17,4 +17,13 @@ abstract class MainFragment(@LayoutRes layout: Int) : BaseFragment(layout) {
             insets.replaceSystemWindowInsets(0, 0, 0, insets.systemWindowInsetBottom)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        // Navigate to pending targets, such as barcode scanning result
+        requireMainActivity()
+            .getPendingDestination()
+            ?.let(::navigate)
+    }
 }

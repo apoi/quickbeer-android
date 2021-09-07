@@ -1,14 +1,11 @@
 package quickbeer.android.ui.search
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.feature.barcode.BarcodeScannerActivity
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.view.SearchView
 
@@ -36,7 +33,6 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
             querySubmitCallback = ::onSearchQuerySubmit
             searchFocusChangeCallback = ::onSearchFocusChanged
             navigateBackCallback = requireActivity()::onBackPressed
-            barcodeCallback = ::onScanBarcode
         }
     }
 
@@ -47,19 +43,6 @@ abstract class SearchBarFragment(@LayoutRes layout: Int) : MainFragment(layout) 
     protected open fun onSearchQuerySubmit(query: String) = Unit
 
     protected open fun onBarcodeScanResult(barcode: String, beers: List<Beer>) = Unit
-
-    private fun onScanBarcode() {
-        val intent = Intent(context, BarcodeScannerActivity::class.java)
-        startActivityForResult(intent, BarcodeScannerActivity.BARCODE_RESULT)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == BarcodeScannerActivity.BARCODE_RESULT && resultCode == RESULT_OK) {
-            val barcode = data?.getStringExtra(BarcodeScannerActivity.KEY_BARCODE)
-            val beers = data?.getParcelableArrayListExtra<Beer>(BarcodeScannerActivity.KEY_BEERS)
-            if (barcode != null) onBarcodeScanResult(barcode, beers?.toList().orEmpty())
-        }
-    }
 
     @CallSuper
     protected open fun onSearchFocusChanged(hasFocus: Boolean) {

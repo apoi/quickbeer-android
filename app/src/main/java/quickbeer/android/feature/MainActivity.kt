@@ -9,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.StateFlow
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
+import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.navigation.setupWithNavController
 import quickbeer.android.ui.recyclerview.DefaultRecycledPoolHolder
@@ -26,6 +27,8 @@ class MainActivity :
     private val binding by viewBinding(MainActivityBinding::bind)
 
     private var currentNavController: StateFlow<NavController>? = null
+
+    private var pendingDestination: Destination? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +75,19 @@ class MainActivity :
         }
 
         currentNavController = controller
+    }
+
+    fun selectMainTab() {
+        binding.mainBottomNav.selectedItemId = R.id.discover
+    }
+
+    fun setPendingDestination(destination: Destination) {
+        pendingDestination = destination
+    }
+
+    fun getPendingDestination(): Destination? {
+        return pendingDestination
+            ?.also { pendingDestination = null }
     }
 
     override fun onBackPressed() {

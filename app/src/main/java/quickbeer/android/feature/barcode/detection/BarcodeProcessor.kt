@@ -21,26 +21,23 @@ import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.barcode.Barcode
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import java.io.IOException
+import quickbeer.android.feature.barcode.BarcodeScannerViewModel
 import quickbeer.android.feature.barcode.ScannerState
+import quickbeer.android.feature.barcode.graphic.BarcodeReticleGraphic
 import quickbeer.android.feature.barcode.graphic.CameraReticleAnimator
 import quickbeer.android.feature.barcode.graphic.GraphicOverlay
-import quickbeer.android.feature.barcode.graphic.BarcodeReticleGraphic
 import quickbeer.android.feature.barcode.utils.BarcodeValidator
 import timber.log.Timber
 
 /** A processor to run the barcode detector. */
 class BarcodeProcessor(
     graphicOverlay: GraphicOverlay,
+    private val viewModel: BarcodeScannerViewModel
 ) : FrameProcessorBase<List<Barcode>>() {
 
     private val scanner = BarcodeScanning.getClient()
     private val cameraReticleAnimator = CameraReticleAnimator(graphicOverlay)
-
-    private val _scannerState = MutableSharedFlow<ScannerState>()
-    val scannerState: Flow<ScannerState> = _scannerState
 
     override fun detectInImage(image: InputImage): Task<List<Barcode>> {
         return scanner.process(image)
@@ -51,16 +48,18 @@ class BarcodeProcessor(
         results: List<Barcode>,
         graphicOverlay: GraphicOverlay
     ) {
+        if (!viewModel.isCameraLive) return
+
         graphicOverlay.clear()
 
         val barcode = results.firstOrNull(BarcodeValidator::isValidBarcode)
         if (barcode == null) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
-            _scannerState.tryEmit(ScannerState.Detecting)
+            viewModel.setScannerState(ScannerState.Detecting)
         } else {
             cameraReticleAnimator.cancel()
-            _scannerState.tryEmit(ScannerState.Detected(barcode))
+            viewModel.setScannerState(ScannerState.Detected(barcode))
         }
 
         graphicOverlay.invalidate()

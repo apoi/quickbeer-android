@@ -5,7 +5,7 @@ import android.view.View
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.DiscoverFragmentBinding
-import quickbeer.android.domain.beer.Beer
+import quickbeer.android.navigation.NavAnim
 import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.search.SearchBarFragment
 import quickbeer.android.ui.view.SearchView
@@ -40,6 +40,4 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
     }
 
     override fun onReset() = Unit
-
-    override fun onBarcodeScanResult(barcode: String, beers: List<Beer>) = Unit
 }
