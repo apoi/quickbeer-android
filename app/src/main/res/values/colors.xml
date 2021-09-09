@@ -22,7 +22,7 @@
     <!-- Text -->
     <color name="text_dark">@color/black</color>
     <color name="text_light">@color/white</color>
-    <color name="text_hint">?attr/colorOnSurface</color>
+    <color name="text_hint">@color/gray_50</color>
 
     <!-- Not that many other colors -->
     <color name="orange">#F39815</color>

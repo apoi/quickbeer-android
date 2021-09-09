@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -35,6 +34,7 @@ import quickbeer.android.ui.adapter.brewer.BrewerListModel
 import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.ui.adapter.country.CountryListModel
 import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.util.ktx.distinctUntilNewId
 import quickbeer.android.util.ktx.normalize
 
 @HiltViewModel
@@ -92,7 +92,7 @@ class SearchViewModel @Inject constructor(
             beerSearchRepository
                 .getStream(beerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 // Avoid re-sorting the results if the set of beers didn't change
-                .distinctUntilChanged { old, new -> sameIds(old, new, Beer::id) }
+                .distinctUntilNewId(Beer::id)
                 .map(BeerListModelRateCountMapper(beerRepository)::map)
                 .collectLatest(_beerResults::emit)
         }
@@ -106,7 +106,7 @@ class SearchViewModel @Inject constructor(
 
             brewerSearchRepository
                 .getStream(brewerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
-                .distinctUntilChanged { old, new -> sameIds(old, new, Brewer::id) }
+                .distinctUntilNewId(Brewer::id)
                 .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
                 .collectLatest(_brewerResults::emit)
         }
@@ -157,11 +157,6 @@ class SearchViewModel @Inject constructor(
         return state.value.filter { matcher(query, it.name) }
             .sortedBy(Country::name)
             .let { State.from(it) }
-    }
-
-    private fun <T> sameIds(a: State<List<T>>, b: State<List<T>>, getId: (T) -> Int): Boolean {
-        return a is State.Success && b is State.Success &&
-            a.value.map(getId).toSet() == b.value.map(getId).toSet()
     }
 
     private fun matcher(query: String, value: String?): Boolean {

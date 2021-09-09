@@ -53,13 +53,16 @@ class BarcodeProcessor(
         graphicOverlay.clear()
 
         val barcode = results.firstOrNull(BarcodeValidator::isValidBarcode)
-        if (barcode == null) {
+        val rawValue = barcode?.rawValue
+
+        if (rawValue == null) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
             viewModel.setScannerState(ScannerState.Detecting)
         } else {
+            stop()
             cameraReticleAnimator.cancel()
-            viewModel.setScannerState(ScannerState.Detected(barcode))
+            viewModel.setScannerState(ScannerState.Detected(rawValue))
         }
 
         graphicOverlay.invalidate()

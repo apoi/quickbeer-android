@@ -40,13 +40,6 @@
 
         </activity>
 
-        <activity
-            android:name=".feature.barcode.BarcodeScannerActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            tools:ignore="LockedOrientationActivity" />
-
     </application>
 
 </manifest>

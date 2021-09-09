@@ -19,25 +19,30 @@ package quickbeer.android.feature.barcode
 import android.Manifest.permission.CAMERA
 import android.animation.AnimatorInflater
 import android.animation.AnimatorSet
-import android.content.pm.PackageManager.PERMISSION_DENIED
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.hardware.Camera
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerFragmentBinding
 import quickbeer.android.feature.barcode.camera.CameraSource
 import quickbeer.android.feature.barcode.detection.BarcodeProcessor
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.base.BaseFragment
-import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.setNegativeAction
+import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
 
@@ -49,6 +54,14 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
 
     private var cameraSource: CameraSource? = null
     private lateinit var promptChipAnimator: AnimatorSet
+    private var scanJob: Job? = null
+
+    private val permissionHandler = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) setupCamera()
+        else showRationale()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,16 +70,11 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
             closeScanner()
         }
 
-        val animatorSource = R.animator.bottom_prompt_chip_enter
-        val animatorSet =
-            (AnimatorInflater.loadAnimator(requireContext(), animatorSource) as AnimatorSet)
+        binding.graphicOverlay.setOnClickListener {
+            if (!viewModel.isCameraLive) startCamera()
+        }
 
-        promptChipAnimator = animatorSet.apply { setTarget(binding.bottomPromptChip) }
-        cameraSource = CameraSource(binding.graphicOverlay)
-
-        binding.graphicOverlay.setOnClickListener { startCamera() }
         binding.flashButton.setOnClickListener { onFlashPressed() }
-        observeScannerState()
     }
 
     override fun onStart() {
@@ -75,18 +83,8 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         if (ContextCompat.checkSelfPermission(requireContext(), CAMERA) != PERMISSION_GRANTED) {
             requestPermission()
         } else {
-            startCamera()
+            setupCamera()
         }
-
-        // Emulator testing
-        // 036000291452
-        // 4036328000015
-        /*
-        setResult(RESULT_OK, Intent().apply {
-            putExtra(KEY_BARCODE, "4036328000015")
-        })
-        finish()
-        */
     }
 
     override fun onResume() {
@@ -102,49 +100,53 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        scanJob?.cancel()
+        scanJob = null
+
         cameraSource?.release()
         cameraSource = null
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(requireActivity(), arrayOf(CAMERA), PERMISSION_RESULT)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        val result = grantResults.firstOrNull()
-        when {
-            requestCode != PERMISSION_RESULT -> closeScanner()
-            result == PERMISSION_GRANTED -> startCamera()
-            result == PERMISSION_DENIED -> showRationale()
-            else -> closeScanner()
-        }
+        permissionHandler.launch(CAMERA)
     }
 
     private fun showRationale() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(requireActivity(), CAMERA)) {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireActivity())
                 .setMessage(R.string.permission_explanation)
-                .setPositiveButton(R.string.action_yes) { _, _ -> requestPermission() }
-                .setNegativeButton(R.string.action_no) { _, _ -> closeScanner() }
+                .setPositiveAction(R.string.action_yes, ::requestPermission)
+                .setNegativeAction(R.string.action_no) { closeScanner() }
                 .show()
         } else {
             MaterialAlertDialogBuilder(requireContext())
                 .setMessage(R.string.permission_missing)
-                .setPositiveButton(R.string.action_ok) { _, _ -> closeScanner() }
+                .setPositiveAction(R.string.action_ok, ::closeScanner)
                 .show()
         }
+    }
+
+    private fun setupCamera() {
+        val animatorSource = R.animator.bottom_prompt_chip_enter
+        val animatorSet =
+            (AnimatorInflater.loadAnimator(requireContext(), animatorSource) as AnimatorSet)
+
+        promptChipAnimator = animatorSet.apply { setTarget(binding.bottomPromptChip) }
+        cameraSource = CameraSource(binding.graphicOverlay)
+
+        startCamera()
     }
 
     private fun startCamera() {
         viewModel.markCameraFrozen()
         cameraSource?.setFrameProcessor(BarcodeProcessor(binding.graphicOverlay, viewModel))
         viewModel.setScannerState(ScannerState.Detecting)
+
+        scanJob?.cancel()
+        scanJob = lifecycleScope.launch {
+            viewModel.scan().collect(::handleScannerState)
+        }
     }
 
     private fun closeScanner() {
@@ -184,39 +186,37 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         }
     }
 
-    private fun observeScannerState() {
-        observe(viewModel.scannerState) { state ->
-            when (state) {
-                is ScannerState.NotStarted -> Unit
-                is ScannerState.Detecting -> {
-                    showPrompt(getString(R.string.prompt_point_at_a_barcode))
-                    startCameraPreview()
-                }
-                is ScannerState.Confirming -> {
-                    showPrompt(getString(R.string.prompt_move_camera_closer))
-                    startCameraPreview()
-                }
-                is ScannerState.Detected -> {
-                    showPrompt(null)
-                    stopCameraPreview()
-                }
-                is ScannerState.Searching -> {
-                    showPrompt(getString(R.string.prompt_searching))
-                    stopCameraPreview()
-                }
-                is ScannerState.Found -> {
-                    val scanDestination = Destination.Beer(state.beers.first().id)
-                    requireMainActivity().setPendingDestination(scanDestination)
-                    closeScanner()
-                }
-                is ScannerState.NotFound -> {
-                    showPrompt(getString(R.string.prompt_no_results).format(state.barcode.rawValue))
-                    stopCameraPreview()
-                }
-                is ScannerState.Error -> {
-                    showPrompt(getString(R.string.prompt_error).format(state.barcode.rawValue))
-                    stopCameraPreview()
-                }
+    private fun handleScannerState(state: ScannerState) {
+        when (state) {
+            is ScannerState.NotStarted -> Unit
+            is ScannerState.Detecting -> {
+                showPrompt(getString(R.string.prompt_point_at_a_barcode))
+                startCameraPreview()
+            }
+            is ScannerState.Confirming -> {
+                showPrompt(getString(R.string.prompt_move_camera_closer))
+                startCameraPreview()
+            }
+            is ScannerState.Detected -> {
+                showPrompt(null)
+                stopCameraPreview()
+            }
+            is ScannerState.Searching -> {
+                showPrompt(getString(R.string.prompt_searching))
+                stopCameraPreview()
+            }
+            is ScannerState.Found -> {
+                val scanDestination = Destination.Beer(state.beers.first().id)
+                requireMainActivity().setPendingDestination(scanDestination)
+                closeScanner()
+            }
+            is ScannerState.NotFound -> {
+                showPrompt(getString(R.string.prompt_no_results).format(state.barcode))
+                stopCameraPreview()
+            }
+            is ScannerState.Error -> {
+                showPrompt(getString(R.string.prompt_error).format(state.barcode))
+                stopCameraPreview()
             }
         }
     }

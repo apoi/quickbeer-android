@@ -99,13 +99,9 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
                 .asSequence()
                 .map(::getChildAt)
                 .forEach {
-                    when (it.id) {
-                        else -> {
-                            it.layout(
-                                0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf
-                            )
-                        }
-                    }
+                    it.layout(
+                        0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf
+                    )
                 }
         }
 
