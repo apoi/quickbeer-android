@@ -34,9 +34,7 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.recyclerView.apply {
             adapter = resultAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                recycleChildrenOnDetach = true
-            }
+            layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))

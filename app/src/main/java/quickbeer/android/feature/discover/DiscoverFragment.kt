@@ -2,6 +2,7 @@ package quickbeer.android.feature.discover
 
 import android.os.Bundle
 import android.view.View
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.DiscoverFragmentBinding
@@ -20,11 +21,26 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
 
     override fun topInsetView() = binding.layout
 
+    private var mediator: TabLayoutMediator? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewPager.adapter = RecentItemsPagerAdapter(childFragmentManager)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.viewPager.adapter = RecentItemsPagerAdapter(this)
+
+        mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.recent_beers)
+                else -> getString(R.string.recent_brewers)
+            }
+        }.also(TabLayoutMediator::attach)
+    }
+
+    override fun onDestroyView() {
+        mediator?.detach()
+        mediator = null
+        binding.viewPager.adapter = null
+        super.onDestroyView()
     }
 
     override fun searchView(): SearchView {
@@ -41,6 +57,6 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
 
     override fun onReset() {
         binding.viewPager.setCurrentItem(0, true)
-        (binding.viewPager.adapter as Resetable).onReset()
+        childFragmentManager.fragments.filterIsInstance<Resetable>().forEach(Resetable::onReset)
     }
 }

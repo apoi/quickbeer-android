@@ -35,9 +35,7 @@ class RecentBrewersFragment : BaseFragment(R.layout.list_fragment) {
 
         binding.recyclerView.apply {
             adapter = brewersAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                recycleChildrenOnDetach = true
-            }
+            layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
