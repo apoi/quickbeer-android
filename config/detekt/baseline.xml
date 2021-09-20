@@ -8,12 +8,13 @@
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>
     <ID>MagicNumber:SearchFragment.kt$SearchFragment$3</ID>
     <ID>MagicNumber:SessionPersistingCookieJar.kt$SessionPersistingCookieJar$10</ID>
-    <ID>TooManyFunctions:BarcodeScannerActivity.kt$BarcodeScannerActivity : AppCompatActivity</ID>
+    <ID>TooManyFunctions:BarcodeScannerFragment.kt$BarcodeScannerFragment : BaseFragment</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
+    <ID>TooManyFunctions:MainActivity.kt$MainActivity : AppCompatActivityOnDestinationChangedListenerRecycledPoolHolder</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:PreferenceDataStoreCore.kt$PreferenceDataStoreCore&lt;V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:RateBeerApi.kt$RateBeerApi</ID>

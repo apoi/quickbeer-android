@@ -2,7 +2,6 @@ package quickbeer.android.util.ktx
 
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.coroutineScope
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
@@ -14,14 +13,14 @@ import quickbeer.android.data.state.State
 /**
  * Flow observing helper.
  */
-fun <T> LifecycleOwner.observe(flow: Flow<T>, observer: (T) -> Unit) {
-    lifecycle.coroutineScope.launchWhenStarted {
+fun <T> Fragment.observe(flow: Flow<T>, observer: (T) -> Unit) {
+    viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
         flow.collectLatest { observer.invoke(it) }
     }
 }
 
-fun <T> LifecycleOwner.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
-    lifecycle.coroutineScope.launchWhenStarted {
+fun <T> Fragment.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
+    viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
         flow.collectLatest { if (it is State.Success) observer(it.value) }
     }
 }
