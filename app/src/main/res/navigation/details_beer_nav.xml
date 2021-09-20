@@ -26,11 +26,6 @@
             android:defaultValue=""
             app:argType="string" />
 
-        <argument
-            android:name="navbar"
-            android:defaultValue="false"
-            app:argType="boolean" />
-
         <action
             android:id="@+id/to_photo"
             app:destination="@id/details_photo_nav">

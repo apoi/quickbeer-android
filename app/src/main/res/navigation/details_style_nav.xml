@@ -18,11 +18,6 @@
             android:name="id"
             app:argType="integer" />
 
-        <argument
-            android:name="navbar"
-            android:defaultValue="false"
-            app:argType="boolean" />
-
     </fragment>
 
 </navigation>
