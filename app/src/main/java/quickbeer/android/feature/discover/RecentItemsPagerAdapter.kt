@@ -17,12 +17,16 @@
  */
 package quickbeer.android.feature.discover
 
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import quickbeer.android.ui.base.Resetable
 
 class RecentItemsPagerAdapter(fm: FragmentManager) :
-    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT), Resetable {
+
+    private var currentFragment: Fragment? = null
 
     override fun getCount(): Int {
         return 2
@@ -40,5 +44,17 @@ class RecentItemsPagerAdapter(fm: FragmentManager) :
             0 -> "Recent beers"
             else -> "Recent brewers"
         }
+    }
+
+    override fun setPrimaryItem(container: ViewGroup, position: Int, fragment: Any) {
+        super.setPrimaryItem(container, position, fragment)
+
+        if (fragment is Fragment) {
+            currentFragment = fragment
+        }
+    }
+
+    override fun onReset() {
+        (currentFragment as? Resetable)?.onReset()
     }
 }

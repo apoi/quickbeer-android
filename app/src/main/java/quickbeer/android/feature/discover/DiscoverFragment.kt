@@ -39,5 +39,8 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
         }
     }
 
-    override fun onReset() = Unit
+    override fun onReset() {
+        binding.viewPager.setCurrentItem(0, true)
+        (binding.viewPager.adapter as Resetable).onReset()
+    }
 }
