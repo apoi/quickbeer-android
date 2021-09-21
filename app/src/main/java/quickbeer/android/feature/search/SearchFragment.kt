@@ -41,12 +41,14 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.searchView.query = args.barcode.orEmpty()
         binding.searchView.navigationMode = SearchView.NavigationMode.BACK
     }
 
     @Suppress("MagicNumber")
     override fun onInitialViewCreated() {
+        // TODO multi-result barcode search should come here
+        binding.searchView.query = args.barcode.orEmpty()
+
         // Delay for search field opening animation
         requireView().postDelayed(
             { binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch()) },
