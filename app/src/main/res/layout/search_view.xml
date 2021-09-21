@@ -41,7 +41,7 @@
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerInside"
-            android:src="@drawable/ic_clear"
+            android:src="@drawable/ic_hero_x"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/search_top_anchor"
             app:layout_constraintEnd_toEndOf="parent"

@@ -19,7 +19,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/ic_close"
+            app:navigationIcon="@drawable/ic_hero_x"
             app:title="">
 
             <FrameLayout

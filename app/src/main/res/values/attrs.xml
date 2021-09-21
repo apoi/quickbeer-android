@@ -27,6 +27,11 @@
     <declare-styleable name="GroupLink">
         <attr name="icon" format="reference" />
         <attr name="label" format="reference" />
+        <attr name="type" format="enum">
+            <enum name="LINK" value="0" />
+            <enum name="EXTERNAL" value="1" />
+            <enum name="ACTION" value="2" />
+        </attr>
     </declare-styleable>
 
 </resources>

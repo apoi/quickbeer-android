@@ -21,13 +21,16 @@
         <action
             android:id="@+id/to_ticks_list"
             app:destination="@id/ticks_list_fragment" />
+        <action
+            android:id="@+id/to_legal"
+            app:destination="@id/legal_fragment" />
     </fragment>
 
     <fragment
-        android:id="@+id/about_fragment"
-        android:name="quickbeer.android.feature.about.AboutFragment"
-        android:label="@string/profile_title"
-        tools:layout="@layout/about_fragment" />
+        android:id="@+id/legal_fragment"
+        android:name="quickbeer.android.feature.profile.ProfileLegalFragment"
+        android:label="@string/legal_title"
+        tools:layout="@layout/profile_legal_fragment" />
 
     <fragment
         android:id="@+id/ticks_list_fragment"

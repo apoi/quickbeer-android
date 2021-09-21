@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_noun_review"
+                app:icon="@drawable/ic_hero_annotation"
                 app:label="@string/profile_reviews"
                 app:position="MIDDLE"
                 tools:visibility="visible" />
@@ -95,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_noun_rating"
+                app:icon="@drawable/ic_hero_star"
                 app:label="@string/profile_ticks"
                 app:position="MIDDLE"
                 tools:visibility="visible" />
@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_profile"
+                app:icon="@drawable/ic_hero_login"
                 app:label="@string/profile_login"
                 app:position="LAST" />
 
@@ -116,61 +116,29 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_profile"
+                app:icon="@drawable/ic_hero_logout"
                 app:label="@string/profile_logout"
                 app:position="LAST"
                 tools:visibility="visible" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/link_legal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_code"
+                app:label="@string/about_legal"
+                app:position="ONLY" />
 
             <quickbeer.android.ui.view.GroupLink
                 android:id="@+id/link_play_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_noun_play_store"
+                app:icon="@drawable/ic_google_play"
                 app:label="@string/about_google_play"
-                app:position="ONLY" />
-
-            <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/link_privacy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:applyTopMargin="false"
-                app:icon="@drawable/ic_noun_privacy"
-                app:label="@string/about_privacy_policy"
-                app:position="FIRST" />
-
-            <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/link_source"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:applyTopMargin="false"
-                app:icon="@drawable/ic_noun_source_code"
-                app:label="@string/about_source_code"
-                app:position="MIDDLE" />
-
-            <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/link_license"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_noun_section"
-                app:label="@string/about_quickbeer_license"
-                app:position="MIDDLE" />
-
-            <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/link_open_source"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_copyleft"
-                app:label="@string/about_open_source_licenses"
-                app:position="MIDDLE" />
-
-            <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/link_graphics_assets"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/ic_noun_icon"
-                app:label="@string/about_graphic_asset_licenses"
-                app:position="LAST" />
+                app:position="ONLY"
+                app:type="EXTERNAL" />
 
             <TextView
                 android:id="@+id/about_version"

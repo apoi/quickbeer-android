@@ -37,11 +37,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
         }
 
         binding.linkPlayStore.setOnClickListener { openLink(Constants.PLAY_STORE) }
-        binding.linkPrivacy.setOnClickListener { openLink(Constants.PRIVACY_POLICY) }
-        binding.linkSource.setOnClickListener { openLink(Constants.QUICKBEER_GITHUB) }
-        binding.linkLicense.setOnClickListener { openLink(Constants.QUICKBEER_LICENSE) }
-        binding.linkOpenSource.setOnClickListener { openLink(Constants.OPEN_SOURCE_LICENSES) }
-        binding.linkGraphicsAssets.setOnClickListener { openLink(Constants.GRAPHICS_LICENSES) }
+        binding.linkLegal.setOnClickListener { navigate(ProfileFragmentDirections.toLegal()) }
 
         binding.aboutVersion.text =
             getString(R.string.about_version).format(BuildConfig.VERSION_NAME)

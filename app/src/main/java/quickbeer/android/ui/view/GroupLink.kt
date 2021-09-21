@@ -26,9 +26,17 @@ class GroupLink @JvmOverloads constructor(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupLink)
         val icon = ta.getResourceId(R.styleable.GroupLink_icon, 0)
         val label = ta.getResourceId(R.styleable.GroupLink_label, 0)
+        val type = Type.values()[ta.getInt(R.styleable.GroupLink_type, 0)]
         ta.recycle()
 
         binding.icon.setImageResource(icon)
         binding.label.setText(label)
+        binding.chevron.setImageResource(type.icon)
+    }
+
+    enum class Type(val icon: Int) {
+        LINK(R.drawable.ic_hero_chevron),
+        EXTERNAL(R.drawable.ic_hero_external_link),
+        ACTION(0)
     }
 }

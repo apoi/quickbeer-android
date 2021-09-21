@@ -12,7 +12,7 @@
         android:background="@drawable/top_action_bar_scrim"
         android:translationZ="100dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_close"
+        app:navigationIcon="@drawable/ic_hero_x"
         app:title="">
 
         <FrameLayout

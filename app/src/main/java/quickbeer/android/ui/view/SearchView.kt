@@ -179,7 +179,7 @@ class SearchView @JvmOverloads constructor(
         binding.searchTopAnchor.setHeight(60.dp())
 
         // Navigation icon
-        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_back, null)
+        val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_hero_arrow_left, null)
         binding.searchNavigation.setImageDrawable(drawable)
 
         // Search box
@@ -235,6 +235,6 @@ class SearchView @JvmOverloads constructor(
 
     enum class NavigationMode(val icon: Int) {
         SEARCH(R.drawable.ic_search),
-        BACK(R.drawable.ic_back)
+        BACK(R.drawable.ic_hero_arrow_left)
     }
 }
