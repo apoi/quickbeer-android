@@ -25,7 +25,9 @@ class LegalDetailsFragment : BaseFragment(R.layout.legal_details_fragment) {
             navigate(LegalDetailsFragmentDirections.toOpenSource())
         }
 
-        binding.linkGraphicsAssets.setOnClickListener { openLink(Constants.GRAPHICS_LICENSES) }
+        binding.linkGraphicsAssets.setOnClickListener {
+            navigate(LegalDetailsFragmentDirections.toGraphicsAssets())
+        }
 
         binding.linkLicense.setOnClickListener {
             navigate(LegalDetailsFragmentDirections.toLicense())
@@ -35,7 +37,9 @@ class LegalDetailsFragment : BaseFragment(R.layout.legal_details_fragment) {
             navigate(LegalDetailsFragmentDirections.toPrivacyPolicy())
         }
 
-        binding.linkSource.setOnClickListener { openLink(Constants.QUICKBEER_GITHUB) }
+        binding.linkSource.setOnClickListener {
+            openLink(Constants.QUICKBEER_GITHUB)
+        }
     }
 
     private fun openLink(uri: String) {

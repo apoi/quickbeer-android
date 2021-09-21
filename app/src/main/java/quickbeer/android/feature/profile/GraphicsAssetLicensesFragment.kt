@@ -17,7 +17,7 @@ import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class OpenSourceLicensesFragment : BaseFragment(R.layout.license_list_fragment) {
+class GraphicsAssetLicensesFragment : BaseFragment(R.layout.license_list_fragment) {
 
     @Inject
     lateinit var moshi: Moshi
@@ -32,7 +32,7 @@ class OpenSourceLicensesFragment : BaseFragment(R.layout.license_list_fragment) 
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
-        binding.toolbar.title = getString(R.string.open_source_title)
+        binding.toolbar.title = getString(R.string.graphics_assets_title)
 
         binding.licenseList.apply {
             adapter = licenseAdapter
@@ -45,7 +45,7 @@ class OpenSourceLicensesFragment : BaseFragment(R.layout.license_list_fragment) 
     private fun setLicenses() {
         val type = Types.newParameterizedType(List::class.java, LicenseDataModel::class.java)
         val adapter = moshi.adapter<List<LicenseDataModel>>(type)
-        val json = resourceProvider.getRaw(R.raw.licenses_dependencies)
+        val json = resourceProvider.getRaw(R.raw.licenses_graphics)
         val licenses = adapter.fromJson(json).orEmpty().sortedBy(LicenseDataModel::project)
 
         licenseAdapter.setItems(licenses)

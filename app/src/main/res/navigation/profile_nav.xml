@@ -53,6 +53,10 @@
             app:destination="@id/open_source_fragment" />
 
         <action
+            android:id="@+id/to_graphics_assets"
+            app:destination="@id/graphics_assets_fragment" />
+
+        <action
             android:id="@+id/to_license"
             app:destination="@id/license_fragment" />
 
@@ -66,7 +70,13 @@
         android:id="@+id/open_source_fragment"
         android:name="quickbeer.android.feature.profile.OpenSourceLicensesFragment"
         android:label="@string/open_source_title"
-        tools:layout="@layout/open_source_license_fragment" />
+        tools:layout="@layout/license_list_fragment" />
+
+    <fragment
+        android:id="@+id/graphics_assets_fragment"
+        android:name="quickbeer.android.feature.profile.GraphicsAssetLicensesFragment"
+        android:label="@string/graphics_assets_title"
+        tools:layout="@layout/license_list_fragment" />
 
     <fragment
         android:id="@+id/license_fragment"
