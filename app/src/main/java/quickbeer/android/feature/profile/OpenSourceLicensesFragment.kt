@@ -2,10 +2,10 @@ package quickbeer.android.feature.profile
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.databinding.OpenSourceLicenseFragmentBinding
 import quickbeer.android.feature.profile.model.OpenSourceLicenseModel
@@ -15,8 +15,6 @@ import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class OpenSourceLicensesFragment : BaseFragment(R.layout.open_source_license_fragment) {

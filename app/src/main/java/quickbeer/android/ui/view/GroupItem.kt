@@ -1,6 +1,7 @@
 package quickbeer.android.ui.view
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.Gravity
 import android.widget.ImageView
@@ -37,6 +38,13 @@ open class GroupItem @JvmOverloads constructor(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
+
+        setCardBackgroundColor(resources.getColor(R.color.gray_85_10, null))
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            outlineAmbientShadowColor = resources.getColor(R.color.gray_85_10, null)
+            outlineSpotShadowColor = resources.getColor(R.color.gray_85_10, null)
+        }
 
         updateShape()
         updateDivider()

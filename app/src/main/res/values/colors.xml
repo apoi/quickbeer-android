@@ -3,7 +3,6 @@
 
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
-    <color name="white_10">#1AFFFFFF</color>
     <color name="transparent">#00000000</color>
 
     <!-- https://material.io/design/color/the-color-system.html#tools-for-picking-colors -->
@@ -14,6 +13,10 @@
     <color name="gray_50">#9E9E9E</color>
     <color name="gray_40">#BDBDBD</color>
     <color name="gray_30">#E0E0E0</color>
+
+    <!-- Partial colors -->
+    <color name="white_10">#1AFFFFFF</color>
+    <color name="gray_85_10">#B3303030</color>
 
     <!-- Icons -->
     <color name="icon_light">@color/white</color>

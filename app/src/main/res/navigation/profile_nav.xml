@@ -52,6 +52,14 @@
             android:id="@+id/to_open_source"
             app:destination="@id/open_source_fragment" />
 
+        <action
+            android:id="@+id/to_license"
+            app:destination="@id/license_fragment" />
+
+        <action
+            android:id="@+id/to_privacy_policy"
+            app:destination="@id/privacy_policy_fragment" />
+
     </fragment>
 
     <fragment
@@ -59,6 +67,18 @@
         android:name="quickbeer.android.feature.profile.OpenSourceLicensesFragment"
         android:label="@string/open_source_title"
         tools:layout="@layout/open_source_license_fragment" />
+
+    <fragment
+        android:id="@+id/license_fragment"
+        android:name="quickbeer.android.feature.profile.LicenseFragment"
+        android:label="@string/quickbeer_license_title"
+        tools:layout="@layout/text_content_fragment" />
+
+    <fragment
+        android:id="@+id/privacy_policy_fragment"
+        android:name="quickbeer.android.feature.profile.PrivacyPolicyFragment"
+        android:label="@string/quickbeer_privacy_policy_title"
+        tools:layout="@layout/privacy_policy_fragment" />
 
     <dialog
         android:id="@+id/login_dialog"

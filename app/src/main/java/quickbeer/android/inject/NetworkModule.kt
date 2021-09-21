@@ -10,6 +10,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Qualifier
 import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -27,7 +28,6 @@ import quickbeer.android.network.interceptor.LoginRedirectInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import javax.inject.Qualifier
 
 private const val TEN_MEGABYTES: Long = 10 * 1024 * 1024
 
