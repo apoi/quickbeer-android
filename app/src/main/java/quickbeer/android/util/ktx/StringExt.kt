@@ -13,7 +13,7 @@ fun String?.nullIfEmpty(): String? {
 }
 
 fun String.removeSingleLineBreaks(): String {
-    return replace(SINGLE_LINEBREAK_PATTERN, "")
+    return replace(SINGLE_LINEBREAK_PATTERN, " ")
 }
 
 /**
