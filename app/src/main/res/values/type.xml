@@ -17,4 +17,8 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="AppTheme.Text.XS">
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

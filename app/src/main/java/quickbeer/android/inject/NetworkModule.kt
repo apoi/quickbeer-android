@@ -6,6 +6,7 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
@@ -26,8 +27,13 @@ import quickbeer.android.network.interceptor.LoginRedirectInterceptor
 import quickbeer.android.network.result.ResultCallAdapterFactory
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Qualifier
 
 private const val TEN_MEGABYTES: Long = 10 * 1024 * 1024
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class RateBeerMoshi
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -50,8 +56,15 @@ object NetworkModule {
     }
 
     @Provides
-    @Singleton
+    @Reusable
     fun provideMoshi(): Moshi {
+        return Moshi.Builder().build()
+    }
+
+    @Provides
+    @Reusable
+    @RateBeerMoshi
+    fun provideRateBeerMoshi(): Moshi {
         return Moshi.Builder()
             .add(ZonedDateTimeAdapter())
             .add(EscapedStringAdapter())
@@ -60,7 +73,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, moshi: Moshi): Retrofit {
+    fun provideRetrofit(okHttpClient: OkHttpClient, @RateBeerMoshi moshi: Moshi): Retrofit {
         return Retrofit.Builder()
             .addCallAdapterFactory(ResultCallAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))

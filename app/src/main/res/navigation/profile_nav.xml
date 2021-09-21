@@ -15,32 +15,50 @@
         android:name="quickbeer.android.feature.profile.ProfileFragment"
         android:label="@string/profile_title"
         tools:layout="@layout/profile_fragment">
+
         <action
             android:id="@+id/to_login"
             app:destination="@id/login_dialog" />
+
         <action
             android:id="@+id/to_ticks_list"
             app:destination="@id/ticks_list_fragment" />
+
         <action
             android:id="@+id/to_legal"
             app:destination="@id/legal_fragment" />
-    </fragment>
 
-    <fragment
-        android:id="@+id/legal_fragment"
-        android:name="quickbeer.android.feature.profile.ProfileLegalFragment"
-        android:label="@string/legal_title"
-        tools:layout="@layout/profile_legal_fragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/ticks_list_fragment"
         android:name="quickbeer.android.feature.tickedbeers.TickedBeersFragment"
         android:label="@string/ticks_list_title"
         tools:layout="@layout/ticked_beers_fragment">
+
         <argument
             android:name="id"
             app:argType="integer" />
+
     </fragment>
+
+    <fragment
+        android:id="@+id/legal_fragment"
+        android:name="quickbeer.android.feature.profile.LegalDetailsFragment"
+        android:label="@string/legal_title"
+        tools:layout="@layout/legal_details_fragment">
+
+        <action
+            android:id="@+id/to_open_source"
+            app:destination="@id/open_source_fragment" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/open_source_fragment"
+        android:name="quickbeer.android.feature.profile.OpenSourceLicensesFragment"
+        android:label="@string/open_source_title"
+        tools:layout="@layout/open_source_license_fragment" />
 
     <dialog
         android:id="@+id/login_dialog"

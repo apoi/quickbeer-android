@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_hero_code"
+                app:icon="@drawable/ic_hero_scale"
                 app:label="@string/about_legal"
                 app:position="ONLY" />
 

@@ -10,20 +10,8 @@
     <string name="action_no">No</string>
 
     <!-- Pages -->
-    <string name="home_title">Home</string>
-    <string name="home_description">Home</string>
-
     <string name="discover_title">Discover</string>
     <string name="discover_description">Discover</string>
-
-    <string name="style_list_title">Styles</string>
-    <string name="style_list_description">Styles</string>
-
-    <string name="details_title">Details</string>
-    <string name="details_description">Details</string>
-
-    <string name="search_title">Search</string>
-    <string name="search_description">Search</string>
 
     <string name="barcode_scanner_title">Scanner</string>
     <string name="barcode_scanner_description">Barcode scanner</string>
@@ -31,14 +19,15 @@
     <string name="profile_title">Profile</string>
     <string name="profile_description">Profile</string>
 
-    <string name="legal_title">Legal</string>
-    <string name="legal_description">Legal</string>
+    <string name="details_title">Details</string>
 
     <string name="login_title">Login</string>
-    <string name="login_description">Login</string>
-
+    <string name="legal_title">Legal</string>
     <string name="ticks_list_title">Ticked Beers</string>
-    <string name="ticks_list_description">Ticked Beers</string>
+    <string name="open_source_title">Open Source Licenses</string>
+    <string name="graphics_assets_title">Graphics Asset Licenses</string>
+    <string name="quickbeer_license_title">QuickBeer License</string>
+    <string name="quickbeer_privacy_policy_title">QuickBeer Privacy Policy</string>
 
     <!-- Search bar -->
     <string name="search_hint">Search…</string>
