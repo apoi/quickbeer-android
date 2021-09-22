@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import quickbeer.android.R
 import quickbeer.android.databinding.GroupLinkBinding
 
@@ -30,6 +31,7 @@ class GroupLink @JvmOverloads constructor(
         ta.recycle()
 
         binding.icon.setImageResource(icon)
+        binding.icon.isVisible = icon != 0
         binding.label.setText(label)
         binding.chevron.setImageResource(type.icon)
     }
