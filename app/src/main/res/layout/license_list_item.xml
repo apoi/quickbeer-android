@@ -16,6 +16,15 @@
         tools:text="Open Source Project" />
 
     <TextView
+        android:id="@+id/link"
+        style="@style/AppTheme.Text.S"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:textIsSelectable="true"
+        tools:text="Website: https://www.example.com" />
+
+    <TextView
         android:id="@+id/license"
         style="@style/AppTheme.Text.XS"
         android:layout_width="match_parent"

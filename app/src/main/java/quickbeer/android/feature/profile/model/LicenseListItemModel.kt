@@ -3,7 +3,7 @@ package quickbeer.android.feature.profile.model
 import quickbeer.android.ui.adapter.base.ListItem
 import quickbeer.android.ui.adapter.base.ListTypeFactory
 
-class LicenseDataModel(
+class LicenseListItemModel(
     val project: String,
     val link: String,
     val license: String

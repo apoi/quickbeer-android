@@ -148,6 +148,9 @@
     <string name="profile_login">Login</string>
     <string name="profile_logout">Logout</string>
 
+    <!-- License listing -->
+    <string name="license_link">Link: %s</string>
+
     <!-- About application -->
     <string name="about">About</string>
     <string name="about_description">QuickBeer is an open source app made with lots of love and scarce free time. Consider reviewing it on Google Play if you like the app. Thanks!</string>
