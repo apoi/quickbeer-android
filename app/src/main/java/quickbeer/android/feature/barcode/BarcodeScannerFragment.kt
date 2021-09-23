@@ -31,7 +31,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.IOException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -45,6 +44,7 @@ import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
+import java.io.IOException
 
 @AndroidEntryPoint
 class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
@@ -85,11 +85,6 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         } else {
             setupCamera()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        startCameraPreview()
     }
 
     override fun onPause() {
@@ -135,6 +130,7 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         promptChipAnimator = animatorSet.apply { setTarget(binding.bottomPromptChip) }
         cameraSource = CameraSource(binding.graphicOverlay)
 
+        showPrompt(getString(R.string.prompt_loading_camera))
         startCamera()
     }
 
@@ -147,6 +143,8 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         scanJob = lifecycleScope.launch {
             viewModel.scan().collect(::handleScannerState)
         }
+
+        requireView().postDelayed(Runnable(::startCameraPreview), 150)
     }
 
     private fun closeScanner() {
