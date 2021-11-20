@@ -13,6 +13,11 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="AppTheme.Text.M.Heavy">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
     <style name="AppTheme.Text.S">
         <item name="android:textSize">14sp</item>
     </style>
