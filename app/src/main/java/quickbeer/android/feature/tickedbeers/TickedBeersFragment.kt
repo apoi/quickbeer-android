@@ -59,6 +59,7 @@ class TickedBeersFragment : BaseFragment(R.layout.ticked_beers_fragment) {
     override fun observeViewState() {
         observe(viewModel.viewState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false

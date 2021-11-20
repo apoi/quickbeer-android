@@ -29,6 +29,7 @@ class BeerListViewHolder(
         when (state) {
             is State.Loading -> state.value?.let(::setBeer)
             is State.Success -> setBeer(state.value)
+            is State.Initial, is State.Empty, is State.Error -> Unit
         }
     }
 

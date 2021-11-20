@@ -57,6 +57,7 @@ class RecentBeersFragment : BaseFragment(R.layout.list_fragment), Resetable {
     override fun observeViewState() {
         observe(viewModel.recentBeersState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false

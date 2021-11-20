@@ -45,8 +45,9 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
     override fun observeViewState() {
         observe(viewModel.brewerState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> Unit
-                State.Empty -> Unit
+                is State.Empty -> Unit
                 is State.Success -> setBrewer(state.value)
                 is State.Error -> Unit
             }
@@ -54,8 +55,9 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
         observe(viewModel.addressState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> Unit
-                State.Empty -> Unit
+                is State.Empty -> Unit
                 is State.Success -> setAddress(state.value)
                 is State.Error -> Unit
             }

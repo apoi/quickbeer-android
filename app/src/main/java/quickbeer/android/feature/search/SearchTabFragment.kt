@@ -57,13 +57,14 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
     override fun observeViewState() {
         observe(resultFlow()) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> {
                     resultAdapter.setItems(state.value ?: emptyList())
                     binding.recyclerView.scrollToPosition(0)
                     binding.message.text = getString(R.string.search_progress)
                     binding.message.isVisible = state.value?.isNotEmpty() != true
                 }
-                State.Empty -> {
+                is State.Empty -> {
                     resultAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true

@@ -51,8 +51,11 @@ class BrewerListViewHolder(
 
     private fun updateState(state: State<Brewer>) {
         when (state) {
+            is State.Initial -> Unit
             is State.Loading -> state.value?.let(::setBrewer)
+            is State.Empty -> Unit
             is State.Success -> setBrewer(state.value)
+            is State.Error -> Unit
         }
     }
 

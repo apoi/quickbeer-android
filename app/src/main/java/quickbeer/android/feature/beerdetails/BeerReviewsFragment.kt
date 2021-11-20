@@ -75,6 +75,7 @@ class BeerReviewsFragment : BaseFragment(R.layout.list_fragment) {
     override fun observeViewState() {
         observe(viewModel.reviewsState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> {
                     binding.message.isVisible = false
                     binding.progress.show()

@@ -59,12 +59,13 @@ class CountryDetailsBeersFragment : BaseFragment(R.layout.list_fragment) {
     override fun observeViewState() {
         observe(viewModel.beersState) { state ->
             when (state) {
+                is State.Initial -> Unit
                 is State.Loading -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.isVisible = false
                     binding.progress.show()
                 }
-                State.Empty -> {
+                is State.Empty -> {
                     beersAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true

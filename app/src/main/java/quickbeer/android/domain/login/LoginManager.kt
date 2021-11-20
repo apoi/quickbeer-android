@@ -61,6 +61,8 @@ class LoginManager @Inject constructor(
         when (result) {
             is ApiResult.Success -> handleSuccess(result.value, username, password)
             is ApiResult.HttpError -> handleHttpError(result)
+            is ApiResult.NetworkError -> Unit
+            is ApiResult.UnknownError -> Unit
         }
 
         return result
