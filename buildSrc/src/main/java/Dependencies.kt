@@ -1,7 +1,7 @@
 object Sdk {
     const val MinSdkVersion = 23
-    const val TargetSdkVersion = 30
-    const val CompileSdkVersion = 30
+    const val TargetSdkVersion = 31
+    const val CompileSdkVersion = 31
 }
 
 object Plugins {
@@ -27,21 +27,21 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.17.1"
-        const val Gradle = "7.0.0"
-        const val Kotlin = "1.5.21"
-        const val Ktlint = "10.1.0"
+        const val Detekt = "1.18.1"
+        const val Gradle = "7.0.3"
+        const val Kotlin = "1.6.0"
+        const val Ktlint = "10.2.0"
         const val Version = "0.39.0"
     }
 
     object AndroidX {
-        const val AppCompat = "1.3.1"
+        const val AppCompat = "1.4.0"
         const val ConstraintLayout = "2.0.4"
-        const val CoreKt = "1.6.0"
+        const val CoreKt = "1.7.0"
         const val Crypto = "1.0.0"
         const val DataStore = "1.0.0"
-        const val Fragment = "1.3.6"
-        const val Lifecycle = "2.3.1"
+        const val Fragment = "1.4.0"
+        const val Lifecycle = "2.4.0"
         const val Navigation = "2.3.5"
         const val RecyclerView = "1.2.1"
         const val Room = "2.3.0"
@@ -50,28 +50,28 @@ object Versions {
 
     object Google {
         const val Material = "1.4.0"
-        const val Barcode = "16.2.0"
+        const val Barcode = "17.0.0"
     }
 
     object OkHttp {
-        const val OkHttp = "4.9.1"
+        const val OkHttp = "4.9.2"
         const val AndroidSupport = "3.13.1"
     }
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.5.1"
+        const val Coroutines = "1.5.2"
     }
 
-    const val Coil = "1.3.1"
+    const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
-    const val Hilt = "2.38.1"
-    const val Ktlint = "0.42.0"
+    const val Hilt = "2.40.1"
+    const val Ktlint = "0.43.0"
     const val LeakCanary = "2.7"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.3.1"
-    const val Timber = "4.7.1"
+    const val Timber = "5.0.1"
 
     object Testing {
         object AndroidX {
