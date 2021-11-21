@@ -17,17 +17,17 @@
  */
 package quickbeer.android.feature.beerdetails
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -37,12 +37,12 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
-import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
@@ -64,10 +64,6 @@ class BeerDetailsInfoFragment :
 
         binding.ratingBar.onRatingBarChangeListener = this
 
-        binding.ratingLoginOverlay.setOnClickListener {
-            showLoginDialog()
-        }
-
         binding.beerRatingOverall.setOnClickListener {
             showToast(R.string.description_rating_overall)
         }
@@ -86,14 +82,16 @@ class BeerDetailsInfoFragment :
     }
 
     override fun observeViewState() {
-        observe(viewModel.isLoggedIn) { isLoggedIn ->
-            binding.ratingLoginOverlay.isVisible = !isLoggedIn
-        }
-
         observeSuccess(viewModel.beerState, ::setBeer)
         observeSuccess(viewModel.brewerState, ::setBrewer)
         observeSuccess(viewModel.styleState, ::setStyle)
         observeSuccess(viewModel.addressState, ::setAddress)
+
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>(LoginDialog.LOGIN_RESULT)
+            ?.observe(viewLifecycleOwner, ::onLoginResult)
     }
 
     private fun setBeer(beer: Beer) {
@@ -157,19 +155,40 @@ class BeerDetailsInfoFragment :
         }
     }
 
+    override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
+        if (!fromUser) return
+
+        if (viewModel.isLoggedIn.value) {
+            viewModel.tickBeer(rating.toInt())
+        } else {
+            showLoginDialog()
+        }
+    }
+
     private fun showLoginDialog() {
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.login_dialog_title)
             .setMessage(R.string.login_to_rate_message)
-            .setPositiveAction(R.string.action_yes, BeerDetailsFragmentDirections::toLogin)
-            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
+            .setPositiveAction(R.string.action_yes, ::login)
+            .setNegativeAction(R.string.action_no) { it.cancel(); clearRating() }
+            .setOnCancelListener { clearRating() }
             .show()
     }
 
-    override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
-        if (fromUser) {
-            viewModel.tickBeer(rating.toInt())
+    private fun login() {
+        navigate(BeerDetailsFragmentDirections.toLogin())
+    }
+
+    private fun onLoginResult(success: Boolean) {
+        if (success) {
+            viewModel.tickBeer(binding.ratingBar.rating.toInt())
+        } else {
+            clearRating()
         }
+    }
+
+    private fun clearRating() {
+        binding.ratingBar.rating = 0F
     }
 
     private fun showToast(@StringRes resource: Int) {

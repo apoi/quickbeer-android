@@ -25,6 +25,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
@@ -72,7 +73,8 @@ class BeerDetailsViewModel @Inject constructor(
 
     private val beerId = savedStateHandle.navId()
 
-    val isLoggedIn: Flow<Boolean> = loginManager.isLoggedIn
+    private val _isLoggedIn = MutableStateFlow(false)
+    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
     private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
     val beerState: Flow<State<Beer>> = _beerState
@@ -100,6 +102,10 @@ class BeerDetailsViewModel @Inject constructor(
                         getAddress(it.value)
                     }
                 }
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            loginManager.isLoggedIn.collectLatest { _isLoggedIn.emit(it) }
         }
     }
 

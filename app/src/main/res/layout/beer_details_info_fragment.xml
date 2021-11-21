@@ -48,11 +48,6 @@
                 tools:text="You rated this beer last week."
                 tools:visibility="visible" />
 
-            <View
-                android:id="@+id/rating_login_overlay"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,10 +1,12 @@
 package quickbeer.android.feature.login
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import quickbeer.android.R
@@ -49,10 +51,19 @@ class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
             when (state) {
                 is State.Initial, is State.Loading -> Unit
                 is State.Error -> showError(state.cause)
-                is State.Success -> dismiss()
+                is State.Success -> loginSuccess()
                 is State.Empty -> showError(LoginError.UnknownError)
             }
         }
+    }
+
+    private fun loginSuccess() {
+        setLoginResult(true)
+        dismiss()
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        setLoginResult(false)
     }
 
     private fun showError(error: Throwable) {
@@ -60,5 +71,13 @@ class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
             is LoginError.InvalidCredentials -> toastProvider.showToast(R.string.login_failed)
             else -> toastProvider.showToast(R.string.login_error)
         }
+    }
+
+    private fun setLoginResult(success: Boolean) {
+        findNavController().previousBackStackEntry?.savedStateHandle?.set(LOGIN_RESULT, success)
+    }
+
+    companion object {
+        const val LOGIN_RESULT = "LoginResult"
     }
 }

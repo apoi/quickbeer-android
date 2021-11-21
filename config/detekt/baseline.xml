@@ -4,12 +4,14 @@
   <CurrentIssues>
     <ID>LongParameterList:BeerDetailsViewModel.kt$BeerDetailsViewModel$( savedStateHandle: SavedStateHandle, private val loginManager: LoginManager, private val beerRepository: BeerRepository, private val brewerRepository: BrewerRepository, private val styleRepository: StyleRepository, private val styleListRepository: StyleListRepository, private val countryRepository: CountryRepository, private val beerTickFetcher: BeerTickFetcher, private val resourceProvider: ResourceProvider, private val toastProvider: ToastProvider )</ID>
     <ID>LongParameterList:SearchViewModel.kt$SearchViewModel$( private val beerRepository: BeerRepository, private val beerSearchRepository: BeerSearchRepository, private val brewerRepository: BrewerRepository, private val brewerSearchRepository: BrewerSearchRepository, private val styleListRepository: StyleListRepository, private val countryListRepository: CountryListRepository, private val countryRepository: CountryRepository )</ID>
+    <ID>MagicNumber:BarcodeScannerFragment.kt$BarcodeScannerFragment$150</ID>
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.COUNTRY_LIST$4</ID>
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>
     <ID>MagicNumber:SearchFragment.kt$SearchFragment$3</ID>
     <ID>MagicNumber:SessionPersistingCookieJar.kt$SessionPersistingCookieJar$10</ID>
     <ID>TooManyFunctions:BarcodeScannerFragment.kt$BarcodeScannerFragment : BaseFragment</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
+    <ID>TooManyFunctions:BeerDetailsInfoFragment.kt$BeerDetailsInfoFragment : BaseFragmentOnRatingBarChangeListener</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
     <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
