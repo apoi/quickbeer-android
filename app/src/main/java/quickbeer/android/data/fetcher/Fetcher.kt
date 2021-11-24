@@ -1,10 +1,12 @@
 package quickbeer.android.data.fetcher
 
+import java.util.concurrent.CancellationException
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 import kotlin.coroutines.Continuation
-import kotlin.coroutines.suspendCoroutine
+import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.suspendCancellableCoroutine
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.network.result.map
 import quickbeer.android.util.JsonMapper
@@ -42,9 +44,14 @@ open class Fetcher<in K : Any, out V : Any, J : Any>(
             fetchAndResume(key)
         } else {
             // Request is already ongoing. Suspend and add a listener for the result.
-            suspendCoroutine { continuation ->
-                map[key] = continuations + continuation
-                lock.unlock()
+            try {
+                suspendCancellableCoroutine { continuation ->
+                    map[key] = continuations + continuation
+                    lock.unlock()
+                }
+            } catch (e: CancellationException) {
+                // Previous job was cancelled, this continuation was awaken to retry
+                fetchAndResume(key)
             }
         }
     }
@@ -58,11 +65,31 @@ open class Fetcher<in K : Any, out V : Any, J : Any>(
         }
 
         lock.withLock {
-            map.remove(key)
-                ?.forEach { it.resumeWith(Result.success(result)) }
+            if (result is ApiResult.UnknownError && result.cause is CancellationException) {
+                // Cancelled without result, wake up next continuation to retry
+                wakeNextContinuation(key, result)
+            } else {
+                // Valid result, notify all suspended listeners
+                notifyContinuations(key, result)
+            }
         }
 
         return result
+    }
+
+    private fun wakeNextContinuation(key: K, result: ApiResult.UnknownError) {
+        val continuations = map.remove(key)
+        val next = continuations?.firstOrNull()
+        if (next != null && continuations.size > 1) {
+            map[key] = continuations - next
+        }
+        next?.resumeWithException(result.cause)
+    }
+
+    private fun notifyContinuations(key: K, result: ApiResult<V>) {
+        map.remove(key)?.forEach {
+            it.resumeWith(Result.success(result))
+        }
     }
 }
 
