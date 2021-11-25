@@ -80,10 +80,13 @@ open class Fetcher<in K : Any, out V : Any, J : Any>(
     private fun wakeNextContinuation(key: K, result: ApiResult.UnknownError) {
         val continuations = map.remove(key)
         val next = continuations?.firstOrNull()
-        if (next != null && continuations.size > 1) {
+
+        if (next != null) {
+            // Remaining continuations, or an empty list to mark ongoing operation
+            // if there are no other suspended listeners for this key
             map[key] = continuations - next
+            next.resumeWithException(result.cause)
         }
-        next?.resumeWithException(result.cause)
     }
 
     private fun notifyContinuations(key: K, result: ApiResult<V>) {
