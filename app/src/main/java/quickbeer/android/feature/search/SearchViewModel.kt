@@ -76,7 +76,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchQueryChanged(query: String) {
-        queryFlow.value = query.normalize()
+        queryFlow.value = query.normalize().orEmpty()
     }
 
     fun onSearchTypeChanged(type: SearchType) {

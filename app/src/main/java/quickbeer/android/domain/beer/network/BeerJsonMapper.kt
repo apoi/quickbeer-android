@@ -4,6 +4,7 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.util.JsonMapper
 import quickbeer.android.util.ktx.normalize
+import quickbeer.android.util.ktx.nullIfEmpty
 
 object BeerJsonMapper : JsonMapper<Int, Beer, BeerJson> {
 
@@ -31,7 +32,7 @@ object BeerJsonMapper : JsonMapper<Int, Beer, BeerJson> {
             unrateable = source.unrateable,
             tickValue = source.tickValue,
             tickDate = source.tickDate,
-            normalizedName = source.name.normalize(),
+            normalizedName = source.name.normalize().nullIfEmpty(),
             updated = ZonedDateTime.now(),
             accessed = null
         )

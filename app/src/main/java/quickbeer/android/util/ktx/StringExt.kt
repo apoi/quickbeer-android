@@ -19,8 +19,8 @@ fun String.removeSingleLineBreaks(): String {
 /**
  * Normalize and simplify for search purposes.
  */
-fun String?.normalize(): String {
-    if (this == null) return ""
+fun String?.normalize(): String? {
+    if (this == null) return null
     return NORMALIZER_PATTERN
         .matcher(Normalizer.normalize(this, Normalizer.Form.NFD))
         .replaceAll("")

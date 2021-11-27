@@ -4,6 +4,7 @@ import org.threeten.bp.ZonedDateTime
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.util.JsonMapper
 import quickbeer.android.util.ktx.normalize
+import quickbeer.android.util.ktx.nullIfEmpty
 
 object BrewerJsonMapper : JsonMapper<Int, Brewer, BrewerJson> {
 
@@ -39,7 +40,7 @@ object BrewerJsonMapper : JsonMapper<Int, Brewer, BrewerJson> {
             metroId = source.metroId,
             msa = source.msa,
             regionId = source.regionId,
-            normalizedName = source.name.normalize(),
+            normalizedName = source.name.normalize().nullIfEmpty(),
             updated = ZonedDateTime.now(),
             accessed = null
         )
