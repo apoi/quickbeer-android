@@ -27,11 +27,11 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.18.1"
-        const val Gradle = "7.0.3"
-        const val Kotlin = "1.6.0"
-        const val Ktlint = "10.2.0"
-        const val Version = "0.39.0"
+        const val Detekt = "1.19.0"
+        const val Gradle = "7.0.4"
+        const val Kotlin = "1.6.10"
+        const val Ktlint = "10.2.1"
+        const val Version = "0.41.0"
     }
 
     object AndroidX {
@@ -44,30 +44,30 @@ object Versions {
         const val Lifecycle = "2.4.0"
         const val Navigation = "2.3.5"
         const val RecyclerView = "1.2.1"
-        const val Room = "2.3.0"
+        const val Room = "2.4.0"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object Google {
         const val Material = "1.4.0"
-        const val Barcode = "17.0.0"
+        const val Barcode = "17.0.1"
     }
 
     object OkHttp {
-        const val OkHttp = "4.9.2"
+        const val OkHttp = "4.9.3"
         const val AndroidSupport = "3.13.1"
     }
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.5.2"
+        const val Coroutines = "1.6.0"
     }
 
     const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
-    const val Hilt = "2.40.1"
-    const val Ktlint = "0.43.0"
-    const val LeakCanary = "2.7"
+    const val Hilt = "2.40.5"
+    const val Ktlint = "0.43.2"
+    const val LeakCanary = "2.8.1"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
     const val ThreeTenABP = "1.3.1"

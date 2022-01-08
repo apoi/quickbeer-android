@@ -1,6 +1,6 @@
 package quickbeer.android.feature.barcode.utils
 
-import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.common.Barcode
 
 @Suppress("MagicNumber")
 object BarcodeValidator {
