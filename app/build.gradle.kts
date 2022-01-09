@@ -15,7 +15,7 @@ android {
         targetSdk = Sdk.TargetSdkVersion
 
         applicationId = App.AppId
-        versionCode = appBuildVersion()
+        versionCode = appVersionCode()
         versionName = appVersionName()
 
         val appKey = System.getenv("RATEBEER_KEY")
@@ -64,9 +64,9 @@ dependencies {
     implementation(Libraries.AndroidX.AppCompat)
     implementation(Libraries.AndroidX.ConstraintLayout)
     implementation(Libraries.AndroidX.CoreKtx)
-    implementation(Libraries.AndroidX.Crypto)
     implementation(Libraries.AndroidX.DataStore)
     implementation(Libraries.AndroidX.Fragment)
+    implementation(Libraries.AndroidX.Preferences)
     implementation(Libraries.AndroidX.RecyclerView)
 
     implementation(Libraries.AndroidX.Lifecycle.Common)

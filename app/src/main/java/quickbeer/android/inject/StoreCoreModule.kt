@@ -3,6 +3,7 @@ package quickbeer.android.inject
 import android.content.Context
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.preference.PreferenceManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,7 +29,6 @@ import quickbeer.android.domain.review.store.ReviewRoomCore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.store.StyleRoomCore
 import quickbeer.android.domain.user.User
-import quickbeer.android.util.LegacyPreferences
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -41,7 +41,11 @@ annotation class IdListMemoryCore
 private val Context.dataStore by preferencesDataStore(
     name = "quickbeer_datastore",
     produceMigrations = { context ->
-        listOf(SharedPreferencesMigration({ LegacyPreferences.createPreferences(context) }))
+        listOf(
+            SharedPreferencesMigration({
+                PreferenceManager.getDefaultSharedPreferences(context)
+            })
+        )
     }
 )
 
