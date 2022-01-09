@@ -1,7 +1,8 @@
-package quickbeer.android.util.migration
+package quickbeer.android.util.migration.v3
 
 import android.annotation.SuppressLint
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZonedDateTime
@@ -9,8 +10,19 @@ import quickbeer.android.domain.beer.Beer
 
 object LegacyBeerReader {
 
+    fun readBeers(db: SQLiteDatabase): List<Beer> {
+        val cursor = db.rawQuery("SELECT beer_id, updated, accessed FROM beerMetadata", null)
+        val values = generateSequence { if (cursor.moveToNext()) cursor else null }
+            .map { readBeerFromCursor(it) }
+            .toList()
+
+        cursor.close()
+
+        return values
+    }
+
     @SuppressLint("Range")
-    fun getBeerFromCursor(cursor: Cursor): Beer {
+    private fun readBeerFromCursor(cursor: Cursor): Beer {
         val id = cursor.getInt(cursor.getColumnIndex("beer_id"))
         val updated = cursor.getInt(cursor.getColumnIndex("updated"))
         val accessed = cursor.getInt(cursor.getColumnIndex("accessed"))
