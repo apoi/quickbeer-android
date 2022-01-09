@@ -13,7 +13,7 @@ import quickbeer.android.domain.review.store.ReviewEntity
 import quickbeer.android.domain.style.store.StyleDao
 import quickbeer.android.domain.style.store.StyleEntity
 
-const val DATABASE_NAME = "quickbeer.db"
+const val DATABASE_NAME = "quickbeer4.db"
 const val BATCH_SIZE = 999
 
 private const val CURRENT_VERSION = 1

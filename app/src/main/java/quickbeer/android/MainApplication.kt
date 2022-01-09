@@ -6,16 +6,22 @@ import coil.ImageLoaderFactory
 import coil.decode.SvgDecoder
 import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
+import quickbeer.android.util.migration.DatabaseMigration
 import timber.log.Timber
 
 @HiltAndroidApp
 class MainApplication : Application(), ImageLoaderFactory {
+
+    @Inject
+    lateinit var migration: DatabaseMigration
 
     override fun onCreate() {
         super.onCreate()
 
         initThreeTenAbp()
         initTimber()
+        migrate()
 
         Timber.d("App running!")
     }
@@ -28,6 +34,10 @@ class MainApplication : Application(), ImageLoaderFactory {
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
         }
+    }
+
+    private fun migrate() {
+        migration.migrate()
     }
 
     override fun newImageLoader(): ImageLoader {
