@@ -14,7 +14,7 @@ class RecyclerViewListener(
     private val detector = GestureDetector(
         context,
         object : GestureDetector.SimpleOnGestureListener() {
-            override fun onSingleTapUp(e: MotionEvent?) = true
+            override fun onSingleTapUp(e: MotionEvent) = true
         }
     )
 

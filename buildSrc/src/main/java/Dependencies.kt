@@ -1,7 +1,7 @@
 object Sdk {
     const val MinSdkVersion = 23
-    const val TargetSdkVersion = 31
-    const val CompileSdkVersion = 31
+    const val TargetSdkVersion = 34
+    const val CompileSdkVersion = 34
 }
 
 object Plugins {
