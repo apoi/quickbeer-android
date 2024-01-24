@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -20,7 +21,7 @@ import quickbeer.android.data.state.State
  */
 fun <T> Fragment.observe(flow: Flow<T>, observer: (T) -> Unit) {
     viewLifecycleOwner.lifecycleScope.launch {
-        repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow.collectLatest { event -> observer(event) }
         }
     }

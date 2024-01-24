@@ -23,7 +23,11 @@ import quickbeer.android.util.ktx.viewBinding
 @AndroidEntryPoint
 class TickedBeersFragment : BaseFragment(R.layout.ticked_beers_fragment) {
 
-    private val binding by viewBinding(TickedBeersFragmentBinding::bind)
+    private val binding by viewBinding(
+        bind = TickedBeersFragmentBinding::bind,
+        destroyCallback = { it.recyclerView.adapter = null }
+    )
+
     private val viewModel by viewModels<TickedBeersViewModel>()
     private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
 
@@ -49,11 +53,6 @@ class TickedBeersFragment : BaseFragment(R.layout.ticked_beers_fragment) {
                     .getPool(RecycledPoolHolder.PoolType.BEER_LIST, beersAdapter::createPool)
             )
         }
-    }
-
-    override fun onDestroyView() {
-        binding.recyclerView.adapter = null
-        super.onDestroyView()
     }
 
     override fun observeViewState() {

@@ -40,7 +40,14 @@ import quickbeer.android.util.ktx.viewBinding
 @AndroidEntryPoint
 class BeerReviewsFragment : BaseFragment(R.layout.list_fragment) {
 
-    private val binding by viewBinding(ListContentBinding::bind)
+    private val binding by viewBinding(
+        bind = ListContentBinding::bind,
+        destroyCallback = {
+            it.recyclerView.adapter = null
+            it.recyclerView.clearOnScrollListeners()
+        }
+    )
+
     private val viewModel by viewModels<BeerReviewsViewModel>()
 
     private val reviewsAdapter = ListAdapter<ReviewListModel>(ReviewTypeFactory())
@@ -59,12 +66,6 @@ class BeerReviewsFragment : BaseFragment(R.layout.list_fragment) {
 
         loadMoreListener.moreItemRequestedCallback = viewModel::loadReviewPage
         loadMoreListener.setLayoutManager(manager)
-    }
-
-    override fun onDestroyView() {
-        binding.recyclerView.adapter = null
-        binding.recyclerView.clearOnScrollListeners()
-        super.onDestroyView()
     }
 
     override fun onResume() {

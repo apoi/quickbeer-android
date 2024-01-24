@@ -15,7 +15,14 @@ import quickbeer.android.util.ktx.viewBinding
 @AndroidEntryPoint
 class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetable {
 
-    private val binding by viewBinding(DiscoverFragmentBinding::bind)
+    private val binding by viewBinding(
+        bind = DiscoverFragmentBinding::bind,
+        destroyCallback = {
+            mediator?.detach()
+            mediator = null
+            it.viewPager.adapter = null
+        }
+    )
 
     override val searchHint = R.string.search_hint
 
@@ -34,13 +41,6 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
                 else -> getString(R.string.recent_brewers)
             }
         }.also(TabLayoutMediator::attach)
-    }
-
-    override fun onDestroyView() {
-        mediator?.detach()
-        mediator = null
-        binding.viewPager.adapter = null
-        super.onDestroyView()
     }
 
     override fun searchView(): SearchView {

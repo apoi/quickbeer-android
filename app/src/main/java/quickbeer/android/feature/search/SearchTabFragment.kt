@@ -24,7 +24,11 @@ import quickbeer.android.util.ktx.viewBinding
 
 abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_fragment) {
 
-    private val binding by viewBinding(ListContentBinding::bind)
+    private val binding by viewBinding(
+        bind = ListContentBinding::bind,
+        destroyCallback = { it.recyclerView.adapter = null }
+    )
+
     protected val viewModel by activityViewModels<SearchViewModel>()
 
     protected abstract val resultAdapter: ListAdapter<T>
@@ -47,11 +51,6 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
         }
 
         super.onViewCreated(view, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        binding.recyclerView.adapter = null
-        super.onDestroyView()
     }
 
     override fun observeViewState() {

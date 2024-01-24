@@ -40,7 +40,7 @@ object Versions {
         const val CoreKt = "1.7.0"
         const val DataStore = "1.0.0"
         const val Fragment = "1.4.0"
-        const val Lifecycle = "2.4.0"
+        const val Lifecycle = "2.4.1"
         const val Navigation = "2.3.5"
         const val Preferences = "1.1.1"
         const val RecyclerView = "1.2.1"
@@ -88,6 +88,7 @@ object Libraries {
     object AndroidX {
         object Lifecycle {
             const val Common = "androidx.lifecycle:lifecycle-common-java8:${Versions.AndroidX.Lifecycle}"
+            const val Runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.Lifecycle}"
             const val ViewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.AndroidX.Lifecycle}"
         }
 
