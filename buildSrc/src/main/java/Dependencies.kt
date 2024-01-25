@@ -28,49 +28,49 @@ object Plugins {
 object Versions {
     object Plugin {
         const val Detekt = "1.19.0"
-        const val Gradle = "8.2.0"
-        const val Kotlin = "1.8.10"
+        const val Gradle = "8.2.1"
+        const val Kotlin = "1.8.20"
         const val Ktlint = "10.2.1"
-        const val Version = "0.41.0"
+        const val Version = "0.51.0"
     }
 
     object AndroidX {
-        const val AppCompat = "1.5.1"
-        const val ConstraintLayout = "2.0.4"
-        const val CoreKt = "1.7.0"
+        const val AppCompat = "1.6.1"
+        const val ConstraintLayout = "2.1.4"
+        const val CoreKt = "1.12.0"
         const val DataStore = "1.0.0"
         const val Fragment = "1.6.2"
-        const val Lifecycle = "2.4.1"
-        const val Navigation = "2.6.0"
-        const val Preferences = "1.1.1"
-        const val RecyclerView = "1.2.1"
+        const val Lifecycle = "2.7.0"
+        const val Navigation = "2.7.6"
+        const val Preferences = "1.2.1"
+        const val RecyclerView = "1.3.2"
         const val Room = "2.6.1"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object Google {
-        const val Material = "1.7.0"
-        const val Barcode = "17.0.1"
+        const val Material = "1.11.0"
+        const val Barcode = "17.2.0"
     }
 
     object OkHttp {
-        const val OkHttp = "4.9.3"
+        const val OkHttp = "4.12.0"
         const val AndroidSupport = "3.13.1"
     }
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.6.0"
+        const val Coroutines = "1.7.3"
     }
 
     const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
     const val Hilt = "2.50"
     const val Ktlint = "0.43.2"
-    const val LeakCanary = "2.8.1"
+    const val LeakCanary = "2.13"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
-    const val ThreeTenABP = "1.3.1"
+    const val ThreeTenABP = "1.4.6"
     const val Timber = "5.0.1"
 
     object Testing {
@@ -105,7 +105,7 @@ object Libraries {
         }
 
         const val AppCompat = "androidx.appcompat:appcompat:${Versions.AndroidX.AppCompat}"
-        const val ConstraintLayout = "com.android.support.constraint:constraint-layout:${Versions.AndroidX.ConstraintLayout}"
+        const val ConstraintLayout = "androidx.constraintlayout:constraintlayout:${Versions.AndroidX.ConstraintLayout}"
         const val CoreKtx = "androidx.core:core-ktx:${Versions.AndroidX.CoreKt}"
         const val DataStore = "androidx.datastore:datastore-preferences:${Versions.AndroidX.DataStore}"
         const val Fragment = "androidx.fragment:fragment:${Versions.AndroidX.Fragment}"
