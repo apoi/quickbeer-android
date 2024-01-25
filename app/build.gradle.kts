@@ -1,14 +1,15 @@
 plugins {
     id(Plugins.Id.Android.Application)
     kotlin(Plugins.Id.Kotlin.Android)
-    kotlin(Plugins.Id.Kotlin.AndroidExtensions)
     kotlin(Plugins.Id.Kotlin.Kapt)
+    id(Plugins.Id.Parcelize)
     id(Plugins.Id.SafeArgs)
     id(Plugins.Id.Hilt)
 }
 
 android {
     compileSdk = Sdk.CompileSdkVersion
+    namespace = "quickbeer.android"
 
     defaultConfig {
         minSdk = Sdk.MinSdkVersion
@@ -25,16 +26,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
-
-    androidExtensions {
-        features = setOf("parcelize")
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     buildTypes {
@@ -49,11 +46,7 @@ android {
 
     buildFeatures {
         viewBinding = true
-    }
-
-    lint {
-        isWarningsAsErrors = true
-        isAbortOnError = true
+        buildConfig = true
     }
 }
 

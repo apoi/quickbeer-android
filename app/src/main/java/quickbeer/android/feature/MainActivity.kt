@@ -3,17 +3,16 @@ package quickbeer.android.feature
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
-import quickbeer.android.navigation.setupWithNavController
 import quickbeer.android.ui.recyclerview.DefaultRecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.util.ktx.hideKeyboard
@@ -27,7 +26,8 @@ class MainActivity :
 
     private val binding by viewBinding(MainActivityBinding::bind)
 
-    private var currentNavController: StateFlow<NavController>? = null
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var pendingDestination: Destination? = null
 
@@ -52,32 +52,13 @@ class MainActivity :
      * Called on first creation and when restoring state.
      */
     private fun setupBottomNavigationBar() {
-        // Setup the bottom navigation view with a list of navigation graphs
-        val graphs = listOf(
-            R.navigation.discover_nav,
-            R.navigation.barcode_nav,
-            R.navigation.profile_nav
-        )
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.main_nav_container) as NavHostFragment
+        navController = navHostFragment.navController
 
-        val controller = binding.mainBottomNav.setupWithNavController(
-            navGraphIds = graphs,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.main_nav_container,
-            intent = intent
-        )
-
-        // Clear intent after navigation
-        intent.data = null
-
-        // Whenever the selected controller changes, setup action bar and other changes
-        lifecycleScope.launchWhenStarted {
-            controller.collectLatest {
-                it.removeOnDestinationChangedListener(this@MainActivity)
-                it.addOnDestinationChangedListener(this@MainActivity)
-            }
-        }
-
-        currentNavController = controller
+        // Setup the bottom navigation view with navController
+        val bottomNavigationView = binding.mainBottomNav
+        bottomNavigationView.setupWithNavController(navController)
     }
 
     fun selectMainTab() {
@@ -98,7 +79,7 @@ class MainActivity :
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return currentNavController?.value?.navigateUp() ?: false
+        return navController.navigateUp()
     }
 
     override fun onDestinationChanged(

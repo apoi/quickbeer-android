@@ -8,7 +8,6 @@ object Plugins {
     object Id {
         object Kotlin {
             const val Android = "android"
-            const val AndroidExtensions = "android.extensions"
             const val Kapt = "kapt"
         }
 
@@ -20,6 +19,7 @@ object Plugins {
         const val Detekt = "io.gitlab.arturbosch.detekt"
         const val Hilt = "dagger.hilt.android.plugin"
         const val Ktlint = "org.jlleitschuh.gradle.ktlint"
+        const val Parcelize = "kotlin-parcelize"
         const val Version = "com.github.ben-manes.versions"
         const val SafeArgs = "androidx.navigation.safeargs.kotlin"
     }
@@ -28,28 +28,28 @@ object Plugins {
 object Versions {
     object Plugin {
         const val Detekt = "1.19.0"
-        const val Gradle = "7.0.4"
-        const val Kotlin = "1.6.10"
+        const val Gradle = "8.2.0"
+        const val Kotlin = "1.8.10"
         const val Ktlint = "10.2.1"
         const val Version = "0.41.0"
     }
 
     object AndroidX {
-        const val AppCompat = "1.4.0"
+        const val AppCompat = "1.5.1"
         const val ConstraintLayout = "2.0.4"
         const val CoreKt = "1.7.0"
         const val DataStore = "1.0.0"
-        const val Fragment = "1.4.0"
+        const val Fragment = "1.6.2"
         const val Lifecycle = "2.4.1"
-        const val Navigation = "2.3.5"
+        const val Navigation = "2.6.0"
         const val Preferences = "1.1.1"
         const val RecyclerView = "1.2.1"
-        const val Room = "2.4.0"
+        const val Room = "2.6.1"
         const val SwipeRefreshLayout = "1.1.0"
     }
 
     object Google {
-        const val Material = "1.4.0"
+        const val Material = "1.7.0"
         const val Barcode = "17.0.1"
     }
 
@@ -65,7 +65,7 @@ object Versions {
 
     const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
-    const val Hilt = "2.40.5"
+    const val Hilt = "2.50"
     const val Ktlint = "0.43.2"
     const val LeakCanary = "2.8.1"
     const val PhotoView = "2.3.0"

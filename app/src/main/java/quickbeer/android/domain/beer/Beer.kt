@@ -1,7 +1,7 @@
 package quickbeer.android.domain.beer
 
 import kotlin.math.roundToInt
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.pojo.Dateable

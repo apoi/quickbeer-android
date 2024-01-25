@@ -1,7 +1,7 @@
 package quickbeer.android.domain.review
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.store.Merger
 

@@ -46,8 +46,8 @@ class ValueLabel @JvmOverloads constructor(
         val selectable = ta.getBoolean(R.styleable.ValueLabel_selectable, false)
 
         val backgroundRes = if (constrained) {
-            R.attr.selectableItemBackground
-        } else R.attr.selectableItemBackgroundBorderless
+            android.R.attr.selectableItemBackground
+        } else android.R.attr.selectableItemBackgroundBorderless
 
         val outValue = TypedValue()
         context.theme.resolveAttribute(backgroundRes, outValue, true)

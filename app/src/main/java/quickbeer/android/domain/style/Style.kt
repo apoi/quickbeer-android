@@ -1,7 +1,7 @@
 package quickbeer.android.domain.style
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import quickbeer.android.data.store.Merger
 
 @Parcelize
