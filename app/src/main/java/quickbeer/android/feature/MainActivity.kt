@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
+import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
@@ -27,7 +27,6 @@ class MainActivity :
     private val binding by viewBinding(MainActivityBinding::bind)
 
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var pendingDestination: Destination? = null
 
@@ -59,6 +58,17 @@ class MainActivity :
         // Setup the bottom navigation view with navController
         val bottomNavigationView = binding.mainBottomNav
         bottomNavigationView.setupWithNavController(navController)
+
+        // Tab reselect handler
+        bottomNavigationView.setOnItemReselectedListener { item ->
+            val selectedMenuItemNavGraph = navHostFragment.navController
+                .graph.findNode(item.itemId) as? NavGraph?
+
+            selectedMenuItemNavGraph?.let { menuGraph ->
+                navHostFragment.navController
+                    .popBackStack(menuGraph.startDestinationId, false)
+            }
+        }
     }
 
     fun selectMainTab() {
@@ -75,7 +85,34 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        if (!onSupportNavigateUp()) super.onBackPressed()
+        if (!onBackNavigation()) super.onBackPressed()
+    }
+
+    private fun onBackNavigation(): Boolean {
+        val bottomNavigationView = binding.mainBottomNav
+
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.main_nav_container) as NavHostFragment
+
+        val previousBackStackEntry = navHostFragment.navController
+            .previousBackStackEntry?.destination?.id
+
+        return if (previousBackStackEntry != R.id.discover_fragment) {
+            // Navigate back if next item in back stack isn't yet Discover fragment.
+            // This handles back navigation in non-Discover tabs
+            onSupportNavigateUp()
+        } else if (bottomNavigationView.selectedItemId == R.id.discover) {
+            // Navigate back if current tab is Discover. This handles back navigation
+            // in the Discover tab.
+            onSupportNavigateUp()
+            true
+        } else {
+            // Switch to Discover tab when back navigation would take back to initial state.
+            // This handles tab switching to Discover with keeping the expected navigation status:
+            // otherwise, the default handling would show the initial fragment of Discover.
+            selectMainTab()
+            true
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
