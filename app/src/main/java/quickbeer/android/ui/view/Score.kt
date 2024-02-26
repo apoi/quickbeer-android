@@ -26,6 +26,6 @@ object Score {
         SCORE_2(R.drawable.score_2),
         SCORE_3(R.drawable.score_3),
         SCORE_4(R.drawable.score_4),
-        SCORE_5(R.drawable.score_5);
+        SCORE_5(R.drawable.score_5)
     }
 }

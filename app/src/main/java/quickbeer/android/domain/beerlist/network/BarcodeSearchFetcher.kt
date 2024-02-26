@@ -13,7 +13,10 @@ class BarcodeSearchFetcher(
 ) : Fetcher<String, List<Beer>, List<BeerJson>>(
     BeerListJsonMapper(),
     { query ->
-        if (query.length >= QUERY_MIN_LENGTH) api.barcodeSearch(query)
-        else ApiResult.UnknownError(QueryTooShortException)
+        if (query.length >= QUERY_MIN_LENGTH) {
+            api.barcodeSearch(query)
+        } else {
+            ApiResult.UnknownError(QueryTooShortException)
+        }
     }
 )

@@ -166,8 +166,10 @@ class ProgressIndicatorBar @JvmOverloads constructor(
         }
 
         val animation = ScaleAnimation(
-            barScale, width / progressBarWidth.toFloat() + 1,
-            progressBar.height.toFloat(), progressBar.height.toFloat()
+            barScale,
+            width / progressBarWidth.toFloat() + 1,
+            progressBar.height.toFloat(),
+            progressBar.height.toFloat()
         ).apply {
             duration = ANIMATION_END_SCALE_DURATION.toLong()
             fillAfter = true

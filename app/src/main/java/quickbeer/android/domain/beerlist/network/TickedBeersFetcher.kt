@@ -10,5 +10,7 @@ class TickedBeersFetcher(
     api: RateBeerApi,
     loginManager: LoginManager
 ) : LoginAndRetryFetcher<String, List<Beer>, List<BeerJson>>(
-    BeerListJsonMapper(), { userId -> api.getTicks(userId) }, loginManager
+    BeerListJsonMapper(),
+    { userId -> api.getTicks(userId) },
+    loginManager
 )

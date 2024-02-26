@@ -9,5 +9,5 @@ import quickbeer.android.domain.beerlist.store.TickedBeersStore
 
 class TickedBeersRepository @Inject constructor(
     override val store: TickedBeersStore,
-    fetcher: TickedBeersFetcher,
+    fetcher: TickedBeersFetcher
 ) : ItemListRepository<String, Int, Beer, BeerJson>(store, fetcher)

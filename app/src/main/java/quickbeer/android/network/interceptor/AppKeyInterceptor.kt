@@ -21,7 +21,9 @@ class AppKeyInterceptor : Interceptor {
             url.newBuilder()
                 .addQueryParameter("k", BuildConfig.APP_KEY)
                 .build()
-        } else url
+        } else {
+            url
+        }
     }
 
     companion object {

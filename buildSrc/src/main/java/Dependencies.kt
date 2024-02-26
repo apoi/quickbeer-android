@@ -28,9 +28,9 @@ object Plugins {
 object Versions {
     object Plugin {
         const val Detekt = "1.19.0"
-        const val Gradle = "8.2.1"
+        const val Gradle = "8.2.2"
         const val Kotlin = "1.8.20"
-        const val Ktlint = "10.2.1"
+        const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }
 
@@ -41,7 +41,7 @@ object Versions {
         const val DataStore = "1.0.0"
         const val Fragment = "1.6.2"
         const val Lifecycle = "2.7.0"
-        const val Navigation = "2.7.6"
+        const val Navigation = "2.7.7"
         const val Preferences = "1.2.1"
         const val RecyclerView = "1.3.2"
         const val Room = "2.6.1"
@@ -66,7 +66,7 @@ object Versions {
     const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
     const val Hilt = "2.50"
-    const val Ktlint = "0.43.2"
+    const val Ktlint = "1.1.1"
     const val LeakCanary = "2.13"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"

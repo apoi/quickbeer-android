@@ -79,8 +79,11 @@ class ListAdapter<T : ListItem>(
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             // Lazy items update themselves and do not require explicit list updates
-            return if (lazyListItems) areItemsTheSame(oldItemPosition, newItemPosition)
-            else return old[oldItemPosition] == new[newItemPosition]
+            return if (lazyListItems) {
+                areItemsTheSame(oldItemPosition, newItemPosition)
+            } else {
+                return old[oldItemPosition] == new[newItemPosition]
+            }
         }
     }
 }

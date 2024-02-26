@@ -10,7 +10,9 @@ class BeerTickFetcher(
     api: RateBeerApi,
     loginManager: LoginManager
 ) : LoginAndRetryFetcher<BeerTickFetcher.TickKey, Int, ResponseBody>(
-    BeerTickJsonMapper, tickAction(api), loginManager
+    BeerTickJsonMapper,
+    tickAction(api),
+    loginManager
 ) {
 
     // Wrapper class for tick request parameters
@@ -22,9 +24,7 @@ class BeerTickFetcher(
         private const val MODE_REMOVE = 3
 
         // Creator method for tick action
-        fun tickAction(
-            api: RateBeerApi
-        ): suspend (TickKey) -> ApiResult<ResponseBody> {
+        fun tickAction(api: RateBeerApi): suspend (TickKey) -> ApiResult<ResponseBody> {
             return { (beerId, userId, tick) ->
                 if (tick == 0) {
                     api.tickBeer(beerId, userId, MODE_REMOVE, null)

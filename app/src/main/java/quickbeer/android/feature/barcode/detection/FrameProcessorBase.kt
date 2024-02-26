@@ -91,10 +91,7 @@ abstract class FrameProcessorBase<T> : FrameProcessor {
     protected abstract fun detectInImage(image: InputImage): Task<T>
 
     /** Be called when the detection succeeds. */
-    protected abstract fun onSuccess(
-        results: T,
-        graphicOverlay: GraphicOverlay
-    )
+    protected abstract fun onSuccess(results: T, graphicOverlay: GraphicOverlay)
 
     protected abstract fun onFailure(e: Exception)
 }

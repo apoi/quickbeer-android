@@ -46,7 +46,9 @@ class BrewerListViewHolder(
     private fun mergeAddress(brewer: Brewer, country: State<Country>): Address? {
         return if (country is State.Success) {
             Address.from(brewer, country.value)
-        } else null
+        } else {
+            null
+        }
     }
 
     private fun updateState(state: State<Brewer>) {

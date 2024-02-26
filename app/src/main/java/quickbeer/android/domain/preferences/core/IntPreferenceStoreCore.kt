@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import quickbeer.android.data.store.core.PreferenceDataStoreCore
 
 class IntPreferenceStoreCore(
-    dataStore: DataStore<Preferences>,
+    dataStore: DataStore<Preferences>
 ) : PreferenceDataStoreCore<Int>(dataStore) {
 
     override fun String.dataKey(): Preferences.Key<Int> {

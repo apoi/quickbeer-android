@@ -20,7 +20,7 @@ data class User(
                 username = new.username ?: old.username,
                 rateCount = new.rateCount ?: old.rateCount,
                 tickCount = new.tickCount ?: old.tickCount,
-                placeCount = new.placeCount ?: old.placeCount,
+                placeCount = new.placeCount ?: old.placeCount
             )
         }
     }

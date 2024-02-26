@@ -13,7 +13,10 @@ class BrewerSearchFetcher(
 ) : Fetcher<String, List<Brewer>, List<BrewerJson>>(
     BrewerListJsonMapper,
     { query ->
-        if (query.length >= QUERY_MIN_LENGTH) api.brewerSearch(query)
-        else ApiResult.UnknownError(QueryTooShortException)
+        if (query.length >= QUERY_MIN_LENGTH) {
+            api.brewerSearch(query)
+        } else {
+            ApiResult.UnknownError(QueryTooShortException)
+        }
     }
 )

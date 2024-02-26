@@ -16,7 +16,7 @@ class StyleRoomCore @Inject constructor(
 )
 
 private class StyleDaoProxy(
-    private val dao: StyleDao,
+    private val dao: StyleDao
 ) : RoomDaoProxy<Int, StyleEntity>() {
 
     override suspend fun get(key: Int) = dao.get(key)

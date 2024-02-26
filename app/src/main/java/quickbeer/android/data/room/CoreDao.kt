@@ -16,10 +16,7 @@ abstract class CoreDao<K, V>(
     /**
      * Splits batch get to smaller batches to fit in database limits.
      */
-    protected suspend fun getBatch(
-        keys: List<K>,
-        get: suspend (List<K>) -> List<V>
-    ): List<V> {
+    protected suspend fun getBatch(keys: List<K>, get: suspend (List<K>) -> List<V>): List<V> {
         return keys.chunked(BATCH_SIZE)
             .map { get(it) }
             .flatten()
@@ -28,10 +25,7 @@ abstract class CoreDao<K, V>(
     /**
      * Merges and puts a value to database. Returns changed value, or null if no change.
      */
-    protected suspend fun putMerged(
-        value: V,
-        get: suspend (K) -> V?
-    ): V? {
+    protected suspend fun putMerged(value: V, get: suspend (K) -> V?): V? {
         val oldValue = get(getKey(value))
         val (newValue, valuesDiffer) = StoreCore.merge(oldValue, value, merger)
 
@@ -46,10 +40,7 @@ abstract class CoreDao<K, V>(
     /**
      * Splits batch put to smaller batches to fit in database limits.
      */
-    protected suspend fun putBatch(
-        values: List<V>,
-        get: suspend (List<K>) -> List<V>
-    ): List<V> {
+    protected suspend fun putBatch(values: List<V>, get: suspend (List<K>) -> List<V>): List<V> {
         return values.chunked(BATCH_SIZE)
             .map { putList(it, get) }
             .flatten()
@@ -58,10 +49,7 @@ abstract class CoreDao<K, V>(
     /**
      * Merges and puts a list of values to database. Returns list of changed values.
      */
-    private suspend fun putList(
-        values: List<V>,
-        get: suspend (List<K>) -> List<V>
-    ): List<V> {
+    private suspend fun putList(values: List<V>, get: suspend (List<K>) -> List<V>): List<V> {
         val oldValues = get(values.map(getKey))
             .map { Pair(getKey(it), it) }
             .toMap()

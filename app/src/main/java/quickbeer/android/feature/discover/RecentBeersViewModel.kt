@@ -20,7 +20,7 @@ import quickbeer.android.ui.adapter.beer.BeerListModel
 @HiltViewModel
 class RecentBeersViewModel @Inject constructor(
     recentBeersStore: RecentBeersStore,
-    beerRepository: BeerRepository,
+    beerRepository: BeerRepository
 ) : ViewModel() {
 
     private val _recentBeersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)

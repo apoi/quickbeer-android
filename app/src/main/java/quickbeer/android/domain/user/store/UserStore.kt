@@ -6,5 +6,5 @@ import quickbeer.android.data.store.store.DefaultStore
 import quickbeer.android.domain.user.User
 
 class UserStore @Inject constructor(
-    userStoreCore: StoreCore<Int, User>,
+    userStoreCore: StoreCore<Int, User>
 ) : DefaultStore<Int, User>(userStoreCore)

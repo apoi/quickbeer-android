@@ -47,7 +47,9 @@ class ValueLabel @JvmOverloads constructor(
 
         val backgroundRes = if (constrained) {
             android.R.attr.selectableItemBackground
-        } else android.R.attr.selectableItemBackgroundBorderless
+        } else {
+            android.R.attr.selectableItemBackgroundBorderless
+        }
 
         val outValue = TypedValue()
         context.theme.resolveAttribute(backgroundRes, outValue, true)
@@ -59,7 +61,9 @@ class ValueLabel @JvmOverloads constructor(
 
         if (!title.isNullOrEmpty()) {
             binding.title.text = title
-        } else binding.title.isVisible = false
+        } else {
+            binding.title.isVisible = false
+        }
 
         if (paragraph) {
             binding.value.textSize = 14f

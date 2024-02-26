@@ -152,7 +152,9 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
 
         val street = if (address.address.contains(",")) {
             address.address.split(",")[0]
-        } else address.address
+        } else {
+            address.address
+        }
 
         val link = "%s, %s, %s".format(street, address.city, address.country)
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GOOGLE_MAPS_PATH.format(link)))

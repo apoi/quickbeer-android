@@ -11,7 +11,7 @@ object BarcodeValidator {
         Barcode.FORMAT_EAN_8,
         Barcode.FORMAT_EAN_13,
         Barcode.FORMAT_UPC_A,
-        Barcode.FORMAT_UPC_E,
+        Barcode.FORMAT_UPC_E
     )
 
     fun isValidBarcode(barcode: Barcode): Boolean {

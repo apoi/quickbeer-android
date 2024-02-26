@@ -108,6 +108,8 @@ object ScannerUtils {
         val attr = android.R.attr.actionBarSize
         return if (context.theme.resolveAttribute(attr, value, true)) {
             TypedValue.complexToDimensionPixelSize(value.data, context.resources.displayMetrics)
-        } else context.resources.dpToPx(56)
+        } else {
+            context.resources.dpToPx(56)
+        }
     }
 }

@@ -109,6 +109,8 @@ class BrewerDetailsViewModel @Inject constructor(
     private fun mergeAddress(brewer: Brewer, country: State<Country>): State<Address> {
         return if (country is State.Success) {
             State.Success(Address.from(brewer, country.value))
-        } else State.Loading()
+        } else {
+            State.Loading()
+        }
     }
 }

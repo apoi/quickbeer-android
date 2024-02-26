@@ -32,11 +32,15 @@ object LegacyBrewerReader {
     private fun createBrewer(id: Int, updated: Long, accessed: Long): Brewer {
         val dateUpdated = if (updated > 0) {
             ZonedDateTime.ofInstant(Instant.ofEpochSecond(updated), ZoneOffset.UTC)
-        } else null
+        } else {
+            null
+        }
 
         val dateAccessed = if (accessed > 0) {
             ZonedDateTime.ofInstant(Instant.ofEpochSecond(accessed), ZoneOffset.UTC)
-        } else null
+        } else {
+            null
+        }
 
         return Brewer(
             id = id,

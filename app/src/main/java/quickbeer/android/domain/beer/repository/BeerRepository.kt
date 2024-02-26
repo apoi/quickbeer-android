@@ -8,7 +8,8 @@ import quickbeer.android.domain.beer.store.BeerStore
 
 class BeerRepository @Inject constructor(
     store: BeerStore,
-    fetcher: BeerFetcher,
+    fetcher: BeerFetcher
 ) : DefaultRepository<Int, Beer>(
-    store, fetcher::fetch
+    store,
+    fetcher::fetch
 )

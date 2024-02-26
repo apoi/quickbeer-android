@@ -44,10 +44,7 @@ class BarcodeProcessor(
     }
 
     @MainThread
-    override fun onSuccess(
-        results: List<Barcode>,
-        graphicOverlay: GraphicOverlay
-    ) {
+    override fun onSuccess(results: List<Barcode>, graphicOverlay: GraphicOverlay) {
         if (!viewModel.isCameraLive) return
 
         graphicOverlay.clear()

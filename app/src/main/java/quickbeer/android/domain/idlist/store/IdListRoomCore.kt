@@ -16,7 +16,7 @@ class IdListRoomCore @Inject constructor(
 )
 
 private class IdListDaoProxy(
-    private val dao: IdListDao,
+    private val dao: IdListDao
 ) : RoomDaoProxy<String, IdListEntity>() {
 
     override suspend fun get(key: String) = dao.get(key)

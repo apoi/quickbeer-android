@@ -48,7 +48,7 @@ class BeerRoomCore @Inject constructor(
 }
 
 private class BeerDaoProxy(
-    private val dao: BeerDao,
+    private val dao: BeerDao
 ) : RoomDaoProxy<Int, BeerEntity>() {
 
     override suspend fun get(key: Int) = dao.get(key)

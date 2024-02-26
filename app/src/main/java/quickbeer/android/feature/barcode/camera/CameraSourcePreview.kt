@@ -100,7 +100,10 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
                 .map(::getChildAt)
                 .forEach {
                     it.layout(
-                        0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf
+                        0,
+                        -excessLenInHalf,
+                        layoutWidth,
+                        layoutHeight + excessLenInHalf
                     )
                 }
         }

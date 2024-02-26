@@ -32,16 +32,16 @@ class LoginRedirectInterceptor : Interceptor {
 
         return if (isLoginRequest(request)) {
             handleLoginResponse(chain)
-        } else chain.proceed(request)
+        } else {
+            chain.proceed(request)
+        }
     }
 
     private fun isLoginRequest(request: Request): Boolean {
         return request.url.encodedPath.endsWith(Constants.API_LOGIN_PAGE)
     }
 
-    private fun handleLoginResponse(
-        chain: Interceptor.Chain
-    ): Response {
+    private fun handleLoginResponse(chain: Interceptor.Chain): Response {
         val request = chain.request()
         val response = chain.proceed(request)
         val contentType = response.body?.contentType()

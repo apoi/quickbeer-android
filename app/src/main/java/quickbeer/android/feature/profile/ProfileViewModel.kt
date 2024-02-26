@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.user.User
@@ -21,7 +20,7 @@ import quickbeer.android.domain.user.repository.UserRepository
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val tickedBeersRepository: TickedBeersRepository,
-    private val loginManager: LoginManager,
+    private val loginManager: LoginManager
 ) : ViewModel() {
 
     val hasUser: Flow<Boolean> = loginManager.userId
@@ -29,8 +28,11 @@ class ProfileViewModel @Inject constructor(
 
     val userState: Flow<State<User>> = loginManager.userId
         .flatMapLatest {
-            if (it != null) userRepository.getStream(it, Accept())
-            else flow { emit(State.Empty) }
+            if (it != null) {
+                userRepository.getStream(it, Accept())
+            } else {
+                flow { emit(State.Empty) }
+            }
         }
         .onStart { emit(State.Initial) }
 

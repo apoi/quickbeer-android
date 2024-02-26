@@ -170,7 +170,10 @@ class BeerDetailsInfoFragment :
             .setTitle(R.string.login_dialog_title)
             .setMessage(R.string.login_to_rate_message)
             .setPositiveAction(R.string.action_yes, ::login)
-            .setNegativeAction(R.string.action_no) { it.cancel(); clearRating() }
+            .setNegativeAction(R.string.action_no) {
+                it.cancel()
+                clearRating()
+            }
             .setOnCancelListener { clearRating() }
             .show()
     }

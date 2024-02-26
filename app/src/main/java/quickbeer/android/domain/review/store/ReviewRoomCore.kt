@@ -16,7 +16,7 @@ class ReviewRoomCore @Inject constructor(
 )
 
 private class ReviewDaoProxy(
-    private val dao: ReviewDao,
+    private val dao: ReviewDao
 ) : RoomDaoProxy<Int, ReviewEntity>() {
 
     override suspend fun get(key: Int) = dao.get(key)

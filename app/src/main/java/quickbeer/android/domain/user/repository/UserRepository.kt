@@ -8,5 +8,5 @@ import quickbeer.android.domain.user.store.UserStore
 
 class UserRepository @Inject constructor(
     store: UserStore,
-    fetcher: RateCountFetcher,
+    fetcher: RateCountFetcher
 ) : DefaultRepository<Int, User>(store, fetcher::fetch)

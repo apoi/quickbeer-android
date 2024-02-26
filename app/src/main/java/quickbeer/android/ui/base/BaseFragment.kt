@@ -54,7 +54,6 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
             .navigate(destination.uri, anim.navOptions())
     }
 
-
     override fun onCreateAnimation(transit: Int, enter: Boolean, nextAnim: Int): Animation? {
         val activity = requireActivity()
 

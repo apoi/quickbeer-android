@@ -26,8 +26,11 @@ import org.threeten.bp.format.FormatStyle
 import org.threeten.bp.temporal.ChronoUnit
 
 fun ZonedDateTime?.orEpoch(): ZonedDateTime {
-    return if (isValidDate()) this!!
-    else ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC)
+    return if (isValidDate()) {
+        this!!
+    } else {
+        ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneOffset.UTC)
+    }
 }
 
 fun ZonedDateTime?.isValidDate(): Boolean {

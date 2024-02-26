@@ -134,10 +134,7 @@ abstract class Repository<K, V> {
         return merge(errorFlow, remoteFlow, localFlow)
     }
 
-    suspend fun fetch(
-        key: K,
-        validator: Validator<V>? = null
-    ): State<V> {
+    suspend fun fetch(key: K, validator: Validator<V>? = null): State<V> {
         return when (val response = fetchRemote(key)) {
             is ApiResult.Success -> {
                 val result = response.value
@@ -154,10 +151,7 @@ abstract class Repository<K, V> {
         }
     }
 
-    private fun fetchAndStream(
-        key: K,
-        validator: Validator<V>
-    ): Flow<State<V>> {
+    private fun fetchAndStream(key: K, validator: Validator<V>): Flow<State<V>> {
         return flow {
             val result = fetch(key)
 

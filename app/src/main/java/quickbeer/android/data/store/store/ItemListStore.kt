@@ -26,7 +26,7 @@ open class ItemListStore<I : Any, out K : Any, V : Any>(
     private val indexMapper: IndexMapper<I>,
     private val getKey: (V) -> K,
     private val indexCore: StoreCore<I, ItemList<I, K>>,
-    private val valueCore: StoreCore<K, V>,
+    private val valueCore: StoreCore<K, V>
 ) : Store<I, List<V>> {
 
     override suspend fun get(): List<List<V>> {

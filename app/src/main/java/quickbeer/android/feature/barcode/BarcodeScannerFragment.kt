@@ -59,8 +59,11 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
     private val permissionHandler = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        if (isGranted) setupCamera()
-        else showRationale()
+        if (isGranted) {
+            setupCamera()
+        } else {
+            showRationale()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -155,7 +158,9 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         val selected = !binding.flashButton.isSelected
         val mode = if (selected) {
             Camera.Parameters.FLASH_MODE_TORCH
-        } else Camera.Parameters.FLASH_MODE_OFF
+        } else {
+            Camera.Parameters.FLASH_MODE_OFF
+        }
 
         binding.flashButton.isSelected = selected
         cameraSource?.updateFlashMode(mode)
