@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavGraph
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
@@ -29,6 +30,8 @@ class MainActivity :
     private lateinit var navController: NavController
 
     private var pendingDestination: Destination? = null
+
+    var suppressNavAnimation: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +62,14 @@ class MainActivity :
         val bottomNavigationView = binding.mainBottomNav
         bottomNavigationView.setupWithNavController(navController)
 
-        // Tab reselect handler
+        // Tab select handler to suppress default animation on tab changes
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            NavigationUI.onNavDestinationSelected(item, navController)
+            suppressNavAnimation = true
+            true
+        }
+
+        // Tab reselect handler to jump to the root view of the tab
         bottomNavigationView.setOnItemReselectedListener { item ->
             val selectedMenuItemNavGraph = navHostFragment.navController
                 .graph.findNode(item.itemId) as? NavGraph?
