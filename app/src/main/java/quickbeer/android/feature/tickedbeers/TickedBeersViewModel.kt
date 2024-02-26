@@ -38,7 +38,7 @@ class TickedBeersViewModel @Inject constructor(
             tickedBeersRepository
                 .getStream(userId.toString(), Accept())
                 .flatMapLatest { tickedBeersRepository.store.getLocalTicks() }
-                .map { State.Success(it) }
+                .map { State.from(it) }
                 .map(BeerListModelTickDateMapper(beerRepository)::map)
                 .onStart { emit(State.Loading()) }
                 .collectLatest(_viewState::emit)

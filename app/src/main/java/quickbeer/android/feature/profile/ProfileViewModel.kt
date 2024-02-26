@@ -37,7 +37,7 @@ class ProfileViewModel @Inject constructor(
     val tickCount: Flow<State<Int>> = loginManager.userId
         .filterNotNull()
         .flatMapLatest { tickedBeersRepository.store.getLocalTicks() }
-        .map<List<Beer>, State<Int>> { State.Success(it.size) }
+        .map { State.from(it.size) }
         .onStart { emit(State.Loading()) }
 
     suspend fun logout() {

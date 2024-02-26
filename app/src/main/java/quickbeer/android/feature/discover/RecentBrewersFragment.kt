@@ -63,7 +63,7 @@ class RecentBrewersFragment : BaseFragment(R.layout.list_fragment) {
                 }
                 is State.Empty -> {
                     brewersAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_empty)
+                    binding.message.text = getString(R.string.message_start)
                     binding.message.isVisible = true
                     binding.progress.hide()
                 }

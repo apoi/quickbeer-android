@@ -123,7 +123,7 @@ abstract class Repository<K, V> {
                         flow {
                             // Always emit Loading first for consistency
                             emit(State.Loading(it))
-                            if (state.isValid) emit(State.Success(it))
+                            if (state.isValid) emit(State.from(it))
                         }
                     }
                     // Cancel if remote or error emits. In this case the Loading state
@@ -143,7 +143,7 @@ abstract class Repository<K, V> {
                 val result = response.value
                 if (result != null && validator?.validate(result) != false) {
                     persist(key, result) // Always persist new valid values
-                    State.Success(result)
+                    State.from(result)
                 } else {
                     State.Empty
                 }

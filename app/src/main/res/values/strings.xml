@@ -42,7 +42,7 @@
     <string name="recent_brewers">Recent brewers</string>
 
     <!-- Beer list messages -->
-    <string name="message_start">Start by searching for your favourite beer.\n\nCheers!</string>
+    <string name="message_start">Welcome to QuickBeer!\n\nStart by searching for your favourite beer or cider.\n\nCheers!</string>
     <string name="message_empty">No results.</string>
     <string name="message_error">Error! Try again later.</string>
 

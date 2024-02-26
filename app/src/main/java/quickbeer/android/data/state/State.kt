@@ -5,11 +5,11 @@ package quickbeer.android.data.state
  */
 sealed class State<out T> {
 
-    object Initial : State<Nothing>()
+    data object Initial : State<Nothing>()
 
     data class Loading<out T>(val value: T? = null) : State<T>()
 
-    object Empty : State<Nothing>()
+    data object Empty : State<Nothing>()
 
     data class Success<out T>(val value: T) : State<T>()
 
@@ -17,9 +17,9 @@ sealed class State<out T> {
 
     fun valueOrNull(): T? {
         return when (this) {
-            Initial -> null
+            is Initial -> null
             is Loading -> value
-            Empty -> null
+            is Empty -> null
             is Success -> value
             is Error -> null
         }
