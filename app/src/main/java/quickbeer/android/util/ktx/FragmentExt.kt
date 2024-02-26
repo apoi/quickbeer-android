@@ -28,8 +28,10 @@ fun <T> Fragment.observe(flow: Flow<T>, observer: (T) -> Unit) {
 }
 
 fun <T> Fragment.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
-    viewLifecycleOwner.lifecycle.coroutineScope.launchWhenStarted {
-        flow.collectLatest { if (it is State.Success) observer(it.value) }
+    viewLifecycleOwner.lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.collectLatest { if (it is State.Success) observer(it.value) }
+        }
     }
 }
 
