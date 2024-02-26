@@ -62,7 +62,6 @@ abstract class PreferenceDataStoreCore<V : Any>(
         return getKeysStream().first()
     }
 
-    @Suppress("UNCHECKED_CAST")
     override fun getKeysStream(): Flow<List<String>> {
         return dataStore.data.map { preferences ->
             preferences.asMap().keys.toList().map { it.name }

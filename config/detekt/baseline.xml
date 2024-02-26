@@ -2,6 +2,11 @@
 <SmellBaseline>
   <ManuallySuppressedIssues></ManuallySuppressedIssues>
   <CurrentIssues>
+    <ID>ForEachOnRange:CameraSourcePreview.kt$CameraSourcePreview$(0 until childCount) .asSequence() .map(::getChildAt)</ID>
+    <ID>ForEachOnRange:CameraSourcePreview.kt$CameraSourcePreview$0.until(childCount)</ID>
+    <ID>ForEachOnRange:SearchFragment.kt$SearchFragment$0.until(binding.tabLayout.tabCount)</ID>
+    <ID>ImplicitDefaultLocale:BeerReviewsViewHolder.kt$BeerReviewsViewHolder$String.format("%.1f", item.review.totalScore)</ID>
+    <ID>LongParameterList:ApplicationMigration.kt$ApplicationMigration$( @ApplicationContext private val context: Context, private val moshi: Moshi, private val beerStore: BeerStore, private val brewerStore: BrewerStore, private val intPreferenceStore: IntPreferenceStore, private val stringPreferenceStore: StringPreferenceStore, private val tickedBeersRepository: TickedBeersRepository )</ID>
     <ID>LongParameterList:BeerDetailsViewModel.kt$BeerDetailsViewModel$( savedStateHandle: SavedStateHandle, private val loginManager: LoginManager, private val beerRepository: BeerRepository, private val brewerRepository: BrewerRepository, private val styleRepository: StyleRepository, private val styleListRepository: StyleListRepository, private val countryRepository: CountryRepository, private val beerTickFetcher: BeerTickFetcher, private val resourceProvider: ResourceProvider, private val toastProvider: ToastProvider )</ID>
     <ID>LongParameterList:SearchViewModel.kt$SearchViewModel$( private val beerRepository: BeerRepository, private val beerSearchRepository: BeerSearchRepository, private val brewerRepository: BrewerRepository, private val brewerSearchRepository: BrewerSearchRepository, private val styleListRepository: StyleListRepository, private val countryListRepository: CountryListRepository, private val countryRepository: CountryRepository )</ID>
     <ID>MagicNumber:BarcodeScannerFragment.kt$BarcodeScannerFragment$150</ID>
@@ -9,12 +14,16 @@
     <ID>MagicNumber:RecycledPoolHolder.kt$RecycledPoolHolder.PoolType.STYLE_LIST$3</ID>
     <ID>MagicNumber:SearchFragment.kt$SearchFragment$3</ID>
     <ID>MagicNumber:SessionPersistingCookieJar.kt$SessionPersistingCookieJar$10</ID>
+    <ID>ReturnCount:ApplicationMigration.kt$ApplicationMigration$private fun getDatabase(context: Context): SQLiteDatabase?</ID>
+    <ID>SwallowedException:Fetcher.kt$Fetcher$e: CancellationException</ID>
+    <ID>SwallowedException:FragmentExt.kt$&lt;no name provided&gt;$e: IllegalStateException</ID>
+    <ID>TooGenericExceptionCaught:ApplicationMigration.kt$ApplicationMigration$e: Exception</ID>
     <ID>TooManyFunctions:BarcodeScannerFragment.kt$BarcodeScannerFragment : BaseFragment</ID>
     <ID>TooManyFunctions:BeerDao.kt$BeerDao : CoreDao</ID>
     <ID>TooManyFunctions:BeerDetailsInfoFragment.kt$BeerDetailsInfoFragment : BaseFragmentOnRatingBarChangeListener</ID>
     <ID>TooManyFunctions:BrewerDao.kt$BrewerDao : CoreDao</ID>
     <ID>TooManyFunctions:CachingStoreCore.kt$CachingStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
-    <ID>TooManyFunctions:FetcherModule.kt$FetcherModule$FetcherModule</ID>
+    <ID>TooManyFunctions:FetcherModule.kt$FetcherModule</ID>
     <ID>TooManyFunctions:IdListDao.kt$IdListDao : CoreDao</ID>
     <ID>TooManyFunctions:MainActivity.kt$MainActivity : AppCompatActivityOnDestinationChangedListenerRecycledPoolHolder</ID>
     <ID>TooManyFunctions:MemoryStoreCore.kt$MemoryStoreCore&lt;K : Any, V : Any&gt; : StoreCore</ID>
@@ -26,5 +35,9 @@
     <ID>TooManyFunctions:SearchView.kt$SearchView : MaterialCardView</ID>
     <ID>TooManyFunctions:StoreCore.kt$StoreCore&lt;K : Any, V : Any&gt;</ID>
     <ID>TooManyFunctions:StyleDao.kt$StyleDao : CoreDao</ID>
+    <ID>UnusedParameter:BeerReviewsViewHolder.kt$BeerReviewsViewHolder$@StringRes resource: Int</ID>
+    <ID>UnusedParameter:MainActivity.kt$MainActivity$showFullscreen: Boolean</ID>
+    <ID>UnusedPrivateMember:ProgressIndicatorBar.kt$ProgressIndicatorBar$private fun addPreDrawListener()</ID>
+    <ID>UnusedPrivateProperty:BarcodeScannerFragment.kt$BarcodeScannerFragment.Companion$private const val PERMISSION_RESULT = 0x500</ID>
   </CurrentIssues>
 </SmellBaseline>

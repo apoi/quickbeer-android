@@ -64,7 +64,7 @@ abstract class RoomStoreCore<K : Any, V : Any, E : Any>(
     override suspend fun put(items: Map<K, V>): List<V> {
         return coreProxy.put(items.mapValues { entityMapper.mapFrom(it.value) })
             .map(entityMapper::mapTo)
-            .also { values -> values.forEach { putStream.emit(it) } }
+            .onEach { putStream.emit(it) }
     }
 
     override fun getPutStream(): Flow<V> {

@@ -75,7 +75,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         )
 
         // Set custom tab layouts to get progress indicators
-        (0 until binding.tabLayout.tabCount)
+        (0.until(binding.tabLayout.tabCount))
             .forEach { index ->
                 val searchType = SearchViewModel.SearchType.fromValue(index)
                 val tabBinding = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
