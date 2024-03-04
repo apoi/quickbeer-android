@@ -5,6 +5,7 @@ plugins {
     id(Plugins.Id.Parcelize)
     id(Plugins.Id.SafeArgs)
     id(Plugins.Id.Hilt)
+    id(Plugins.Id.Room)
 }
 
 android {
@@ -48,6 +49,10 @@ android {
         viewBinding = true
         buildConfig = true
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {

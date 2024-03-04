@@ -22,6 +22,7 @@ object Plugins {
         const val Parcelize = "kotlin-parcelize"
         const val Version = "com.github.ben-manes.versions"
         const val SafeArgs = "androidx.navigation.safeargs.kotlin"
+        const val Room = "androidx.room"
     }
 }
 

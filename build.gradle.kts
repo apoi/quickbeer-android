@@ -3,6 +3,7 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 plugins {
     id(Plugins.Id.Android.Application) version Versions.Plugin.Gradle apply false
     kotlin(Plugins.Id.Kotlin.Android) version Versions.Plugin.Kotlin apply false
+    id(Plugins.Id.Room) version Versions.AndroidX.Room apply false
     id(Plugins.Id.Detekt) version Versions.Plugin.Detekt
     id(Plugins.Id.Ktlint) version Versions.Plugin.Ktlint
     id(Plugins.Id.Version) version Versions.Plugin.Version
