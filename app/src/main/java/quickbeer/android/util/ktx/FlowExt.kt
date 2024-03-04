@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
@@ -34,5 +35,20 @@ fun <T> Flow<State<List<T>>>.distinctUntilNewId(getId: (T) -> Int): Flow<State<L
     return distinctUntilChanged { old, new ->
         old is State.Success && new is State.Success &&
             old.value.map(getId).toSet() == new.value.map(getId).toSet()
+    }
+}
+
+/**
+ * Maps a State<T> flow to a State<R> flow.
+ */
+fun <T, R> Flow<State<T>>.mapState(mapper: (T) -> R): Flow<State<R>> {
+    return map {
+        when (it) {
+            is State.Initial -> State.Initial
+            is State.Loading -> State.Loading(it.value?.let(mapper))
+            is State.Empty -> State.Empty
+            is State.Success -> State.Success(mapper(it.value))
+            is State.Error -> State.Error(it.cause)
+        }
     }
 }

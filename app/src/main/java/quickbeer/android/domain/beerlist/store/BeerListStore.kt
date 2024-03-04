@@ -40,7 +40,7 @@ abstract class SingleBeerListStore(
     indexStoreCore: StoreCore<String, IdList>,
     beerStoreCore: BeerStoreCore
 ) : SingleItemListStore<String, Int, Beer>(
-    indexKey,
+    indexKey = indexKey,
     getKey = Beer::id,
     indexCore = indexStoreCore,
     valueCore = beerStoreCore

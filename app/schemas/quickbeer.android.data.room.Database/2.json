@@ -1,0 +1,616 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "901e6fb0454a5ced141b7bf2caecb425",
+    "entities": [
+      {
+        "tableName": "lists",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `values` TEXT NOT NULL, `updated` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "values",
+            "columnName": "values",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "beers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `brewer_id` INTEGER, `brewer_name` TEXT, `contract_brewer_id` INTEGER, `contract_brewer_name` TEXT, `average_rating` REAL, `rating_overall` REAL, `rating_style` REAL, `rate_count` INTEGER, `brewer_country_id` INTEGER, `beer_style_id` INTEGER, `beer_style_name` TEXT, `alcohol` REAL, `ibu` REAL, `description` TEXT, `is_alias` INTEGER, `is_retired` INTEGER, `is_verified` INTEGER, `is_unrateable` INTEGER, `liked` INTEGER, `time_entered` TEXT, `normalized_name` TEXT, `updated` TEXT, `accessed` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "brewerId",
+            "columnName": "brewer_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "brewerName",
+            "columnName": "brewer_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contractBrewerId",
+            "columnName": "contract_brewer_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "contractBrewerName",
+            "columnName": "contract_brewer_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "averageRating",
+            "columnName": "average_rating",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "overallRating",
+            "columnName": "rating_overall",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "styleRating",
+            "columnName": "rating_style",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rateCount",
+            "columnName": "rate_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "countryId",
+            "columnName": "brewer_country_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "styleId",
+            "columnName": "beer_style_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "styleName",
+            "columnName": "beer_style_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "alcohol",
+            "columnName": "alcohol",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ibu",
+            "columnName": "ibu",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isAlias",
+            "columnName": "is_alias",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isRetired",
+            "columnName": "is_retired",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isVerified",
+            "columnName": "is_verified",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unrateable",
+            "columnName": "is_unrateable",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tickValue",
+            "columnName": "liked",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tickDate",
+            "columnName": "time_entered",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "normalizedName",
+            "columnName": "normalized_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accessed",
+            "columnName": "accessed",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_beers_normalized_name_accessed",
+            "unique": false,
+            "columnNames": [
+              "normalized_name",
+              "accessed"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_beers_normalized_name_accessed` ON `${TABLE_NAME}` (`normalized_name`, `accessed`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "brewers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `description` TEXT, `address` TEXT, `city` TEXT, `state_id` INTEGER, `country_id` INTEGER, `zip_code` TEXT, `type_id` INTEGER, `type` TEXT, `website` TEXT, `facebook` TEXT, `twitter` TEXT, `email` TEXT, `phone` TEXT, `barrels` INTEGER, `founded` TEXT, `entered_on` TEXT, `entered_by` INTEGER, `logo` TEXT, `view_count` TEXT, `score` INTEGER, `out_of_business` INTEGER, `retired` INTEGER, `area_code` TEXT, `hours` TEXT, `head_brewer` TEXT, `metro_id` TEXT, `msa` TEXT, `region_id` TEXT, `normalized_name` TEXT, `updated` TEXT, `accessed` TEXT, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stateId",
+            "columnName": "state_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "countryId",
+            "columnName": "country_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "zipCode",
+            "columnName": "zip_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "typeId",
+            "columnName": "type_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "website",
+            "columnName": "website",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "facebook",
+            "columnName": "facebook",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "twitter",
+            "columnName": "twitter",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "email",
+            "columnName": "email",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phone",
+            "columnName": "phone",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "barrels",
+            "columnName": "barrels",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "founded",
+            "columnName": "founded",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "enteredOn",
+            "columnName": "entered_on",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "enteredBy",
+            "columnName": "entered_by",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "logo",
+            "columnName": "logo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "viewCount",
+            "columnName": "view_count",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "score",
+            "columnName": "score",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outOfBusiness",
+            "columnName": "out_of_business",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "retired",
+            "columnName": "retired",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "areaCode",
+            "columnName": "area_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours",
+            "columnName": "hours",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "headBrewer",
+            "columnName": "head_brewer",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "metroId",
+            "columnName": "metro_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "msa",
+            "columnName": "msa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "regionId",
+            "columnName": "region_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "normalizedName",
+            "columnName": "normalized_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updated",
+            "columnName": "updated",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accessed",
+            "columnName": "accessed",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_brewers_normalized_name_accessed",
+            "unique": false,
+            "columnNames": [
+              "normalized_name",
+              "accessed"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_brewers_normalized_name_accessed` ON `${TABLE_NAME}` (`normalized_name`, `accessed`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "reviews",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `beer_id` INTEGER, `appearance` INTEGER, `aroma` INTEGER, `flavor` INTEGER, `mouthfeel` INTEGER, `overall` INTEGER, `total_score` REAL, `comments` TEXT, `time_entered` TEXT, `time_updated` TEXT, `user_id` INTEGER, `user_name` TEXT, `city` TEXT, `state_id` INTEGER, `state` TEXT, `country_id` INTEGER, `country` TEXT, `rate_count` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "beerId",
+            "columnName": "beer_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "appearance",
+            "columnName": "appearance",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "aroma",
+            "columnName": "aroma",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "flavor",
+            "columnName": "flavor",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mouthfeel",
+            "columnName": "mouthfeel",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "overall",
+            "columnName": "overall",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalScore",
+            "columnName": "total_score",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comments",
+            "columnName": "comments",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeEntered",
+            "columnName": "time_entered",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeUpdated",
+            "columnName": "time_updated",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userName",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "stateId",
+            "columnName": "state_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "countryId",
+            "columnName": "country_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "country",
+            "columnName": "country",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rateCount",
+            "columnName": "rate_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "styles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT NOT NULL, `description` TEXT, `parent` INTEGER, `category` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parent",
+            "columnName": "parent",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "category",
+            "columnName": "category",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '901e6fb0454a5ced141b7bf2caecb425')"
+    ]
+  }
+}

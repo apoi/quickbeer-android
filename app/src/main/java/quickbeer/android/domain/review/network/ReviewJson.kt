@@ -20,7 +20,12 @@ package quickbeer.android.domain.review.network
 import com.squareup.moshi.Json
 import org.threeten.bp.ZonedDateTime
 
+/**
+ * Generic review of a given beer. We know beer details, details of
+ * the user are included in the response.
+ */
 data class ReviewJson(
+    // Review data
     @field:Json(name = "RatingID") val id: Int,
     @field:Json(name = "Appearance") val appearance: Int?,
     @field:Json(name = "Aroma") val aroma: Int?,
@@ -31,6 +36,8 @@ data class ReviewJson(
     @field:Json(name = "Comments") val comments: String?,
     @field:Json(name = "TimeEntered") val timeEntered: ZonedDateTime?,
     @field:Json(name = "TimeUpdated") val timeUpdated: ZonedDateTime?,
+
+    // User data
     @field:Json(name = "UserID") val userId: Int?,
     @field:Json(name = "UserName") val userName: String?,
     @field:Json(name = "City") val city: String?,

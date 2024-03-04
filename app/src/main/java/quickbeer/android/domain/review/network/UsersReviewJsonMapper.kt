@@ -1,14 +1,15 @@
 package quickbeer.android.domain.review.network
 
 import quickbeer.android.domain.review.Review
+import quickbeer.android.domain.user.User
 import quickbeer.android.util.JsonMapper
 
-object ReviewJsonMapper : JsonMapper<Int, Review, ReviewJson> {
+object UsersReviewJsonMapper : JsonMapper<User, Review, UsersReviewJson> {
 
-    override fun map(key: Int, source: ReviewJson): Review {
+    override fun map(key: User, source: UsersReviewJson): Review {
         return Review(
             id = source.id,
-            beerId = null,
+            beerId = source.beerId,
             appearance = source.appearance,
             aroma = source.aroma,
             flavor = source.flavor,
@@ -18,14 +19,16 @@ object ReviewJsonMapper : JsonMapper<Int, Review, ReviewJson> {
             comments = source.comments,
             timeEntered = source.timeEntered,
             timeUpdated = source.timeUpdated,
-            userId = source.userId,
-            userName = source.userName,
-            city = source.city,
-            stateId = source.stateId,
-            state = source.state,
-            countryId = source.countryId,
-            country = source.country,
-            rateCount = source.rateCount
+
+            // User's own reviews don't contain the user details
+            userId = key.id,
+            userName = null,
+            city = null,
+            stateId = null,
+            state = null,
+            countryId = null,
+            country = null,
+            rateCount = null
         )
     }
 }

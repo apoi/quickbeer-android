@@ -3,17 +3,25 @@ package quickbeer.android.domain.review.store
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
 import quickbeer.android.data.store.core.RoomStoreCore
 import quickbeer.android.domain.review.Review
 
 class ReviewRoomCore @Inject constructor(
-    database: Database
+    private val database: Database
 ) : RoomStoreCore<Int, Review, ReviewEntity>(
     ReviewEntityMapper,
     ReviewDaoProxy(database.reviewDao())
-)
+) {
+
+    fun reviewsForUser(userId: Int): Flow<List<Review>> {
+        return database.reviewDao()
+            .reviewsForUser(userId)
+            .map { it.map(ReviewEntityMapper::mapTo) }
+    }
+}
 
 private class ReviewDaoProxy(
     private val dao: ReviewDao

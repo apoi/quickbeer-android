@@ -15,11 +15,11 @@ import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.UserRepository
+import quickbeer.android.util.ktx.mapState
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val tickedBeersRepository: TickedBeersRepository,
     private val loginManager: LoginManager
 ) : ViewModel() {
 
@@ -35,12 +35,6 @@ class ProfileViewModel @Inject constructor(
             }
         }
         .onStart { emit(State.Initial) }
-
-    val tickCount: Flow<State<Int>> = loginManager.userId
-        .filterNotNull()
-        .flatMapLatest { tickedBeersRepository.store.getLocalTicks() }
-        .map { State.from(it.size) }
-        .onStart { emit(State.Loading()) }
 
     suspend fun logout() {
         loginManager.logout()

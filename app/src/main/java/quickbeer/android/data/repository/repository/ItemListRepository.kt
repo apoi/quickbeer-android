@@ -28,11 +28,7 @@ open class ItemListRepository<I : Any, out K : Any, V : Any, E : Any>(
 
     override suspend fun getLocal(key: I): List<V>? {
         return store.get(key).let {
-            if (it.isEmpty()) {
-                null
-            } else {
-                it
-            }
+            it.ifEmpty { null }
         }
     }
 
@@ -64,11 +60,7 @@ open class SingleItemListRepository<in I : Any, K : Any, V : Any, E : Any>(
 
     override suspend fun getLocal(): List<V>? {
         return store.get().let {
-            if (it.isEmpty()) {
-                null
-            } else {
-                it
-            }
+            it.ifEmpty { null }
         }
     }
 

@@ -7,6 +7,7 @@ import androidx.room.TypeConverters
 import kotlinx.coroutines.flow.Flow
 import quickbeer.android.data.room.CoreDao
 import quickbeer.android.data.room.converter.ZonedDateTimeConverter
+import quickbeer.android.domain.beer.store.BeerEntity
 
 @Dao
 @TypeConverters(ZonedDateTimeConverter::class)
@@ -14,6 +15,9 @@ abstract class ReviewDao : CoreDao<Int, ReviewEntity>(
     ReviewEntity::id,
     ReviewEntity.merger
 ) {
+
+    @Query("SELECT * FROM reviews WHERE user_id=:userId")
+    abstract fun reviewsForUser(userId: Int): Flow<List<ReviewEntity>>
 
     @Query("SELECT * FROM reviews WHERE id=:key")
     abstract suspend fun get(key: Int): ReviewEntity?

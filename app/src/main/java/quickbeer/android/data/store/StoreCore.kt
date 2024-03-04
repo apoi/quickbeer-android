@@ -76,15 +76,18 @@ interface StoreCore<K : Any, V : Any> {
     fun getKeysStream(): Flow<List<K>>
 
     /**
-     * Takes an identifier to be added, and returns success status of the operation.
+     * Puts a value to the store with the associated ID. Returns the inserted value if the value
+     * was changed during the put operation, and null otherwise.
      *
      * @param key Key of the persisted item.
+     * @param value The persisted value
      * @return Inserted value if it was changed, and null otherwise.
      */
     suspend fun put(key: K, value: V): V?
 
     /**
-     * Takes an identifier to be added, and returns success status of the operation.
+     * Puts multiple values to the store, associated by IDs, and returns a list of all values that
+     * were changed by the operation.
      *
      * @param items Map of items to insert.
      * @return List of all values that were changed.

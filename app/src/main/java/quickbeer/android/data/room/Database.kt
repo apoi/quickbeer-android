@@ -1,5 +1,6 @@
 package quickbeer.android.data.room
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import quickbeer.android.domain.beer.store.BeerDao
@@ -16,9 +17,10 @@ import quickbeer.android.domain.style.store.StyleEntity
 const val DATABASE_NAME = "quickbeer4.db"
 const val BATCH_SIZE = 999
 
-private const val CURRENT_VERSION = 1
+private const val CURRENT_VERSION = 2
 
 @Database(
+    version = CURRENT_VERSION,
     entities = [
         IdListEntity::class,
         BeerEntity::class,
@@ -26,7 +28,9 @@ private const val CURRENT_VERSION = 1
         ReviewEntity::class,
         StyleEntity::class
     ],
-    version = CURRENT_VERSION
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2)
+    ]
 )
 abstract class Database : RoomDatabase() {
 

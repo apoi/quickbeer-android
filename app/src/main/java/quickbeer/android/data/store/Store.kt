@@ -48,7 +48,8 @@ interface Store<K, V> {
     /**
      * Puts the value to the store.
      *
-     * @return True if operation was successful, otherwise false.
+     * @return True if operation resulted in item being persisted, otherwise false. Note that this
+     * will return false if the value was already persisted and the operation thus skipped.
      */
     suspend fun put(key: K, value: V): Boolean
 

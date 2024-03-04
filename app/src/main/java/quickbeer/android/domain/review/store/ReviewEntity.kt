@@ -13,6 +13,7 @@ import quickbeer.android.domain.review.Review
 @TypeConverters(ZonedDateTimeConverter::class)
 data class ReviewEntity(
     @PrimaryKey val id: Int,
+    @ColumnInfo(name = "beer_id") val beerId: Int?,
     @ColumnInfo(name = "appearance") val appearance: Int?,
     @ColumnInfo(name = "aroma") val aroma: Int?,
     @ColumnInfo(name = "flavor") val flavor: Int?,

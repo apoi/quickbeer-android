@@ -21,6 +21,7 @@ import quickbeer.android.domain.countrylist.network.CountryListFetcher
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.reviewlist.network.BeerReviewsFetcher
 import quickbeer.android.domain.reviewlist.network.BeerReviewsPageFetcher
+import quickbeer.android.domain.reviewlist.network.UsersReviewsPageFetcher
 import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.user.network.RateCountFetcher
 import quickbeer.android.network.RateBeerApi
@@ -130,5 +131,13 @@ object FetcherModule {
         loginManager: LoginManager
     ): TickedBeersFetcher {
         return TickedBeersFetcher(api, loginManager)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUsersReviewsPageFetcher(
+        api: RateBeerApi
+    ): UsersReviewsPageFetcher {
+        return UsersReviewsPageFetcher(api)
     }
 }

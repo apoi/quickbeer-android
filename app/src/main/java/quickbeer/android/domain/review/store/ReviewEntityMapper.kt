@@ -8,6 +8,7 @@ object ReviewEntityMapper : Mapper<Review, ReviewEntity> {
     override fun mapFrom(source: Review): ReviewEntity {
         return ReviewEntity(
             id = source.id,
+            beerId = source.beerId,
             appearance = source.appearance,
             aroma = source.aroma,
             flavor = source.flavor,
@@ -31,6 +32,7 @@ object ReviewEntityMapper : Mapper<Review, ReviewEntity> {
     override fun mapTo(source: ReviewEntity): Review {
         return Review(
             id = source.id,
+            beerId = source.beerId,
             appearance = source.appearance,
             aroma = source.aroma,
             flavor = source.flavor,

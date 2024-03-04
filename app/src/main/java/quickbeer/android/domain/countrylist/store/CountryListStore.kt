@@ -11,7 +11,7 @@ class CountryListStore @Inject constructor(
     @IdListPersistedCore indexStoreCore: StoreCore<String, IdList>,
     countryStoreCore: StoreCore<Int, Country>
 ) : SingleItemListStore<String, Int, Country>(
-    KEY,
+    indexKey = KEY,
     getKey = Country::id,
     indexCore = indexStoreCore,
     valueCore = countryStoreCore

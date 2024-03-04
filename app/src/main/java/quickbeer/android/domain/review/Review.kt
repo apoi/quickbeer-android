@@ -8,6 +8,7 @@ import quickbeer.android.data.store.Merger
 @Parcelize
 data class Review(
     val id: Int,
+    val beerId: Int?,
     val appearance: Int?,
     val aroma: Int?,
     val flavor: Int?,
@@ -31,6 +32,7 @@ data class Review(
         val merger: Merger<Review> = { old, new ->
             Review(
                 id = new.id,
+                beerId = new.beerId ?: old.beerId,
                 appearance = new.appearance ?: old.appearance,
                 aroma = new.aroma ?: old.aroma,
                 flavor = new.flavor ?: old.flavor,
