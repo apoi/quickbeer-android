@@ -19,12 +19,18 @@ package quickbeer.android.feature.beerdetails
 
 import android.view.View
 import androidx.annotation.StringRes
+import coil.load
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.transform.BlurTransformation
+import coil.transform.CircleCropTransformation
 import java.lang.String.valueOf
 import quickbeer.android.R
 import quickbeer.android.databinding.RatingListItemBinding
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.ui.adapter.base.ListViewHolder
 import quickbeer.android.ui.adapter.rating.RatingListModel
+import quickbeer.android.ui.transformations.ContainerLabelExtractor
 
 /**
  * View holder for ratings in list
@@ -41,6 +47,11 @@ class BeerRatingsViewHolder(
         binding.user.text = metadata
         binding.score.text = String.format("%.1f", item.rating.totalScore)
         binding.description.text = item.rating.comments
+
+        binding.avatar.load(item.rating.avatarUri()) {
+            crossfade(itemView.context.resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(CircleCropTransformation())
+        }
 
         if (item.rating.appearance != null) {
             setDetails(item.rating)

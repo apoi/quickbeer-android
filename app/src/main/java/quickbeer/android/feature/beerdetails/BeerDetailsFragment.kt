@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
+import coil.request.ImageResult
 import coil.transform.BlurTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
@@ -78,7 +79,7 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
                 BlurTransformation(requireContext(), LABEL_BLUR)
             )
             listener(object : ImageRequest.Listener {
-                override fun onStart(request: ImageRequest) {
+                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     onImageLoadSuccess()
                 }
             })

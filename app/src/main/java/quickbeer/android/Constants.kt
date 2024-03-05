@@ -21,6 +21,12 @@ object Constants {
     const val BREWER_IMAGE_PATH =
         "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg"
 
+    const val USER_AVATAR_PATH =
+        "https://res.cloudinary.com/ratebeer/image/upload/w_300,c_limit,q_100,d_user_def.png/user_%s.jpg"
+
+    const val USER_AVATAR_HIRES_PATH =
+        "http://res.cloudinary.com/ratebeer/image/upload/w_1024,c_limit,q_100,d_user_def.png/user_%s.jpg"
+
     const val FLAG_IMAGE_PATH =
         "https://ztesch.fi/quickbeer/flags/%s.svg"
 

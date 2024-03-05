@@ -3,6 +3,7 @@ package quickbeer.android.domain.rating
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.Constants
 import quickbeer.android.data.store.Merger
 
 @Parcelize
@@ -27,6 +28,10 @@ data class Rating(
     val country: String?,
     val rateCount: Int?
 ) : Parcelable {
+
+    fun avatarUri(): String {
+        return Constants.USER_AVATAR_PATH.format(userName)
+    }
 
     companion object {
         val merger: Merger<Rating> = { old, new ->

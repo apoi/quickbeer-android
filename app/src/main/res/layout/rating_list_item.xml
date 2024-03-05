@@ -25,7 +25,7 @@
             <TextView
                 android:id="@+id/score"
                 style="@style/DetailsScore"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="@dimen/spacing_xl"
                 tools:text="3.8" />
 
             <include
@@ -36,13 +36,24 @@
                 android:layout_alignBottom="@id/score"
                 android:layout_toEndOf="@id/score" />
 
+            <ImageView
+                android:id="@+id/avatar"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignTop="@id/score"
+                android:layout_alignBottom="@id/score"
+                android:layout_marginStart="@dimen/spacing_s"
+                android:layout_toEndOf="@id/score"
+                android:scaleType="fitCenter"
+                android:gravity="center_vertical" />
+
             <TextView
                 android:id="@+id/user"
                 style="@style/DetailsInfoValue"
                 android:layout_alignTop="@id/score"
                 android:layout_alignBottom="@id/score"
-                android:layout_marginStart="20dp"
-                android:layout_toEndOf="@id/score"
+                android:layout_marginStart="@dimen/spacing_s"
+                android:layout_toEndOf="@id/avatar"
                 android:gravity="center_vertical"
                 tools:text="beerdude, Germany\n2017-02-11" />
 
