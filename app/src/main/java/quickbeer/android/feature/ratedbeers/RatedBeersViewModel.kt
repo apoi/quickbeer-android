@@ -1,6 +1,5 @@
 package quickbeer.android.feature.ratedbeers
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,29 +12,24 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.AlwaysFetch
-import quickbeer.android.data.repository.ListCountValidator
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.reviewlist.repository.UserReviewsRepository
+import quickbeer.android.domain.ratinglist.repository.UserRatingsRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
-import quickbeer.android.util.ktx.user
 
 @HiltViewModel
 class RatedBeersViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle,
     private val beerRepository: BeerRepository,
-    private val userReviewsRepository: UserReviewsRepository
+    private val userRatingsRepository: UserRatingsRepository
 ) : ViewModel() {
-
-    private val user = savedStateHandle.user()
 
     private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
     val viewState: StateFlow<State<List<BeerListModel>>> = _viewState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            userReviewsRepository
+            userRatingsRepository
                 .getStream(AlwaysFetch())
                 .map(BeerListModelRatingTimeMapper(beerRepository)::map)
                 .onStart { emit(State.Loading()) }

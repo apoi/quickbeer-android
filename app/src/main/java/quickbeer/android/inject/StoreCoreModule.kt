@@ -24,8 +24,8 @@ import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.preferences.core.IntPreferenceStoreCore
 import quickbeer.android.domain.preferences.core.StringPreferenceStoreCore
-import quickbeer.android.domain.review.Review
-import quickbeer.android.domain.review.store.ReviewRoomCore
+import quickbeer.android.domain.rating.Rating
+import quickbeer.android.domain.rating.store.RatingRoomCore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.store.StyleRoomCore
 import quickbeer.android.domain.user.User
@@ -93,8 +93,8 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideReviewCore(roomCore: ReviewRoomCore): StoreCore<Int, Review> {
-        return CachingStoreCore(roomCore, Review::id, Review.merger)
+    fun provideRatingCore(roomCore: RatingRoomCore): StoreCore<Int, Rating> {
+        return CachingStoreCore(roomCore, Rating::id, Rating.merger)
     }
 
     @Provides

@@ -9,8 +9,8 @@ import quickbeer.android.domain.brewer.store.BrewerDao
 import quickbeer.android.domain.brewer.store.BrewerEntity
 import quickbeer.android.domain.idlist.store.IdListDao
 import quickbeer.android.domain.idlist.store.IdListEntity
-import quickbeer.android.domain.review.store.ReviewDao
-import quickbeer.android.domain.review.store.ReviewEntity
+import quickbeer.android.domain.rating.store.RatingDao
+import quickbeer.android.domain.rating.store.RatingEntity
 import quickbeer.android.domain.style.store.StyleDao
 import quickbeer.android.domain.style.store.StyleEntity
 
@@ -25,7 +25,7 @@ private const val CURRENT_VERSION = 2
         IdListEntity::class,
         BeerEntity::class,
         BrewerEntity::class,
-        ReviewEntity::class,
+        RatingEntity::class,
         StyleEntity::class
     ],
     autoMigrations = [
@@ -40,7 +40,7 @@ abstract class Database : RoomDatabase() {
 
     abstract fun brewerDao(): BrewerDao
 
-    abstract fun reviewDao(): ReviewDao
+    abstract fun ratingDao(): RatingDao
 
     abstract fun styleDao(): StyleDao
 }

@@ -48,10 +48,10 @@
     <string name="message_error">Error! Try again later.</string>
 
     <!-- Beer details -->
-    <string name="rating_overall">Overall</string>
-    <string name="rating_style">Style</string>
+    <string name="percentile_overall">Overall</string>
+    <string name="percentile_style">Style</string>
 
-    <string name="beer_details_reviews">Reviews</string>
+    <string name="beer_details_ratings">Ratings</string>
     <string name="beer_details_no_photo">No photo available for this beer</string>
     <string name="no_description">No description available.</string>
     <string name="not_available">N/A</string>
@@ -102,22 +102,22 @@
     <string name="login_to_rate_message">You need to login to rate beers. Login now?</string>
     <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>
 
-    <!-- Reviews -->
-    <string name="review_appearance">Appear.</string>
-    <string name="review_aroma">Aroma</string>
-    <string name="review_flavor">Flavor</string>
-    <string name="review_mouthfeel">Mouthf.</string>
-    <string name="review_overall">Overall</string>
+    <!-- Ratings -->
+    <string name="rating_appearance">Appear.</string>
+    <string name="rating_aroma">Aroma</string>
+    <string name="rating_flavor">Flavor</string>
+    <string name="rating_mouthfeel">Mouthf.</string>
+    <string name="rating_overall">Overall</string>
 
-    <string name="review_appearance_hint">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
-    <string name="review_aroma_hint">Hop character, malts, sweetness, fruitiness and other aromas.</string>
-    <string name="review_flavor_hint">How the beer tastes. How does the initial flavour vary from the start, the middle, finish and aftertaste of the beer?</string>
-    <string name="review_mouthfeel_hint">The “feel” of the beer inside your mouth and as you swallow it.</string>
-    <string name="review_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
+    <string name="rating_appearance_hint">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
+    <string name="rating_aroma_hint">Hop character, malts, sweetness, fruitiness and other aromas.</string>
+    <string name="rating_flavor_hint">How the beer tastes. How does the initial flavour vary from the start, the middle, finish and aftertaste of the beer?</string>
+    <string name="rating_mouthfeel_hint">The “feel” of the beer inside your mouth and as you swallow it.</string>
+    <string name="rating_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
-    <!-- Review list messages -->
-    <string name="review_list_empty">This beer hasn\'t been reviewed yet.</string>
-    <string name="review_list_error">Error! Try again later.</string>
+    <!-- Rating list messages -->
+    <string name="rating_list_empty">This beer hasn\'t been rated yet.</string>
+    <string name="rating_list_error">Error! Try again later.</string>
 
     <!-- Barcode -->
     <string name="cd_close_button">Back</string>
@@ -145,7 +145,7 @@
     <string name="login_error">Error logging in. Please try again later.</string>
 
     <!-- Profile -->
-    <string name="profile_reviews">Reviews: %s</string>
+    <string name="profile_ratings">Ratings: %s</string>
     <string name="profile_ticks">Ticks: %s</string>
     <string name="profile_login">Login</string>
     <string name="profile_logout">Logout</string>

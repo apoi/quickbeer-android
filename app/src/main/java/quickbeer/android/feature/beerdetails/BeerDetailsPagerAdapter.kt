@@ -31,14 +31,14 @@ class BeerDetailsPagerAdapter(fm: FragmentManager, private val beerId: Int) :
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> BeerDetailsInfoFragment.create(beerId)
-            else -> BeerReviewsFragment.create(beerId)
+            else -> BeerRatingsFragment.create(beerId)
         }
     }
 
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
             0 -> "Details"
-            else -> "Reviews"
+            else -> "Ratings"
         }
     }
 }

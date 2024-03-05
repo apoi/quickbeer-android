@@ -85,7 +85,7 @@
                 android:visibility="gone"
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_annotation"
-                app:label="@string/profile_reviews"
+                app:label="@string/profile_ratings"
                 app:position="MIDDLE"
                 tools:visibility="visible" />
 

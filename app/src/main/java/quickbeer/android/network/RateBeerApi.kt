@@ -3,8 +3,8 @@ package quickbeer.android.network
 import okhttp3.ResponseBody
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
-import quickbeer.android.domain.review.network.ReviewJson
-import quickbeer.android.domain.review.network.UsersReviewJson
+import quickbeer.android.domain.rating.network.RatingJson
+import quickbeer.android.domain.rating.network.UsersRatingJson
 import quickbeer.android.domain.stylelist.network.StyleJson
 import quickbeer.android.domain.user.network.RateCountJson
 import quickbeer.android.network.result.ApiResult
@@ -72,16 +72,16 @@ interface RateBeerApi {
     @GET("/json/tb.asp?m=country")
     suspend fun beersInCountry(@Query("c") countryId: String): ApiResult<List<BeerJson>>
 
-    // REVIEWS
+    // RATINGS
 
     @GET("/json/gr.asp")
-    suspend fun getReviews(
+    suspend fun getRatings(
         @Query("bid") beerId: String,
         @Query("p") page: Int
-    ): ApiResult<List<ReviewJson>>
+    ): ApiResult<List<RatingJson>>
 
     @GET("/json/revs.asp?m=BR&x=2&x2=2")
-    suspend fun getUsersReviews(@Query("p") page: Int): ApiResult<List<UsersReviewJson>>
+    suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UsersRatingJson>>
 
     @GET("/json/bt.asp?m=1")
     suspend fun getTicks(@Query("u") userId: String): ApiResult<List<BeerJson>>

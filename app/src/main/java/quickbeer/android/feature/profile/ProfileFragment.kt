@@ -74,7 +74,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
 
     private fun setRateCount(user: User?) {
         binding.profileRatings.label.text =
-            getString(R.string.profile_reviews).format(user?.rateCount ?: "loading...")
+            getString(R.string.profile_ratings).format(user?.rateCount ?: "loading...")
 
         if (user?.rateCount != null) {
             binding.profileRatings.setOnClickListener {

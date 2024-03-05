@@ -19,9 +19,9 @@ import quickbeer.android.domain.brewer.network.BrewerFetcher
 import quickbeer.android.domain.brewerlist.network.BrewerSearchFetcher
 import quickbeer.android.domain.countrylist.network.CountryListFetcher
 import quickbeer.android.domain.login.LoginManager
-import quickbeer.android.domain.reviewlist.network.BeerReviewsFetcher
-import quickbeer.android.domain.reviewlist.network.BeerReviewsPageFetcher
-import quickbeer.android.domain.reviewlist.network.UsersReviewsPageFetcher
+import quickbeer.android.domain.ratinglist.network.BeerRatingsFetcher
+import quickbeer.android.domain.ratinglist.network.BeerRatingsPageFetcher
+import quickbeer.android.domain.ratinglist.network.UsersRatingsPageFetcher
 import quickbeer.android.domain.stylelist.network.StyleListFetcher
 import quickbeer.android.domain.user.network.RateCountFetcher
 import quickbeer.android.network.RateBeerApi
@@ -108,14 +108,14 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideBeerReviewsFetcher(api: RateBeerApi): BeerReviewsFetcher {
-        return BeerReviewsFetcher(api)
+    fun provideBeerRatingsFetcher(api: RateBeerApi): BeerRatingsFetcher {
+        return BeerRatingsFetcher(api)
     }
 
     @Provides
     @Singleton
-    fun provideBeerReviewsPageFetcher(api: RateBeerApi): BeerReviewsPageFetcher {
-        return BeerReviewsPageFetcher(api)
+    fun provideBeerRatingsPageFetcher(api: RateBeerApi): BeerRatingsPageFetcher {
+        return BeerRatingsPageFetcher(api)
     }
 
     @Provides
@@ -135,9 +135,9 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideUsersReviewsPageFetcher(
+    fun provideUsersRatingsPageFetcher(
         api: RateBeerApi
-    ): UsersReviewsPageFetcher {
-        return UsersReviewsPageFetcher(api)
+    ): UsersRatingsPageFetcher {
+        return UsersRatingsPageFetcher(api)
     }
 }

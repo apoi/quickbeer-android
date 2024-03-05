@@ -66,7 +66,7 @@
                 app:layout_constraintEnd_toStartOf="@id/beer_rating_overall_separator"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="@string/rating_overall" />
+                app:title="@string/percentile_overall" />
 
             <View
                 android:id="@+id/beer_rating_overall_separator"
@@ -91,7 +91,7 @@
                 app:layout_constraintEnd_toStartOf="@id/beer_rating_style_separator"
                 app:layout_constraintStart_toEndOf="@id/beer_rating_overall_separator"
                 app:layout_constraintTop_toTopOf="@id/beer_rating_overall"
-                app:title="@string/rating_style" />
+                app:title="@string/percentile_style" />
 
             <View
                 android:id="@+id/beer_rating_style_separator"
