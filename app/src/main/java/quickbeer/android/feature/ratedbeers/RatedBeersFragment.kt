@@ -40,9 +40,7 @@ class RatedBeersFragment : BaseFragment(R.layout.rated_beers_fragment) {
 
         binding.recyclerView.apply {
             adapter = beersAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                recycleChildrenOnDetach = true
-            }
+            layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))

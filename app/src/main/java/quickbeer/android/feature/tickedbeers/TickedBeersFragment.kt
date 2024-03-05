@@ -40,9 +40,7 @@ class TickedBeersFragment : BaseFragment(R.layout.ticked_beers_fragment) {
 
         binding.recyclerView.apply {
             adapter = beersAdapter
-            layoutManager = LinearLayoutManager(context).apply {
-                recycleChildrenOnDetach = true
-            }
+            layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
