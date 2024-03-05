@@ -8,39 +8,44 @@
     android:paddingBottom="@dimen/card_view_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_m"
-        android:background="@color/gray_80">
+        style="@style/InfoCard">
 
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_s"
-            android:layout_marginBottom="@dimen/spacing_s"
-            app:layout_constraintBottom_toTopOf="@id/description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/style_details_parent"
-            app:top_divider="false" />
+            android:layout_height="wrap_content">
 
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            android:focusable="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/parent"
-            app:paragraph="true"
-            app:selectable="true"
-            app:title="@string/style_details_description"
-            app:top_divider="true" />
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_s"
+                android:layout_marginBottom="@dimen/spacing_s"
+                app:layout_constraintBottom_toTopOf="@id/description"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/style_details_parent"
+                app:top_divider="false" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="false"
+                android:focusable="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/parent"
+                app:paragraph="true"
+                app:selectable="true"
+                app:title="@string/style_details_description"
+                app:top_divider="true" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.core.widget.NestedScrollView>

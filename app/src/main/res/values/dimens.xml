@@ -26,9 +26,9 @@
     <dimen name="beer_details_line_margin">7dp</dimen>
     <dimen name="beer_details_image_size">80dp</dimen>
 
-    <dimen name="card_view_elevation">2dp</dimen>
-    <dimen name="card_view_margin">10dp</dimen>
-    <dimen name="card_inner_margin">5dp</dimen>
+    <dimen name="card_view_elevation">4dp</dimen>
+    <dimen name="card_view_margin">12dp</dimen>
+    <dimen name="card_view_inner_margin">8dp</dimen>
 
     <!-- Main lists -->
     <dimen name="listitem_text_header">15sp</dimen>

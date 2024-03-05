@@ -143,6 +143,16 @@
         <item name="android:indeterminate">true</item>
     </style>
 
+    <!-- Info cards -->
+    <style name="InfoCard" parent="CardView">
+        <item name="android:layout_marginLeft">@dimen/card_view_margin</item>
+        <item name="android:layout_marginTop">@dimen/card_view_margin</item>
+        <item name="android:layout_marginRight">@dimen/card_view_margin</item>
+        <item name="android:elevation">@dimen/card_view_elevation</item>
+        <item name="cardBackgroundColor">@color/gray_80</item>
+        <item name="cardCornerRadius">@dimen/radius_l</item>
+    </style>
+
     <!-- Beer details -->
     <style name="DetailsScore">
         <item name="android:layout_width">wrap_content</item>

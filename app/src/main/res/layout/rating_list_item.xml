@@ -2,32 +2,29 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/InfoCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/card_view_margin"
-    android:layout_marginTop="@dimen/card_view_margin"
-    android:layout_marginRight="@dimen/card_view_margin"
-    android:elevation="@dimen/card_view_elevation"
-    app:cardBackgroundColor="@color/gray_80">
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/card_inner_margin"
-        android:layout_marginBottom="@dimen/card_inner_margin"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:layout_marginBottom="@dimen/spacing_s"
         android:clipChildren="false"
         android:orientation="vertical">
 
         <RelativeLayout
             style="@style/DetailsRowLayout"
-            android:layout_marginLeft="@dimen/card_inner_margin"
-            android:layout_marginRight="@dimen/card_inner_margin"
+            android:layout_marginLeft="@dimen/card_view_inner_margin"
+            android:layout_marginRight="@dimen/card_view_inner_margin"
             android:gravity="start">
 
             <TextView
                 android:id="@+id/score"
                 style="@style/DetailsScore"
-                android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
                 tools:text="3.8" />
 

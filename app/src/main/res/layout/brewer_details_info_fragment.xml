@@ -8,166 +8,171 @@
     android:paddingBottom="@dimen/card_view_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
+        style="@style/InfoCard"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_m"
-        android:background="@color/gray_80"
-        android:clipChildren="false"
-        android:clipToPadding="false">
+        android:layout_height="wrap_content">
 
-        <!-- Founded -->
-
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/founded"
-            android:layout_width="@dimen/details_box_width"
-            android:layout_height="@dimen/details_box_height"
-            android:layout_marginStart="@dimen/spacing_xl"
-            android:layout_marginTop="@dimen/spacing_l"
-            app:constrained="false"
-            app:layout_constraintEnd_toStartOf="@id/founded_separator"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/founded" />
-
-        <View
-            android:id="@+id/founded_separator"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:alpha="0.1"
-            android:background="@color/gray_30"
-            app:layout_constraintBottom_toBottomOf="@id/founded"
-            app:layout_constraintEnd_toStartOf="@id/web_container"
-            app:layout_constraintStart_toEndOf="@id/founded"
-            app:layout_constraintTop_toTopOf="@id/founded" />
-
-        <!-- Web -->
-
-        <FrameLayout
-            android:id="@+id/web_container"
-            android:layout_width="@dimen/details_box_width"
-            android:layout_height="@dimen/details_box_height"
-            android:alpha="0.4"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toStartOf="@id/web_separator"
-            app:layout_constraintStart_toEndOf="@id/founded_separator"
-            app:layout_constraintTop_toTopOf="@id/founded">
-
-            <ImageView
-                android:id="@+id/web"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_action_web" />
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/web_separator"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:alpha="0.1"
-            android:background="@color/gray_30"
-            app:layout_constraintBottom_toBottomOf="@id/web_container"
-            app:layout_constraintEnd_toStartOf="@id/facebook_container"
-            app:layout_constraintStart_toEndOf="@id/web_container"
-            app:layout_constraintTop_toTopOf="@id/web_container" />
-
-        <!-- Facebook -->
-
-        <FrameLayout
-            android:id="@+id/facebook_container"
-            android:layout_width="@dimen/details_box_width"
-            android:layout_height="@dimen/details_box_height"
-            android:alpha="0.4"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toStartOf="@id/facebook_separator"
-            app:layout_constraintStart_toEndOf="@id/web_separator"
-            app:layout_constraintTop_toTopOf="@id/founded">
-
-            <ImageView
-                android:id="@+id/facebook"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_action_facebook" />
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/facebook_separator"
-            android:layout_width="1dp"
-            android:layout_height="0dp"
-            android:alpha="0.1"
-            android:background="@color/gray_30"
-            app:layout_constraintBottom_toBottomOf="@id/facebook_container"
-            app:layout_constraintEnd_toStartOf="@id/twitter_container"
-            app:layout_constraintStart_toEndOf="@id/facebook_container"
-            app:layout_constraintTop_toTopOf="@id/facebook_container" />
-
-        <!-- Twitter -->
-
-        <FrameLayout
-            android:id="@+id/twitter_container"
-            android:layout_width="@dimen/details_box_width"
-            android:layout_height="@dimen/details_box_height"
-            android:layout_marginEnd="@dimen/spacing_xl"
-            android:alpha="0.4"
-            android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/facebook_separator"
-            app:layout_constraintTop_toTopOf="@id/founded">
-
-            <ImageView
-                android:id="@+id/twitter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_action_twitter" />
-
-        </FrameLayout>
-
-        <!-- Info fields -->
-
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/country"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_m"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/city"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/founded_separator"
-            app:title="@string/country"
-            app:top_divider="false" />
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/city"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toTopOf="@id/address"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/country"
-            app:title="@string/city"
-            app:top_divider="true" />
+            <!-- Founded -->
 
-        <quickbeer.android.ui.view.ValueLabel
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/city"
-            app:title="@string/address"
-            app:top_divider="true" />
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/founded"
+                android:layout_width="@dimen/details_box_width"
+                android:layout_height="@dimen/details_box_height"
+                android:layout_marginStart="@dimen/spacing_xl"
+                android:layout_marginTop="@dimen/spacing_l"
+                app:constrained="false"
+                app:layout_constraintEnd_toStartOf="@id/founded_separator"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:title="@string/founded" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <View
+                android:id="@+id/founded_separator"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:alpha="0.1"
+                android:background="@color/gray_30"
+                app:layout_constraintBottom_toBottomOf="@id/founded"
+                app:layout_constraintEnd_toStartOf="@id/web_container"
+                app:layout_constraintStart_toEndOf="@id/founded"
+                app:layout_constraintTop_toTopOf="@id/founded" />
+
+            <!-- Web -->
+
+            <FrameLayout
+                android:id="@+id/web_container"
+                android:layout_width="@dimen/details_box_width"
+                android:layout_height="@dimen/details_box_height"
+                android:alpha="0.4"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toStartOf="@id/web_separator"
+                app:layout_constraintStart_toEndOf="@id/founded_separator"
+                app:layout_constraintTop_toTopOf="@id/founded">
+
+                <ImageView
+                    android:id="@+id/web"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_action_web" />
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/web_separator"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:alpha="0.1"
+                android:background="@color/gray_30"
+                app:layout_constraintBottom_toBottomOf="@id/web_container"
+                app:layout_constraintEnd_toStartOf="@id/facebook_container"
+                app:layout_constraintStart_toEndOf="@id/web_container"
+                app:layout_constraintTop_toTopOf="@id/web_container" />
+
+            <!-- Facebook -->
+
+            <FrameLayout
+                android:id="@+id/facebook_container"
+                android:layout_width="@dimen/details_box_width"
+                android:layout_height="@dimen/details_box_height"
+                android:alpha="0.4"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toStartOf="@id/facebook_separator"
+                app:layout_constraintStart_toEndOf="@id/web_separator"
+                app:layout_constraintTop_toTopOf="@id/founded">
+
+                <ImageView
+                    android:id="@+id/facebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_action_facebook" />
+
+            </FrameLayout>
+
+            <View
+                android:id="@+id/facebook_separator"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:alpha="0.1"
+                android:background="@color/gray_30"
+                app:layout_constraintBottom_toBottomOf="@id/facebook_container"
+                app:layout_constraintEnd_toStartOf="@id/twitter_container"
+                app:layout_constraintStart_toEndOf="@id/facebook_container"
+                app:layout_constraintTop_toTopOf="@id/facebook_container" />
+
+            <!-- Twitter -->
+
+            <FrameLayout
+                android:id="@+id/twitter_container"
+                android:layout_width="@dimen/details_box_width"
+                android:layout_height="@dimen/details_box_height"
+                android:layout_marginEnd="@dimen/spacing_xl"
+                android:alpha="0.4"
+                android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/facebook_separator"
+                app:layout_constraintTop_toTopOf="@id/founded">
+
+                <ImageView
+                    android:id="@+id/twitter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_action_twitter" />
+
+            </FrameLayout>
+
+            <!-- Info fields -->
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/country"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/city"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/founded_separator"
+                app:title="@string/country"
+                app:top_divider="false" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/country"
+                app:title="@string/city"
+                app:top_divider="true" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/city"
+                app:title="@string/address"
+                app:top_divider="true" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.core.widget.NestedScrollView>
