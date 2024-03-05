@@ -1,9 +1,11 @@
 package quickbeer.android.domain.user
 
 import android.os.Parcelable
+import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
 import quickbeer.android.data.store.Merger
 
+@Keep
 @Parcelize
 data class User(
     val id: Int,

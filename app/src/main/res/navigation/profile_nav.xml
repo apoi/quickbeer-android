@@ -21,6 +21,10 @@
             app:destination="@id/login_dialog" />
 
         <action
+            android:id="@+id/to_ratings_list"
+            app:destination="@id/ratings_list_fragment" />
+
+        <action
             android:id="@+id/to_ticks_list"
             app:destination="@id/ticks_list_fragment" />
 
@@ -31,14 +35,26 @@
     </fragment>
 
     <fragment
+        android:id="@+id/ratings_list_fragment"
+        android:name="quickbeer.android.feature.ratedbeers.RatedBeersFragment"
+        android:label="@string/ratings_list_title"
+        tools:layout="@layout/rated_beers_fragment">
+
+        <argument
+            android:name="user"
+            app:argType="quickbeer.android.domain.user.User" />
+
+    </fragment>
+
+    <fragment
         android:id="@+id/ticks_list_fragment"
         android:name="quickbeer.android.feature.tickedbeers.TickedBeersFragment"
         android:label="@string/ticks_list_title"
         tools:layout="@layout/ticked_beers_fragment">
 
         <argument
-            android:name="id"
-            app:argType="integer" />
+            android:name="user"
+            app:argType="quickbeer.android.domain.user.User" />
 
     </fragment>
 

@@ -47,7 +47,8 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
         observe(viewModel.hasUser, ::setProfileButtons)
         observe(viewModel.userState) { state ->
             when (state) {
-                is State.Initial, is State.Loading -> setStateLoading()
+                is State.Initial-> Unit
+                is State.Loading -> setStateContent(state.value)
                 is State.Success -> setStateContent(state.value)
                 is State.Empty, is State.Error -> setStateEmpty()
             }
@@ -55,33 +56,45 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     private fun setProfileButtons(hasUser: Boolean) {
-        binding.profileReviews.isVisible = hasUser
+        binding.profileRatings.isVisible = hasUser
         binding.profileTicks.isVisible = hasUser
         binding.profileLogout.isVisible = hasUser
         binding.profileLogin.isVisible = !hasUser
     }
 
-    private fun setStateLoading() {
-        binding.profileUsername.text = "Loading..."
-
-        binding.profileReviews.label.text =
-            getString(R.string.profile_reviews).format("loading...")
-
-        binding.profileTicks.label.text =
-            getString(R.string.profile_ticks).format("loading...")
+    private fun setStateContent(user: User?) {
+        setProfile(user)
+        setRateCount(user)
+        setTickCount(user)
     }
 
-    private fun setStateContent(user: User) {
-        binding.profileUsername.text = user.username
+    private fun setProfile(user: User?) {
+        binding.profileUsername.text = user?.username ?: "Loading..."
+    }
 
-        binding.profileReviews.label.text =
-            getString(R.string.profile_reviews).format(user.rateCount)
+    private fun setRateCount(user: User?) {
+        binding.profileRatings.label.text =
+            getString(R.string.profile_reviews).format(user?.rateCount ?: "loading...")
 
+        if (user?.rateCount != null) {
+            binding.profileRatings.setOnClickListener {
+                navigate(ProfileFragmentDirections.toRatingsList(user))
+            }
+        } else {
+            binding.profileRatings.setOnClickListener(null)
+        }
+    }
+
+    private fun setTickCount(user: User?) {
         binding.profileTicks.label.text =
-            getString(R.string.profile_ticks).format(user.tickCount)
+            getString(R.string.profile_ticks).format(user?.tickCount ?: "loading...")
 
-        binding.profileTicks.setOnClickListener {
-            navigate(ProfileFragmentDirections.toTicksList(user.id))
+        if (user?.tickCount != null) {
+            binding.profileTicks.setOnClickListener {
+                navigate(ProfileFragmentDirections.toTicksList(user))
+            }
+        } else {
+            binding.profileTicks.setOnClickListener(null)
         }
     }
 

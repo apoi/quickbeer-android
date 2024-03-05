@@ -23,6 +23,7 @@
 
     <string name="login_title">Login</string>
     <string name="legal_title">Legal</string>
+    <string name="ratings_list_title">Rated Beers</string>
     <string name="ticks_list_title">Ticked Beers</string>
     <string name="open_source_title">Open Source Licenses</string>
     <string name="graphics_assets_title">Graphics Asset Licenses</string>

@@ -1,4 +1,4 @@
-package quickbeer.android.feature.tickedbeers
+package quickbeer.android.feature.ratedbeers
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -12,19 +12,20 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.AlwaysFetch
 import quickbeer.android.data.repository.ListCountValidator
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
+import quickbeer.android.domain.reviewlist.repository.UserReviewsRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
-import quickbeer.android.ui.adapter.beer.BeerListModelTickDateMapper
+import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
 import quickbeer.android.util.ktx.user
 
 @HiltViewModel
-class TickedBeersViewModel @Inject constructor(
+class RatedBeersViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val beerRepository: BeerRepository,
-    private val tickedBeersRepository: TickedBeersRepository
+    private val userReviewsRepository: UserReviewsRepository
 ) : ViewModel() {
 
     private val user = savedStateHandle.user()
@@ -34,12 +35,9 @@ class TickedBeersViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            tickedBeersRepository
-                .getStream(
-                    user.id.toString(),
-                    ListCountValidator { it >= (user.tickCount ?: 0) }
-                )
-                .map(BeerListModelTickDateMapper(beerRepository)::map)
+            userReviewsRepository
+                .getStream(AlwaysFetch())
+                .map(BeerListModelRatingTimeMapper(beerRepository)::map)
                 .onStart { emit(State.Loading()) }
                 .collectLatest(_viewState::emit)
         }

@@ -16,7 +16,7 @@ abstract class ReviewDao : CoreDao<Int, ReviewEntity>(
     ReviewEntity.merger
 ) {
 
-    @Query("SELECT * FROM reviews WHERE user_id=:userId")
+    @Query("SELECT * FROM reviews WHERE user_id=:userId AND aroma IS NOT NULL")
     abstract fun reviewsForUser(userId: Int): Flow<List<ReviewEntity>>
 
     @Query("SELECT * FROM reviews WHERE id=:key")

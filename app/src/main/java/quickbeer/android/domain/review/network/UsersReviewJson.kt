@@ -27,12 +27,12 @@ import org.threeten.bp.ZonedDateTime
 data class UsersReviewJson(
     // Review data
     @field:Json(name = "RatingID") val id: Int,
-    @field:Json(name = "Appearance") val appearance: Int,
-    @field:Json(name = "Aroma") val aroma: Int,
-    @field:Json(name = "Flavor") val flavor: Int,
-    @field:Json(name = "Mouthfeel") val mouthfeel: Int,
-    @field:Json(name = "Overall") val overall: Int,
-    @field:Json(name = "TotalScore") val totalScore: Float,
+    @field:Json(name = "Appearance") val appearance: Int?,
+    @field:Json(name = "Aroma") val aroma: Int?,
+    @field:Json(name = "Flavor") val flavor: Int?,
+    @field:Json(name = "Mouthfeel") val mouthfeel: Int?,
+    @field:Json(name = "Overall") val overall: Int?,
+    @field:Json(name = "TotalScore") val totalScore: Float?,
     @field:Json(name = "Comments") val comments: String?,
     @field:Json(name = "TimeEntered") val timeEntered: ZonedDateTime?,
     @field:Json(name = "TimeUpdated") val timeUpdated: ZonedDateTime?,

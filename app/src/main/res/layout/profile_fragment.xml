@@ -79,7 +79,7 @@
             </quickbeer.android.ui.view.GroupItem>
 
             <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/profile_reviews"
+                android:id="@+id/profile_ratings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"

@@ -64,18 +64,35 @@ class UserReviewsRepository @Inject constructor(
     private suspend fun fetchReviews(user: User?): ApiResult<List<Review>> {
         if (user == null) error("User is null, can't fetch reviews")
 
-        val reviews = user.rateCount ?: 0
-        val pages = ceil(reviews.toDouble() / RATINGS_PER_PAGE).toInt()
+        // The ratings API seems to be broken:
+        //   1. It returns ticked beers in addition to rated beers, at least for a certain time span
+        //   2. Result list is not sorted by the update timestamp
+        //
+        // This means that even though we cache the ratings, we can't say if
+        //   1. Do we have all the ratings cached already
+        //   2. Was some cached rating changed outside of the app
+        //
+        // Thus, we just need to fetch all the pages to get the full picture. We do that here by
+        // calling the API recursively until we get an empty list or an error.
+        return fetchPages(user, 1, emptyList())
+    }
 
-        Timber.d("QUICKBEER: FETCHING $pages PAGES")
+    private suspend fun fetchPages(
+        user: User,
+        page: Int,
+        accumulator: List<Review>
+    ): ApiResult<List<Review>> {
+        Timber.d("QUICKBEER: FETCHING PAGE $page")
+        val result = fetcher.fetch(Pair(user, page))
 
-        val results = (0..pages).map { page ->
-            coroutineScope {
-                async { fetcher.fetch(Pair(user, page)) }
-            }
-        }.awaitAll()
-
-        return mergeApiResults(results)
+        return if (result is ApiResult.Success && !result.value.isNullOrEmpty()) {
+            fetchPages(user, page + 1, accumulator + result.value)
+        } else if (accumulator.isNotEmpty()) {
+            Timber.d("QUICKBEER: RECURSION DONE, GOT ${accumulator.size} RATINGS")
+            ApiResult.Success(accumulator)
+        } else {
+            result
+        }
     }
 
     private fun mergeApiResults(results: List<ApiResult<List<Review>>>): ApiResult<List<Review>> {

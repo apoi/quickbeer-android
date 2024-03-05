@@ -80,7 +80,7 @@ interface RateBeerApi {
         @Query("p") page: Int
     ): ApiResult<List<ReviewJson>>
 
-    @GET("/json/revs.asp?m=BR&x=2&x2=1")
+    @GET("/json/revs.asp?m=BR&x=2&x2=2")
     suspend fun getUsersReviews(@Query("p") page: Int): ApiResult<List<UsersReviewJson>>
 
     @GET("/json/bt.asp?m=1")

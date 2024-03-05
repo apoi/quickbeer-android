@@ -3,6 +3,7 @@ package quickbeer.android.ui.adapter.beer
 import quickbeer.android.data.state.StateMapper
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.review.Review
 
 class BeerListModelRatingMapper(private val beerRepository: BeerRepository) :
     StateMapper<List<Beer>, List<BeerListModel>>(
@@ -32,6 +33,15 @@ class BeerListModelTickDateMapper(private val beerRepository: BeerRepository) :
                     .thenBy(Beer::name)
                     .thenBy(Beer::id)
             ).map { BeerListModel(it.id, beerRepository) }
+        }
+    )
+
+class BeerListModelRatingTimeMapper(private val beerRepository: BeerRepository) :
+    StateMapper<List<Review>, List<BeerListModel>>(
+        { list ->
+            list.sortedWith(compareByDescending(Review::timeUpdated))
+                .mapNotNull { it.beerId }
+                .map { BeerListModel(it, beerRepository) }
         }
     )
 
