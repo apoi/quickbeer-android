@@ -47,7 +47,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
         observe(viewModel.hasUser, ::setProfileButtons)
         observe(viewModel.userState) { state ->
             when (state) {
-                is State.Initial-> Unit
+                is State.Initial -> Unit
                 is State.Loading -> setStateContent(state.value)
                 is State.Success -> setStateContent(state.value)
                 is State.Empty, is State.Error -> setStateEmpty()

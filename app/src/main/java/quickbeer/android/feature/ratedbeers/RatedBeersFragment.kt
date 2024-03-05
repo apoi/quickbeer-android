@@ -9,7 +9,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.RatedBeersFragmentBinding
-import quickbeer.android.databinding.TickedBeersFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter

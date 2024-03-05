@@ -135,9 +135,7 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideUsersRatingsPageFetcher(
-        api: RateBeerApi
-    ): UsersRatingsPageFetcher {
+    fun provideUsersRatingsPageFetcher(api: RateBeerApi): UsersRatingsPageFetcher {
         return UsersRatingsPageFetcher(api)
     }
 }

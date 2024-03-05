@@ -21,7 +21,7 @@ class UserRatingsRepository @Inject constructor(
     private val store: UsersRatingsStore,
     private val fetcher: UsersRatingsPageFetcher,
     private val intPreferenceStore: IntPreferenceStore,
-    private val userStore: UserStore,
+    private val userStore: UserStore
 ) : SingleRepository<List<Rating>>() {
 
     private suspend fun getUserId(): Int {
@@ -46,8 +46,11 @@ class UserRatingsRepository @Inject constructor(
     override fun getLocalStream(): Flow<List<Rating>> {
         return getUserIdStream()
             .flatMapLatest { userId ->
-                if (userId != null) store.getStream(userId)
-                else flowOf(emptyList())
+                if (userId != null) {
+                    store.getStream(userId)
+                } else {
+                    flowOf(emptyList())
+                }
             }
     }
 
