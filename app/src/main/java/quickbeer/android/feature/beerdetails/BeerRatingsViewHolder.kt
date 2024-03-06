@@ -27,6 +27,7 @@ import quickbeer.android.databinding.RatingListItemBinding
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.ui.adapter.base.ListViewHolder
 import quickbeer.android.ui.adapter.rating.RatingListModel
+import quickbeer.android.util.ktx.formatDate
 
 /**
  * View holder for ratings in list
@@ -38,7 +39,7 @@ class BeerRatingsViewHolder(
     override fun bind(item: RatingListModel) {
         val metadata = item.rating.userName +
             (item.rating.country?.let { ", $it" } ?: "") +
-            "\n" + item.rating.timeEntered
+            "\n" + item.rating.timeEntered?.formatDate()
 
         binding.user.text = metadata
         binding.score.text = String.format("%.1f", item.rating.totalScore)
