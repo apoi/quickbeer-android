@@ -14,6 +14,7 @@ import quickbeer.android.R
 import quickbeer.android.databinding.MainActivityBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
+import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.recyclerview.DefaultRecycledPoolHolder
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
 import quickbeer.android.util.ktx.hideKeyboard
@@ -74,9 +75,18 @@ class MainActivity :
             val selectedMenuItemNavGraph = navHostFragment.navController
                 .graph.findNode(item.itemId) as? NavGraph?
 
-            selectedMenuItemNavGraph?.let { menuGraph ->
-                navHostFragment.navController
-                    .popBackStack(menuGraph.startDestinationId, false)
+            val previousBackStackEntry = navHostFragment.navController
+                .previousBackStackEntry?.destination?.id
+
+            if (previousBackStackEntry == null) {
+                // We're already at the beginning, scroll views here on reselect
+                val currentFragment = navHostFragment.childFragmentManager.fragments.first()
+                (currentFragment as? Resetable)?.onReset()
+            } else {
+                selectedMenuItemNavGraph?.let { menuGraph ->
+                    navHostFragment.navController
+                        .popBackStack(menuGraph.startDestinationId, false)
+                }
             }
         }
     }

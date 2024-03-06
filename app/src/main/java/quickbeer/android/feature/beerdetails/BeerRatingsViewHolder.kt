@@ -20,9 +20,6 @@ package quickbeer.android.feature.beerdetails
 import android.view.View
 import androidx.annotation.StringRes
 import coil.load
-import coil.request.ImageRequest
-import coil.request.ImageResult
-import coil.transform.BlurTransformation
 import coil.transform.CircleCropTransformation
 import java.lang.String.valueOf
 import quickbeer.android.R
@@ -30,7 +27,6 @@ import quickbeer.android.databinding.RatingListItemBinding
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.ui.adapter.base.ListViewHolder
 import quickbeer.android.ui.adapter.rating.RatingListModel
-import quickbeer.android.ui.transformations.ContainerLabelExtractor
 
 /**
  * View holder for ratings in list

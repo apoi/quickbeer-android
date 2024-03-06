@@ -1,5 +1,6 @@
 package quickbeer.android
 
+@Suppress("ktlint:standard:max-line-length")
 object Constants {
 
     const val QUERY_MIN_LENGTH = 4
