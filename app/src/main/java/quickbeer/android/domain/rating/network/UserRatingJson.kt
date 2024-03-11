@@ -24,7 +24,7 @@ import org.threeten.bp.ZonedDateTime
  * Rating made by the currently logged in user. We know user details, details of
  * the beer are included in the response.
  */
-data class UsersRatingJson(
+data class UserRatingJson(
     // Rating data
     @field:Json(name = "RatingID") val id: Int,
     @field:Json(name = "Appearance") val appearance: Int?,

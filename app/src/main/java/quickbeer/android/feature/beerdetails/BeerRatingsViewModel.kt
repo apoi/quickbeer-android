@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.ratinglist.repository.BeerRatingsRepository
+import quickbeer.android.domain.ratinglist.repository.BeerRatingRepository
 import quickbeer.android.ui.adapter.rating.RatingListModel
 import quickbeer.android.ui.adapter.rating.RatingListModelDateSortingMapper
 import quickbeer.android.util.ktx.navId
@@ -38,7 +38,7 @@ import quickbeer.android.util.ktx.navId
 @HiltViewModel
 class BeerRatingsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val ratingRepository: BeerRatingsRepository
+    private val ratingRepository: BeerRatingRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()

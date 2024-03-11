@@ -11,9 +11,13 @@ import quickbeer.android.domain.rating.store.RatingStoreCore
 /**
  * Store that returns all persisted ratings for the user associated by an ID.
  */
-class UsersRatingsStore @Inject constructor(
+class UsersRatingStore @Inject constructor(
     private val ratingStoreCore: RatingStoreCore
 ) : Store<Int, List<Rating>> {
+
+    fun getStream(userId: Int, beerId: Int): Flow<Rating> {
+        return ratingStoreCore.ratingByUser(userId, beerId)
+    }
 
     override suspend fun get(): List<List<Rating>> {
         return ratingStoreCore.getAll()
@@ -21,8 +25,8 @@ class UsersRatingsStore @Inject constructor(
             .values.toList()
     }
 
-    override suspend fun get(key: Int): List<Rating>? {
-        return getStream(key).firstOrNull()
+    override suspend fun get(userId: Int): List<Rating>? {
+        return getStream(userId).firstOrNull()
     }
 
     override fun getStream(): Flow<List<List<Rating>>> {
@@ -30,8 +34,8 @@ class UsersRatingsStore @Inject constructor(
             .map { it.groupBy(Rating::userId).values.toList() }
     }
 
-    override fun getStream(key: Int): Flow<List<Rating>> {
-        return ratingStoreCore.ratingsForUser(key)
+    override fun getStream(userId: Int): Flow<List<Rating>> {
+        return ratingStoreCore.allRatingsByUser(userId)
     }
 
     override suspend fun getKeys(): List<Int> {
@@ -45,7 +49,7 @@ class UsersRatingsStore @Inject constructor(
             .map { it.mapNotNull(Rating::userId).distinct() }
     }
 
-    override suspend fun put(key: Int, value: List<Rating>): Boolean {
+    override suspend fun put(userId: Int, value: List<Rating>): Boolean {
         return ratingStoreCore.put(value.associateBy { it.id }).isNotEmpty()
     }
 

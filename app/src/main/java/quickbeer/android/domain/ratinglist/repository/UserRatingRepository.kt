@@ -1,53 +1,49 @@
 package quickbeer.android.domain.ratinglist.repository
 
 import javax.inject.Inject
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.repository.SingleRepository
+import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.preferences.store.IntPreferenceStore
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.ratinglist.network.UsersRatingsPageFetcher
-import quickbeer.android.domain.ratinglist.store.UsersRatingsStore
+import quickbeer.android.domain.ratinglist.network.UserRatingPageFetcher
+import quickbeer.android.domain.ratinglist.store.UsersRatingStore
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.store.UserStore
 import quickbeer.android.network.result.ApiResult
-import timber.log.Timber
+import quickbeer.android.network.result.map
+import quickbeer.android.network.result.value
 
-class UserRatingsRepository @Inject constructor(
-    private val store: UsersRatingsStore,
-    private val fetcher: UsersRatingsPageFetcher,
+class UserRatingRepository @Inject constructor(
+    private val beerStore: BeerStore,
+    private val ratingStore: UsersRatingStore,
+    private val fetcher: UserRatingPageFetcher,
     private val intPreferenceStore: IntPreferenceStore,
     private val userStore: UserStore
 ) : SingleRepository<List<Rating>>() {
 
-    private suspend fun getUserId(): Int {
-        return intPreferenceStore.get(LoginManager.USERID)
-            ?: error("User is not logged in")
-    }
-
-    private fun getUserIdStream(): Flow<Int?> {
-        return intPreferenceStore.getKeysStream()
-            .map { intPreferenceStore.get(LoginManager.USERID) }
-            .distinctUntilChanged()
-    }
-
     override suspend fun persist(value: List<Rating>) {
-        store.put(getUserId(), value)
+        ratingStore.put(getUserId(), value)
     }
 
     override suspend fun getLocal(): List<Rating>? {
-        return store.get(getUserId())
+        return ratingStore.get(getUserId())
     }
 
     override fun getLocalStream(): Flow<List<Rating>> {
         return getUserIdStream()
             .flatMapLatest { userId ->
                 if (userId != null) {
-                    store.getStream(userId)
+                    ratingStore.getStream(userId)
                 } else {
                     flowOf(emptyList())
                 }
@@ -56,9 +52,11 @@ class UserRatingsRepository @Inject constructor(
 
     override suspend fun fetchRemote(): ApiResult<List<Rating>> {
         return fetchRatings(userStore.get(getUserId()))
+            .also { persistBeers(it) }
+            .let(::takeRatings)
     }
 
-    private suspend fun fetchRatings(user: User?): ApiResult<List<Rating>> {
+    private suspend fun fetchRatings(user: User?): ApiResult<List<Pair<Beer, Rating>>> {
         if (user == null) error("User is null, can't fetch ratings")
 
         // The ratings API seems to be broken:
@@ -77,40 +75,37 @@ class UserRatingsRepository @Inject constructor(
     private suspend fun fetchPages(
         user: User,
         page: Int,
-        accumulator: List<Rating>
-    ): ApiResult<List<Rating>> {
-        Timber.d("QUICKBEER: FETCHING PAGE $page")
+        accumulator: List<Pair<Beer, Rating>>
+    ): ApiResult<List<Pair<Beer, Rating>>> {
         val result = fetcher.fetch(Pair(user, page))
 
         return if (result is ApiResult.Success && !result.value.isNullOrEmpty()) {
             fetchPages(user, page + 1, accumulator + result.value)
         } else if (accumulator.isNotEmpty()) {
-            Timber.d("QUICKBEER: RECURSION DONE, GOT ${accumulator.size} RATINGS")
             ApiResult.Success(accumulator)
         } else {
             result
         }
     }
 
-    private fun mergeApiResults(results: List<ApiResult<List<Rating>>>): ApiResult<List<Rating>> {
-        Timber.d("QUICKBEER: MERGING ${results.size} PAGES")
-        Timber.d("QUICKBEER: MERGING $results")
+    private suspend fun persistBeers(result: ApiResult<List<Pair<Beer, Rating>>>) = coroutineScope {
+        result.value()
+            ?.map { (beer, _) -> async { beerStore.put(beer.id, beer) } }
+            ?.awaitAll()
+    }
 
-        return results.reduce { acc: ApiResult<List<Rating>>, result: ApiResult<List<Rating>> ->
-            when {
-                acc is ApiResult.Success && result is ApiResult.Success -> {
-                    // If both are Success, combine the contained lists
-                    ApiResult.Success(acc.value.orEmpty() + result.value.orEmpty())
-                }
-                acc !is ApiResult.Success -> {
-                    // Accumulator is an error, return it (first element error case)
-                    return acc
-                }
-                else -> {
-                    // Current is an error, return it (stops further reduction)
-                    return result
-                }
-            }
-        }
+    private fun takeRatings(result: ApiResult<List<Pair<Beer, Rating>>>): ApiResult<List<Rating>> {
+        return result.map { list -> list.map(Pair<Beer, Rating>::second) }
+    }
+
+    private suspend fun getUserId(): Int {
+        return intPreferenceStore.get(LoginManager.USERID)
+            ?: error("User is not logged in")
+    }
+
+    private fun getUserIdStream(): Flow<Int?> {
+        return intPreferenceStore.getKeysStream()
+            .map { intPreferenceStore.get(LoginManager.USERID) }
+            .distinctUntilChanged()
     }
 }

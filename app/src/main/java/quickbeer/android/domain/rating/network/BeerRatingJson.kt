@@ -24,7 +24,7 @@ import org.threeten.bp.ZonedDateTime
  * Generic rating of a given beer. We know beer details, details of
  * the user are included in the response.
  */
-data class RatingJson(
+data class BeerRatingJson(
     // Rating data
     @field:Json(name = "RatingID") val id: Int,
     @field:Json(name = "Appearance") val appearance: Int?,

@@ -3,17 +3,17 @@ package quickbeer.android.domain.ratinglist.repository
 import javax.inject.Inject
 import quickbeer.android.data.repository.repository.ItemListRepository
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.rating.network.RatingJson
-import quickbeer.android.domain.ratinglist.network.BeerRatingsFetcher
-import quickbeer.android.domain.ratinglist.network.BeerRatingsPageFetcher
-import quickbeer.android.domain.ratinglist.store.BeerRatingsStore
+import quickbeer.android.domain.rating.network.BeerRatingJson
+import quickbeer.android.domain.ratinglist.network.BeerRatingFetcher
+import quickbeer.android.domain.ratinglist.network.BeerRatingPageFetcher
+import quickbeer.android.domain.ratinglist.store.BeerRatingStore
 import quickbeer.android.network.result.ApiResult
 
-class BeerRatingsRepository @Inject constructor(
-    store: BeerRatingsStore,
-    fetcher: BeerRatingsFetcher,
-    private val pageFetcher: BeerRatingsPageFetcher
-) : ItemListRepository<String, Int, Rating, RatingJson>(store, fetcher) {
+class BeerRatingRepository @Inject constructor(
+    store: BeerRatingStore,
+    fetcher: BeerRatingFetcher,
+    private val pageFetcher: BeerRatingPageFetcher
+) : ItemListRepository<String, Int, Rating, BeerRatingJson>(store, fetcher) {
 
     suspend fun fetch(beerId: String, page: Int) {
         val response = pageFetcher.fetch(Pair(beerId, page))

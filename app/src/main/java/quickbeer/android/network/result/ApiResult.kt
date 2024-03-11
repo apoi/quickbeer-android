@@ -47,11 +47,35 @@ fun <U : List<T>, T> ApiResult<U>.first(): ApiResult<T> {
 /**
  * Result mapper from one type to another.
  */
-fun <K, V, J> ApiResult<J>.map(key: K, mapper: JsonMapper<K, V, J>): ApiResult<V> {
+fun <T, U> ApiResult<U>.map(mapper: (U) -> T): ApiResult<T> {
+    return when (this) {
+        is Success -> Success(value?.let(mapper))
+        is HttpError -> HttpError(code, cause)
+        is NetworkError -> NetworkError(cause)
+        is UnknownError -> UnknownError(cause)
+    }
+}
+
+/**
+ * Result mapper from one type to another.
+ */
+fun <K, T, U> ApiResult<U>.map(key: K, mapper: JsonMapper<K, T, U>): ApiResult<T> {
     return when (this) {
         is Success -> Success(value?.let { mapper.map(key, it) })
         is HttpError -> HttpError(code, cause)
         is NetworkError -> NetworkError(cause)
         is UnknownError -> UnknownError(cause)
+    }
+}
+
+/**
+ * Returns the value of a successful result, or null otherwise.
+ */
+fun <T> ApiResult<T>.value(): T? {
+    return when (this) {
+        is Success -> value
+        is HttpError -> null
+        is NetworkError -> null
+        is UnknownError -> null
     }
 }

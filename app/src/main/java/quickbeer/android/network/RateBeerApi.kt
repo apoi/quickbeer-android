@@ -3,8 +3,8 @@ package quickbeer.android.network
 import okhttp3.ResponseBody
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
-import quickbeer.android.domain.rating.network.RatingJson
-import quickbeer.android.domain.rating.network.UsersRatingJson
+import quickbeer.android.domain.rating.network.BeerRatingJson
+import quickbeer.android.domain.rating.network.UserRatingJson
 import quickbeer.android.domain.stylelist.network.StyleJson
 import quickbeer.android.domain.user.network.RateCountJson
 import quickbeer.android.network.result.ApiResult
@@ -78,10 +78,10 @@ interface RateBeerApi {
     suspend fun getRatings(
         @Query("bid") beerId: String,
         @Query("p") page: Int
-    ): ApiResult<List<RatingJson>>
+    ): ApiResult<List<BeerRatingJson>>
 
     @GET("/json/revs.asp?m=BR&x=2&x2=2")
-    suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UsersRatingJson>>
+    suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UserRatingJson>>
 
     @GET("/json/bt.asp?m=1")
     suspend fun getTicks(@Query("u") userId: String): ApiResult<List<BeerJson>>

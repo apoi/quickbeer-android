@@ -13,6 +13,9 @@ object Constants {
     const val API_LOGIN_PAGE =
         "Signin_r.asp"
 
+    const val API_REVIEWS_PAGE =
+        "/json/revs.asp"
+
     const val BEER_PATH =
         "https://ratebeer.com/beer/%d/"
 

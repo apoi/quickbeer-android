@@ -8,7 +8,7 @@ import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.store.RatingStoreCore
 import quickbeer.android.inject.IdListMemoryCore
 
-class BeerRatingsStore @Inject constructor(
+class BeerRatingStore @Inject constructor(
     @IdListMemoryCore indexStoreCore: StoreCore<String, IdList>,
     ratingStoreCore: RatingStoreCore
 ) : ItemListStore<String, Int, Rating>(

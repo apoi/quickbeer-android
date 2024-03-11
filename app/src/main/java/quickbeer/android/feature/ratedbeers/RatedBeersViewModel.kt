@@ -14,14 +14,14 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.AlwaysFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.ratinglist.repository.UserRatingsRepository
+import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
 
 @HiltViewModel
 class RatedBeersViewModel @Inject constructor(
     private val beerRepository: BeerRepository,
-    private val userRatingsRepository: UserRatingsRepository
+    private val userRatingsRepository: UserRatingRepository
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)

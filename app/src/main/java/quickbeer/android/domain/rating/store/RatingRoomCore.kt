@@ -16,9 +16,15 @@ class RatingRoomCore @Inject constructor(
     RatingDaoProxy(database.ratingDao())
 ) {
 
-    fun ratingsForUser(userId: Int): Flow<List<Rating>> {
+    fun ratingByUser(userId: Int, beerId: Int): Flow<Rating> {
         return database.ratingDao()
-            .ratingsForUser(userId)
+            .ratingByUser(userId, beerId)
+            .map(RatingEntityMapper::mapTo)
+    }
+
+    fun allRatingsByUser(userId: Int): Flow<List<Rating>> {
+        return database.ratingDao()
+            .allRatingsByUser(userId)
             .map { it.map(RatingEntityMapper::mapTo) }
     }
 }

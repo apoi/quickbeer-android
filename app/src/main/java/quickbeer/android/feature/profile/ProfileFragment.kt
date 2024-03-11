@@ -17,6 +17,7 @@ import quickbeer.android.databinding.ProfileFragmentBinding
 import quickbeer.android.domain.user.User
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -44,7 +45,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     override fun observeViewState() {
-        observe(viewModel.hasUser, ::setProfileButtons)
+        observeSuccess(viewModel.hasUser, ::setProfileButtons)
         observe(viewModel.userState) { state ->
             when (state) {
                 is State.Initial -> Unit
