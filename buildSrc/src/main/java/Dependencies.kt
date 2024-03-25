@@ -29,13 +29,20 @@ object Plugins {
 object Versions {
     object Plugin {
         const val Detekt = "1.23.5"
-        const val Gradle = "8.2.2"
-        const val Kotlin = "1.8.20"
+        const val Gradle = "8.3.0"
+        const val Kotlin = "1.9.23"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }
 
     object AndroidX {
+        object Compose {
+            const val Compiler = "1.5.11"
+            const val Material3 = "1.2.1"
+            const val Runtime = "1.6.4"
+            const val Ui = "1.6.4"
+        }
+
         const val AppCompat = "1.6.1"
         const val ConstraintLayout = "2.1.4"
         const val CoreKt = "1.12.0"
@@ -87,6 +94,11 @@ object Versions {
 
 object Libraries {
     object AndroidX {
+        object Compose {
+            const val Material3 = "androidx.compose.material3:material3:${Versions.AndroidX.Compose.Material3}"
+            const val Ui = "androidx.compose.ui:ui:${Versions.AndroidX.Compose.Ui}"
+        }
+
         object Lifecycle {
             const val Common = "androidx.lifecycle:lifecycle-common-java8:${Versions.AndroidX.Lifecycle}"
             const val Runtime = "androidx.lifecycle:lifecycle-runtime-ktx:${Versions.AndroidX.Lifecycle}"

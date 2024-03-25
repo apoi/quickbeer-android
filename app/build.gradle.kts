@@ -31,6 +31,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    composeOptions {
+        kotlinCompilerExtensionVersion = Versions.AndroidX.Compose.Compiler
+    }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
@@ -46,6 +50,7 @@ android {
     }
 
     buildFeatures {
+        compose = true
         viewBinding = true
         buildConfig = true
     }
@@ -66,6 +71,9 @@ dependencies {
     implementation(Libraries.AndroidX.Fragment)
     implementation(Libraries.AndroidX.Preferences)
     implementation(Libraries.AndroidX.RecyclerView)
+
+    implementation(Libraries.AndroidX.Compose.Material3)
+    implementation(Libraries.AndroidX.Compose.Ui)
 
     implementation(Libraries.AndroidX.Lifecycle.Common)
     implementation(Libraries.AndroidX.Lifecycle.Runtime)
