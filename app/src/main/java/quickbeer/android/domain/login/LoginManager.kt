@@ -1,13 +1,7 @@
 package quickbeer.android.domain.login
 
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
+import quickbeer.android.Constants
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beerlist.store.TickedBeersStore
 import quickbeer.android.domain.preferences.store.IntPreferenceStore
@@ -22,36 +16,13 @@ class LoginManager @Inject constructor(
     private val cookieJar: LoginCookieJar,
     private val userStore: UserStore,
     private val tickedBeersStore: TickedBeersStore,
-    private val stringPreferenceStore: StringPreferenceStore,
-    private val intPreferenceStore: IntPreferenceStore
+    private val intPreferenceStore: IntPreferenceStore,
+    private val stringPreferenceStore: StringPreferenceStore
 ) {
 
-    val isLoggedIn: Flow<Boolean> = intPreferenceStore.getKeysStream()
-        .map { it.contains(USERID) }
-        .distinctUntilChanged()
-
-    val userId: Flow<Int?> = intPreferenceStore.getKeysStream()
-        .map { intPreferenceStore.get(USERID) }
-        .distinctUntilChanged()
-
-    private var job: Job? = null
-
-    init {
-        // User store doesn't persist, so init with locally stored user details.
-        // Alternatively username could be fetched from backend on demand.
-        job = CoroutineScope(Dispatchers.IO).launch {
-            val userId = intPreferenceStore.get(USERID)
-            val username = stringPreferenceStore.get(USERNAME)
-
-            if (userId != null) {
-                userStore.put(userId, User(id = userId, username = username))
-            }
-        }
-    }
-
     suspend fun autoLogin(): ApiResult<Int> {
-        val username = stringPreferenceStore.get(USERNAME)
-        val password = stringPreferenceStore.get(PASSWORD)
+        val username = stringPreferenceStore.get(Constants.USERNAME)
+        val password = stringPreferenceStore.get(Constants.PASSWORD)
 
         if (username == null || password == null) {
             return ApiResult.UnknownError(IllegalStateException("Username or password missing"))
@@ -80,19 +51,19 @@ class LoginManager @Inject constructor(
     }
 
     suspend fun logout() {
-        val id = intPreferenceStore.get(USERID)
+        val id = intPreferenceStore.get(Constants.USERID)
 
         clearLogin()
 
-        stringPreferenceStore.delete(USERNAME)
-        stringPreferenceStore.delete(PASSWORD)
+        stringPreferenceStore.delete(Constants.USERNAME)
+        stringPreferenceStore.delete(Constants.PASSWORD)
 
         if (id != null) tickedBeersStore.delete(id.toString())
         tickedBeersStore.clearTicks()
     }
 
     private suspend fun clearLogin() {
-        intPreferenceStore.delete(USERID)
+        intPreferenceStore.delete(Constants.USERID)
         cookieJar.clear()
     }
 
@@ -105,11 +76,11 @@ class LoginManager @Inject constructor(
             return State.Error(LoginError.UnknownError)
         }
 
-        intPreferenceStore.put(USERID, userId)
-        stringPreferenceStore.put(USERNAME, username)
-        stringPreferenceStore.put(PASSWORD, password)
+        intPreferenceStore.put(Constants.USERID, userId)
+        stringPreferenceStore.put(Constants.USERNAME, username)
+        stringPreferenceStore.put(Constants.PASSWORD, password)
 
-        userStore.put(userId, User(id = userId, username = username))
+        userStore.put(User(id = userId, username = username))
 
         return State.Success(true)
     }
@@ -122,8 +93,5 @@ class LoginManager @Inject constructor(
     }
 
     companion object {
-        const val USERID = "PREF_USERID"
-        const val USERNAME = "PREF_USERNAME"
-        const val PASSWORD = "PREF_PASSWORD"
     }
 }

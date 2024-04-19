@@ -5,15 +5,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import quickbeer.android.data.repository.SingleRepository
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.store.BeerStore
-import quickbeer.android.domain.login.LoginManager
-import quickbeer.android.domain.preferences.store.IntPreferenceStore
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.network.UserRatingPageFetcher
 import quickbeer.android.domain.ratinglist.store.UsersRatingStore
@@ -24,26 +20,29 @@ import quickbeer.android.network.result.map
 import quickbeer.android.network.result.value
 
 class UserRatingRepository @Inject constructor(
+    private val userStore: UserStore,
     private val beerStore: BeerStore,
     private val ratingStore: UsersRatingStore,
-    private val fetcher: UserRatingPageFetcher,
-    private val intPreferenceStore: IntPreferenceStore,
-    private val userStore: UserStore
+    private val fetcher: UserRatingPageFetcher
 ) : SingleRepository<List<Rating>>() {
 
     override suspend fun persist(value: List<Rating>) {
-        ratingStore.put(getUserId(), value)
+        userStore.get()?.let { user ->
+            ratingStore.put(user.id, value)
+        }
     }
 
     override suspend fun getLocal(): List<Rating>? {
-        return ratingStore.get(getUserId())
+        return userStore.get()?.let { user ->
+            ratingStore.get(user.id)
+        }
     }
 
     override fun getLocalStream(): Flow<List<Rating>> {
-        return getUserIdStream()
-            .flatMapLatest { userId ->
-                if (userId != null) {
-                    ratingStore.getStream(userId)
+        return userStore.getStream()
+            .flatMapLatest { user ->
+                if (user != null) {
+                    ratingStore.getStream(user.id)
                 } else {
                     flowOf(emptyList())
                 }
@@ -51,7 +50,7 @@ class UserRatingRepository @Inject constructor(
     }
 
     override suspend fun fetchRemote(): ApiResult<List<Rating>> {
-        return fetchRatings(userStore.get(getUserId()))
+        return fetchRatings(userStore.get())
             .also { persistBeers(it) }
             .let(::takeRatings)
     }
@@ -96,16 +95,5 @@ class UserRatingRepository @Inject constructor(
 
     private fun takeRatings(result: ApiResult<List<Pair<Beer, Rating>>>): ApiResult<List<Rating>> {
         return result.map { list -> list.map(Pair<Beer, Rating>::second) }
-    }
-
-    private suspend fun getUserId(): Int {
-        return intPreferenceStore.get(LoginManager.USERID)
-            ?: error("User is not logged in")
-    }
-
-    private fun getUserIdStream(): Flow<Int?> {
-        return intPreferenceStore.getKeysStream()
-            .map { intPreferenceStore.get(LoginManager.USERID) }
-            .distinctUntilChanged()
     }
 }

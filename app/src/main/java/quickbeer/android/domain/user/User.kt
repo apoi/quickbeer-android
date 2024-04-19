@@ -10,6 +10,7 @@ import quickbeer.android.data.store.Merger
 data class User(
     val id: Int,
     val username: String? = null,
+    val password: String? = null,
     val rateCount: Int? = null,
     val tickCount: Int? = null,
     val placeCount: Int? = null

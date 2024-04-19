@@ -8,10 +8,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.login.LoginManager
@@ -32,20 +32,19 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            loginManager.userId
-                .map { State.from(it != null) }
+            userRepository.getStream(NoFetch())
+                .distinctUntilChanged()
+                .map {
+                    val user = it.valueOrNull()
+                    State.from(user != null)
+                }
                 .collectLatest(_hasUser::emit)
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            loginManager.userId
-                .flatMapLatest {
-                    if (it != null) {
-                        userRepository.getStream(it, USER_VALIDATOR)
-                    } else {
-                        flow { emit(State.Empty) }
-                    }
-                }
+            userRepository.getStream(USER_VALIDATOR)
+                .distinctUntilChanged()
+                .map { State.from(it.valueOrNull()) }
                 .collectLatest(_userState::emit)
         }
     }
@@ -55,9 +54,14 @@ class ProfileViewModel @Inject constructor(
     }
 
     companion object {
-        private val USER_VALIDATOR = object : Validator<User> {
+        private val USER_VALIDATOR = object : Validator<User?> {
             override suspend fun validate(value: User?): Boolean {
-                return value?.tickCount != null
+                /**
+                 * Valid states in this view:
+                 *   1) User is not logged in
+                 *   2) User is logged in, and tick count has been fetched
+                 */
+                return value == null || value.tickCount != null
             }
         }
     }

@@ -17,6 +17,7 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
@@ -53,6 +54,8 @@ class BeerRatingsFragment : BaseFragment(R.layout.list_fragment) {
     private val ratingsAdapter = ListAdapter<RatingListModel>(RatingTypeFactory())
     private val loadMoreListener = LoadMoreListener()
 
+    private var scrollListener: OnFragmentScrollListener? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -66,11 +69,29 @@ class BeerRatingsFragment : BaseFragment(R.layout.list_fragment) {
 
         loadMoreListener.moreItemRequestedCallback = viewModel::loadRatingPage
         loadMoreListener.setLayoutManager(manager)
+
+        binding.recyclerView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                scrollListener?.onScrollDown()
+            } else if (scrollY < oldScrollY) {
+                scrollListener?.onScrollUp()
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadInitialRatings()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        scrollListener = parentFragment as OnFragmentScrollListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        scrollListener = null
     }
 
     override fun observeViewState() {

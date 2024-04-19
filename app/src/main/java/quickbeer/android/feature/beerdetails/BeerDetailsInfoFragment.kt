@@ -17,13 +17,12 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -42,16 +41,13 @@ import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
-import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class BeerDetailsInfoFragment :
-    BaseFragment(R.layout.beer_details_info_fragment),
-    RatingBar.OnRatingBarChangeListener {
+class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment) {
 
     @Inject
     lateinit var toastProvider: ToastProvider
@@ -59,10 +55,10 @@ class BeerDetailsInfoFragment :
     private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModels<BeerDetailsViewModel>()
 
+    private var scrollListener: OnFragmentScrollListener? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.ratingBar.onRatingBarChangeListener = this
 
         binding.beerRatingOverall.setOnClickListener {
             showToast(R.string.description_rating_overall)
@@ -79,6 +75,24 @@ class BeerDetailsInfoFragment :
         binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
         }
+        
+        binding.detailsView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) {
+                scrollListener?.onScrollDown()
+            } else if (scrollY < oldScrollY) {
+                scrollListener?.onScrollUp()
+            }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        scrollListener = parentFragment as OnFragmentScrollListener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        scrollListener = null
     }
 
     override fun observeViewState() {
@@ -95,7 +109,7 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setBeer(beer: Beer) {
-        binding.description.value = beer.description
+        binding.infoDescription.value = beer.description
             ?.takeIf(String::isNotEmpty)
             ?: getString(R.string.no_description)
 
@@ -122,46 +136,41 @@ class BeerDetailsInfoFragment :
             ?.roundToInt()
             ?.toString()
             ?: getString(R.string.not_available)
+    }
 
-        binding.ratingBar.rating = beer.tickValue
+    private fun setRating() {
+/*
+
+        binding.ownRating.score.text = beer.tickValue
             ?.takeIf { beer.isTicked() }
             ?.toFloat()
             ?: 0F
 
-        binding.tickedDate.text = beer.tickDate
+        binding.ownRating.date.text = beer.tickDate
             ?.takeIf { beer.isTicked() }
             ?.formatDateTime(getString(R.string.beer_tick_date))
             .also { binding.tickedDate.isVisible = it != null }
+            */
     }
 
     private fun setBrewer(brewer: Brewer) {
-        binding.brewer.value = brewer.name
-        binding.brewer.setOnClickListener {
+        binding.infoBrewer.value = brewer.name
+        binding.infoBrewer.setOnClickListener {
             navigate(Destination.Brewer(brewer.id))
         }
     }
 
     private fun setStyle(style: Style) {
-        binding.style.value = style.name
-        binding.style.setOnClickListener {
+        binding.infoStyle.value = style.name
+        binding.infoStyle.setOnClickListener {
             navigate(Destination.Style(style.id))
         }
     }
 
     private fun setAddress(address: Address) {
-        binding.origin.value = address.cityAndCountry()
-        binding.origin.setOnClickListener {
+        binding.infoOrigin.value = address.cityAndCountry()
+        binding.infoOrigin.setOnClickListener {
             navigate(Destination.Country(address.countryId))
-        }
-    }
-
-    override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
-        if (!fromUser) return
-
-        if (viewModel.isLoggedIn.value) {
-            viewModel.tickBeer(rating.toInt())
-        } else {
-            showLoginDialog()
         }
     }
 
@@ -184,14 +193,14 @@ class BeerDetailsInfoFragment :
 
     private fun onLoginResult(success: Boolean) {
         if (success) {
-            viewModel.tickBeer(binding.ratingBar.rating.toInt())
+            //viewModel.tickBeer(binding.ratingBar.rating.toInt())
         } else {
             clearRating()
         }
     }
 
     private fun clearRating() {
-        binding.ratingBar.rating = 0F
+        //binding.ratingBar.rating = 0F
     }
 
     private fun showToast(@StringRes resource: Int) {

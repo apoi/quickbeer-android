@@ -19,6 +19,7 @@ package quickbeer.android.feature.beerdetails
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -30,13 +31,14 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
+class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentScrollListener {
 
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModels<BeerDetailsViewModel>()
@@ -62,6 +64,16 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
                 is State.Error -> Unit
             }
         }
+
+        observe(viewModel.ratingState) { state ->
+            when (state) {
+                is State.Initial -> Unit
+                is State.Loading -> Unit
+                is State.Empty -> setRating(null)
+                is State.Success -> setRating(state.value)
+                is State.Error -> Unit
+            }
+        }
     }
 
     private fun setBeer(beer: Beer) {
@@ -84,6 +96,27 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
                 }
             })
         }
+    }
+
+    private fun setRating(rating: OwnRating?) {
+        if (rating != null) {
+            binding.mainActionButton.setText(R.string.edit_rating)
+        } else {
+            binding.mainActionButton.setText(R.string.add_rating)
+        }
+
+        binding.mainActionButton.isVisible = true
+        binding.mainActionButton.setOnClickListener {
+            // TODO open rating sheet
+        }
+    }
+
+    override fun onScrollUp() {
+        binding.mainActionButton.extend()
+    }
+
+    override fun onScrollDown() {
+        binding.mainActionButton.shrink()
     }
 
     companion object {

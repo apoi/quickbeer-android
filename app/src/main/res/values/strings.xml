@@ -48,6 +48,10 @@
     <string name="message_error">Error! Try again later.</string>
 
     <!-- Beer details -->
+    <string name="not_yet_rated">You have not yet rated this one.</string>
+    <string name="add_rating">Add rating</string>
+    <string name="edit_rating">Edit rating</string>
+
     <string name="percentile_overall">Overall</string>
     <string name="percentile_style">Style</string>
 

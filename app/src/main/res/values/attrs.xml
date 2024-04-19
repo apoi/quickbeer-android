@@ -16,6 +16,7 @@
 
     <declare-styleable name="GroupItem">
         <attr name="applyTopMargin" format="boolean" />
+        <attr name="applyBottomMargin" format="boolean" />
         <attr name="position" format="enum">
             <enum name="ONLY" value="0" />
             <enum name="FIRST" value="1" />

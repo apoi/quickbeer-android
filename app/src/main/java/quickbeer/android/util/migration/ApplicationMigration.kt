@@ -10,6 +10,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import quickbeer.android.Constants
 import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.brewer.store.BrewerStore
@@ -77,9 +78,9 @@ class ApplicationMigration @Inject constructor(
         try {
             LegacyUserReader.readUser(database, moshi)
                 ?.also { user ->
-                    intPreferenceStore.put(LoginManager.USERID, user.id)
-                    stringPreferenceStore.put(LoginManager.USERNAME, user.username)
-                    stringPreferenceStore.put(LoginManager.PASSWORD, user.password)
+                    intPreferenceStore.put(Constants.USERID, user.id)
+                    stringPreferenceStore.put(Constants.USERNAME, user.username)
+                    stringPreferenceStore.put(Constants.PASSWORD, user.password)
                     tickedBeersRepository.fetch(user.id.toString())
                 }
         } catch (e: Exception) {

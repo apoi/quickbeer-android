@@ -16,6 +16,7 @@ open class GroupItem @JvmOverloads constructor(
 ) : MaterialCardView(context, attrs, defStyleAttr) {
 
     private val applyTopMargin: Boolean
+    private val applyBottomMargin: Boolean
 
     private var _position: Position = Position.ONLY
     var position: Position
@@ -33,6 +34,7 @@ open class GroupItem @JvmOverloads constructor(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupItem)
         _position = Position.values()[ta.getInt(R.styleable.GroupItem_position, 0)]
         applyTopMargin = ta.getBoolean(R.styleable.GroupItem_applyTopMargin, true)
+        applyBottomMargin = ta.getBoolean(R.styleable.GroupItem_applyBottomMargin, true)
         ta.recycle()
     }
 
@@ -106,7 +108,7 @@ open class GroupItem @JvmOverloads constructor(
             else -> 0
         }
         val bottom = when (position) {
-            Position.ONLY, Position.LAST -> margin
+            Position.ONLY, Position.LAST -> if (applyBottomMargin) margin else 0
             else -> 0
         }
 

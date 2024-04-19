@@ -25,19 +25,15 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.threeten.bp.ZonedDateTime
-import quickbeer.android.R
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
@@ -48,12 +44,12 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.login.LoginManager
+import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
-import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.ResourceProvider
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.navId
@@ -61,21 +57,15 @@ import quickbeer.android.util.ktx.navId
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val loginManager: LoginManager,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository,
-    private val beerTickFetcher: BeerTickFetcher,
-    private val resourceProvider: ResourceProvider,
-    private val toastProvider: ToastProvider
+    private val userRatingRepository: UserRatingRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
-
-    private val _isLoggedIn = MutableStateFlow(false)
-    val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
 
     private val _ratingState = MutableStateFlow<State<OwnRating>>(State.Initial)
     val ratingState: Flow<State<OwnRating>> = _ratingState
@@ -109,24 +99,13 @@ class BeerDetailsViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO return combined ratings value
-            /*
-            beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-                .combine(rating)
-                .latest
+            val beer = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
+            val rating = userRatingRepository.getStream(Accept())
+
+            beer.combine(rating, OwnRating.Companion::create)
                 .collectLatest {
-                    _beerState.emit(it)
-
-                    if (it is State.Success) {
-                        getBrewer(it.value)
-                        getStyle(it.value)
-                        getAddress(it.value)
-                    }
-                }*/
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            loginManager.isLoggedIn.collectLatest { _isLoggedIn.emit(it) }
+                    _ratingState.emit(State.from(it))
+                }
         }
     }
 
@@ -212,6 +191,7 @@ class BeerDetailsViewModel @Inject constructor(
         }
     }
 
+    /* TODO logic to review fragment
     fun tickBeer(tick: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val beer = beerRepository.store.get(beerId) ?: error("No beer found!")
@@ -235,4 +215,5 @@ class BeerDetailsViewModel @Inject constructor(
             }
         }
     }
+    */
 }
