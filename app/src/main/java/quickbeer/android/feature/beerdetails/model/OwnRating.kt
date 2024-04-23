@@ -13,11 +13,14 @@ data class OwnRating(
 
     companion object {
 
-        fun create(beer: State<Beer>, ratings: State<List<Rating>>): OwnRating {
+        fun create(beerState: State<Beer>, ratingsState: State<List<Rating>>): OwnRating {
+            val beer = beerState.valueOrNull()
+            val ratings = ratingsState.valueOrNull()
+
             return OwnRating(
-                beer.valueOrNull()?.tickValue,
-                beer.valueOrNull()?.tickDate,
-                findRating(beer.valueOrNull(), ratings.valueOrNull())
+                beer?.tickValue?.takeIf { beer.isTicked() },
+                beer?.tickDate?.takeIf { beer.isTicked() },
+                findRating(beer, ratings)
             )
         }
 

@@ -14,6 +14,45 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Own tick -->
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/star_rating_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            style="@style/InfoCard">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:paddingTop="@dimen/spacing_l"
+                    android:rating="0"
+                    android:isIndicator="true"
+                    android:stepSize="1.0" />
+
+                <TextView
+                    android:id="@+id/ticked_date"
+                    style="@style/DetailsDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/spacing_l"
+                    android:textAlignment="center"
+                    tools:text="You rated this beer last week."
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!-- Own rating -->
 
         <include

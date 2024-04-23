@@ -21,7 +21,7 @@ object UserRatingJsonMapper : JsonMapper<User, Pair<Beer, Rating>, UserRatingJso
             timeEntered = source.timeEntered,
             timeUpdated = source.timeUpdated,
             userId = key.id,
-            userName = null,
+            userName = key.username,
             city = null,
             stateId = null,
             state = null,

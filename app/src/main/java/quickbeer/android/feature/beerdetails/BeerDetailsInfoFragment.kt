@@ -23,6 +23,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -34,13 +35,16 @@ import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
+import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
+import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
@@ -100,6 +104,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         observeSuccess(viewModel.brewerState, ::setBrewer)
         observeSuccess(viewModel.styleState, ::setStyle)
         observeSuccess(viewModel.addressState, ::setAddress)
+        observeSuccess(viewModel.ratingState, ::setRating)
 
         findNavController()
             .currentBackStackEntry
@@ -138,19 +143,18 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
             ?: getString(R.string.not_available)
     }
 
-    private fun setRating() {
-/*
-
-        binding.ownRating.score.text = beer.tickValue
-            ?.takeIf { beer.isTicked() }
-            ?.toFloat()
-            ?: 0F
-
-        binding.ownRating.date.text = beer.tickDate
-            ?.takeIf { beer.isTicked() }
-            ?.formatDateTime(getString(R.string.beer_tick_date))
-            .also { binding.tickedDate.isVisible = it != null }
-            */
+    private fun setRating(ownRating: OwnRating) {
+        if (ownRating.rating != null) {
+            // Rating is shown if available
+            RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating)
+            binding.ownRating.ratingCard.isVisible = true
+        } else if (ownRating.tick != null) {
+            // Tick is shown if available and no rating
+            binding.ratingBar.rating = ownRating.tick.toFloat()
+            binding.tickedDate.text = ownRating.tickDate
+                ?.formatDateTime(getString(R.string.beer_tick_date))
+            binding.starRatingCard.isVisible = true
+        }
     }
 
     private fun setBrewer(brewer: Brewer) {

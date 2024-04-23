@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.network.BeerTickFetcher
@@ -100,7 +101,7 @@ class BeerDetailsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             val beer = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-            val rating = userRatingRepository.getStream(Accept())
+            val rating = userRatingRepository.getStream(NoFetch())
 
             beer.combine(rating, OwnRating.Companion::create)
                 .collectLatest {

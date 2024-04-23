@@ -36,6 +36,7 @@ import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
+import timber.log.Timber
 
 @AndroidEntryPoint
 class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentScrollListener {
@@ -52,6 +53,17 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        var previousOffset = 0
+        binding.appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
+            if (verticalOffset < previousOffset) {
+                onScrollDown()
+            } else if (verticalOffset > previousOffset) {
+                onScrollUp()
+            }
+
+            previousOffset = verticalOffset
+        }
     }
 
     override fun observeViewState() {
@@ -99,7 +111,7 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
     }
 
     private fun setRating(rating: OwnRating?) {
-        if (rating != null) {
+        if (rating?.rating != null || rating?.tick != null) {
             binding.mainActionButton.setText(R.string.edit_rating)
         } else {
             binding.mainActionButton.setText(R.string.add_rating)
