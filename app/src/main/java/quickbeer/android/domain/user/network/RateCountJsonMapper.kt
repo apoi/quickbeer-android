@@ -9,6 +9,9 @@ object RateCountJsonMapper : JsonMapper<Int, User, RateCountJson> {
         return User(
             id = key,
             username = null,
+            password = null,
+            loggedIn = null,
+            countryId = null,
             rateCount = source.rateCount,
             tickCount = source.tickCount,
             placeCount = source.placeRatings

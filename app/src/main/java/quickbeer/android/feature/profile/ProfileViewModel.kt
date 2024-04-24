@@ -16,11 +16,11 @@ import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.user.User
-import quickbeer.android.domain.user.repository.UserRepository
+import quickbeer.android.domain.user.repository.CurrentUserRepository
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val currentUserRepository: CurrentUserRepository,
     private val loginManager: LoginManager
 ) : ViewModel() {
 
@@ -32,7 +32,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            userRepository.getStream(NoFetch())
+            currentUserRepository.getStream(NoFetch())
                 .distinctUntilChanged()
                 .map {
                     val user = it.valueOrNull()
@@ -42,7 +42,7 @@ class ProfileViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            userRepository.getStream(USER_VALIDATOR)
+            currentUserRepository.getStream(USER_VALIDATOR)
                 .distinctUntilChanged()
                 .map { State.from(it.valueOrNull()) }
                 .collectLatest(_userState::emit)

@@ -36,7 +36,6 @@ import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
-import timber.log.Timber
 
 @AndroidEntryPoint
 class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentScrollListener {

@@ -16,8 +16,8 @@ object RatingBinder {
 
     fun bind(context: Context, rating: Rating, binding: RatingListItemBinding) {
         val metadata = rating.userName +
-                (rating.country?.let { ", $it" } ?: "") + "\n" +
-                (rating.timeUpdated ?: rating.timeEntered)?.formatDate()
+            (rating.country?.let { ", $it" } ?: "") + "\n" +
+            (rating.timeUpdated ?: rating.timeEntered)?.formatDate()
 
         binding.user.text = metadata
         binding.score.text = String.format("%.1f", rating.totalScore)
@@ -35,7 +35,7 @@ object RatingBinder {
             binding.detailsRow.visibility = View.GONE
         }
 
-        //setColors(context, binding, isOwnReview)
+        // TODO setColors(context, binding, isOwnReview)
     }
 
     private fun setDetails(rating: Rating, binding: RatingListItemBinding) {
@@ -52,11 +52,7 @@ object RatingBinder {
         binding.overallColumn.setOnClickListener { showToast(R.string.rating_overall_hint) }
     }
 
-    private fun setColors(
-        context: Context,
-        binding: RatingListItemBinding,
-        isOwnReview: Boolean
-    ) {
+    private fun setColors(context: Context, binding: RatingListItemBinding, isOwnReview: Boolean) {
         val color = if (isOwnReview) {
             context.getColor(R.color.orange_dark)
         } else {

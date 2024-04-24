@@ -13,11 +13,13 @@ import quickbeer.android.domain.rating.store.RatingDao
 import quickbeer.android.domain.rating.store.RatingEntity
 import quickbeer.android.domain.style.store.StyleDao
 import quickbeer.android.domain.style.store.StyleEntity
+import quickbeer.android.domain.user.store.UserDao
+import quickbeer.android.domain.user.store.UserEntity
 
 const val DATABASE_NAME = "quickbeer4.db"
 const val BATCH_SIZE = 999
 
-private const val CURRENT_VERSION = 2
+private const val CURRENT_VERSION = 3
 
 @Database(
     version = CURRENT_VERSION,
@@ -26,10 +28,12 @@ private const val CURRENT_VERSION = 2
         BeerEntity::class,
         BrewerEntity::class,
         RatingEntity::class,
-        StyleEntity::class
+        StyleEntity::class,
+        UserEntity::class
     ],
     autoMigrations = [
-        AutoMigration(from = 1, to = 2)
+        AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 2, to = 3)
     ]
 )
 abstract class Database : RoomDatabase() {
@@ -43,4 +47,6 @@ abstract class Database : RoomDatabase() {
     abstract fun ratingDao(): RatingDao
 
     abstract fun styleDao(): StyleDao
+
+    abstract fun userDao(): UserDao
 }

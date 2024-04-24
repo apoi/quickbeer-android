@@ -38,21 +38,17 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.beer.network.BeerTickFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
-import quickbeer.android.util.ResourceProvider
-import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
@@ -216,5 +212,5 @@ class BeerDetailsViewModel @Inject constructor(
             }
         }
     }
-    */
+     */
 }

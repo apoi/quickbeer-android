@@ -1,4 +1,4 @@
-package quickbeer.android.util.migration.v3
+package quickbeer.android.util.migration.v40
 
 import android.annotation.SuppressLint
 import android.database.Cursor

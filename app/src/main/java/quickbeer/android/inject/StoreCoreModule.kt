@@ -28,7 +28,6 @@ import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.store.RatingRoomCore
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.store.StyleRoomCore
-import quickbeer.android.domain.user.User
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
@@ -95,12 +94,6 @@ object RepositoryModule {
     @Singleton
     fun provideRatingCore(roomCore: RatingRoomCore): StoreCore<Int, Rating> {
         return CachingStoreCore(roomCore, Rating::id, Rating.merger)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserCore(): StoreCore<Int, User> {
-        return MemoryStoreCore(User.merger)
     }
 
     @Provides

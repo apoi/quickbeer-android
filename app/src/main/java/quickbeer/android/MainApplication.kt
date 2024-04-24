@@ -22,8 +22,6 @@ class MainApplication : Application(), ImageLoaderFactory {
         initThreeTenAbp()
         initTimber()
         migrate()
-
-        Timber.d("App running!")
     }
 
     private fun initThreeTenAbp() {

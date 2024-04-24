@@ -6,7 +6,7 @@ object App {
 
     object Version {
         internal const val Major = 4
-        internal const val Minor = 0
+        internal const val Minor = 1
     }
 }
 

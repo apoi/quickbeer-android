@@ -79,7 +79,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
         }
-        
+
         binding.detailsView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             if (scrollY > oldScrollY) {
                 scrollListener?.onScrollDown()
@@ -197,14 +197,14 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     private fun onLoginResult(success: Boolean) {
         if (success) {
-            //viewModel.tickBeer(binding.ratingBar.rating.toInt())
+            // TODO viewModel.tickBeer(binding.ratingBar.rating.toInt())
         } else {
             clearRating()
         }
     }
 
     private fun clearRating() {
-        //binding.ratingBar.rating = 0F
+        // TODO binding.ratingBar.rating = 0F
     }
 
     private fun showToast(@StringRes resource: Int) {

@@ -63,10 +63,4 @@ object Constants {
 
     const val PRIVACY_POLICY =
         "https://ztesch.fi/quickbeer/privacy-policy"
-
-    // PREFERENCES
-
-    const val USERID = "PREF_USERID"
-    const val USERNAME = "PREF_USERNAME"
-    const val PASSWORD = "PREF_PASSWORD"
 }

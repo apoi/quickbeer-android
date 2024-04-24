@@ -27,19 +27,19 @@ class UserRatingRepository @Inject constructor(
 ) : SingleRepository<List<Rating>>() {
 
     override suspend fun persist(value: List<Rating>) {
-        userStore.get()?.let { user ->
+        userStore.getCurrentUser()?.let { user ->
             ratingStore.put(user.id, value)
         }
     }
 
     override suspend fun getLocal(): List<Rating>? {
-        return userStore.get()?.let { user ->
+        return userStore.getCurrentUser()?.let { user ->
             ratingStore.get(user.id)
         }
     }
 
     override fun getLocalStream(): Flow<List<Rating>> {
-        return userStore.getStream()
+        return userStore.getCurrentUserStream()
             .flatMapLatest { user ->
                 if (user != null) {
                     ratingStore.getStream(user.id)
@@ -50,7 +50,7 @@ class UserRatingRepository @Inject constructor(
     }
 
     override suspend fun fetchRemote(): ApiResult<List<Rating>> {
-        return fetchRatings(userStore.get())
+        return fetchRatings(userStore.getCurrentUser())
             .also { persistBeers(it) }
             .let(::takeRatings)
     }
