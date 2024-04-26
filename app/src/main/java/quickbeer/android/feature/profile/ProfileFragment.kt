@@ -45,7 +45,6 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     override fun observeViewState() {
-        observeSuccess(viewModel.hasUser, ::setProfileButtons)
         observe(viewModel.userState) { state ->
             when (state) {
                 is State.Initial -> Unit
@@ -64,6 +63,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     private fun setStateContent(user: User?) {
+        setProfileButtons(true)
         setProfile(user)
         setRateCount(user)
         setTickCount(user)
@@ -100,6 +100,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     private fun setStateEmpty() {
+        setProfileButtons(false)
         binding.profileUsername.text = "Not logged in"
     }
 

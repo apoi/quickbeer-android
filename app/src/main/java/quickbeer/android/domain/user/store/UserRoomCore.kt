@@ -20,11 +20,13 @@ class UserRoomCore @Inject constructor(
     suspend fun getCurrentUser(): User? {
         return database.userDao().getCurrentUser()
             .firstOrNull()
+            ?.firstOrNull()
             ?.let(UserEntityMapper::mapTo)
     }
 
     fun getCurrentUserStream(): Flow<User?> {
         return database.userDao().getCurrentUser()
+            .map { it.firstOrNull() }
             .map { it?.let(UserEntityMapper::mapTo) }
     }
 }

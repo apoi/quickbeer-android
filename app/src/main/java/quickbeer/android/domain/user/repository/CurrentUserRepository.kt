@@ -11,12 +11,10 @@ import quickbeer.android.network.result.ApiResult
 class CurrentUserRepository @Inject constructor(
     private val store: UserStore,
     private val fetcher: RateCountFetcher
-) : SingleRepository<User?>() {
+) : SingleRepository<User>() {
 
-    override suspend fun persist(value: User?) {
-        if (value?.id != null) {
-            store.put(value.id, value)
-        }
+    override suspend fun persist(value: User) {
+        store.put(value.id, value)
     }
 
     override suspend fun getLocal(): User? {
@@ -27,7 +25,7 @@ class CurrentUserRepository @Inject constructor(
         return store.getCurrentUserStream()
     }
 
-    override suspend fun fetchRemote(): ApiResult<User?> {
+    override suspend fun fetchRemote(): ApiResult<User> {
         return getLocal()
             ?.let { user -> return fetcher.fetch(user.id) }
             ?: ApiResult.Success(null)

@@ -176,7 +176,7 @@ abstract class Repository<K, V> {
 
     protected abstract suspend fun getLocal(key: K): V?
 
-    protected abstract fun getLocalStream(key: K): Flow<V>
+    protected abstract fun getLocalStream(key: K): Flow<V?>
 
     inner class FlowState(val key: K, val value: V?, val isValid: Boolean)
 
@@ -201,7 +201,7 @@ abstract class SingleRepository<V> {
             return this@SingleRepository.getLocal()
         }
 
-        override fun getLocalStream(key: Int): Flow<V> {
+        override fun getLocalStream(key: Int): Flow<V?> {
             return this@SingleRepository.getLocalStream()
         }
 
@@ -218,7 +218,7 @@ abstract class SingleRepository<V> {
 
     protected abstract suspend fun getLocal(): V?
 
-    protected abstract fun getLocalStream(): Flow<V>
+    protected abstract fun getLocalStream(): Flow<V?>
 
     protected abstract suspend fun fetchRemote(): ApiResult<V>
 }

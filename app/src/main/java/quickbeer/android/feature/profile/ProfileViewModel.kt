@@ -20,27 +20,14 @@ import quickbeer.android.domain.user.repository.CurrentUserRepository
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val currentUserRepository: CurrentUserRepository,
-    private val loginManager: LoginManager
+    private val loginManager: LoginManager,
+    private val currentUserRepository: CurrentUserRepository
 ) : ViewModel() {
-
-    private val _hasUser = MutableStateFlow<State<Boolean>>(State.Initial)
-    val hasUser: Flow<State<Boolean>> = _hasUser
 
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
     val userState: Flow<State<User>> = _userState
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            currentUserRepository.getStream(NoFetch())
-                .distinctUntilChanged()
-                .map {
-                    val user = it.valueOrNull()
-                    State.from(user != null)
-                }
-                .collectLatest(_hasUser::emit)
-        }
-
         viewModelScope.launch(Dispatchers.IO) {
             currentUserRepository.getStream(USER_VALIDATOR)
                 .distinctUntilChanged()

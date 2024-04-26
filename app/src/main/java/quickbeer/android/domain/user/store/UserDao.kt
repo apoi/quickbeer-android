@@ -18,7 +18,7 @@ abstract class UserDao : CoreDao<Int, UserEntity>(
         AND username IS NOT NULL
         AND password IS NOT NULL"""
     )
-    abstract fun getCurrentUser(): Flow<UserEntity?>
+    abstract fun getCurrentUser(): Flow<List<UserEntity>>
 
     @Query("SELECT * FROM users WHERE id=:key")
     abstract suspend fun get(key: Int): UserEntity?
