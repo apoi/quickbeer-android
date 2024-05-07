@@ -106,6 +106,14 @@ open class ItemListStore<I : Any, out K : Any, V : Any>(
     }
 
     /**
+     * Deletes all keys from the index store. Note that since all ItemListStores share
+     * the same core, all the index stores will be cleared -- not just this one.
+     */
+    override suspend fun deleteAll(): Boolean {
+        return indexCore.deleteAll()
+    }
+
+    /**
      * Interface for mapping index to store persistence key. Useful when multiple stores use the
      * same core for storing indexes: this allows the stores to have unique persisted values.
      */

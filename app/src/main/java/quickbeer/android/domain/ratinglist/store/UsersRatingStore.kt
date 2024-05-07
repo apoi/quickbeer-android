@@ -53,7 +53,13 @@ class UsersRatingStore @Inject constructor(
         return ratingStoreCore.put(value.associateBy { it.id }).isNotEmpty()
     }
 
-    override suspend fun delete(key: Int): Boolean {
-        error("Operation not supported")
+    override suspend fun delete(userId: Int): Boolean {
+        val ratings = get(userId)
+        ratings?.forEach { ratingStoreCore.delete(it.id) }
+        return ratings?.isNotEmpty() == true
+    }
+
+    override suspend fun deleteAll(): Boolean {
+        return ratingStoreCore.deleteAll()
     }
 }

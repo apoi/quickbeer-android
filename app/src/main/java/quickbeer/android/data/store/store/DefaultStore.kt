@@ -43,4 +43,8 @@ open class DefaultStore<K : Any, V : Any>(private val core: StoreCore<K, V>) : S
     override suspend fun delete(key: K): Boolean {
         return core.delete(key)
     }
+
+    override suspend fun deleteAll(): Boolean {
+        return core.deleteAll()
+    }
 }

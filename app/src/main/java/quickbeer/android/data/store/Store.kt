@@ -59,6 +59,13 @@ interface Store<K, V> {
      * @return True if operation was successful, otherwise false.
      */
     suspend fun delete(key: K): Boolean
+
+    /**
+     * Deletes all values from the store.
+     *
+     * @return True if at least one value was deleted, otherwise false.
+     */
+    suspend fun deleteAll(): Boolean
 }
 
 /**
