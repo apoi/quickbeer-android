@@ -1,8 +1,9 @@
 package quickbeer.android.data.repository
 
+import org.threeten.bp.Duration
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.repository.ItemList
-import timber.log.Timber
+import quickbeer.android.util.ktx.isOlderThan
 
 interface Validator<in V> {
     suspend fun validate(value: V?): Boolean
@@ -30,11 +31,22 @@ class AlwaysFetch<in V> : Validator<V> {
     }
 }
 
+class NotOlderThan<in V>(
+    private val interval: Duration,
+    private val updateTime: (V?) -> ZonedDateTime?
+) : Validator<V> {
+
+    override suspend fun validate(value: V?): Boolean {
+        // Validate that given timestamp + update interval is still in the future
+        val updated = updateTime(value)
+        return updated != null && !updated.isOlderThan(interval)
+    }
+}
+
 class ListCountValidator<in V>(
     private val rule: (Int) -> Boolean
 ) : Validator<List<V>> {
     override suspend fun validate(value: List<V>?): Boolean {
-        Timber.d("QUICKBEER: VALIDATING LIST SIZE " + value?.size)
         return value != null && rule(value.size)
     }
 }
@@ -45,13 +57,6 @@ class ItemListRefreshValidator<in K, in V>(
 
     override suspend fun validate(value: ItemList<K, V>?): Boolean {
         return value != null && rule(value.updated)
-    }
-
-    companion object {
-        val WEEKLY_REFRESH = { updated: ZonedDateTime ->
-            val sevenDays = ZonedDateTime.now().minusDays(7)
-            updated.isAfter(sevenDays)
-        }
     }
 }
 

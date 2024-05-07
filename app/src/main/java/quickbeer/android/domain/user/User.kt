@@ -3,7 +3,9 @@ package quickbeer.android.domain.user
 import android.os.Parcelable
 import androidx.annotation.Keep
 import kotlinx.parcelize.Parcelize
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.store.Merger
+import quickbeer.android.util.ktx.orLater
 
 @Keep
 @Parcelize
@@ -15,7 +17,8 @@ data class User(
     val countryId: Int?,
     val rateCount: Int?,
     val tickCount: Int?,
-    val placeCount: Int?
+    val placeCount: Int?,
+    val updated: ZonedDateTime?
 ) : Parcelable {
 
     companion object {
@@ -29,7 +32,8 @@ data class User(
                 countryId = null,
                 rateCount = null,
                 tickCount = null,
-                placeCount = null
+                placeCount = null,
+                updated = null
             )
         }
 
@@ -42,7 +46,8 @@ data class User(
                 countryId = new.countryId ?: old.countryId,
                 rateCount = new.rateCount ?: old.rateCount,
                 tickCount = new.tickCount ?: old.tickCount,
-                placeCount = new.placeCount ?: old.placeCount
+                placeCount = new.placeCount ?: old.placeCount,
+                updated = new.updated.orLater(old.updated)
             )
         }
     }

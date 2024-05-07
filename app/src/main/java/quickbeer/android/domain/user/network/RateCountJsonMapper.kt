@@ -1,5 +1,6 @@
 package quickbeer.android.domain.user.network
 
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.domain.user.User
 import quickbeer.android.util.JsonMapper
 
@@ -14,7 +15,8 @@ object RateCountJsonMapper : JsonMapper<Int, User, RateCountJson> {
             countryId = null,
             rateCount = source.rateCount,
             tickCount = source.tickCount,
-            placeCount = source.placeRatings
+            placeCount = source.placeRatings,
+            updated = ZonedDateTime.now(),
         )
     }
 }

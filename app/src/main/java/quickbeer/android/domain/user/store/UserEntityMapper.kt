@@ -14,7 +14,8 @@ object UserEntityMapper : Mapper<User, UserEntity> {
             countryId = source.countryId,
             rateCount = source.rateCount,
             tickCount = source.tickCount,
-            placeCount = source.placeCount
+            placeCount = source.placeCount,
+            updated = source.updated
         )
     }
 
@@ -27,7 +28,8 @@ object UserEntityMapper : Mapper<User, UserEntity> {
             countryId = source.countryId,
             rateCount = source.rateCount,
             tickCount = source.tickCount,
-            placeCount = source.placeCount
+            placeCount = source.placeCount,
+            updated = source.updated
         )
     }
 }

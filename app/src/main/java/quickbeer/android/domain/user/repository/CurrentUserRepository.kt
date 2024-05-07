@@ -2,11 +2,14 @@ package quickbeer.android.domain.user.repository
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import quickbeer.android.data.repository.SingleRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.network.RateCountFetcher
 import quickbeer.android.domain.user.store.UserStore
 import quickbeer.android.network.result.ApiResult
+import timber.log.Timber
 
 class CurrentUserRepository @Inject constructor(
     private val store: UserStore,

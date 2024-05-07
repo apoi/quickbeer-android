@@ -17,6 +17,7 @@
  */
 package quickbeer.android.util.ktx
 
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset
@@ -40,6 +41,10 @@ fun ZonedDateTime?.isValidDate(): Boolean {
 fun ZonedDateTime?.within(millis: Long): Boolean {
     val compare = ZonedDateTime.now().minus(millis, ChronoUnit.MILLIS)
     return this != null && this > compare
+}
+
+fun ZonedDateTime.isOlderThan(duration: Duration): Boolean {
+    return (this + duration) < ZonedDateTime.now()
 }
 
 fun ZonedDateTime?.formatDateTime(template: String): String {
