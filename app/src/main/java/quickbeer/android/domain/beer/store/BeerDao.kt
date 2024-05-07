@@ -70,4 +70,7 @@ abstract class BeerDao : CoreDao<Int, BeerEntity>(
 
     @Query("DELETE FROM beers WHERE id=:key")
     abstract suspend fun delete(key: Int): Int
+
+    @Query("DELETE FROM beers")
+    abstract suspend fun deleteAll(): Int
 }

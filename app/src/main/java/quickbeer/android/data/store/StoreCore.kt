@@ -110,6 +110,13 @@ interface StoreCore<K : Any, V : Any> {
     suspend fun delete(key: K): Boolean
 
     /**
+     * Deletes all values from the store, and returns success status of the operation.
+     *
+     * @return True if at least one value was deleted, and false otherwise.
+     */
+    suspend fun deleteAll(): Boolean
+
+    /**
      * Returns a Flow that emits the key of every item that has been deleted.
      *
      * @return Flow with keys that have been deleted in the store.

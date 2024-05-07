@@ -76,6 +76,12 @@ abstract class RoomStoreCore<K : Any, V : Any, E : Any>(
             .also { if (it) deleteStream.emit(key) }
     }
 
+    override suspend fun deleteAll(): Boolean {
+        val keys = coreProxy.getKeys()
+        return coreProxy.deleteAll()
+            .also { keys.forEach { key -> deleteStream.emit(key) } }
+    }
+
     override fun getDeleteStream(): Flow<K> {
         return deleteStream
     }

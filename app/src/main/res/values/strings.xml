@@ -67,8 +67,8 @@
     <string name="abv">ABV</string>
     <string name="ibu">IBU</string>
 
-    <string name="description_rating_overall">Beer\'s rating relative to all beers on a scale from 0 to 100</string>
-    <string name="description_rating_style">Beer\'s rating relative to beers in the same style category on a scale from 0 to 100</string>
+    <string name="description_rating_overall">Beer’s rating relative to all beers on a scale from 0 to 100</string>
+    <string name="description_rating_style">Beer’s rating relative to beers in the same style category on a scale from 0 to 100</string>
     <string name="description_abv">Alcohol by volume</string>
     <string name="description_ibu">International Bittering Units, a measure of beer bitterness</string>
 
@@ -101,7 +101,7 @@
     <string name="tick_removed">Rating removed!</string>
     <string name="tick_failure">Rating failed! Try again later.</string>
     <string name="beer_details_login">Log in to rate this beer</string>
-    <string name="ticks_empty_list">You haven\'t rated any beers yet.</string>
+    <string name="ticks_empty_list">You haven’t rated any beers yet.</string>
     <string name="login_dialog_title">Login required</string>
     <string name="login_to_rate_message">You need to login to rate beers. Login now?</string>
     <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>
@@ -120,7 +120,7 @@
     <string name="rating_overall_hint">Overall rating of the beer. When you finish the beer, how do you feel about it?</string>
 
     <!-- Rating list messages -->
-    <string name="rating_list_empty">This beer hasn\'t been rated yet.</string>
+    <string name="rating_list_empty">This beer isn’t rated yet.</string>
     <string name="rating_list_error">Error! Try again later.</string>
 
     <!-- Barcode -->
@@ -149,10 +149,13 @@
     <string name="login_error">Error logging in. Please try again later.</string>
 
     <!-- Profile -->
+    <string name="profile_loading_profile">Loading…</string>
+    <string name="profile_loading_ratings">loading…</string>
     <string name="profile_ratings">Ratings: %s</string>
     <string name="profile_ticks">Ticks: %s</string>
     <string name="profile_login">Login</string>
     <string name="profile_logout">Logout</string>
+    <string name="profile_not_logged">Not logged in</string>
 
     <!-- License listing -->
     <string name="license_link">Link: %s</string>

@@ -17,7 +17,6 @@ import quickbeer.android.databinding.ProfileFragmentBinding
 import quickbeer.android.domain.user.User
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.observe
-import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -70,12 +69,14 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     }
 
     private fun setProfile(user: User?) {
-        binding.profileUsername.text = user?.username ?: "Loading..."
+        binding.profileUsername.text = user?.username
+            ?: getString(R.string.profile_loading_profile)
     }
 
     private fun setRateCount(user: User?) {
         binding.profileRatings.label.text =
-            getString(R.string.profile_ratings).format(user?.rateCount ?: "loading...")
+            getString(R.string.profile_ratings)
+                .format(user?.rateCount ?: getString(R.string.profile_loading_ratings))
 
         if (user?.rateCount != null) {
             binding.profileRatings.setOnClickListener {
@@ -88,7 +89,8 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
 
     private fun setTickCount(user: User?) {
         binding.profileTicks.label.text =
-            getString(R.string.profile_ticks).format(user?.tickCount ?: "loading...")
+            getString(R.string.profile_ticks)
+                .format(user?.tickCount ?: getString(R.string.profile_loading_ratings))
 
         if (user?.tickCount != null) {
             binding.profileTicks.setOnClickListener {
@@ -101,7 +103,7 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
 
     private fun setStateEmpty() {
         setProfileButtons(false)
-        binding.profileUsername.text = "Not logged in"
+        binding.profileUsername.text = getString(R.string.profile_not_logged)
     }
 
     private fun openLink(uri: String) {

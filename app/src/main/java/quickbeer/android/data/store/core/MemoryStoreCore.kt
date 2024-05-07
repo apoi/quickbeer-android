@@ -106,6 +106,17 @@ class MemoryStoreCore<K : Any, V : Any>(
         return deleted
     }
 
+    override suspend fun deleteAll(): Boolean {
+        lock.lock()
+
+        val keys = cache.keys
+        cache.clear()
+        keys.forEach { deleteStream.emit(it) }
+
+        lock.unlock()
+        return keys.isNotEmpty()
+    }
+
     override fun getDeleteStream(): Flow<K> {
         return deleteStream
     }

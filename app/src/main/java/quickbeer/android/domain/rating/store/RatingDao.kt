@@ -59,4 +59,7 @@ abstract class RatingDao : CoreDao<Int, RatingEntity>(
 
     @Query("DELETE FROM reviews WHERE id=:key")
     abstract suspend fun delete(key: Int): Int
+
+    @Query("DELETE FROM reviews")
+    abstract suspend fun deleteAll(): Int
 }

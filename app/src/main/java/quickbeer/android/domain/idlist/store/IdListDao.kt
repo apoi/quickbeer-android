@@ -54,4 +54,7 @@ abstract class IdListDao : CoreDao<String, IdListEntity>(
 
     @Query("DELETE FROM lists WHERE id=:key")
     abstract suspend fun delete(key: String): Int
+
+    @Query("DELETE FROM lists")
+    abstract suspend fun deleteAll(): Int
 }

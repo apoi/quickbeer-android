@@ -124,6 +124,12 @@ abstract class PreferenceDataStoreCore<V : Any>(
             .let { valueDeleted }
     }
 
+    override suspend fun deleteAll(): Boolean {
+        // Preferences DataStore can't list all keys of a given type, so we can't emit delete with
+        // support of deleteStream. Shouldn't be an issue for the use cases.
+        error("This core does not support deletion of all values")
+    }
+
     override fun getDeleteStream(): Flow<String> {
         return deleteStream
     }

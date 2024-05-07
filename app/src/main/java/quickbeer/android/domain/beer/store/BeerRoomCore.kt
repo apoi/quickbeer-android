@@ -70,4 +70,6 @@ private class BeerDaoProxy(
     override suspend fun put(items: Map<Int, BeerEntity>) = dao.put(items.values.toList())
 
     override suspend fun delete(key: Int) = dao.delete(key) > 0
+
+    override suspend fun deleteAll() = dao.deleteAll() > 0
 }

@@ -68,4 +68,7 @@ abstract class BrewerDao : CoreDao<Int, BrewerEntity>(
 
     @Query("DELETE FROM brewers WHERE id=:key")
     abstract suspend fun delete(key: Int): Int
+
+    @Query("DELETE FROM brewers")
+    abstract suspend fun deleteAll(): Int
 }

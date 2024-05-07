@@ -58,4 +58,7 @@ abstract class UserDao : CoreDao<Int, UserEntity>(
 
     @Query("DELETE FROM users WHERE id=:key")
     abstract suspend fun delete(key: Int): Int
+
+    @Query("DELETE FROM users")
+    abstract suspend fun deleteAll(): Int
 }

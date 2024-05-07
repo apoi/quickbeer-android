@@ -38,4 +38,6 @@ private class IdListDaoProxy(
     override suspend fun put(items: Map<String, IdListEntity>) = dao.put(items.values.toList())
 
     override suspend fun delete(key: String) = dao.delete(key) > 0
+
+    override suspend fun deleteAll() = dao.deleteAll() > 0
 }

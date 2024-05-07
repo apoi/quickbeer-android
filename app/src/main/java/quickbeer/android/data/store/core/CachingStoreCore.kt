@@ -109,6 +109,10 @@ open class CachingStoreCore<K : Any, V : Any>(
         return persistingCore.delete(key)
     }
 
+    override suspend fun deleteAll(): Boolean {
+        return persistingCore.deleteAll()
+    }
+
     override fun getDeleteStream(): Flow<K> {
         return persistingCore.getDeleteStream()
     }

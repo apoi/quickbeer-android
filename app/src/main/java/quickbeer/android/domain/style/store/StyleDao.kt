@@ -50,4 +50,7 @@ abstract class StyleDao : CoreDao<Int, StyleEntity>(
 
     @Query("DELETE FROM styles WHERE id=:key")
     abstract suspend fun delete(key: Int): Int
+
+    @Query("DELETE FROM styles")
+    abstract suspend fun deleteAll(): Int
 }
