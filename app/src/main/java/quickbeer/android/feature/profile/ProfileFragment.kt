@@ -52,6 +52,24 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
                 is State.Empty, is State.Error -> setStateEmpty()
             }
         }
+
+        observe(viewModel.ratingCountState) { state ->
+            when (state) {
+                is State.Initial -> setRateCount(null)
+                is State.Loading -> setRateCount(null)
+                is State.Success -> setRateCount(state.value)
+                is State.Empty, is State.Error -> setRateCount(0)
+            }
+        }
+
+        observe(viewModel.tickCountState) { state ->
+            when (state) {
+                is State.Initial -> setTickCount(null)
+                is State.Loading -> setTickCount(null)
+                is State.Success -> setTickCount(state.value)
+                is State.Empty, is State.Error -> setTickCount(0)
+            }
+        }
     }
 
     private fun setProfileButtons(hasUser: Boolean) {
@@ -64,8 +82,6 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
     private fun setStateContent(user: User?) {
         setProfileButtons(true)
         setProfile(user)
-        setRateCount(user)
-        setTickCount(user)
     }
 
     private fun setProfile(user: User?) {
@@ -73,28 +89,28 @@ class ProfileFragment : BaseFragment(R.layout.profile_fragment) {
             ?: getString(R.string.profile_loading_profile)
     }
 
-    private fun setRateCount(user: User?) {
+    private fun setRateCount(count: Int?) {
         binding.profileRatings.label.text =
             getString(R.string.profile_ratings)
-                .format(user?.rateCount ?: getString(R.string.profile_loading_ratings))
+                .format(count ?: getString(R.string.profile_loading_ratings))
 
-        if (user?.rateCount != null) {
+        if (count != null) {
             binding.profileRatings.setOnClickListener {
-                navigate(ProfileFragmentDirections.toRatingsList(user))
+                navigate(ProfileFragmentDirections.toRatingsList())
             }
         } else {
             binding.profileRatings.setOnClickListener(null)
         }
     }
 
-    private fun setTickCount(user: User?) {
+    private fun setTickCount(count: Int?) {
         binding.profileTicks.label.text =
             getString(R.string.profile_ticks)
-                .format(user?.tickCount ?: getString(R.string.profile_loading_ratings))
+                .format(count ?: getString(R.string.profile_loading_ratings))
 
-        if (user?.tickCount != null) {
+        if (count != null) {
             binding.profileTicks.setOnClickListener {
-                navigate(ProfileFragmentDirections.toTicksList(user))
+                navigate(ProfileFragmentDirections.toTicksList())
             }
         } else {
             binding.profileTicks.setOnClickListener(null)

@@ -50,6 +50,8 @@ class UsersRatingStore @Inject constructor(
     }
 
     override suspend fun put(userId: Int, value: List<Rating>): Boolean {
+        // Clear stored ratings first in case any was deleted out of app
+        delete(userId)
         return ratingStoreCore.put(value.associateBy { it.id }).isNotEmpty()
     }
 

@@ -25,6 +25,8 @@ class TickedBeersStore @Inject constructor(
     }
 
     override suspend fun put(value: List<Beer>): Boolean {
+        // Clear stored ticks first in case any was deleted out of app
+        delete()
         return beerStoreCore.put(value.associateBy { it.id }).isNotEmpty()
     }
 }

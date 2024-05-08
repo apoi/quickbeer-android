@@ -38,25 +38,13 @@
         android:id="@+id/ratings_list_fragment"
         android:name="quickbeer.android.feature.ratedbeers.RatedBeersFragment"
         android:label="@string/ratings_list_title"
-        tools:layout="@layout/rated_beers_fragment">
-
-        <argument
-            android:name="user"
-            app:argType="quickbeer.android.domain.user.User" />
-
-    </fragment>
+        tools:layout="@layout/rated_beers_fragment" />
 
     <fragment
         android:id="@+id/ticks_list_fragment"
         android:name="quickbeer.android.feature.tickedbeers.TickedBeersFragment"
         android:label="@string/ticks_list_title"
-        tools:layout="@layout/ticked_beers_fragment">
-
-        <argument
-            android:name="user"
-            app:argType="quickbeer.android.domain.user.User" />
-
-    </fragment>
+        tools:layout="@layout/ticked_beers_fragment" />
 
     <fragment
         android:id="@+id/legal_fragment"

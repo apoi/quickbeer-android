@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -42,12 +43,34 @@ class ProfileViewModel @Inject constructor(
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
     val userState: Flow<State<User>> = _userState
 
+    private val _ratingCountState = MutableStateFlow<State<Int>>(State.Initial)
+    val ratingCountState: Flow<State<Int>> = _ratingCountState
+
+    private val _tickCountState = MutableStateFlow<State<Int>>(State.Initial)
+    val tickCountState: Flow<State<Int>> = _tickCountState
+
     init {
         // Current user state for display purposes, do not update anything here
         viewModelScope.launch(Dispatchers.IO) {
             currentUserRepository.getStream(NoFetch())
                 .distinctUntilChanged()
                 .collectLatest(_userState::emit)
+        }
+
+        // Tick data for display. Similarly should not update
+        viewModelScope.launch(Dispatchers.IO) {
+            userRatingRepository.getStream(NoFetch())
+                .map(StateListSizeMapper()::map)
+                .distinctUntilChanged()
+                .collectLatest(_ratingCountState::emit)
+        }
+
+        // Rating data for display. Again, no updating here
+        viewModelScope.launch(Dispatchers.IO) {
+            tickedBeersRepository.getStream(NoFetch())
+                .map(StateListSizeMapper()::map)
+                .distinctUntilChanged()
+                .collectLatest(_tickCountState::emit)
         }
 
         // User details, tick and rating data refresh once a week, according to the timestamp
