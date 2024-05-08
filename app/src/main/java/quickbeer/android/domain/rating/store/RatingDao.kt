@@ -15,7 +15,9 @@ abstract class RatingDao : CoreDao<Int, RatingEntity>(
     RatingEntity.merger
 ) {
 
-    @Query("SELECT * FROM reviews WHERE user_id=:userId AND beer_id=:beerId AND comments IS NOT NULL")
+    @Query(
+        "SELECT * FROM reviews WHERE user_id=:userId AND beer_id=:beerId AND comments IS NOT NULL"
+    )
     abstract fun ratingByUser(userId: Int, beerId: Int): Flow<RatingEntity>
 
     @Query("SELECT * FROM reviews WHERE user_id=:userId AND comments IS NOT NULL")

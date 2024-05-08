@@ -50,8 +50,10 @@ class ProfileViewModel @Inject constructor(
                 .collectLatest(_userState::emit)
         }
 
-        // User details, tick and rating data refresh once a week, according to the
-        // timestamp stored in the currently logged in User object
+        // User details, tick and rating data refresh once a week, according to the timestamp
+        // stored in the currently logged in User object. The ratings count in the user object
+        // does not match (!!) actual tick/rating data, so this acts as a periodical full refresh
+        // to get up-to-date data.
         viewModelScope.launch(Dispatchers.IO) {
             currentUserRepository.getStream(NoFetch())
                 // Only proceed when we receive User
@@ -61,10 +63,10 @@ class ProfileViewModel @Inject constructor(
                 .onEach { Timber.d("Current user updated: ${it.updated}") }
                 // Only proceed if update date doesn't exist, or is older than 7 days
                 .filter { it.updated?.isOlderThan(ofDays(7)) != false }
-                .flatMapLatest { user: User ->
+                .flatMapLatest {
                     Timber.d("Fetch user, ticks, ratings")
                     val u = currentUserRepository.getStream(NotOlderThan(ofDays(7)) { it?.updated })
-                    val t = tickedBeersRepository.getStream(user.id.toString(), AlwaysFetch())
+                    val t = tickedBeersRepository.getStream(AlwaysFetch())
                     val r = userRatingRepository.getStream(AlwaysFetch())
 
                     combine(u, t, r) { newUser, newTicks, newRatings ->

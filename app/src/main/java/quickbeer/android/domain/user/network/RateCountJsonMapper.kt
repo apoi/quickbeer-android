@@ -16,7 +16,7 @@ object RateCountJsonMapper : JsonMapper<Int, User, RateCountJson> {
             rateCount = source.rateCount,
             tickCount = source.tickCount,
             placeCount = source.placeRatings,
-            updated = ZonedDateTime.now(),
+            updated = ZonedDateTime.now()
         )
     }
 }

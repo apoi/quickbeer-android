@@ -45,13 +45,10 @@ class LoginManager @Inject constructor(
     }
 
     suspend fun logout() {
-        val user = userStore.getCurrentUser()
-        if (user?.id != null) {
-            tickedBeersStore.delete(user.id.toString())
-            userStore.delete(user.id)
-        }
+        userStore.getCurrentUser()
+            ?.let { user -> userStore.delete(user.id) }
 
-        tickedBeersStore.clearTicks()
+        tickedBeersStore.delete()
         clearCookies()
     }
 

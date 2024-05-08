@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import quickbeer.android.data.store.Merger
 import quickbeer.android.data.store.StoreCore
 
 /**

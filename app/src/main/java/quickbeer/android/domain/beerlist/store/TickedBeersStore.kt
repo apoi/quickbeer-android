@@ -2,26 +2,29 @@ package quickbeer.android.domain.beerlist.store
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
-import quickbeer.android.data.store.StoreCore
+import kotlinx.coroutines.flow.first
+import quickbeer.android.data.store.SingleStore
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.store.BeerStoreCore
-import quickbeer.android.domain.idlist.IdList
-import quickbeer.android.inject.IdListMemoryCore
 
 class TickedBeersStore @Inject constructor(
-    @IdListMemoryCore indexStoreCore: StoreCore<String, IdList>,
     private val beerStoreCore: BeerStoreCore
-) : BeerListStore(INDEX_PREFIX, indexStoreCore, beerStoreCore) {
+) : SingleStore<List<Beer>> {
 
-    fun getLocalTicks(): Flow<List<Beer>> {
+    override suspend fun get(): List<Beer> {
+        return beerStoreCore.tickedBeers().first()
+    }
+
+    override fun getStream(): Flow<List<Beer>> {
         return beerStoreCore.tickedBeers()
     }
 
-    suspend fun clearTicks() {
+    override suspend fun delete(): Boolean {
         beerStoreCore.clearTicks()
+        return true
     }
 
-    companion object {
-        private const val INDEX_PREFIX = "ticks/"
+    override suspend fun put(value: List<Beer>): Boolean {
+        return beerStoreCore.put(value.associateBy { it.id }).isNotEmpty()
     }
 }

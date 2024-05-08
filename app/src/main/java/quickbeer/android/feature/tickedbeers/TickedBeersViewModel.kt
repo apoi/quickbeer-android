@@ -35,10 +35,7 @@ class TickedBeersViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             tickedBeersRepository
-                .getStream(
-                    user.id.toString(),
-                    ListCountValidator { it >= (user.tickCount ?: 0) }
-                )
+                .getStream(ListCountValidator { it >= (user.tickCount ?: 0) })
                 .map(BeerListModelTickDateMapper(beerRepository)::map)
                 .onStart { emit(State.Loading()) }
                 .collectLatest(_viewState::emit)

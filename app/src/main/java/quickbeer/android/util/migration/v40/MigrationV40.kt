@@ -7,7 +7,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
 import javax.inject.Inject
 import quickbeer.android.domain.beer.store.BeerStore
-import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.brewer.store.BrewerStore
 import quickbeer.android.domain.preferences.store.IntPreferenceStore
 import quickbeer.android.domain.preferences.store.StringPreferenceStore
@@ -20,8 +19,7 @@ class MigrationV40 @Inject constructor(
     private val beerStore: BeerStore,
     private val brewerStore: BrewerStore,
     private val intPreferenceStore: IntPreferenceStore,
-    private val stringPreferenceStore: StringPreferenceStore,
-    private val tickedBeersRepository: TickedBeersRepository
+    private val stringPreferenceStore: StringPreferenceStore
 ) : ApplicationMigration.Migration {
 
     override suspend fun migrate() {
@@ -65,7 +63,6 @@ class MigrationV40 @Inject constructor(
                     intPreferenceStore.put(USERID, user.id)
                     stringPreferenceStore.put(USERNAME, user.username)
                     stringPreferenceStore.put(PASSWORD, user.password)
-                    tickedBeersRepository.fetch(user.id.toString())
                 }
         } catch (e: Exception) {
             Timber.e(e, "Failure migrating v3 user")
