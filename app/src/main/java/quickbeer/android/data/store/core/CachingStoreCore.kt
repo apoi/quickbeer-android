@@ -19,11 +19,12 @@ import quickbeer.android.data.store.StoreCore
  */
 open class CachingStoreCore<K : Any, V : Any>(
     private val persistingCore: StoreCore<K, V>,
-    private val getKey: (V) -> K,
-    merger: Merger<V> = StoreCore.takeNew()
+    private val getKey: (V) -> K
 ) : StoreCore<K, V> {
 
-    private val cacheCore = MemoryStoreCore<K, V>(merger)
+    // Merging function for the cache core must always take the new element
+    // to ensure consistency with the persisting core
+    private val cacheCore = MemoryStoreCore<K, V>(StoreCore.takeNew())
     private val monitoringContext = CoroutineScope(Dispatchers.IO)
     private val lock = Mutex(false)
 

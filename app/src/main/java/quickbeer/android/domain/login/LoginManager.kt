@@ -52,7 +52,6 @@ class LoginManager @Inject constructor(
         }
 
         tickedBeersStore.clearTicks()
-
         clearCookies()
     }
 

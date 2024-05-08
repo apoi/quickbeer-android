@@ -6,7 +6,7 @@ import quickbeer.android.domain.rating.Rating
 
 class RatingStoreCore @Inject constructor(
     private val roomCore: RatingRoomCore
-) : CachingStoreCore<Int, Rating>(roomCore, Rating::id, Rating.merger) {
+) : CachingStoreCore<Int, Rating>(roomCore, Rating::id) {
 
     fun ratingByUser(userId: Int, beerId: Int) = roomCore.ratingByUser(userId, beerId)
 

@@ -6,7 +6,7 @@ import quickbeer.android.domain.beer.Beer
 
 class BeerStoreCore(
     private val roomCore: BeerRoomCore
-) : CachingStoreCore<Int, Beer>(roomCore, Beer::id, Beer.merger) {
+) : CachingStoreCore<Int, Beer>(roomCore, Beer::id) {
 
     constructor(database: Database) : this(BeerRoomCore(database))
 

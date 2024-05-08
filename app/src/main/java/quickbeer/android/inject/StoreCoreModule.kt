@@ -81,7 +81,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideStyleStoreCore(roomCore: StyleRoomCore): StoreCore<Int, Style> {
-        return CachingStoreCore(roomCore, Style::id, Style.merger)
+        return CachingStoreCore(roomCore, Style::id)
     }
 
     @Provides
@@ -93,7 +93,7 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideRatingCore(roomCore: RatingRoomCore): StoreCore<Int, Rating> {
-        return CachingStoreCore(roomCore, Rating::id, Rating.merger)
+        return CachingStoreCore(roomCore, Rating::id)
     }
 
     @Provides
