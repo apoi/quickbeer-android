@@ -9,9 +9,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.ListCountValidator
@@ -19,6 +19,7 @@ import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
+import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelTickDateMapper
@@ -37,7 +38,8 @@ class TickedBeersViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             userRepository.getStream(NoFetch())
-                .mapNotNull { it.valueOrNull() }
+                .filterIsInstance<State.Success<User>>()
+                .map { it.value }
                 .flatMapLatest { user ->
                     tickedBeersRepository
                         .getStream(ListCountValidator { it >= (user.tickCount ?: 0) })

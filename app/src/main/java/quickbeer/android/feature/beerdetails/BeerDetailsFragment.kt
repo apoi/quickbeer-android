@@ -17,24 +17,31 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.BlurTransformation
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.model.OwnRating
+import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.setNegativeAction
+import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -66,6 +73,16 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
     }
 
     override fun observeViewState() {
+        observe(viewModel.userState) { state ->
+            when (state) {
+                is State.Initial -> setRatingAction(null)
+                is State.Loading -> setRatingAction(state.value)
+                is State.Empty -> setRatingAction(null)
+                is State.Success -> setRatingAction(state.value)
+                is State.Error -> setRatingAction(null)
+            }
+        }
+
         observe(viewModel.beerState) { state ->
             when (state) {
                 is State.Initial -> Unit
@@ -83,6 +100,22 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
                 is State.Empty -> setRating(null)
                 is State.Success -> setRating(state.value)
                 is State.Error -> Unit
+            }
+        }
+
+        findNavController()
+            .currentBackStackEntry
+            ?.savedStateHandle
+            ?.getLiveData<Boolean>(LoginDialog.LOGIN_RESULT)
+            ?.observe(viewLifecycleOwner, ::onLoginResult)
+    }
+
+    private fun setRatingAction(user: User?) {
+        binding.mainActionButton.setOnClickListener {
+            if (user != null) {
+                navigateToRating()
+            } else {
+                showLoginDialog()
             }
         }
     }
@@ -117,9 +150,29 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         }
 
         binding.mainActionButton.isVisible = true
-        binding.mainActionButton.setOnClickListener {
-            // TODO open rating sheet
+    }
+
+    private fun showLoginDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.login_dialog_title)
+            .setMessage(R.string.login_to_rate_message)
+            .setPositiveAction(R.string.action_yes, ::login)
+            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
+            .show()
+    }
+
+    private fun login() {
+        navigate(BeerDetailsFragmentDirections.toLogin())
+    }
+
+    private fun onLoginResult(success: Boolean) {
+        if (success) {
+            navigateToRating()
         }
+    }
+
+    private fun navigateToRating() {
+        navigate(BeerDetailsFragmentDirections.toRating())
     }
 
     override fun onScrollUp() {

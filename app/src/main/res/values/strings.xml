@@ -20,7 +20,7 @@
     <string name="profile_description">Profile</string>
 
     <string name="details_title">Details</string>
-
+    <string name="rating_title">Rating</string>
     <string name="login_title">Login</string>
     <string name="legal_title">Legal</string>
     <string name="ratings_list_title">Rated Beers</string>

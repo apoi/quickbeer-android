@@ -47,6 +47,8 @@ import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
+import quickbeer.android.domain.user.User
+import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.util.ktx.navId
@@ -54,6 +56,7 @@ import quickbeer.android.util.ktx.navId
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val currentUserRepository: CurrentUserRepository,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
@@ -63,6 +66,9 @@ class BeerDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
+
+    private val _userState = MutableStateFlow<State<User>>(State.Initial)
+    val userState: Flow<State<User>> = _userState
 
     private val _ratingState = MutableStateFlow<State<OwnRating>>(State.Initial)
     val ratingState: Flow<State<OwnRating>> = _ratingState
@@ -81,6 +87,11 @@ class BeerDetailsViewModel @Inject constructor(
 
     init {
         updateAccessedBeer(beerId)
+
+        viewModelScope.launch(Dispatchers.IO) {
+            currentUserRepository.getStream(NoFetch())
+                .collectLatest { _userState.emit(it) }
+        }
 
         viewModelScope.launch(Dispatchers.IO) {
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
@@ -112,7 +123,7 @@ class BeerDetailsViewModel @Inject constructor(
                 .filterIsInstance<State.Success<Beer>>()
                 .map { it.value }
                 .take(1)
-                .collect { beer ->
+                .collectLatest { beer ->
                     val accessed = beer.copy(accessed = ZonedDateTime.now())
                     beerRepository.persist(beer.id, accessed)
                 }
@@ -125,7 +136,7 @@ class BeerDetailsViewModel @Inject constructor(
                 .filterIsInstance<State.Success<Brewer>>()
                 .map { it.value }
                 .take(1)
-                .collect { brewer ->
+                .collectLatest { brewer ->
                     val accessed = brewer.copy(accessed = ZonedDateTime.now())
                     brewerRepository.persist(brewer.id, accessed)
                 }

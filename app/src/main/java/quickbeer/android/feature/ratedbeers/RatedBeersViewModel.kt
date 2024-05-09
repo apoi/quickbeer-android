@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
@@ -19,6 +20,7 @@ import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
@@ -37,7 +39,8 @@ class RatedBeersViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             userRepository.getStream(NoFetch())
-                .mapNotNull { it.valueOrNull() }
+                .filterIsInstance<State.Success<User>>()
+                .map { it.value }
                 .flatMapLatest { user ->
                     userRatingsRepository
                         .getStream(ListCountValidator { it >= (user.rateCount ?: 0) })

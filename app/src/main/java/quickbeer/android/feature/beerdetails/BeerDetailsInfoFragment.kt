@@ -105,12 +105,6 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         observeSuccess(viewModel.styleState, ::setStyle)
         observeSuccess(viewModel.addressState, ::setAddress)
         observeSuccess(viewModel.ratingState, ::setRating)
-
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>(LoginDialog.LOGIN_RESULT)
-            ?.observe(viewLifecycleOwner, ::onLoginResult)
     }
 
     private fun setBeer(beer: Beer) {
@@ -176,35 +170,6 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         binding.infoOrigin.setOnClickListener {
             navigate(Destination.Country(address.countryId))
         }
-    }
-
-    private fun showLoginDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.login_dialog_title)
-            .setMessage(R.string.login_to_rate_message)
-            .setPositiveAction(R.string.action_yes, ::login)
-            .setNegativeAction(R.string.action_no) {
-                it.cancel()
-                clearRating()
-            }
-            .setOnCancelListener { clearRating() }
-            .show()
-    }
-
-    private fun login() {
-        navigate(BeerDetailsFragmentDirections.toLogin())
-    }
-
-    private fun onLoginResult(success: Boolean) {
-        if (success) {
-            // TODO viewModel.tickBeer(binding.ratingBar.rating.toInt())
-        } else {
-            clearRating()
-        }
-    }
-
-    private fun clearRating() {
-        // TODO binding.ratingBar.rating = 0F
     }
 
     private fun showToast(@StringRes resource: Int) {
