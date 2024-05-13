@@ -1,8 +1,6 @@
 package quickbeer.android.feature.beerrating
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -11,12 +9,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,15 +28,10 @@ import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
+import quickbeer.android.ui.compose.style.TextStyle
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
-fun RatingSlider(
-    modifier: Modifier = Modifier,
-    title: String,
-    description: String,
-    maxValue: Int
-) {
+fun RatingSlider(title: String, description: String, maxValue: Int) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     var infoExpanded by remember { mutableStateOf(false) }
 
@@ -53,9 +43,11 @@ fun RatingSlider(
             horizontalArrangement = Arrangement.Start
         ) {
             Text(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                style = TextStyle.detailsTitle,
                 color = Colors.textLight,
-                style = MaterialTheme.typography.titleMedium,
-                text = title
+                text = title.uppercase()
             )
             Spacer(modifier = Modifier.size(Dimens.spacingM))
             Icon(
@@ -64,16 +56,18 @@ fun RatingSlider(
                     .align(Alignment.CenterVertically),
                 painter = painterResource(id = R.drawable.ic_hero_info),
                 tint = Colors.iconLight,
-                contentDescription = "Details",
+                contentDescription = "Details"
             )
         }
 
         AnimatedVisibility(visible = infoExpanded) {
             Text(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(top = 3.dp)
+                    .fillMaxWidth(),
+                style = TextStyle.detailsDescription,
                 color = Colors.textLight,
-                style = MaterialTheme.typography.bodyMedium,
-                text = description,
+                text = description
             )
         }
 
@@ -98,8 +92,8 @@ fun RatingSlider(
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
+                    style = TextStyle.title,
                     color = Colors.textDark,
-                    style = MaterialTheme.typography.titleLarge,
                     text = sliderPosition.roundToInt().toString()
                 )
             }

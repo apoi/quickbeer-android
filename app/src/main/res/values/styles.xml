@@ -101,6 +101,15 @@
         <item name="android:textColor">@color/text_hint</item>
     </style>
 
+    <!-- Bottom sheet -->
+    <style name="AppTheme.BottomSheet" parent="Theme.Design.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/TransparentBottomSheetStyle</item>
+    </style>
+
+    <style name="TransparentBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <!-- Button -->
     <style name="AppTheme.Button" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:layout_height">48dp</item>

@@ -26,8 +26,6 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -39,15 +37,12 @@ import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
-import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.observeSuccess
-import quickbeer.android.util.ktx.setNegativeAction
-import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint

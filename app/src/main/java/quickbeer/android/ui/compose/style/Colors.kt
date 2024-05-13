@@ -1,6 +1,5 @@
 package quickbeer.android.ui.compose.style
 
-import androidx.compose.material3.SliderColors
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -33,7 +32,8 @@ object Colors {
     @Composable
     fun sliderColors() = SliderDefaults.colors().copy(
         thumbColor = ColorDef.orangeDark,
-        activeTrackColor = ColorDef.orangeDark
+        activeTrackColor = ColorDef.orangeDark,
+        inactiveTrackColor = ColorDef.white10
     )
 
     private object ColorDef {
