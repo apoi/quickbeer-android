@@ -79,7 +79,7 @@
 
                 <TextView
                     style="@style/DetailsTitle"
-                    android:text="@string/rating_appearance" />
+                    android:text="@string/rating_appearance_short" />
 
                 <TextView
                     android:id="@+id/appearance"
@@ -130,7 +130,7 @@
 
                 <TextView
                     style="@style/DetailsTitle"
-                    android:text="@string/rating_mouthfeel" />
+                    android:text="@string/rating_mouthfeel_short" />
 
                 <TextView
                     android:id="@+id/mouthfeel"

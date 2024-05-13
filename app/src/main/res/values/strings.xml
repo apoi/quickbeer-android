@@ -107,10 +107,12 @@
     <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>
 
     <!-- Ratings -->
-    <string name="rating_appearance">Appear.</string>
+    <string name="rating_appearance">Appearance</string>
+    <string name="rating_appearance_short">Appear.</string>
     <string name="rating_aroma">Aroma</string>
     <string name="rating_flavor">Flavor</string>
-    <string name="rating_mouthfeel">Mouthf.</string>
+    <string name="rating_mouthfeel">Mouthfeel</string>
+    <string name="rating_mouthfeel_short">Mouthf.</string>
     <string name="rating_overall">Overall</string>
 
     <string name="rating_appearance_hint">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
