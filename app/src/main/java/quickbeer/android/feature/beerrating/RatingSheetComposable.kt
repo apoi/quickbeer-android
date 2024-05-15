@@ -20,6 +20,7 @@ fun RatingSheetComposable() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .padding(bottom = Dimens.spacingL)
                 .padding(horizontal = Dimens.spacingL),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingM),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -48,6 +49,10 @@ fun RatingSheetComposable() {
                 title = stringResource(R.string.rating_overall),
                 description = stringResource(R.string.rating_overall_hint),
                 maxValue = 20
+            )
+            DescriptionInput(
+                modifier = Modifier.fillMaxWidth(),
+                text = ""
             )
         }
     }
