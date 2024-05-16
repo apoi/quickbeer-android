@@ -1,9 +1,8 @@
 package quickbeer.android.ui.compose.style
 
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.SliderDefaults
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
@@ -31,7 +30,17 @@ object Colors {
     val textError = ColorDef.redDark
 
     // Components
-    val primaryButton = ColorDef.orangeDark
+    val bottomSheetDragHandleColor = ColorDef.orangeDark
+
+    @Composable
+    fun primaryButtonColors() = ButtonDefaults.buttonColors().copy(
+        containerColor = ColorDef.orangeDark
+    )
+
+    @Composable
+    fun secondaryButtonColors() = ButtonDefaults.buttonColors().copy(
+        containerColor = ColorDef.gray80
+    )
 
     @Composable
     fun sliderColors() = SliderDefaults.colors().copy(
@@ -74,7 +83,7 @@ object Colors {
         // Not that many other colors
         val orange = Color(0xFFF39815)
         val orangeDark = Color(0xFFC17D1C)
-        val redDark = Color(0xFFAA3232)
+        val redDark = Color(0xFF923C3C)
 
         // Search
         val searchShadow = Color(0x99000000)

@@ -20,7 +20,9 @@ fun BottomSheet(content: @Composable ColumnScope.() -> Unit) {
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetContainerColor = Colors.cardBackgroundColor,
-        sheetDragHandle = { BottomSheetDefaults.DragHandle(color = Colors.primaryButton) },
+        sheetDragHandle = {
+            BottomSheetDefaults.DragHandle(color = Colors.bottomSheetDragHandleColor)
+        },
         sheetContent = content
     ) {}
 }

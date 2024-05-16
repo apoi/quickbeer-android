@@ -2,6 +2,7 @@ package quickbeer.android.feature.beerrating
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import quickbeer.android.R
 import quickbeer.android.ui.compose.element.BottomSheet
+import quickbeer.android.ui.compose.element.Button
+import quickbeer.android.ui.compose.style.ButtonStyles
 import quickbeer.android.ui.compose.style.Dimens
 
 @Composable
@@ -50,10 +53,34 @@ fun RatingSheetComposable() {
                 description = stringResource(R.string.rating_overall_hint),
                 maxValue = 20
             )
+
+            // Description text input
             DescriptionInput(
                 modifier = Modifier.fillMaxWidth(),
                 text = ""
             )
+
+            // Action buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ){
+                Button(
+                    onClick = { /*TODO*/ },
+                    style = ButtonStyles.primary(),
+                    text = "Submit"
+                )
+                Button(
+                    onClick = { /*TODO*/ },
+                    style = ButtonStyles.secondary(),
+                    text = "Save draft"
+                )
+                Button(
+                    onClick = { /*TODO*/ },
+                    style = ButtonStyles.secondary(),
+                    text = "Cancel"
+                )
+            }
         }
     }
 }

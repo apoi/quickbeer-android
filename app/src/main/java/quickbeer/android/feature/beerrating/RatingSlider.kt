@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
-import quickbeer.android.ui.compose.style.TextStyle
+import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
 fun RatingSlider(title: String, description: String, maxValue: Int) {
@@ -45,7 +45,7 @@ fun RatingSlider(title: String, description: String, maxValue: Int) {
             Text(
                 modifier = Modifier
                     .align(Alignment.CenterVertically),
-                style = TextStyle.detailsTitle,
+                style = TextStyles.detailsTitle,
                 color = Colors.textLight,
                 text = title.uppercase()
             )
@@ -65,7 +65,7 @@ fun RatingSlider(title: String, description: String, maxValue: Int) {
                 modifier = Modifier
                     .padding(top = 3.dp)
                     .fillMaxWidth(),
-                style = TextStyle.detailsDescription,
+                style = TextStyles.detailsDescription,
                 color = Colors.textLight,
                 text = description
             )
@@ -92,7 +92,7 @@ fun RatingSlider(title: String, description: String, maxValue: Int) {
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
-                    style = TextStyle.title,
+                    style = TextStyles.title,
                     color = Colors.textDark,
                     text = sliderPosition.roundToInt().toString()
                 )

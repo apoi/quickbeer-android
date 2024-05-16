@@ -114,6 +114,8 @@
     <string name="rating_mouthfeel">Mouthfeel</string>
     <string name="rating_mouthfeel_short">Mouthf.</string>
     <string name="rating_overall">Overall</string>
+    <string name="rating_description">Notes</string>
+    <string name="rating_description_length">Min length: %s / %s</string>
 
     <string name="rating_appearance_hint">Visual appeal, including the colour, clarity, carbonation, and head size and longevity.</string>
     <string name="rating_aroma_hint">Hop character, malts, sweetness, fruitiness and other aromas.</string>

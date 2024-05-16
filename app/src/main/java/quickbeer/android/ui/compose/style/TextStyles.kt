@@ -9,7 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 @Stable
-object TextStyle {
+object TextStyles {
 
     private object FontFamily {
 

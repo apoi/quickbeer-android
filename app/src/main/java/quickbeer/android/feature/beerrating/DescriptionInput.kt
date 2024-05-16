@@ -12,11 +12,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import quickbeer.android.Constants
+import quickbeer.android.R
 import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
-import quickbeer.android.ui.compose.style.TextStyle
+import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
 fun DescriptionInput(
@@ -31,12 +33,12 @@ fun DescriptionInput(
         modifier = modifier.padding(bottom = Dimens.spacingL),
         value = text.value,
         colors = Colors.textFieldColors(),
-        textStyle = TextStyle.textM,
+        textStyle = TextStyles.textM,
         onValueChange = { text.value = it },
         label = {
             Text(
-                style = TextStyle.detailsTitle,
-                text = "Notes".uppercase()
+                style = TextStyles.detailsTitle,
+                text = stringResource(R.string.rating_description).uppercase()
             )
         },
         supportingText = {
@@ -44,8 +46,9 @@ fun DescriptionInput(
                 Text(
                     modifier = Modifier.align(Alignment.CenterEnd),
                     color = if (hasLength) Colors.textLight else Colors.textError,
-                    style = TextStyle.detailsTitle,
-                    text = "%s / 80".format(textLength)
+                    style = TextStyles.detailsTitle,
+                    text = stringResource(R.string.rating_description_length)
+                        .format(textLength, Constants.RATING_MIN_LENGTH)
                 )
             }
         },
