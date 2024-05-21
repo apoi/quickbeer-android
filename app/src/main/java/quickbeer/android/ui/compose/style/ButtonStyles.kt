@@ -13,14 +13,14 @@ object ButtonStyles {
     fun primary() = ButtonStyle(
         colors = Colors.primaryButtonColors(),
         textColor = Colors.textDark,
-        textStyle = TextStyles.textM
+        textStyle = TextStyles.textSHeavy
     )
 
     @Composable
     fun secondary() = ButtonStyle(
         colors = Colors.secondaryButtonColors(),
         textColor = Colors.textLight,
-        textStyle = TextStyles.textM
+        textStyle = TextStyles.textSHeavy
     )
 
     class ButtonStyle(

@@ -21,10 +21,7 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
-fun DescriptionInput(
-    text: String,
-    modifier: Modifier = Modifier
-) {
+fun DescriptionInput(text: String, modifier: Modifier = Modifier) {
     var text = remember { mutableStateOf(text) }
     var textLength = text.value.length
     var hasLength = textLength >= Constants.RATING_MIN_LENGTH
@@ -53,6 +50,6 @@ fun DescriptionInput(
             }
         },
         keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = {/* Handle the done action */ })
+        keyboardActions = KeyboardActions(onDone = { /* Handle the done action */ })
     )
 }

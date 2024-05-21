@@ -8,7 +8,6 @@ import androidx.compose.ui.platform.ComposeView
 import quickbeer.android.R
 import quickbeer.android.ui.base.BaseBottomSheetFragment
 
-
 class BeerRatingFragment : BaseBottomSheetFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

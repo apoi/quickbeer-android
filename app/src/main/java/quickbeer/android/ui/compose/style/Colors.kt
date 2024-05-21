@@ -13,6 +13,7 @@ object Colors {
     // Defaults
     val black = ColorDef.black
     val white = ColorDef.white
+    val transparent = ColorDef.transparent
     val highlight = ColorDef.orangeDark
 
     // Cards
@@ -39,7 +40,7 @@ object Colors {
 
     @Composable
     fun secondaryButtonColors() = ButtonDefaults.buttonColors().copy(
-        containerColor = ColorDef.gray80
+        containerColor = ColorDef.gray90
     )
 
     @Composable

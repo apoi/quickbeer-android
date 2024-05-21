@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +25,7 @@ fun RatingSheetComposable() {
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
                 .padding(bottom = Dimens.spacingL)
                 .padding(horizontal = Dimens.spacingL),
             verticalArrangement = Arrangement.spacedBy(Dimens.spacingM),
@@ -64,7 +67,7 @@ fun RatingSheetComposable() {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
-            ){
+            ) {
                 Button(
                     onClick = { /*TODO*/ },
                     style = ButtonStyles.primary(),

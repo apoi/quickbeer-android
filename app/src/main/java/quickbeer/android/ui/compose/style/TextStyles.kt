@@ -42,6 +42,7 @@ object TextStyles {
     val textM = baseTextStyle.copy(fontSize = 16.sp)
     val textMHeavy = textM.copy(fontFamily = FontFamily.heavy)
     val textS = baseTextStyle.copy(fontSize = 14.sp)
+    val textSHeavy = textS.copy(fontFamily = FontFamily.heavy)
     val textXS = baseTextStyle.copy(fontSize = 12.sp)
 
     // Specific elements
