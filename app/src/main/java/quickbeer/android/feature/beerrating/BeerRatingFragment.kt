@@ -1,10 +1,15 @@
 package quickbeer.android.feature.beerrating
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
+import com.google.android.material.R as materialR
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import quickbeer.android.R
 import quickbeer.android.ui.base.BaseBottomSheetFragment
 
@@ -13,6 +18,20 @@ class BeerRatingFragment : BaseBottomSheetFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.AppTheme_BottomSheet)
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+
+        dialog.setOnShowListener { dialogInterface ->
+            val bottomSheet = (dialogInterface as BottomSheetDialog)
+                .findViewById<View>(materialR.id.design_bottom_sheet) as? FrameLayout
+
+            val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
+            behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        return dialog
     }
 
     override fun onCreateView(

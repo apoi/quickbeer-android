@@ -104,6 +104,8 @@
     <!-- Bottom sheet -->
     <style name="AppTheme.BottomSheet" parent="Theme.Design.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/TransparentBottomSheetStyle</item>
+        <item name="android:navigationBarColor">@color/gray_80</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
     <style name="TransparentBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">

@@ -1,5 +1,6 @@
 package quickbeer.android.feature.beerrating
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import quickbeer.android.R
 import quickbeer.android.ui.compose.element.BottomSheet
 import quickbeer.android.ui.compose.element.Button
 import quickbeer.android.ui.compose.style.ButtonStyles
+import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
 
 @Composable
@@ -23,6 +25,7 @@ fun RatingSheetComposable() {
     BottomSheet {
         Column(
             modifier = Modifier
+                .background(Colors.cardBackgroundColor)
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .verticalScroll(rememberScrollState())
