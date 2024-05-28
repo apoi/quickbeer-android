@@ -22,7 +22,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
@@ -36,7 +35,6 @@ import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.model.OwnRating
-import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
@@ -102,12 +100,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
                 is State.Error -> Unit
             }
         }
-
-        findNavController()
-            .currentBackStackEntry
-            ?.savedStateHandle
-            ?.getLiveData<Boolean>(LoginDialog.LOGIN_RESULT)
-            ?.observe(viewLifecycleOwner, ::onLoginResult)
     }
 
     private fun setRatingAction(user: User?) {
@@ -163,12 +155,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
 
     private fun login() {
         navigate(BeerDetailsFragmentDirections.toLogin())
-    }
-
-    private fun onLoginResult(success: Boolean) {
-        if (success) {
-            navigateToRating()
-        }
     }
 
     private fun navigateToRating() {
