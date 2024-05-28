@@ -12,6 +12,7 @@ import quickbeer.android.R
 import quickbeer.android.feature.MainActivity
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavAnim
+import quickbeer.android.util.ktx.hideKeyboard
 
 abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
 
@@ -45,11 +46,13 @@ abstract class BaseFragment(@LayoutRes layout: Int) : Fragment(layout) {
     }
 
     protected fun navigate(navDirections: NavDirections, anim: NavAnim = NavAnim.DEFAULT) {
+        hideKeyboard()
         findNavController()
             .navigate(navDirections, anim.navOptions())
     }
 
     protected fun navigate(destination: Destination, anim: NavAnim = NavAnim.DEFAULT) {
+        hideKeyboard()
         findNavController()
             .navigate(destination.uri, anim.navOptions())
     }
