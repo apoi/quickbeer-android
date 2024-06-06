@@ -14,4 +14,6 @@ object Dimens {
 
     val radiusM = 4.dp
     val radiusL = 8.dp
+
+    val elevation = 4.dp
 }

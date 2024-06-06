@@ -3,6 +3,8 @@ package quickbeer.android.ui.compose.element
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,8 +26,11 @@ import quickbeer.android.ui.compose.style.Colors
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun BottomSheet(content: @Composable () -> Unit) {
-    // Bottom sheet visuals, due to the actual bottom sheet elements not
+fun BottomSheet(
+    content: @Composable ColumnScope.() -> Unit,
+    stickyContent: @Composable ColumnScope.() -> Unit
+) {
+    // Just bottom sheet visuals, due to the Compose bottom sheet elements not
     // playing well together with the containing BottomSheetDialogFragment.
     Surface(
         modifier = Modifier
@@ -36,7 +41,9 @@ fun BottomSheet(content: @Composable () -> Unit) {
         tonalElevation = BottomSheetDefaults.Elevation
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
         ) {
             Column(
                 Modifier
@@ -56,6 +63,8 @@ fun BottomSheet(content: @Composable () -> Unit) {
             }
 
             content()
+
+            stickyContent()
         }
     }
 }
