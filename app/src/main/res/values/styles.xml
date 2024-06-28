@@ -106,6 +106,7 @@
         <item name="bottomSheetStyle">@style/TransparentBottomSheetStyle</item>
         <item name="android:navigationBarColor">?attr/colorPrimary</item>
         <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
     </style>
 
     <style name="TransparentBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">

@@ -30,17 +30,17 @@ object Versions {
     object Plugin {
         const val Detekt = "1.23.5"
         const val Gradle = "8.3.0"
-        const val Kotlin = "1.9.23"
+        const val Kotlin = "1.9.24"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }
 
     object AndroidX {
         object Compose {
-            const val Compiler = "1.5.11"
+            const val Compiler = "1.5.14"
             const val Material2 = "1.6.8"
-            const val Runtime = "1.6.4"
-            const val Ui = "1.6.4"
+            const val Runtime = "1.6.8"
+            const val Ui = "1.6.8"
         }
 
         const val AppCompat = "1.6.1"
