@@ -1,31 +1,25 @@
 package quickbeer.android.feature.beerrating
 
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import quickbeer.android.R
 import quickbeer.android.ui.compose.element.BottomSheet
 import quickbeer.android.ui.compose.element.Button
 import quickbeer.android.ui.compose.style.ButtonStyles
 import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
+import quickbeer.android.util.ktx.bottomElevation
 
 @Composable
 fun RatingSheetComposable() {
@@ -104,55 +98,25 @@ private fun ColumnScope.RatingContent(scrollState: ScrollState) {
 
 @Composable
 private fun ActionButtons(scrollState: ScrollState) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = Dimens.spacingM),
-        horizontalArrangement = Arrangement
-            .spacedBy(Dimens.spacingL, Alignment.CenterHorizontally)
+    Surface(
+        color = Colors.cardBackgroundColor,
+        elevation = scrollState.bottomElevation,
     ) {
-        Button(
-            onClick = { /*TODO*/ },
-            style = ButtonStyles.primary(),
-            text = "Submit"
-        )
-        Button(
-            onClick = { /*TODO*/ },
-            style = ButtonStyles.secondary(),
-            text = "Save draft"
-        )
-        Button(
-            onClick = { /*TODO*/ },
-            style = ButtonStyles.secondary(),
-            text = "Cancel"
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(Dimens.spacingM)
+        ) {
+            Button(
+                onClick = { /*TODO*/ },
+                style = ButtonStyles.primary(),
+                text = "Submit"
+            )
+            Button(
+                onClick = { /*TODO*/ },
+                style = ButtonStyles.secondary(),
+                text = "Save draft"
+            )
+        }
     }
 }
-
-val ScrollState.topElevation: Dp
-    get() = if (value != 0) Dimens.elevation else 0.dp
-
-val ScrollState.bottomElevation: Dp
-    get() = if (canScrollForward) Dimens.elevation else 0.dp
-
-/*
-@Composable
-fun Modifier.elevateBottom(scrollState: ScrollState): Modifier {
-    val elevation: Dp by animateDpAsState(
-        targetValue = if (scrollState.canScrollForward) Dimens.elevation else 0.dp
-    )
-    return this
-        .graphicsLayer {
-            shadowElevation = elevation.toPx()
-            clip = true
-        }
-}
-
-@Composable
-fun Modifier.elevateTop(scrollState: ScrollState): Modifier {
-    val elevation: Dp by animateDpAsState(
-        targetValue = if (scrollState.value != 0) Dimens.elevation else 0.dp
-    )
-    return this.shadow(elevation, clip = true)
-}
-*/
