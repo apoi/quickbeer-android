@@ -28,7 +28,7 @@ object Colors {
     val textDark = ColorDef.black
     val textLight = ColorDef.white
     val textHint = ColorDef.gray50
-    val textError = ColorDef.redDark
+    val textError = ColorDef.redLight
 
     // Components
     val bottomSheetDragHandleColor = ColorDef.orangeDark
@@ -84,6 +84,7 @@ object Colors {
         val orange = Color(0xFFF39815)
         val orangeDark = Color(0xFFC17D1C)
         val redDark = Color(0xFF923C3C)
+        val redLight = Color(0xFFDA7F7F)
 
         // Search
         val searchShadow = Color(0x99000000)
