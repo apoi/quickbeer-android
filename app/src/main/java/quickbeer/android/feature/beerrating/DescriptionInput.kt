@@ -1,47 +1,73 @@
 package quickbeer.android.feature.beerrating
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import quickbeer.android.Constants
+import quickbeer.android.R
 import quickbeer.android.ui.compose.style.Colors
 import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
 fun DescriptionInput(text: String, modifier: Modifier = Modifier) {
-    var text = remember { mutableStateOf(text) }
-    var textLength = text.value.length
-    var hasLength = textLength >= Constants.RATING_MIN_LENGTH
+    val textField = remember { mutableStateOf(TextFieldValue(text)) }
+    val textLength = textField.value.text.length
+    val hasLength = textLength >= Constants.RATING_MIN_LENGTH
+    val icon = if (hasLength) R.drawable.ic_hero_check_circle else R.drawable.ic_hero_error_circle
+    val iconColor = if (hasLength) Colors.iconLight else Colors.textError
 
-    OutlinedTextField(
-        value = text.value,
-        onValueChange = { text.value = it },
-        modifier = modifier.padding(bottom = Dimens.spacingL),
-        colors = Colors.textFieldColors(),
-        textStyle = TextStyles.textM,
-        /*
-        label = Text(
-            style = TextStyles.detailsTitle,
-            text = stringResource(R.string.rating_description).uppercase()
-        ),*/
-        /*
-        supportingText = Box(modifier = Modifier.fillMaxWidth()) {
+    Column {
+        OutlinedTextField(
+            value = textField.value,
+            onValueChange = { textField.value = it },
+            modifier = modifier.padding(bottom = Dimens.spacingM),
+            colors = Colors.textFieldColors(),
+            textStyle = TextStyles.textM,
+            minLines = 3,
+            label = {
+                Text(
+                    style = TextStyles.detailsTitle,
+                    text = stringResource(R.string.rating_description).uppercase()
+                )
+            }
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
             Text(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                color = if (hasLength) Colors.textLight else Colors.textError,
+                modifier = Modifier
+                    .align(Alignment.CenterVertically),
+                color = Colors.textLight,
                 style = TextStyles.detailsTitle,
                 text = stringResource(R.string.rating_description_length)
                     .format(textLength, Constants.RATING_MIN_LENGTH)
             )
-        },*/
-        keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
-        keyboardActions = KeyboardActions(onDone = { /* Handle the done action */ })
-    )
+            Icon(
+                modifier = Modifier
+                    .size(Dimens.icon)
+                    .padding(start = Dimens.spacingS)
+                    .align(Alignment.CenterVertically),
+                painter = painterResource(id = icon),
+                tint = iconColor,
+                contentDescription = "Length status"
+            )
+        }
+    }
 }

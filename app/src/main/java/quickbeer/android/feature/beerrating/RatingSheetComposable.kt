@@ -71,27 +71,10 @@ private fun ColumnScope.RatingContent(scrollState: ScrollState) {
 
         // Description text input
         DescriptionInput(
-            modifier = Modifier.fillMaxWidth(),
-            text = """
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-                test
-            """.trimIndent()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = Dimens.spacingM),
+            text = ""
         )
     }
 }
@@ -100,7 +83,7 @@ private fun ColumnScope.RatingContent(scrollState: ScrollState) {
 private fun ActionButtons(scrollState: ScrollState) {
     Surface(
         color = Colors.cardBackgroundColor,
-        elevation = scrollState.bottomElevation,
+        elevation = scrollState.bottomElevation
     ) {
         Column(
             modifier = Modifier
