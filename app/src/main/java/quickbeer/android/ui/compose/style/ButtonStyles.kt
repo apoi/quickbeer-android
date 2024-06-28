@@ -1,6 +1,6 @@
 package quickbeer.android.ui.compose.style
 
-import androidx.compose.material3.ButtonColors
+import androidx.compose.material.ButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color

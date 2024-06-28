@@ -75,7 +75,7 @@ dependencies {
     implementation(Libraries.AndroidX.Preferences)
     implementation(Libraries.AndroidX.RecyclerView)
 
-    implementation(Libraries.AndroidX.Compose.Material3)
+    implementation(Libraries.AndroidX.Compose.Material2)
     implementation(Libraries.AndroidX.Compose.Ui)
 
     implementation(Libraries.AndroidX.Lifecycle.Common)

@@ -1,8 +1,8 @@
 package quickbeer.android.ui.compose.style
 
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.SliderDefaults
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.SliderDefaults
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.Color
@@ -34,26 +34,25 @@ object Colors {
     val bottomSheetDragHandleColor = ColorDef.orangeDark
 
     @Composable
-    fun primaryButtonColors() = ButtonDefaults.buttonColors().copy(
-        containerColor = ColorDef.orangeDark
+    fun primaryButtonColors() = ButtonDefaults.buttonColors(
+        backgroundColor = ColorDef.orangeDark
     )
 
     @Composable
-    fun secondaryButtonColors() = ButtonDefaults.buttonColors().copy(
-        containerColor = ColorDef.gray90
+    fun secondaryButtonColors() = ButtonDefaults.buttonColors(
+        backgroundColor = ColorDef.gray90
     )
 
     @Composable
-    fun sliderColors() = SliderDefaults.colors().copy(
+    fun sliderColors() = SliderDefaults.colors(
         thumbColor = ColorDef.orangeDark,
         activeTrackColor = ColorDef.orangeDark,
         inactiveTrackColor = ColorDef.white10
     )
 
     @Composable
-    fun textFieldColors() = OutlinedTextFieldDefaults.colors().copy(
-        focusedTextColor = textLight,
-        unfocusedTextColor = textLight,
+    fun textFieldColors() = TextFieldDefaults.textFieldColors(
+        textColor = textLight,
         cursorColor = textLight,
         focusedIndicatorColor = ColorDef.gray50,
         unfocusedIndicatorColor = ColorDef.gray50,

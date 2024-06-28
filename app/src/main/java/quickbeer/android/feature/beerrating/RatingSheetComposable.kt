@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ fun RatingSheetComposable() {
     val scrollState = rememberScrollState()
 
     BottomSheet(
+        scrollState = scrollState,
         content = { RatingContent(scrollState) },
         stickyContent = { ActionButtons(scrollState) }
     )
@@ -40,12 +42,10 @@ fun RatingSheetComposable() {
 private fun ColumnScope.RatingContent(scrollState: ScrollState) {
     Column(
         modifier = Modifier
-            .background(Colors.cardBackgroundColor)
             .weight(1.0f)
             .fillMaxWidth()
             .verticalScroll(scrollState)
-            .padding(bottom = Dimens.spacingL)
-            .padding(horizontal = Dimens.spacingL),
+            .padding(Dimens.spacingL),
         verticalArrangement = Arrangement.spacedBy(Dimens.spacingM),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -104,15 +104,10 @@ private fun ColumnScope.RatingContent(scrollState: ScrollState) {
 
 @Composable
 private fun ActionButtons(scrollState: ScrollState) {
-    val elevation: Dp by animateDpAsState(
-        targetValue = if (scrollState.canScrollForward) Dimens.elevation else 0.dp
-    )
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Colors.cardBackgroundColor)
-            .shadow(elevation, clip = true),
+            .padding(vertical = Dimens.spacingM),
         horizontalArrangement = Arrangement
             .spacedBy(Dimens.spacingL, Alignment.CenterHorizontally)
     ) {
@@ -133,3 +128,31 @@ private fun ActionButtons(scrollState: ScrollState) {
         )
     }
 }
+
+val ScrollState.topElevation: Dp
+    get() = if (value != 0) Dimens.elevation else 0.dp
+
+val ScrollState.bottomElevation: Dp
+    get() = if (canScrollForward) Dimens.elevation else 0.dp
+
+/*
+@Composable
+fun Modifier.elevateBottom(scrollState: ScrollState): Modifier {
+    val elevation: Dp by animateDpAsState(
+        targetValue = if (scrollState.canScrollForward) Dimens.elevation else 0.dp
+    )
+    return this
+        .graphicsLayer {
+            shadowElevation = elevation.toPx()
+            clip = true
+        }
+}
+
+@Composable
+fun Modifier.elevateTop(scrollState: ScrollState): Modifier {
+    val elevation: Dp by animateDpAsState(
+        targetValue = if (scrollState.value != 0) Dimens.elevation else 0.dp
+    )
+    return this.shadow(elevation, clip = true)
+}
+*/

@@ -38,7 +38,7 @@ object Versions {
     object AndroidX {
         object Compose {
             const val Compiler = "1.5.11"
-            const val Material3 = "1.2.1"
+            const val Material2 = "1.6.8"
             const val Runtime = "1.6.4"
             const val Ui = "1.6.4"
         }
@@ -95,7 +95,7 @@ object Versions {
 object Libraries {
     object AndroidX {
         object Compose {
-            const val Material3 = "androidx.compose.material3:material3:${Versions.AndroidX.Compose.Material3}"
+            const val Material2 = "androidx.compose.material:material:${Versions.AndroidX.Compose.Material2}"
             const val Ui = "androidx.compose.ui:ui:${Versions.AndroidX.Compose.Ui}"
         }
 
