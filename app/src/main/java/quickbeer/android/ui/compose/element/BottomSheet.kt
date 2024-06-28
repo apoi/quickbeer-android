@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -50,8 +51,6 @@ fun BottomSheet(
             // Surface to provide elevation, as elevation directly on TopAppBar
             // doesn't work if it has verticalScroll() set
             Surface(
-                color = Colors.cardBackgroundColor,
-                contentColor = Colors.cardBackgroundColor,
                 elevation = scrollState.topElevation
             ) {
                 TopAppBar(
@@ -69,13 +68,11 @@ fun BottomSheet(
                     ) {
                         Box(
                             modifier = Modifier
-                                .padding(vertical = 22.dp)
+                                .size(width = 32.dp, height = 4.dp)
                                 .align(Alignment.Center)
+                                .clip(RoundedCornerShape(4.dp))
                                 .background(Colors.bottomSheetDragHandleColor)
-                                .clip(MaterialTheme.shapes.large)
-                        ) {
-                            Box(Modifier.size(width = 32.dp, height = 4.dp))
-                        }
+                        )
                     }
                 }
             }
