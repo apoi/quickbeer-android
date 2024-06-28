@@ -1,6 +1,6 @@
 package quickbeer.android.ui.compose.element
 
-import androidx.compose.material3.Text
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import quickbeer.android.ui.compose.style.ButtonStyles.ButtonStyle
@@ -13,7 +13,7 @@ fun Button(
     style: ButtonStyle,
     text: String
 ) {
-    androidx.compose.material3.Button(
+    androidx.compose.material.Button(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,

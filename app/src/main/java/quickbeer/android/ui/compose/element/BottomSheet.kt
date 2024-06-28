@@ -1,32 +1,37 @@
 package quickbeer.android.ui.compose.element
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.BottomSheetScaffoldDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
+import quickbeer.android.feature.beerrating.topElevation
 import quickbeer.android.ui.compose.style.Colors
+import quickbeer.android.ui.compose.style.Dimens
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun BottomSheet(
+    scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
     stickyContent: @Composable ColumnScope.() -> Unit
 ) {
@@ -34,31 +39,39 @@ fun BottomSheet(
     // playing well together with the containing BottomSheetDialogFragment.
     Surface(
         modifier = Modifier
-            .windowInsetsPadding(BottomSheetDefaults.windowInsets)
             .nestedScroll(rememberNestedScrollInteropConnection()),
-        shape = BottomSheetDefaults.ExpandedShape,
-        color = Colors.cardBackgroundColor,
-        tonalElevation = BottomSheetDefaults.Elevation
+        shape = RoundedCornerShape(
+            topStart = 16.dp,
+            topEnd = 16.dp
+        ),
+        color = Colors.cardBackgroundColor
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-
+            TopAppBar(
+                modifier = Modifier
+                    .nestedScroll(rememberNestedScrollInteropConnection()),
+                backgroundColor = Colors.cardBackgroundColor,
+                contentColor = Colors.cardBackgroundColor,
+                elevation = scrollState.topElevation
             ) {
                 Box(
                     modifier = Modifier
-                        .padding(vertical = 22.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .background(Colors.bottomSheetDragHandleColor)
-                        .clip(MaterialTheme.shapes.extraLarge)
+                        .fillMaxWidth()
+                        .fillMaxHeight()
                 ) {
-                    Box(Modifier.size(width = 32.dp, height = 4.dp))
+                    Box(
+                        modifier = Modifier
+                            .padding(vertical = 22.dp)
+                            .align(Alignment.Center)
+                            .background(Colors.bottomSheetDragHandleColor)
+                            .clip(MaterialTheme.shapes.large)
+                    ) {
+                        Box(Modifier.size(width = 32.dp, height = 4.dp))
+                    }
                 }
             }
 
