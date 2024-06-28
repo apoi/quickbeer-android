@@ -29,6 +29,7 @@ class BeerRatingFragment : BaseBottomSheetFragment() {
 
             val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
             behavior?.state = BottomSheetBehavior.STATE_EXPANDED
+            behavior?.skipCollapsed = true
         }
 
         return dialog

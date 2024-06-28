@@ -1,5 +1,6 @@
 package quickbeer.android.ui.compose.element
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -15,7 +16,7 @@ fun Button(
 ) {
     androidx.compose.material.Button(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         enabled = enabled,
         colors = style.colors
     ) {
