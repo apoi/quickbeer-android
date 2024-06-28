@@ -31,41 +31,51 @@ fun BottomSheet(
     content: @Composable ColumnScope.() -> Unit,
     stickyContent: @Composable ColumnScope.() -> Unit
 ) {
+    val sheetScrollState = rememberScrollState()
+
     // Just bottom sheet visuals, due to the Compose bottom sheet elements not
     // playing well together with the containing BottomSheetDialogFragment.
     Surface(
-        modifier = Modifier
-            .nestedScroll(rememberNestedScrollInteropConnection()),
+        color = Colors.cardBackgroundColor,
         shape = RoundedCornerShape(
             topStart = 16.dp,
             topEnd = 16.dp
-        ),
-        color = Colors.cardBackgroundColor
+        )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
         ) {
-            TopAppBar(
-                backgroundColor = Colors.cardBackgroundColor,
+            // Surface to provide elevation, as elevation directly on TopAppBar
+            // doesn't work if it has verticalScroll() set
+            Surface(
+                color = Colors.cardBackgroundColor,
                 contentColor = Colors.cardBackgroundColor,
                 elevation = scrollState.topElevation
             ) {
-                Box(
+                TopAppBar(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .verticalScroll(rememberScrollState())
+                        // Allows bottom sheet dragging from the top bar
+                        .nestedScroll(rememberNestedScrollInteropConnection())
+                        .verticalScroll(sheetScrollState),
+                    backgroundColor = Colors.cardBackgroundColor,
+                    contentColor = Colors.cardBackgroundColor
                 ) {
                     Box(
                         modifier = Modifier
-                            .padding(vertical = 22.dp)
-                            .align(Alignment.Center)
-                            .background(Colors.bottomSheetDragHandleColor)
-                            .clip(MaterialTheme.shapes.large)
+                            .fillMaxWidth()
+                            .fillMaxHeight()
                     ) {
-                        Box(Modifier.size(width = 32.dp, height = 4.dp))
+                        Box(
+                            modifier = Modifier
+                                .padding(vertical = 22.dp)
+                                .align(Alignment.Center)
+                                .background(Colors.bottomSheetDragHandleColor)
+                                .clip(MaterialTheme.shapes.large)
+                        ) {
+                            Box(Modifier.size(width = 32.dp, height = 4.dp))
+                        }
                     }
                 }
             }
