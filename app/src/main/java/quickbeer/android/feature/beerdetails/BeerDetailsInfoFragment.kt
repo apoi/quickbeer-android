@@ -35,6 +35,7 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
+import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.navigation.Destination
@@ -132,7 +133,9 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
             ?: getString(R.string.not_available)
     }
 
-    private fun setRating(ownRating: OwnRating) {
+    private fun setRating(value: Pair<User?, OwnRating>) {
+        val ownRating = value.second
+
         if (ownRating.rating != null) {
             // Rating is shown if available
             RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating)
