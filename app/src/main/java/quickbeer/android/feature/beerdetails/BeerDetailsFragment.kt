@@ -33,6 +33,7 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.ui.base.MainFragment
@@ -71,16 +72,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
     }
 
     override fun observeViewState() {
-        observe(viewModel.userState) { state ->
-            when (state) {
-                is State.Initial -> setRatingAction(null)
-                is State.Loading -> setRatingAction(state.value)
-                is State.Empty -> setRatingAction(null)
-                is State.Success -> setRatingAction(state.value)
-                is State.Error -> setRatingAction(null)
-            }
-        }
-
         observe(viewModel.beerState) { state ->
             when (state) {
                 is State.Initial -> Unit
@@ -93,21 +84,11 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
 
         observe(viewModel.ratingState) { state ->
             when (state) {
-                is State.Initial -> Unit
-                is State.Loading -> Unit
+                is State.Initial -> setRating(null)
+                is State.Loading -> setRating(state.value)
                 is State.Empty -> setRating(null)
                 is State.Success -> setRating(state.value)
-                is State.Error -> Unit
-            }
-        }
-    }
-
-    private fun setRatingAction(user: User?) {
-        binding.mainActionButton.setOnClickListener {
-            if (user != null) {
-                navigateToRating()
-            } else {
-                showLoginDialog()
+                is State.Error -> setRating(null)
             }
         }
     }
@@ -134,11 +115,19 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         }
     }
 
-    private fun setRating(rating: OwnRating?) {
-        if (rating?.rating != null || rating?.tick != null) {
+    private fun setRating(value: Pair<User?, OwnRating>?) {
+        if (value?.second?.rating != null || value?.second?.tick != null) {
             binding.mainActionButton.setText(R.string.edit_rating)
         } else {
             binding.mainActionButton.setText(R.string.add_rating)
+        }
+
+        binding.mainActionButton.setOnClickListener {
+            if (value?.first != null) {
+                navigateToRating(value?.second?.rating)
+            } else {
+                showLoginDialog()
+            }
         }
 
         binding.mainActionButton.isVisible = true
@@ -157,8 +146,8 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         navigate(BeerDetailsFragmentDirections.toLogin())
     }
 
-    private fun navigateToRating() {
-        navigate(BeerDetailsFragmentDirections.toRating())
+    private fun navigateToRating(rating: Rating?) {
+        navigate(BeerDetailsFragmentDirections.toRating(rating))
     }
 
     override fun onScrollUp() {

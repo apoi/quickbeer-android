@@ -42,7 +42,12 @@
 
         <action
             android:id="@+id/to_rating"
-            app:destination="@id/rating_dialog" />
+            app:destination="@id/rating_dialog">
+            <argument
+                android:name="rating"
+                app:nullable="true"
+                app:argType="quickbeer.android.domain.rating.Rating" />
+        </action>
 
     </fragment>
 

@@ -67,11 +67,8 @@ class BeerDetailsViewModel @Inject constructor(
 
     private val beerId = savedStateHandle.navId()
 
-    private val _userState = MutableStateFlow<State<User>>(State.Initial)
-    val userState: Flow<State<User>> = _userState
-
-    private val _ratingState = MutableStateFlow<State<OwnRating>>(State.Initial)
-    val ratingState: Flow<State<OwnRating>> = _ratingState
+    private val _ratingState = MutableStateFlow<State<Pair<User?, OwnRating>>>(State.Initial)
+    val ratingState: Flow<State<Pair<User?, OwnRating>>> = _ratingState
 
     private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
     val beerState: Flow<State<Beer>> = _beerState
@@ -89,11 +86,6 @@ class BeerDetailsViewModel @Inject constructor(
         updateAccessedBeer(beerId)
 
         viewModelScope.launch(Dispatchers.IO) {
-            currentUserRepository.getStream(NoFetch())
-                .collectLatest { _userState.emit(it) }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
             beerRepository.getStream(beerId, Beer.DetailsDataValidator())
                 .collectLatest {
                     _beerState.emit(it)
@@ -107,10 +99,12 @@ class BeerDetailsViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            val beer = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-            val rating = userRatingRepository.getStream(NoFetch())
+            val userFlow = currentUserRepository.getStream(NoFetch())
+            val beerFlow = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
+            val ratingFlow = userRatingRepository.getStream(NoFetch())
 
-            beer.combine(rating, OwnRating.Companion::create)
+            beerFlow.combine(ratingFlow, OwnRating.Companion::create)
+                .combine(userFlow) { ownRating, user -> Pair(user.valueOrNull(), ownRating) }
                 .collectLatest {
                     _ratingState.emit(State.from(it))
                 }
