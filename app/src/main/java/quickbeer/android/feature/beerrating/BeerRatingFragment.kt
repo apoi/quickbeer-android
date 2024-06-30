@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.viewModels
 import com.google.android.material.R as materialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.ui.base.BaseBottomSheetFragment
 
+@AndroidEntryPoint
 class BeerRatingFragment : BaseBottomSheetFragment() {
+
+    private val viewModel by viewModels<BeerRatingViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
