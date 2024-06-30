@@ -42,12 +42,7 @@
 
         <action
             android:id="@+id/to_rating"
-            app:destination="@id/rating_dialog">
-            <argument
-                android:name="rating"
-                app:nullable="true"
-                app:argType="quickbeer.android.domain.rating.Rating" />
-        </action>
+            app:destination="@id/rating_dialog" />
 
     </fragment>
 
@@ -60,6 +55,12 @@
     <dialog
         android:id="@+id/rating_dialog"
         android:name="quickbeer.android.feature.beerrating.BeerRatingFragment"
-        android:label="@string/rating_title" />
+        android:label="@string/rating_title">
+
+        <argument
+            android:name="id"
+            app:argType="integer" />
+
+    </dialog>
 
 </navigation>

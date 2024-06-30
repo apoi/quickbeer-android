@@ -33,7 +33,6 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.ui.base.MainFragment
@@ -124,7 +123,7 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
 
         binding.mainActionButton.setOnClickListener {
             if (value?.first != null) {
-                navigateToRating(value?.second?.rating)
+                navigateToRating(args.id)
             } else {
                 showLoginDialog()
             }
@@ -146,8 +145,8 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         navigate(BeerDetailsFragmentDirections.toLogin())
     }
 
-    private fun navigateToRating(rating: Rating?) {
-        navigate(BeerDetailsFragmentDirections.toRating(rating))
+    private fun navigateToRating(beerId: Int) {
+        navigate(BeerDetailsFragmentDirections.toRating(beerId))
     }
 
     override fun onScrollUp() {
