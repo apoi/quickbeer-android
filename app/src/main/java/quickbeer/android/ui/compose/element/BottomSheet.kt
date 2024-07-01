@@ -27,7 +27,7 @@ import quickbeer.android.util.ktx.topElevation
 fun BottomSheet(
     scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
-    stickyContent: @Composable ColumnScope.() -> Unit
+    stickyContent: @Composable ColumnScope.() -> Unit = {}
 ) {
     val sheetScrollState = rememberScrollState()
 
