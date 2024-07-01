@@ -25,19 +25,23 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.util.ktx.bottomElevation
 
 @Composable
-fun RatingSheetComposable(initialRating: Rating?) {
+fun RatingSheetComposable(initialRating: Rating) {
     val scrollState = rememberScrollState()
-    val rating = remember { mutableStateOf(initialRating) }
+    var rating = remember { initialRating }
 
     BottomSheet(
         scrollState = scrollState,
-        content = { RatingContent(rating.value, scrollState) },
-        stickyContent = { ActionButtons(rating.value, scrollState) }
+        content = { RatingContent(scrollState, rating) { rating = it } },
+        stickyContent = { ActionButtons(scrollState, rating) }
     )
 }
 
 @Composable
-private fun ColumnScope.RatingContent(rating: Rating?, scrollState: ScrollState) {
+private fun ColumnScope.RatingContent(
+    scrollState: ScrollState,
+    rating: Rating,
+    onRatingChange: (Rating) -> Unit
+) {
     Column(
         modifier = Modifier
             .weight(1.0f)
@@ -50,32 +54,37 @@ private fun ColumnScope.RatingContent(rating: Rating?, scrollState: ScrollState)
         RatingSlider(
             title = stringResource(R.string.rating_aroma),
             description = stringResource(R.string.rating_aroma_hint),
-            value = rating?.aroma,
-            maxValue = 10
+            value = rating.aroma,
+            maxValue = 10,
+            onValueChange = { onRatingChange(rating.copy(aroma = it)) }
         )
         RatingSlider(
             title = stringResource(R.string.rating_appearance),
             description = stringResource(R.string.rating_appearance_hint),
-            value = rating?.appearance,
-            maxValue = 5
+            value = rating.appearance,
+            maxValue = 5,
+            onValueChange = { onRatingChange(rating.copy(appearance = it)) }
         )
         RatingSlider(
             title = stringResource(R.string.rating_flavor),
             description = stringResource(R.string.rating_flavor_hint),
-            value = rating?.flavor,
-            maxValue = 10
+            value = rating.flavor,
+            maxValue = 10,
+            onValueChange = { onRatingChange(rating.copy(flavor = it)) }
         )
         RatingSlider(
             title = stringResource(R.string.rating_mouthfeel),
             description = stringResource(R.string.rating_mouthfeel_hint),
-            value = rating?.mouthfeel,
-            maxValue = 5
+            value = rating.mouthfeel,
+            maxValue = 5,
+            onValueChange = { onRatingChange(rating.copy(mouthfeel = it)) }
         )
         RatingSlider(
             title = stringResource(R.string.rating_overall),
             description = stringResource(R.string.rating_overall_hint),
-            value = rating?.overall,
-            maxValue = 20
+            value = rating.overall,
+            maxValue = 20,
+            onValueChange = { onRatingChange(rating.copy(overall = it)) }
         )
 
         // Description text input
@@ -83,13 +92,14 @@ private fun ColumnScope.RatingContent(rating: Rating?, scrollState: ScrollState)
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = Dimens.spacingM),
-            text = rating?.comments.orEmpty()
+            text = rating.comments.orEmpty(),
+            onTextChange = { onRatingChange(rating.copy(comments = it)) }
         )
     }
 }
 
 @Composable
-private fun ActionButtons(rating: Rating?, scrollState: ScrollState) {
+private fun ActionButtons(scrollState: ScrollState, rating: Rating) {
     Surface(
         color = Colors.cardBackgroundColor,
         elevation = scrollState.bottomElevation

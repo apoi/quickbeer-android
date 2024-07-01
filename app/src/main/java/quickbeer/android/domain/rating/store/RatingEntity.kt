@@ -30,7 +30,8 @@ data class RatingEntity(
     @ColumnInfo(name = "state") val state: String?,
     @ColumnInfo(name = "country_id") val countryId: Int?,
     @ColumnInfo(name = "country") val country: String?,
-    @ColumnInfo(name = "rate_count") val rateCount: Int?
+    @ColumnInfo(name = "rate_count") val rateCount: Int?,
+    @ColumnInfo(name = "is_draft", defaultValue = "0") val isDraft: Boolean
 ) {
 
     companion object {

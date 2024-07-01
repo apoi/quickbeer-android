@@ -25,7 +25,8 @@ object BeerRatingJsonMapper : JsonMapper<Int, Rating, BeerRatingJson> {
             state = source.state,
             countryId = source.countryId,
             country = source.country,
-            rateCount = source.rateCount
+            rateCount = source.rateCount,
+            isDraft = false
         )
     }
 }

@@ -31,7 +31,13 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
-fun RatingSlider(title: String, description: String, value: Int?, maxValue: Int) {
+fun RatingSlider(
+    title: String,
+    description: String,
+    value: Int?,
+    maxValue: Int,
+    onValueChange: (Int) -> Unit,
+) {
     var sliderPosition by remember { mutableFloatStateOf(value?.toFloat() ?: 0f) }
     var infoExpanded by remember { mutableStateOf(false) }
 
@@ -78,7 +84,10 @@ fun RatingSlider(title: String, description: String, value: Int?, maxValue: Int)
             Slider(
                 modifier = Modifier.weight(1f),
                 colors = Colors.sliderColors(),
-                onValueChange = { sliderPosition = it },
+                onValueChange = {
+                    sliderPosition = it
+                    onValueChange(it.roundToInt())
+                },
                 value = sliderPosition,
                 valueRange = 0f..maxValue.toFloat(),
                 steps = maxValue - 1
