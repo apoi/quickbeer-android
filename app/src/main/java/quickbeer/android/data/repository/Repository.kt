@@ -210,6 +210,8 @@ abstract class SingleRepository<V> {
         }
     }
 
+    suspend fun get() = getLocal()
+
     fun getStream(validator: Validator<V>): Flow<State<V>> {
         return repository.getStream(0, validator)
     }

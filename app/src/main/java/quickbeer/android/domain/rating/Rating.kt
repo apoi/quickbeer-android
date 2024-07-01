@@ -1,10 +1,12 @@
 package quickbeer.android.domain.rating
 
 import android.os.Parcelable
+import kotlin.random.Random
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
 import quickbeer.android.data.store.Merger
+import quickbeer.android.domain.user.User
 
 @Parcelize
 data class Rating(
@@ -26,7 +28,8 @@ data class Rating(
     val state: String?,
     val countryId: Int?,
     val country: String?,
-    val rateCount: Int?
+    val rateCount: Int?,
+    val isDraft: Boolean
 ) : Parcelable {
 
     fun avatarUri(): String {
@@ -34,6 +37,33 @@ data class Rating(
     }
 
     companion object {
+
+        fun createDraft(beerId: Int, user: User): Rating {
+            val currentTime = ZonedDateTime.now()
+            return Rating(
+                id = Random(currentTime.toEpochSecond()).nextInt(),
+                beerId = beerId,
+                appearance = 0,
+                aroma = 0,
+                flavor = 0,
+                mouthfeel = 0,
+                overall = 0,
+                totalScore = 0f,
+                comments = "",
+                timeEntered = currentTime,
+                timeUpdated = currentTime,
+                userId = user.id,
+                userName = user.username,
+                city = null,
+                stateId = null,
+                state = null,
+                countryId = null,
+                country = null,
+                rateCount = null,
+                isDraft = true
+            )
+        }
+
         val merger: Merger<Rating> = { old, new ->
             Rating(
                 id = new.id,
@@ -54,7 +84,8 @@ data class Rating(
                 state = new.state ?: old.state,
                 countryId = new.countryId ?: old.countryId,
                 country = new.country ?: old.country,
-                rateCount = new.rateCount ?: old.rateCount
+                rateCount = new.rateCount ?: old.rateCount,
+                isDraft = new.isDraft ?: old.isDraft
             )
         }
     }

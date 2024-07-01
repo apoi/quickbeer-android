@@ -26,7 +26,11 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.ui.compose.style.TextStyles
 
 @Composable
-fun DescriptionInput(text: String, modifier: Modifier = Modifier) {
+fun DescriptionInput(
+    text: String,
+    onTextChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val textField = remember { mutableStateOf(TextFieldValue(text)) }
     val textLength = textField.value.text.length
     val hasLength = textLength >= Constants.RATING_MIN_LENGTH
@@ -36,7 +40,10 @@ fun DescriptionInput(text: String, modifier: Modifier = Modifier) {
     Column {
         OutlinedTextField(
             value = textField.value,
-            onValueChange = { textField.value = it },
+            onValueChange = {
+                textField.value = it
+                onTextChange(it.text)
+            },
             modifier = modifier.padding(bottom = Dimens.spacingM),
             colors = Colors.textFieldColors(),
             textStyle = TextStyles.textM,

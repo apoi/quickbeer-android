@@ -8,17 +8,17 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerRatingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val currentUserRepository: CurrentUserRepository,
     private val userRatingRepository: UserRatingRepository
 ) : ViewModel() {
 
@@ -29,13 +29,14 @@ class BeerRatingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            userRatingRepository.getStream(NoFetch())
-                .collectLatest { ratings ->
-                    val rating = ratings.valueOrNull()
-                        ?.firstOrNull { it.beerId == beerId }
+            val ratings = userRatingRepository.get()
+            val user = currentUserRepository.get() ?: error("User missing")
 
-                    _ratingState.emit(State.from(rating))
-                }
+            val rating = ratings
+                ?.firstOrNull { it.beerId == beerId }
+                ?: Rating.createDraft(beerId, user)
+
+            _ratingState.emit(State.from(rating))
         }
     }
 }

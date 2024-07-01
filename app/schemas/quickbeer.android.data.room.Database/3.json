@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "5cb63223dd967cd7d02de1ba061ef4af",
+    "identityHash": "8f694617691d71674cf7c1fb872cfce7",
     "entities": [
       {
         "tableName": "lists",
@@ -436,7 +436,7 @@
       },
       {
         "tableName": "reviews",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `beer_id` INTEGER, `appearance` INTEGER, `aroma` INTEGER, `flavor` INTEGER, `mouthfeel` INTEGER, `overall` INTEGER, `total_score` REAL, `comments` TEXT, `time_entered` TEXT, `time_updated` TEXT, `user_id` INTEGER, `user_name` TEXT, `city` TEXT, `state_id` INTEGER, `state` TEXT, `country_id` INTEGER, `country` TEXT, `rate_count` INTEGER, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `beer_id` INTEGER, `appearance` INTEGER, `aroma` INTEGER, `flavor` INTEGER, `mouthfeel` INTEGER, `overall` INTEGER, `total_score` REAL, `comments` TEXT, `time_entered` TEXT, `time_updated` TEXT, `user_id` INTEGER, `user_name` TEXT, `city` TEXT, `state_id` INTEGER, `state` TEXT, `country_id` INTEGER, `country` TEXT, `rate_count` INTEGER, `is_draft` INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -551,6 +551,13 @@
             "columnName": "rate_count",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "isDraft",
+            "columnName": "is_draft",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           }
         ],
         "primaryKey": {
@@ -688,7 +695,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5cb63223dd967cd7d02de1ba061ef4af')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8f694617691d71674cf7c1fb872cfce7')"
     ]
   }
 }
