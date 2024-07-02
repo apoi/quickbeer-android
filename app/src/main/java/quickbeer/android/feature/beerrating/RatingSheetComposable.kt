@@ -27,12 +27,13 @@ import quickbeer.android.util.ktx.bottomElevation
 @Composable
 fun RatingSheetComposable(initialRating: Rating) {
     val scrollState = rememberScrollState()
-    var rating = remember { initialRating }
+    var rating = remember { mutableStateOf(initialRating) }
+    val ratingIsValid = rating.value.isValid() && rating.value.scoringDiffers(initialRating)
 
     BottomSheet(
         scrollState = scrollState,
-        content = { RatingContent(scrollState, rating) { rating = it } },
-        stickyContent = { ActionButtons(scrollState, rating) }
+        content = { RatingContent(scrollState, rating.value) { rating.value = it } },
+        stickyContent = { ActionButtons(scrollState, ratingIsValid) }
     )
 }
 
@@ -99,7 +100,7 @@ private fun ColumnScope.RatingContent(
 }
 
 @Composable
-private fun ActionButtons(scrollState: ScrollState, rating: Rating) {
+private fun ActionButtons(scrollState: ScrollState, isValid: Boolean) {
     Surface(
         color = Colors.cardBackgroundColor,
         elevation = scrollState.bottomElevation
@@ -112,6 +113,7 @@ private fun ActionButtons(scrollState: ScrollState, rating: Rating) {
             Button(
                 onClick = { /*TODO*/ },
                 style = ButtonStyles.primary(),
+                enabled = isValid,
                 text = "Submit"
             )
             Button(

@@ -1,6 +1,5 @@
 package quickbeer.android.feature.beerrating
 
-import com.google.android.material.R as materialR
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +9,7 @@ import android.widget.FrameLayout
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.viewModels
+import com.google.android.material.R as materialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,8 +52,11 @@ class BeerRatingFragment : BaseBottomSheetFragment() {
                 val ratingState = viewModel.ratingState.collectAsState(State.Initial)
                 val rating = ratingState.value.valueOrNull()
 
-                if (rating == null) LoadingSheetComposable()
-                else RatingSheetComposable(rating)
+                if (rating == null) {
+                    LoadingSheetComposable()
+                } else {
+                    RatingSheetComposable(rating)
+                }
             }
         }
     }
