@@ -35,7 +35,8 @@ object Colors {
 
     @Composable
     fun primaryButtonColors() = ButtonDefaults.buttonColors(
-        backgroundColor = ColorDef.orangeDark
+        backgroundColor = ColorDef.orangeDark,
+        disabledBackgroundColor = ColorDef.gray50
     )
 
     @Composable
@@ -46,6 +47,13 @@ object Colors {
     @Composable
     fun sliderColors() = SliderDefaults.colors(
         thumbColor = ColorDef.orangeDark,
+        activeTrackColor = ColorDef.orangeDark,
+        inactiveTrackColor = ColorDef.white10
+    )
+
+    @Composable
+    fun invalidSliderColors() = SliderDefaults.colors(
+        thumbColor = ColorDef.gray50,
         activeTrackColor = ColorDef.orangeDark,
         inactiveTrackColor = ColorDef.white10
     )

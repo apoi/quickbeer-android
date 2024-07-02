@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.ui.compose.style.Colors
@@ -36,10 +37,16 @@ fun RatingSlider(
     description: String,
     value: Int?,
     maxValue: Int,
-    onValueChange: (Int) -> Unit,
+    onValueChange: (Int) -> Unit
 ) {
     var sliderPosition by remember { mutableFloatStateOf(value?.toFloat() ?: 0f) }
     var infoExpanded by remember { mutableStateOf(false) }
+    val isValid = sliderPosition.absoluteValue > 0f
+    val scoreText = if (sliderPosition.roundToInt() > 0) {
+        sliderPosition.roundToInt().toString()
+    } else {
+        "?"
+    }
 
     Column {
         Row(
@@ -83,7 +90,7 @@ fun RatingSlider(
         ) {
             Slider(
                 modifier = Modifier.weight(1f),
-                colors = Colors.sliderColors(),
+                colors = if (isValid) Colors.sliderColors() else Colors.invalidSliderColors(),
                 onValueChange = {
                     sliderPosition = it
                     onValueChange(it.roundToInt())
@@ -103,7 +110,7 @@ fun RatingSlider(
                     modifier = Modifier.align(Alignment.Center),
                     style = TextStyles.title,
                     color = Colors.textDark,
-                    text = sliderPosition.roundToInt().toString()
+                    text = scoreText
                 )
             }
         }

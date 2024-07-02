@@ -36,6 +36,21 @@ data class Rating(
         return Constants.USER_AVATAR_PATH.format(userName)
     }
 
+    fun isValid(): Boolean {
+        val scores = listOf(appearance, aroma, flavor, mouthfeel, overall)
+        return scores.all { it != null && it > 0 } && comments != null &&
+            comments.length >= Constants.RATING_MIN_LENGTH
+    }
+
+    fun scoringDiffers(other: Rating): Boolean {
+        return appearance != other.appearance ||
+            aroma != other.aroma ||
+            flavor != other.flavor ||
+            mouthfeel != other.mouthfeel ||
+            overall != other.overall ||
+            comments != other.comments
+    }
+
     companion object {
 
         fun createDraft(beerId: Int, user: User): Rating {

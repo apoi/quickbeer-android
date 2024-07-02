@@ -56,7 +56,7 @@ object UserRatingJsonMapper : JsonMapper<User, Pair<Beer, Rating>, UserRatingJso
             tickDate = null,
             normalizedName = null,
             updated = null,
-            accessed = null,
+            accessed = null
         )
 
         return Pair(beer, rating)
