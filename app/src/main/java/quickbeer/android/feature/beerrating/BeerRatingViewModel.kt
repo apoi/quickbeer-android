@@ -27,6 +27,9 @@ class BeerRatingViewModel @Inject constructor(
     private val _ratingState = MutableStateFlow<State<Rating>>(State.Initial)
     val ratingState: Flow<State<Rating>> = _ratingState
 
+    private val _publishState = MutableStateFlow<State<Unit>>(State.Initial)
+    val publishState: Flow<State<Unit>> = _publishState
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val ratings = userRatingRepository.get()
@@ -38,5 +41,11 @@ class BeerRatingViewModel @Inject constructor(
 
             _ratingState.emit(State.from(rating))
         }
+    }
+
+    fun saveDraft(rating: Rating) {
+    }
+
+    fun publish(rating: Rating) {
     }
 }
