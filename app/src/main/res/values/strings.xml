@@ -127,6 +127,10 @@
     <string name="rating_list_empty">This beer isn’t rated yet.</string>
     <string name="rating_list_error">Error! Try again later.</string>
 
+    <!-- Rating actions -->
+    <string name="rating_action_publish">Submit</string>
+    <string name="rating_action_draft">Save draft</string>
+
     <!-- Barcode -->
     <string name="cd_close_button">Back</string>
     <string name="cd_flash_button">Toggle camera flash</string>

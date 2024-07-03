@@ -55,7 +55,7 @@ class BeerRatingFragment : BaseBottomSheetFragment() {
                 if (rating == null) {
                     LoadingSheetComposable()
                 } else {
-                    RatingSheetComposable(rating)
+                    RatingSheetComposable(rating, viewModel)
                 }
             }
         }

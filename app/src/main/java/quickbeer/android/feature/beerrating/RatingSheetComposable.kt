@@ -25,15 +25,27 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.util.ktx.bottomElevation
 
 @Composable
-fun RatingSheetComposable(initialRating: Rating) {
+fun RatingSheetComposable(initialRating: Rating, viewModel: BeerRatingViewModel) {
     val scrollState = rememberScrollState()
     var rating = remember { mutableStateOf(initialRating) }
-    val ratingIsValid = rating.value.isValid() && rating.value.scoringDiffers(initialRating)
 
     BottomSheet(
         scrollState = scrollState,
-        content = { RatingContent(scrollState, rating.value) { rating.value = it } },
-        stickyContent = { ActionButtons(scrollState, ratingIsValid) }
+        content = {
+            RatingContent(
+                scrollState = scrollState,
+                rating = rating.value,
+                onRatingChange = { rating.value = it }
+            )
+        },
+        stickyContent = {
+            ActionButtons(
+                scrollState = scrollState,
+                rating = rating.value,
+                publish = viewModel::publish,
+                saveDraft = viewModel::saveDraft
+            )
+        }
     )
 }
 
@@ -100,7 +112,12 @@ private fun ColumnScope.RatingContent(
 }
 
 @Composable
-private fun ActionButtons(scrollState: ScrollState, isValid: Boolean) {
+private fun ActionButtons(
+    scrollState: ScrollState,
+    rating: Rating,
+    publish: (Rating) -> Unit,
+    saveDraft: (Rating) -> Unit
+) {
     Surface(
         color = Colors.cardBackgroundColor,
         elevation = scrollState.bottomElevation
@@ -111,15 +128,15 @@ private fun ActionButtons(scrollState: ScrollState, isValid: Boolean) {
                 .padding(Dimens.spacingM)
         ) {
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { publish(rating) },
                 style = ButtonStyles.primary(),
-                enabled = isValid,
-                text = "Submit"
+                enabled = rating.isValid(),
+                text = stringResource(id = R.string.rating_action_publish)
             )
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { saveDraft(rating) },
                 style = ButtonStyles.secondary(),
-                text = "Save draft"
+                text = stringResource(id = R.string.rating_action_draft)
             )
         }
     }
