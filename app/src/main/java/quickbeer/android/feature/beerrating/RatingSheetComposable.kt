@@ -12,10 +12,13 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import kotlinx.coroutines.launch
 import quickbeer.android.R
+import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.ui.compose.element.BottomSheet
 import quickbeer.android.ui.compose.element.Button
@@ -25,7 +28,11 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.util.ktx.bottomElevation
 
 @Composable
-fun RatingSheetComposable(initialRating: Rating, viewModel: BeerRatingViewModel) {
+fun RatingSheetComposable(
+    initialRating: Rating,
+    viewModel: BeerRatingViewModel,
+    closeSheet: () -> Unit
+) {
     val scrollState = rememberScrollState()
     var rating = remember { mutableStateOf(initialRating) }
 
@@ -35,7 +42,8 @@ fun RatingSheetComposable(initialRating: Rating, viewModel: BeerRatingViewModel)
             RatingContent(
                 scrollState = scrollState,
                 rating = rating.value,
-                onRatingChange = { rating.value = it }
+                onRatingChange = { rating.value = it },
+                closeSheet = closeSheet
             )
         },
         stickyContent = {
@@ -43,7 +51,8 @@ fun RatingSheetComposable(initialRating: Rating, viewModel: BeerRatingViewModel)
                 scrollState = scrollState,
                 rating = rating.value,
                 publish = viewModel::publish,
-                saveDraft = viewModel::saveDraft
+                saveDraft = viewModel::saveDraft,
+                closeSheet = closeSheet
             )
         }
     )
@@ -53,7 +62,8 @@ fun RatingSheetComposable(initialRating: Rating, viewModel: BeerRatingViewModel)
 private fun ColumnScope.RatingContent(
     scrollState: ScrollState,
     rating: Rating,
-    onRatingChange: (Rating) -> Unit
+    onRatingChange: (Rating) -> Unit,
+    closeSheet: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -115,9 +125,14 @@ private fun ColumnScope.RatingContent(
 private fun ActionButtons(
     scrollState: ScrollState,
     rating: Rating,
-    publish: (Rating) -> Unit,
-    saveDraft: (Rating) -> Unit
+    publish: suspend (Rating) -> State<Unit>,
+    saveDraft: suspend (Rating) -> State<Unit>,
+    closeSheet: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    val publishing = remember { mutableStateOf(false) }
+    val savingDraft = remember { mutableStateOf(false) }
+
     Surface(
         color = Colors.cardBackgroundColor,
         elevation = scrollState.bottomElevation
@@ -128,13 +143,20 @@ private fun ActionButtons(
                 .padding(Dimens.spacingM)
         ) {
             Button(
-                onClick = { publish(rating) },
+                onClick = { coroutineScope.launch { publish(rating) } },
                 style = ButtonStyles.primary(),
                 enabled = rating.isValid(),
                 text = stringResource(id = R.string.rating_action_publish)
             )
             Button(
-                onClick = { saveDraft(rating) },
+                onClick = {
+                    coroutineScope.launch {
+                        savingDraft.value = true
+                        saveDraft(rating)
+                        closeSheet()
+                    }
+                },
+                loading = savingDraft.value,
                 style = ButtonStyles.secondary(),
                 text = stringResource(id = R.string.rating_action_draft)
             )

@@ -16,7 +16,10 @@ abstract class RatingDao : CoreDao<Int, RatingEntity>(
 ) {
 
     @Query(
-        "SELECT * FROM reviews WHERE user_id=:userId AND beer_id=:beerId AND comments IS NOT NULL"
+        """
+            SELECT * FROM reviews
+            WHERE user_id=:userId AND beer_id=:beerId AND (comments IS NOT NULL OR is_draft IS 1)
+        """
     )
     abstract fun ratingByUser(userId: Int, beerId: Int): Flow<RatingEntity>
 
