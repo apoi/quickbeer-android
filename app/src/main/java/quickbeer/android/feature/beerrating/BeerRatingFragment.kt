@@ -13,7 +13,6 @@ import com.google.android.material.R as materialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
-import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.ui.base.BaseBottomSheetFragment
 
@@ -21,11 +20,6 @@ import quickbeer.android.ui.base.BaseBottomSheetFragment
 class BeerRatingFragment : BaseBottomSheetFragment() {
 
     private val viewModel by viewModels<BeerRatingViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(STYLE_NORMAL, R.style.AppTheme_BottomSheet)
-    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog

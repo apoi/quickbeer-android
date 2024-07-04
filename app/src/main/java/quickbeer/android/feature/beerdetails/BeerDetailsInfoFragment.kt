@@ -40,6 +40,7 @@ import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
+import quickbeer.android.ui.actionmenu.Action
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
@@ -74,6 +75,10 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
         binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
+        }
+
+        binding.ownRating.actions.setOnClickListener {
+            showRatingActionsMenu()
         }
 
         binding.detailsView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
@@ -172,6 +177,14 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     private fun showToast(@StringRes resource: Int) {
         toastProvider.showCancelableToast(resource, Toast.LENGTH_LONG)
+    }
+
+    private fun showRatingActionsMenu() {
+        val actions = listOf(
+            Action(1, R.string.edit_draft),
+            Action(2, R.string.edit_rating)
+        )
+        navigate(BeerDetailsFragmentDirections.toActions(actions.toTypedArray()))
     }
 
     companion object {

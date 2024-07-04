@@ -41,6 +41,10 @@
             app:destination="@id/login_dialog" />
 
         <action
+            android:id="@+id/to_actions"
+            app:destination="@id/action_dialog" />
+
+        <action
             android:id="@+id/to_rating"
             app:destination="@id/rating_dialog" />
 
@@ -51,6 +55,17 @@
         android:name="quickbeer.android.feature.login.LoginDialog"
         android:label="@string/profile_title"
         tools:layout="@layout/login_dialog_fragment" />
+
+    <dialog
+        android:id="@+id/action_dialog"
+        android:name="quickbeer.android.ui.actionmenu.ActionSheetFragment"
+        android:label="@string/actions_title">
+
+        <argument
+            android:name="actions"
+            app:argType="quickbeer.android.ui.actionmenu.Action[]" />
+
+    </dialog>
 
     <dialog
         android:id="@+id/rating_dialog"
