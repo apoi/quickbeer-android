@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.lang.IllegalStateException
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -43,9 +44,13 @@ class BeerRatingViewModel @Inject constructor(
         }
     }
 
-    fun saveDraft(rating: Rating) {
+    suspend fun publish(rating: Rating): State<Unit> {
+        return State.Error(IllegalStateException("Not implemented"))
     }
 
-    fun publish(rating: Rating) {
+    suspend fun saveDraft(rating: Rating): State<Unit> {
+        // We expect local saving to never fail
+        userRatingRepository.saveDraft(rating)
+        return State.Success(Unit)
     }
 }

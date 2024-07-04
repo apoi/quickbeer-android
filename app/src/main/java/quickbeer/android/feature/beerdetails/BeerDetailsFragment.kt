@@ -83,11 +83,11 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
 
         observe(viewModel.ratingState) { state ->
             when (state) {
-                is State.Initial -> setRating(null)
-                is State.Loading -> setRating(state.value)
-                is State.Empty -> setRating(null)
-                is State.Success -> setRating(state.value)
-                is State.Error -> setRating(null)
+                is State.Initial -> setRating(null, null)
+                is State.Loading -> setRating(state.value?.first, state.value?.second)
+                is State.Empty -> setRating(null, null)
+                is State.Success -> setRating(state.value.first, state.value.second)
+                is State.Error -> setRating(null, null)
             }
         }
     }
@@ -114,21 +114,23 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         }
     }
 
-    private fun setRating(value: Pair<User?, OwnRating>?) {
-        if (value?.second?.rating != null || value?.second?.tick != null) {
-            binding.mainActionButton.setText(R.string.edit_rating)
-        } else {
-            binding.mainActionButton.setText(R.string.add_rating)
+    private fun setRating(user: User?, ownRating: OwnRating?) {
+        val buttonText = when {
+            ownRating?.rating?.isDraft == true -> R.string.edit_draft
+            ownRating?.rating != null -> R.string.edit_rating
+            ownRating?.tick != null -> R.string.edit_rating
+            else -> R.string.add_rating
         }
 
         binding.mainActionButton.setOnClickListener {
-            if (value?.first != null) {
+            if (user != null) {
                 navigateToRating(args.id)
             } else {
                 showLoginDialog()
             }
         }
 
+        binding.mainActionButton.setText(buttonText)
         binding.mainActionButton.isVisible = true
     }
 

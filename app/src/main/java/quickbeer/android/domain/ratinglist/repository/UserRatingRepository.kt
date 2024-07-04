@@ -11,6 +11,7 @@ import quickbeer.android.data.repository.SingleRepository
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.rating.Rating
+import quickbeer.android.domain.rating.store.RatingStore
 import quickbeer.android.domain.ratinglist.network.UserRatingPageFetcher
 import quickbeer.android.domain.ratinglist.store.UsersRatingStore
 import quickbeer.android.domain.user.User
@@ -22,19 +23,29 @@ import quickbeer.android.network.result.value
 class UserRatingRepository @Inject constructor(
     private val userStore: UserStore,
     private val beerStore: BeerStore,
-    private val ratingStore: UsersRatingStore,
+    private val ratingStore: RatingStore,
+    private val usersRatingStore: UsersRatingStore,
     private val fetcher: UserRatingPageFetcher
 ) : SingleRepository<List<Rating>>() {
 
+    suspend fun publish(rating: Rating) {
+        // TODO
+    }
+
+    suspend fun saveDraft(rating: Rating) {
+        if (!rating.isDraft) error("Not a draft!")
+        ratingStore.put(rating.id, rating)
+    }
+
     override suspend fun persist(value: List<Rating>) {
         userStore.getCurrentUser()?.let { user ->
-            ratingStore.put(user.id, value)
+            usersRatingStore.put(user.id, value)
         }
     }
 
     override suspend fun getLocal(): List<Rating>? {
         return userStore.getCurrentUser()?.let { user ->
-            ratingStore.get(user.id)
+            usersRatingStore.get(user.id)
         }
     }
 
@@ -42,7 +53,7 @@ class UserRatingRepository @Inject constructor(
         return userStore.getCurrentUserStream()
             .flatMapLatest { user ->
                 if (user != null) {
-                    ratingStore.getStream(user.id)
+                    usersRatingStore.getStream(user.id)
                 } else {
                     flowOf(emptyList())
                 }
