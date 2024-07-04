@@ -161,7 +161,6 @@
         <item name="android:layout_marginTop">@dimen/card_view_margin</item>
         <item name="android:layout_marginRight">@dimen/card_view_margin</item>
         <item name="android:elevation">@dimen/card_view_elevation</item>
-        <item name="cardBackgroundColor">@color/gray_80</item>
         <item name="cardCornerRadius">@dimen/radius_l</item>
     </style>
 
@@ -175,7 +174,7 @@
     </style>
 
     <style name="DetailsDescription">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/gray_30</item>
         <item name="android:fontFamily">sans-serif-thin</item>

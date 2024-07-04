@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/InfoCard"
     android:id="@+id/rating_card"
@@ -10,26 +9,39 @@
     android:clipToPadding="false">
 
     <LinearLayout
+        android:id="@+id/rating_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_s"
-        android:layout_marginBottom="@dimen/spacing_s"
         android:clipChildren="false"
-        android:orientation="vertical">
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/spacing_s"
+        android:paddingBottom="@dimen/spacing_s">
 
         <RelativeLayout
             style="@style/DetailsRowLayout"
-            android:layout_marginLeft="@dimen/card_view_inner_margin"
-            android:layout_marginRight="@dimen/card_view_inner_margin"
             android:gravity="start">
+
+            <TextView
+                android:id="@+id/draft_title"
+                style="@style/DetailsTitle"
+                android:layout_alignTop="@id/actions"
+                android:layout_alignBottom="@id/actions"
+                android:layout_margin="0dp"
+                android:gravity="center"
+                android:text="@string/rating_draft"
+                android:textColor="@color/orange"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/score"
                 style="@style/DetailsScore"
+                android:layout_marginStart="@dimen/card_view_inner_margin"
                 android:layout_marginEnd="@dimen/spacing_xl"
                 tools:text="3.8" />
 
             <include
+                android:id="@+id/summary_divider"
                 layout="@layout/details_separator_vertical"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
@@ -54,19 +66,35 @@
                 android:layout_alignTop="@id/score"
                 android:layout_alignBottom="@id/score"
                 android:layout_marginStart="@dimen/spacing_s"
+                android:layout_marginEnd="@dimen/card_view_inner_margin"
                 android:layout_toEndOf="@id/avatar"
                 android:gravity="center_vertical"
                 tools:text="beerdude, Germany\n2017-02-11" />
 
-            <TextView
-                android:id="@+id/description"
-                style="@style/DetailsDescription"
-                android:layout_below="@id/score"
-                android:layout_marginTop="15dp"
-                android:textAlignment="viewStart"
-                tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this." />
+            <ImageView
+                android:id="@+id/actions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/spacing_s"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_hero_ellipsis_vertical"
+                android:visibility="gone" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/description"
+            style="@style/DetailsDescription"
+            android:layout_marginStart="@dimen/spacing_xl"
+            android:layout_marginTop="@dimen/spacing_s"
+            android:layout_marginBottom="@dimen/spacing_s"
+            android:layout_marginEnd="@dimen/spacing_xl"
+            android:textAlignment="viewStart"
+            tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this." />
 
         <LinearLayout
             android:id="@+id/details_row"

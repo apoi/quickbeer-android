@@ -138,7 +138,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
         if (ownRating.rating != null) {
             // Rating is shown if available
-            RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating)
+            RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating, true)
             binding.ownRating.ratingCard.isVisible = true
         } else if (ownRating.tick != null) {
             // Tick is shown if available and no rating

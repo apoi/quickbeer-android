@@ -3,6 +3,7 @@ package quickbeer.android.domain.rating
 import android.content.Context
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import coil.load
 import coil.transform.CircleCropTransformation
 import quickbeer.android.R
@@ -14,18 +15,35 @@ import quickbeer.android.util.ktx.formatDate
  */
 object RatingBinder {
 
-    fun bind(context: Context, rating: Rating, binding: RatingListItemBinding) {
+    fun bind(
+        context: Context,
+        rating: Rating,
+        binding: RatingListItemBinding,
+        showActions: Boolean = false
+    ) {
         val metadata = rating.userName +
             (rating.country?.let { ", $it" } ?: "") + "\n" +
             (rating.timeUpdated ?: rating.timeEntered)?.formatDate()
 
-        binding.user.text = metadata
-        binding.score.text = String.format("%.1f", rating.totalScore)
         binding.description.text = rating.comments
+        binding.actions.isVisible = showActions
 
-        binding.avatar.load(rating.avatarUri()) {
-            crossfade(context.resources.getInteger(android.R.integer.config_shortAnimTime))
-            transformations(CircleCropTransformation())
+        if (!rating.isDraft) {
+            binding.draftTitle.isVisible = false
+            binding.user.text = metadata
+            binding.score.text = String.format("%.1f", rating.totalScore)
+
+            binding.avatar.load(rating.avatarUri()) {
+                crossfade(context.resources.getInteger(android.R.integer.config_shortAnimTime))
+                transformations(CircleCropTransformation())
+            }
+        } else {
+            binding.score.isVisible = false
+            binding.summaryDivider.divider.isVisible = false
+            binding.avatar.isVisible = false
+            binding.user.isVisible = false
+            binding.draftTitle.isVisible = true
+            binding.ratingItemLayout.setBackgroundResource(R.drawable.border_dashed)
         }
 
         if (rating.appearance != null) {
