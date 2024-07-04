@@ -30,6 +30,9 @@
     <string name="quickbeer_license_title">QuickBeer License</string>
     <string name="quickbeer_privacy_policy_title">QuickBeer Privacy Policy</string>
 
+    <!-- Actions -->
+    <string name="actions_title">Actions</string>
+
     <!-- Search bar -->
     <string name="search_hint">Search…</string>
     <string name="search_progress">Searching…</string>
