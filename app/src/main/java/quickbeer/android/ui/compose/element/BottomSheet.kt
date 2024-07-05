@@ -25,6 +25,7 @@ import quickbeer.android.util.ktx.topElevation
 
 @Composable
 fun BottomSheet(
+    modifier: Modifier,
     scrollState: ScrollState,
     content: @Composable ColumnScope.() -> Unit,
     stickyContent: @Composable ColumnScope.() -> Unit = {}
@@ -41,9 +42,8 @@ fun BottomSheet(
         )
     ) {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
         ) {
             // Surface to provide elevation, as elevation directly on TopAppBar
             // doesn't work if it has verticalScroll() set
