@@ -1,6 +1,7 @@
 package quickbeer.android.feature.beerrating
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.CircularProgressIndicator
@@ -15,6 +16,7 @@ fun LoadingSheetComposable() {
     val scrollState = rememberScrollState()
 
     BottomSheet(
+        modifier = Modifier.fillMaxHeight(),
         scrollState = scrollState,
         content = { LoadingIndicator() }
     )
