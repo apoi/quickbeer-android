@@ -77,18 +77,18 @@ private fun ColumnScope.RatingContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         RatingSlider(
-            title = stringResource(R.string.rating_aroma),
-            description = stringResource(R.string.rating_aroma_hint),
-            value = rating.aroma,
-            maxValue = 10,
-            onValueChange = { onRatingChange(rating.copy(aroma = it)) }
-        )
-        RatingSlider(
             title = stringResource(R.string.rating_appearance),
             description = stringResource(R.string.rating_appearance_hint),
             value = rating.appearance,
             maxValue = 5,
             onValueChange = { onRatingChange(rating.copy(appearance = it)) }
+        )
+        RatingSlider(
+            title = stringResource(R.string.rating_aroma),
+            description = stringResource(R.string.rating_aroma_hint),
+            value = rating.aroma,
+            maxValue = 10,
+            onValueChange = { onRatingChange(rating.copy(aroma = it)) }
         )
         RatingSlider(
             title = stringResource(R.string.rating_flavor),
