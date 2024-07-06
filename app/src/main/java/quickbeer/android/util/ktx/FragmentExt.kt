@@ -4,9 +4,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
+import androidx.lifecycle.Lifecycle.Event.ON_RESUME
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -32,6 +36,30 @@ fun <T> Fragment.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
             flow.collectLatest { if (it is State.Success) observer(it.value) }
         }
     }
+}
+
+fun <T> Fragment.setNavigationResult(key: String, value: T?) {
+    findNavController().previousBackStackEntry?.savedStateHandle?.set(key, value)
+}
+
+fun <T> Fragment.getNavigationResult(fragmentId: Int, key: String, action: (T) -> Unit) {
+    val navBackStackEntry = findNavController().getBackStackEntry(fragmentId)
+    val observer = LifecycleEventObserver { _, event ->
+        if (event == ON_RESUME && navBackStackEntry.savedStateHandle.contains(key)) {
+            navBackStackEntry.savedStateHandle.remove<T>(key)?.run(action)
+        }
+    }
+
+    navBackStackEntry.lifecycle.addObserver(observer)
+
+    // Remove on destroy as addObserver does not automatically remove the observer
+    viewLifecycleOwner.lifecycle.addObserver(
+        LifecycleEventObserver { _, event ->
+            if (event == ON_DESTROY) {
+                navBackStackEntry.lifecycle.removeObserver(observer)
+            }
+        }
+    )
 }
 
 fun Fragment.hideKeyboard() {
