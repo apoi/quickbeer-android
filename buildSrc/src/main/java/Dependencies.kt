@@ -47,7 +47,7 @@ object Versions {
         const val ConstraintLayout = "2.1.4"
         const val CoreKt = "1.12.0"
         const val DataStore = "1.0.0"
-        const val Fragment = "1.6.2"
+        const val Fragment = "1.8.1"
         const val Lifecycle = "2.7.0"
         const val Navigation = "2.7.7"
         const val Preferences = "1.2.1"

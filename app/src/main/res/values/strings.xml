@@ -54,7 +54,9 @@
     <string name="not_yet_rated">You have not yet rated this one.</string>
     <string name="add_rating">Add rating</string>
     <string name="edit_rating">Edit rating</string>
+    <string name="delete_rating">Delete draft</string>
     <string name="edit_draft">Edit draft</string>
+    <string name="delete_draft">Delete draft</string>
 
     <string name="percentile_overall">Overall</string>
     <string name="percentile_style">Style</string>

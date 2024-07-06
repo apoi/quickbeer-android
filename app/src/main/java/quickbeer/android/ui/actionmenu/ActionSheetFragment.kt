@@ -7,13 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.compose.ui.platform.ComposeView
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.R as materialR
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import quickbeer.android.R
 import quickbeer.android.ui.base.BaseBottomSheetFragment
+import quickbeer.android.util.ktx.setNavigationResult
 
 class ActionSheetFragment : BaseBottomSheetFragment() {
+
+    private val args by navArgs<ActionSheetFragmentArgs>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
@@ -38,17 +42,9 @@ class ActionSheetFragment : BaseBottomSheetFragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                val items = listOf(
-                    Pair(1, R.string.edit_draft),
-                    Pair(2, R.string.add_rating),
-                    Pair(2, R.string.add_rating),
-                    Pair(2, R.string.add_rating),
-                    Pair(2, R.string.add_rating)
-                )
-
                 ActionSheetFragmentComposable(
                     title = getString(R.string.actions_title),
-                    items = items,
+                    items = args.actions.toList(),
                     ::selectAction
                 )
             }
@@ -56,6 +52,11 @@ class ActionSheetFragment : BaseBottomSheetFragment() {
     }
 
     private fun selectAction(action: Int) {
+        setNavigationResult(ACTION_RESULT, action)
         dismiss()
+    }
+
+    companion object {
+        const val ACTION_RESULT = "ActionResult"
     }
 }
