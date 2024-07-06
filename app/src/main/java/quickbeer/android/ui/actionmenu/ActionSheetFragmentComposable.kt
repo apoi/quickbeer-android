@@ -11,6 +11,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,30 +30,33 @@ fun ActionSheetFragmentComposable(
     BottomSheet(
         modifier = Modifier,
         scrollState = scrollState,
-        content = { ActionList(title, items, onItemSelected) }
+        title = title,
+        showHandle = false,
+        content = { ActionList(items, onItemSelected) }
     )
 }
 
 @Composable
-fun ActionList(title: String, items: List<Pair<Int, Int>>, onItemSelected: (Int) -> Unit) {
+fun ActionList(items: List<Pair<Int, Int>>, onItemSelected: (Int) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
         itemsIndexed(items) { index, (key, value) ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp)
+                    .clickable { onItemSelected(key) }
             ) {
                 Text(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .clickable { onItemSelected(key) },
+                        .align(Alignment.CenterStart),
                     style = TextStyles.textM,
                     color = Colors.textLight,
                     text = stringResource(value)
                 )
             }
             if (index < items.lastIndex) {
-                Divider(color = Colors.iconLight)
+                Divider(color = Colors.dividerColor)
             }
         }
     }
