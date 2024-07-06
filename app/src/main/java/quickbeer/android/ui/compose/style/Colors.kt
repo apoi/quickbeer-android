@@ -32,6 +32,7 @@ object Colors {
 
     // Components
     val bottomSheetDragHandleColor = ColorDef.orangeDark
+    val dividerColor = ColorDef.gray30.copy(alpha = 0.1F)
 
     @Composable
     fun primaryButtonColors() = ButtonDefaults.buttonColors(

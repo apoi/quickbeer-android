@@ -46,7 +46,11 @@ class ActionSheetFragment : BaseBottomSheetFragment() {
                     Pair(2, R.string.add_rating)
                 )
 
-                ActionSheetFragmentComposable(title = "Actions", items = items, ::selectAction)
+                ActionSheetFragmentComposable(
+                    title = getString(R.string.actions_title),
+                    items = items,
+                    ::selectAction
+                )
             }
         }
     }
