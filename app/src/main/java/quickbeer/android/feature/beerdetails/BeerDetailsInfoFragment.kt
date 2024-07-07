@@ -19,7 +19,6 @@ package quickbeer.android.feature.beerdetails
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -27,10 +26,10 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
-import kotlinx.parcelize.Parcelize
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
@@ -39,12 +38,15 @@ import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.user.User
-import quickbeer.android.feature.beerdetails.BeerDetailsInfoFragment.RatingAction.DELETE_DRAFT
-import quickbeer.android.feature.beerdetails.BeerDetailsInfoFragment.RatingAction.DELETE_RATING
-import quickbeer.android.feature.beerdetails.BeerDetailsInfoFragment.RatingAction.EDIT_DRAFT
-import quickbeer.android.feature.beerdetails.BeerDetailsInfoFragment.RatingAction.EDIT_RATING
+import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
+import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
+import quickbeer.android.feature.beerdetails.model.RatingAction
+import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteDraft
+import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteRating
+import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
+import quickbeer.android.feature.beerdetails.model.RatingAction.EditRating
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.actionmenu.Action
@@ -54,6 +56,8 @@ import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.getNavigationResult
 import quickbeer.android.util.ktx.observeSuccess
+import quickbeer.android.util.ktx.setNegativeAction
+import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -196,42 +200,31 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     private fun showRatingActionsMenu(rating: Rating) {
         val actions = if (rating.isDraft) {
-            listOf(EDIT_DRAFT.toAction(), DELETE_DRAFT.toAction())
+            listOf(EditDraft(beerId, rating.id), DeleteDraft(beerId, rating.id))
         } else {
-            listOf(EDIT_RATING.toAction(), DELETE_RATING.toAction())
+            listOf(EditRating(beerId, rating.id), DeleteRating(beerId, rating.id))
         }
 
-        navigate(BeerDetailsFragmentDirections.toActions(actions.toTypedArray()))
+        navigate(toActions(actions.toTypedArray()))
     }
 
-    private fun onActionSelected(key: Int) {
-        when (val action = RatingAction.fromValue(key)) {
-            EDIT_DRAFT -> navigate(BeerDetailsFragmentDirections.toRating(beerId))
-            DELETE_DRAFT -> confirmAction(action)
-            EDIT_RATING -> navigate(BeerDetailsFragmentDirections.toRating(beerId))
-            DELETE_RATING -> confirmAction(action)
+    private fun onActionSelected(action: Action) {
+        when (action) {
+            is EditDraft -> navigate(toRating(action))
+            is DeleteDraft -> confirmAction(action)
+            is EditRating -> navigate(toRating(action))
+            is DeleteRating -> confirmAction(action)
+            else -> error("Invalid action $action")
         }
     }
 
     private fun confirmAction(action: RatingAction) {
-    }
-
-    @Parcelize
-    enum class RatingAction(@StringRes val text: Int) : Parcelable {
-        EDIT_DRAFT(R.string.edit_draft),
-        DELETE_DRAFT(R.string.delete_draft),
-        EDIT_RATING(R.string.edit_rating),
-        DELETE_RATING(R.string.delete_rating);
-
-        fun toAction(): Action {
-            return Action(ordinal, text)
-        }
-
-        companion object {
-            fun fromValue(value: Int): RatingAction {
-                return entries.first { it.ordinal == value }
-            }
-        }
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(action.confirmTitle!!)
+            .setMessage(action.confirmMessage!!)
+            .setPositiveAction(R.string.action_yes, { })
+            .setNegativeAction(R.string.action_no) { it.cancel() }
+            .show()
     }
 
     companion object {
