@@ -165,6 +165,12 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         }
     }
 
+    private fun showTickCard() {
+        binding.ratingBar.rating = 0f
+        binding.tickedDate.text = getString(R.string.tick_explanation)
+        binding.starRatingCard.isVisible = true
+    }
+
     private fun setBrewer(brewer: Brewer) {
         binding.infoBrewer.value = brewer.name
         binding.infoBrewer.setOnClickListener {
@@ -203,6 +209,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
     private fun onActionSelected(action: Action) {
         when (action) {
             is CreateDraft -> navigate(toRating(action))
+            is CreateTick -> showTickCard()
             is EditDraft -> navigate(toRating(action))
             is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))

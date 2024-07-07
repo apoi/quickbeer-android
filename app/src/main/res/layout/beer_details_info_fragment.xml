@@ -60,7 +60,6 @@
                     android:numStars="5"
                     android:paddingTop="@dimen/spacing_l"
                     android:rating="0"
-                    android:isIndicator="true"
                     android:stepSize="1.0" />
 
                 <TextView
@@ -68,6 +67,8 @@
                     style="@style/DetailsDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_l"
+                    android:layout_marginEnd="@dimen/spacing_l"
                     android:paddingBottom="@dimen/spacing_l"
                     android:textAlignment="center"
                     tools:text="You rated this beer last week."
