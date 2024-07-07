@@ -148,10 +148,12 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
     private fun setRating(value: Pair<User?, OwnRating>) {
         val ownRating = value.second
 
+        binding.ownRating.ratingCard.isVisible = ownRating.rating != null
+        binding.starRatingCard.isVisible = ownRating.tick != null
+
         if (ownRating.rating != null) {
             // Rating is shown if available
             RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating, true)
-            binding.ownRating.ratingCard.isVisible = true
             binding.ownRating.actions.setOnClickListener {
                 showRatingActionsMenu(ownRating.rating)
             }
@@ -160,7 +162,6 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
             binding.ratingBar.rating = ownRating.tick.toFloat()
             binding.tickedDate.text = ownRating.tickDate
                 ?.formatDateTime(getString(R.string.beer_tick_date))
-            binding.starRatingCard.isVisible = true
         }
     }
 
