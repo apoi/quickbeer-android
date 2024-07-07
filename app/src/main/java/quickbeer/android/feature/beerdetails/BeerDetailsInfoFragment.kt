@@ -211,18 +211,18 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
     private fun onActionSelected(action: Action) {
         when (action) {
             is EditDraft -> navigate(toRating(action))
-            is DeleteDraft -> confirmAction(action)
+            is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))
-            is DeleteRating -> confirmAction(action)
+            is DeleteRating -> confirmAction(action, viewModel::deleteRating)
             else -> error("Invalid action $action")
         }
     }
 
-    private fun confirmAction(action: RatingAction) {
+    private fun confirmAction(action: RatingAction, callback: (Int) -> Unit) {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(action.confirmTitle!!)
             .setMessage(action.confirmMessage!!)
-            .setPositiveAction(R.string.action_yes, { })
+            .setPositiveAction(R.string.action_yes) { callback(action.ratingId) }
             .setNegativeAction(R.string.action_no) { it.cancel() }
             .show()
     }
