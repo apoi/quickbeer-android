@@ -18,6 +18,7 @@
 package quickbeer.android.feature.beerdetails
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -72,8 +73,6 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
     private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
     private val viewModel by viewModels<BeerDetailsViewModel>()
 
-    private var scrollListener: OnFragmentScrollListener? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -100,24 +99,6 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         binding.beerRatingIbu.setOnClickListener {
             showToast(R.string.description_ibu)
         }
-
-        binding.detailsView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
-            if (scrollY > oldScrollY) {
-                scrollListener?.onScrollDown()
-            } else if (scrollY < oldScrollY) {
-                scrollListener?.onScrollUp()
-            }
-        }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        scrollListener = parentFragment as OnFragmentScrollListener
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        scrollListener = null
     }
 
     override fun observeViewState() {
@@ -235,6 +216,15 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
             .setMessage(action.confirmMessage!!)
             .setPositiveAction(R.string.action_yes) { callback(action.ratingId!!) }
             .setNegativeAction(R.string.action_no) { it.cancel() }
+            .show()
+    }
+
+    private fun showLoginDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.login_dialog_title)
+            .setMessage(R.string.login_to_rate_message)
+            .setPositiveAction(R.string.action_yes, {})
+            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
             .show()
     }
 
