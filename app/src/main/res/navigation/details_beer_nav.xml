@@ -73,8 +73,8 @@
         android:label="@string/rating_title">
 
         <argument
-            android:name="id"
-            app:argType="integer" />
+            android:name="action"
+            app:argType="quickbeer.android.feature.beerdetails.model.RatingAction" />
 
     </dialog>
 

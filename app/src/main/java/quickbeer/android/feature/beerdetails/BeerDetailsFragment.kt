@@ -148,7 +148,8 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
     }
 
     private fun navigateToRating(beerId: Int) {
-        navigate(BeerDetailsFragmentDirections.toRating(beerId))
+        // TODO remove FAB, in-view actions instead
+        // navigate(BeerDetailsFragmentDirections.toRating(beerId))
     }
 
     override fun onScrollUp() {

@@ -51,7 +51,7 @@ class ActionSheetFragment : BaseBottomSheetFragment() {
         }
     }
 
-    private fun selectAction(action: Int) {
+    private fun selectAction(action: Action) {
         setNavigationResult(ACTION_RESULT, action)
         dismiss()
     }

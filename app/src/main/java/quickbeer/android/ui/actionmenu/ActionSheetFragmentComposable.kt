@@ -1,7 +1,6 @@
 package quickbeer.android.ui.actionmenu
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,7 +27,7 @@ import quickbeer.android.ui.compose.style.TextStyles
 fun ActionSheetFragmentComposable(
     title: String,
     items: List<Action>,
-    onItemSelected: (Int) -> Unit
+    onItemSelected: (Action) -> Unit
 ) {
     val scrollState = rememberScrollState()
 
@@ -42,9 +41,9 @@ fun ActionSheetFragmentComposable(
 }
 
 @Composable
-fun ActionList(items: List<Action>, onItemSelected: (Int) -> Unit) {
+fun ActionList(items: List<Action>, onItemSelected: (Action) -> Unit) {
     LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        itemsIndexed(items) { index, (key, value) ->
+        itemsIndexed(items) { index, action ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -52,7 +51,7 @@ fun ActionList(items: List<Action>, onItemSelected: (Int) -> Unit) {
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = rememberRipple(),
-                        onClick = { onItemSelected(key) }
+                        onClick = { onItemSelected(action) }
                     )
             ) {
                 Text(
@@ -61,7 +60,7 @@ fun ActionList(items: List<Action>, onItemSelected: (Int) -> Unit) {
                         .align(Alignment.CenterStart),
                     style = TextStyles.textM,
                     color = Colors.textLight,
-                    text = stringResource(value)
+                    text = stringResource(action.text)
                 )
             }
             if (index < items.lastIndex) {
