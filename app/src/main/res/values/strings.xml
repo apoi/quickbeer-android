@@ -106,12 +106,11 @@
     <string name="country_wikipedia_note">Includes material from Wikipedia under the CC BY-SA 3.0 license.</string>
 
     <!-- Ticking -->
-    <string name="beer_tick_date">You rated this beer on %1$s at %2$s</string>
-    <string name="tick_success">%s rated!</string>
-    <string name="tick_removed">Rating removed!</string>
-    <string name="tick_failure">Rating failed! Try again later.</string>
-    <string name="beer_details_login">Log in to rate this beer</string>
-    <string name="ticks_empty_list">You haven’t rated any beers yet.</string>
+    <string name="beer_tick_date">You ticked this beer on %1$s at %2$s</string>
+    <string name="tick_success">%s ticked!</string>
+    <string name="tick_failure">Ticking failed. Try again later.</string>
+    <string name="tick_explanation">Ticks are your private notes and do not affect the public score or rank.</string>
+
     <string name="login_dialog_title">Login required</string>
     <string name="login_to_rate_message">You need to login to rate beers. Login now?</string>
     <string name="login_to_view_ratings_message">You need to login to view your ratings. Login now?</string>

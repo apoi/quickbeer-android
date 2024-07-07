@@ -56,7 +56,8 @@ data class Rating(
         fun createDraft(beerId: Int, user: User): Rating {
             val currentTime = ZonedDateTime.now()
             return Rating(
-                id = Random(currentTime.toEpochSecond()).nextInt(),
+                // Random negative number will work as a local draft ID
+                id = Random(currentTime.toEpochSecond()).nextInt() * -1,
                 beerId = beerId,
                 appearance = 0,
                 aroma = 0,
