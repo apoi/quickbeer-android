@@ -17,33 +17,26 @@
  */
 package quickbeer.android.feature.beerdetails
 
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.BlurTransformation
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.user.User
-import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
-import quickbeer.android.util.ktx.setNegativeAction
-import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentScrollListener {
+class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
     private val binding by viewBinding(DetailsFragmentBinding::bind)
     private val viewModel by viewModels<BeerDetailsViewModel>()
@@ -57,17 +50,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
-
-        var previousOffset = 0
-        binding.appBarLayout.addOnOffsetChangedListener { _, verticalOffset ->
-            if (verticalOffset < previousOffset) {
-                onScrollDown()
-            } else if (verticalOffset > previousOffset) {
-                onScrollUp()
-            }
-
-            previousOffset = verticalOffset
-        }
     }
 
     override fun observeViewState() {
@@ -78,16 +60,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
                 is State.Empty -> Unit
                 is State.Success -> setBeer(state.value)
                 is State.Error -> Unit
-            }
-        }
-
-        observe(viewModel.ratingState) { state ->
-            when (state) {
-                is State.Initial -> setRating(null, null)
-                is State.Loading -> setRating(state.value?.first, state.value?.second)
-                is State.Empty -> setRating(null, null)
-                is State.Success -> setRating(state.value.first, state.value.second)
-                is State.Error -> setRating(null, null)
             }
         }
     }
@@ -112,52 +84,6 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment), OnFragmentS
                 }
             })
         }
-    }
-
-    private fun setRating(user: User?, ownRating: OwnRating?) {
-        val buttonText = when {
-            ownRating?.rating?.isDraft == true -> R.string.edit_draft
-            ownRating?.rating != null -> R.string.edit_rating
-            ownRating?.tick != null -> R.string.edit_rating
-            else -> R.string.add_rating
-        }
-
-        binding.mainActionButton.setOnClickListener {
-            if (user != null) {
-                navigateToRating(args.id)
-            } else {
-                showLoginDialog()
-            }
-        }
-
-        binding.mainActionButton.setText(buttonText)
-        binding.mainActionButton.isVisible = true
-    }
-
-    private fun showLoginDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.login_dialog_title)
-            .setMessage(R.string.login_to_rate_message)
-            .setPositiveAction(R.string.action_yes, ::login)
-            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
-            .show()
-    }
-
-    private fun login() {
-        navigate(BeerDetailsFragmentDirections.toLogin())
-    }
-
-    private fun navigateToRating(beerId: Int) {
-        // TODO remove FAB, in-view actions instead
-        // navigate(BeerDetailsFragmentDirections.toRating(beerId))
-    }
-
-    override fun onScrollUp() {
-        binding.mainActionButton.extend()
-    }
-
-    override fun onScrollDown() {
-        binding.mainActionButton.shrink()
     }
 
     companion object {

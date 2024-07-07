@@ -76,19 +76,4 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/main_action_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/spacing_l"
-        android:src="@drawable/ic_hero_star"
-        android:text="@string/add_rating"
-        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-        android:textColor="@color/black"
-        android:visibility="gone"
-        app:backgroundTint="@color/orange_dark"
-        app:icon="@drawable/ic_hero_pencil_square"
-        app:iconTint="@color/black" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
