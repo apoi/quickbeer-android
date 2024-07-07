@@ -14,6 +14,30 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Rating actions -->
+
+        <LinearLayout
+            style="@style/InfoCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_l"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_add_rating"
+                style="@style/AppTheme.Button.Action"
+                android:layout_marginEnd="@dimen/spacing_m"
+                android:text="@string/rating_action_rate"
+                app:icon="@drawable/ic_hero_star" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_add_tick"
+                style="@style/AppTheme.Button.Action"
+                android:text="@string/rating_action_tick"
+                app:icon="@drawable/ic_hero_check_circle" />
+
+        </LinearLayout>
+
         <!-- Own tick -->
 
         <androidx.cardview.widget.CardView
