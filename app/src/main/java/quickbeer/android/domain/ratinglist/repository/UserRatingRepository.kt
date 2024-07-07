@@ -43,6 +43,10 @@ class UserRatingRepository @Inject constructor(
         }
     }
 
+    suspend fun delete(ratingId: Int) {
+        ratingStore.delete(ratingId)
+    }
+
     override suspend fun getLocal(): List<Rating>? {
         return userStore.getCurrentUser()?.let { user ->
             usersRatingStore.get(user.id)

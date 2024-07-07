@@ -112,6 +112,9 @@ class BeerDetailsViewModel @Inject constructor(
     }
 
     fun deleteRating(ratingId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userRatingRepository.delete(ratingId)
+        }
     }
 
     private fun updateAccessedBeer(beerId: Int) {
