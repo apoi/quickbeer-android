@@ -126,6 +126,28 @@
         <item name="android:minWidth">0dp</item>
     </style>
 
+    <style name="AppTheme.Button.Action">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:elevation">8dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:paddingStart">@dimen/spacing_xl</item>
+        <item name="android:paddingEnd">@dimen/spacing_xl</item>
+        <item name="android:paddingTop">@dimen/spacing_m</item>
+        <item name="android:paddingBottom">@dimen/spacing_m</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textSize">12sp</item>
+        <item name="backgroundTint">@color/gray_80</item>
+        <item name="cornerRadius">16dp</item>
+        <item name="iconSize">16dp</item>
+        <item name="iconTint">@color/orange_dark</item>
+    </style>
+
     <style name="AppTheme.Button.Primary">
         <item name="backgroundTint">@color/button_primary_color</item>
     </style>
@@ -162,6 +184,15 @@
         <item name="android:layout_marginRight">@dimen/card_view_margin</item>
         <item name="android:elevation">@dimen/card_view_elevation</item>
         <item name="cardCornerRadius">@dimen/radius_l</item>
+    </style>
+
+    <!-- Actions -->
+    <style name="ActionText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <!-- Beer details -->

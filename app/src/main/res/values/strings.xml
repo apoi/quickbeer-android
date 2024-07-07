@@ -139,6 +139,8 @@
     <string name="rating_list_error">Error! Try again later.</string>
 
     <!-- Rating actions -->
+    <string name="rating_action_rate">Rate beer</string>
+    <string name="rating_action_tick">Tick beer</string>
     <string name="rating_action_publish">Submit</string>
     <string name="rating_action_draft">Save draft</string>
 

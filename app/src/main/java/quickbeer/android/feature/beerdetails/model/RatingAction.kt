@@ -8,11 +8,21 @@ import quickbeer.android.ui.actionmenu.Action
 @Parcelize
 sealed class RatingAction(
     open val beerId: Int,
-    open val ratingId: Int,
+    open val ratingId: Int? = null,
     @StringRes override val text: Int,
     @StringRes val confirmTitle: Int? = null,
     @StringRes val confirmMessage: Int? = null
 ) : Action(text) {
+
+    data class CreateDraft(override val beerId: Int) : RatingAction(
+        beerId = beerId,
+        text = R.string.rating_action_rate
+    )
+
+    data class CreateTick(override val beerId: Int) : RatingAction(
+        beerId = beerId,
+        text = R.string.rating_action_tick
+    )
 
     data class EditDraft(override val beerId: Int, override val ratingId: Int) :
         RatingAction(

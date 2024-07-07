@@ -43,6 +43,8 @@ import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Compa
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.feature.beerdetails.model.RatingAction
+import quickbeer.android.feature.beerdetails.model.RatingAction.CreateDraft
+import quickbeer.android.feature.beerdetails.model.RatingAction.CreateTick
 import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteRating
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
@@ -74,6 +76,14 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.actionAddRating.setOnClickListener {
+            onActionSelected(CreateDraft(beerId))
+        }
+
+        binding.actionAddTick.setOnClickListener {
+            onActionSelected(CreateTick(beerId))
+        }
 
         binding.beerRatingOverall.setOnClickListener {
             showToast(R.string.description_rating_overall)
@@ -210,6 +220,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     private fun onActionSelected(action: Action) {
         when (action) {
+            is CreateDraft -> navigate(toRating(action))
             is EditDraft -> navigate(toRating(action))
             is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))
@@ -222,7 +233,7 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(action.confirmTitle!!)
             .setMessage(action.confirmMessage!!)
-            .setPositiveAction(R.string.action_yes) { callback(action.ratingId) }
+            .setPositiveAction(R.string.action_yes) { callback(action.ratingId!!) }
             .setNegativeAction(R.string.action_no) { it.cancel() }
             .show()
     }
