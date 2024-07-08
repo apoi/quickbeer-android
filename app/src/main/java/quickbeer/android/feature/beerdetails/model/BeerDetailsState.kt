@@ -13,8 +13,8 @@ data class BeerDetailsState(
     val style: Style?,
     val address: Address?,
     val user: User?,
-    val rating: RatingState<Rating>?,
-    val tick: RatingState<Tick>?
+    val rating: RatingState<Rating>,
+    val tick: RatingState<Tick>
 ) {
 
     companion object {
