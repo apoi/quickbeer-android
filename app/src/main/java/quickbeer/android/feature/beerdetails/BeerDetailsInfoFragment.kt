@@ -183,33 +183,32 @@ class BeerDetailsInfoFragment :
             ?.formatDateTime(getString(R.string.beer_tick_date))
     }
 
-    private fun setRating(rating: RatingState<Rating>) {
-        binding.ownRating.ratingCard.isVisible = rating is RatingState.ShowRating
+    private fun setRating(ratingState: RatingState<Rating>) {
+        binding.ownRating.ratingCard.isVisible = ratingState is RatingState.ShowRating
 
-        if (rating is RatingState.ShowRating) {
-            RatingBinder.bind(requireContext(), rating.value, binding.ownRating, true)
+        if (ratingState is RatingState.ShowRating) {
+            RatingBinder.bind(requireContext(), ratingState.value, binding.ownRating, true)
             binding.ownRating.actions.setOnClickListener {
-                showRatingActionsMenu(rating.value)
+                showRatingActionsMenu(ratingState.value)
             }
         }
     }
 
-    private fun setTick(tick: RatingState<Tick>) {
-        binding.starRatingCard.isVisible = tick is RatingState.ShowRating
+    private fun setTick(tickState: RatingState<Tick>) {
+        val show = tickState is RatingState.ShowRating || tickState is RatingState.ShowEmptyRating
+        val tick = tickState.valueOrNull()
 
-        if (tick is RatingState.ShowRating) {
+        binding.starRatingCard.isVisible = show
+
+        if (show) {
             // Tick is shown if available and no rating
-            binding.ratingBar.rating = tick.value.tick?.toFloat() ?: 0F
-            binding.tickedDate.text = tick.value.tickDate
+            binding.ratingBar.rating = tick?.tick?.toFloat() ?: 0F
+            binding.tickedDate.text = tick?.tickDate
                 ?.formatDateTime(getString(R.string.beer_tick_date))
+                ?: getString(R.string.tick_explanation)
         }
-    }
 
-    private fun showTickCard() {
-        binding.ratingBar.rating = 0f
-        binding.tickedDate.text = getString(R.string.tick_explanation)
-        binding.starRatingCard.isVisible = true
-        binding.actionAddTick.isVisible = false
+
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
@@ -255,7 +254,7 @@ class BeerDetailsInfoFragment :
     private fun onActionSelected(action: Action) {
         when (action) {
             is CreateDraft -> navigate(toRating(action))
-            is CreateTick -> showTickCard()
+            is CreateTick -> viewModel.showTickCard()
             is EditDraft -> navigate(toRating(action))
             is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))

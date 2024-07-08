@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
@@ -54,6 +55,7 @@ class BeerDetailsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
+    private val isTicking = MutableStateFlow(false)
 
     private val _viewState = MutableStateFlow<State<BeerDetailsState>>(State.Initial)
     val viewState: Flow<State<BeerDetailsState>> = _viewState
@@ -64,6 +66,14 @@ class BeerDetailsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             getBeerDetailsUseCase.getBeerDetails(beerId)
+                .combine(isTicking) { state, showTickView ->
+                    if (!showTickView) {
+                        state
+                    } else {
+                        // Always show tick view if user chose the action
+                        state.map { it.copy(tick = it.tick.forceShow()) }
+                    }
+                }
                 .collectLatest {
                     _viewState.emit(it)
                 }
@@ -133,6 +143,12 @@ class BeerDetailsViewModel @Inject constructor(
                 toastProvider.showToast(message)
             }
              */
+        }
+    }
+
+    fun showTickCard() {
+        viewModelScope.launch(Dispatchers.IO) {
+            isTicking.emit(true)
         }
     }
 }

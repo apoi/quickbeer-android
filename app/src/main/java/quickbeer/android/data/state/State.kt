@@ -7,11 +7,11 @@ sealed class State<out T> {
 
     data object Initial : State<Nothing>()
 
-    data class Loading<out T>(val value: T? = null) : State<T>()
+    data class Loading<T>(val value: T? = null) : State<T>()
 
     data object Empty : State<Nothing>()
 
-    data class Success<out T>(val value: T) : State<T>()
+    data class Success<T>(val value: T) : State<T>()
 
     data class Error(val cause: Throwable) : State<Nothing>()
 
@@ -22,6 +22,16 @@ sealed class State<out T> {
             is Empty -> null
             is Success -> value
             is Error -> null
+        }
+    }
+
+    fun <R> map(mapper: (T) -> R): State<R> {
+        return when (this) {
+            is Initial -> Initial
+            is Loading -> Loading(this.value?.let(mapper))
+            is Empty -> Empty
+            is Success -> Success(mapper(this.value))
+            is Error -> Error(this.cause)
         }
     }
 

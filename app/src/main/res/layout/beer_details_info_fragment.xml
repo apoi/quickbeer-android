@@ -28,9 +28,9 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action_login"
                 style="@style/AppTheme.Button.Action"
-                android:text="@string/rating_action_tick"
+                android:text="@string/rating_action_login"
                 android:visibility="gone"
-                app:icon="@drawable/ic_hero_user" />
+                app:icon="@drawable/ic_hero_login" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action_add_rating"
