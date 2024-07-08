@@ -6,7 +6,6 @@ import android.view.View
 import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import quickbeer.android.R
@@ -15,6 +14,7 @@ import quickbeer.android.databinding.LoginDialogFragmentBinding
 import quickbeer.android.domain.login.LoginError
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.setNavigationResult
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -74,7 +74,7 @@ class LoginDialog : DialogFragment(R.layout.login_dialog_fragment) {
     }
 
     private fun setLoginResult(success: Boolean) {
-        findNavController().previousBackStackEntry?.savedStateHandle?.set(LOGIN_RESULT, success)
+        setNavigationResult(LOGIN_RESULT, success)
     }
 
     companion object {

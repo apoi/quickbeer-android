@@ -18,7 +18,6 @@
 package quickbeer.android.feature.beerdetails
 
 import android.animation.LayoutTransition
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.widget.RatingBar
@@ -52,6 +51,7 @@ import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditRating
 import quickbeer.android.feature.beerdetails.model.RatingState
 import quickbeer.android.feature.beerdetails.model.Tick
+import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.actionmenu.Action
@@ -83,7 +83,7 @@ class BeerDetailsInfoFragment :
         binding.ratingBar.onRatingBarChangeListener = this
 
         binding.actionLogin.setOnClickListener {
-            showLoginDialog()
+            login()
         }
 
         binding.actionAddRating.setOnClickListener {
@@ -119,15 +119,21 @@ class BeerDetailsInfoFragment :
             key = ActionSheetFragment.ACTION_RESULT,
             action = ::onActionSelected
         )
+
+        getNavigationResult(
+            fragmentId = R.id.beer_details_fragment,
+            key = LoginDialog.LOGIN_RESULT,
+            action = ::onLoginResult
+        )
     }
 
     private fun setValues(state: BeerDetailsState) {
         setBeer(state.beer)
+        setRating(state.rating)
+        setTick(state.tick)
         state.brewer?.let(::setBrewer)
         state.style?.let(::setStyle)
         state.address?.let(::setAddress)
-        state.rating?.let(::setRating)
-        state.tick?.let(::setTick)
 
         // Set action buttons
         val showLoginAction = state.user == null
@@ -201,14 +207,11 @@ class BeerDetailsInfoFragment :
         binding.starRatingCard.isVisible = show
 
         if (show) {
-            // Tick is shown if available and no rating
             binding.ratingBar.rating = tick?.tick?.toFloat() ?: 0F
             binding.tickedDate.text = tick?.tickDate
                 ?.formatDateTime(getString(R.string.beer_tick_date))
                 ?: getString(R.string.tick_explanation)
         }
-
-
     }
 
     override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
@@ -272,13 +275,15 @@ class BeerDetailsInfoFragment :
             .show()
     }
 
-    private fun showLoginDialog() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(R.string.login_dialog_title)
-            .setMessage(R.string.login_to_rate_message)
-            .setPositiveAction(R.string.action_yes, {})
-            .setNegativeAction(R.string.action_no, DialogInterface::cancel)
-            .show()
+    private fun login() {
+        // TODO does not fetch ticks now
+        navigate(BeerDetailsFragmentDirections.toLogin())
+    }
+
+    private fun onLoginResult(success: Boolean) {
+        if (success) {
+            toastProvider.showToast(getString(R.string.login_success))
+        }
     }
 
     companion object {
