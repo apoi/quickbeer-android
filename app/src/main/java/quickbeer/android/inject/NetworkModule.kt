@@ -10,6 +10,7 @@ import dagger.Reusable
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 import okhttp3.Cache
@@ -48,6 +49,8 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .cache(Cache(context.cacheDir, TEN_MEGABYTES))
             .cookieJar(cookieJar)
+            .writeTimeout(20, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(AuthorizationErrorInterceptor(cookieJar))
             .addInterceptor(AppKeyInterceptor())
             .addInterceptor(LoggingInterceptor.create())
