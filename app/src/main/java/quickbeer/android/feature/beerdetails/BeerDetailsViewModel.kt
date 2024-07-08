@@ -38,11 +38,14 @@ import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.beer.network.BeerTickFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.domain.login.LoginManager
+import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
@@ -50,25 +53,37 @@ import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.feature.beerdetails.model.Address
-import quickbeer.android.feature.beerdetails.model.OwnRating
+import quickbeer.android.feature.beerdetails.model.RatingState
+import quickbeer.android.feature.beerdetails.model.Tick
+import quickbeer.android.util.ResourceProvider
+import quickbeer.android.util.ktx.mapState
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val loginManager: LoginManager,
     private val currentUserRepository: CurrentUserRepository,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository,
-    private val userRatingRepository: UserRatingRepository
+    private val userRatingRepository: UserRatingRepository,
+    private val beerTickFetcher: BeerTickFetcher,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
 
-    private val _ratingState = MutableStateFlow<State<Pair<User?, OwnRating>>>(State.Initial)
-    val ratingState: Flow<State<Pair<User?, OwnRating>>> = _ratingState
+    private val _tickState = MutableStateFlow<RatingState<Tick>>(RatingState.Hide)
+    val tickState: Flow<RatingState<Tick>> = _tickState
+
+    private val _ratingState = MutableStateFlow<RatingState<Rating>>(RatingState.Hide)
+    val ratingState: Flow<RatingState<Rating>> = _ratingState
+
+    private val _userState = MutableStateFlow<State<User>>(State.Initial)
+    val userState: Flow<State<User>> = _userState
 
     private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
     val beerState: Flow<State<Beer>> = _beerState
@@ -99,15 +114,42 @@ class BeerDetailsViewModel @Inject constructor(
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            val userFlow = currentUserRepository.getStream(NoFetch())
-            val beerFlow = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-            val ratingFlow = userRatingRepository.getStream(NoFetch())
+            currentUserRepository.getStream(NoFetch())
+                .collectLatest(_userState::emit)
+        }
 
-            beerFlow.combine(ratingFlow, OwnRating.Companion::create)
-                .combine(userFlow) { ownRating, user -> Pair(user.valueOrNull(), ownRating) }
-                .collectLatest {
-                    _ratingState.emit(State.from(it))
+        viewModelScope.launch(Dispatchers.IO) {
+            beerRepository.getStream(beerId, Beer.DetailsDataValidator())
+                .combine(userState) { beerState, userState ->
+                    val user = userState.valueOrNull()
+                    val beer = beerState.valueOrNull()
+                    val tick = Tick.create(beer)
+
+                    when {
+                        user != null && tick.tick != null -> RatingState.ShowRating(tick)
+                        user != null -> RatingState.ShowAction
+                        else -> RatingState.Hide
+                    }
                 }
+                .collectLatest(_tickState::emit)
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            userRatingRepository.getStream(NoFetch())
+                .combine(userState) { ratingsState, userState ->
+                    val user = userState.valueOrNull()
+                    val ratings = ratingsState.valueOrNull()
+                    val rating = ratings
+                        ?.filter { it.beerId == beerId }
+                        ?.maxByOrNull(Rating::isDraft)
+
+                    when {
+                        user != null && rating != null -> RatingState.ShowRating(rating)
+                        user != null -> RatingState.ShowAction
+                        else -> RatingState.Hide
+                    }
+                }
+                .collectLatest { _ratingState.emit(it) }
         }
     }
 
@@ -199,9 +241,10 @@ class BeerDetailsViewModel @Inject constructor(
         }
     }
 
-    /* TODO logic to review fragment
     fun tickBeer(tick: Int) {
         viewModelScope.launch(Dispatchers.IO) {
+            // TODO()
+            /*
             val beer = beerRepository.store.get(beerId) ?: error("No beer found!")
             val userId = loginManager.userId.first() ?: error("Not logged in!")
             val fetchKey = BeerTickFetcher.TickKey(beerId, userId, tick)
@@ -212,16 +255,18 @@ class BeerDetailsViewModel @Inject constructor(
                 beerRepository.persist(beerId, update)
             }
 
+
             val message = when {
                 result !is ApiResult.Success -> resourceProvider.getString(R.string.tick_failure)
                 tick > 0 -> resourceProvider.getString(R.string.tick_success).format(beer.name)
                 else -> resourceProvider.getString(R.string.tick_removed)
             }
 
+
             withContext(Dispatchers.Main) {
                 toastProvider.showToast(message)
             }
+             */
         }
     }
-     */
 }
