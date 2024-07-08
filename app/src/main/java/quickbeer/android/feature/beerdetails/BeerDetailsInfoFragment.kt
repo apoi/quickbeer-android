@@ -17,6 +17,7 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import android.animation.LayoutTransition
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
@@ -137,6 +138,10 @@ class BeerDetailsInfoFragment :
         binding.actionAddRating.isVisible = showRatingAction
         binding.actionAddTick.isVisible = showTickAction
         binding.actionLayout.isVisible = showLoginAction || showRatingAction || showTickAction
+
+        // Animate layout changes after initial layout is done
+        binding.mainLayout.layoutTransition = LayoutTransition()
+        binding.actionLayout.layoutTransition = LayoutTransition()
     }
 
     private fun setBeer(beer: Beer) {
