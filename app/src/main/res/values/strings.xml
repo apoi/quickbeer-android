@@ -168,6 +168,7 @@
     <string name="login_error_field_required">This field is required</string>
     <string name="login_failed">Login failed. Check your username and password.</string>
     <string name="login_error">Error logging in. Please try again later.</string>
+    <string name="login_success">Logged in successfully</string>
 
     <!-- Profile -->
     <string name="profile_loading_profile">Loading…</string>
