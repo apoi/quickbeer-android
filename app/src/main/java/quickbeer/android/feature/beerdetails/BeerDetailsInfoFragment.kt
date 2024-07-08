@@ -17,10 +17,10 @@
  */
 package quickbeer.android.feature.beerdetails
 
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import android.widget.RatingBar
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
@@ -32,6 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import quickbeer.android.R
+import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
@@ -42,7 +43,6 @@ import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
 import quickbeer.android.feature.beerdetails.model.Address
-import quickbeer.android.feature.beerdetails.model.OwnRating
 import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateTick
@@ -50,6 +50,8 @@ import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteRating
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditRating
+import quickbeer.android.feature.beerdetails.model.RatingState
+import quickbeer.android.feature.beerdetails.model.Tick
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.actionmenu.Action
@@ -58,13 +60,16 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.getNavigationResult
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment) {
+class BeerDetailsInfoFragment :
+    BaseFragment(R.layout.beer_details_info_fragment),
+    RatingBar.OnRatingBarChangeListener {
 
     @Inject
     lateinit var toastProvider: ToastProvider
@@ -75,6 +80,12 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.ratingBar.onRatingBarChangeListener = this
+
+        binding.actionLogin.setOnClickListener {
+            showLoginDialog()
+        }
 
         binding.actionAddRating.setOnClickListener {
             onActionSelected(CreateDraft(beerId))
@@ -106,7 +117,16 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         observeSuccess(viewModel.brewerState, ::setBrewer)
         observeSuccess(viewModel.styleState, ::setStyle)
         observeSuccess(viewModel.addressState, ::setAddress)
-        observeSuccess(viewModel.ratingState, ::setRating)
+
+        observe(viewModel.userState) { state ->
+            when (state) {
+                is State.Empty, is State.Success -> setUser(state.valueOrNull())
+                is State.Error, is State.Initial, is State.Loading -> setUser(null)
+            }
+        }
+
+        observe(viewModel.ratingState, ::setRating)
+        observe(viewModel.tickState, ::setTick)
 
         getNavigationResult(
             fragmentId = R.id.beer_details_fragment,
@@ -143,24 +163,42 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
             ?.roundToInt()
             ?.toString()
             ?: getString(R.string.not_available)
+
+        binding.ratingBar.rating = beer.tickValue
+            ?.takeIf { beer.isTicked() }
+            ?.toFloat()
+            ?: 0F
+
+        binding.tickedDate.text = beer.tickDate
+            ?.takeIf { beer.isTicked() }
+            ?.formatDateTime(getString(R.string.beer_tick_date))
+
     }
 
-    private fun setRating(value: Pair<User?, OwnRating>) {
-        val ownRating = value.second
+    private fun setUser(user: User?) {
+        binding.actionLogin.isVisible = user == null
+    }
 
-        binding.ownRating.ratingCard.isVisible = ownRating.rating != null
-        binding.starRatingCard.isVisible = ownRating.tick != null
+    private fun setRating(rating: RatingState<Rating>) {
+        binding.ownRating.ratingCard.isVisible = rating is RatingState.ShowRating
+        binding.actionAddRating.isVisible = rating is RatingState.ShowAction
 
-        if (ownRating.rating != null) {
-            // Rating is shown if available
-            RatingBinder.bind(requireContext(), ownRating.rating, binding.ownRating, true)
+        if (rating is RatingState.ShowRating) {
+            RatingBinder.bind(requireContext(), rating.value, binding.ownRating, true)
             binding.ownRating.actions.setOnClickListener {
-                showRatingActionsMenu(ownRating.rating)
+                showRatingActionsMenu(rating.value)
             }
-        } else if (ownRating.tick != null) {
+        }
+    }
+
+    private fun setTick(tick: RatingState<Tick>) {
+        binding.starRatingCard.isVisible = tick is RatingState.ShowRating
+        binding.actionAddTick.isVisible = tick is RatingState.ShowAction
+
+        if (tick is RatingState.ShowRating) {
             // Tick is shown if available and no rating
-            binding.ratingBar.rating = ownRating.tick.toFloat()
-            binding.tickedDate.text = ownRating.tickDate
+            binding.ratingBar.rating = tick.value.tick?.toFloat() ?: 0F
+            binding.tickedDate.text = tick.value.tickDate
                 ?.formatDateTime(getString(R.string.beer_tick_date))
         }
     }
@@ -169,6 +207,12 @@ class BeerDetailsInfoFragment : BaseFragment(R.layout.beer_details_info_fragment
         binding.ratingBar.rating = 0f
         binding.tickedDate.text = getString(R.string.tick_explanation)
         binding.starRatingCard.isVisible = true
+        binding.actionAddTick.isVisible = false
+    }
+
+    override fun onRatingChanged(ratingBar: RatingBar?, rating: Float, fromUser: Boolean) {
+        if (!fromUser) return
+        viewModel.tickBeer(rating.toInt())
     }
 
     private fun setBrewer(brewer: Brewer) {

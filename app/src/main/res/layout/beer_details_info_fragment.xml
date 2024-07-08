@@ -24,16 +24,25 @@
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_login"
+                style="@style/AppTheme.Button.Action"
+                android:text="@string/rating_action_tick"
+                android:visibility="gone"
+                app:icon="@drawable/ic_hero_user" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/action_add_rating"
                 style="@style/AppTheme.Button.Action"
                 android:layout_marginEnd="@dimen/spacing_m"
                 android:text="@string/rating_action_rate"
+                android:visibility="gone"
                 app:icon="@drawable/ic_hero_star" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action_add_tick"
                 style="@style/AppTheme.Button.Action"
                 android:text="@string/rating_action_tick"
+                android:visibility="gone"
                 app:icon="@drawable/ic_hero_check_circle" />
 
         </LinearLayout>
@@ -71,8 +80,7 @@
                     android:layout_marginEnd="@dimen/spacing_l"
                     android:paddingBottom="@dimen/spacing_l"
                     android:textAlignment="center"
-                    tools:text="You rated this beer last week."
-                    tools:visibility="visible" />
+                    tools:text="You rated this beer last week." />
 
             </LinearLayout>
 

@@ -41,13 +41,17 @@ fun <T> Flow<State<List<T>>>.distinctUntilNewId(getId: (T) -> Int): Flow<State<L
 /**
  * Maps a State<T> flow to a State<R> flow.
  */
-fun <T, R> Flow<State<T>>.mapState(mapper: (T) -> R): Flow<State<R>> {
+fun <T, R> Flow<State<T>>.mapState(mapper: (T) -> R?): Flow<State<R>> {
     return map {
         when (it) {
             is State.Initial -> State.Initial
             is State.Loading -> State.Loading(it.value?.let(mapper))
             is State.Empty -> State.Empty
-            is State.Success -> State.Success(mapper(it.value))
+            is State.Success -> {
+                mapper(it.value)
+                    ?.let { value -> State.Success(value) }
+                    ?: State.Empty
+            }
             is State.Error -> State.Error(it.cause)
         }
     }
