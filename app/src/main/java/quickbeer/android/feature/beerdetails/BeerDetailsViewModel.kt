@@ -26,130 +26,47 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
-import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.beer.network.BeerTickFetcher
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
-import quickbeer.android.domain.country.Country
-import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.domain.login.LoginManager
-import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
-import quickbeer.android.domain.style.Style
-import quickbeer.android.domain.style.repository.StyleRepository
-import quickbeer.android.domain.stylelist.repository.StyleListRepository
-import quickbeer.android.domain.user.User
-import quickbeer.android.domain.user.repository.CurrentUserRepository
-import quickbeer.android.feature.beerdetails.model.Address
-import quickbeer.android.feature.beerdetails.model.RatingState
-import quickbeer.android.feature.beerdetails.model.Tick
-import quickbeer.android.util.ResourceProvider
-import quickbeer.android.util.ktx.mapState
+import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val loginManager: LoginManager,
-    private val currentUserRepository: CurrentUserRepository,
+    private val getBeerDetailsUseCase: GetBeerDetailsUseCase,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
-    private val styleRepository: StyleRepository,
-    private val styleListRepository: StyleListRepository,
-    private val countryRepository: CountryRepository,
-    private val userRatingRepository: UserRatingRepository,
-    private val beerTickFetcher: BeerTickFetcher,
-    private val resourceProvider: ResourceProvider
+    private val userRatingRepository: UserRatingRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
 
-    private val _tickState = MutableStateFlow<RatingState<Tick>>(RatingState.Hide)
-    val tickState: Flow<RatingState<Tick>> = _tickState
-
-    private val _ratingState = MutableStateFlow<RatingState<Rating>>(RatingState.Hide)
-    val ratingState: Flow<RatingState<Rating>> = _ratingState
-
-    private val _userState = MutableStateFlow<State<User>>(State.Initial)
-    val userState: Flow<State<User>> = _userState
-
-    private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
-    val beerState: Flow<State<Beer>> = _beerState
-
-    private val _brewerState = MutableStateFlow<State<Brewer>>(State.Initial)
-    val brewerState: Flow<State<Brewer>> = _brewerState
-
-    private val _styleState = MutableStateFlow<State<Style>>(State.Initial)
-    val styleState: Flow<State<Style>> = _styleState
-
-    private val _addressState = MutableStateFlow<State<Address>>(State.Initial)
-    val addressState: Flow<State<Address>> = _addressState
+    private val _viewState = MutableStateFlow<State<BeerDetailsState>>(State.Initial)
+    val viewState: Flow<State<BeerDetailsState>> = _viewState
 
     init {
         updateAccessedBeer(beerId)
+        updateAccessedBrewer(beerId)
 
         viewModelScope.launch(Dispatchers.IO) {
-            beerRepository.getStream(beerId, Beer.DetailsDataValidator())
+            getBeerDetailsUseCase.getBeerDetails(beerId)
                 .collectLatest {
-                    _beerState.emit(it)
-
-                    if (it is State.Success) {
-                        getBrewer(it.value)
-                        getStyle(it.value)
-                        getAddress(it.value)
-                    }
+                    _viewState.emit(it)
                 }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            currentUserRepository.getStream(NoFetch())
-                .collectLatest(_userState::emit)
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-                .combine(userState) { beerState, userState ->
-                    val user = userState.valueOrNull()
-                    val beer = beerState.valueOrNull()
-                    val tick = Tick.create(beer)
-
-                    when {
-                        user != null && tick.tick != null -> RatingState.ShowRating(tick)
-                        user != null -> RatingState.ShowAction
-                        else -> RatingState.Hide
-                    }
-                }
-                .collectLatest(_tickState::emit)
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            userRatingRepository.getStream(NoFetch())
-                .combine(userState) { ratingsState, userState ->
-                    val user = userState.valueOrNull()
-                    val ratings = ratingsState.valueOrNull()
-                    val rating = ratings
-                        ?.filter { it.beerId == beerId }
-                        ?.maxByOrNull(Rating::isDraft)
-
-                    when {
-                        user != null && rating != null -> RatingState.ShowRating(rating)
-                        user != null -> RatingState.ShowAction
-                        else -> RatingState.Hide
-                    }
-                }
-                .collectLatest { _ratingState.emit(it) }
         }
     }
 
@@ -172,72 +89,21 @@ class BeerDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun updateAccessedBrewer(brewerId: Int) {
+    private fun updateAccessedBrewer(beerId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            brewerRepository.getStream(brewerId, Accept())
-                .filterIsInstance<State.Success<Brewer>>()
-                .map { it.value }
-                .take(1)
+            beerRepository.getStream(beerId, Accept())
+                .mapNotNull { it.valueOrNull()?.brewerId }
+                .distinctUntilChanged()
+                .flatMapLatest { brewerId ->
+                    brewerRepository.getStream(brewerId, Accept())
+                        .filterIsInstance<State.Success<Brewer>>()
+                        .map { it.value }
+                        .take(1)
+                }
                 .collectLatest { brewer ->
                     val accessed = brewer.copy(accessed = ZonedDateTime.now())
                     brewerRepository.persist(brewer.id, accessed)
                 }
-        }
-    }
-
-    private fun getBrewer(beer: Beer) {
-        if (beer.brewerId == null) return
-
-        updateAccessedBrewer(beer.brewerId)
-
-        viewModelScope.launch(Dispatchers.IO) {
-            brewerRepository.getStream(beer.brewerId, Brewer.BasicDataValidator())
-                .collectLatest(_brewerState::emit)
-        }
-    }
-
-    private fun getStyle(beer: Beer) {
-        when {
-            beer.styleId != null -> getStyle(beer.styleId)
-            beer.styleName != null -> getStyle(beer.styleName)
-        }
-    }
-
-    private fun getStyle(styleId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            styleRepository.getStream(styleId, Accept())
-                .collectLatest(_styleState::emit)
-        }
-    }
-
-    private fun getStyle(styleName: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            styleListRepository.getStream(Accept())
-                .firstOrNull { it is State.Success }
-                ?.let { if (it is State.Success) it.value else null }
-                ?.firstOrNull { style -> style.name == styleName }
-                ?.let { getStyle(it.id) }
-        }
-    }
-
-    private fun getAddress(beer: Beer) {
-        if (beer.brewerId == null || beer.countryId == null) return
-
-        val brewer = brewerRepository.getStream(beer.brewerId, Brewer.DetailsDataValidator())
-        val country = countryRepository.getStream(beer.countryId, Accept())
-
-        viewModelScope.launch(Dispatchers.IO) {
-            brewer.combineTransform(country) { b, c ->
-                emit(mergeAddress(b, c))
-            }.collectLatest { _addressState.emit(it) }
-        }
-    }
-
-    private fun mergeAddress(brewer: State<Brewer>, country: State<Country>): State<Address> {
-        return if (brewer is State.Success && country is State.Success) {
-            State.Success(Address.from(brewer.value, country.value))
-        } else {
-            State.Loading()
         }
     }
 

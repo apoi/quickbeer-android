@@ -32,17 +32,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.math.roundToInt
 import quickbeer.android.R
-import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
-import quickbeer.android.domain.user.User
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateTick
@@ -60,7 +59,6 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.getNavigationResult
-import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
@@ -113,26 +111,32 @@ class BeerDetailsInfoFragment :
     }
 
     override fun observeViewState() {
-        observeSuccess(viewModel.beerState, ::setBeer)
-        observeSuccess(viewModel.brewerState, ::setBrewer)
-        observeSuccess(viewModel.styleState, ::setStyle)
-        observeSuccess(viewModel.addressState, ::setAddress)
-
-        observe(viewModel.userState) { state ->
-            when (state) {
-                is State.Empty, is State.Success -> setUser(state.valueOrNull())
-                is State.Error, is State.Initial, is State.Loading -> setUser(null)
-            }
-        }
-
-        observe(viewModel.ratingState, ::setRating)
-        observe(viewModel.tickState, ::setTick)
+        observeSuccess(viewModel.viewState, ::setValues)
 
         getNavigationResult(
             fragmentId = R.id.beer_details_fragment,
             key = ActionSheetFragment.ACTION_RESULT,
             action = ::onActionSelected
         )
+    }
+
+    private fun setValues(state: BeerDetailsState) {
+        setBeer(state.beer)
+        state.brewer?.let(::setBrewer)
+        state.style?.let(::setStyle)
+        state.address?.let(::setAddress)
+        state.rating?.let(::setRating)
+        state.tick?.let(::setTick)
+
+        // Set action buttons
+        val showLoginAction = state.user == null
+        val showRatingAction = state.rating is RatingState.ShowAction
+        val showTickAction = state.tick is RatingState.ShowAction
+
+        binding.actionLogin.isVisible = showLoginAction
+        binding.actionAddRating.isVisible = showRatingAction
+        binding.actionAddTick.isVisible = showTickAction
+        binding.actionLayout.isVisible = showLoginAction || showRatingAction || showTickAction
     }
 
     private fun setBeer(beer: Beer) {
@@ -172,16 +176,10 @@ class BeerDetailsInfoFragment :
         binding.tickedDate.text = beer.tickDate
             ?.takeIf { beer.isTicked() }
             ?.formatDateTime(getString(R.string.beer_tick_date))
-
-    }
-
-    private fun setUser(user: User?) {
-        binding.actionLogin.isVisible = user == null
     }
 
     private fun setRating(rating: RatingState<Rating>) {
         binding.ownRating.ratingCard.isVisible = rating is RatingState.ShowRating
-        binding.actionAddRating.isVisible = rating is RatingState.ShowAction
 
         if (rating is RatingState.ShowRating) {
             RatingBinder.bind(requireContext(), rating.value, binding.ownRating, true)
@@ -193,7 +191,6 @@ class BeerDetailsInfoFragment :
 
     private fun setTick(tick: RatingState<Tick>) {
         binding.starRatingCard.isVisible = tick is RatingState.ShowRating
-        binding.actionAddTick.isVisible = tick is RatingState.ShowAction
 
         if (tick is RatingState.ShowRating) {
             // Tick is shown if available and no rating
