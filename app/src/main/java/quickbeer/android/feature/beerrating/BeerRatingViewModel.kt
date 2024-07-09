@@ -10,26 +10,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import quickbeer.android.R
+import quickbeer.android.data.result.Result
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
 import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.PublishError
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.PublishSuccess
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.SaveDraftSuccess
+import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.ShowError
+import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.ShowMessageAndClose
 import quickbeer.android.feature.beerrating.model.BeerRatingViewState
-import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.SingleLiveEvent
 
 @HiltViewModel
 class BeerRatingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val currentUserRepository: CurrentUserRepository,
-    private val userRatingRepository: UserRatingRepository,
-    private val beerPublishRatingFetcher: BeerPublishRatingFetcher
+    private val userRatingRepository: UserRatingRepository
 ) : ViewModel() {
 
     private val action = savedStateHandle.get<RatingAction>("action")!!
@@ -63,15 +61,13 @@ class BeerRatingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _viewState.emit(updateState { it.copy(isPublishing = true) })
 
-            val result = beerPublishRatingFetcher.fetch(rating)
+            val result = userRatingRepository.publish(rating)
             val event = when (result) {
-                is ApiResult.Success -> PublishSuccess
-                is ApiResult.HttpError -> PublishError(result.cause)
-                is ApiResult.NetworkError -> PublishError(result.cause)
-                is ApiResult.UnknownError -> PublishError(result.cause)
+                is Result.Success -> ShowMessageAndClose(R.string.rating_publish_success)
+                is Result.Failure -> ShowError(result.cause)
             }
 
-            if (event is PublishError) {
+            if (result is Result.Failure) {
                 // Success closes the view so re-enable only in the case of failure
                 _viewState.emit(updateState { it.copy(isPublishing = false) })
             }
@@ -84,7 +80,7 @@ class BeerRatingViewModel @Inject constructor(
             // We expect local saving to never fail
             _viewState.emit(updateState { it.copy(isSavingDraft = true) })
             userRatingRepository.saveDraft(rating)
-            _events.postValue(SaveDraftSuccess)
+            _events.postValue(ShowMessageAndClose(R.string.rating_draft_success))
         }
     }
 

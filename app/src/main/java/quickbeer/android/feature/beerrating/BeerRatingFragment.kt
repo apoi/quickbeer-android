@@ -17,9 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.PublishError
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.PublishSuccess
-import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.SaveDraftSuccess
+import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.ShowError
+import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent.ShowMessageAndClose
 import quickbeer.android.ui.base.BaseBottomSheetFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.observe
@@ -67,9 +66,8 @@ class BeerRatingFragment : BaseBottomSheetFragment() {
     override fun observeViewState() {
         observe(viewModel.events) { event ->
             when (event) {
-                is SaveDraftSuccess -> closeWithMessage(R.string.rating_draft_success)
-                is PublishSuccess -> closeWithMessage(R.string.rating_publish_success)
-                is PublishError -> showError(event.cause)
+                is ShowMessageAndClose -> closeWithMessage(event.message)
+                is ShowError -> showError(event.cause)
             }
         }
     }
