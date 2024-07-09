@@ -14,15 +14,28 @@ class BeerPublishRatingFetcher(
     { rating ->
         if (!rating.isValid()) error("Incomplete rating")
 
-        api.postRating(
-            beerId = rating.beerId ?: error("Missing rating"),
-            appearance = rating.appearance ?: error("Missing appearance"),
-            aroma = rating.aroma ?: error("Missing aroma"),
-            flavor = rating.flavor ?: error("Missing flavor"),
-            palate = rating.mouthfeel ?: error("Missing palate"),
-            overall = rating.overall ?: error("Missing overall"),
-            comments = rating.comments ?: error("Missing comments")
-        )
+        if (rating.isDraft) {
+            api.postRating(
+                beerId = rating.beerId ?: error("Missing beer id"),
+                appearance = rating.appearance ?: error("Missing appearance"),
+                aroma = rating.aroma ?: error("Missing aroma"),
+                flavor = rating.flavor ?: error("Missing flavor"),
+                palate = rating.mouthfeel ?: error("Missing palate"),
+                overall = rating.overall ?: error("Missing overall"),
+                comments = rating.comments ?: error("Missing comments")
+            )
+        } else {
+            api.updateRating(
+                ratingId = rating.id,
+                beerId = rating.beerId ?: error("Missing beer id"),
+                appearance = rating.appearance ?: error("Missing appearance"),
+                aroma = rating.aroma ?: error("Missing aroma"),
+                flavor = rating.flavor ?: error("Missing flavor"),
+                palate = rating.mouthfeel ?: error("Missing palate"),
+                overall = rating.overall ?: error("Missing overall"),
+                comments = rating.comments ?: error("Missing comments")
+            )
+        }
     },
     loginManager
 )

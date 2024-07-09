@@ -49,6 +49,7 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .cache(Cache(context.cacheDir, TEN_MEGABYTES))
             .cookieJar(cookieJar)
+//            .followRedirects(false)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(AuthorizationErrorInterceptor(cookieJar))

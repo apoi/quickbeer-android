@@ -84,8 +84,8 @@ interface RateBeerApi {
     suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UserRatingJson>>
 
     @FormUrlEncoded
-    @POST("/json/saverating.asp")
-    fun postRating(
+    @POST("/saverating.asp")
+    suspend fun postRating(
         @Field("beerId") beerId: Int,
         @Field("appearance") appearance: Int,
         @Field("aroma") aroma: Int,
@@ -96,10 +96,10 @@ interface RateBeerApi {
     ): ApiResult<ResponseBody>
 
     @FormUrlEncoded
-    @POST("/json/updaterating.asp")
-    fun updateRating(
-        @Field("beerId") beerId: Int,
+    @POST("/updaterating.asp")
+    suspend fun updateRating(
         @Field("ratingId") ratingId: Int,
+        @Field("beerId") beerId: Int,
         @Field("appearance") appearance: Int,
         @Field("aroma") aroma: Int,
         @Field("flavor") flavor: Int,

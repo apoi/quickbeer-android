@@ -20,8 +20,10 @@ class AuthorizationErrorInterceptor(
         val response = chain.proceed(request)
         val hasLoginCookie = loginCookieJar.hasUserCookie()
 
-        if (hasLoginCookie &&
-            (isInternalError(request, response) || isEmptyReviewsResponse(request, response))
+        if (hasLoginCookie && (
+                isInternalError(request, response) ||
+                    isEmptyReviewsResponse(request, response)
+                )
         ) {
             return response.newBuilder()
                 .code(HttpCode.UNAUTHORIZED)
