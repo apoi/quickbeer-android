@@ -25,7 +25,7 @@ import quickbeer.android.data.repository.NotOlderThan
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.login.LoginManager
-import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.util.ktx.isOlderThan
@@ -37,7 +37,7 @@ class ProfileViewModel @Inject constructor(
     private val loginManager: LoginManager,
     private val currentUserRepository: CurrentUserRepository,
     private val tickedBeersRepository: TickedBeersRepository,
-    private val userRatingRepository: UserRatingRepository
+    private val userAllRatingsRepository: UserAllRatingsRepository
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
@@ -59,7 +59,7 @@ class ProfileViewModel @Inject constructor(
 
         // Tick data for display. Similarly should not update
         viewModelScope.launch(Dispatchers.IO) {
-            userRatingRepository.getStream(NoFetch())
+            userAllRatingsRepository.getStream(NoFetch())
                 .map(StateListSizeMapper()::map)
                 .distinctUntilChanged()
                 .collectLatest(_ratingCountState::emit)
@@ -90,7 +90,7 @@ class ProfileViewModel @Inject constructor(
                     Timber.d("Fetch user, ticks, ratings")
                     val u = currentUserRepository.getStream(NotOlderThan(ofDays(7)) { it?.updated })
                     val t = tickedBeersRepository.getStream(AlwaysFetch())
-                    val r = userRatingRepository.getStream(AlwaysFetch())
+                    val r = userAllRatingsRepository.getStream(AlwaysFetch())
 
                     combine(u, t, r) { newUser, newTicks, newRatings ->
                         Timber.d("Updated user: ${newUser.valueOrNull()?.updated}")

@@ -15,18 +15,18 @@ import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
 import quickbeer.android.domain.rating.store.RatingStore
 import quickbeer.android.domain.ratinglist.network.UserRatingPageFetcher
-import quickbeer.android.domain.ratinglist.store.UsersRatingStore
+import quickbeer.android.domain.ratinglist.store.UserRatingsStore
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.store.UserStore
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.network.result.map
 import quickbeer.android.network.result.value
 
-class UserRatingRepository @Inject constructor(
+class UserAllRatingsRepository @Inject constructor(
     private val userStore: UserStore,
     private val beerStore: BeerStore,
     private val ratingStore: RatingStore,
-    private val usersRatingStore: UsersRatingStore,
+    private val userRatingsStore: UserRatingsStore,
     private val ratingPageFetcher: UserRatingPageFetcher,
     private val publishFetcher: BeerPublishRatingFetcher
 ) : SingleRepository<List<Rating>>() {
@@ -55,7 +55,7 @@ class UserRatingRepository @Inject constructor(
 
     override suspend fun persist(value: List<Rating>) {
         userStore.getCurrentUser()?.let { user ->
-            usersRatingStore.put(user.id, value)
+            userRatingsStore.put(user.id, value)
         }
     }
 
@@ -65,7 +65,7 @@ class UserRatingRepository @Inject constructor(
 
     override suspend fun getLocal(): List<Rating>? {
         return userStore.getCurrentUser()?.let { user ->
-            usersRatingStore.get(user.id)
+            userRatingsStore.get(user.id)
         }
     }
 
@@ -73,7 +73,7 @@ class UserRatingRepository @Inject constructor(
         return userStore.getCurrentUserStream()
             .flatMapLatest { user ->
                 if (user != null) {
-                    usersRatingStore.getStream(user.id)
+                    userRatingsStore.getStream(user.id)
                 } else {
                     flowOf(emptyList())
                 }

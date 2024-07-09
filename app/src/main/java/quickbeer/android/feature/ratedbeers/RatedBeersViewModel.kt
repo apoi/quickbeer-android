@@ -18,7 +18,7 @@ import quickbeer.android.data.repository.ListCountValidator
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
@@ -29,7 +29,7 @@ import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
 class RatedBeersViewModel @Inject constructor(
     private val beerRepository: BeerRepository,
     private val userRepository: CurrentUserRepository,
-    private val userRatingsRepository: UserRatingRepository
+    private val userRatingsRepository: UserAllRatingsRepository
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)

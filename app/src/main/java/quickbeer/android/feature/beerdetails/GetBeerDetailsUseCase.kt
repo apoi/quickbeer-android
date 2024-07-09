@@ -5,6 +5,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onStart
 import quickbeer.android.data.repository.Accept
@@ -17,7 +19,8 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
+import quickbeer.android.domain.ratinglist.repository.UserBeerRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
@@ -36,7 +39,8 @@ class GetBeerDetailsUseCase @Inject constructor(
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository,
-    private val userRatingRepository: UserRatingRepository
+    private val userBeerRatingRepository: UserBeerRatingRepository,
+    private val userAllRatingsRepository: UserAllRatingsRepository
 ) {
 
     fun getBeerDetails(beerId: Int): Flow<State<BeerDetailsState>> {
@@ -63,8 +67,8 @@ class GetBeerDetailsUseCase @Inject constructor(
         }
     }
 
-    private fun getBrewer(beer: Flow<State<Beer>>): Flow<State<Brewer>> {
-        return beer
+    private fun getBrewer(beerFlow: Flow<State<Beer>>): Flow<State<Brewer>> {
+        return beerFlow
             .mapNotNull { it.valueOrNull()?.brewerId }
             .distinctUntilChanged()
             .flatMapLatest { brewerId ->
@@ -74,8 +78,8 @@ class GetBeerDetailsUseCase @Inject constructor(
             .distinctUntilChanged()
     }
 
-    private fun getCountry(beer: Flow<State<Beer>>): Flow<State<Country>> {
-        return beer
+    private fun getCountry(beerFlow: Flow<State<Beer>>): Flow<State<Country>> {
+        return beerFlow
             .mapNotNull { it.valueOrNull()?.countryId }
             .distinctUntilChanged()
             .flatMapLatest { countryId ->
@@ -86,57 +90,70 @@ class GetBeerDetailsUseCase @Inject constructor(
     }
 
     private fun getAddress(
-        brewer: Flow<State<Brewer>>,
-        country: Flow<State<Country>>
+        brewerFlow: Flow<State<Brewer>>,
+        countryFlow: Flow<State<Country>>
     ): Flow<State<Address>> {
-        return brewer
-            .combine(country) { b, c -> mergeAddress(b, c) }
+        return brewerFlow
+            .combine(countryFlow) { b, c -> mergeAddress(b, c) }
             .onStart { emit(State.Initial) }
             .distinctUntilChanged()
     }
 
-    private fun mergeAddress(brewer: State<Brewer>, country: State<Country>): State<Address> {
-        return if (brewer is State.Success && country is State.Success) {
-            State.Success(Address.from(brewer.value, country.value))
+    private fun mergeAddress(
+        brewerFlow: State<Brewer>,
+        countryFlow: State<Country>
+    ): State<Address> {
+        return if (brewerFlow is State.Success && countryFlow is State.Success) {
+            State.Success(Address.from(brewerFlow.value, countryFlow.value))
         } else {
             State.Loading()
         }
     }
 
-    private fun getRating(beerId: Int, user: Flow<State<User>>): Flow<RatingState<Rating>> {
-        return user
-            .combine(userRatingRepository.getStream(NoFetch())) { userState, ratingsState ->
-                val userValue = userState.valueOrNull()
-                val ratings = ratingsState.valueOrNull()
-                val rating = ratings
-                    ?.filter { it.beerId == beerId }
-                    ?.maxByOrNull(Rating::isDraft)
+    private fun getRating(beerId: Int, userFlow: Flow<State<User>>): Flow<RatingState<Rating>> {
+        return userFlow
+            .map { it.valueOrNull() }
+            .flatMapLatest { user ->
+                if (user == null) {
+                    flowOf(RatingState.Hide)
+                } else {
+                    getRating(user, beerId)
+                }
+            }
+            .distinctUntilChanged()
+    }
+
+    private fun getRating(user: User, beerId: Int): Flow<RatingState<Rating>> {
+        return userBeerRatingRepository.getStream(Pair(user, beerId), Accept())
+            .map { it.valueOrNull() }
+            .map { ratingValue ->
                 when {
-                    userValue != null && rating != null -> RatingState.ShowRating(rating)
-                    userValue != null -> RatingState.ShowAction
+                    ratingValue != null -> RatingState.ShowRating(ratingValue)
+                    else -> RatingState.ShowAction
+                }
+            }
+    }
+
+    private fun getTick(
+        beerFlow: Flow<State<Beer>>,
+        userFlow: Flow<State<User>>
+    ): Flow<RatingState<Tick>> {
+        return beerFlow
+            .combine(userFlow) { beerState, userState ->
+                val user = userState.valueOrNull()
+                val beer = beerState.valueOrNull()
+                val tick = Tick.create(beer)
+                when {
+                    user != null && tick.tick != null -> RatingState.ShowRating(tick)
+                    user != null -> RatingState.ShowAction
                     else -> RatingState.Hide
                 }
             }
             .distinctUntilChanged()
     }
 
-    private fun getTick(beer: Flow<State<Beer>>, user: Flow<State<User>>): Flow<RatingState<Tick>> {
-        return beer
-            .combine(user) { beerState, userState ->
-                val userValue = userState.valueOrNull()
-                val beerValue = beerState.valueOrNull()
-                val tick = Tick.create(beerValue)
-                when {
-                    userValue != null && tick.tick != null -> RatingState.ShowRating(tick)
-                    userValue != null -> RatingState.ShowAction
-                    else -> RatingState.Hide
-                }
-            }
-            .distinctUntilChanged()
-    }
-
-    private fun getStyle(beer: Flow<State<Beer>>): Flow<State<Style>> {
-        return beer
+    private fun getStyle(beerFlow: Flow<State<Beer>>): Flow<State<Style>> {
+        return beerFlow
             .mapNotNull { it.valueOrNull() }
             .mapNotNull {
                 when {

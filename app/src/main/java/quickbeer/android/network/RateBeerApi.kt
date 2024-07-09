@@ -80,6 +80,12 @@ interface RateBeerApi {
         @Query("p") page: Int
     ): ApiResult<List<BeerRatingJson>>
 
+    @GET("/json/gr.asp")
+    suspend fun getRating(
+        @Query("uid") userId: Int,
+        @Query("bid") beerId: Int
+    ): ApiResult<List<BeerRatingJson>>
+
     @GET("/json/revs.asp?m=BR&x=2&x2=2")
     suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UserRatingJson>>
 

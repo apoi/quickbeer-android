@@ -3,6 +3,7 @@ package quickbeer.android.domain.rating.store
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import quickbeer.android.data.room.Database
 import quickbeer.android.data.store.core.RoomDaoProxy
@@ -16,9 +17,17 @@ class RatingRoomCore @Inject constructor(
     RatingDaoProxy(database.ratingDao())
 ) {
 
-    fun ratingByUser(userId: Int, beerId: Int): Flow<Rating> {
+    suspend fun getRatingByUser(userId: Int, beerId: Int): Rating? {
         return database.ratingDao()
-            .ratingByUser(userId, beerId)
+            .getRatingByUserStream(userId, beerId)
+            .firstOrNull()
+            ?.let(RatingEntityMapper::mapTo)
+    }
+
+    fun getRatingByUserStream(userId: Int, beerId: Int): Flow<Rating> {
+        return database.ratingDao()
+            .getRatingByUserStream(userId, beerId)
+            .filterNotNull()
             .map(RatingEntityMapper::mapTo)
     }
 
