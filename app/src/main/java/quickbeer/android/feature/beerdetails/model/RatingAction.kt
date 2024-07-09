@@ -24,35 +24,31 @@ sealed class RatingAction(
         text = R.string.rating_action_tick
     )
 
-    data class EditDraft(override val beerId: Int, override val ratingId: Int) :
-        RatingAction(
-            beerId = beerId,
-            ratingId = ratingId,
-            text = R.string.edit_draft
-        )
+    data class EditDraft(override val beerId: Int, override val ratingId: Int) : RatingAction(
+        beerId = beerId,
+        ratingId = ratingId,
+        text = R.string.edit_draft
+    )
 
-    data class DeleteDraft(override val beerId: Int, override val ratingId: Int) :
-        RatingAction(
-            beerId = beerId,
-            ratingId = ratingId,
-            text = R.string.delete_draft,
-            confirmTitle = R.string.delete_draft_title,
-            confirmMessage = R.string.delete_draft_message
-        )
+    data class DeleteDraft(override val beerId: Int, override val ratingId: Int) : RatingAction(
+        beerId = beerId,
+        ratingId = ratingId,
+        text = R.string.delete_draft,
+        confirmTitle = R.string.delete_draft,
+        confirmMessage = R.string.delete_draft_message
+    )
 
-    data class EditRating(override val beerId: Int, override val ratingId: Int) :
-        RatingAction(
-            beerId = beerId,
-            ratingId = ratingId,
-            text = R.string.edit_rating
-        )
+    data class EditRating(override val beerId: Int, override val ratingId: Int) : RatingAction(
+        beerId = beerId,
+        ratingId = ratingId,
+        text = R.string.edit_rating
+    )
 
-    data class DeleteRating(override val beerId: Int, override val ratingId: Int) :
-        RatingAction(
-            beerId = beerId,
-            ratingId = ratingId,
-            text = R.string.delete_rating,
-            confirmTitle = R.string.delete_rating_title,
-            confirmMessage = R.string.delete_rating_message
-        )
+    data class DeleteRating(override val beerId: Int, override val ratingId: Int) : RatingAction(
+        beerId = beerId,
+        ratingId = ratingId,
+        text = R.string.delete_rating,
+        confirmTitle = R.string.delete_rating,
+        confirmMessage = R.string.delete_rating_message
+    )
 }

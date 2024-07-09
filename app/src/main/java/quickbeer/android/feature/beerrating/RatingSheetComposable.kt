@@ -35,7 +35,7 @@ fun RatingSheetComposable(
     closeSheet: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    var rating = remember { mutableStateOf(initialRating) }
+    val rating = remember { mutableStateOf(initialRating) }
 
     BottomSheet(
         modifier = Modifier.fillMaxHeight(),
@@ -142,7 +142,7 @@ private fun ActionButtons(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimens.spacingM)
+                .padding(Dimens.spacingL)
         ) {
             Button(
                 onClick = { coroutineScope.launch { publish(rating) } },
@@ -150,18 +150,20 @@ private fun ActionButtons(
                 enabled = rating.isValid(),
                 text = stringResource(id = R.string.rating_action_publish)
             )
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        savingDraft.value = true
-                        saveDraft(rating)
-                        closeSheet()
-                    }
-                },
-                loading = savingDraft.value,
-                style = ButtonStyles.secondary(),
-                text = stringResource(id = R.string.rating_action_draft)
-            )
+            if (rating.isDraft) {
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            savingDraft.value = true
+                            saveDraft(rating)
+                            closeSheet()
+                        }
+                    },
+                    loading = savingDraft.value,
+                    style = ButtonStyles.secondary(),
+                    text = stringResource(id = R.string.rating_action_draft)
+                )
+            }
         }
     }
 }
