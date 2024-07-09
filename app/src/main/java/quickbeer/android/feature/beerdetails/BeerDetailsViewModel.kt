@@ -41,7 +41,7 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
-import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.util.ktx.navId
 
@@ -51,7 +51,7 @@ class BeerDetailsViewModel @Inject constructor(
     private val getBeerDetailsUseCase: GetBeerDetailsUseCase,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
-    private val userRatingRepository: UserRatingRepository
+    private val userAllRatingsRepository: UserAllRatingsRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
@@ -82,7 +82,7 @@ class BeerDetailsViewModel @Inject constructor(
 
     fun deleteRating(ratingId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            userRatingRepository.delete(ratingId)
+            userAllRatingsRepository.delete(ratingId)
         }
     }
 

@@ -14,7 +14,7 @@ import quickbeer.android.R
 import quickbeer.android.data.result.Result
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.ratinglist.repository.UserRatingRepository
+import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerrating.model.BeerRatingViewEvent
@@ -27,7 +27,7 @@ import quickbeer.android.util.SingleLiveEvent
 class BeerRatingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val currentUserRepository: CurrentUserRepository,
-    private val userRatingRepository: UserRatingRepository
+    private val userAllRatingsRepository: UserAllRatingsRepository
 ) : ViewModel() {
 
     private val action = savedStateHandle.get<RatingAction>("action")!!
@@ -40,7 +40,7 @@ class BeerRatingViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val ratings = userRatingRepository.get()
+            val ratings = userAllRatingsRepository.get()
             val user = currentUserRepository.get() ?: error("User missing")
 
             val rating = ratings
@@ -61,7 +61,7 @@ class BeerRatingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _viewState.emit(updateState { it.copy(isPublishing = true) })
 
-            val result = userRatingRepository.publish(rating)
+            val result = userAllRatingsRepository.publish(rating)
             val event = when (result) {
                 is Result.Success -> ShowMessageAndClose(R.string.rating_publish_success)
                 is Result.Failure -> ShowError(result.cause)
@@ -79,7 +79,7 @@ class BeerRatingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             // We expect local saving to never fail
             _viewState.emit(updateState { it.copy(isSavingDraft = true) })
-            userRatingRepository.saveDraft(rating)
+            userAllRatingsRepository.saveDraft(rating)
             _events.postValue(ShowMessageAndClose(R.string.rating_draft_success))
         }
     }

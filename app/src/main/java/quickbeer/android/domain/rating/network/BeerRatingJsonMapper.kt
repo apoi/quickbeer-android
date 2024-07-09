@@ -3,12 +3,12 @@ package quickbeer.android.domain.rating.network
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.util.JsonMapper
 
-object BeerRatingJsonMapper : JsonMapper<Int, Rating, BeerRatingJson> {
+object BeerRatingJsonMapper : JsonMapper<Any, Rating, BeerRatingJson> {
 
-    override fun map(key: Int, source: BeerRatingJson): Rating {
+    override fun map(key: Any, source: BeerRatingJson): Rating {
         return Rating(
             id = source.id,
-            beerId = null,
+            beerId = source.beerId,
             appearance = source.appearance,
             aroma = source.aroma,
             flavor = source.flavor,

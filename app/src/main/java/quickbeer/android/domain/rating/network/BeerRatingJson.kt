@@ -37,6 +37,9 @@ data class BeerRatingJson(
     @field:Json(name = "TimeEntered") val timeEntered: ZonedDateTime?,
     @field:Json(name = "TimeUpdated") val timeUpdated: ZonedDateTime?,
 
+    // Beer data
+    @field:Json(name = "BeerID") val beerId: Int?,
+
     // User data
     @field:Json(name = "UserID") val userId: Int?,
     @field:Json(name = "UserName") val userName: String?,

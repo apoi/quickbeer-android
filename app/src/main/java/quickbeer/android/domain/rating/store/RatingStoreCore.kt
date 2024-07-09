@@ -8,7 +8,10 @@ class RatingStoreCore @Inject constructor(
     private val roomCore: RatingRoomCore
 ) : CachingStoreCore<Int, Rating>(roomCore, Rating::id) {
 
-    fun ratingByUser(userId: Int, beerId: Int) = roomCore.ratingByUser(userId, beerId)
+    suspend fun ratingByUser(userId: Int, beerId: Int) = roomCore.getRatingByUser(userId, beerId)
+
+    fun ratingByUserStream(userId: Int, beerId: Int) =
+        roomCore.getRatingByUserStream(userId, beerId)
 
     fun allRatingsByUser(userId: Int) = roomCore.allRatingsByUser(userId)
 }

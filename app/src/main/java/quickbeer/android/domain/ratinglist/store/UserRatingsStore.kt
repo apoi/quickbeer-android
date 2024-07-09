@@ -11,12 +11,16 @@ import quickbeer.android.domain.rating.store.RatingStoreCore
 /**
  * Store that returns all persisted ratings for the user associated by an ID.
  */
-class UsersRatingStore @Inject constructor(
+class UserRatingsStore @Inject constructor(
     private val ratingStoreCore: RatingStoreCore
 ) : Store<Int, List<Rating>> {
 
-    fun getStream(userId: Int, beerId: Int): Flow<Rating> {
+    suspend fun get(userId: Int, beerId: Int): Rating? {
         return ratingStoreCore.ratingByUser(userId, beerId)
+    }
+
+    fun getStream(userId: Int, beerId: Int): Flow<Rating> {
+        return ratingStoreCore.ratingByUserStream(userId, beerId)
     }
 
     override suspend fun get(): List<List<Rating>> {
