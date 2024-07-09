@@ -11,16 +11,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.launch
 import quickbeer.android.R
-import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
+import quickbeer.android.feature.beerrating.model.BeerRatingViewState
 import quickbeer.android.ui.compose.element.BottomSheet
 import quickbeer.android.ui.compose.element.Button
 import quickbeer.android.ui.compose.style.ButtonStyles
@@ -29,13 +25,8 @@ import quickbeer.android.ui.compose.style.Dimens
 import quickbeer.android.util.ktx.bottomElevation
 
 @Composable
-fun RatingSheetComposable(
-    initialRating: Rating,
-    viewModel: BeerRatingViewModel,
-    closeSheet: () -> Unit
-) {
+fun RatingSheetComposable(state: BeerRatingViewState, viewModel: BeerRatingViewModel) {
     val scrollState = rememberScrollState()
-    val rating = remember { mutableStateOf(initialRating) }
 
     BottomSheet(
         modifier = Modifier.fillMaxHeight(),
@@ -43,18 +34,17 @@ fun RatingSheetComposable(
         content = {
             RatingContent(
                 scrollState = scrollState,
-                rating = rating.value,
-                onRatingChange = { rating.value = it },
-                closeSheet = closeSheet
+                rating = state.rating,
+                enabled = state.isEnabled,
+                onRatingChange = { viewModel.setRating(it) }
             )
         },
         stickyContent = {
             ActionButtons(
                 scrollState = scrollState,
-                rating = rating.value,
+                state = state,
                 publish = viewModel::publish,
-                saveDraft = viewModel::saveDraft,
-                closeSheet = closeSheet
+                saveDraft = viewModel::saveDraft
             )
         }
     )
@@ -64,8 +54,8 @@ fun RatingSheetComposable(
 private fun ColumnScope.RatingContent(
     scrollState: ScrollState,
     rating: Rating,
-    onRatingChange: (Rating) -> Unit,
-    closeSheet: () -> Unit
+    enabled: Boolean,
+    onRatingChange: (Rating) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -81,6 +71,7 @@ private fun ColumnScope.RatingContent(
             description = stringResource(R.string.rating_appearance_hint),
             value = rating.appearance,
             maxValue = 5,
+            enabled = enabled,
             onValueChange = { onRatingChange(rating.copy(appearance = it)) }
         )
         RatingSlider(
@@ -88,6 +79,7 @@ private fun ColumnScope.RatingContent(
             description = stringResource(R.string.rating_aroma_hint),
             value = rating.aroma,
             maxValue = 10,
+            enabled = enabled,
             onValueChange = { onRatingChange(rating.copy(aroma = it)) }
         )
         RatingSlider(
@@ -95,6 +87,7 @@ private fun ColumnScope.RatingContent(
             description = stringResource(R.string.rating_flavor_hint),
             value = rating.flavor,
             maxValue = 10,
+            enabled = enabled,
             onValueChange = { onRatingChange(rating.copy(flavor = it)) }
         )
         RatingSlider(
@@ -102,6 +95,7 @@ private fun ColumnScope.RatingContent(
             description = stringResource(R.string.rating_mouthfeel_hint),
             value = rating.mouthfeel,
             maxValue = 5,
+            enabled = enabled,
             onValueChange = { onRatingChange(rating.copy(mouthfeel = it)) }
         )
         RatingSlider(
@@ -109,6 +103,7 @@ private fun ColumnScope.RatingContent(
             description = stringResource(R.string.rating_overall_hint),
             value = rating.overall,
             maxValue = 20,
+            enabled = enabled,
             onValueChange = { onRatingChange(rating.copy(overall = it)) }
         )
 
@@ -118,6 +113,7 @@ private fun ColumnScope.RatingContent(
                 .fillMaxWidth()
                 .padding(top = Dimens.spacingM),
             text = rating.comments.orEmpty(),
+            enabled = enabled,
             onTextChange = { onRatingChange(rating.copy(comments = it)) }
         )
     }
@@ -126,15 +122,10 @@ private fun ColumnScope.RatingContent(
 @Composable
 private fun ActionButtons(
     scrollState: ScrollState,
-    rating: Rating,
-    publish: suspend (Rating) -> State<Unit>,
-    saveDraft: suspend (Rating) -> State<Unit>,
-    closeSheet: () -> Unit
+    state: BeerRatingViewState,
+    publish: (Rating) -> Unit,
+    saveDraft: (Rating) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-    val publishing = remember { mutableStateOf(false) }
-    val savingDraft = remember { mutableStateOf(false) }
-
     Surface(
         color = Colors.cardBackgroundColor,
         elevation = scrollState.bottomElevation
@@ -145,21 +136,17 @@ private fun ActionButtons(
                 .padding(Dimens.spacingL)
         ) {
             Button(
-                onClick = { coroutineScope.launch { publish(rating) } },
+                onClick = { publish(state.rating) },
                 style = ButtonStyles.primary(),
-                enabled = rating.isValid(),
+                loading = state.isPublishing,
+                enabled = state.isEnabled && state.rating.isValid(),
                 text = stringResource(id = R.string.rating_action_publish)
             )
-            if (rating.isDraft) {
+            if (state.rating.isDraft) {
                 Button(
-                    onClick = {
-                        coroutineScope.launch {
-                            savingDraft.value = true
-                            saveDraft(rating)
-                            closeSheet()
-                        }
-                    },
-                    loading = savingDraft.value,
+                    onClick = { saveDraft(state.rating) },
+                    loading = state.isSavingDraft,
+                    enabled = state.isEnabled,
                     style = ButtonStyles.secondary(),
                     text = stringResource(id = R.string.rating_action_draft)
                 )

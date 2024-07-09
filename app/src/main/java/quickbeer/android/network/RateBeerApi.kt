@@ -83,6 +83,31 @@ interface RateBeerApi {
     @GET("/json/revs.asp?m=BR&x=2&x2=2")
     suspend fun getUsersRatings(@Query("p") page: Int): ApiResult<List<UserRatingJson>>
 
+    @FormUrlEncoded
+    @POST("/json/saverating.asp")
+    fun postRating(
+        @Field("beerId") beerId: Int,
+        @Field("appearance") appearance: Int,
+        @Field("aroma") aroma: Int,
+        @Field("flavor") flavor: Int,
+        @Field("palate") palate: Int,
+        @Field("overall") overall: Int,
+        @Field("comments", encoded = true) comments: String
+    ): ApiResult<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("/json/updaterating.asp")
+    fun updateRating(
+        @Field("beerId") beerId: Int,
+        @Field("ratingId") ratingId: Int,
+        @Field("appearance") appearance: Int,
+        @Field("aroma") aroma: Int,
+        @Field("flavor") flavor: Int,
+        @Field("palate") palate: Int,
+        @Field("overall") overall: Int,
+        @Field("comments", encoded = true) comments: String
+    ): ApiResult<ResponseBody>
+
     @GET("/json/bt.asp?m=1")
     suspend fun getTicks(@Query("u") userId: String): ApiResult<List<BeerJson>>
 

@@ -141,6 +141,9 @@
     <string name="rating_action_tick">Tick</string>
     <string name="rating_action_publish">Publish</string>
     <string name="rating_action_draft">Save draft</string>
+    <string name="rating_publish_success">Published successfully</string>
+    <string name="rating_publish_error">Error publishing. Try again later.</string>
+    <string name="rating_draft_success">Saved as in-app draft</string>
 
     <!-- Barcode -->
     <string name="cd_close_button">Back</string>

@@ -13,19 +13,22 @@ object ButtonStyles {
     fun primary() = ButtonStyle(
         colors = Colors.primaryButtonColors(),
         textColor = Colors.textDark,
-        textStyle = TextStyles.textSHeavy
+        textStyle = TextStyles.textSHeavy,
+        loadingIndicatorColor = Colors.textDark
     )
 
     @Composable
     fun secondary() = ButtonStyle(
         colors = Colors.secondaryButtonColors(),
         textColor = Colors.textLight,
-        textStyle = TextStyles.textSHeavy
+        textStyle = TextStyles.textSHeavy,
+        loadingIndicatorColor = Colors.textDark
     )
 
     class ButtonStyle(
         val colors: ButtonColors,
         val textColor: Color,
-        val textStyle: TextStyle
+        val textStyle: TextStyle,
+        val loadingIndicatorColor: Color
     )
 }

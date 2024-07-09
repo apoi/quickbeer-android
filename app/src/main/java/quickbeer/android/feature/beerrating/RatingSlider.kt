@@ -37,6 +37,7 @@ fun RatingSlider(
     description: String,
     value: Int?,
     maxValue: Int,
+    enabled: Boolean = true,
     onValueChange: (Int) -> Unit
 ) {
     var sliderPosition by remember { mutableFloatStateOf(value?.toFloat() ?: 0f) }
@@ -97,7 +98,8 @@ fun RatingSlider(
                 },
                 value = sliderPosition,
                 valueRange = 0f..maxValue.toFloat(),
-                steps = maxValue - 1
+                steps = maxValue - 1,
+                enabled = enabled
             )
             Spacer(modifier = Modifier.size(Dimens.spacingM))
             Box(

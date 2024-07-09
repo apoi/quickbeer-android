@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle.Event.ON_DESTROY
 import androidx.lifecycle.Lifecycle.Event.ON_RESUME
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,10 @@ fun <T> Fragment.observeSuccess(flow: Flow<State<T>>, observer: (T) -> Unit) {
             flow.collectLatest { if (it is State.Success) observer(it.value) }
         }
     }
+}
+
+fun <T> Fragment.observe(liveData: LiveData<T>, observer: (T) -> Unit) {
+    liveData.observe(viewLifecycleOwner, observer)
 }
 
 fun <T> Fragment.setNavigationResult(key: String, value: T?) {

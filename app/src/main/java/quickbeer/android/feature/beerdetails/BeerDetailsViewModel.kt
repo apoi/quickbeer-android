@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -58,7 +58,7 @@ class BeerDetailsViewModel @Inject constructor(
     private val isTicking = MutableStateFlow(false)
 
     private val _viewState = MutableStateFlow<State<BeerDetailsState>>(State.Initial)
-    val viewState: Flow<State<BeerDetailsState>> = _viewState
+    val viewState: StateFlow<State<BeerDetailsState>> = _viewState
 
     init {
         updateAccessedBeer(beerId)

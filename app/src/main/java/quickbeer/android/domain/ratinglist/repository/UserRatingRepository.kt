@@ -29,7 +29,6 @@ class UserRatingRepository @Inject constructor(
 ) : SingleRepository<List<Rating>>() {
 
     suspend fun publish(rating: Rating) {
-        // TODO
     }
 
     suspend fun saveDraft(rating: Rating) {

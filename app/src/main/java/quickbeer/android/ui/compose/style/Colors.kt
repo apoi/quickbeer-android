@@ -42,7 +42,8 @@ object Colors {
 
     @Composable
     fun secondaryButtonColors() = ButtonDefaults.buttonColors(
-        backgroundColor = ColorDef.gray90
+        backgroundColor = ColorDef.gray90,
+        disabledBackgroundColor = ColorDef.gray50
     )
 
     @Composable
