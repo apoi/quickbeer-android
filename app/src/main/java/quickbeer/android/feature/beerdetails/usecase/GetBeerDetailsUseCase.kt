@@ -1,4 +1,4 @@
-package quickbeer.android.feature.beerdetails
+package quickbeer.android.feature.beerdetails.usecase
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -43,8 +43,14 @@ class GetBeerDetailsUseCase @Inject constructor(
 ) {
 
     fun getBeerDetails(beerId: Int): Flow<State<BeerDetailsState>> {
-        val beerFlow = beerRepository.getStream(beerId, Beer.DetailsDataValidator())
-        val userFlow = currentUserRepository.getStream(NoFetch())
+        val beerFlow = beerRepository
+            .getStream(beerId, Beer.DetailsDataValidator())
+            .distinctUntilChanged()
+
+        val userFlow = currentUserRepository
+            .getStream(NoFetch())
+            .distinctUntilChanged()
+
         val brewerFlow = getBrewer(beerFlow)
         val countryFlow = getCountry(beerFlow)
         val addressFlow = getAddress(brewerFlow, countryFlow)
@@ -63,29 +69,25 @@ class GetBeerDetailsUseCase @Inject constructor(
         ) { beer, brewer, style, address, user, rating, tick ->
             val v = BeerDetailsState.create(beer, brewer, style, address, user, rating, tick)
             if (v != null) State.from(v) else State.Initial
-        }
+        }.distinctUntilChanged()
     }
 
     private fun getBrewer(beerFlow: Flow<State<Beer>>): Flow<State<Brewer>> {
         return beerFlow
             .mapNotNull { it.valueOrNull()?.brewerId }
-            .distinctUntilChanged()
             .flatMapLatest { brewerId ->
                 brewerRepository.getStream(brewerId, Brewer.DetailsDataValidator())
             }
             .onStart { emit(State.Initial) }
-            .distinctUntilChanged()
     }
 
     private fun getCountry(beerFlow: Flow<State<Beer>>): Flow<State<Country>> {
         return beerFlow
             .mapNotNull { it.valueOrNull()?.countryId }
-            .distinctUntilChanged()
             .flatMapLatest { countryId ->
                 countryRepository.getStream(countryId, Accept())
             }
             .onStart { emit(State.Initial) }
-            .distinctUntilChanged()
     }
 
     private fun getAddress(
@@ -95,7 +97,6 @@ class GetBeerDetailsUseCase @Inject constructor(
         return brewerFlow
             .combine(countryFlow) { b, c -> mergeAddress(b, c) }
             .onStart { emit(State.Initial) }
-            .distinctUntilChanged()
     }
 
     private fun mergeAddress(
@@ -119,7 +120,6 @@ class GetBeerDetailsUseCase @Inject constructor(
                     getRating(user, beerId)
                 }
             }
-            .distinctUntilChanged()
     }
 
     private fun getRating(user: User, beerId: Int): Flow<RatingState<Rating>> {
@@ -148,7 +148,6 @@ class GetBeerDetailsUseCase @Inject constructor(
                     else -> RatingState.Hide
                 }
             }
-            .distinctUntilChanged()
     }
 
     private fun getStyle(beerFlow: Flow<State<Beer>>): Flow<State<Style>> {
@@ -161,7 +160,6 @@ class GetBeerDetailsUseCase @Inject constructor(
                     else -> null
                 }
             }
-            .distinctUntilChanged()
             .flatMapLatest { (styleId, styleName) ->
                 when {
                     styleId != null -> getStyle(styleId)

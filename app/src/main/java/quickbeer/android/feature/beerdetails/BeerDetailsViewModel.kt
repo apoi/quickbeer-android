@@ -26,7 +26,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
@@ -41,48 +40,27 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
-import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
-import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val getBeerDetailsUseCase: GetBeerDetailsUseCase,
     private val beerRepository: BeerRepository,
     private val brewerRepository: BrewerRepository,
-    private val userAllRatingsRepository: UserAllRatingsRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
-    private val isTicking = MutableStateFlow(false)
 
-    private val _viewState = MutableStateFlow<State<BeerDetailsState>>(State.Initial)
-    val viewState: StateFlow<State<BeerDetailsState>> = _viewState
+    private val _beerState = MutableStateFlow<State<Beer>>(State.Initial)
+    val beerState: StateFlow<State<Beer>> = _beerState
 
     init {
         updateAccessedBeer(beerId)
         updateAccessedBrewer(beerId)
 
         viewModelScope.launch(Dispatchers.IO) {
-            getBeerDetailsUseCase.getBeerDetails(beerId)
-                .combine(isTicking) { state, showTickView ->
-                    if (!showTickView) {
-                        state
-                    } else {
-                        // Always show tick view if user chose the action
-                        state.map { it.copy(tick = it.tick.forceShow()) }
-                    }
-                }
-                .collectLatest {
-                    _viewState.emit(it)
-                }
-        }
-    }
-
-    fun deleteRating(ratingId: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            userAllRatingsRepository.delete(ratingId)
+            beerRepository.getStream(beerId, Accept())
+                .collectLatest(_beerState::emit)
         }
     }
 
@@ -114,41 +92,6 @@ class BeerDetailsViewModel @Inject constructor(
                     val accessed = brewer.copy(accessed = ZonedDateTime.now())
                     brewerRepository.persist(brewer.id, accessed)
                 }
-        }
-    }
-
-    fun tickBeer(tick: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
-            // TODO()
-            /*
-            val beer = beerRepository.store.get(beerId) ?: error("No beer found!")
-            val userId = loginManager.userId.first() ?: error("Not logged in!")
-            val fetchKey = BeerTickFetcher.TickKey(beerId, userId, tick)
-            val result = beerTickFetcher.fetch(fetchKey)
-
-            if (result is ApiResult.Success) {
-                val update = beer.copy(tickValue = tick, tickDate = ZonedDateTime.now())
-                beerRepository.persist(beerId, update)
-            }
-
-
-            val message = when {
-                result !is ApiResult.Success -> resourceProvider.getString(R.string.tick_failure)
-                tick > 0 -> resourceProvider.getString(R.string.tick_success).format(beer.name)
-                else -> resourceProvider.getString(R.string.tick_removed)
-            }
-
-
-            withContext(Dispatchers.Main) {
-                toastProvider.showToast(message)
-            }
-             */
-        }
-    }
-
-    fun showTickCard() {
-        viewModelScope.launch(Dispatchers.IO) {
-            isTicking.emit(true)
         }
     }
 }

@@ -75,7 +75,7 @@ class BeerDetailsInfoFragment :
 
     private val beerId by lazy { requireArguments().getInt(NavParams.ID) }
     private val binding by viewBinding(BeerDetailsInfoFragmentBinding::bind)
-    private val viewModel by viewModels<BeerDetailsViewModel>()
+    private val viewModel by viewModels<BeerDetailsInfoViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
