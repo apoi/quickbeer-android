@@ -4,7 +4,7 @@ package quickbeer.android
 object Constants {
 
     const val QUERY_MIN_LENGTH = 4
-    const val RATING_MIN_LENGTH = 80
+    const val RATING_MIN_LENGTH = 75
 
     // URLS
 

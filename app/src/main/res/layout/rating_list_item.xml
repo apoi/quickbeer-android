@@ -55,7 +55,7 @@
                 android:layout_height="56dp"
                 android:layout_alignTop="@id/score"
                 android:layout_alignBottom="@id/score"
-                android:layout_marginStart="@dimen/spacing_s"
+                android:layout_marginStart="@dimen/spacing_m"
                 android:layout_toEndOf="@id/score"
                 android:scaleType="fitCenter"
                 android:gravity="center_vertical" />
@@ -91,7 +91,7 @@
             style="@style/DetailsDescription"
             android:layout_marginStart="@dimen/spacing_xl"
             android:layout_marginTop="@dimen/spacing_s"
-            android:layout_marginBottom="@dimen/spacing_s"
+            android:layout_marginBottom="@dimen/spacing_m"
             android:layout_marginEnd="@dimen/spacing_xl"
             android:textAlignment="viewStart"
             tools:text="This is long review with ups and downs. It goes on for many lines, and feels like a drab eternity. Hopefully someone reads this." />
