@@ -31,6 +31,11 @@ data class Rating(
     val rateCount: Int?
 ) : Parcelable {
 
+    fun draftTotalScore(): Float? {
+        val scores = listOfNotNull(appearance, aroma, flavor, mouthfeel, overall)
+        return if (scores.size == 5) scores.sum() / 10F else null
+    }
+
     fun avatarUri(): String {
         return Constants.USER_AVATAR_PATH.format(userName)
     }

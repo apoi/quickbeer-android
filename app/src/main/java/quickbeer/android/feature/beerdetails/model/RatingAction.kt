@@ -43,12 +43,4 @@ sealed class RatingAction(
         ratingId = ratingId,
         text = R.string.edit_rating
     )
-
-    data class DeleteRating(override val beerId: Int, override val ratingId: Int) : RatingAction(
-        beerId = beerId,
-        ratingId = ratingId,
-        text = R.string.delete_rating,
-        confirmTitle = R.string.delete_rating,
-        confirmMessage = R.string.delete_rating_message
-    )
 }

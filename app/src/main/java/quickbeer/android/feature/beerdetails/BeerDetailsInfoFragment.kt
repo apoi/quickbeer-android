@@ -47,7 +47,6 @@ import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateTick
 import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteDraft
-import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteRating
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditRating
 import quickbeer.android.feature.beerdetails.model.RatingState
@@ -276,7 +275,7 @@ class BeerDetailsInfoFragment :
         val actions = if (rating.isDraft()) {
             listOf(EditDraft(beerId, rating.id), DeleteDraft(beerId, rating.id))
         } else {
-            listOf(EditRating(beerId, rating.id), DeleteRating(beerId, rating.id))
+            listOf(EditRating(beerId, rating.id))
         }
 
         navigate(toActions(actions.toTypedArray()))
@@ -289,7 +288,6 @@ class BeerDetailsInfoFragment :
             is EditDraft -> navigate(toRating(action))
             is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))
-            is DeleteRating -> confirmAction(action, viewModel::deleteRating)
             else -> error("Invalid action $action")
         }
     }
