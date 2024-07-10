@@ -13,5 +13,5 @@ class RatingStoreCore @Inject constructor(
     fun ratingByUserStream(userId: Int, beerId: Int) =
         roomCore.getRatingByUserStream(userId, beerId)
 
-    fun allRatingsByUser(userId: Int) = roomCore.allRatingsByUser(userId)
+    fun allRatingsByUser(userId: Int) = roomCore.getAllRatingsByUserStream(userId)
 }
