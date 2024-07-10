@@ -8,12 +8,14 @@ QuickBeer
 Running the project
 -------------------
 
-You will need your own API key for the RateBeer service, as the keys can't be distributed. Export the key as an environment variable `RATEBEER_KEY`. After this the project should run out of the box with Android Studio. Let me know if there are any issues!
+You will need your own API key for the RateBeer service, as the keys can't be distributed. Export
+the key as an environment variable `RATEBEER_KEY`. After this the project should run out of the box
+with Android Studio. Let me know if there are any issues!
 
 License
 =======
 
-	Copyright (C) 2015-2021 Antti Poikela
+	Copyright (C) 2015-2024 Antti Poikela
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
