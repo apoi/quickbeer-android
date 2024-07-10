@@ -39,6 +39,10 @@ data class Rating(
         return id < 0
     }
 
+    fun isPrivateRating(): Boolean {
+        return !isDraft() && (comments == null || comments.length < Constants.RATING_MIN_LENGTH)
+    }
+
     fun isValid(): Boolean {
         val scores = listOf(appearance, aroma, flavor, mouthfeel, overall)
         return scores.all { it != null && it > 0 } && comments != null &&

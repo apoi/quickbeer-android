@@ -56,6 +56,7 @@ import quickbeer.android.feature.beerdetails.model.RatingState.ShowRating
 import quickbeer.android.feature.beerdetails.model.Tick
 import quickbeer.android.feature.beerdetails.model.TickActionState
 import quickbeer.android.feature.beerdetails.model.TickActionState.ActionClicked
+import quickbeer.android.feature.beerdetails.model.TickActionState.Default
 import quickbeer.android.feature.beerdetails.model.TickActionState.LoadingInProgress
 import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
@@ -151,7 +152,7 @@ class BeerDetailsInfoFragment :
         // Set action buttons
         val showLoginAction = state.user == null
         val showRatingAction = state.rating is ShowAction
-        val showTickAction = state.tick is ShowAction
+        val showTickAction = state.tick is ShowAction && state.tickActionState is Default
 
         binding.actionLogin.isVisible = showLoginAction
         binding.actionAddRating.isVisible = showRatingAction

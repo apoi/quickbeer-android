@@ -38,14 +38,14 @@
                 android:layout_marginEnd="@dimen/spacing_m"
                 android:text="@string/rating_action_rate"
                 android:visibility="gone"
-                app:icon="@drawable/ic_hero_star" />
+                app:icon="@drawable/ic_hero_annotation" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action_add_tick"
                 style="@style/AppTheme.Button.Action"
                 android:text="@string/rating_action_tick"
                 android:visibility="gone"
-                app:icon="@drawable/ic_hero_check_circle" />
+                app:icon="@drawable/ic_hero_star" />
 
         </LinearLayout>
 
