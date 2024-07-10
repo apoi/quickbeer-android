@@ -27,8 +27,7 @@ object UserRatingJsonMapper : JsonMapper<User, Pair<Beer, Rating>, UserRatingJso
             state = null,
             countryId = null,
             country = null,
-            rateCount = null,
-            isDraft = false
+            rateCount = null
         )
 
         val beer = Beer(

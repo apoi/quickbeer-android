@@ -28,12 +28,15 @@ data class Rating(
     val state: String?,
     val countryId: Int?,
     val country: String?,
-    val rateCount: Int?,
-    val isDraft: Boolean
+    val rateCount: Int?
 ) : Parcelable {
 
     fun avatarUri(): String {
         return Constants.USER_AVATAR_PATH.format(userName)
+    }
+
+    fun isDraft(): Boolean {
+        return id < 0
     }
 
     fun isValid(): Boolean {
@@ -75,8 +78,7 @@ data class Rating(
                 state = null,
                 countryId = null,
                 country = null,
-                rateCount = null,
-                isDraft = true
+                rateCount = null
             )
         }
 
@@ -100,8 +102,7 @@ data class Rating(
                 state = new.state ?: old.state,
                 countryId = new.countryId ?: old.countryId,
                 country = new.country ?: old.country,
-                rateCount = new.rateCount ?: old.rateCount,
-                isDraft = new.isDraft ?: old.isDraft
+                rateCount = new.rateCount ?: old.rateCount
             )
         }
     }

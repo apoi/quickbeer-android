@@ -25,8 +25,7 @@ object RatingEntityMapper : Mapper<Rating, RatingEntity> {
             state = source.state,
             countryId = source.countryId,
             country = source.country,
-            rateCount = source.rateCount,
-            isDraft = source.isDraft
+            rateCount = source.rateCount
         )
     }
 
@@ -50,8 +49,7 @@ object RatingEntityMapper : Mapper<Rating, RatingEntity> {
             state = source.state,
             countryId = source.countryId,
             country = source.country,
-            rateCount = source.rateCount,
-            isDraft = source.isDraft
+            rateCount = source.rateCount
         )
     }
 }

@@ -245,7 +245,7 @@ class BeerDetailsInfoFragment :
     }
 
     private fun showRatingActionsMenu(rating: Rating) {
-        val actions = if (rating.isDraft) {
+        val actions = if (rating.isDraft()) {
             listOf(EditDraft(beerId, rating.id), DeleteDraft(beerId, rating.id))
         } else {
             listOf(EditRating(beerId, rating.id), DeleteRating(beerId, rating.id))

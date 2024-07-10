@@ -142,7 +142,7 @@ private fun ActionButtons(
                 enabled = state.isEnabled && state.rating.isValid(),
                 text = stringResource(id = R.string.rating_action_publish)
             )
-            if (state.rating.isDraft) {
+            if (state.rating.isDraft()) {
                 Button(
                     onClick = { saveDraft(state.rating) },
                     loading = state.isSavingDraft,
