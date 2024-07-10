@@ -13,11 +13,11 @@ import quickbeer.android.network.result.ApiResult
 class UserBeerRatingRepository @Inject constructor(
     private val ratingStore: RatingStore,
     private val userRatingsStore: UserRatingsStore,
-    private val fetcher: UserBeerRatingFetcher
+    private val ratingFetcher: UserBeerRatingFetcher
 ) : Repository<Pair<User, Int>, Rating>() {
 
     override suspend fun fetchRemote(key: Pair<User, Int>): ApiResult<Rating> {
-        return fetcher.fetch(key)
+        return ratingFetcher.fetch(key)
     }
 
     override suspend fun getLocal(key: Pair<User, Int>): Rating? {

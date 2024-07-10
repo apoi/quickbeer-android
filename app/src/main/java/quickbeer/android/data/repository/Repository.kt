@@ -26,6 +26,11 @@ import quickbeer.android.util.ktx.takeUntil
 abstract class Repository<K, V> {
 
     /**
+     * Returns the local value currently stored in the repository, or null if no value.
+     */
+    suspend fun get(key: K) = getLocal(key)
+
+    /**
      * Returns a stream of data with fetching if current value is invalid.
      */
     fun getStream(key: K, validator: Validator<V>): Flow<State<V>> {
@@ -41,7 +46,7 @@ abstract class Repository<K, V> {
             val isValid = validator.validate(local)
 
             if (!isValid) {
-                val result = fetch(key)
+                val result = fetchAndPersist(key)
 
                 // Success is emitted through local stream after merging
                 if (result !is State.Success) {
@@ -134,7 +139,7 @@ abstract class Repository<K, V> {
         return merge(errorFlow, remoteFlow, localFlow)
     }
 
-    private suspend fun fetch(key: K, validator: Validator<V>? = null): State<V> {
+    suspend fun fetchAndPersist(key: K, validator: Validator<V>? = null): State<V> {
         return when (val response = fetchRemote(key)) {
             is ApiResult.Success -> {
                 val result = response.value
@@ -153,7 +158,7 @@ abstract class Repository<K, V> {
 
     private fun fetchAndStream(key: K, validator: Validator<V>): Flow<State<V>> {
         return flow {
-            val result = fetch(key)
+            val result = fetchAndPersist(key)
 
             // Success is emitted through local stream after merging
             if (result !is State.Success) {

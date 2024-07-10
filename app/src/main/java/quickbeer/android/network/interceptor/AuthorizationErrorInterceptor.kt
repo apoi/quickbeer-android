@@ -22,7 +22,8 @@ class AuthorizationErrorInterceptor(
 
         if (hasLoginCookie && (
                 isInternalError(request, response) ||
-                    isEmptyReviewsResponse(request, response)
+                    isEmptyReviewsResponse(request, response) ||
+                    isRatingRequiringLogin(request, response)
                 )
         ) {
             return response.newBuilder()
@@ -35,7 +36,7 @@ class AuthorizationErrorInterceptor(
 
     private fun isInternalError(request: Request, response: Response): Boolean {
         val isInternalError = response.code == HttpCode.INTERNAL_ERROR
-        val isLoginRequest = request.url.encodedPath.startsWith(Constants.API_LOGIN_PAGE)
+        val isLoginRequest = request.url.encodedPath.endsWith(Constants.API_LOGIN_PAGE)
         return isInternalError && !isLoginRequest
     }
 
@@ -45,7 +46,7 @@ class AuthorizationErrorInterceptor(
      */
     private fun isEmptyReviewsResponse(request: Request, response: Response): Boolean {
         // Only valid for the reviews endpoint
-        val isReviewsRequest = request.url.encodedPath.startsWith(Constants.API_REVIEWS_PAGE)
+        val isReviewsRequest = request.url.encodedPath.endsWith(Constants.API_REVIEWS_PAGE)
         if (!isReviewsRequest) return false
 
         // Attempt to peek into the response body
@@ -55,5 +56,14 @@ class AuthorizationErrorInterceptor(
         // Reviews call without valid login is an empty JSON list. Could also mean no reviews
         // exists for this user, in which case we will auth & retry for nothing ¯\_(ツ)_/¯
         return peekedContent == "[]"
+    }
+
+    /**
+     * Rating request with expired session "fails" with 200 and a redirect to a login page.
+     */
+    private fun isRatingRequiringLogin(request: Request, response: Response): Boolean {
+        val isRatingRequest = request.url.encodedPath.endsWith(Constants.API_PUBLISH_RATING_PAGE)
+        val isLoginNeeded = response.request.url.encodedPath.endsWith(Constants.API_LOGIN_REDIRECT)
+        return isRatingRequest && isLoginNeeded
     }
 }
