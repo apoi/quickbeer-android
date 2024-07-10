@@ -28,7 +28,7 @@ object RatingBinder {
         binding.description.text = rating.comments
         binding.actions.isVisible = showActions
 
-        if (!rating.isDraft) {
+        if (!rating.isDraft()) {
             binding.draftTitle.isVisible = false
             binding.user.text = metadata
             binding.score.text = String.format("%.1f", rating.totalScore)

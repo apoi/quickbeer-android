@@ -14,7 +14,7 @@ class BeerPublishRatingFetcher(
     { rating ->
         if (!rating.isValid()) error("Incomplete rating")
 
-        if (rating.isDraft) {
+        if (rating.isDraft()) {
             api.postRating(
                 beerId = rating.beerId ?: error("Missing beer id"),
                 appearance = rating.appearance ?: error("Missing appearance"),

@@ -19,7 +19,7 @@ class PublishRatingUseCase @Inject constructor(
 ) {
 
     suspend fun saveDraft(rating: Rating) {
-        if (!rating.isDraft) error("Not a draft!")
+        if (!rating.isDraft()) error("Not a draft!")
         ratingStore.put(rating.id, rating)
     }
 
@@ -42,7 +42,7 @@ class PublishRatingUseCase @Inject constructor(
         }
 
         if (result is Result.Success) {
-            if (rating.isDraft) {
+            if (rating.isDraft()) {
                 ratingStore.delete(rating.id)
             }
         }
