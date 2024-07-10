@@ -21,6 +21,17 @@ class NoFetch<in V> : Validator<V> {
     }
 }
 
+class FetchIfNull<in V> : Validator<V> {
+
+    private var validationCount = 0
+
+    override suspend fun validate(value: V?): Boolean {
+        // Reject first validation if null, allow subsequent null values. This
+        // is required for cases where a value may get deleted.
+        return value != null || validationCount++ > 0
+    }
+}
+
 class AlwaysFetch<in V> : Validator<V> {
 
     private var validationCount = 0
