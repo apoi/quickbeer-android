@@ -212,6 +212,18 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="DetailsDraftTitle" parent="DetailsDescription">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:fontFamily">sans-serif-smallcaps</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="DetailsDraftMessage" parent="DetailsDescription">
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="DetailsTitle" parent="DetailsDescription">
         <item name="android:layout_marginBottom">3dp</item>
         <item name="android:gravity">center_horizontal</item>

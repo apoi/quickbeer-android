@@ -23,19 +23,9 @@
             android:gravity="start">
 
             <TextView
-                android:id="@+id/draft_title"
-                style="@style/DetailsTitle"
-                android:layout_alignTop="@id/actions"
-                android:layout_alignBottom="@id/actions"
-                android:layout_margin="0dp"
-                android:gravity="center"
-                android:text="@string/rating_draft"
-                android:textColor="@color/orange"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/score"
                 style="@style/DetailsScore"
+                android:paddingBottom="2dp"
                 android:layout_marginStart="@dimen/card_view_inner_margin"
                 android:layout_marginEnd="@dimen/spacing_xl"
                 tools:text="3.8" />
@@ -48,6 +38,32 @@
                 android:layout_alignTop="@id/score"
                 android:layout_alignBottom="@id/score"
                 android:layout_toEndOf="@id/score" />
+
+            <LinearLayout
+                android:id="@+id/draft_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/score"
+                android:layout_alignBottom="@id/score"
+                android:layout_marginStart="@dimen/spacing_xl"
+                android:layout_toEndOf="@id/score"
+                android:gravity="start|center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/draft_title"
+                    style="@style/DetailsDraftTitle"
+                    android:gravity="start"
+                    android:text="@string/rating_draft"
+                    android:textColor="@color/orange_dark" />
+
+                <TextView
+                    android:id="@+id/draft_message"
+                    style="@style/DetailsDraftMessage"
+                    android:gravity="start"
+                    android:text="@string/rating_draft_explanation" />
+
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/avatar"
