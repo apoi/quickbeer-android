@@ -18,8 +18,8 @@ abstract class RatingDao : CoreDao<Int, RatingEntity>(
     @Query("SELECT * FROM reviews WHERE user_id=:userId AND beer_id=:beerId")
     abstract fun getRatingByUserStream(userId: Int, beerId: Int): Flow<RatingEntity?>
 
-    @Query("SELECT * FROM reviews WHERE user_id=:userId AND comments IS NOT NULL")
-    abstract fun allRatingsByUser(userId: Int): Flow<List<RatingEntity>>
+    @Query("SELECT * FROM reviews WHERE user_id=:userId")
+    abstract fun getAllRatingsByUserStream(userId: Int): Flow<List<RatingEntity>>
 
     @Query("SELECT * FROM reviews WHERE id=:key")
     abstract suspend fun get(key: Int): RatingEntity?

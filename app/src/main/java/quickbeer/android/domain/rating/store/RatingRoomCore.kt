@@ -30,9 +30,9 @@ class RatingRoomCore @Inject constructor(
             .map { entity -> entity?.let(RatingEntityMapper::mapTo) }
     }
 
-    fun allRatingsByUser(userId: Int): Flow<List<Rating>> {
+    fun getAllRatingsByUserStream(userId: Int): Flow<List<Rating>> {
         return database.ratingDao()
-            .allRatingsByUser(userId)
+            .getAllRatingsByUserStream(userId)
             .map { it.map(RatingEntityMapper::mapTo) }
     }
 }
