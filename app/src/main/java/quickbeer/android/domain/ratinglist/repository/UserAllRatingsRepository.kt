@@ -8,11 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import quickbeer.android.data.repository.SingleRepository
-import quickbeer.android.data.result.Result
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.store.BeerStore
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
 import quickbeer.android.domain.rating.store.RatingStore
 import quickbeer.android.domain.ratinglist.network.UserRatingPageFetcher
 import quickbeer.android.domain.ratinglist.store.UserRatingsStore
@@ -27,31 +25,8 @@ class UserAllRatingsRepository @Inject constructor(
     private val beerStore: BeerStore,
     private val ratingStore: RatingStore,
     private val userRatingsStore: UserRatingsStore,
-    private val ratingPageFetcher: UserRatingPageFetcher,
-    private val publishFetcher: BeerPublishRatingFetcher
+    private val ratingPageFetcher: UserRatingPageFetcher
 ) : SingleRepository<List<Rating>>() {
-
-    suspend fun publish(rating: Rating): Result<Unit> {
-        val apiResult = publishFetcher.fetch(rating)
-        val result = when (apiResult) {
-            is ApiResult.Success -> Result.Success(Unit)
-            is ApiResult.HttpError -> Result.Failure(apiResult.cause)
-            is ApiResult.NetworkError -> Result.Failure(apiResult.cause)
-            is ApiResult.UnknownError -> Result.Failure(apiResult.cause)
-        }
-
-        if (result is Result.Success) {
-            // TODO remove local draft, if any
-            // and fetch the newly saved review
-        }
-
-        return result
-    }
-
-    suspend fun saveDraft(rating: Rating) {
-        if (!rating.isDraft) error("Not a draft!")
-        ratingStore.put(rating.id, rating)
-    }
 
     override suspend fun persist(value: List<Rating>) {
         userStore.getCurrentUser()?.let { user ->

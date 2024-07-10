@@ -14,6 +14,9 @@ object Constants {
     const val API_LOGIN_PAGE =
         "Signin_r.asp"
 
+    const val API_LOGIN_REDIRECT =
+        "/login.asp"
+
     const val API_REVIEWS_PAGE =
         "/json/revs.asp"
 
