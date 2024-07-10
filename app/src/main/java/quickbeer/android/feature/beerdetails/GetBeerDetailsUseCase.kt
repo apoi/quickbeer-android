@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onStart
 import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.repository.FetchIfNull
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.Beer
@@ -19,7 +20,6 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.ratinglist.repository.UserBeerRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
@@ -39,8 +39,7 @@ class GetBeerDetailsUseCase @Inject constructor(
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository,
-    private val userBeerRatingRepository: UserBeerRatingRepository,
-    private val userAllRatingsRepository: UserAllRatingsRepository
+    private val userBeerRatingRepository: UserBeerRatingRepository
 ) {
 
     fun getBeerDetails(beerId: Int): Flow<State<BeerDetailsState>> {
@@ -124,7 +123,7 @@ class GetBeerDetailsUseCase @Inject constructor(
     }
 
     private fun getRating(user: User, beerId: Int): Flow<RatingState<Rating>> {
-        return userBeerRatingRepository.getStream(Pair(user, beerId), Accept())
+        return userBeerRatingRepository.getStream(Pair(user, beerId), FetchIfNull())
             .map { it.valueOrNull() }
             .map { ratingValue ->
                 when {

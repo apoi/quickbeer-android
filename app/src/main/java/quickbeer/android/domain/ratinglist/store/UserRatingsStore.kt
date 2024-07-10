@@ -19,7 +19,7 @@ class UserRatingsStore @Inject constructor(
         return ratingStoreCore.ratingByUser(userId, beerId)
     }
 
-    fun getStream(userId: Int, beerId: Int): Flow<Rating> {
+    fun getStream(userId: Int, beerId: Int): Flow<Rating?> {
         return ratingStoreCore.ratingByUserStream(userId, beerId)
     }
 
