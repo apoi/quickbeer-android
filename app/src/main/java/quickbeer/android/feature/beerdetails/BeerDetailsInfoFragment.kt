@@ -41,6 +41,7 @@ import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
 import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.feature.beerdetails.model.BeerDetailsInfoViewEvent.ShowMessage
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.feature.beerdetails.model.RatingAction
 import quickbeer.android.feature.beerdetails.model.RatingAction.CreateDraft
@@ -50,7 +51,12 @@ import quickbeer.android.feature.beerdetails.model.RatingAction.DeleteRating
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditDraft
 import quickbeer.android.feature.beerdetails.model.RatingAction.EditRating
 import quickbeer.android.feature.beerdetails.model.RatingState
+import quickbeer.android.feature.beerdetails.model.RatingState.ShowAction
+import quickbeer.android.feature.beerdetails.model.RatingState.ShowRating
 import quickbeer.android.feature.beerdetails.model.Tick
+import quickbeer.android.feature.beerdetails.model.TickActionState
+import quickbeer.android.feature.beerdetails.model.TickActionState.ActionClicked
+import quickbeer.android.feature.beerdetails.model.TickActionState.LoadingInProgress
 import quickbeer.android.feature.login.LoginDialog
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
@@ -60,6 +66,7 @@ import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.getNavigationResult
+import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
@@ -114,6 +121,12 @@ class BeerDetailsInfoFragment :
     override fun observeViewState() {
         observeSuccess(viewModel.viewState, ::setValues)
 
+        observe(viewModel.events) { event ->
+            when (event) {
+                is ShowMessage -> showToast(event.message)
+            }
+        }
+
         getNavigationResult(
             fragmentId = R.id.beer_details_fragment,
             key = ActionSheetFragment.ACTION_RESULT,
@@ -130,15 +143,15 @@ class BeerDetailsInfoFragment :
     private fun setValues(state: BeerDetailsState) {
         setBeer(state.beer)
         setRating(state.rating)
-        setTick(state.tick)
+        setTick(state.tick, state.tickActionState)
         state.brewer?.let(::setBrewer)
         state.style?.let(::setStyle)
         state.address?.let(::setAddress)
 
         // Set action buttons
         val showLoginAction = state.user == null
-        val showRatingAction = state.rating is RatingState.ShowAction
-        val showTickAction = state.tick is RatingState.ShowAction
+        val showRatingAction = state.rating is ShowAction
+        val showTickAction = state.tick is ShowAction
 
         binding.actionLogin.isVisible = showLoginAction
         binding.actionAddRating.isVisible = showRatingAction
@@ -190,9 +203,9 @@ class BeerDetailsInfoFragment :
     }
 
     private fun setRating(ratingState: RatingState<Rating>) {
-        binding.ownRating.ratingCard.isVisible = ratingState is RatingState.ShowRating
+        binding.ownRating.ratingCard.isVisible = ratingState is ShowRating
 
-        if (ratingState is RatingState.ShowRating) {
+        if (ratingState is ShowRating) {
             RatingBinder.bind(requireContext(), ratingState.value, binding.ownRating, true)
             binding.ownRating.actions.setOnClickListener {
                 showRatingActionsMenu(ratingState.value)
@@ -200,14 +213,24 @@ class BeerDetailsInfoFragment :
         }
     }
 
-    private fun setTick(tickState: RatingState<Tick>) {
-        val show = tickState is RatingState.ShowRating || tickState is RatingState.ShowEmptyRating
+    private fun setTick(tickState: RatingState<Tick>, tickActionState: TickActionState) {
         val tick = tickState.valueOrNull()
+        val isLoading = tickActionState is LoadingInProgress
 
-        binding.starRatingCard.isVisible = show
+        val showCard = when {
+            tickState is ShowRating -> true
+            tickActionState is ActionClicked -> true
+            tickActionState is LoadingInProgress -> true
+            else -> false
+        }
 
-        if (show) {
+        binding.starRatingCard.isVisible = showCard
+
+        if (showCard) {
             binding.ratingBar.rating = tick?.tick?.toFloat() ?: 0F
+            binding.ratingBar.isVisible = !isLoading
+            binding.tickLoadingIndicator.isVisible = isLoading
+
             binding.tickedDate.text = tick?.tickDate
                 ?.formatDateTime(getString(R.string.beer_tick_date))
                 ?: getString(R.string.tick_explanation)
@@ -244,6 +267,10 @@ class BeerDetailsInfoFragment :
         toastProvider.showCancelableToast(resource, Toast.LENGTH_LONG)
     }
 
+    private fun showToast(message: String) {
+        toastProvider.showCancelableToast(message, Toast.LENGTH_LONG)
+    }
+
     private fun showRatingActionsMenu(rating: Rating) {
         val actions = if (rating.isDraft()) {
             listOf(EditDraft(beerId, rating.id), DeleteDraft(beerId, rating.id))
@@ -257,7 +284,7 @@ class BeerDetailsInfoFragment :
     private fun onActionSelected(action: Action) {
         when (action) {
             is CreateDraft -> navigate(toRating(action))
-            is CreateTick -> viewModel.showTickCard()
+            is CreateTick -> viewModel.createTickClicked()
             is EditDraft -> navigate(toRating(action))
             is DeleteDraft -> confirmAction(action, viewModel::deleteRating)
             is EditRating -> navigate(toRating(action))

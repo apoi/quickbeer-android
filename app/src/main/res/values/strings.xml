@@ -105,7 +105,8 @@
 
     <!-- Ticking -->
     <string name="beer_tick_date">You ticked this beer on %1$s at %2$s</string>
-    <string name="tick_success">%s ticked!</string>
+    <string name="tick_success">%s ticked</string>
+    <string name="tick_removed">Tick removed</string>
     <string name="tick_failure">Ticking failed. Try again later.</string>
     <string name="tick_explanation">Ticks are your private notes and do not affect the public score or rank.</string>
 
