@@ -17,6 +17,7 @@
  */
 package quickbeer.android.feature.beerdetails
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,37 +29,47 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import quickbeer.android.R
+import quickbeer.android.data.result.Result
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
+import quickbeer.android.feature.beerdetails.model.BeerDetailsInfoViewEvent
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
+import quickbeer.android.feature.beerdetails.model.TickActionState
+import quickbeer.android.feature.beerdetails.model.TickActionState.ActionClicked
+import quickbeer.android.feature.beerdetails.model.TickActionState.Default
+import quickbeer.android.feature.beerdetails.model.TickActionState.LoadingInProgress
 import quickbeer.android.feature.beerdetails.usecase.GetBeerDetailsUseCase
+import quickbeer.android.feature.beerdetails.usecase.TickBeerUseCase
+import quickbeer.android.util.ResourceProvider
+import quickbeer.android.util.SingleLiveEvent
 import quickbeer.android.util.ktx.navId
-import timber.log.Timber
 
 @HiltViewModel
 class BeerDetailsInfoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    private val beerRepository: BeerRepository,
+    private val tickBeerUseCase: TickBeerUseCase,
     private val getBeerDetailsUseCase: GetBeerDetailsUseCase,
-    private val userAllRatingsRepository: UserAllRatingsRepository
+    private val userAllRatingsRepository: UserAllRatingsRepository,
+    private val resourceProvider: ResourceProvider
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()
-    private val isTicking = MutableStateFlow(false)
+    private val tickActionState = MutableStateFlow<TickActionState>(Default)
 
     private val _viewState = MutableStateFlow<State<BeerDetailsState>>(State.Initial)
     val viewState: StateFlow<State<BeerDetailsState>> = _viewState
 
+    private val _events = SingleLiveEvent<BeerDetailsInfoViewEvent>()
+    val events: LiveData<BeerDetailsInfoViewEvent> = _events
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             getBeerDetailsUseCase.getBeerDetails(beerId)
-                .combine(isTicking) { state, showTickView ->
-                    Timber.d("STATE $state")
-                    if (!showTickView) {
-                        state
-                    } else {
-                        // Always show tick view if user chose the action
-                        state.map { it.copy(tick = it.tick.forceShow()) }
-                    }
+                .combine(tickActionState) { state, tickActionState ->
+                    state.map { it.copy(tickActionState = tickActionState) }
                 }
                 .collectLatest {
                     _viewState.emit(it)
@@ -74,36 +85,30 @@ class BeerDetailsInfoViewModel @Inject constructor(
 
     fun tickBeer(tick: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            // TODO()
-            /*
-            val beer = beerRepository.store.get(beerId) ?: error("No beer found!")
-            val userId = loginManager.userId.first() ?: error("Not logged in!")
-            val fetchKey = BeerTickFetcher.TickKey(beerId, userId, tick)
-            val result = beerTickFetcher.fetch(fetchKey)
+            tickActionState.emit(LoadingInProgress)
 
-            if (result is ApiResult.Success) {
-                val update = beer.copy(tickValue = tick, tickDate = ZonedDateTime.now())
-                beerRepository.persist(beerId, update)
-            }
-
+            val beer = beerRepository.get(beerId) ?: error("Invalid beer id")
+            val result = tickBeerUseCase.tickBeer(beerId, tick)
 
             val message = when {
-                result !is ApiResult.Success -> resourceProvider.getString(R.string.tick_failure)
+                result !is Result.Success -> resourceProvider.getString(R.string.tick_failure)
                 tick > 0 -> resourceProvider.getString(R.string.tick_success).format(beer.name)
                 else -> resourceProvider.getString(R.string.tick_removed)
             }
 
-
-            withContext(Dispatchers.Main) {
-                toastProvider.showToast(message)
+            val actionState = when (result) {
+                is Result.Success -> Default
+                is Result.Failure -> ActionClicked
             }
-             */
+
+            tickActionState.emit(actionState)
+            _events.postValue(BeerDetailsInfoViewEvent.ShowMessage(message))
         }
     }
 
-    fun showTickCard() {
+    fun createTickClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-            isTicking.emit(true)
+            tickActionState.emit(ActionClicked)
         }
     }
 }

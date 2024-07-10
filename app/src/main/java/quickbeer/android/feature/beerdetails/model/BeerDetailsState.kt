@@ -14,7 +14,8 @@ data class BeerDetailsState(
     val address: Address?,
     val user: User?,
     val rating: RatingState<Rating>,
-    val tick: RatingState<Tick>
+    val tick: RatingState<Tick>,
+    val tickActionState: TickActionState
 ) {
 
     companion object {
@@ -36,7 +37,8 @@ data class BeerDetailsState(
                 address = address.valueOrNull(),
                 user = user.valueOrNull(),
                 rating = rating,
-                tick = tick
+                tick = tick,
+                tickActionState = TickActionState.Default
             )
         }
     }

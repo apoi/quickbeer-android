@@ -46,7 +46,7 @@ import quickbeer.android.util.ktx.navId
 class BeerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val beerRepository: BeerRepository,
-    private val brewerRepository: BrewerRepository,
+    private val brewerRepository: BrewerRepository
 ) : ViewModel() {
 
     private val beerId = savedStateHandle.navId()

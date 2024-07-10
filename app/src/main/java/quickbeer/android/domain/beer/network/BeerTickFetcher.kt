@@ -27,9 +27,19 @@ class BeerTickFetcher(
         fun tickAction(api: RateBeerApi): suspend (TickKey) -> ApiResult<ResponseBody> {
             return { (beerId, userId, tick) ->
                 if (tick == 0) {
-                    api.tickBeer(beerId, userId, MODE_REMOVE, null)
+                    api.tickBeer(
+                        beerId = beerId,
+                        userId = userId,
+                        mode = MODE_REMOVE,
+                        tick = null
+                    )
                 } else {
-                    api.tickBeer(beerId, userId, MODE_TICK, tick)
+                    api.tickBeer(
+                        beerId = beerId,
+                        userId = userId,
+                        mode = MODE_TICK,
+                        tick = tick
+                    )
                 }
             }
         }

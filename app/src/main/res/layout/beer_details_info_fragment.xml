@@ -64,14 +64,29 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <RatingBar
-                    android:id="@+id/rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:paddingTop="@dimen/spacing_l"
-                    android:rating="0"
-                    android:stepSize="1.0" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="@dimen/spacing_l">
+
+                    <RatingBar
+                        android:id="@+id/rating_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:numStars="5"
+                        android:rating="0"
+                        android:stepSize="1.0" />
+
+                    <com.google.android.material.progressindicator.CircularProgressIndicator
+                        android:id="@+id/tick_loading_indicator"
+                        style="@style/AppTheme.Progress.Normal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        app:indicatorColor="@color/orange_dark" />
+
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/ticked_date"
