@@ -45,8 +45,10 @@ class BeerRatingViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             val user = currentUserRepository.get() ?: error("User missing")
-            val rating = ratingStore.get(action.ratingId!!)
+            val rating = action.ratingId
+                ?.let { ratingStore.get(it) }
                 ?: Rating.createDraft(action.beerId, user)
+
             _viewState.emit(State.from(BeerRatingViewState.create(rating)))
         }
     }

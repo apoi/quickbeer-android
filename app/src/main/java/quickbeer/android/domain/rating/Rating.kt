@@ -57,7 +57,7 @@ data class Rating(
             val currentTime = ZonedDateTime.now()
             return Rating(
                 // Random negative number will work as a local draft ID
-                id = Random(currentTime.toEpochSecond()).nextInt() * -1,
+                id = Random.nextInt(Int.MAX_VALUE) * -1,
                 beerId = beerId,
                 appearance = 0,
                 aroma = 0,
