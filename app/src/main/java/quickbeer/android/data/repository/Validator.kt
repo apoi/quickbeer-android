@@ -28,7 +28,7 @@ class FetchIfNull<in V> : Validator<V> {
     override suspend fun validate(value: V?): Boolean {
         // Reject first validation if null, allow subsequent null values. This
         // is required for cases where a value may get deleted.
-        return value != null || validationCount++ > 0
+        return validationCount++ > 0 || value != null
     }
 }
 
