@@ -1,13 +1,12 @@
 package quickbeer.android.ui.adapter.beer
 
+import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import quickbeer.android.R
-import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BeerListItemBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.rating.Rating
@@ -22,17 +21,15 @@ class BeerListViewHolder(
         scope.launch {
             combine(item.getBeer(), item.getRating(), ::Pair)
                 .collectLatest { (beerState, ratingState) ->
-                    withContext(Dispatchers.Main) { updateState(beerState, ratingState) }
+                    val beer = beerState.valueOrNull()
+                    val rating = ratingState.valueOrNull()
+
+                    if (beer != null) {
+                        withContext(Dispatchers.Main) {
+                            setBeer(beer, rating)
+                        }
+                    }
                 }
-        }
-    }
-
-    private fun updateState(beerState: State<Beer>, ratingState: State<Rating>) {
-        val beer = beerState.valueOrNull()
-        val rating = ratingState.valueOrNull()
-
-        if (beer != null) {
-            setBeer(beer, rating)
         }
     }
 
@@ -41,15 +38,18 @@ class BeerListViewHolder(
         // This prevents the rating label to be shown with empty details.
         if (beer.name.isNullOrEmpty()) return
 
+        val score = beer.rating().takeIf { it >= 0 }?.toString() ?: "?"
+
         if (beer.isTicked() || rating != null) {
-            binding.beerScore.setTextColor(itemView.context.getColor(R.color.text_dark))
-            binding.beerScore.setBackgroundResource(R.drawable.score_rated)
+            binding.beerScoreRated.text = score
+            binding.beerScoreRated.isVisible = true
+            binding.beerScoreUnrated.isVisible = false
         } else {
-            binding.beerScore.setTextColor(itemView.context.getColor(R.color.text_light))
-            binding.beerScore.setBackgroundResource(R.drawable.score_unrated)
+            binding.beerScoreUnrated.text = score
+            binding.beerScoreUnrated.isVisible = true
+            binding.beerScoreRated.isVisible = false
         }
 
-        binding.beerScore.text = beer.rating().takeIf { it >= 0 }?.toString() ?: "?"
         binding.beerName.text = beer.name
         binding.beerStyle.text = beer.styleName
         binding.brewerName.text = beer.brewerName
@@ -59,6 +59,9 @@ class BeerListViewHolder(
         binding.beerName.text = ""
         binding.beerStyle.text = ""
         binding.brewerName.text = ""
-        binding.beerScore.setBackgroundResource(R.drawable.score_unrated)
+        binding.beerScoreRated.text = ""
+        binding.beerScoreUnrated.text = ""
+        binding.beerScoreRated.isVisible = false
+        binding.beerScoreUnrated.isVisible = true
     }
 }
