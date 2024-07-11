@@ -13,7 +13,7 @@
     android:paddingBottom="@dimen/spacing_s">
 
     <TextView
-        android:id="@+id/beer_score"
+        android:id="@+id/beer_score_unrated"
         android:layout_width="@dimen/beer_list_item_icon_size"
         android:layout_height="@dimen/beer_list_item_icon_size"
         android:layout_gravity="center"
@@ -21,9 +21,24 @@
         android:layout_marginEnd="@dimen/spacing_m"
         android:layout_marginBottom="@dimen/spacing_s"
         android:background="@drawable/score_unrated"
-        android:fontFamily="sans-serif-light"
+        android:fontFamily="sans-serif-thin"
         android:gravity="center"
         android:textColor="@color/text_light"
+        android:textSize="@dimen/listitem_text_score"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/beer_score_rated"
+        android:layout_width="@dimen/beer_list_item_icon_size"
+        android:layout_height="@dimen/beer_list_item_icon_size"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:layout_marginBottom="@dimen/spacing_s"
+        android:background="@drawable/score_rated"
+        android:fontFamily="sans-serif-light"
+        android:gravity="center"
+        android:textColor="@color/text_dark"
         android:textSize="@dimen/listitem_text_score"
         tools:text="100" />
 
