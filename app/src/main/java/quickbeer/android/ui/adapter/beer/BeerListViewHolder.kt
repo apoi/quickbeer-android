@@ -20,7 +20,7 @@ class BeerListViewHolder(
         clear()
         scope.launch {
             combine(item.getBeer(), item.getRating(), ::Pair)
-                .collectLatest { (beerState, ratingState) ->
+                .collect { (beerState, ratingState) ->
                     val beer = beerState.valueOrNull()
                     val rating = ratingState.valueOrNull()
 
