@@ -18,7 +18,6 @@ import quickbeer.android.data.repository.Repository
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeerSearchRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
@@ -39,13 +38,13 @@ import quickbeer.android.util.ktx.normalize
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val beerRepository: BeerRepository,
     private val beerSearchRepository: BeerSearchRepository,
     private val brewerRepository: BrewerRepository,
     private val brewerSearchRepository: BrewerSearchRepository,
     private val styleListRepository: StyleListRepository,
     private val countryListRepository: CountryListRepository,
-    private val countryRepository: CountryRepository
+    private val countryRepository: CountryRepository,
+    private val beerListMapper: BeerListModelRateCountMapper
 ) : ViewModel() {
 
     private val queryFlow = MutableStateFlow("")
@@ -93,7 +92,7 @@ class SearchViewModel @Inject constructor(
                 .getStream(beerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 // Avoid re-sorting the results if the set of beers didn't change
                 .distinctUntilNewId(Beer::id)
-                .map(BeerListModelRateCountMapper(beerRepository)::map)
+                .map(beerListMapper::map)
                 .collectLatest(_beerResults::emit)
         }
     }

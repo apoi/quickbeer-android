@@ -15,12 +15,14 @@ import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.store.RecentBeersStore
+import quickbeer.android.domain.rating.usecase.GetCurrentUserBeerRatingUseCase
 import quickbeer.android.ui.adapter.beer.BeerListModel
 
 @HiltViewModel
 class RecentBeersViewModel @Inject constructor(
     recentBeersStore: RecentBeersStore,
-    beerRepository: BeerRepository
+    beerRepository: BeerRepository,
+    getRatingUseCase: GetCurrentUserBeerRatingUseCase
 ) : ViewModel() {
 
     private val _recentBeersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
@@ -33,7 +35,7 @@ class RecentBeersViewModel @Inject constructor(
                 .onStart { State.Loading<List<Int>>() }
                 .map(
                     StateListMapper<Int, BeerListModel> {
-                        BeerListModel(it, beerRepository)
+                        BeerListModel(it, beerRepository, getRatingUseCase)
                     }::map
                 )
                 .collectLatest(_recentBeersState::emit)

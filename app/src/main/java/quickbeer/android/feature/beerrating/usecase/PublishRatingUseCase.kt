@@ -6,8 +6,8 @@ import quickbeer.android.data.result.Result
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
+import quickbeer.android.domain.rating.repository.UserBeerRatingRepository
 import quickbeer.android.domain.rating.store.RatingStore
-import quickbeer.android.domain.ratinglist.repository.UserBeerRatingRepository
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.network.result.ApiResult
 

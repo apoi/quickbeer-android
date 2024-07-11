@@ -1,6 +1,8 @@
 package quickbeer.android.ui.view
 
 import quickbeer.android.R
+import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.rating.Rating
 
 object Score {
 
@@ -16,12 +18,22 @@ object Score {
         }
     }
 
+    @Suppress("MagicNumber")
+    fun fromRating(beer: Beer, rating: Rating?): Stars {
+        return if (beer.isTicked() || rating != null) {
+            Stars.RATED
+        } else {
+            Stars.UNRATED
+        }
+    }
+
     fun fromRating(rating: Int): String {
         return if (rating >= 0) "$rating" else "?"
     }
 
     enum class Stars(val resource: Int) {
         UNRATED(R.drawable.score_unrated),
+        RATED(R.drawable.score_rated),
         SCORE_1(R.drawable.score_1),
         SCORE_2(R.drawable.score_2),
         SCORE_3(R.drawable.score_3),

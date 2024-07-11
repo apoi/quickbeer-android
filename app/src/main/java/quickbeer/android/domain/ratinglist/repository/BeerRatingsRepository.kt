@@ -9,7 +9,7 @@ import quickbeer.android.domain.ratinglist.network.BeerRatingPageFetcher
 import quickbeer.android.domain.ratinglist.store.BeerRatingStore
 import quickbeer.android.network.result.ApiResult
 
-class BeerRatingRepository @Inject constructor(
+class BeerRatingsRepository @Inject constructor(
     store: BeerRatingStore,
     fetcher: BeerRatingFetcher,
     private val pageFetcher: BeerRatingPageFetcher
