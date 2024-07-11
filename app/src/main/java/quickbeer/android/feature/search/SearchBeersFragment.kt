@@ -15,6 +15,6 @@ class SearchBeersFragment : SearchTabFragment<BeerListModel>() {
     override fun resultFlow() = viewModel.beerResults
 
     override fun onItemSelected(item: BeerListModel) {
-        navigate(Destination.Beer(item.id))
+        navigate(Destination.Beer(item.beerId))
     }
 }

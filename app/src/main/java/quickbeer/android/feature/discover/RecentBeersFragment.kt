@@ -84,7 +84,7 @@ class RecentBeersFragment : BaseFragment(R.layout.list_fragment), Resetable {
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(Destination.Beer(beer.id))
+        navigate(Destination.Beer(beer.beerId))
     }
 
     override fun onReset() {

@@ -84,6 +84,6 @@ class RatedBeersFragment : BaseFragment(R.layout.rated_beers_fragment) {
     }
 
     private fun onBeerSelected(beer: BeerListModel) {
-        navigate(Destination.Beer(beer.id))
+        navigate(Destination.Beer(beer.beerId))
     }
 }

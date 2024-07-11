@@ -25,7 +25,6 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
@@ -34,7 +33,6 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BrewersBeersRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
@@ -50,8 +48,8 @@ class BrewerDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val brewerRepository: BrewerRepository,
     private val brewersBeersRepository: BrewersBeersRepository,
-    private val beerRepository: BeerRepository,
-    private val countryRepository: CountryRepository
+    private val countryRepository: CountryRepository,
+    private val beerListMapper: BeerListModelAlphabeticMapper
 ) : ViewModel() {
 
     private val brewerId = savedStateHandle.navId()
@@ -78,7 +76,7 @@ class BrewerDetailsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             brewersBeersRepository.getStream(brewerId.toString(), Accept())
-                .map(BeerListModelAlphabeticMapper(beerRepository)::map)
+                .map(beerListMapper::map)
                 .collectLatest(_beersState::emit)
         }
     }

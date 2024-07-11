@@ -1,4 +1,4 @@
-package quickbeer.android.domain.ratinglist.repository
+package quickbeer.android.domain.rating.repository
 
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow

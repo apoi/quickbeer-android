@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInCountryRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
@@ -43,7 +42,7 @@ class CountryDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val countryRepository: CountryRepository,
     private val beersInCountryRepository: BeersInCountryRepository,
-    private val beerRepository: BeerRepository
+    private val beerListMapper: BeerListModelRatingMapper
 ) : ViewModel() {
 
     private val countryId = savedStateHandle.navId()
@@ -62,7 +61,7 @@ class CountryDetailsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             beersInCountryRepository.getStream(countryId.toString(), Accept())
-                .map(BeerListModelRatingMapper(beerRepository)::map)
+                .map(beerListMapper::map)
                 .collectLatest(_beersState::emit)
         }
     }

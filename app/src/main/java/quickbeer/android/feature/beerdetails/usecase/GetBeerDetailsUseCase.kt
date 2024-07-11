@@ -20,7 +20,7 @@ import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.ratinglist.repository.UserBeerRatingRepository
+import quickbeer.android.domain.rating.repository.UserBeerRatingRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository

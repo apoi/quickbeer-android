@@ -25,13 +25,11 @@ import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.repository.BeersInStyleRepository
 import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.style.repository.StyleRepository
@@ -44,7 +42,7 @@ class StyleDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val styleRepository: StyleRepository,
     private val beersInStyleRepository: BeersInStyleRepository,
-    private val beerRepository: BeerRepository
+    private val beerListMapper: BeerListModelRatingMapper
 ) : ViewModel() {
 
     private val styleId = savedStateHandle.navId()
@@ -69,7 +67,7 @@ class StyleDetailsViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             beersInStyleRepository.getStream(styleId.toString(), Accept())
-                .map(BeerListModelRatingMapper(beerRepository)::map)
+                .map(beerListMapper::map)
                 .collectLatest(_beersState::emit)
         }
     }

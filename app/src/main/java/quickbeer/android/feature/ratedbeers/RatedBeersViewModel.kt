@@ -17,7 +17,6 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.ListCountValidator
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
@@ -27,9 +26,9 @@ import quickbeer.android.ui.adapter.beer.BeerListModelRatingTimeMapper
 @HiltViewModel
 @OptIn(ExperimentalCoroutinesApi::class)
 class RatedBeersViewModel @Inject constructor(
-    private val beerRepository: BeerRepository,
     private val userRepository: CurrentUserRepository,
-    private val userRatingsRepository: UserAllRatingsRepository
+    private val userRatingsRepository: UserAllRatingsRepository,
+    private val beerListMapper: BeerListModelRatingTimeMapper
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
@@ -43,7 +42,7 @@ class RatedBeersViewModel @Inject constructor(
                 .flatMapLatest { user ->
                     userRatingsRepository
                         .getStream(ListCountValidator { it >= (user.rateCount ?: 0) })
-                        .map(BeerListModelRatingTimeMapper(beerRepository)::map)
+                        .map(beerListMapper::map)
                         .onStart { emit(State.Loading()) }
                 }
                 .collectLatest(_viewState::emit)
