@@ -1,10 +1,12 @@
 package quickbeer.android.feature.beerdetails.model
 
+import androidx.annotation.Keep
 import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import quickbeer.android.R
 import quickbeer.android.ui.actionmenu.Action
 
+@Keep
 @Parcelize
 sealed class RatingAction(
     open val beerId: Int,
