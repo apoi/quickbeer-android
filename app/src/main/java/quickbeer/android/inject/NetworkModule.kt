@@ -15,6 +15,7 @@ import javax.inject.Qualifier
 import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
+import quickbeer.android.BuildConfig
 import quickbeer.android.Constants
 import quickbeer.android.domain.login.LoginCookieJar
 import quickbeer.android.domain.login.LoginFetcher
@@ -46,17 +47,20 @@ object NetworkModule {
         @ApplicationContext context: Context,
         cookieJar: LoginCookieJar
     ): OkHttpClient {
-        return OkHttpClient.Builder()
+        val builder = OkHttpClient.Builder()
             .cache(Cache(context.cacheDir, TEN_MEGABYTES))
             .cookieJar(cookieJar)
-//            .followRedirects(false)
             .writeTimeout(20, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(AuthorizationErrorInterceptor(cookieJar))
             .addInterceptor(AppKeyInterceptor())
-            .addInterceptor(LoggingInterceptor.create())
             .addInterceptor(LoginRedirectInterceptor())
-            .build()
+
+        if (BuildConfig.DEBUG) {
+            builder.addInterceptor(LoggingInterceptor.create())
+        }
+
+        return builder.build()
     }
 
     @Provides
