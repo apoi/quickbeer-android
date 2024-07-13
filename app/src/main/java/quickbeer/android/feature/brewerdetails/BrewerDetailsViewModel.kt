@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.map
@@ -55,13 +55,13 @@ class BrewerDetailsViewModel @Inject constructor(
     private val brewerId = savedStateHandle.navId()
 
     private val _brewerState = MutableStateFlow<State<Brewer>>(State.Initial)
-    val brewerState: Flow<State<Brewer>> = _brewerState
+    val brewerState: StateFlow<State<Brewer>> = _brewerState
 
     private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
-    val beersState: Flow<State<List<BeerListModel>>> = _beersState
+    val beersState: StateFlow<State<List<BeerListModel>>> = _beersState
 
     private val _addressState = MutableStateFlow<State<Address>>(State.Initial)
-    val addressState: Flow<State<Address>> = _addressState
+    val addressState: StateFlow<State<Address>> = _addressState
 
     init {
         updateAccessedBrewer(brewerId)

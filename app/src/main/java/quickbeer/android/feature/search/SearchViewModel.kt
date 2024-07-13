@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.flatMapLatest
@@ -51,16 +51,16 @@ class SearchViewModel @Inject constructor(
     private val typeFlow = MutableStateFlow(SearchType.BEER)
 
     private val _beerResults = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
-    val beerResults: Flow<State<List<BeerListModel>>> = _beerResults
+    val beerResults: StateFlow<State<List<BeerListModel>>> = _beerResults
 
     private val _brewerResults = MutableStateFlow<State<List<BrewerListModel>>>(State.Initial)
-    val brewerResults: Flow<State<List<BrewerListModel>>> = _brewerResults
+    val brewerResults: StateFlow<State<List<BrewerListModel>>> = _brewerResults
 
     private val _styleResults = MutableStateFlow<State<List<StyleListModel>>>(State.Initial)
-    val styleResults: Flow<State<List<StyleListModel>>> = _styleResults
+    val styleResults: StateFlow<State<List<StyleListModel>>> = _styleResults
 
     private val _countryResults = MutableStateFlow<State<List<CountryListModel>>>(State.Initial)
-    val countryResults: Flow<State<List<CountryListModel>>> = _countryResults
+    val countryResults: StateFlow<State<List<CountryListModel>>> = _countryResults
 
     private val queryLengthValidator = object : Repository.KeyValidator<String> {
         override fun isEmpty(key: String) = key.isEmpty()

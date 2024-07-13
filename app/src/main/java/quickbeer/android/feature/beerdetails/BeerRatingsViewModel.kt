@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -44,7 +44,7 @@ class BeerRatingsViewModel @Inject constructor(
     private val beerId = savedStateHandle.navId()
 
     private val _ratingsState = MutableStateFlow<State<List<RatingListModel>>>(State.Initial)
-    val ratingsState: Flow<State<List<RatingListModel>>> = _ratingsState
+    val ratingsState: StateFlow<State<List<RatingListModel>>> = _ratingsState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

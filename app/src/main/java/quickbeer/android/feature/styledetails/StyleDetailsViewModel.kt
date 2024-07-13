@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -48,13 +48,13 @@ class StyleDetailsViewModel @Inject constructor(
     private val styleId = savedStateHandle.navId()
 
     private val _styleState = MutableStateFlow<State<Style>>(State.Initial)
-    val styleState: Flow<State<Style>> = _styleState
+    val styleState: StateFlow<State<Style>> = _styleState
 
     private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
-    val beersState: Flow<State<List<BeerListModel>>> = _beersState
+    val beersState: StateFlow<State<List<BeerListModel>>> = _beersState
 
     private val _parentStyleState = MutableStateFlow<State<Style>>(State.Initial)
-    val parentStyleState: Flow<State<Style>> = _parentStyleState
+    val parentStyleState: StateFlow<State<Style>> = _parentStyleState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {

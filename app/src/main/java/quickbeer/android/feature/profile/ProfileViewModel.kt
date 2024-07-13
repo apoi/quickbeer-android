@@ -6,8 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
@@ -41,13 +41,13 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<State<User>>(State.Initial)
-    val userState: Flow<State<User>> = _userState
+    val userState: StateFlow<State<User>> = _userState
 
     private val _ratingCountState = MutableStateFlow<State<Int>>(State.Initial)
-    val ratingCountState: Flow<State<Int>> = _ratingCountState
+    val ratingCountState: StateFlow<State<Int>> = _ratingCountState
 
     private val _tickCountState = MutableStateFlow<State<Int>>(State.Initial)
-    val tickCountState: Flow<State<Int>> = _tickCountState
+    val tickCountState: StateFlow<State<Int>> = _tickCountState
 
     init {
         // Current user state for display purposes, do not update anything here

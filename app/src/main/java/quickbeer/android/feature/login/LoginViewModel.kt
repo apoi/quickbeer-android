@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.login.LoginManager
@@ -17,7 +17,7 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _loginState = MutableStateFlow<State<Boolean>>(State.Initial)
-    val loginState: Flow<State<Boolean>> = _loginState
+    val loginState: StateFlow<State<Boolean>> = _loginState
 
     fun login(username: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {

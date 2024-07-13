@@ -23,8 +23,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -48,10 +48,10 @@ class CountryDetailsViewModel @Inject constructor(
     private val countryId = savedStateHandle.navId()
 
     private val _countryState = MutableStateFlow<State<Country>>(State.Initial)
-    val countryState: Flow<State<Country>> = _countryState
+    val countryState: StateFlow<State<Country>> = _countryState
 
     private val _beersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
-    val beersState: Flow<State<List<BeerListModel>>> = _beersState
+    val beersState: StateFlow<State<List<BeerListModel>>> = _beersState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
