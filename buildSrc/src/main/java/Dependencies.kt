@@ -8,7 +8,6 @@ object Plugins {
     object Id {
         object Kotlin {
             const val Android = "android"
-            const val Kapt = "kapt"
         }
 
         object Android {
@@ -18,6 +17,7 @@ object Plugins {
 
         const val Detekt = "io.gitlab.arturbosch.detekt"
         const val Hilt = "dagger.hilt.android.plugin"
+        const val Ksp = "com.google.devtools.ksp"
         const val Ktlint = "org.jlleitschuh.gradle.ktlint"
         const val Parcelize = "kotlin-parcelize"
         const val Version = "com.github.ben-manes.versions"
@@ -31,6 +31,7 @@ object Versions {
         const val Detekt = "1.23.6"
         const val Gradle = "8.5.1"
         const val Kotlin = "1.9.24"
+        const val Ksp = "1.9.24-1.0.20"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }

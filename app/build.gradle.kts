@@ -1,11 +1,11 @@
 plugins {
     id(Plugins.Id.Android.Application)
     kotlin(Plugins.Id.Kotlin.Android)
-    kotlin(Plugins.Id.Kotlin.Kapt)
     id(Plugins.Id.Parcelize)
     id(Plugins.Id.SafeArgs)
     id(Plugins.Id.Hilt)
     id(Plugins.Id.Room)
+    id(Plugins.Id.Ksp)
 }
 
 android {
@@ -88,7 +88,7 @@ dependencies {
     implementation(Libraries.AndroidX.Navigation.Fragment)
     implementation(Libraries.AndroidX.Navigation.Ui)
 
-    kapt(Libraries.AndroidX.Room.Compiler)
+    ksp(Libraries.AndroidX.Room.Compiler)
     implementation(Libraries.AndroidX.Room.Runtime)
     implementation(Libraries.AndroidX.Room.Extensions)
 
@@ -96,7 +96,7 @@ dependencies {
     implementation(Libraries.Google.Barcode)
 
     implementation(Libraries.Hilt.Android)
-    kapt(Libraries.Hilt.Compiler)
+    ksp(Libraries.Hilt.Compiler)
 
     implementation(Libraries.OkHttp.OkHttp)
     implementation(Libraries.OkHttp.AndroidSupport)
@@ -107,7 +107,7 @@ dependencies {
 
     implementation(Libraries.Retrofit.Retrofit)
     implementation(Libraries.Retrofit.MoshiConverter)
-    kapt(Libraries.MoshiCodegen)
+    ksp(Libraries.MoshiCodegen)
 
     implementation(Libraries.PhotoView)
     implementation(Libraries.ThreeTenABP)
