@@ -1,7 +1,8 @@
 plugins {
     id(Plugins.Id.Android.Application)
-    kotlin(Plugins.Id.Kotlin.Android)
-    id(Plugins.Id.Parcelize)
+    id(Plugins.Id.Kotlin.KotlinAndroid)
+    id(Plugins.Id.Kotlin.ComposeCompiler) version Versions.Plugin.Kotlin
+    id(Plugins.Id.Kotlin.Parcelize)
     id(Plugins.Id.SafeArgs)
     id(Plugins.Id.Hilt)
     id(Plugins.Id.Room)
@@ -29,10 +30,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = Versions.AndroidX.Compose.Compiler
     }
 
     kotlinOptions {

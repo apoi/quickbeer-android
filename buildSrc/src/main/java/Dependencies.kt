@@ -8,6 +8,9 @@ object Plugins {
     object Id {
         object Kotlin {
             const val Android = "android"
+            const val ComposeCompiler = "org.jetbrains.kotlin.plugin.compose"
+            const val KotlinAndroid = "org.jetbrains.kotlin.android"
+            const val Parcelize = "kotlin-parcelize"
         }
 
         object Android {
@@ -19,7 +22,6 @@ object Plugins {
         const val Hilt = "dagger.hilt.android.plugin"
         const val Ksp = "com.google.devtools.ksp"
         const val Ktlint = "org.jlleitschuh.gradle.ktlint"
-        const val Parcelize = "kotlin-parcelize"
         const val Version = "com.github.ben-manes.versions"
         const val SafeArgs = "androidx.navigation.safeargs.kotlin"
         const val Room = "androidx.room"
@@ -30,15 +32,14 @@ object Versions {
     object Plugin {
         const val Detekt = "1.23.6"
         const val Gradle = "8.5.1"
-        const val Kotlin = "1.9.24"
-        const val Ksp = "1.9.24-1.0.20"
+        const val Kotlin = "2.0.0"
+        const val Ksp = "2.0.0-1.0.21"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }
 
     object AndroidX {
         object Compose {
-            const val Compiler = "1.5.14"
             const val Material2 = "1.6.8"
             const val Runtime = "1.6.8"
             const val Ui = "1.6.8"
@@ -69,7 +70,7 @@ object Versions {
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.8.1"
+        const val Coroutines = "1.9.0-RC"
     }
 
     const val Coil = "1.4.0"
