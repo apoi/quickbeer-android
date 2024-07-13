@@ -76,8 +76,9 @@ object Versions {
     const val Hilt = "2.51.1"
     const val Ktlint = "1.1.1"
     const val LeakCanary = "2.14"
+    const val Moshi = "1.15.1"
     const val PhotoView = "2.3.0"
-    const val Retrofit = "2.9.0"
+    const val Retrofit = "2.11.0"
     const val ThreeTenABP = "1.4.7"
     const val Timber = "5.0.1"
 
@@ -163,6 +164,7 @@ object Libraries {
 
     const val CookieJar = "com.github.franmontiel:PersistentCookieJar:${Versions.CookieJar}"
     const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"
+    const val MoshiCodegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.Moshi}"
     const val PhotoView = "com.github.chrisbanes:PhotoView:${Versions.PhotoView}"
     const val ThreeTenABP = "com.jakewharton.threetenabp:threetenabp:${Versions.ThreeTenABP}"
     const val Timber = "com.jakewharton.timber:timber:${Versions.Timber}"

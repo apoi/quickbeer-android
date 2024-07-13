@@ -18,12 +18,14 @@
 package quickbeer.android.domain.rating.network
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import org.threeten.bp.ZonedDateTime
 
 /**
  * Generic rating of a given beer. We know beer details, details of
  * the user are included in the response.
  */
+@JsonClass(generateAdapter = true)
 data class BeerRatingJson(
     // Rating data
     @field:Json(name = "RatingID") val id: Int,

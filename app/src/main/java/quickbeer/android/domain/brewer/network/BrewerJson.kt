@@ -1,8 +1,10 @@
 package quickbeer.android.domain.brewer.network
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import org.threeten.bp.ZonedDateTime
 
+@JsonClass(generateAdapter = true)
 data class BrewerJson(
     @field:Json(name = "BrewerID") val id: Int,
     @field:Json(name = "BrewerName") val name: String?,

@@ -107,6 +107,7 @@ dependencies {
 
     implementation(Libraries.Retrofit.Retrofit)
     implementation(Libraries.Retrofit.MoshiConverter)
+    kapt(Libraries.MoshiCodegen)
 
     implementation(Libraries.PhotoView)
     implementation(Libraries.ThreeTenABP)
