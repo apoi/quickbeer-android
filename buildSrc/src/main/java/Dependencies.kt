@@ -28,8 +28,8 @@ object Plugins {
 
 object Versions {
     object Plugin {
-        const val Detekt = "1.23.5"
-        const val Gradle = "8.5.0"
+        const val Detekt = "1.23.6"
+        const val Gradle = "8.5.1"
         const val Kotlin = "1.9.24"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
@@ -43,12 +43,12 @@ object Versions {
             const val Ui = "1.6.8"
         }
 
-        const val AppCompat = "1.6.1"
+        const val AppCompat = "1.7.0"
         const val ConstraintLayout = "2.1.4"
-        const val CoreKt = "1.12.0"
-        const val DataStore = "1.0.0"
+        const val CoreKt = "1.13.1"
+        const val DataStore = "1.1.1"
         const val Fragment = "1.8.1"
-        const val Lifecycle = "2.7.0"
+        const val Lifecycle = "2.8.3"
         const val Navigation = "2.7.7"
         const val Preferences = "1.2.1"
         const val RecyclerView = "1.3.2"
@@ -57,7 +57,7 @@ object Versions {
     }
 
     object Google {
-        const val Material = "1.11.0"
+        const val Material = "1.12.0"
         const val Barcode = "17.2.0"
     }
 
@@ -68,26 +68,26 @@ object Versions {
 
     object Kotlin {
         const val Kotlin = Plugin.Kotlin
-        const val Coroutines = "1.7.3"
+        const val Coroutines = "1.8.1"
     }
 
     const val Coil = "1.4.0"
     const val CookieJar = "1.0.1"
-    const val Hilt = "2.50"
+    const val Hilt = "2.51.1"
     const val Ktlint = "1.1.1"
-    const val LeakCanary = "2.13"
+    const val LeakCanary = "2.14"
     const val PhotoView = "2.3.0"
     const val Retrofit = "2.9.0"
-    const val ThreeTenABP = "1.4.6"
+    const val ThreeTenABP = "1.4.7"
     const val Timber = "5.0.1"
 
     object Testing {
         object AndroidX {
-            const val Test = "1.4.0"
-            const val TestExt = "1.1.3"
+            const val Test = "1.6.1"
+            const val TestExt = "1.2.1"
         }
 
-        const val EspressoCore = "3.4.0"
+        const val EspressoCore = "3.6.1"
         const val JUnit = "4.13.2"
     }
 }
