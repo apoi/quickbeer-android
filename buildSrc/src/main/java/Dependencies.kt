@@ -33,7 +33,7 @@ object Versions {
         const val Detekt = "1.23.6"
         const val Gradle = "8.5.1"
         const val Kotlin = "2.0.0"
-        const val Ksp = "2.0.0-1.0.21"
+        const val Ksp = "2.0.0-1.0.23"
         const val Ktlint = "12.1.0"
         const val Version = "0.51.0"
     }
