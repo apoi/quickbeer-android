@@ -166,6 +166,11 @@
     <string name="prompt_no_results">No beers found for %s</string>
     <string name="prompt_error">Error searching for %s</string>
 
+    <!-- Discover -->
+    <string name="discover_top_beers">Top Beers</string>
+    <string name="discover_countries">Explore Countries</string>
+    <string name="discover_styles">Explore Beer Styles</string>
+
     <!-- Login -->
     <string name="login_username_hint">Username</string>
     <string name="login_username_label">Username</string>

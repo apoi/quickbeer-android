@@ -32,7 +32,7 @@ open class GroupItem @JvmOverloads constructor(
 
     init {
         val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupItem)
-        _position = Position.values()[ta.getInt(R.styleable.GroupItem_position, 0)]
+        _position = Position.entries.toTypedArray()[ta.getInt(R.styleable.GroupItem_position, 0)]
         applyTopMargin = ta.getBoolean(R.styleable.GroupItem_applyTopMargin, true)
         applyBottomMargin = ta.getBoolean(R.styleable.GroupItem_applyBottomMargin, true)
         ta.recycle()

@@ -25,6 +25,40 @@
         android:layout_height="wrap_content"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/discover_top_beers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="true"
+                app:icon="@drawable/ic_hero_star"
+                app:label="@string/discover_top_beers"
+                app:position="FIRST" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/discover_countries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_world"
+                app:label="@string/discover_countries"
+                app:position="MIDDLE" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/discover_styles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_beaker"
+                app:label="@string/discover_styles"
+                app:position="LAST" />
+
+        </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
