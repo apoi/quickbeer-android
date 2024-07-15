@@ -16,6 +16,9 @@
     <string name="barcode_scanner_title">Scanner</string>
     <string name="barcode_scanner_description">Barcode scanner</string>
 
+    <string name="discover_title">Discover</string>
+    <string name="discover_description">Discover</string>
+
     <string name="profile_title">Profile</string>
     <string name="profile_description">Profile</string>
 

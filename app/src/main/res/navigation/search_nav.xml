@@ -15,9 +15,11 @@
         android:name="quickbeer.android.feature.recent.RecentFragment"
         android:label="@string/app_name"
         tools:layout="@layout/recent_fragment">
+
         <action
             android:id="@+id/to_search"
             app:destination="@id/search_fragment" />
+
     </fragment>
 
     <fragment
@@ -25,15 +27,18 @@
         android:name="quickbeer.android.feature.search.SearchFragment"
         android:label="@string/app_name"
         tools:layout="@layout/recent_fragment">
+
         <argument
             android:name="barcode"
             android:defaultValue="@null"
             app:nullable="true"
             app:argType="string" />
+
         <argument
             android:name="navbar"
             android:defaultValue="true"
             app:argType="boolean" />
+
     </fragment>
 
 </navigation>
