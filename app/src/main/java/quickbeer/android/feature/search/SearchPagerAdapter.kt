@@ -7,15 +7,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 class SearchPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
-        return 4
+        return 2
     }
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> SearchBeersFragment()
-            1 -> SearchBrewersFragment()
-            2 -> SearchStylesFragment()
-            else -> SearchCountriesFragment()
+            else -> SearchBrewersFragment()
         }
     }
 }

@@ -82,8 +82,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
                 tabBinding.title.text = when (searchType) {
                     SearchViewModel.SearchType.BEER -> getString(R.string.search_tab_beers)
                     SearchViewModel.SearchType.BREWER -> getString(R.string.search_tab_brewers)
-                    SearchViewModel.SearchType.STYLE -> getString(R.string.search_tab_styles)
-                    SearchViewModel.SearchType.COUNTRY -> getString(R.string.search_tab_countries)
                 }
                 binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
             }
@@ -96,14 +94,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
         observe(searchViewModel.brewerResults) { state ->
             updateSearchTabProgress(1, state is State.Loading)
-        }
-
-        observe(searchViewModel.styleResults) { state ->
-            updateSearchTabProgress(2, state is State.Loading)
-        }
-
-        observe(searchViewModel.countryResults) { state ->
-            updateSearchTabProgress(3, state is State.Loading)
         }
     }
 
