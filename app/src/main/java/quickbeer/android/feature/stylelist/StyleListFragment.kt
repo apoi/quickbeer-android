@@ -1,4 +1,4 @@
-package quickbeer.android.feature.topbeers
+package quickbeer.android.feature.stylelist
 
 import android.os.Bundle
 import android.view.View
@@ -13,8 +13,8 @@ import quickbeer.android.databinding.ListStandaloneFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
-import quickbeer.android.ui.adapter.beer.BeerListModel
-import quickbeer.android.ui.adapter.beer.BeerListTypeFactory
+import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.ui.adapter.style.StyleTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
@@ -23,7 +23,7 @@ import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class TopBeersFragment : BaseFragment(R.layout.list_standalone_fragment) {
+class StyleListFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
     private val binding by viewBinding(
         bind = ListStandaloneFragmentBinding::bind
@@ -34,46 +34,46 @@ class TopBeersFragment : BaseFragment(R.layout.list_standalone_fragment) {
         destroyCallback = { it.recyclerView.adapter = null }
     )
 
-    private val viewModel by viewModels<TopBeersViewModel>()
-    private val beersAdapter = ListAdapter<BeerListModel>(BeerListTypeFactory())
+    private val viewModel by viewModels<StyleListViewModel>()
+    private val countriesAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.title = getString(R.string.discover_top_beers)
+        binding.toolbar.title = getString(R.string.discover_styles)
 
         listBinding.recyclerView.apply {
-            adapter = beersAdapter
+            adapter = countriesAdapter
             layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onBeerSelected)
+            setClickListener(::onStyleSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.BEER_LIST, beersAdapter::createPool)
+                    .getPool(PoolType.COUNTRY_LIST, countriesAdapter::createPool)
             )
         }
     }
 
     override fun observeViewState() {
-        observe(viewModel.beerListState) { state ->
+        observe(viewModel.styleListState) { state ->
             when (state) {
                 is State.Initial -> Unit
                 is State.Loading -> {
-                    beersAdapter.setItems(emptyList())
+                    countriesAdapter.setItems(emptyList())
                     listBinding.message.isVisible = false
                     listBinding.progress.show()
                 }
                 is State.Empty, is State.Error -> {
-                    beersAdapter.setItems(emptyList())
+                    countriesAdapter.setItems(emptyList())
                     listBinding.message.text = getString(R.string.message_error)
                     listBinding.message.isVisible = true
                     listBinding.progress.hide()
                 }
                 is State.Success -> {
-                    beersAdapter.setItems(state.value)
+                    countriesAdapter.setItems(state.value)
                     listBinding.message.isVisible = false
                     listBinding.progress.hide()
                 }
@@ -81,7 +81,7 @@ class TopBeersFragment : BaseFragment(R.layout.list_standalone_fragment) {
         }
     }
 
-    private fun onBeerSelected(beer: BeerListModel) {
-        navigate(Destination.Beer(beer.beerId))
+    private fun onStyleSelected(style: StyleListModel) {
+        navigate(Destination.Style(style.style.id))
     }
 }

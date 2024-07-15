@@ -15,7 +15,7 @@
             style="@style/AppTheme.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/discover_top_beers" />
+            app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -25,7 +25,6 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <include
-            android:id="@+id/list_content"
             layout="@layout/list_content" />
 
     </FrameLayout>

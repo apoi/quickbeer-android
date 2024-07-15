@@ -9,6 +9,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
+import quickbeer.android.databinding.ListStandaloneFragmentBinding
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
@@ -25,6 +26,10 @@ import quickbeer.android.util.ktx.viewBinding
 class CountryListFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
     private val binding by viewBinding(
+        bind = ListStandaloneFragmentBinding::bind
+    )
+
+    private val listBinding by viewBinding(
         bind = ListContentBinding::bind,
         destroyCallback = { it.recyclerView.adapter = null }
     )
@@ -35,7 +40,9 @@ class CountryListFragment : BaseFragment(R.layout.list_standalone_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.recyclerView.apply {
+        binding.toolbar.title = getString(R.string.discover_countries)
+
+        listBinding.recyclerView.apply {
             adapter = countriesAdapter
             layoutManager = LinearLayoutManager(context)
 
@@ -56,19 +63,19 @@ class CountryListFragment : BaseFragment(R.layout.list_standalone_fragment) {
                 is State.Initial -> Unit
                 is State.Loading -> {
                     countriesAdapter.setItems(emptyList())
-                    binding.message.isVisible = false
-                    binding.progress.show()
+                    listBinding.message.isVisible = false
+                    listBinding.progress.show()
                 }
                 is State.Empty, is State.Error -> {
                     countriesAdapter.setItems(emptyList())
-                    binding.message.text = getString(R.string.message_error)
-                    binding.message.isVisible = true
-                    binding.progress.hide()
+                    listBinding.message.text = getString(R.string.message_error)
+                    listBinding.message.isVisible = true
+                    listBinding.progress.hide()
                 }
                 is State.Success -> {
                     countriesAdapter.setItems(state.value)
-                    binding.message.isVisible = false
-                    binding.progress.hide()
+                    listBinding.message.isVisible = false
+                    listBinding.progress.hide()
                 }
             }
         }

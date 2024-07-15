@@ -24,6 +24,10 @@
             android:id="@+id/to_country_list"
             app:destination="@id/country_list_fragment" />
 
+        <action
+            android:id="@+id/to_style_list"
+            app:destination="@id/style_list_fragment" />
+
     </fragment>
 
     <fragment
@@ -35,6 +39,12 @@
     <fragment
         android:id="@+id/country_list_fragment"
         android:name="quickbeer.android.feature.countrylist.CountryListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/list_standalone_fragment" />
+
+    <fragment
+        android:id="@+id/style_list_fragment"
+        android:name="quickbeer.android.feature.stylelist.StyleListFragment"
         android:label="@string/app_name"
         tools:layout="@layout/list_standalone_fragment" />
 

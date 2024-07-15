@@ -168,8 +168,8 @@
 
     <!-- Discover -->
     <string name="discover_top_beers">Top 50 Beers</string>
-    <string name="discover_countries">Explore Countries</string>
-    <string name="discover_styles">Explore Beer Styles</string>
+    <string name="discover_countries">List of Countries</string>
+    <string name="discover_styles">List of Styles</string>
 
     <!-- Login -->
     <string name="login_username_hint">Username</string>
