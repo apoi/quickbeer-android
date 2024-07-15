@@ -75,10 +75,21 @@ class MainActivity :
             val selectedMenuItemNavGraph = navHostFragment.navController
                 .graph.findNode(item.itemId) as? NavGraph?
 
-            val previousBackStackEntry = navHostFragment.navController
-                .previousBackStackEntry?.destination?.id
+            val destination = navController.currentDestination?.id
 
-            if (previousBackStackEntry == null) {
+            val findNode = { fragmentId: Int ->
+                selectedMenuItemNavGraph?.findNode(fragmentId)?.id
+            }
+
+            val isAtTabRoot = when (item.itemId) {
+                R.id.search -> destination == findNode(R.id.recent_fragment)
+                R.id.barcode -> destination == findNode(R.id.barcode_scanner_fragment)
+                R.id.discover -> destination == findNode(R.id.discover_fragment)
+                R.id.more -> destination == findNode(R.id.profile_fragment)
+                else -> false
+            }
+
+            if (isAtTabRoot) {
                 // We're already at the beginning, scroll views here on reselect
                 val currentFragment = navHostFragment.childFragmentManager.fragments.first()
                 (currentFragment as? Resetable)?.onReset()
