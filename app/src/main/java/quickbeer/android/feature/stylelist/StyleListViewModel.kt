@@ -14,8 +14,10 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
+import quickbeer.android.domain.style.Style
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.ui.adapter.style.StyleListModel
+import quickbeer.android.util.ktx.mapState
 
 @HiltViewModel
 class StyleListViewModel @Inject constructor(
@@ -28,9 +30,16 @@ class StyleListViewModel @Inject constructor(
     init {
         viewModelScope.launch(Dispatchers.IO) {
             styleListRepository.getStream(Accept())
+                .mapState(::filterStyles)
                 .onStart { emit(State.Loading()) }
                 .map(StateListMapper(::StyleListModel)::map)
                 .collectLatest(_styleListState::emit)
         }
+    }
+
+    private fun filterStyles(styles: List<Style>): List<Style> {
+        return styles
+            .filter { it.parent != null && it.parent > 0 }
+            .sortedBy(Style::name)
     }
 }
