@@ -1,4 +1,4 @@
-package quickbeer.android.feature.recent
+package quickbeer.android.feature.topbeers
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,34 +11,35 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.data.state.StateListMapper
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beer.repository.BeerRepository
-import quickbeer.android.domain.beerlist.store.RecentBeersStore
+import quickbeer.android.domain.beerlist.repository.TopBeersRepository
 import quickbeer.android.domain.rating.usecase.GetCurrentUserBeerRatingUseCase
 import quickbeer.android.ui.adapter.beer.BeerListModel
 
 @HiltViewModel
-class RecentBeersViewModel @Inject constructor(
-    recentBeersStore: RecentBeersStore,
+class TopBeersViewModel @Inject constructor(
+    topBeersRepository: TopBeersRepository,
     beerRepository: BeerRepository,
     getRatingUseCase: GetCurrentUserBeerRatingUseCase
 ) : ViewModel() {
 
-    private val _recentBeersState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
-    val recentBeersState: StateFlow<State<List<BeerListModel>>> = _recentBeersState
+    private val _beerListState = MutableStateFlow<State<List<BeerListModel>>>(State.Initial)
+    val beerListState: StateFlow<State<List<BeerListModel>>> = _beerListState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            recentBeersStore.getStream()
-                .map { State.from(it) }
+            topBeersRepository.getStream(Accept())
                 .onStart { emit(State.Loading()) }
                 .map(
-                    StateListMapper<Int, BeerListModel> {
-                        BeerListModel(it, beerRepository, getRatingUseCase)
+                    StateListMapper<Beer, BeerListModel> {
+                        BeerListModel(it.id, beerRepository, getRatingUseCase)
                     }::map
                 )
-                .collectLatest(_recentBeersState::emit)
+                .collectLatest(_beerListState::emit)
         }
     }
 }

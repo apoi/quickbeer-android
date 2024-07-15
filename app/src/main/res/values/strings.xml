@@ -167,7 +167,7 @@
     <string name="prompt_error">Error searching for %s</string>
 
     <!-- Discover -->
-    <string name="discover_top_beers">Top Beers</string>
+    <string name="discover_top_beers">Top 50 Beers</string>
     <string name="discover_countries">Explore Countries</string>
     <string name="discover_styles">Explore Beer Styles</string>
 

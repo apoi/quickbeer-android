@@ -32,7 +32,7 @@ class RecentBrewersViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             recentBrewersStore.getStream()
                 .map { State.from(it) }
-                .onStart { State.Loading<List<Int>>() }
+                .onStart { emit(State.Loading()) }
                 .map(
                     StateListMapper<Int, BrewerListModel> {
                         BrewerListModel(it, null, brewerRepository, countryRepository)

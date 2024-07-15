@@ -17,6 +17,16 @@ class DiscoverFragment : BaseFragment(R.layout.discover_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.discoverTopBeers.setOnClickListener {
+            navigate(DiscoverFragmentDirections.toTopBeers())
+        }
+
+        binding.discoverCountries.setOnClickListener {
+        }
+
+        binding.discoverStyles.setOnClickListener {
+        }
     }
 
     override fun observeViewState() {
