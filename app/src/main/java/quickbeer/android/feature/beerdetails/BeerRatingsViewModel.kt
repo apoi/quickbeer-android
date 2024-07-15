@@ -26,13 +26,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.repository.BeerRatingsRepository
 import quickbeer.android.ui.adapter.rating.RatingListModel
-import quickbeer.android.ui.adapter.rating.RatingListModelDateSortingMapper
+import quickbeer.android.util.ktx.mapState
+import quickbeer.android.util.ktx.mapStateList
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
@@ -50,9 +51,17 @@ class BeerRatingsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             ratingRepository
                 .getStream(beerId.toString(), NoFetch())
-                .map(RatingListModelDateSortingMapper()::map)
+                .mapState(::sortRatingList)
+                .mapStateList(::RatingListModel)
                 .collectLatest(_ratingsState::emit)
         }
+    }
+
+    private fun sortRatingList(ratings: List<Rating>): List<Rating> {
+        return ratings.sortedWith(
+            compareByDescending(Rating::timeEntered)
+                .thenBy(Rating::id)
+        )
     }
 
     fun loadInitialRatings() {

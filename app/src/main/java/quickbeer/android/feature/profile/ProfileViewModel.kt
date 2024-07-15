@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,12 +22,15 @@ import quickbeer.android.data.repository.AlwaysFetch
 import quickbeer.android.data.repository.NoFetch
 import quickbeer.android.data.repository.NotOlderThan
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.beerlist.repository.TickedBeersRepository
 import quickbeer.android.domain.login.LoginManager
+import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.ratinglist.repository.UserAllRatingsRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
 import quickbeer.android.util.ktx.isOlderThan
+import quickbeer.android.util.ktx.mapState
 import timber.log.Timber
 
 @HiltViewModel
@@ -60,7 +62,7 @@ class ProfileViewModel @Inject constructor(
         // Tick data for display. Similarly should not update
         viewModelScope.launch(Dispatchers.IO) {
             userAllRatingsRepository.getStream(NoFetch())
-                .map(StateListSizeMapper()::map)
+                .mapState(List<Rating>::size)
                 .distinctUntilChanged()
                 .collectLatest(_ratingCountState::emit)
         }
@@ -68,7 +70,7 @@ class ProfileViewModel @Inject constructor(
         // Rating data for display. Again, no updating here
         viewModelScope.launch(Dispatchers.IO) {
             tickedBeersRepository.getStream(NoFetch())
-                .map(StateListSizeMapper()::map)
+                .mapState(List<Beer>::size)
                 .distinctUntilChanged()
                 .collectLatest(_tickCountState::emit)
         }

@@ -24,8 +24,9 @@ import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRateCountMapper
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
-import quickbeer.android.ui.adapter.brewer.BrewerListModelAlphabeticMapper
 import quickbeer.android.util.ktx.distinctUntilNewId
+import quickbeer.android.util.ktx.mapState
+import quickbeer.android.util.ktx.mapStateList
 import quickbeer.android.util.ktx.normalize
 
 @HiltViewModel
@@ -88,7 +89,10 @@ class SearchViewModel @Inject constructor(
             brewerSearchRepository
                 .getStream(brewerQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
                 .distinctUntilNewId(Brewer::id)
-                .map(BrewerListModelAlphabeticMapper(brewerRepository, countryRepository)::map)
+                .mapState { it.sortedWith(compareBy(Brewer::name, Brewer::id)) }
+                .mapStateList {
+                    BrewerListModel(it.id, it.countryId, brewerRepository, countryRepository)
+                }
                 .collectLatest(_brewerResults::emit)
         }
     }

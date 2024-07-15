@@ -55,7 +55,7 @@ class BeerListModelRatingTimeMapper @Inject constructor(
     }
 )
 
-class BeerListModelAlphabeticMapper @Inject constructor(
+class BeerListModelAlphabeticalMapper @Inject constructor(
     private val beerRepository: BeerRepository,
     private val getRatingUseCase: GetCurrentUserBeerRatingUseCase
 ) : StateMapper<List<Beer>, List<BeerListModel>>(

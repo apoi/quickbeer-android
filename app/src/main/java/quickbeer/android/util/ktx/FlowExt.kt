@@ -42,7 +42,7 @@ fun <T> Flow<State<List<T>>>.distinctUntilNewId(getId: (T) -> Int): Flow<State<L
  * Maps a State<T> flow to a State<R> flow.
  */
 fun <T, R> Flow<State<T>>.mapState(mapper: (T) -> R?): Flow<State<R>> {
-    return map { it.map(mapper) }
+    return map { state -> state.map(mapper) }
 }
 
 /**
