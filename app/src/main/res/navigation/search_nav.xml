@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/search"
     app:startDestination="@id/recent_fragment">
-    
+
     <fragment
         android:id="@+id/recent_fragment"
         android:name="quickbeer.android.feature.recent.RecentFragment"

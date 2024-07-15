@@ -1,9 +1,11 @@
 package quickbeer.android.feature.profile.model
 
+import com.squareup.moshi.JsonClass
 import quickbeer.android.ui.adapter.base.ListItem
 import quickbeer.android.ui.adapter.base.ListTypeFactory
 
-class LicenseListItemModel(
+@JsonClass(generateAdapter = true)
+data class LicenseListItemModel(
     val project: String,
     val link: String,
     val license: String
