@@ -36,7 +36,7 @@
                 app:applyTopMargin="true"
                 app:icon="@drawable/ic_hero_star"
                 app:label="@string/discover_top_beers"
-                app:position="FIRST" />
+                app:position="ONLY" />
 
             <quickbeer.android.ui.view.GroupLink
                 android:id="@+id/discover_countries"
@@ -45,7 +45,7 @@
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_world"
                 app:label="@string/discover_countries"
-                app:position="MIDDLE" />
+                app:position="FIRST" />
 
             <quickbeer.android.ui.view.GroupLink
                 android:id="@+id/discover_styles"
