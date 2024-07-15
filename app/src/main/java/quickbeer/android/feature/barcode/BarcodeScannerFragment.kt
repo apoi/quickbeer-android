@@ -33,7 +33,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.IOException
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import quickbeer.android.R
 import quickbeer.android.databinding.BarcodeScannerFragmentBinding
@@ -41,13 +40,14 @@ import quickbeer.android.feature.barcode.camera.CameraSource
 import quickbeer.android.feature.barcode.detection.BarcodeProcessor
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.base.Resetable
 import quickbeer.android.util.ktx.setNegativeAction
 import quickbeer.android.util.ktx.setPositiveAction
 import quickbeer.android.util.ktx.viewBinding
 import timber.log.Timber
 
 @AndroidEntryPoint
-class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
+class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment), Resetable {
 
     private val binding by viewBinding(BarcodeScannerFragmentBinding::bind)
     private val viewModel by viewModels<BarcodeScannerViewModel>()
@@ -69,13 +69,9 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.setNavigationOnClickListener {
-            closeScanner()
-        }
+        binding.toolbar.setNavigationOnClickListener { closeScanner() }
 
-        binding.graphicOverlay.setOnClickListener {
-            if (!viewModel.isCameraLive) startCamera()
-        }
+        binding.graphicOverlay.setOnClickListener { restartCamera() }
 
         binding.flashButton.setOnClickListener { onFlashPressed() }
     }
@@ -148,6 +144,10 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
         }
 
         requireView().postDelayed(Runnable(::startCameraPreview), 150)
+    }
+
+    private fun restartCamera() {
+        if (!viewModel.isCameraLive) startCamera()
     }
 
     private fun closeScanner() {
@@ -233,6 +233,10 @@ class BarcodeScannerFragment : BaseFragment(R.layout.barcode_scanner_fragment) {
 
         val shouldAnimateChip = wasPromptChipGone && promptChip.isVisible
         if (shouldAnimateChip && !promptChipAnimator.isRunning) promptChipAnimator.start()
+    }
+
+    override fun onReset() {
+        restartCamera()
     }
 
     companion object {
