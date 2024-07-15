@@ -25,12 +25,12 @@ sealed class State<out T> {
         }
     }
 
-    fun <R> map(mapper: (T) -> R): State<R> {
+    fun <R> map(mapper: (T) -> R?): State<R> {
         return when (this) {
             is Initial -> Initial
             is Loading -> Loading(this.value?.let(mapper))
             is Empty -> Empty
-            is Success -> Success(mapper(this.value))
+            is Success -> from(mapper(this.value))
             is Error -> Error(this.cause)
         }
     }

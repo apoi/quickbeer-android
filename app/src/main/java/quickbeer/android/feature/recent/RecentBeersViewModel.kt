@@ -12,11 +12,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
-import quickbeer.android.data.state.StateListMapper
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.beerlist.store.RecentBeersStore
 import quickbeer.android.domain.rating.usecase.GetCurrentUserBeerRatingUseCase
 import quickbeer.android.ui.adapter.beer.BeerListModel
+import quickbeer.android.util.ktx.mapStateList
 
 @HiltViewModel
 class RecentBeersViewModel @Inject constructor(
@@ -33,11 +33,7 @@ class RecentBeersViewModel @Inject constructor(
             recentBeersStore.getStream()
                 .map { State.from(it) }
                 .onStart { emit(State.Loading()) }
-                .map(
-                    StateListMapper<Int, BeerListModel> {
-                        BeerListModel(it, beerRepository, getRatingUseCase)
-                    }::map
-                )
+                .mapStateList { BeerListModel(it, beerRepository, getRatingUseCase) }
                 .collectLatest(_recentBeersState::emit)
         }
     }
