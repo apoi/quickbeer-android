@@ -3,6 +3,7 @@ package quickbeer.android.network
 import okhttp3.ResponseBody
 import quickbeer.android.domain.beer.network.BeerJson
 import quickbeer.android.domain.brewer.network.BrewerJson
+import quickbeer.android.domain.feed.network.FeedItemJson
 import quickbeer.android.domain.rating.network.BeerRatingJson
 import quickbeer.android.domain.rating.network.UserRatingJson
 import quickbeer.android.domain.stylelist.network.StyleJson
@@ -129,4 +130,9 @@ interface RateBeerApi {
 
     @GET("/json/rc.asp")
     suspend fun getUserRateCount(@Query("uid") userId: String): ApiResult<List<RateCountJson>>
+
+    // FEED
+
+    @GET("/json/feed.asp")
+    fun getFeed(@Query("m") mode: String): ApiResult<List<FeedItemJson>>
 }

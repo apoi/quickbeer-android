@@ -20,6 +20,7 @@ import quickbeer.android.domain.beer.store.BeerStoreCore
 import quickbeer.android.domain.brewer.store.BrewerRoomCore
 import quickbeer.android.domain.brewer.store.BrewerStoreCore
 import quickbeer.android.domain.country.Country
+import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
 import quickbeer.android.domain.preferences.core.IntPreferenceStoreCore
@@ -94,6 +95,13 @@ object RepositoryModule {
     @Singleton
     fun provideRatingCore(roomCore: RatingRoomCore): StoreCore<Int, Rating> {
         return CachingStoreCore(roomCore, Rating::id)
+    }
+
+    @Provides
+    @Singleton
+    @IdListMemoryCore
+    fun provideFeedItemCore(): StoreCore<Int, FeedItem> {
+        return MemoryStoreCore(FeedItem.merger)
     }
 
     @Provides
