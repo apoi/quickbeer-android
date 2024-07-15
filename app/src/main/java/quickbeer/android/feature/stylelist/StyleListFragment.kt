@@ -42,6 +42,10 @@ class StyleListFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
         binding.toolbar.title = getString(R.string.discover_styles)
 
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
         listBinding.recyclerView.apply {
             adapter = countriesAdapter
             layoutManager = LinearLayoutManager(context)

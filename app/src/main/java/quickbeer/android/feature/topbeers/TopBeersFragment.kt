@@ -42,6 +42,10 @@ class TopBeersFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
         binding.toolbar.title = getString(R.string.discover_top_beers)
 
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
         listBinding.recyclerView.apply {
             adapter = beersAdapter
             layoutManager = LinearLayoutManager(context)

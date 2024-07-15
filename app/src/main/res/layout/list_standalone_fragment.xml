@@ -15,6 +15,7 @@
             style="@style/AppTheme.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:navigationIcon="@drawable/ic_hero_arrow_left"
             app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
