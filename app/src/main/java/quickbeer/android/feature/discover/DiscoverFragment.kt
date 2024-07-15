@@ -23,6 +23,7 @@ class DiscoverFragment : BaseFragment(R.layout.discover_fragment) {
         }
 
         binding.discoverCountries.setOnClickListener {
+            navigate(DiscoverFragmentDirections.toCountryList())
         }
 
         binding.discoverStyles.setOnClickListener {

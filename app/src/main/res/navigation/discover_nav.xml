@@ -20,12 +20,22 @@
             android:id="@+id/to_top_beers"
             app:destination="@id/top_beers_fragment" />
 
+        <action
+            android:id="@+id/to_country_list"
+            app:destination="@id/country_list_fragment" />
+
     </fragment>
 
     <fragment
         android:id="@+id/top_beers_fragment"
         android:name="quickbeer.android.feature.topbeers.TopBeersFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/list_fragment" />
+        tools:layout="@layout/list_standalone_fragment" />
+
+    <fragment
+        android:id="@+id/country_list_fragment"
+        android:name="quickbeer.android.feature.countrylist.CountryListFragment"
+        android:label="@string/app_name"
+        tools:layout="@layout/list_standalone_fragment" />
 
 </navigation>
