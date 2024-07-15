@@ -10,7 +10,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.DiscoverTabTitleBinding
+import quickbeer.android.databinding.RecentTabTitleBinding
 import quickbeer.android.databinding.SearchFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.feature.barcode.utils.BarcodeValidator
@@ -78,7 +78,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         (0.until(binding.tabLayout.tabCount))
             .forEach { index ->
                 val searchType = SearchViewModel.SearchType.fromValue(index)
-                val tabBinding = DiscoverTabTitleBinding.inflate(LayoutInflater.from(context))
+                val tabBinding = RecentTabTitleBinding.inflate(LayoutInflater.from(context))
                 tabBinding.title.text = when (searchType) {
                     SearchViewModel.SearchType.BEER -> getString(R.string.search_tab_beers)
                     SearchViewModel.SearchType.BREWER -> getString(R.string.search_tab_brewers)

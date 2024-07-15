@@ -1,4 +1,4 @@
-package quickbeer.android.feature.discover
+package quickbeer.android.feature.recent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

@@ -1,11 +1,11 @@
-package quickbeer.android.feature.discover
+package quickbeer.android.feature.recent
 
 import android.os.Bundle
 import android.view.View
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
-import quickbeer.android.databinding.DiscoverFragmentBinding
+import quickbeer.android.databinding.RecentFragmentBinding
 import quickbeer.android.navigation.NavAnim
 import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.search.SearchBarFragment
@@ -13,10 +13,10 @@ import quickbeer.android.ui.view.SearchView
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetable {
+class RecentFragment : SearchBarFragment(R.layout.recent_fragment), Resetable {
 
     private val binding by viewBinding(
-        bind = DiscoverFragmentBinding::bind,
+        bind = RecentFragmentBinding::bind,
         destroyCallback = {
             mediator?.detach()
             mediator = null
@@ -51,7 +51,7 @@ class DiscoverFragment : SearchBarFragment(R.layout.discover_fragment), Resetabl
         super.onSearchFocusChanged(hasFocus)
 
         if (hasFocus) {
-            navigate(DiscoverFragmentDirections.toSearch(), NavAnim.NONE)
+            navigate(RecentFragmentDirections.toSearch(), NavAnim.NONE)
         }
     }
 

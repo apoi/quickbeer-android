@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/discover"
+        android:id="@+id/search"
         android:icon="@drawable/ic_search"
-        android:contentDescription="@string/discover_description"
-        android:title="@string/discover_title" />
+        android:contentDescription="@string/recent_description"
+        android:title="@string/recent_title" />
 
     <item
         android:id="@+id/barcode"

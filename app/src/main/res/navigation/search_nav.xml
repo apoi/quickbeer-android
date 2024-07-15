@@ -2,8 +2,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/discover"
-    app:startDestination="@id/discover_fragment">
+    android:id="@+id/search"
+    app:startDestination="@id/recent_fragment">
 
     <include app:graph="@navigation/details_beer_nav" />
     <include app:graph="@navigation/details_brewer_nav" />
@@ -11,10 +11,10 @@
     <include app:graph="@navigation/details_country_nav" />
 
     <fragment
-        android:id="@+id/discover_fragment"
-        android:name="quickbeer.android.feature.discover.DiscoverFragment"
+        android:id="@+id/recent_fragment"
+        android:name="quickbeer.android.feature.recent.RecentFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/discover_fragment">
+        tools:layout="@layout/recent_fragment">
         <action
             android:id="@+id/to_search"
             app:destination="@id/search_fragment" />
@@ -24,7 +24,7 @@
         android:id="@+id/search_fragment"
         android:name="quickbeer.android.feature.search.SearchFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/discover_fragment">
+        tools:layout="@layout/recent_fragment">
         <argument
             android:name="barcode"
             android:defaultValue="@null"

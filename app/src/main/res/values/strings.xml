@@ -10,8 +10,8 @@
     <string name="action_no">No</string>
 
     <!-- Pages -->
-    <string name="discover_title">Discover</string>
-    <string name="discover_description">Discover</string>
+    <string name="recent_title">Search</string>
+    <string name="recent_description">Search</string>
 
     <string name="barcode_scanner_title">Scanner</string>
     <string name="barcode_scanner_description">Barcode scanner</string>
@@ -41,7 +41,7 @@
     <string name="search_tab_styles">Styles</string>
     <string name="search_tab_countries">Countries</string>
 
-    <!-- Discover -->
+    <!-- Recent -->
     <string name="recent_beers">Recent beers</string>
     <string name="recent_brewers">Recent brewers</string>
 

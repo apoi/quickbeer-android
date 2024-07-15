@@ -92,7 +92,7 @@ class MainActivity :
     }
 
     fun selectMainTab() {
-        binding.mainBottomNav.selectedItemId = R.id.discover
+        binding.mainBottomNav.selectedItemId = R.id.search
     }
 
     fun setPendingDestination(destination: Destination) {
@@ -117,19 +117,19 @@ class MainActivity :
         val previousBackStackEntry = navHostFragment.navController
             .previousBackStackEntry?.destination?.id
 
-        return if (previousBackStackEntry != R.id.discover_fragment) {
-            // Navigate back if next item in back stack isn't yet Discover fragment.
-            // This handles back navigation in non-Discover tabs
+        return if (previousBackStackEntry != R.id.recent_fragment) {
+            // Navigate back if next item in back stack isn't yet Recent (search) fragment.
+            // This handles back navigation in non-Recent tabs
             onSupportNavigateUp()
-        } else if (bottomNavigationView.selectedItemId == R.id.discover) {
-            // Navigate back if current tab is Discover. This handles back navigation
-            // in the Discover tab.
+        } else if (bottomNavigationView.selectedItemId == R.id.search) {
+            // Navigate back if current tab is Search. This handles back navigation
+            // in the Search tab.
             onSupportNavigateUp()
             true
         } else {
-            // Switch to Discover tab when back navigation would take back to initial state.
-            // This handles tab switching to Discover with keeping the expected navigation status:
-            // otherwise, the default handling would show the initial fragment of Discover.
+            // Switch to Search tab when back navigation would take back to initial state.
+            // This handles tab switching to Search with keeping the expected navigation status:
+            // otherwise, the default handling would show the initial fragment of Search.
             selectMainTab()
             true
         }
