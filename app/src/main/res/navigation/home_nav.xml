@@ -9,4 +9,9 @@
     <include app:graph="@navigation/discover_nav" />
     <include app:graph="@navigation/profile_nav" />
 
+    <include app:graph="@navigation/details_beer_nav" />
+    <include app:graph="@navigation/details_brewer_nav" />
+    <include app:graph="@navigation/details_style_nav" />
+    <include app:graph="@navigation/details_country_nav" />
+
 </navigation>

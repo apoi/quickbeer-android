@@ -5,11 +5,6 @@
     android:id="@+id/discover"
     app:startDestination="@id/discover_fragment">
 
-    <include app:graph="@navigation/details_beer_nav" />
-    <include app:graph="@navigation/details_brewer_nav" />
-    <include app:graph="@navigation/details_style_nav" />
-    <include app:graph="@navigation/details_country_nav" />
-
     <fragment
         android:id="@+id/discover_fragment"
         android:name="quickbeer.android.feature.discover.DiscoverFragment"
