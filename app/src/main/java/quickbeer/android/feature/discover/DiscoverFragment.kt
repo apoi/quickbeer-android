@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.DiscoverFragmentBinding
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toCountryList
+import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toFeed
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toStyleList
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toTopBeers
 import quickbeer.android.ui.base.BaseFragment
@@ -31,6 +32,10 @@ class DiscoverFragment : BaseFragment(R.layout.discover_fragment) {
 
         binding.discoverStyles.setOnClickListener {
             navigate(toStyleList())
+        }
+
+        binding.discoverFeed.setOnClickListener {
+            navigate(toFeed())
         }
     }
 

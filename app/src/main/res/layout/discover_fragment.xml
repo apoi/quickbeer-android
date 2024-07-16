@@ -56,6 +56,15 @@
                 app:label="@string/discover_styles"
                 app:position="LAST" />
 
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/discover_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_sparkles"
+                app:label="@string/discover_feed"
+                app:position="ONLY" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

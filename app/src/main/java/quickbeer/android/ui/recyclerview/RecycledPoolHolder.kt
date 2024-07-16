@@ -13,6 +13,7 @@ interface RecycledPoolHolder {
         BEER_LIST(1),
         BREWER_LIST(2),
         STYLE_LIST(3),
-        COUNTRY_LIST(4)
+        COUNTRY_LIST(4),
+        FEED_LIST(5)
     }
 }

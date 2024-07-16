@@ -170,6 +170,7 @@
     <string name="discover_top_beers">Highest Rated Beers</string>
     <string name="discover_countries">List of Countries</string>
     <string name="discover_styles">List of Styles</string>
+    <string name="discover_feed">Feed</string>
 
     <!-- Login -->
     <string name="login_username_hint">Username</string>

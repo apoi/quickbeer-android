@@ -1,4 +1,4 @@
-package quickbeer.android.feature.stylelist
+package quickbeer.android.feature.feed
 
 import android.os.Bundle
 import android.view.View
@@ -10,11 +10,10 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.databinding.ListStandaloneFragmentBinding
-import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
-import quickbeer.android.ui.adapter.style.StyleListModel
-import quickbeer.android.ui.adapter.style.StyleTypeFactory
+import quickbeer.android.ui.adapter.feed.FeedListModel
+import quickbeer.android.ui.adapter.feed.FeedTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
 import quickbeer.android.ui.recyclerview.RecycledPoolHolder
@@ -23,7 +22,7 @@ import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
-class StyleListFragment : BaseFragment(R.layout.list_standalone_fragment) {
+class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
     private val binding by viewBinding(
         bind = ListStandaloneFragmentBinding::bind
@@ -34,50 +33,50 @@ class StyleListFragment : BaseFragment(R.layout.list_standalone_fragment) {
         destroyCallback = { it.recyclerView.adapter = null }
     )
 
-    private val viewModel by viewModels<StyleListViewModel>()
-    private val stylesAdapter = ListAdapter<StyleListModel>(StyleTypeFactory())
+    private val viewModel by viewModels<FeedViewModel>()
+    private val feedAdapter = ListAdapter<FeedListModel>(FeedTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.title = getString(R.string.discover_styles)
+        binding.toolbar.title = getString(R.string.discover_feed)
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
 
         listBinding.recyclerView.apply {
-            adapter = stylesAdapter
+            adapter = feedAdapter
             layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
-            setClickListener(::onStyleSelected)
+            setClickListener(::onFeedItemSelected)
 
             setRecycledViewPool(
                 (activity as RecycledPoolHolder)
-                    .getPool(PoolType.STYLE_LIST, stylesAdapter::createPool)
+                    .getPool(PoolType.FEED_LIST, feedAdapter::createPool)
             )
         }
     }
 
     override fun observeViewState() {
-        observe(viewModel.styleListState) { state ->
+        observe(viewModel.feedListState) { state ->
             when (state) {
                 is State.Initial -> Unit
                 is State.Loading -> {
-                    stylesAdapter.setItems(emptyList())
+                    feedAdapter.setItems(emptyList())
                     listBinding.message.isVisible = false
                     listBinding.progress.show()
                 }
                 is State.Empty, is State.Error -> {
-                    stylesAdapter.setItems(emptyList())
+                    feedAdapter.setItems(emptyList())
                     listBinding.message.text = getString(R.string.message_error)
                     listBinding.message.isVisible = true
                     listBinding.progress.hide()
                 }
                 is State.Success -> {
-                    stylesAdapter.setItems(state.value)
+                    feedAdapter.setItems(state.value)
                     listBinding.message.isVisible = false
                     listBinding.progress.hide()
                 }
@@ -85,7 +84,7 @@ class StyleListFragment : BaseFragment(R.layout.list_standalone_fragment) {
         }
     }
 
-    private fun onStyleSelected(style: StyleListModel) {
-        navigate(Destination.Style(style.style.id))
+    private fun onFeedItemSelected(feedItem: FeedListModel) {
+        TODO()
     }
 }
