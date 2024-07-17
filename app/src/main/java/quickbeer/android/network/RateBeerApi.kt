@@ -134,5 +134,5 @@ interface RateBeerApi {
     // FEED
 
     @GET("/json/feed.asp")
-    fun getFeed(@Query("m") mode: String): ApiResult<List<FeedItemJson>>
+    suspend fun getFeed(@Query("m") mode: String): ApiResult<List<FeedItemJson>>
 }

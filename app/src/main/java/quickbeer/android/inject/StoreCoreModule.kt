@@ -99,7 +99,6 @@ object RepositoryModule {
 
     @Provides
     @Singleton
-    @IdListMemoryCore
     fun provideFeedItemCore(): StoreCore<Int, FeedItem> {
         return MemoryStoreCore(FeedItem.merger)
     }
