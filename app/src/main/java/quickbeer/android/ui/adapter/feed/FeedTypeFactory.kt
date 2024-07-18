@@ -10,7 +10,7 @@ import quickbeer.android.ui.adapter.base.ListViewHolder
 class FeedTypeFactory : ListTypeFactory() {
 
     override fun type(item: ListItem): Int {
-        return R.layout.simple_list_item
+        return R.layout.feed_list_item
     }
 
     override fun createViewHolder(type: Int, parent: ViewGroup): ListViewHolder<*> {

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/beer_list_item_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_m"
+    android:paddingTop="@dimen/spacing_s"
+    android:paddingEnd="@dimen/spacing_m"
+    android:paddingBottom="@dimen/spacing_s">
+
+    <TextView
+        android:id="@+id/item_icon"
+        android:layout_width="@dimen/beer_list_item_icon_size"
+        android:layout_height="@dimen/beer_list_item_icon_size"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:layout_marginEnd="@dimen/spacing_m"
+        android:layout_marginBottom="@dimen/spacing_s"
+        android:background="@drawable/score_unrated"
+        android:fontFamily="sans-serif-thin"
+        android:gravity="center"
+        android:textColor="@color/text_light"
+        android:textSize="@dimen/listitem_text_score"
+        tools:text="100" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-thin"
+        android:singleLine="true"
+        android:textColor="@color/text_light"
+        android:textSize="@dimen/listitem_text_primary"
+        tools:text="Pilsener / Pils / Pilsner" />
+
+</LinearLayout>
