@@ -162,9 +162,7 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideFeedFetcher(
-        api: RateBeerApi
-    ): FeedFetcher {
+    fun provideFeedFetcher(api: RateBeerApi): FeedFetcher {
         return FeedFetcher(api)
     }
 }

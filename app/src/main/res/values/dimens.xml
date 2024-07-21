@@ -40,6 +40,9 @@
     <dimen name="beer_list_item_height">70dp</dimen>
     <dimen name="beer_list_item_icon_size">52dp</dimen>
 
+    <!-- Feed list -->
+    <dimen name="feed_list_item_height">120dp</dimen>
+
     <!-- Search view -->
     <dimen name="search_sp_16">16sp</dimen>
     <dimen name="search_icon_48">48dp</dimen>
