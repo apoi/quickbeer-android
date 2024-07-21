@@ -1,6 +1,7 @@
 package quickbeer.android.ui.adapter.feed
 
 import coil.load
+import coil.request.Disposable
 import coil.transform.BlurTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,8 @@ import timber.log.Timber
 class FeedViewHolder(
     private val binding: FeedListItemBinding
 ) : ScopeListViewHolder<FeedListModel>(binding.root) {
+
+    private var disposable: Disposable? = null
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
         clear()
@@ -47,7 +50,7 @@ class FeedViewHolder(
     }
 
     private fun setBeer(beer: Beer) {
-        binding.background.load(beer.imageUri()) {
+        disposable = binding.background.load(beer.imageUri()) {
             crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
             transformations(
                 ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT),
@@ -56,7 +59,14 @@ class FeedViewHolder(
         }
     }
 
+    override fun unbind() {
+        super.unbind()
+        disposable?.dispose()
+        disposable = null
+    }
+
     private fun clear() {
+        binding.background.setImageResource(0)
     }
 
     companion object {
