@@ -1,28 +1,67 @@
 package quickbeer.android.ui.adapter.feed
 
+import coil.load
+import coil.transform.BlurTransformation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import quickbeer.android.databinding.FeedListItemBinding
+import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.feed.FeedItem
-import quickbeer.android.ui.adapter.base.ListViewHolder
+import quickbeer.android.ui.adapter.base.ScopeListViewHolder
+import quickbeer.android.ui.transformations.ContainerLabelExtractor
+import timber.log.Timber
 
 class FeedViewHolder(
     private val binding: FeedListItemBinding
-) : ListViewHolder<FeedListModel>(binding.root) {
+) : ScopeListViewHolder<FeedListModel>(binding.root) {
 
-    override fun bind(item: FeedListModel) {
-        when (item.feedItem.type) {
-            FeedItem.Type.BEER_RATING -> bindBeerRating(item.feedItem)
-            FeedItem.Type.BEER_ADDED -> TODO()
-            FeedItem.Type.PLACE_RATING -> TODO()
-            FeedItem.Type.IS_DRINKING -> TODO()
-            FeedItem.Type.EVENT_ATTENDANCE -> TODO()
-            FeedItem.Type.AWARD -> TODO()
-            FeedItem.Type.PLACE_CHECK_IN -> TODO()
-            FeedItem.Type.REACHED_RATINGS -> TODO()
-            FeedItem.Type.BREWERY_ADDED -> TODO()
-            null -> TODO()
+    override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        clear()
+
+        Timber.d("BIND $item")
+
+        when (item.feedItem) {
+            is FeedItem.BeerRated -> bindBeerRating(item.feedItem, item, scope)
         }
     }
 
-    private fun bindBeerRating(item: FeedItem) {
+    private fun bindBeerRating(
+        item: FeedItem.BeerRated,
+        listModel: FeedListModel,
+        scope: CoroutineScope
+    ) {
+        scope.launch {
+            listModel.getBeer(item.beerId)
+                .collect { beerState ->
+                    val beer = beerState.valueOrNull()
+
+                    if (beer != null) {
+                        withContext(Dispatchers.Main) {
+                            setBeer(beer)
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun setBeer(beer: Beer) {
+        binding.background.load(beer.imageUri()) {
+            crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(
+                ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT),
+                BlurTransformation(itemView.context, LABEL_BLUR)
+            )
+        }
+    }
+
+    private fun clear() {
+    }
+
+    companion object {
+        private const val LABEL_WIDTH = 500
+        private const val LABEL_HEIGHT = 500
+        private const val LABEL_BLUR = 15f
     }
 }

@@ -7,10 +7,13 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:paddingStart="@dimen/spacing_m"
     android:paddingTop="@dimen/spacing_s"
-    android:paddingEnd="@dimen/spacing_m"
     android:paddingBottom="@dimen/spacing_s">
 
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

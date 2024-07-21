@@ -3,18 +3,18 @@ package quickbeer.android.domain.feed.store
 import javax.inject.Inject
 import quickbeer.android.data.store.StoreCore
 import quickbeer.android.data.store.store.ItemListStore
-import quickbeer.android.domain.feed.FeedItem
+import quickbeer.android.domain.feed.FeedDataItem
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.inject.IdListMemoryCore
 
 class FeedStore @Inject constructor(
     @IdListMemoryCore indexStoreCore: StoreCore<String, IdList>,
-    feedItemStoreCore: StoreCore<Int, FeedItem>
-) : ItemListStore<String, Int, FeedItem>(
+    feedDataItemStoreCore: StoreCore<Int, FeedDataItem>
+) : ItemListStore<String, Int, FeedDataItem>(
     indexMapper = FeedModeMapper(),
-    getKey = FeedItem::id,
+    getKey = FeedDataItem::id,
     indexCore = indexStoreCore,
-    valueCore = feedItemStoreCore
+    valueCore = feedDataItemStoreCore
 ) {
 
     private class FeedModeMapper : IndexMapper<String> {
