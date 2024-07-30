@@ -6,7 +6,7 @@ object LoggingInterceptor {
 
     fun create(): HttpLoggingInterceptor {
         return HttpLoggingInterceptor().apply {
-            setLevel(HttpLoggingInterceptor.Level.BODY)
+            setLevel(HttpLoggingInterceptor.Level.BASIC)
         }
     }
 }

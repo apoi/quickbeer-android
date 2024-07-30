@@ -12,7 +12,6 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
-import timber.log.Timber
 
 class FeedViewHolder(
     private val binding: FeedListItemBinding
@@ -21,10 +20,6 @@ class FeedViewHolder(
     private var disposable: Disposable? = null
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
-        clear()
-
-        Timber.d("BIND $item")
-
         when (item.feedItem) {
             is FeedItem.BeerRated -> bindBeerRating(item.feedItem, item, scope)
         }
@@ -36,20 +31,19 @@ class FeedViewHolder(
         scope: CoroutineScope
     ) {
         scope.launch {
-            listModel.getBeer(item.beerId)
-                .collect { beerState ->
-                    val beer = beerState.valueOrNull()
-
-                    if (beer != null) {
-                        withContext(Dispatchers.Main) {
-                            setBeer(beer)
-                        }
+            listModel.getBeer(item.beerId).collect {
+                it.valueOrNull()?.let { beer ->
+                    withContext(Dispatchers.Main) {
+                        setBeer(beer)
                     }
                 }
+            }
         }
     }
 
     private fun setBeer(beer: Beer) {
+        binding.name.text = beer.name
+
         disposable = binding.background.load(beer.imageUri()) {
             crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
             transformations(
@@ -61,11 +55,14 @@ class FeedViewHolder(
 
     override fun unbind() {
         super.unbind()
+
         disposable?.dispose()
         disposable = null
+        clear()
     }
 
     private fun clear() {
+        binding.name.text = ""
         binding.background.setImageResource(0)
     }
 

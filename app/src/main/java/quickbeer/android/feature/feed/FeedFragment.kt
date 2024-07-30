@@ -85,6 +85,5 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
     }
 
     private fun onFeedItemSelected(feedItem: FeedListModel) {
-        TODO()
     }
 }
