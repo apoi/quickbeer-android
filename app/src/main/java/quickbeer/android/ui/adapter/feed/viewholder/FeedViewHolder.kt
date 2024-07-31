@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import quickbeer.android.Constants
 import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.beer.Beer
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 import quickbeer.android.ui.adapter.feed.FeedListModel
@@ -32,12 +33,24 @@ abstract class FeedViewHolder(
         }.let(disposables::add)
     }
 
-    protected fun bindBeerRating(listModel: FeedListModel, scope: CoroutineScope) {
+    protected fun bindBeer(listModel: FeedListModel, scope: CoroutineScope) {
         scope.launch {
             listModel.getBeer(listModel.feedItem.beerId()).collect {
                 it.valueOrNull()?.let { beer ->
                     withContext(Dispatchers.Main) {
                         setBeer(listModel.feedItem, beer)
+                    }
+                }
+            }
+        }
+    }
+
+    protected fun bindBrewer(listModel: FeedListModel, scope: CoroutineScope) {
+        scope.launch {
+            listModel.getBrewer(listModel.feedItem.brewerId()).collect {
+                it.valueOrNull()?.let { brewer ->
+                    withContext(Dispatchers.Main) {
+                        setBrewer(listModel.feedItem, brewer)
                     }
                 }
             }
@@ -54,6 +67,8 @@ abstract class FeedViewHolder(
             )
         }.let(disposables::add)
     }
+
+    protected open fun setBrewer(item: FeedItem, brewer: Brewer) = Unit
 
     override fun unbind() {
         super.unbind()

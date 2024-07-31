@@ -11,7 +11,7 @@ class BeerRatingViewHolder(
 ) : FeedViewHolder(binding) {
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
-        bindBeerRating(item, scope)
+        bindBeer(item, scope)
         setUser(item.feedItem.username)
     }
 

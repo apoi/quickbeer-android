@@ -23,6 +23,13 @@ data class FeedItem(
         }
     }
 
+    fun brewerId(): Int {
+        return when (type) {
+            Type.BREWERY_ADDED -> linkId?.takeIf { it > 0 } ?: error("Invalid id")
+            else -> error("No id for type $type")
+        }
+    }
+
     enum class Type(val id: Int) {
         BEER_ADDED(1),
         EVENT_ADDED(3),
@@ -42,7 +49,8 @@ data class FeedItem(
                 BEER_RATING,
                 REACHED_RATINGS,
                 EVENT_ADDED,
-                EVENT_ATTENDANCE -> true
+                EVENT_ATTENDANCE,
+                PLACE_RATING -> true
                 else -> false
             }
         }

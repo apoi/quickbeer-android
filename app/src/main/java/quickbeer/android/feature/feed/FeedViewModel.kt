@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
+import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.feed.repository.FeedRepository
 import quickbeer.android.ui.adapter.feed.FeedListModel
 import quickbeer.android.util.ktx.mapState
@@ -20,7 +21,8 @@ import quickbeer.android.util.ktx.mapStateList
 @HiltViewModel
 class FeedViewModel @Inject constructor(
     repository: FeedRepository,
-    beerRepository: BeerRepository
+    beerRepository: BeerRepository,
+    brewerRepository: BrewerRepository
 ) : ViewModel() {
 
     private val _feedListState = MutableStateFlow<State<List<FeedListModel>>>(State.Initial)
@@ -32,7 +34,7 @@ class FeedViewModel @Inject constructor(
                 .mapState { feedItems ->
                     feedItems.filter { it.type.isSupported() }
                 }
-                .mapStateList { FeedListModel(it, beerRepository) }
+                .mapStateList { FeedListModel(it, beerRepository, brewerRepository) }
                 .collectLatest { _feedListState.emit(it) }
         }
     }
