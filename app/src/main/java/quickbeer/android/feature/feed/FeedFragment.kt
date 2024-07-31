@@ -10,6 +10,8 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.databinding.ListStandaloneFragmentBinding
+import quickbeer.android.domain.feed.FeedItem.Type.BEER_ADDED
+import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.feed.FeedListModel
@@ -84,6 +86,10 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
         }
     }
 
-    private fun onFeedItemSelected(feedItem: FeedListModel) {
+    private fun onFeedItemSelected(model: FeedListModel) {
+        when (model.feedItem.type) {
+            BEER_ADDED -> navigate(Destination.Beer(model.feedItem.beerId()))
+            else -> Unit
+        }
     }
 }

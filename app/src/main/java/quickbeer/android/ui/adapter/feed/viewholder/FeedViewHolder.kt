@@ -1,5 +1,6 @@
-package quickbeer.android.ui.adapter.feed
+package quickbeer.android.ui.adapter.feed.viewholder
 
+import androidx.annotation.CallSuper
 import coil.load
 import coil.request.Disposable
 import coil.transform.BlurTransformation
@@ -13,73 +14,54 @@ import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.ui.adapter.base.ScopeListViewHolder
+import quickbeer.android.ui.adapter.feed.FeedListModel
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 
-class FeedViewHolder(
+abstract class FeedViewHolder(
     private val binding: FeedListItemBinding
 ) : ScopeListViewHolder<FeedListModel>(binding.root) {
 
-    private var disposable: Disposable? = null
+    private var disposables = mutableListOf<Disposable>()
 
-    override fun bind(item: FeedListModel, scope: CoroutineScope) {
-        when (item.feedItem) {
-            is FeedItem.BeerRated -> bindBeerRating(item.feedItem, item, scope)
-        }
+    @CallSuper
+    protected open fun setUser(username: String) {
+        binding.avatar.load(Constants.USER_AVATAR_PATH.format(username)) {
+            crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(CircleCropTransformation())
+        }.let(disposables::add)
     }
 
-    private fun bindBeerRating(
-        item: FeedItem.BeerRated,
+    protected fun bindBeerRating(
         listModel: FeedListModel,
         scope: CoroutineScope
     ) {
-        setUser(item.userName)
-
         scope.launch {
-            listModel.getBeer(item.beerId).collect {
+            listModel.getBeer(listModel.feedItem.beerId()).collect {
                 it.valueOrNull()?.let { beer ->
                     withContext(Dispatchers.Main) {
-                        setBeer(beer)
+                        setBeer(listModel.feedItem, beer)
                     }
                 }
             }
         }
     }
 
-    private fun setUser(userName: String) {
-        binding.line1.text = "$userName rated"
-
-        binding.avatar.load(Constants.USER_AVATAR_PATH.format(userName)) {
-            crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
-            transformations(CircleCropTransformation())
-        }
-    }
-
-    private fun setBeer(beer: Beer) {
-        val details = listOfNotNull(
-            beer.styleName,
-            beer.alcohol
-                ?.takeIf { it > 0 }
-                ?.toString()
-                ?.let { "ABV %s%%".format(it) }
-        )
-
-        binding.line2.text = beer.name
-        binding.line3.text = details.joinToString(", ")
-
-        disposable = binding.background.load(beer.imageUri()) {
+    @CallSuper
+    protected open fun setBeer(item: FeedItem, beer: Beer) {
+        binding.background.load(beer.imageUri()) {
             crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
             transformations(
                 ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT),
                 BlurTransformation(itemView.context, LABEL_BLUR)
             )
-        }
+        }.let(disposables::add)
     }
 
     override fun unbind() {
         super.unbind()
 
-        disposable?.dispose()
-        disposable = null
+        disposables.forEach(Disposable::dispose)
+        disposables.clear()
         clear()
     }
 
