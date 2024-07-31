@@ -38,10 +38,11 @@ data class FeedItem(
 
         fun isSupported(): Boolean {
             return when (this) {
-//                BEER_ADDED,
-//                BEER_RATING,
+                BEER_ADDED,
+                BEER_RATING,
                 REACHED_RATINGS,
-                EVENT_ADDED -> true
+                EVENT_ADDED,
+                EVENT_ATTENDANCE -> true
                 else -> false
             }
         }
