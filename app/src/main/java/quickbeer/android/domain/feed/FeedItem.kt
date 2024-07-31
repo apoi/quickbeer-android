@@ -10,7 +10,7 @@ data class FeedItem(
     val userId: Int,
     val username: String,
     val linkId: Int?,
-    val linkText: String?,
+    val linkText: String,
     val activityNumber: Int?,
     val timeEntered: ZonedDateTime?,
     val numComments: Int?
@@ -25,6 +25,7 @@ data class FeedItem(
 
     enum class Type(val id: Int) {
         BEER_ADDED(1),
+        EVENT_ADDED(3),
         BEER_RATING(7),
         PLACE_RATING(8),
         IS_DRINKING(12),
@@ -37,7 +38,10 @@ data class FeedItem(
 
         fun isSupported(): Boolean {
             return when (this) {
-                BEER_ADDED, BEER_RATING, REACHED_RATINGS -> true
+//                BEER_ADDED,
+//                BEER_RATING,
+                REACHED_RATINGS,
+                EVENT_ADDED -> true
                 else -> false
             }
         }

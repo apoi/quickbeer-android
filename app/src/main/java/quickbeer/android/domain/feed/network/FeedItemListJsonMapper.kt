@@ -16,7 +16,7 @@ object FeedItemListJsonMapper : JsonMapper<String, List<FeedItem>, List<FeedItem
             username = source.username.orEmpty(),
             type = FeedItem.Type.fromId(source.type),
             linkId = source.linkId,
-            linkText = source.linkText,
+            linkText = source.linkText.orEmpty(),
             activityNumber = source.activityNumber,
             timeEntered = source.timeEntered,
             numComments = source.numComments

@@ -1,6 +1,7 @@
 package quickbeer.android.ui.adapter.feed.viewholder
 
 import androidx.annotation.CallSuper
+import androidx.core.view.isVisible
 import coil.load
 import coil.request.Disposable
 import coil.transform.BlurTransformation
@@ -31,10 +32,7 @@ abstract class FeedViewHolder(
         }.let(disposables::add)
     }
 
-    protected fun bindBeerRating(
-        listModel: FeedListModel,
-        scope: CoroutineScope
-    ) {
+    protected fun bindBeerRating(listModel: FeedListModel, scope: CoroutineScope) {
         scope.launch {
             listModel.getBeer(listModel.feedItem.beerId()).collect {
                 it.valueOrNull()?.let { beer ->
@@ -69,6 +67,10 @@ abstract class FeedViewHolder(
         binding.line1.text = ""
         binding.line2.text = ""
         binding.line3.text = ""
+
+        binding.line1.isVisible = true
+        binding.line2.isVisible = true
+        binding.line3.isVisible = true
 
         binding.avatar.setImageResource(0)
         binding.background.setImageResource(0)

@@ -5,14 +5,14 @@
     android:id="@+id/rating_card"
     style="@style/InfoCard"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/feed_list_item_height"
+    android:layout_height="wrap_content"
     android:clipChildren="false"
     android:clipToPadding="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground">
@@ -51,12 +51,14 @@
             android:id="@+id/avatar"
             android:layout_width="@dimen/avatar_icon_size"
             android:layout_height="@dimen/avatar_icon_size"
+            android:layout_marginVertical="@dimen/spacing_l"
             android:layout_marginStart="@dimen/spacing_l"
-            android:layout_marginTop="@dimen/spacing_l"
             android:gravity="center_vertical"
             android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/content_start"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0" />
 
         <TextView
             android:id="@+id/line1"
@@ -65,8 +67,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/spacing_l"
             android:layout_marginTop="@dimen/spacing_l"
-            android:ellipsize="end"
-            android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -78,8 +78,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/spacing_l"
             android:layout_marginTop="@dimen/spacing_s"
-            android:ellipsize="end"
-            android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar"
             app:layout_constraintTop_toBottomOf="@id/line1" />
@@ -91,11 +89,24 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/spacing_l"
             android:layout_marginTop="@dimen/spacing_s"
-            android:ellipsize="end"
-            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/avatar"
-            app:layout_constraintTop_toBottomOf="@id/line2" />
+            app:layout_constraintTop_toBottomOf="@id/line2"
+            app:layout_constraintVertical_bias="0" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/content_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="line2,line3" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/spacing_l"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/content_bottom" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -19,6 +19,7 @@ import quickbeer.android.domain.brewer.network.BrewerFetcher
 import quickbeer.android.domain.brewerlist.network.BrewerSearchFetcher
 import quickbeer.android.domain.countrylist.network.CountryListFetcher
 import quickbeer.android.domain.feed.network.FeedFetcher
+import quickbeer.android.domain.feed.network.FeedResourcesFetcher
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
 import quickbeer.android.domain.rating.network.UserBeerRatingFetcher
@@ -164,5 +165,14 @@ object FetcherModule {
     @Singleton
     fun provideFeedFetcher(api: RateBeerApi): FeedFetcher {
         return FeedFetcher(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFeedResourcesFetcher(
+        resourceProvider: ResourceProvider,
+        @DateParsingMoshi moshi: Moshi
+    ): FeedResourcesFetcher {
+        return FeedResourcesFetcher(resourceProvider, moshi)
     }
 }

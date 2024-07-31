@@ -1,9 +1,8 @@
 package quickbeer.android.ui.adapter.feed.viewholder
 
+import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import quickbeer.android.databinding.FeedListItemBinding
-import quickbeer.android.domain.beer.Beer
-import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.ui.adapter.feed.FeedListModel
 
 class ReachedRatingsViewHolder(
@@ -13,6 +12,7 @@ class ReachedRatingsViewHolder(
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
         setUser(item.feedItem.username)
         binding.line2.text = item.feedItem.linkText
+        binding.line3.isVisible = false
     }
 
     override fun setUser(username: String) {

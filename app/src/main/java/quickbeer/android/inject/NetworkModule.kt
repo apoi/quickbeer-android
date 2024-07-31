@@ -37,6 +37,10 @@ private const val TEN_MEGABYTES: Long = 10 * 1024 * 1024
 @Retention(AnnotationRetention.BINARY)
 annotation class RateBeerMoshi
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class DateParsingMoshi
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -76,6 +80,15 @@ object NetworkModule {
         return Moshi.Builder()
             .add(ZonedDateTimeAdapter())
             .add(EscapedStringAdapter())
+            .build()
+    }
+
+    @Provides
+    @Reusable
+    @DateParsingMoshi
+    fun provideDateParsingMoshi(): Moshi {
+        return Moshi.Builder()
+            .add(ZonedDateTimeAdapter())
             .build()
     }
 

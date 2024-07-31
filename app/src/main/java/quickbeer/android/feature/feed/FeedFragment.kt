@@ -11,6 +11,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.databinding.ListStandaloneFragmentBinding
 import quickbeer.android.domain.feed.FeedItem.Type.BEER_ADDED
+import quickbeer.android.domain.feed.FeedItem.Type.BEER_RATING
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
@@ -51,7 +52,6 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
             adapter = feedAdapter
             layoutManager = LinearLayoutManager(context)
 
-            setHasFixedSize(true)
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onFeedItemSelected)
 
@@ -88,7 +88,7 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
 
     private fun onFeedItemSelected(model: FeedListModel) {
         when (model.feedItem.type) {
-            BEER_ADDED -> navigate(Destination.Beer(model.feedItem.beerId()))
+            BEER_ADDED, BEER_RATING -> navigate(Destination.Beer(model.feedItem.beerId()))
             else -> Unit
         }
     }
