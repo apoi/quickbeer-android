@@ -3,10 +3,12 @@ package quickbeer.android.ui.adapter.feed
 import coil.load
 import coil.request.Disposable
 import coil.transform.BlurTransformation
+import coil.transform.CircleCropTransformation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import quickbeer.android.Constants
 import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.feed.FeedItem
@@ -30,6 +32,8 @@ class FeedViewHolder(
         listModel: FeedListModel,
         scope: CoroutineScope
     ) {
+        setUser(item.userName)
+
         scope.launch {
             listModel.getBeer(item.beerId).collect {
                 it.valueOrNull()?.let { beer ->
@@ -41,8 +45,26 @@ class FeedViewHolder(
         }
     }
 
+    private fun setUser(userName: String) {
+        binding.line1.text = "$userName rated"
+
+        binding.avatar.load(Constants.USER_AVATAR_PATH.format(userName)) {
+            crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(CircleCropTransformation())
+        }
+    }
+
     private fun setBeer(beer: Beer) {
-        binding.name.text = beer.name
+        val details = listOfNotNull(
+            beer.styleName,
+            beer.alcohol
+                ?.takeIf { it > 0 }
+                ?.toString()
+                ?.let { "ABV %s%%".format(it) }
+        )
+
+        binding.line2.text = beer.name
+        binding.line3.text = details.joinToString(", ")
 
         disposable = binding.background.load(beer.imageUri()) {
             crossfade(itemView.resources.getInteger(android.R.integer.config_shortAnimTime))
@@ -62,7 +84,11 @@ class FeedViewHolder(
     }
 
     private fun clear() {
-        binding.name.text = ""
+        binding.line1.text = ""
+        binding.line2.text = ""
+        binding.line3.text = ""
+
+        binding.avatar.setImageResource(0)
         binding.background.setImageResource(0)
     }
 

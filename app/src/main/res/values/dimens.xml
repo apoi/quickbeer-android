@@ -17,6 +17,7 @@
     <dimen name="details_box_height">60dp</dimen>
     <dimen name="details_box_width">80dp</dimen>
     <dimen name="group_item_height">48dp</dimen>
+    <dimen name="avatar_icon_size">56dp</dimen>
 
     <!-- Beer details -->
     <dimen name="beer_details_header_text">30sp</dimen>

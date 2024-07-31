@@ -67,8 +67,8 @@
 
             <ImageView
                 android:id="@+id/avatar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="@dimen/avatar_icon_size"
+                android:layout_height="@dimen/avatar_icon_size"
                 android:layout_alignTop="@id/score"
                 android:layout_alignBottom="@id/score"
                 android:layout_marginStart="@dimen/spacing_m"
