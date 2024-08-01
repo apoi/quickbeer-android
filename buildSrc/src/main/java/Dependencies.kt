@@ -74,6 +74,7 @@ object Versions {
     }
 
     const val Coil = "1.4.0"
+    const val CommonsText = "1.12.0"
     const val CookieJar = "1.0.1"
     const val Hilt = "2.51.1"
     const val Ktlint = "1.1.1"
@@ -164,6 +165,7 @@ object Libraries {
         const val Svg = "io.coil-kt:coil-svg:${Versions.Coil}"
     }
 
+    const val CommonsText = "org.apache.commons:commons-text:${Versions.CommonsText}"
     const val CookieJar = "com.github.franmontiel:PersistentCookieJar:${Versions.CookieJar}"
     const val LeakCanary = "com.squareup.leakcanary:leakcanary-android:${Versions.LeakCanary}"
     const val MoshiCodegen = "com.squareup.moshi:moshi-kotlin-codegen:${Versions.Moshi}"

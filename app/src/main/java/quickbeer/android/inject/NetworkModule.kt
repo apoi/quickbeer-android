@@ -21,7 +21,8 @@ import quickbeer.android.domain.login.LoginCookieJar
 import quickbeer.android.domain.login.LoginFetcher
 import quickbeer.android.domain.login.LoginMapper
 import quickbeer.android.network.RateBeerApi
-import quickbeer.android.network.adapter.EscapedStringAdapter
+import quickbeer.android.network.adapter.StripHtmlStringAdapter
+import quickbeer.android.network.adapter.UnescapeHtmlEntitiesStringAdapter
 import quickbeer.android.network.adapter.ZonedDateTimeAdapter
 import quickbeer.android.network.interceptor.AppKeyInterceptor
 import quickbeer.android.network.interceptor.AuthorizationErrorInterceptor
@@ -39,7 +40,11 @@ annotation class RateBeerMoshi
 
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
-annotation class DateParsingMoshi
+annotation class HtmlPreservingMoshi
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class HtmlPreservingApi
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -79,16 +84,17 @@ object NetworkModule {
     fun provideRateBeerMoshi(): Moshi {
         return Moshi.Builder()
             .add(ZonedDateTimeAdapter())
-            .add(EscapedStringAdapter())
+            .add(StripHtmlStringAdapter())
             .build()
     }
 
     @Provides
     @Reusable
-    @DateParsingMoshi
-    fun provideDateParsingMoshi(): Moshi {
+    @HtmlPreservingMoshi
+    fun provideHtmlPreservingMoshi(): Moshi {
         return Moshi.Builder()
             .add(ZonedDateTimeAdapter())
+            .add(UnescapeHtmlEntitiesStringAdapter())
             .build()
     }
 
@@ -106,6 +112,23 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRateBeerApi(retrofit: Retrofit): RateBeerApi {
+        return retrofit.create(RateBeerApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    @HtmlPreservingApi
+    fun provideHtmlPreservingRateBeerApi(
+        okHttpClient: OkHttpClient,
+        @HtmlPreservingMoshi moshi: Moshi
+    ): RateBeerApi {
+        val retrofit = Retrofit.Builder()
+            .addCallAdapterFactory(ResultCallAdapterFactory())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .baseUrl(Constants.API_URL)
+            .client(okHttpClient)
+            .build()
+
         return retrofit.create(RateBeerApi::class.java)
     }
 

@@ -106,6 +106,7 @@ dependencies {
     implementation(Libraries.Retrofit.MoshiConverter)
     ksp(Libraries.MoshiCodegen)
 
+    implementation(Libraries.CommonsText)
     implementation(Libraries.PhotoView)
     implementation(Libraries.ThreeTenABP)
     implementation(Libraries.Timber)

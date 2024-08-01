@@ -163,7 +163,7 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideFeedFetcher(api: RateBeerApi): FeedFetcher {
+    fun provideFeedFetcher(@HtmlPreservingApi api: RateBeerApi): FeedFetcher {
         return FeedFetcher(api)
     }
 
@@ -171,7 +171,7 @@ object FetcherModule {
     @Singleton
     fun provideFeedResourcesFetcher(
         resourceProvider: ResourceProvider,
-        @DateParsingMoshi moshi: Moshi
+        @HtmlPreservingMoshi moshi: Moshi
     ): FeedResourcesFetcher {
         return FeedResourcesFetcher(resourceProvider, moshi)
     }
