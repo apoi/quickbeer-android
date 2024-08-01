@@ -170,9 +170,12 @@
     <string name="discover_top_beers">Highest Rated Beers</string>
     <string name="discover_countries">All Countries</string>
     <string name="discover_styles">All Styles</string>
-    <string name="discover_friends_feed">Friends Feed</string>
-    <string name="discover_local_feed">Local Feed</string>
-    <string name="discover_global_feed">Global Feed</string>
+
+    <!-- Feed -->
+    <string name="feed_friends">Friends Feed</string>
+    <string name="feed_local">Local Feed</string>
+    <string name="feed_global">Global Feed</string>
+    <string name="feed_friends_error">No results. Are you following anyone?</string>
 
     <!-- Login -->
     <string name="login_username_hint">Username</string>

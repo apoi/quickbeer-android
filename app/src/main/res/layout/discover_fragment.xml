@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_sparkles"
-                app:label="@string/discover_friends_feed"
+                app:label="@string/feed_friends"
                 app:position="FIRST" />
 
             <quickbeer.android.ui.view.GroupLink
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_sparkles"
-                app:label="@string/discover_local_feed"
+                app:label="@string/feed_local"
                 app:position="MIDDLE" />
 
             <quickbeer.android.ui.view.GroupLink
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_sparkles"
-                app:label="@string/discover_global_feed"
+                app:label="@string/feed_global"
                 app:position="LAST" />
 
         </LinearLayout>

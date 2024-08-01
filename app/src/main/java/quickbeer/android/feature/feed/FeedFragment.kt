@@ -48,9 +48,9 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val titleResId = when (args.mode) {
-            0 -> R.string.discover_friends_feed
-            1 -> R.string.discover_global_feed
-            2 -> R.string.discover_local_feed
+            MODE_FRIENDS -> R.string.feed_friends
+            MODE_LOCAL -> R.string.feed_local
+            MODE_GLOBAL -> R.string.feed_global
             else -> error("Invalid mode")
         }
 
@@ -84,7 +84,7 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
                 }
                 is State.Empty, is State.Error -> {
                     feedAdapter.setItems(emptyList())
-                    listBinding.message.text = getString(R.string.message_error)
+                    listBinding.message.text = getString(getErrorText(args.mode))
                     listBinding.message.isVisible = true
                     listBinding.progress.hide()
                 }
@@ -94,6 +94,14 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
                     listBinding.progress.hide()
                 }
             }
+        }
+    }
+
+    private fun getErrorText(mode: Int): Int {
+        return if (mode == MODE_FRIENDS) {
+            R.string.feed_friends_error
+        } else {
+            R.string.message_error
         }
     }
 
@@ -108,5 +116,11 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
     private fun openUri(uri: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         requireContext().startActivity(intent)
+    }
+
+    companion object {
+        const val MODE_FRIENDS = 0
+        const val MODE_GLOBAL = 1
+        const val MODE_LOCAL = 2
     }
 }
