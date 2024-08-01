@@ -1,8 +1,9 @@
 package quickbeer.android.domain.feed
 
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.Constants
 import quickbeer.android.data.store.Merger
-import quickbeer.android.util.ktx.orLater
+import quickbeer.android.data.store.StoreCore
 
 data class FeedItem(
     val id: Int,
@@ -28,6 +29,13 @@ data class FeedItem(
             Type.BREWERY_ADDED -> linkId?.takeIf { it > 0 } ?: error("Invalid id")
             else -> error("No id for type $type")
         }
+    }
+
+    fun link(): String? {
+        return LINK_PATTERN.find(linkText)
+            ?.destructured
+            ?.component1()
+            ?.let { Constants.API_URL + it }
     }
 
     enum class Type(val id: Int) {
@@ -65,18 +73,7 @@ data class FeedItem(
     }
 
     companion object {
-        val merger: Merger<FeedItem> = { old, new ->
-            FeedItem(
-                id = new.id,
-                userId = new.userId,
-                username = new.username,
-                type = new.type,
-                linkId = new.linkId ?: old.linkId,
-                linkText = new.linkText,
-                activityNumber = new.activityNumber ?: old.activityNumber,
-                timeEntered = new.timeEntered?.orLater(old.timeEntered),
-                numComments = new.numComments ?: old.numComments
-            )
-        }
+        val merger: Merger<FeedItem> = StoreCore.takeNew()
+        val LINK_PATTERN = ".*<a href=&quot;(.*)&quot;>.*".toRegex()
     }
 }

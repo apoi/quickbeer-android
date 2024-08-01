@@ -22,10 +22,11 @@ class PlaceCheckInViewHolder(
     }
 
     private fun setPlace(item: FeedItem) {
-        val match = PLACE_CHECK_IN_PATTERN.find(item.linkText)!!
-        val (place) = match.destructured
-
-        binding.line2.text = place.trim()
+        PLACE_CHECK_IN_PATTERN.find(item.linkText)
+            ?.destructured
+            ?.let { (place) ->
+                binding.line2.text = place.trim()
+            }
     }
 
     companion object {

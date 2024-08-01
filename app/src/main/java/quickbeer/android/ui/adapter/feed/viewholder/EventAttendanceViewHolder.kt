@@ -20,11 +20,12 @@ class EventAttendanceViewHolder(
     }
 
     private fun setEvent(item: FeedItem) {
-        val match = EVENT_ATTENDANCE_PATTERN.find(item.linkText)!!
-        val (event, details) = match.destructured
-
-        binding.line2.text = event.trim()
-        binding.line3.text = details.trim()
+        EVENT_ATTENDANCE_PATTERN.find(item.linkText)
+            ?.destructured
+            ?.let { (event, details) ->
+                binding.line2.text = event.trim()
+                binding.line3.text = details.trim()
+            }
     }
 
     companion object {

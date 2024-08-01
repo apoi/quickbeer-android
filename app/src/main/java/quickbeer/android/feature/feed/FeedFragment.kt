@@ -1,5 +1,7 @@
 package quickbeer.android.feature.feed
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
@@ -91,7 +93,12 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
         when (model.feedItem.type) {
             BEER_ADDED, BEER_RATING -> navigate(Destination.Beer(model.feedItem.beerId()))
             BREWERY_ADDED -> navigate(Destination.Brewer(model.feedItem.brewerId()))
-            else -> Unit
+            else -> model.feedItem.link()?.let(::openUri)
         }
+    }
+
+    private fun openUri(uri: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        requireContext().startActivity(intent)
     }
 }
