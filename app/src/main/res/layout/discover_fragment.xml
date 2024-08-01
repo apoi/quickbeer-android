@@ -61,7 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_hero_sparkles"
+                app:icon="@drawable/ic_hero_user_group"
                 app:label="@string/feed_friends"
                 app:position="FIRST" />
 
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_hero_sparkles"
+                app:icon="@drawable/ic_hero_flag"
                 app:label="@string/feed_local"
                 app:position="MIDDLE" />
 
@@ -79,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
-                app:icon="@drawable/ic_hero_sparkles"
+                app:icon="@drawable/ic_hero_globe"
                 app:label="@string/feed_global"
                 app:position="LAST" />
 

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import quickbeer.android.data.repository.Accept
+import quickbeer.android.data.repository.AlwaysFetch
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.beer.repository.BeerRepository
 import quickbeer.android.domain.brewer.repository.BrewerRepository
@@ -35,7 +36,8 @@ class FeedViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getStream(mode.toString(), Accept())
+            // Feed changes fast, so always fetch
+            repository.getStream(mode.toString(), AlwaysFetch())
                 .mapState { feedItems ->
                     feedItems.filter { it.type.isSupported() }
                 }
