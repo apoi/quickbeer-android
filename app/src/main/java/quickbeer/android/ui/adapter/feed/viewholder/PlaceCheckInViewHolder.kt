@@ -6,7 +6,7 @@ import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.ui.adapter.feed.FeedListModel
 
-class PlaceRatingViewHolder(
+class PlaceCheckInViewHolder(
     private val binding: FeedListItemBinding
 ) : FeedViewHolder(binding) {
 
@@ -18,17 +18,17 @@ class PlaceRatingViewHolder(
 
     override fun setUser(username: String) {
         super.setUser(username)
-        binding.line1.text = "$username reviewed"
+        binding.line1.text = "$username checked in at"
     }
 
     private fun setPlace(item: FeedItem) {
-        val match = PLACE_RATING_PATTERN.find(item.linkText)!!
+        val match = PLACE_CHECK_IN_PATTERN.find(item.linkText)!!
         val (place) = match.destructured
 
         binding.line2.text = place.trim()
     }
 
     companion object {
-        private val PLACE_RATING_PATTERN = ".*<a .*>(.*)<\\/a>".toRegex()
+        private val PLACE_CHECK_IN_PATTERN = ".*<a .*>(.*)<\\/a>".toRegex()
     }
 }

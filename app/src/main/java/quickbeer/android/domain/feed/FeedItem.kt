@@ -51,8 +51,11 @@ data class FeedItem(
                 EVENT_ADDED,
                 EVENT_ATTENDANCE,
                 PLACE_RATING,
+                PLACE_CHECK_IN,
                 BREWERY_ADDED -> true
-                else -> false
+                AWARD,
+                IS_DRINKING,
+                UNKNOWN -> false
             }
         }
 
@@ -65,11 +68,11 @@ data class FeedItem(
         val merger: Merger<FeedItem> = { old, new ->
             FeedItem(
                 id = new.id,
-                userId = new.userId ?: old.userId,
-                username = new.username ?: old.username,
-                type = new.type ?: old.type,
+                userId = new.userId,
+                username = new.username,
+                type = new.type,
                 linkId = new.linkId ?: old.linkId,
-                linkText = new.linkText ?: old.linkText,
+                linkText = new.linkText,
                 activityNumber = new.activityNumber ?: old.activityNumber,
                 timeEntered = new.timeEntered?.orLater(old.timeEntered),
                 numComments = new.numComments ?: old.numComments

@@ -1,5 +1,6 @@
 package quickbeer.android.ui.adapter.feed.viewholder
 
+import androidx.core.view.isVisible
 import kotlinx.coroutines.CoroutineScope
 import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.brewer.Brewer
@@ -23,7 +24,9 @@ class BrewerAddedViewHolder(
         binding.line1.text = "${item.username} added a new brewery"
         binding.line2.text = brewer.name
         if (details != null) {
-            binding.line3.text = "from $details"
+            binding.line3.text = details
+        } else {
+            binding.line3.isVisible = false
         }
     }
 }
