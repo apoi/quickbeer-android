@@ -8,9 +8,10 @@ import quickbeer.android.ui.adapter.feed.FeedListModel
 
 class PlaceRatingViewHolder(
     private val binding: FeedListItemBinding
-) : FeedViewHolder(binding) {
+) : FeedViewHolder(binding, LinkType.EXTERNAL) {
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        super.bind(item, scope)
         setUser(item.feedItem.username)
         setPlace(item.feedItem)
         binding.line3.isVisible = false

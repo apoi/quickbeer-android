@@ -7,9 +7,10 @@ import quickbeer.android.ui.adapter.feed.FeedListModel
 
 class EventAttendanceViewHolder(
     private val binding: FeedListItemBinding
-) : FeedViewHolder(binding) {
+) : FeedViewHolder(binding, LinkType.EXTERNAL) {
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        super.bind(item, scope)
         setUser(item.feedItem.username)
         setEvent(item.feedItem)
     }

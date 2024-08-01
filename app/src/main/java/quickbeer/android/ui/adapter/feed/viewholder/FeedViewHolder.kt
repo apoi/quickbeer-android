@@ -20,10 +20,17 @@ import quickbeer.android.ui.adapter.feed.FeedListModel
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 
 abstract class FeedViewHolder(
-    private val binding: FeedListItemBinding
+    private val binding: FeedListItemBinding,
+    private val linkType: LinkType
 ) : ScopeListViewHolder<FeedListModel>(binding.root) {
 
     private var disposables = mutableListOf<Disposable>()
+
+    @CallSuper
+    override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        binding.chevron.isVisible = linkType == LinkType.INTERNAL
+        binding.external.isVisible = linkType == LinkType.EXTERNAL
+    }
 
     @CallSuper
     protected open fun setUser(username: String) {
@@ -90,6 +97,12 @@ abstract class FeedViewHolder(
 
         binding.avatar.setImageResource(0)
         binding.background.setImageResource(0)
+    }
+
+    enum class LinkType {
+        INTERNAL,
+        EXTERNAL,
+        NONE
     }
 
     companion object {

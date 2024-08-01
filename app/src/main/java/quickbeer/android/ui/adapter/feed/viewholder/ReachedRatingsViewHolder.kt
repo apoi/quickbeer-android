@@ -7,9 +7,10 @@ import quickbeer.android.ui.adapter.feed.FeedListModel
 
 class ReachedRatingsViewHolder(
     private val binding: FeedListItemBinding
-) : FeedViewHolder(binding) {
+) : FeedViewHolder(binding, LinkType.NONE) {
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        super.bind(item, scope)
         setUser(item.feedItem.username)
         binding.line2.text = item.feedItem.linkText
         binding.line3.isVisible = false

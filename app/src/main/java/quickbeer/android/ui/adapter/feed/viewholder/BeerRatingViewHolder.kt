@@ -8,9 +8,10 @@ import quickbeer.android.ui.adapter.feed.FeedListModel
 
 class BeerRatingViewHolder(
     private val binding: FeedListItemBinding
-) : FeedViewHolder(binding) {
+) : FeedViewHolder(binding, LinkType.INTERNAL) {
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
+        super.bind(item, scope)
         bindBeer(item, scope)
         setUser(item.feedItem.username)
     }
