@@ -5,6 +5,7 @@ import quickbeer.android.databinding.FeedListItemBinding
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.domain.feed.FeedItem.Type.BEER_ADDED
 import quickbeer.android.domain.feed.FeedItem.Type.BEER_RATING
+import quickbeer.android.domain.feed.FeedItem.Type.BREWERY_ADDED
 import quickbeer.android.domain.feed.FeedItem.Type.EVENT_ADDED
 import quickbeer.android.domain.feed.FeedItem.Type.EVENT_ATTENDANCE
 import quickbeer.android.domain.feed.FeedItem.Type.PLACE_RATING
@@ -14,6 +15,7 @@ import quickbeer.android.ui.adapter.base.ListTypeFactory
 import quickbeer.android.ui.adapter.base.ListViewHolder
 import quickbeer.android.ui.adapter.feed.viewholder.BeerAddedViewHolder
 import quickbeer.android.ui.adapter.feed.viewholder.BeerRatingViewHolder
+import quickbeer.android.ui.adapter.feed.viewholder.BrewerAddedViewHolder
 import quickbeer.android.ui.adapter.feed.viewholder.EventAddedViewHolder
 import quickbeer.android.ui.adapter.feed.viewholder.EventAttendanceViewHolder
 import quickbeer.android.ui.adapter.feed.viewholder.PlaceRatingViewHolder
@@ -35,6 +37,7 @@ class FeedTypeFactory : ListTypeFactory() {
             EVENT_ADDED -> EventAddedViewHolder(creator())
             EVENT_ATTENDANCE -> EventAttendanceViewHolder(creator())
             PLACE_RATING -> PlaceRatingViewHolder(creator())
+            BREWERY_ADDED -> BrewerAddedViewHolder(creator())
             else -> error("Unsupported type $type")
         }
     }

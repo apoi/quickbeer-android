@@ -68,6 +68,7 @@ abstract class FeedViewHolder(
         }.let(disposables::add)
     }
 
+    @CallSuper
     protected open fun setBrewer(item: FeedItem, brewer: Brewer) = Unit
 
     override fun unbind() {

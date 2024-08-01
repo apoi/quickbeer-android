@@ -50,7 +50,8 @@ data class FeedItem(
                 REACHED_RATINGS,
                 EVENT_ADDED,
                 EVENT_ATTENDANCE,
-                PLACE_RATING -> true
+                PLACE_RATING,
+                BREWERY_ADDED -> true
                 else -> false
             }
         }
