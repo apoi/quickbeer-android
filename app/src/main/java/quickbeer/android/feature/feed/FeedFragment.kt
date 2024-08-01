@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
@@ -39,14 +40,21 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
         destroyCallback = { it.recyclerView.adapter = null }
     )
 
+    private val args by navArgs<FeedFragmentArgs>()
     private val viewModel by viewModels<FeedViewModel>()
     private val feedAdapter = ListAdapter<FeedListModel>(FeedTypeFactory())
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.toolbar.title = getString(R.string.discover_feed)
+        val titleResId = when (args.mode) {
+            0 -> R.string.discover_friends_feed
+            1 -> R.string.discover_global_feed
+            2 -> R.string.discover_local_feed
+            else -> error("Invalid mode")
+        }
 
+        binding.toolbar.title = getString(titleResId)
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }

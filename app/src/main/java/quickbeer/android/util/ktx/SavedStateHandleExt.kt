@@ -11,3 +11,7 @@ fun SavedStateHandle.navId(): Int {
 fun SavedStateHandle.user(): User {
     return get<User>(NavParams.USER)!!
 }
+
+fun SavedStateHandle.mode(): Int {
+    return get<Int>(NavParams.MODE)!!
+}

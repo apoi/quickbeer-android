@@ -51,6 +51,12 @@
         android:id="@+id/feed_fragment"
         android:name="quickbeer.android.feature.feed.FeedFragment"
         android:label="@string/app_name"
-        tools:layout="@layout/list_standalone_fragment" />
+        tools:layout="@layout/list_standalone_fragment">
+
+        <argument
+            android:name="mode"
+            app:argType="integer" />
+
+    </fragment>
 
 </navigation>

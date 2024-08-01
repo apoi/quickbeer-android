@@ -57,13 +57,31 @@
                 app:position="LAST" />
 
             <quickbeer.android.ui.view.GroupLink
-                android:id="@+id/discover_feed"
+                android:id="@+id/friends_feed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:applyTopMargin="false"
                 app:icon="@drawable/ic_hero_sparkles"
-                app:label="@string/discover_feed"
-                app:position="ONLY" />
+                app:label="@string/discover_friends_feed"
+                app:position="FIRST" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/local_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_sparkles"
+                app:label="@string/discover_local_feed"
+                app:position="MIDDLE" />
+
+            <quickbeer.android.ui.view.GroupLink
+                android:id="@+id/global_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:applyTopMargin="false"
+                app:icon="@drawable/ic_hero_sparkles"
+                app:label="@string/discover_global_feed"
+                app:position="LAST" />
 
         </LinearLayout>
 

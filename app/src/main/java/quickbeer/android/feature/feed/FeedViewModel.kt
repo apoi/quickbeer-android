@@ -1,5 +1,6 @@
 package quickbeer.android.feature.feed
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,20 +18,24 @@ import quickbeer.android.domain.feed.repository.FeedRepository
 import quickbeer.android.ui.adapter.feed.FeedListModel
 import quickbeer.android.util.ktx.mapState
 import quickbeer.android.util.ktx.mapStateList
+import quickbeer.android.util.ktx.mode
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     repository: FeedRepository,
     beerRepository: BeerRepository,
     brewerRepository: BrewerRepository
 ) : ViewModel() {
+
+    private val mode = savedStateHandle.mode()
 
     private val _feedListState = MutableStateFlow<State<List<FeedListModel>>>(State.Initial)
     val feedListState: StateFlow<State<List<FeedListModel>>> = _feedListState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getStream("1", Accept())
+            repository.getStream(mode.toString(), Accept())
                 .mapState { feedItems ->
                     feedItems.filter { it.type.isSupported() }
                 }
