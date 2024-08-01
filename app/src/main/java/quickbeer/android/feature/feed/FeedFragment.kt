@@ -63,6 +63,7 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
             adapter = feedAdapter
             layoutManager = LinearLayoutManager(context)
 
+            setPadding(0, 0, 0, resources.getDimensionPixelSize(R.dimen.spacing_l))
             addItemDecoration(DividerDecoration(context))
             setClickListener(::onFeedItemSelected)
 

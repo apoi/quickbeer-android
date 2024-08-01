@@ -62,6 +62,7 @@ class BeerRatingsFragment : BaseFragment(R.layout.list_fragment) {
             adapter = ratingsAdapter
             layoutManager = manager
             addOnScrollListener(loadMoreListener)
+            setPadding(0, 0, 0, resources.getDimensionPixelSize(R.dimen.spacing_l))
         }
 
         loadMoreListener.moreItemRequestedCallback = viewModel::loadRatingPage
