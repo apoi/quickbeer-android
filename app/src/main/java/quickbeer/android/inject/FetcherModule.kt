@@ -163,8 +163,11 @@ object FetcherModule {
 
     @Provides
     @Singleton
-    fun provideFeedFetcher(@HtmlPreservingApi api: RateBeerApi): FeedFetcher {
-        return FeedFetcher(api)
+    fun provideFeedFetcher(
+        @HtmlPreservingApi api: RateBeerApi,
+        loginManager: LoginManager
+    ): FeedFetcher {
+        return FeedFetcher(api, loginManager)
     }
 
     @Provides

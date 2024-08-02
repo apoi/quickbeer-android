@@ -23,9 +23,10 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import quickbeer.android.Constants
+import quickbeer.android.domain.login.LoginCookieJar
 import quickbeer.android.network.HttpCode
 
-class LoginRedirectInterceptor : Interceptor {
+class LoginRedirectInterceptor(private val cookieJar: LoginCookieJar) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()
@@ -48,7 +49,7 @@ class LoginRedirectInterceptor : Interceptor {
         val body = response.body?.byteString()?.utf8()
 
         val code = when {
-            isSuccessfulLogin(request, response) -> HttpCode.OK
+            isSuccessfulLogin(request, response, body) -> HttpCode.OK
             isKnownLoginFailure(body) -> HttpCode.FORBIDDEN
             else -> HttpCode.FORBIDDEN
         }
@@ -56,12 +57,13 @@ class LoginRedirectInterceptor : Interceptor {
         return createResponse(response, contentType, body, code)
     }
 
-    private fun isSuccessfulLogin(request: Request, response: Response): Boolean {
+    private fun isSuccessfulLogin(request: Request, response: Response, body: String?): Boolean {
         return if (response.code == HttpCode.OK &&
             request.url.encodedPath.endsWith(Constants.API_LOGIN_PAGE) &&
-            idFromStringList(response.headers("set-cookie")) != null
+            hasLoginCookie(response, body)
         ) {
-            // Success with id in a cookie header
+            // Success with id in a cookie header, or stored
+            // cookie and user id in response body
             true
         } else {
             // Old-style API redirect response
@@ -74,11 +76,24 @@ class LoginRedirectInterceptor : Interceptor {
         return body?.contains("failed login") == true
     }
 
+    private fun hasLoginCookie(response: Response, body: String?): Boolean {
+        val a = idFromStringList(response.headers("set-cookie")) != null
+        val b = cookieJar.hasUserCookie()
+        val c = idInResponseBody(body)
+
+        return a || (b && c)
+    }
+
     private fun idFromStringList(values: List<String>): String? {
         return values
             .asSequence()
-            .mapNotNull { ID_PATTERN.find(it)?.groupValues?.get(1) }
+            .mapNotNull { ID_HEADER_PATTERN.find(it)?.groupValues?.get(1) }
             .firstOrNull()
+    }
+
+    private fun idInResponseBody(body: String?): Boolean {
+        if (body == null) return false
+        return ID_BODY_PATTERN.containsMatchIn(body)
     }
 
     /**
@@ -99,6 +114,7 @@ class LoginRedirectInterceptor : Interceptor {
     }
 
     companion object {
-        private val ID_PATTERN = "UserID=([0-9]+);".toRegex()
+        private val ID_HEADER_PATTERN = "UserID=([0-9]+);".toRegex()
+        private val ID_BODY_PATTERN = "^([0-9]+)$".toRegex(RegexOption.MULTILINE)
     }
 }

@@ -5,6 +5,8 @@ import com.squareup.moshi.Types
 import quickbeer.android.R
 import quickbeer.android.data.fetcher.Fetcher
 import quickbeer.android.domain.feed.FeedItem
+import quickbeer.android.domain.login.LoginFirstFetcher
+import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.inject.HtmlPreservingApi
 import quickbeer.android.inject.HtmlPreservingMoshi
 import quickbeer.android.network.RateBeerApi
@@ -13,10 +15,12 @@ import quickbeer.android.util.ResourceProvider
 
 // Note that HTML needs to be preserved for parsing the links
 class FeedFetcher(
-    @HtmlPreservingApi api: RateBeerApi
-) : Fetcher<String, List<FeedItem>, List<FeedItemJson>>(
+    @HtmlPreservingApi api: RateBeerApi,
+    loginManager: LoginManager
+) : LoginFirstFetcher<String, List<FeedItem>, List<FeedItemJson>>(
     jsonMapper = FeedItemListJsonMapper,
-    api = { mode -> api.getFeed(mode) }
+    api = { mode -> api.getFeed(mode) },
+    loginManager = loginManager
 )
 
 // For debug purposes

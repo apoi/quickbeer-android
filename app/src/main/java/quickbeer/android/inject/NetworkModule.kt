@@ -63,7 +63,7 @@ object NetworkModule {
             .readTimeout(30, TimeUnit.SECONDS)
             .addInterceptor(AuthorizationErrorInterceptor(cookieJar))
             .addInterceptor(AppKeyInterceptor())
-            .addInterceptor(LoginRedirectInterceptor())
+            .addInterceptor(LoginRedirectInterceptor(cookieJar))
 
         if (BuildConfig.DEBUG) {
             builder.addInterceptor(LoggingInterceptor.create())

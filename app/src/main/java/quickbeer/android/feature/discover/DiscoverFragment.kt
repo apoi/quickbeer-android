@@ -9,11 +9,9 @@ import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.t
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toFeed
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toStyleList
 import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toTopBeers
-import quickbeer.android.feature.feed.FeedFragment
 import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_FRIENDS
 import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_GLOBAL
 import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_LOCAL
-import quickbeer.android.feature.feed.FeedFragmentArgs
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.viewBinding
 

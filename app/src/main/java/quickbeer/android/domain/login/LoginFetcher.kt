@@ -9,8 +9,8 @@ class LoginFetcher(
     api: RateBeerApi,
     loginMapper: LoginMapper
 ) : Fetcher<Pair<String, String>, Int, ResponseBody>(
-    loginMapper,
-    { (username, password) -> api.login(username, password, DEFAULT_SAVEINFO) }
+    jsonMapper = loginMapper,
+    api = { (username, password) -> api.login(username, password, DEFAULT_SAVEINFO) }
 ) {
 
     suspend fun fetch(username: String, password: String): ApiResult<Int> {
