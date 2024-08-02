@@ -31,6 +31,6 @@ class PlaceRatingViewHolder(
     }
 
     companion object {
-        private val PLACE_RATING_PATTERN = ".*<a .*>(.*)<\\/a>".toRegex()
+        private val PLACE_RATING_PATTERN = "<a .*>(.*)<\\/a>".toRegex()
     }
 }

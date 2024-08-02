@@ -12,14 +12,21 @@ class BeerRatingViewHolder(
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
         super.bind(item, scope)
-        bindBeer(item, scope)
         setUser(item.feedItem.username)
+        setBeerName(item.feedItem)
+        bindBeer(item, scope)
     }
 
     override fun setUser(username: String) {
         super.setUser(username)
 
         binding.line1.text = "$username rated"
+    }
+
+    private fun setBeerName(item: FeedItem) {
+        BEER_RATING_PATTERN.find(item.linkText)
+            ?.destructured
+            ?.let { (beer) -> binding.line2.text = beer }
     }
 
     override fun setBeer(item: FeedItem, beer: Beer) {
@@ -33,7 +40,10 @@ class BeerRatingViewHolder(
                 ?.let { "ABV %s%%".format(it) }
         )
 
-        binding.line2.text = beer.name
         binding.line3.text = details.joinToString(", ")
+    }
+
+    companion object {
+        private val BEER_RATING_PATTERN = "<a .*>(.*)<\\/a>".toRegex()
     }
 }

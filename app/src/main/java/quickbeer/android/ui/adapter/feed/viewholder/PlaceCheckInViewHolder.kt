@@ -31,6 +31,6 @@ class PlaceCheckInViewHolder(
     }
 
     companion object {
-        private val PLACE_CHECK_IN_PATTERN = ".*<a .*>(.*)<\\/a>".toRegex()
+        private val PLACE_CHECK_IN_PATTERN = "<a .*>(.*)<\\/a>".toRegex()
     }
 }

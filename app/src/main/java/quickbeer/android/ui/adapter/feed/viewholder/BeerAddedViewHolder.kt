@@ -12,8 +12,15 @@ class BeerAddedViewHolder(
 
     override fun bind(item: FeedListModel, scope: CoroutineScope) {
         super.bind(item, scope)
-        bindBeer(item, scope)
         setUser(item.feedItem.username)
+        setBeerName(item.feedItem)
+        bindBeer(item, scope)
+    }
+
+    private fun setBeerName(item: FeedItem) {
+        BEER_ADDED_PATTERN.find(item.linkText)
+            ?.destructured
+            ?.let { (beer) -> binding.line2.text = beer }
     }
 
     override fun setBeer(item: FeedItem, beer: Beer) {
@@ -22,5 +29,9 @@ class BeerAddedViewHolder(
         binding.line1.text = "${item.username} added ${beer.styleName}"
         binding.line2.text = beer.name
         binding.line3.text = "from ${beer.brewerName}"
+    }
+
+    companion object {
+        private val BEER_ADDED_PATTERN = "<a .*>(.*)<\\/a>".toRegex()
     }
 }

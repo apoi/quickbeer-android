@@ -30,6 +30,6 @@ class EventAttendanceViewHolder(
     }
 
     companion object {
-        private val EVENT_ATTENDANCE_PATTERN = ".*<a .*>(.*)<\\/a>(.*)".toRegex()
+        private val EVENT_ATTENDANCE_PATTERN = "<a .*>(.*)<\\/a>(.*)".toRegex()
     }
 }
