@@ -74,6 +74,6 @@ data class FeedItem(
 
     companion object {
         val merger: Merger<FeedItem> = StoreCore.takeNew()
-        val LINK_PATTERN = ".*<a href=&quot;(.*)&quot;>.*".toRegex()
+        val LINK_PATTERN = ".*<a href=\"(.*)\">.*".toRegex()
     }
 }
