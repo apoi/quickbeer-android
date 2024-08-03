@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import quickbeer.android.R
 import quickbeer.android.data.repository.NoFetch
@@ -17,7 +18,6 @@ import quickbeer.android.ui.adapter.discover.DiscoverListModel
 import quickbeer.android.ui.adapter.discover.DiscoverListModel.Link
 import quickbeer.android.util.groupitem.GroupItem.Position
 import quickbeer.android.util.ktx.groupItems
-import quickbeer.android.util.ktx.mapState
 
 @HiltViewModel
 class DiscoverViewModel @Inject constructor(
@@ -29,9 +29,9 @@ class DiscoverViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            // Feed changes fast, so always fetch
             currentUserRepository.getStream(NoFetch())
-                .mapState { createItemList(it.loggedIn == true) }
+                .map { it.valueOrNull()?.loggedIn == true }
+                .map { isLoggedIn -> State.Success(createItemList(isLoggedIn)) }
                 .collectLatest(_listState::emit)
         }
     }

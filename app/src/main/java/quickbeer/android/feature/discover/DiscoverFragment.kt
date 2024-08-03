@@ -47,6 +47,7 @@ class DiscoverFragment : BaseFragment(R.layout.list_standalone_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.toolbar.title = getString(R.string.discover_title)
+        binding.toolbar.navigationIcon = null
 
         listBinding.recyclerView.apply {
             adapter = discoverAdapter
