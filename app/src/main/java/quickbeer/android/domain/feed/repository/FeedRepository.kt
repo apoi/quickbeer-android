@@ -8,6 +8,6 @@ import quickbeer.android.domain.feed.network.FeedItemJson
 import quickbeer.android.domain.feed.store.FeedStore
 
 class FeedRepository @Inject constructor(
-    override val store: FeedStore,
+    store: FeedStore,
     fetcher: FeedFetcher
 ) : ItemListRepository<String, Int, FeedItem, FeedItemJson>(store, fetcher)

@@ -5,7 +5,6 @@ import com.squareup.moshi.Types
 import quickbeer.android.R
 import quickbeer.android.data.fetcher.Fetcher
 import quickbeer.android.domain.feed.FeedItem
-import quickbeer.android.domain.login.LoginFirstFetcher
 import quickbeer.android.domain.login.LoginManager
 import quickbeer.android.inject.HtmlPreservingApi
 import quickbeer.android.inject.HtmlPreservingMoshi
@@ -13,15 +12,35 @@ import quickbeer.android.network.RateBeerApi
 import quickbeer.android.network.result.ApiResult
 import quickbeer.android.util.ResourceProvider
 
-// Note that HTML needs to be preserved for parsing the links
+/**
+ * Fetcher that logs in first when fetching friends feed. This is not optimal, but is a functional
+ * workaround for friends feed behaviour where request simply timeouts if there's no valid login
+ * session.
+ *
+ * Note that HTML needs to be preserved for parsing the links.
+ */
 class FeedFetcher(
     @HtmlPreservingApi api: RateBeerApi,
-    loginManager: LoginManager
-) : LoginFirstFetcher<String, List<FeedItem>, List<FeedItemJson>>(
+    private val loginManager: LoginManager
+) : Fetcher<String, List<FeedItem>, List<FeedItemJson>>(
     jsonMapper = FeedItemListJsonMapper,
-    api = { mode -> api.getFeed(mode) },
-    loginManager = loginManager
-)
+    api = { mode -> api.getFeed(mode) }
+) {
+    override suspend fun fetch(mode: String): ApiResult<List<FeedItem>> {
+        if (mode != MODE_FRIENDS) return super.fetch(mode)
+
+        return when (val loginResult = loginManager.autoLogin()) {
+            is ApiResult.Success -> super.fetch(mode)
+            is ApiResult.HttpError -> ApiResult.HttpError(loginResult.code, loginResult.cause)
+            is ApiResult.NetworkError -> ApiResult.NetworkError(loginResult.cause)
+            is ApiResult.UnknownError -> ApiResult.UnknownError(loginResult.cause)
+        }
+    }
+
+    companion object {
+        private const val MODE_FRIENDS = "0"
+    }
+}
 
 // For debug purposes
 class FeedResourcesFetcher(
