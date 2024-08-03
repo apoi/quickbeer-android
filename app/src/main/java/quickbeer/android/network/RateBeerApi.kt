@@ -135,4 +135,28 @@ interface RateBeerApi {
 
     @GET("/json/feed.asp")
     suspend fun getFeed(@Query("m") mode: String): ApiResult<List<FeedItemJson>>
+
+    // PLACES
+
+    @GET("/json/psstring.asp")
+    suspend fun  searchPlaces(
+        @Query("s") query: String
+    ): ApiResult<List<PlaceJson>>
+
+    @GET("/json/beerme.asp")
+    suspend fun getPlacesNearby(
+        @Query("mi") radius: Int,
+        @Query("la") latitude: Double,
+        @Query("lo") longitude: Double
+    ): ApiResult<List<PlaceJson>>
+
+    @GET("/json/pss.asp")
+    suspend fun getPlace(
+        @Query("pid") placeId: Int
+    ): ApiResult<PlaceJson>
+
+    @GET("/json/ci.asp?t=Log")
+    suspend fun checkIn(
+        @Query("p") placeId: Int
+    ): ApiResult<CheckinJson>
 }
