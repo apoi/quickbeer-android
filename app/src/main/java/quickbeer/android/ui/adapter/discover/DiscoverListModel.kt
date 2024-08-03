@@ -7,6 +7,7 @@ import quickbeer.android.ui.adapter.base.ListTypeFactory
 import quickbeer.android.util.groupitem.GroupItem
 
 data class DiscoverListModel(
+    val link: Link,
     @DrawableRes val icon: Int,
     @StringRes val title: Int,
     override val position: GroupItem.Position
@@ -18,5 +19,14 @@ data class DiscoverListModel(
 
     override fun setPosition(position: GroupItem.Position): DiscoverListModel {
         return this.copy(position = position)
+    }
+
+    enum class Link {
+        TOP_BEERS,
+        ALL_COUNTRIES,
+        ALL_STYLES,
+        FEED_FRIENDS,
+        FEED_LOCAL,
+        FEED_GLOBAL
     }
 }

@@ -10,10 +10,16 @@ import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.databinding.ListStandaloneFragmentBinding
-import quickbeer.android.navigation.Destination
+import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toCountryList
+import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toFeed
+import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toStyleList
+import quickbeer.android.feature.discover.DiscoverFragmentDirections.Companion.toTopBeers
+import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_FRIENDS
+import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_GLOBAL
+import quickbeer.android.feature.feed.FeedFragment.Companion.MODE_LOCAL
 import quickbeer.android.ui.adapter.base.ListAdapter
-import quickbeer.android.ui.adapter.country.CountryListModel
 import quickbeer.android.ui.adapter.discover.DiscoverListModel
+import quickbeer.android.ui.adapter.discover.DiscoverListModel.Link
 import quickbeer.android.ui.adapter.discover.DiscoverTypeFactory
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.listener.setClickListener
@@ -47,7 +53,7 @@ class DiscoverFragment : BaseFragment(R.layout.list_standalone_fragment) {
             layoutManager = LinearLayoutManager(context)
 
             setHasFixedSize(true)
-            setClickListener(::onCountrySelected)
+            setClickListener(::onItemSelected)
 
             val spacingL = resources.getDimensionPixelSize(R.dimen.spacing_l)
             setPadding(0, spacingL, 0, spacingL)
@@ -83,7 +89,14 @@ class DiscoverFragment : BaseFragment(R.layout.list_standalone_fragment) {
         }
     }
 
-    private fun onCountrySelected(country: CountryListModel) {
-        navigate(Destination.Country(country.country.id))
+    private fun onItemSelected(item: DiscoverListModel) {
+        when (item.link) {
+            Link.TOP_BEERS -> navigate(toTopBeers())
+            Link.ALL_COUNTRIES -> navigate(toCountryList())
+            Link.ALL_STYLES -> navigate(toStyleList())
+            Link.FEED_FRIENDS -> navigate(toFeed(mode = MODE_FRIENDS))
+            Link.FEED_LOCAL -> navigate(toFeed(mode = MODE_LOCAL))
+            Link.FEED_GLOBAL -> navigate(toFeed(mode = MODE_GLOBAL))
+        }
     }
 }
