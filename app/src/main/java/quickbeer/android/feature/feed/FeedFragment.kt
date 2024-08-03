@@ -64,7 +64,6 @@ class FeedFragment : BaseFragment(R.layout.list_standalone_fragment) {
             layoutManager = LinearLayoutManager(context)
 
             setPadding(0, 0, 0, resources.getDimensionPixelSize(R.dimen.spacing_l))
-            addItemDecoration(DividerDecoration(context))
             setClickListener(::onFeedItemSelected)
 
             setRecycledViewPool(
