@@ -14,7 +14,7 @@
         <attr name="expandable" format="boolean" />
     </declare-styleable>
 
-    <declare-styleable name="GroupItem">
+    <declare-styleable name="GroupItemView">
         <attr name="applyTopMargin" format="boolean" />
         <attr name="applyBottomMargin" format="boolean" />
         <attr name="position" format="enum">

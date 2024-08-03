@@ -14,6 +14,7 @@ interface RecycledPoolHolder {
         BREWER_LIST(2),
         STYLE_LIST(3),
         COUNTRY_LIST(4),
-        FEED_LIST(5)
+        FEED_LIST(5),
+        LINK_LIST(6)
     }
 }

@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <quickbeer.android.ui.view.GroupItem
+            <quickbeer.android.ui.view.GroupItemView
                 android:id="@+id/profile_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </quickbeer.android.ui.view.GroupItem>
+            </quickbeer.android.ui.view.GroupItemView>
 
             <quickbeer.android.ui.view.GroupLink
                 android:id="@+id/profile_ratings"

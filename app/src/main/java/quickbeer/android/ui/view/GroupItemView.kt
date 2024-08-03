@@ -7,9 +7,10 @@ import android.view.Gravity
 import android.widget.ImageView
 import com.google.android.material.card.MaterialCardView
 import quickbeer.android.R
+import quickbeer.android.util.groupitem.GroupItem.Position
 import quickbeer.android.util.ktx.setMargins
 
-open class GroupItem @JvmOverloads constructor(
+open class GroupItemView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -31,10 +32,11 @@ open class GroupItem @JvmOverloads constructor(
         }
 
     init {
-        val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupItem)
-        _position = Position.entries.toTypedArray()[ta.getInt(R.styleable.GroupItem_position, 0)]
-        applyTopMargin = ta.getBoolean(R.styleable.GroupItem_applyTopMargin, true)
-        applyBottomMargin = ta.getBoolean(R.styleable.GroupItem_applyBottomMargin, true)
+        val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupItemView)
+        _position = Position.entries
+            .toTypedArray()[ta.getInt(R.styleable.GroupItemView_position, 0)]
+        applyTopMargin = ta.getBoolean(R.styleable.GroupItemView_applyTopMargin, true)
+        applyBottomMargin = ta.getBoolean(R.styleable.GroupItemView_applyBottomMargin, true)
         ta.recycle()
     }
 
@@ -113,12 +115,5 @@ open class GroupItem @JvmOverloads constructor(
         }
 
         setMargins(margin, top, margin, bottom)
-    }
-
-    enum class Position {
-        ONLY,
-        FIRST,
-        MIDDLE,
-        LAST
     }
 }

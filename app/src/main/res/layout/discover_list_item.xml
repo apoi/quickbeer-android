@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<quickbeer.android.ui.view.GroupLink xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:applyTopMargin="false"
+    app:icon="@drawable/ic_hero_star"
+    app:label="@string/discover_top_beers"
+    app:position="ONLY" />
+

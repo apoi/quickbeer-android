@@ -13,7 +13,7 @@ class GroupLink @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : GroupItem(context, attrs, defStyleAttr) {
+) : GroupItemView(context, attrs, defStyleAttr) {
 
     private val binding = GroupLinkBinding.inflate(LayoutInflater.from(context), this, true)
 
@@ -27,7 +27,7 @@ class GroupLink @JvmOverloads constructor(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.GroupLink)
         val icon = ta.getResourceId(R.styleable.GroupLink_icon, 0)
         val label = ta.getResourceId(R.styleable.GroupLink_label, 0)
-        val type = Type.values()[ta.getInt(R.styleable.GroupLink_type, 0)]
+        val type = Type.entries[ta.getInt(R.styleable.GroupLink_type, 0)]
         ta.recycle()
 
         binding.icon.setImageResource(icon)

@@ -1,0 +1,73 @@
+package quickbeer.android.feature.discover
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import quickbeer.android.R
+import quickbeer.android.data.repository.NoFetch
+import quickbeer.android.data.state.State
+import quickbeer.android.domain.user.repository.CurrentUserRepository
+import quickbeer.android.ui.adapter.discover.DiscoverListModel
+import quickbeer.android.util.groupitem.GroupItem.Position
+import quickbeer.android.util.ktx.groupItems
+import quickbeer.android.util.ktx.mapState
+
+@HiltViewModel
+class DiscoverViewModel @Inject constructor(
+    currentUserRepository: CurrentUserRepository
+) : ViewModel() {
+
+    private val _listState = MutableStateFlow<State<List<DiscoverListModel>>>(State.Initial)
+    val listState: StateFlow<State<List<DiscoverListModel>>> = _listState
+
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
+            // Feed changes fast, so always fetch
+            currentUserRepository.getStream(NoFetch())
+                .mapState { createItemList(it.loggedIn == true) }
+                .collectLatest(_listState::emit)
+        }
+    }
+
+    private fun createItemList(isLoggedIn: Boolean): List<DiscoverListModel> {
+        return listOf(
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_star,
+                title = R.string.discover_top_beers,
+                position = Position.ONLY
+            ),
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_world,
+                title = R.string.discover_countries,
+                position = Position.FIRST
+            ),
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_beaker,
+                title = R.string.discover_styles,
+                position = Position.LAST
+            )
+        ) + listOfNotNull(
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_user_group,
+                title = R.string.feed_friends,
+                position = Position.FIRST
+            ).takeIf { isLoggedIn },
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_flag,
+                title = R.string.feed_local,
+                position = Position.MIDDLE
+            ).takeIf { isLoggedIn },
+            DiscoverListModel(
+                icon = R.drawable.ic_hero_globe,
+                title = R.string.feed_global,
+                position = Position.LAST
+            )
+        ).groupItems()
+    }
+}
