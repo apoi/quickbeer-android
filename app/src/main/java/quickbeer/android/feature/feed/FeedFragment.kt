@@ -17,7 +17,6 @@ import quickbeer.android.domain.feed.FeedItem.Type.BEER_ADDED
 import quickbeer.android.domain.feed.FeedItem.Type.BEER_RATING
 import quickbeer.android.domain.feed.FeedItem.Type.BREWERY_ADDED
 import quickbeer.android.navigation.Destination
-import quickbeer.android.ui.DividerDecoration
 import quickbeer.android.ui.adapter.base.ListAdapter
 import quickbeer.android.ui.adapter.feed.FeedListModel
 import quickbeer.android.ui.adapter.feed.FeedTypeFactory
