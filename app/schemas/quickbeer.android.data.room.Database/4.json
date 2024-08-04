@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "2bf1eca1e136409ecef9d9bb072161d1",
+    "identityHash": "d0636cc706dea9b8ee822b8b2a650f2b",
     "entities": [
       {
         "tableName": "lists",
@@ -199,14 +199,22 @@
         },
         "indices": [
           {
-            "name": "index_beers_normalized_name_accessed",
+            "name": "index_beers_normalized_name",
             "unique": false,
             "columnNames": [
-              "normalized_name",
+              "normalized_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_beers_normalized_name` ON `${TABLE_NAME}` (`normalized_name`)"
+          },
+          {
+            "name": "index_beers_accessed",
+            "unique": false,
+            "columnNames": [
               "accessed"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_beers_normalized_name_accessed` ON `${TABLE_NAME}` (`normalized_name`, `accessed`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_beers_accessed` ON `${TABLE_NAME}` (`accessed`)"
           }
         ],
         "foreignKeys": []
@@ -422,14 +430,22 @@
         },
         "indices": [
           {
-            "name": "index_brewers_normalized_name_accessed",
+            "name": "index_brewers_normalized_name",
             "unique": false,
             "columnNames": [
-              "normalized_name",
+              "normalized_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_brewers_normalized_name` ON `${TABLE_NAME}` (`normalized_name`)"
+          },
+          {
+            "name": "index_brewers_accessed",
+            "unique": false,
+            "columnNames": [
               "accessed"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_brewers_normalized_name_accessed` ON `${TABLE_NAME}` (`normalized_name`, `accessed`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_brewers_accessed` ON `${TABLE_NAME}` (`accessed`)"
           }
         ],
         "foreignKeys": []
@@ -859,14 +875,22 @@
         },
         "indices": [
           {
-            "name": "index_places_normalized_name_accessed",
+            "name": "index_places_normalized_name",
             "unique": false,
             "columnNames": [
-              "normalized_name",
+              "normalized_name"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_normalized_name` ON `${TABLE_NAME}` (`normalized_name`)"
+          },
+          {
+            "name": "index_places_accessed",
+            "unique": false,
+            "columnNames": [
               "accessed"
             ],
             "orders": [],
-            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_normalized_name_accessed` ON `${TABLE_NAME}` (`normalized_name`, `accessed`)"
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_accessed` ON `${TABLE_NAME}` (`accessed`)"
           }
         ],
         "foreignKeys": []
@@ -875,7 +899,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2bf1eca1e136409ecef9d9bb072161d1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0636cc706dea9b8ee822b8b2a650f2b')"
     ]
   }
 }

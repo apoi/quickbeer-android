@@ -10,7 +10,13 @@ import quickbeer.android.data.room.converter.ZonedDateTimeConverter
 import quickbeer.android.data.store.Merger
 import quickbeer.android.domain.place.Place
 
-@Entity(tableName = "places", indices = [Index(value = ["normalized_name", "accessed"])])
+@Entity(
+    tableName = "places",
+    indices = [
+        Index(value = ["normalized_name"]),
+        Index(value = ["accessed"])
+    ]
+)
 @TypeConverters(ZonedDateTimeConverter::class)
 data class PlaceEntity(
     @PrimaryKey val id: Int,
