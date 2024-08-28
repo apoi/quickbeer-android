@@ -21,9 +21,13 @@ import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.brewerlist.repository.BrewerSearchRepository
 import quickbeer.android.domain.country.repository.CountryRepository
+import quickbeer.android.domain.place.Place
+import quickbeer.android.domain.place.repository.PlaceRepository
+import quickbeer.android.domain.placelist.repository.PlaceSearchRepository
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelRateCountMapper
 import quickbeer.android.ui.adapter.brewer.BrewerListModel
+import quickbeer.android.ui.adapter.place.PlaceListModel
 import quickbeer.android.util.ktx.distinctUntilNewId
 import quickbeer.android.util.ktx.mapState
 import quickbeer.android.util.ktx.mapStateList
@@ -34,6 +38,8 @@ class SearchViewModel @Inject constructor(
     private val beerSearchRepository: BeerSearchRepository,
     private val brewerRepository: BrewerRepository,
     private val brewerSearchRepository: BrewerSearchRepository,
+    private val placeRepository: PlaceRepository,
+    private val placeSearchRepository: PlaceSearchRepository,
     private val countryRepository: CountryRepository,
     private val beerListMapper: BeerListModelRateCountMapper
 ) : ViewModel() {
@@ -47,6 +53,9 @@ class SearchViewModel @Inject constructor(
     private val _brewerResults = MutableStateFlow<State<List<BrewerListModel>>>(State.Initial)
     val brewerResults: StateFlow<State<List<BrewerListModel>>> = _brewerResults
 
+    private val _placeResults = MutableStateFlow<State<List<PlaceListModel>>>(State.Initial)
+    val placeResults: StateFlow<State<List<PlaceListModel>>> = _placeResults
+
     private val queryLengthValidator = object : Repository.KeyValidator<String> {
         override fun isEmpty(key: String) = key.isEmpty()
         override fun isValid(key: String) = key.length >= Constants.QUERY_MIN_LENGTH
@@ -55,6 +64,7 @@ class SearchViewModel @Inject constructor(
     init {
         searchBeers()
         searchBrewers()
+        searchPlaces()
     }
 
     fun onSearchQueryChanged(query: String) {
@@ -97,18 +107,32 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    private fun searchPlaces() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val placeQueryFlow = queryFlow.combineTransform(typeFlow) { query, type ->
+                if (type == SearchType.PLACE) emit(query)
+            }
+
+            placeSearchRepository
+                .getStream(placeQueryFlow, queryLengthValidator, Accept(), SEARCH_DELAY)
+                .distinctUntilNewId(Place::id)
+                .mapState { it.sortedWith(compareBy(Place::name, Place::id)) }
+                .mapStateList {
+                    PlaceListModel(it.id, placeRepository)
+                }
+                .collectLatest(_placeResults::emit)
+        }
+    }
+
     @Suppress("MagicNumber")
     enum class SearchType(val value: Int) {
         BEER(0),
-        BREWER(1);
+        BREWER(1),
+        PLACE(2);
 
         companion object {
             fun fromValue(value: Int): SearchType {
-                return when (value) {
-                    0 -> BEER
-                    1 -> BREWER
-                    else -> error("Invalid value")
-                }
+                return SearchType.entries.find { it.value == value } ?: error("Invalid value")
             }
         }
     }

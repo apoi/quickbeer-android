@@ -15,6 +15,7 @@ interface RecycledPoolHolder {
         STYLE_LIST(3),
         COUNTRY_LIST(4),
         FEED_LIST(5),
-        LINK_LIST(6)
+        LINK_LIST(6),
+        PLACE_LIST(7)
     }
 }

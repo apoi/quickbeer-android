@@ -10,4 +10,5 @@ sealed class Destination(val uri: Uri) {
     class Brewer(id: Int) : Destination(Uri.parse("quickbeer://brewer/$id"))
     class Style(id: Int) : Destination(Uri.parse("quickbeer://style/$id"))
     class Country(id: Int) : Destination(Uri.parse("quickbeer://country/$id"))
+    class Place(id: Int) : Destination(Uri.parse("quickbeer://place/$id"))
 }

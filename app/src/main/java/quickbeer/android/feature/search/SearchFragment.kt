@@ -14,6 +14,7 @@ import quickbeer.android.databinding.RecentTabTitleBinding
 import quickbeer.android.databinding.SearchFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.feature.barcode.utils.BarcodeValidator
+import quickbeer.android.feature.search.SearchViewModel.SearchType
 import quickbeer.android.navigation.Destination
 import quickbeer.android.ui.listener.OnTabSelected
 import quickbeer.android.ui.search.SearchBarFragment
@@ -36,7 +37,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         searchViewModel.onSearchQueryChanged(args.barcode.orEmpty())
-        searchViewModel.onSearchTypeChanged(SearchViewModel.SearchType.BEER)
+        searchViewModel.onSearchTypeChanged(SearchType.BEER)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,8 +81,9 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
                 val searchType = SearchViewModel.SearchType.fromValue(index)
                 val tabBinding = RecentTabTitleBinding.inflate(LayoutInflater.from(context))
                 tabBinding.title.text = when (searchType) {
-                    SearchViewModel.SearchType.BEER -> getString(R.string.search_tab_beers)
-                    SearchViewModel.SearchType.BREWER -> getString(R.string.search_tab_brewers)
+                    SearchType.BEER -> getString(R.string.search_tab_beers)
+                    SearchType.BREWER -> getString(R.string.search_tab_brewers)
+                    SearchType.PLACE -> getString(R.string.search_tab_places)
                 }
                 binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
             }
@@ -93,6 +95,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         }
 
         observe(searchViewModel.brewerResults) { state ->
+            updateSearchTabProgress(1, state is State.Loading)
+        }
+
+        observe(searchViewModel.placeResults) { state ->
             updateSearchTabProgress(1, state is State.Loading)
         }
     }

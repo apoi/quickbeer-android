@@ -41,8 +41,7 @@
     <string name="search_progress">Searching…</string>
     <string name="search_tab_beers">Beers</string>
     <string name="search_tab_brewers">Brewers</string>
-    <string name="search_tab_styles">Styles</string>
-    <string name="search_tab_countries">Countries</string>
+    <string name="search_tab_places">Places</string>
 
     <!-- Recent -->
     <string name="recent_beers">Recent beers</string>

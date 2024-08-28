@@ -42,7 +42,7 @@
             android:singleLine="true"
             android:textColor="@color/text_light"
             android:textSize="@dimen/listitem_text_primary"
-            tools:text="Brauerei Heller" />
+            tools:text="BadFish" />
 
         <TextView
             android:id="@+id/place_something"
@@ -53,7 +53,7 @@
             android:singleLine="true"
             android:textColor="@color/gray_30"
             android:textSize="@dimen/listitem_text_secondary"
-            tools:text="Bamberg, Germany" />
+            tools:text="Berlin, Germany" />
 
     </LinearLayout>
 
