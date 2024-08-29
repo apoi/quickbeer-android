@@ -21,6 +21,8 @@ import quickbeer.android.domain.countrylist.network.CountryListFetcher
 import quickbeer.android.domain.feed.network.FeedFetcher
 import quickbeer.android.domain.feed.network.FeedResourcesFetcher
 import quickbeer.android.domain.login.LoginManager
+import quickbeer.android.domain.place.network.PlaceFetcher
+import quickbeer.android.domain.placelist.network.PlaceSearchFetcher
 import quickbeer.android.domain.rating.network.BeerPublishRatingFetcher
 import quickbeer.android.domain.rating.network.UserBeerRatingFetcher
 import quickbeer.android.domain.ratinglist.network.BeerRatingFetcher
@@ -177,5 +179,17 @@ object FetcherModule {
         @HtmlPreservingMoshi moshi: Moshi
     ): FeedResourcesFetcher {
         return FeedResourcesFetcher(resourceProvider, moshi)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaceFetcher(@HtmlPreservingApi api: RateBeerApi): PlaceFetcher {
+        return PlaceFetcher(api)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaceSearchFetcher(@HtmlPreservingApi api: RateBeerApi): PlaceSearchFetcher {
+        return PlaceSearchFetcher(api)
     }
 }

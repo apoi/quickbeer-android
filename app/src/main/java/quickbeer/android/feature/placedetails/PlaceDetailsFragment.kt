@@ -23,12 +23,10 @@ import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.Locale
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
-import quickbeer.android.domain.country.Place
 import quickbeer.android.domain.place.Place
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe

@@ -40,7 +40,6 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
     }
 
     private fun setPlace(country: Place) {
-
     }
 
     companion object {

@@ -23,6 +23,8 @@ import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.feed.FeedItem
 import quickbeer.android.domain.idlist.IdList
 import quickbeer.android.domain.idlist.store.IdListRoomCore
+import quickbeer.android.domain.place.store.PlaceRoomCore
+import quickbeer.android.domain.place.store.PlaceStoreCore
 import quickbeer.android.domain.preferences.core.IntPreferenceStoreCore
 import quickbeer.android.domain.preferences.core.StringPreferenceStoreCore
 import quickbeer.android.domain.rating.Rating
@@ -101,6 +103,12 @@ object RepositoryModule {
     @Singleton
     fun provideFeedItemCore(): StoreCore<Int, FeedItem> {
         return MemoryStoreCore(FeedItem.merger)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlaceStoreCore(roomCore: PlaceRoomCore): PlaceStoreCore {
+        return PlaceStoreCore(roomCore)
     }
 
     @Provides
