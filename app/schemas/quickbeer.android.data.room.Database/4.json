@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "d0636cc706dea9b8ee822b8b2a650f2b",
+    "identityHash": "1df0d48e4ed578556b25bee3fb5d38e6",
     "entities": [
       {
         "tableName": "lists",
@@ -702,7 +702,7 @@
       },
       {
         "tableName": "places",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `name` TEXT, `type` INTEGER, `brewer_id` INTEGER, `user_id` INTEGER, `is_retired` INTEGER, `address` TEXT, `city` TEXT, `postal_code` TEXT, `country_id` INTEGER, `state_id` INTEGER, `hours` TEXT, `taps` TEXT, `bottles` TEXT, `website` TEXT, `facebook` TEXT, `twitter` TEXT, `phone_number` TEXT, `latitude` REAL, `longitude` REAL, `real_rating` REAL, `weighted_rating` REAL, `overall_percentile` REAL, `rate_count` INTEGER, `normalized_name` TEXT, `updated` TEXT, `accessed` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `brewer_id` INTEGER, `type` INTEGER, `name` TEXT, `plain_name` TEXT, `description` TEXT, `map_id` TEXT, `tour_id` INTEGER, `region_id` INTEGER, `msa` TEXT, `latitude` REAL, `longitude` REAL, `geo_override` INTEGER, `address` TEXT, `city` TEXT, `state_id` INTEGER, `country_id` INTEGER, `postal_code` TEXT, `phone_number` TEXT, `phone_country_code` TEXT, `phone_area_code` TEXT, `website` TEXT, `facebook` TEXT, `twitter` TEXT, `food_menu` TEXT, `beer_menu` TEXT, `rating` TEXT, `avg_rating` REAL, `bay_mean` REAL, `percentile` INTEGER, `rate_count` INTEGER, `taps` TEXT, `bottles` TEXT, `seasonals` INTEGER, `real_ales` INTEGER, `rare_beers` INTEGER, `macros` INTEGER, `glassware` INTEGER, `singles` INTEGER, `togo` INTEGER, `wifi` INTEGER, `children` INTEGER, `reservations` INTEGER, `patio` INTEGER, `tv` INTEGER, `games` INTEGER, `scene` TEXT, `staff` TEXT, `parking` TEXT, `music` TEXT, `events` TEXT, `noise` TEXT, `seating` TEXT, `smoking` INTEGER, `cigars` INTEGER, `food` TEXT, `hours` TEXT, `comments` TEXT, `currency` TEXT, `mail_order` INTEGER, `mail_order_intl` INTEGER, `retired` INTEGER, `user_id` INTEGER, `edited_by` INTEGER, `time_added` TEXT, `time_edited` TEXT, `normalized_name` TEXT, `updated` TEXT, `accessed` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -711,9 +711,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
+            "fieldPath": "brewerId",
+            "columnName": "brewer_id",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -723,20 +723,62 @@
             "notNull": false
           },
           {
-            "fieldPath": "brewerId",
-            "columnName": "brewer_id",
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "plainName",
+            "columnName": "plain_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mapId",
+            "columnName": "map_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tourId",
+            "columnName": "tour_id",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "userId",
-            "columnName": "user_id",
+            "fieldPath": "regionId",
+            "columnName": "region_id",
             "affinity": "INTEGER",
             "notNull": false
           },
           {
-            "fieldPath": "isRetired",
-            "columnName": "is_retired",
+            "fieldPath": "msa",
+            "columnName": "msa",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "geoOverride",
+            "columnName": "geo_override",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -753,9 +795,9 @@
             "notNull": false
           },
           {
-            "fieldPath": "postalCode",
-            "columnName": "postal_code",
-            "affinity": "TEXT",
+            "fieldPath": "stateId",
+            "columnName": "state_id",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -765,26 +807,26 @@
             "notNull": false
           },
           {
-            "fieldPath": "stateId",
-            "columnName": "state_id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "hours",
-            "columnName": "hours",
+            "fieldPath": "postalCode",
+            "columnName": "postal_code",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "taps",
-            "columnName": "taps",
+            "fieldPath": "phoneNumber",
+            "columnName": "phone_number",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "bottles",
-            "columnName": "bottles",
+            "fieldPath": "phoneCountryCode",
+            "columnName": "phone_country_code",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "phoneAreaCode",
+            "columnName": "phone_area_code",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -807,45 +849,255 @@
             "notNull": false
           },
           {
-            "fieldPath": "phoneNumber",
-            "columnName": "phone_number",
+            "fieldPath": "foodMenu",
+            "columnName": "food_menu",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "latitude",
-            "columnName": "latitude",
+            "fieldPath": "beerMenu",
+            "columnName": "beer_menu",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rating",
+            "columnName": "rating",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "avgRating",
+            "columnName": "avg_rating",
             "affinity": "REAL",
             "notNull": false
           },
           {
-            "fieldPath": "longitude",
-            "columnName": "longitude",
+            "fieldPath": "bayMean",
+            "columnName": "bay_mean",
             "affinity": "REAL",
             "notNull": false
           },
           {
-            "fieldPath": "realRating",
-            "columnName": "real_rating",
-            "affinity": "REAL",
-            "notNull": false
-          },
-          {
-            "fieldPath": "weightedRating",
-            "columnName": "weighted_rating",
-            "affinity": "REAL",
-            "notNull": false
-          },
-          {
-            "fieldPath": "overallPercentile",
-            "columnName": "overall_percentile",
-            "affinity": "REAL",
+            "fieldPath": "percentile",
+            "columnName": "percentile",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
             "fieldPath": "rateCount",
             "columnName": "rate_count",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "taps",
+            "columnName": "taps",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "bottles",
+            "columnName": "bottles",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "seasonals",
+            "columnName": "seasonals",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "realAles",
+            "columnName": "real_ales",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rareBeers",
+            "columnName": "rare_beers",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "macros",
+            "columnName": "macros",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "glassware",
+            "columnName": "glassware",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "singles",
+            "columnName": "singles",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "togo",
+            "columnName": "togo",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wifi",
+            "columnName": "wifi",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "children",
+            "columnName": "children",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "reservations",
+            "columnName": "reservations",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "patio",
+            "columnName": "patio",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tv",
+            "columnName": "tv",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "games",
+            "columnName": "games",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "scene",
+            "columnName": "scene",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "staff",
+            "columnName": "staff",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "parking",
+            "columnName": "parking",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "music",
+            "columnName": "music",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "events",
+            "columnName": "events",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "noise",
+            "columnName": "noise",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "seating",
+            "columnName": "seating",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "smoking",
+            "columnName": "smoking",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cigars",
+            "columnName": "cigars",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "food",
+            "columnName": "food",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hours",
+            "columnName": "hours",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "comments",
+            "columnName": "comments",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "currency",
+            "columnName": "currency",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mailOrder",
+            "columnName": "mail_order",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mailOrderInternational",
+            "columnName": "mail_order_intl",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "retired",
+            "columnName": "retired",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "editedBy",
+            "columnName": "edited_by",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeAdded",
+            "columnName": "time_added",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timeEdited",
+            "columnName": "time_edited",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -899,7 +1151,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd0636cc706dea9b8ee822b8b2a650f2b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1df0d48e4ed578556b25bee3fb5d38e6')"
     ]
   }
 }
