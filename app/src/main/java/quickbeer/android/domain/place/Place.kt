@@ -3,6 +3,7 @@ package quickbeer.android.domain.place
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
+import quickbeer.android.Constants
 import quickbeer.android.data.store.Merger
 import quickbeer.android.util.ktx.orLater
 
@@ -79,6 +80,10 @@ data class Place(
     val updated: ZonedDateTime?,
     val accessed: ZonedDateTime?
 ) : Parcelable {
+
+    fun imageUri(): String {
+        return Constants.PLACE_IMAGE_PATH.format(id)
+    }
 
     enum class Type(val value: Int) {
         UNKNOWN(0),

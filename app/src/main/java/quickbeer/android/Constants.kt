@@ -5,6 +5,7 @@ object Constants {
 
     const val QUERY_MIN_LENGTH = 4
     const val RATING_MIN_LENGTH = 75
+    const val HEADER_IMAGE_BLUR = 15f
 
     // URLS
 
@@ -31,6 +32,9 @@ object Constants {
 
     const val BREWER_IMAGE_PATH =
         "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/brew_%d.jpg"
+
+    const val PLACE_IMAGE_PATH =
+        "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/plac_%d.jpg"
 
     const val USER_AVATAR_PATH =
         "https://res.cloudinary.com/ratebeer/image/upload/w_300,c_limit,q_100,d_user_def.png/user_%s.jpg"

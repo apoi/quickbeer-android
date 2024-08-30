@@ -26,6 +26,7 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.BlurTransformation
 import dagger.hilt.android.AndroidEntryPoint
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
@@ -73,7 +74,7 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
             crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
             transformations(
                 ContainerLabelExtractor(LABEL_WIDTH, LABEL_HEIGHT),
-                BlurTransformation(requireContext(), LABEL_BLUR)
+                BlurTransformation(requireContext(), Constants.HEADER_IMAGE_BLUR)
             )
             listener(object : ImageRequest.Listener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
@@ -86,6 +87,5 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
     companion object {
         private const val LABEL_WIDTH = 300
         private const val LABEL_HEIGHT = 300
-        private const val LABEL_BLUR = 15f
     }
 }

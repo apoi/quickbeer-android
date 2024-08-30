@@ -1,7 +1,6 @@
 package quickbeer.android.util.ktx
 
 import java.text.Normalizer
-import java.util.Locale
 import java.util.regex.Pattern
 
 private val SINGLE_LINEBREAK_PATTERN = "(?<!\\n)\\n(?!\\n)".toRegex()

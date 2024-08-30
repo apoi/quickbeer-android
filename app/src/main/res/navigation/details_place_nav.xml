@@ -14,7 +14,7 @@
         tools:layout="@layout/details_fragment">
 
         <deepLink app:uri="quickbeer://place/{id}" />
-        <deepLink app:uri="www.ratebeer.com/beer/place/.*/{id}/.*" />
+        <deepLink app:uri="www.ratebeer.com/p/.*/{id}/.*" />
 
         <argument
             android:name="id"

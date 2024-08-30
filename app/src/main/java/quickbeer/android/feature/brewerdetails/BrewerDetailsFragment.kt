@@ -25,6 +25,7 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.BlurTransformation
 import dagger.hilt.android.AndroidEntryPoint
+import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
@@ -72,16 +73,12 @@ class BrewerDetailsFragment : MainFragment(R.layout.details_fragment) {
         binding.collapsingToolbar.title = brewer.name
         binding.collapsingToolbarBackground.load(brewer.imageUri()) {
             crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
-            transformations(BlurTransformation(requireContext(), IMAGE_BLUR))
+            transformations(BlurTransformation(requireContext(), Constants.HEADER_IMAGE_BLUR))
             listener(object : ImageRequest.Listener {
                 override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     onImageLoadSuccess()
                 }
             })
         }
-    }
-
-    companion object {
-        private const val IMAGE_BLUR = 15f
     }
 }

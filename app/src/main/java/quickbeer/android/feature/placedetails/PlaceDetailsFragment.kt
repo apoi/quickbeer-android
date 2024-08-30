@@ -22,12 +22,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.transform.BlurTransformation
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.data.state.State
 import quickbeer.android.databinding.DetailsFragmentBinding
 import quickbeer.android.domain.place.Place
+import quickbeer.android.feature.placedetails.PlaceDetailsFragmentDirections.Companion.toPhoto
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe
 import quickbeer.android.util.ktx.viewBinding
@@ -61,19 +64,19 @@ class PlaceDetailsFragment : MainFragment(R.layout.details_fragment) {
         }
     }
 
-    private fun setPlace(country: Place) {
-        val flag = Constants.FLAG_IMAGE_PATH.format(TODO())
+    private fun setPlace(place: Place) {
         val onImageLoadSuccess = {
             binding.collapsingToolbarBackground.setOnClickListener {
-                navigate(PlaceDetailsFragmentDirections.toPhoto(flag))
+                navigate(toPhoto(place.imageUri()))
             }
         }
 
-        binding.collapsingToolbar.title = country.name
-        binding.collapsingToolbarBackground.load(flag) {
+        binding.collapsingToolbar.title = place.name
+        binding.collapsingToolbarBackground.load(place.imageUri()) {
             crossfade(resources.getInteger(android.R.integer.config_shortAnimTime))
+            transformations(BlurTransformation(requireContext(), Constants.HEADER_IMAGE_BLUR))
             listener(object : ImageRequest.Listener {
-                override fun onStart(request: ImageRequest) {
+                override fun onSuccess(request: ImageRequest, metadata: ImageResult.Metadata) {
                     onImageLoadSuccess()
                 }
             })
