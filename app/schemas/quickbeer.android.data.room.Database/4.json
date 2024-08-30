@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 4,
-    "identityHash": "1df0d48e4ed578556b25bee3fb5d38e6",
+    "identityHash": "e091814f43e2f40dde389a9b0e57e005",
     "entities": [
       {
         "tableName": "lists",
@@ -1136,6 +1136,33 @@
             "createSql": "CREATE INDEX IF NOT EXISTS `index_places_normalized_name` ON `${TABLE_NAME}` (`normalized_name`)"
           },
           {
+            "name": "index_places_city",
+            "unique": false,
+            "columnNames": [
+              "city"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_city` ON `${TABLE_NAME}` (`city`)"
+          },
+          {
+            "name": "index_places_latitude",
+            "unique": false,
+            "columnNames": [
+              "latitude"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_latitude` ON `${TABLE_NAME}` (`latitude`)"
+          },
+          {
+            "name": "index_places_longitude",
+            "unique": false,
+            "columnNames": [
+              "longitude"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_places_longitude` ON `${TABLE_NAME}` (`longitude`)"
+          },
+          {
             "name": "index_places_accessed",
             "unique": false,
             "columnNames": [
@@ -1151,7 +1178,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1df0d48e4ed578556b25bee3fb5d38e6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e091814f43e2f40dde389a9b0e57e005')"
     ]
   }
 }

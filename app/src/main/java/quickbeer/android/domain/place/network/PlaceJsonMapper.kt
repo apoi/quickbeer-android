@@ -76,7 +76,7 @@ object PlaceJsonMapper : JsonMapper<Int, Place, PlaceJson> {
             editedBy = source.editedBy,
             timeAdded = source.timeAdded,
             timeEdited = source.timeEdited,
-            normalizedName = source.name.normalize().nullIfEmpty(),
+            normalizedName = source.plainName.normalize().nullIfEmpty(),
             updated = ZonedDateTime.now(),
             accessed = null
         )

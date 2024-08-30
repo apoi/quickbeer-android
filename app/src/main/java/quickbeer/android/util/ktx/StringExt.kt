@@ -24,7 +24,7 @@ fun String?.normalize(): String? {
     return NORMALIZER_PATTERN
         .matcher(Normalizer.normalize(this, Normalizer.Form.NFD))
         .replaceAll("")
-        .toLowerCase(Locale.ROOT)
+        .lowercase()
         .replace("ø", "o")
         .replace("ł", "l")
         .replace("æ", "ae")

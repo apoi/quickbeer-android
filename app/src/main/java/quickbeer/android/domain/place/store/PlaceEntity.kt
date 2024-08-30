@@ -14,6 +14,9 @@ import quickbeer.android.domain.place.Place
     tableName = "places",
     indices = [
         Index(value = ["normalized_name"]),
+        Index(value = ["city"]),
+        Index(value = ["latitude"]),
+        Index(value = ["longitude"]),
         Index(value = ["accessed"])
     ]
 )
