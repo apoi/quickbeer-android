@@ -118,7 +118,7 @@ class SearchViewModel @Inject constructor(
                 .distinctUntilNewId(Place::id)
                 .mapState { it.sortedWith(compareBy(Place::name, Place::id)) }
                 .mapStateList {
-                    PlaceListModel(it.id, placeRepository)
+                    PlaceListModel(it.id, placeRepository, countryRepository)
                 }
                 .collectLatest(_placeResults::emit)
         }

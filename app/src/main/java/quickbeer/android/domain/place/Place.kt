@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
+import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
 import quickbeer.android.util.ktx.orLater
 
@@ -176,6 +177,12 @@ data class Place(
                 updated = new.updated.orLater(old.updated),
                 accessed = new.accessed.orLater(old.accessed)
             )
+        }
+    }
+
+    open class BasicDataValidator : Validator<Place> {
+        override suspend fun validate(place: Place?): Boolean {
+            return place?.name != null && place.countryId != null
         }
     }
 }
