@@ -1,10 +1,10 @@
 package quickbeer.android.ui.adapter.country
 
-import quickbeer.android.databinding.SimpleListItemBinding
+import quickbeer.android.databinding.ListItemOneRowBinding
 import quickbeer.android.ui.adapter.base.ListViewHolder
 
 class CountryViewHolder(
-    private val binding: SimpleListItemBinding
+    private val binding: ListItemOneRowBinding
 ) : ListViewHolder<CountryListModel>(binding.root) {
 
     override fun bind(item: CountryListModel) {

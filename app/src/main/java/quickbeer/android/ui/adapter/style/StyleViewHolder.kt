@@ -1,10 +1,10 @@
 package quickbeer.android.ui.adapter.style
 
-import quickbeer.android.databinding.SimpleListItemBinding
+import quickbeer.android.databinding.ListItemOneRowBinding
 import quickbeer.android.ui.adapter.base.ListViewHolder
 
 class StyleViewHolder(
-    private val binding: SimpleListItemBinding
+    private val binding: ListItemOneRowBinding
 ) : ListViewHolder<StyleListModel>(binding.root) {
 
     override fun bind(item: StyleListModel) {

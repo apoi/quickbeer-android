@@ -2,19 +2,18 @@ package quickbeer.android.ui.adapter.brewer
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import quickbeer.android.data.state.State
-import quickbeer.android.databinding.BrewerListItemBinding
+import quickbeer.android.databinding.ListItemTwoRowsBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.country.Country
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 
 class BrewerListViewHolder(
-    private val binding: BrewerListItemBinding
+    private val binding: ListItemTwoRowsBinding
 ) : ScopeListViewHolder<BrewerListModel>(binding.root) {
 
     override fun bind(item: BrewerListModel, scope: CoroutineScope) {
@@ -62,18 +61,18 @@ class BrewerListViewHolder(
     }
 
     private fun setBrewer(brewer: Brewer) {
-        binding.brewerName.text = brewer.name
+        binding.infoPrimary.text = brewer.name
     }
 
     private fun setAddress(address: Address?) {
         if (address == null) return
 
-        binding.brewerLocation.text = address.cityAndCountry()
-        binding.brewerCountry.text = address.code
+        binding.icon.text = address.code
+        binding.infoSecondary.text = address.cityAndCountry()
     }
 
     private fun clear() {
-        binding.brewerName.text = ""
-        binding.brewerLocation.text = ""
+        binding.infoPrimary.text = ""
+        binding.infoSecondary.text = ""
     }
 }
