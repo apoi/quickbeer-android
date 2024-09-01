@@ -17,9 +17,9 @@ abstract class PlaceDao : CoreDao<Int, PlaceEntity>(
 
     @Query(
         """SELECT * FROM places
-        WHERE (instr(normalized_name, :q1) > 0 OR instr(city, :q1) > 0)
-        AND (:q2 IS NULL OR instr(normalized_name, :q2) > 0 OR instr(city, :q2) > 0)
-        AND (:q3 IS NULL OR instr(normalized_name, :q3) > 0 OR instr(city, :q3) > 0)"""
+        WHERE (instr(normalized_name, :q1) > 0 OR instr(lower(city), :q1) > 0)
+        AND (:q2 IS NULL OR instr(normalized_name, :q2) > 0 OR instr(lower(city), :q2) > 0)
+        AND (:q3 IS NULL OR instr(normalized_name, :q3) > 0 OR instr(lower(city), :q3) > 0)"""
     )
     abstract fun search(q1: String, q2: String? = null, q3: String? = null): Flow<List<PlaceEntity>>
 
