@@ -6,8 +6,11 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
 import quickbeer.android.data.state.State
@@ -58,4 +61,23 @@ fun <T, R> Flow<State<List<T>>>.mapStateList(mapper: (T) -> R): Flow<State<List<
             is State.Error -> State.Error(it.cause)
         }
     }
+}
+
+/**
+ * Combines two flows where the second flow depends on the first, and maps their results together
+ * with a provided mapper function.
+ */
+fun <T, R, V> Flow<State<T>>.combineDistinctValues(
+    other: suspend (T) -> Flow<State<R>>,
+    combine: (T, R?) -> V
+): Flow<V> {
+    return mapNotNull { it.valueOrNull() }
+        .distinctUntilChanged()
+        .flatMapLatest { first ->
+            other(first)
+                .map { it.valueOrNull() }
+                .onStart { emit(null) }
+                .distinctUntilChanged()
+                .map { second -> combine(first, second) }
+        }
 }
