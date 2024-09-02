@@ -38,7 +38,8 @@ class RecentFragment : SearchBarFragment(R.layout.recent_fragment), Resetable {
         mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.recent_beers)
-                else -> getString(R.string.recent_brewers)
+                1 -> getString(R.string.recent_brewers)
+                else -> getString(R.string.recent_places)
             }
         }.also(TabLayoutMediator::attach)
     }

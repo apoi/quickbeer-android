@@ -23,7 +23,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 class RecentItemsPagerAdapter(parent: Fragment) : FragmentStateAdapter(parent) {
 
     override fun getItemCount(): Int {
-        return 2
+        return 3
     }
 
     override fun getItemId(position: Int): Long {
@@ -33,7 +33,8 @@ class RecentItemsPagerAdapter(parent: Fragment) : FragmentStateAdapter(parent) {
     override fun createFragment(position: Int): Fragment {
         return when (position) {
             0 -> RecentBeersFragment()
-            else -> RecentBrewersFragment()
+            1 -> RecentBrewersFragment()
+            else -> RecentPlacesFragment()
         }
     }
 }

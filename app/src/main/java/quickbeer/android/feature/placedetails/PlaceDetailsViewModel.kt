@@ -26,7 +26,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.launch
+import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
 import quickbeer.android.domain.place.Place
@@ -45,9 +49,24 @@ class PlaceDetailsViewModel @Inject constructor(
     val placeState: StateFlow<State<Place>> = _placeState
 
     init {
+        updateAccessedPlace(placeId)
+
         viewModelScope.launch(Dispatchers.IO) {
             placeRepository.getStream(placeId, Accept())
                 .collectLatest(_placeState::emit)
+        }
+    }
+
+    private fun updateAccessedPlace(placeId: Int) {
+        viewModelScope.launch(Dispatchers.IO) {
+            placeRepository.getStream(placeId, Accept())
+                .filterIsInstance<State.Success<Place>>()
+                .map { it.value }
+                .take(1)
+                .collectLatest { place ->
+                    val accessed = place.copy(accessed = ZonedDateTime.now())
+                    placeRepository.persist(place.id, accessed)
+                }
         }
     }
 }
