@@ -94,6 +94,22 @@
     <string name="brewer_details_no_facebook">Facebook page not available</string>
     <string name="brewer_details_no_twitter">Twitter feed not available</string>
 
+    <!-- Place details -->
+    <string name="place_type">Type</string>
+    <string name="place_country">Country</string>
+    <string name="place_city">City</string>
+    <string name="place_address">Address</string>
+    <string name="place_opening_hours">Opening Hours</string>
+    <string name="place_type_unknown">Unknown</string>
+    <string name="place_type_brewpub">Brewpub</string>
+    <string name="place_type_bar">Bar</string>
+    <string name="place_type_beer_store">Beer store</string>
+    <string name="place_type_restaurant">Restaurant</string>
+    <string name="place_type_brewery">Brewery</string>
+    <string name="place_type_homebrew_shop">Homebrew Shop</string>
+    <string name="place_type_grocery_store">Grocery Store</string>
+    <string name="place_type_internet_based">Internet Based</string>
+
     <!-- Style details -->
     <string name="style_details_description">Description</string>
     <string name="style_details_parent">Parent Category</string>

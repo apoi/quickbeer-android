@@ -1,9 +1,11 @@
 package quickbeer.android.domain.place
 
 import android.os.Parcelable
+import androidx.annotation.StringRes
 import kotlinx.parcelize.Parcelize
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.Constants
+import quickbeer.android.R
 import quickbeer.android.data.repository.Validator
 import quickbeer.android.data.store.Merger
 import quickbeer.android.util.ktx.orLater
@@ -86,16 +88,16 @@ data class Place(
         return Constants.PLACE_IMAGE_PATH.format(id)
     }
 
-    enum class Type(val value: Int) {
-        UNKNOWN(0),
-        BREWPUB(1),
-        BAR(2),
-        BEER_STORE(3),
-        RESTAURANT(4),
-        BREWERY(5),
-        HOME_BREWS_HOP(6),
-        GROCERY_STORE(7),
-        INTERNET_BASED(8);
+    enum class Type(val value: Int, @StringRes val stringRes: Int) {
+        UNKNOWN(0, R.string.place_type_unknown),
+        BREWPUB(1, R.string.place_type_brewpub),
+        BAR(2, R.string.place_type_bar),
+        BEER_STORE(3, R.string.place_type_beer_store),
+        RESTAURANT(4, R.string.place_type_restaurant),
+        BREWERY(5, R.string.place_type_brewery),
+        HOMEBREW_SHOP(6, R.string.place_type_homebrew_shop),
+        GROCERY_STORE(7, R.string.place_type_grocery_store),
+        INTERNET_BASED(8, R.string.place_type_internet_based);
 
         companion object {
             fun fromValue(value: Int?): Type {
@@ -183,6 +185,12 @@ data class Place(
     open class BasicDataValidator : Validator<Place> {
         override suspend fun validate(place: Place?): Boolean {
             return place?.name != null && place.countryId != null
+        }
+    }
+
+    open class DetailsDataValidator : Validator<Place> {
+        override suspend fun validate(place: Place?): Boolean {
+            return place?.plainName != null
         }
     }
 }

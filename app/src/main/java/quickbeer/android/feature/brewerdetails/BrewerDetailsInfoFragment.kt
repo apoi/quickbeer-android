@@ -25,7 +25,6 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.Constants
 import quickbeer.android.R
-import quickbeer.android.data.state.State
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.feature.beerdetails.model.Address
@@ -33,7 +32,7 @@ import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.util.ktx.ifNull
-import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
@@ -43,25 +42,8 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
     private val viewModel by viewModels<BrewerDetailsViewModel>()
 
     override fun observeViewState() {
-        observe(viewModel.brewerState) { state ->
-            when (state) {
-                is State.Initial -> Unit
-                is State.Loading -> Unit
-                is State.Empty -> Unit
-                is State.Success -> setBrewer(state.value)
-                is State.Error -> Unit
-            }
-        }
-
-        observe(viewModel.addressState) { state ->
-            when (state) {
-                is State.Initial -> Unit
-                is State.Loading -> Unit
-                is State.Empty -> Unit
-                is State.Success -> setAddress(state.value)
-                is State.Error -> Unit
-            }
-        }
+        observeSuccess(viewModel.brewerState, ::setBrewer)
+        observeSuccess(viewModel.addressState, ::setAddress)
     }
 
     private fun setBrewer(brewer: Brewer) {
