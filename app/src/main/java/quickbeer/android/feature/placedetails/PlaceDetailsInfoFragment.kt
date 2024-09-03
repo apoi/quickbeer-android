@@ -17,10 +17,12 @@
  */
 package quickbeer.android.feature.placedetails
 
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.databinding.DetailsInfoColumnsBinding
 import quickbeer.android.databinding.PlaceDetailsInfoFragmentBinding
@@ -30,6 +32,7 @@ import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.binder.InfoColumnsBinder
+import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.openMaps
@@ -44,6 +47,9 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
 
     private val viewModel by viewModels<PlaceDetailsViewModel>()
 
+    @Inject
+    lateinit var toastProvider: ToastProvider
+
     override fun observeViewState() {
         observeSuccess(viewModel.placeState, ::setPlace)
         observeSuccess(viewModel.addressState, ::setAddress)
@@ -52,7 +58,7 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
     private fun setPlace(place: Place) {
         val notAvailable = getString(R.string.not_available)
 
-        InfoColumnsBinder.bind(requireContext(), place, columnBinding)
+        InfoColumnsBinder.bind(requireContext(), place, columnBinding, ::onRatingClicked)
 
         place.type
             ?.let { requireContext().getString(it.stringRes) }
@@ -81,6 +87,10 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
         binding.country.setOnClickListener {
             navigate(Destination.Country(address.countryId))
         }
+    }
+
+    private fun onRatingClicked() {
+        toastProvider.showCancelableToast(R.string.place_rating, Toast.LENGTH_LONG)
     }
 
     companion object {

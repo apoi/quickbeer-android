@@ -18,15 +18,21 @@ object InfoColumnsBinder {
     private const val VISIBLE = 1.0f
     private const val OPAQUE = 0.4f
 
-    fun bind(context: Context, place: Place, binding: DetailsInfoColumnsBinding) {
+    fun bind(
+        context: Context,
+        place: Place,
+        binding: DetailsInfoColumnsBinding,
+        onInfoClicked: (() -> Unit)?
+    ) {
         bind(
             context = context,
-            infoTitle = R.string.rating_overall,
+            infoTitle = R.string.percentile_rating,
             infoValue = place.percentile?.toString(),
             website = place.website,
             facebook = place.facebook,
             twitter = place.twitter,
-            binding = binding
+            binding = binding,
+            onInfoClicked = onInfoClicked
         )
     }
 
@@ -38,7 +44,8 @@ object InfoColumnsBinder {
             website = brewer.website,
             facebook = brewer.facebook,
             twitter = brewer.twitter,
-            binding = binding
+            binding = binding,
+            onInfoClicked = null
         )
     }
 
@@ -49,12 +56,14 @@ object InfoColumnsBinder {
         website: String?,
         facebook: String?,
         twitter: String?,
-        binding: DetailsInfoColumnsBinding
+        binding: DetailsInfoColumnsBinding,
+        onInfoClicked: (() -> Unit)?
     ) {
         val notAvailable = context.getString(R.string.not_available)
 
         binding.info.title = context.getString(infoTitle)
         binding.info.value = infoValue ?: notAvailable
+        binding.info.setOnClickListener { onInfoClicked?.invoke() }
 
         website
             ?.takeIf(String::isNotEmpty)
