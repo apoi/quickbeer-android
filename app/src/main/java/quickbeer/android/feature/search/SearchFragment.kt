@@ -103,7 +103,7 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
         }
 
         observe(searchViewModel.placeResults) { state ->
-            updateSearchTabProgress(1, state is State.Loading)
+            updateSearchTabProgress(2, state is State.Loading)
         }
     }
 
