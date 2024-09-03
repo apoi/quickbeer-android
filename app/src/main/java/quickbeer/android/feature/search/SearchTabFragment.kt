@@ -56,31 +56,34 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
     override fun observeViewState() {
         observe(resultFlow()) { state ->
             when (state) {
-                is State.Initial -> Unit
+                is State.Initial -> {
+                    binding.message.text = getString(R.string.search_initial)
+                    binding.message.isVisible = true
+                }
                 is State.Loading -> {
-                    resultAdapter.setItems(state.value ?: emptyList())
                     binding.recyclerView.scrollToPosition(0)
                     binding.message.text = getString(R.string.search_progress)
                     binding.message.isVisible = state.value?.isNotEmpty() != true
+                    resultAdapter.setItems(state.value ?: emptyList())
                 }
                 is State.Empty -> {
-                    resultAdapter.setItems(emptyList())
                     binding.message.text = getString(R.string.message_empty)
                     binding.message.isVisible = true
+                    resultAdapter.setItems(emptyList())
                 }
                 is State.Success -> {
                     val scrollY = binding.recyclerView.computeVerticalScrollOffset()
-                    resultAdapter.setItems(state.value)
                     // Only reset scrolling if already at the top and this isn't restore
                     if (scrollY == 0 && lifecycle.currentState == Lifecycle.State.RESUMED) {
                         binding.recyclerView.scrollToPosition(0)
                     }
                     binding.message.isVisible = false
+                    resultAdapter.setItems(state.value)
                 }
                 is State.Error -> {
-                    resultAdapter.setItems(emptyList())
                     binding.message.text = getError(state.cause)
                     binding.message.isVisible = true
+                    resultAdapter.setItems(emptyList())
                 }
             }
         }
@@ -88,8 +91,8 @@ abstract class SearchTabFragment<T : ListItem> : BaseFragment(R.layout.list_frag
 
     private fun getError(error: Throwable): String {
         return when (error) {
-            AppException.RepositoryKeyEmpty -> ""
-            AppException.RepositoryKeyInvalid -> "Query needs to be at least four characters."
+            AppException.RepositoryKeyEmpty -> getString(R.string.search_initial)
+            AppException.RepositoryKeyInvalid -> getString(R.string.search_min_length)
             else -> error.getMessage(::getString)
         }
     }

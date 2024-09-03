@@ -38,6 +38,8 @@
 
     <!-- Search bar -->
     <string name="search_hint">Search…</string>
+    <string name="search_initial">Enter keywords.</string>
+    <string name="search_min_length">Query needs to be at least four characters.</string>
     <string name="search_progress">Searching…</string>
     <string name="search_tab_beers">Beers</string>
     <string name="search_tab_brewers">Brewers</string>
