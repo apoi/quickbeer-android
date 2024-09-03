@@ -34,12 +34,17 @@ import quickbeer.android.domain.beer.Beer
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.ui.transformations.ContainerLabelExtractor
 import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.openUri
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
 class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
 
-    private val binding by viewBinding(DetailsFragmentBinding::bind)
+    private val binding by viewBinding(
+        bind = { DetailsFragmentBinding.bind(it) },
+        destroyCallback = { it.viewPager.adapter = null }
+    )
+
     private val viewModel by viewModels<BeerDetailsViewModel>()
     private val args by navArgs<BeerDetailsFragmentArgs>()
 
@@ -51,6 +56,16 @@ class BeerDetailsFragment : MainFragment(R.layout.details_fragment) {
         binding.viewPager.adapter = BeerDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_open_in_browser -> {
+                    requireContext().openUri(Constants.BEER_PATH.format(args.id))
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun observeViewState() {

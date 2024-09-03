@@ -25,7 +25,13 @@ object Constants {
         "/saverating.asp"
 
     const val BEER_PATH =
-        "https://ratebeer.com/beer/%d/"
+        "https://www.ratebeer.com/beer/%d/"
+
+    const val BREWER_PATH =
+        "https://www.ratebeer.com/brewers/b/%d/"
+
+    const val PLACE_PATH =
+        "https://www.ratebeer.com/p/p/%d/"
 
     const val BEER_IMAGE_PATH =
         "https://res.cloudinary.com/ratebeer/image/upload/w_250,c_limit/beer_%d.jpg"

@@ -18,6 +18,7 @@
 package quickbeer.android.feature.placedetails
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -33,23 +34,38 @@ import quickbeer.android.domain.place.Place
 import quickbeer.android.feature.placedetails.PlaceDetailsFragmentDirections.Companion.toPhoto
 import quickbeer.android.ui.base.MainFragment
 import quickbeer.android.util.ktx.observe
+import quickbeer.android.util.ktx.openUri
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
 class PlaceDetailsFragment : MainFragment(R.layout.details_fragment) {
 
-    private val binding by viewBinding(DetailsFragmentBinding::bind)
+    private val binding by viewBinding(
+        bind = { DetailsFragmentBinding.bind(it) },
+        destroyCallback = { it.viewPager.adapter = null }
+    )
+
     private val viewModel by viewModels<PlaceDetailsViewModel>()
     private val args by navArgs<PlaceDetailsFragmentArgs>()
 
     override fun topInsetView() = binding.toolbar
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.viewPager.adapter = PlaceDetailsPagerAdapter(childFragmentManager, args.id)
         binding.tabLayout.setupWithViewPager(binding.viewPager)
         binding.toolbar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.action_open_in_browser -> {
+                    requireContext().openUri(Constants.PLACE_PATH.format(args.id))
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun observeViewState() {

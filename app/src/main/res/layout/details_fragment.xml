@@ -48,6 +48,7 @@
                 android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:menu="@menu/details_fragment_action_menu"
                 app:navigationIcon="@drawable/ic_hero_arrow_left" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
