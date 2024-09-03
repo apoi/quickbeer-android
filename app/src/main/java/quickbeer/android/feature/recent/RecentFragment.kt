@@ -7,6 +7,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.RecentFragmentBinding
 import quickbeer.android.databinding.RecentTabTitleBinding
+import quickbeer.android.feature.recent.RecentFragmentDirections.Companion.toSearch
 import quickbeer.android.navigation.NavAnim
 import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.search.SearchBarFragment
@@ -52,7 +53,8 @@ class RecentFragment : SearchBarFragment(R.layout.recent_fragment), Resetable {
         super.onSearchFocusChanged(hasFocus)
 
         if (hasFocus) {
-            navigate(RecentFragmentDirections.toSearch(), NavAnim.NONE)
+            val tabIndex = binding.viewPager.currentItem
+            navigate(toSearch(tabIndex = tabIndex), NavAnim.NONE)
         }
     }
 

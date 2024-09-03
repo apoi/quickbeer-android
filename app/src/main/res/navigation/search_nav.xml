@@ -24,6 +24,11 @@
         tools:layout="@layout/recent_fragment">
 
         <argument
+            android:name="tabIndex"
+            android:defaultValue="-1"
+            app:argType="integer" />
+
+        <argument
             android:name="barcode"
             android:defaultValue="@null"
             app:nullable="true"

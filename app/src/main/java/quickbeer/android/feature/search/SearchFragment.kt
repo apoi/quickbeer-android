@@ -58,6 +58,10 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
             }
         )
 
+        args.tabIndex.takeIf { it >= 0 }?.let { tabIndex ->
+            binding.tabLayout.getTabAt(tabIndex)?.select()
+        }
+
         // Set custom tab layouts to get progress indicators
         (0.until(binding.tabLayout.tabCount))
             .forEach { index ->
