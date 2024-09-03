@@ -26,6 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.Constants
 import quickbeer.android.R
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
+import quickbeer.android.databinding.DetailsInfoColumnsBinding
+import quickbeer.android.databinding.ListContentBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.navigation.Destination
@@ -39,6 +41,8 @@ import quickbeer.android.util.ktx.viewBinding
 class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_fragment) {
 
     private val binding by viewBinding(BrewerDetailsInfoFragmentBinding::bind)
+    private val columnBinding by viewBinding(DetailsInfoColumnsBinding::bind)
+
     private val viewModel by viewModels<BrewerDetailsViewModel>()
 
     override fun observeViewState() {
@@ -49,36 +53,37 @@ class BrewerDetailsInfoFragment : BaseFragment(R.layout.brewer_details_info_frag
     private fun setBrewer(brewer: Brewer) {
         val notAvailable = getString(R.string.not_available)
 
-        binding.founded.value = brewer.founded?.year?.toString() ?: notAvailable
+        columnBinding.info.title = getString(R.string.founded)
+        columnBinding.info.value = brewer.founded?.year?.toString() ?: notAvailable
 
         brewer.website
             ?.takeIf(String::isNotEmpty)
             ?.let(::fixUrl)
             ?.let { url ->
-                binding.webContainer.alpha = VISIBLE
-                binding.webContainer.setOnClickListener { openUri(url) }
+                columnBinding.webContainer.alpha = VISIBLE
+                columnBinding.webContainer.setOnClickListener { openUri(url) }
             }.ifNull {
-                binding.web.alpha = OPAQUE
+                columnBinding.web.alpha = OPAQUE
             }
 
         brewer.facebook
             ?.takeIf(String::isNotEmpty)
             ?.let { Constants.FACEBOOK_PATH.format(it) }
             ?.let { url ->
-                binding.facebookContainer.alpha = VISIBLE
-                binding.facebookContainer.setOnClickListener { openUri(url) }
+                columnBinding.facebookContainer.alpha = VISIBLE
+                columnBinding.facebookContainer.setOnClickListener { openUri(url) }
             }.ifNull {
-                binding.facebook.alpha = OPAQUE
+                columnBinding.facebook.alpha = OPAQUE
             }
 
         brewer.twitter
             ?.takeIf(String::isNotEmpty)
             ?.let { Constants.TWITTER_PATH.format(it) }
             ?.let { url ->
-                binding.twitterContainer.alpha = VISIBLE
-                binding.twitterContainer.setOnClickListener { openUri(url) }
+                columnBinding.twitterContainer.alpha = VISIBLE
+                columnBinding.twitterContainer.setOnClickListener { openUri(url) }
             }.ifNull {
-                binding.twitter.alpha = OPAQUE
+                columnBinding.twitter.alpha = OPAQUE
             }
     }
 

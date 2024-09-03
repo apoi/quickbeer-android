@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/columns"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <!-- Founded -->
+
+    <quickbeer.android.ui.view.ValueLabel
+        android:id="@+id/info"
+        android:layout_width="@dimen/details_box_width"
+        android:layout_height="@dimen/details_box_height"
+        android:layout_marginStart="@dimen/spacing_xl"
+        android:layout_marginTop="@dimen/spacing_l"
+        app:constrained="false"
+        app:layout_constraintEnd_toStartOf="@id/info_separator"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/founded" />
+
+    <View
+        android:id="@+id/info_separator"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:alpha="0.1"
+        android:background="@color/gray_30"
+        app:layout_constraintBottom_toBottomOf="@id/info"
+        app:layout_constraintEnd_toStartOf="@id/web_container"
+        app:layout_constraintStart_toEndOf="@id/info"
+        app:layout_constraintTop_toTopOf="@id/info" />
+
+    <!-- Web -->
+
+    <FrameLayout
+        android:id="@+id/web_container"
+        android:layout_width="@dimen/details_box_width"
+        android:layout_height="@dimen/details_box_height"
+        android:alpha="0.4"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toStartOf="@id/web_separator"
+        app:layout_constraintStart_toEndOf="@id/info_separator"
+        app:layout_constraintTop_toTopOf="@id/info">
+
+        <ImageView
+            android:id="@+id/web"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_web" />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/web_separator"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:alpha="0.1"
+        android:background="@color/gray_30"
+        app:layout_constraintBottom_toBottomOf="@id/web_container"
+        app:layout_constraintEnd_toStartOf="@id/facebook_container"
+        app:layout_constraintStart_toEndOf="@id/web_container"
+        app:layout_constraintTop_toTopOf="@id/web_container" />
+
+    <!-- Facebook -->
+
+    <FrameLayout
+        android:id="@+id/facebook_container"
+        android:layout_width="@dimen/details_box_width"
+        android:layout_height="@dimen/details_box_height"
+        android:alpha="0.4"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toStartOf="@id/facebook_separator"
+        app:layout_constraintStart_toEndOf="@id/web_separator"
+        app:layout_constraintTop_toTopOf="@id/info">
+
+        <ImageView
+            android:id="@+id/facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_facebook" />
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/facebook_separator"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:alpha="0.1"
+        android:background="@color/gray_30"
+        app:layout_constraintBottom_toBottomOf="@id/facebook_container"
+        app:layout_constraintEnd_toStartOf="@id/twitter_container"
+        app:layout_constraintStart_toEndOf="@id/facebook_container"
+        app:layout_constraintTop_toTopOf="@id/facebook_container" />
+
+    <!-- Twitter -->
+
+    <FrameLayout
+        android:id="@+id/twitter_container"
+        android:layout_width="@dimen/details_box_width"
+        android:layout_height="@dimen/details_box_height"
+        android:layout_marginEnd="@dimen/spacing_xl"
+        android:alpha="0.4"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/facebook_separator"
+        app:layout_constraintTop_toTopOf="@id/info">
+
+        <ImageView
+            android:id="@+id/twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_twitter" />
+
+    </FrameLayout>
+
+</merge>

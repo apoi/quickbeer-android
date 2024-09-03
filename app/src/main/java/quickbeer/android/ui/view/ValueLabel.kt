@@ -21,6 +21,12 @@ class ValueLabel @JvmOverloads constructor(
 
     private val binding = ValueLabelBinding.inflate(LayoutInflater.from(context), this)
 
+    var title: String?
+        get() = binding.title.text.toString()
+        set(value) {
+            binding.title.text = value
+        }
+
     var value: String?
         get() = binding.value.text.toString()
         set(value) {
