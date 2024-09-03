@@ -26,7 +26,6 @@
         <activity
             android:name="quickbeer.android.feature.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize"
@@ -36,8 +35,6 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-            <nav-graph android:value="@navigation/details_beer_nav" />
 
         </activity>
 
