@@ -1,11 +1,12 @@
 package quickbeer.android.feature.recent
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.RecentFragmentBinding
+import quickbeer.android.databinding.RecentTabTitleBinding
 import quickbeer.android.navigation.NavAnim
 import quickbeer.android.ui.base.Resetable
 import quickbeer.android.ui.search.SearchBarFragment
@@ -17,31 +18,30 @@ class RecentFragment : SearchBarFragment(R.layout.recent_fragment), Resetable {
 
     private val binding by viewBinding(
         bind = RecentFragmentBinding::bind,
-        destroyCallback = {
-            mediator?.detach()
-            mediator = null
-            it.viewPager.adapter = null
-        }
+        destroyCallback = { it.viewPager.adapter = null }
     )
 
     override val searchHint = R.string.search_hint
 
     override fun topInsetView() = binding.layout
 
-    private var mediator: TabLayoutMediator? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.viewPager.adapter = RecentItemsPagerAdapter(this)
+        binding.viewPager.adapter = RecentItemsPagerAdapter(childFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
 
-        mediator = TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.recent_beers)
-                1 -> getString(R.string.recent_brewers)
-                else -> getString(R.string.recent_places)
+        // Set custom tab layouts to get progress indicators
+        (0.until(binding.tabLayout.tabCount))
+            .forEach { index ->
+                val tabBinding = RecentTabTitleBinding.inflate(LayoutInflater.from(context))
+                tabBinding.title.text = when (index) {
+                    0 -> getString(R.string.search_tab_beers)
+                    1 -> getString(R.string.search_tab_brewers)
+                    else -> getString(R.string.search_tab_places)
+                }
+                binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
             }
-        }.also(TabLayoutMediator::attach)
     }
 
     override fun searchView(): SearchView {

@@ -26,7 +26,11 @@ import quickbeer.android.util.ktx.viewBinding
 @AndroidEntryPoint
 class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
 
-    private val binding by viewBinding(SearchFragmentBinding::bind)
+    private val binding: SearchFragmentBinding by viewBinding(
+        bind = SearchFragmentBinding::bind,
+        destroyCallback = { it.viewPager.adapter = null }
+    )
+
     private val searchViewModel by activityViewModels<SearchViewModel>()
     private val args by navArgs<SearchFragmentArgs>()
 
@@ -43,6 +47,29 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.searchView.navigationMode = SearchView.NavigationMode.BACK
+
+        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
+        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        binding.tabLayout.addOnTabSelectedListener(
+            OnTabSelected { index ->
+                val searchType = SearchType.fromValue(index)
+                searchViewModel.onSearchTypeChanged(searchType)
+                binding.searchView.hideKeyboard()
+            }
+        )
+
+        // Set custom tab layouts to get progress indicators
+        (0.until(binding.tabLayout.tabCount))
+            .forEach { index ->
+                val searchType = SearchType.fromValue(index)
+                val tabBinding = RecentTabTitleBinding.inflate(LayoutInflater.from(context))
+                tabBinding.title.text = when (searchType) {
+                    SearchType.BEER -> getString(R.string.search_tab_beers)
+                    SearchType.BREWER -> getString(R.string.search_tab_brewers)
+                    SearchType.PLACE -> getString(R.string.search_tab_places)
+                }
+                binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
+            }
     }
 
     @Suppress("MagicNumber")
@@ -60,33 +87,6 @@ class SearchFragment : SearchBarFragment(R.layout.search_fragment) {
     override fun onRestoreView() {
         // Open without delay on restore. TODO SearchView should store its state instead.
         binding.searchView.openSearchView(showKeyboard = !isBarcodeSearch())
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        binding.viewPager.adapter = SearchPagerAdapter(childFragmentManager)
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
-        binding.tabLayout.addOnTabSelectedListener(
-            OnTabSelected { index ->
-                val searchType = SearchViewModel.SearchType.fromValue(index)
-                searchViewModel.onSearchTypeChanged(searchType)
-                binding.searchView.hideKeyboard()
-            }
-        )
-
-        // Set custom tab layouts to get progress indicators
-        (0.until(binding.tabLayout.tabCount))
-            .forEach { index ->
-                val searchType = SearchViewModel.SearchType.fromValue(index)
-                val tabBinding = RecentTabTitleBinding.inflate(LayoutInflater.from(context))
-                tabBinding.title.text = when (searchType) {
-                    SearchType.BEER -> getString(R.string.search_tab_beers)
-                    SearchType.BREWER -> getString(R.string.search_tab_brewers)
-                    SearchType.PLACE -> getString(R.string.search_tab_places)
-                }
-                binding.tabLayout.getTabAt(index)?.customView = tabBinding.layout
-            }
     }
 
     override fun observeViewState() {

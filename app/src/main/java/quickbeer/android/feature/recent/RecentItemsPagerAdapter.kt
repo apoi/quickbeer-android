@@ -18,19 +18,16 @@
 package quickbeer.android.feature.recent
 
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 
-class RecentItemsPagerAdapter(parent: Fragment) : FragmentStateAdapter(parent) {
+class RecentItemsPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
-    override fun getItemCount(): Int {
+    override fun getCount(): Int {
         return 3
     }
 
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun createFragment(position: Int): Fragment {
+    override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> RecentBeersFragment()
             1 -> RecentBrewersFragment()

@@ -28,13 +28,6 @@
                 app:top_divider="false" />
 
             <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/opening_hours"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/place_opening_hours"
-                app:top_divider="true" />
-
-            <quickbeer.android.ui.view.ValueLabel
                 android:id="@+id/country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -53,6 +46,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/place_address"
+                app:top_divider="true" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/opening_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/place_opening_hours"
                 app:top_divider="true" />
 
         </LinearLayout>

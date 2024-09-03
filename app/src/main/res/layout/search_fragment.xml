@@ -27,8 +27,8 @@
             android:elevation="4dp"
             app:layout_constraintBottom_toTopOf="@id/view_pager"
             app:layout_constraintTop_toBottomOf="@id/search_view"
-            app:tabMinWidth="130dp"
-            app:tabMode="scrollable" />
+            app:tabGravity="fill"
+            app:tabMode="fixed" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"

@@ -44,9 +44,9 @@
     <string name="search_tab_places">Places</string>
 
     <!-- Recent -->
-    <string name="recent_beers">Recent beers</string>
-    <string name="recent_brewers">Recent brewers</string>
-    <string name="recent_places">Recent places</string>
+    <string name="recent_beers">Beers</string>
+    <string name="recent_brewers">Brewers</string>
+    <string name="recent_places">Places</string>
 
     <!-- Beer list messages -->
     <string name="message_start">Welcome to QuickBeer!\n\nStart by searching for your favourite beer or cider.\n\nCheers!</string>
