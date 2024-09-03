@@ -13,17 +13,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <!-- Info columns -->
+
+            <include layout="@layout/details_info_columns" />
+
+            <!-- Separate fields -->
 
             <quickbeer.android.ui.view.ValueLabel
                 android:id="@+id/type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_s"
-                android:layout_marginBottom="@dimen/spacing_s"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/country"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info"
                 app:title="@string/place_type"
                 app:top_divider="false" />
 
@@ -31,6 +43,12 @@
                 android:id="@+id/country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/city"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/type"
                 app:title="@string/place_country"
                 app:top_divider="true" />
 
@@ -38,6 +56,12 @@
                 android:id="@+id/city"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/country"
                 app:title="@string/place_city"
                 app:top_divider="true" />
 
@@ -45,6 +69,12 @@
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintBottom_toTopOf="@id/opening_hours"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/city"
                 app:title="@string/place_address"
                 app:top_divider="true" />
 
@@ -52,10 +82,15 @@
                 android:id="@+id/opening_hours"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/address"
                 app:title="@string/place_opening_hours"
                 app:top_divider="true" />
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 

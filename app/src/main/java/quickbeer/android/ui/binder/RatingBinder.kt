@@ -1,4 +1,4 @@
-package quickbeer.android.domain.rating
+package quickbeer.android.ui.binder
 
 import android.content.Context
 import androidx.core.view.isVisible
@@ -6,6 +6,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import quickbeer.android.R
 import quickbeer.android.databinding.RatingListItemBinding
+import quickbeer.android.domain.rating.Rating
 import quickbeer.android.util.ktx.formatDate
 
 /**

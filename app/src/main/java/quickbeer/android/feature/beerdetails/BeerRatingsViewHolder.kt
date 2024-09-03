@@ -18,9 +18,9 @@
 package quickbeer.android.feature.beerdetails
 
 import quickbeer.android.databinding.RatingListItemBinding
-import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.ui.adapter.base.ListViewHolder
 import quickbeer.android.ui.adapter.rating.RatingListModel
+import quickbeer.android.ui.binder.RatingBinder
 
 /**
  * View holder for ratings in list

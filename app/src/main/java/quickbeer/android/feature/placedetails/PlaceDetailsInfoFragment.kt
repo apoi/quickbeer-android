@@ -17,28 +17,31 @@
  */
 package quickbeer.android.feature.placedetails
 
-import android.content.Intent
-import android.net.Uri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import quickbeer.android.Constants
 import quickbeer.android.R
+import quickbeer.android.databinding.DetailsInfoColumnsBinding
 import quickbeer.android.databinding.PlaceDetailsInfoFragmentBinding
 import quickbeer.android.domain.place.Place
 import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.binder.InfoColumnsBinder
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observeSuccess
+import quickbeer.android.util.ktx.openMaps
+import quickbeer.android.util.ktx.openWikipedia
 import quickbeer.android.util.ktx.viewBinding
 
 @AndroidEntryPoint
 class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragment) {
 
     private val binding by viewBinding(PlaceDetailsInfoFragmentBinding::bind)
+    private val columnBinding by viewBinding(DetailsInfoColumnsBinding::bind)
+
     private val viewModel by viewModels<PlaceDetailsViewModel>()
 
     override fun observeViewState() {
@@ -48,6 +51,8 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
 
     private fun setPlace(place: Place) {
         val notAvailable = getString(R.string.not_available)
+
+        InfoColumnsBinder.bind(requireContext(), place, columnBinding)
 
         place.type
             ?.let { requireContext().getString(it.stringRes) }
@@ -64,37 +69,18 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
     private fun setAddress(address: Address) {
         val notAvailable = getString(R.string.not_available)
 
-        binding.city.value = address.city
-            ?.also { binding.city.setOnClickListener { openWikipedia(address.city) } }
-            ?: notAvailable
+        binding.city.value = address.city?.also {
+            binding.city.setOnClickListener { requireContext().openWikipedia(address.city) }
+        } ?: notAvailable
 
-        binding.address.value = address.address
-            ?.also { binding.address.setOnClickListener { openMaps(address) } }
-            ?: notAvailable
+        binding.address.value = address.address?.also {
+            binding.address.setOnClickListener { requireContext().openMaps(address) }
+        } ?: notAvailable
 
         binding.country.value = address.country
         binding.country.setOnClickListener {
             navigate(Destination.Country(address.countryId))
         }
-    }
-
-    private fun openWikipedia(article: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.WIKIPEDIA_PATH.format(article)))
-        requireContext().startActivity(intent)
-    }
-
-    private fun openMaps(address: Address) {
-        if (address.address == null) return
-
-        val street = if (address.address.contains(",")) {
-            address.address.split(",")[0]
-        } else {
-            address.address
-        }
-
-        val link = "%s, %s, %s".format(street, address.city, address.country)
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.GOOGLE_MAPS_PATH.format(link)))
-        requireContext().startActivity(intent)
     }
 
     companion object {

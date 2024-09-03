@@ -36,7 +36,6 @@ import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.rating.Rating
-import quickbeer.android.domain.rating.RatingBinder
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
@@ -63,6 +62,7 @@ import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.actionmenu.Action
 import quickbeer.android.ui.actionmenu.ActionSheetFragment
 import quickbeer.android.ui.base.BaseFragment
+import quickbeer.android.ui.binder.RatingBinder
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.formatDateTime
 import quickbeer.android.util.ktx.getNavigationResult
