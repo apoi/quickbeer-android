@@ -33,18 +33,14 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
-import quickbeer.android.domain.country.Country
-import quickbeer.android.domain.country.repository.CountryRepository
 import quickbeer.android.domain.place.Place
 import quickbeer.android.domain.place.repository.PlaceRepository
-import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.util.ktx.navId
 
 @HiltViewModel
 class PlaceDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val placeRepository: PlaceRepository,
-    private val countryRepository: CountryRepository
+    private val placeRepository: PlaceRepository
 ) : ViewModel() {
 
     private val placeId = savedStateHandle.navId()
@@ -52,18 +48,12 @@ class PlaceDetailsViewModel @Inject constructor(
     private val _placeState = MutableStateFlow<State<Place>>(State.Initial)
     val placeState: StateFlow<State<Place>> = _placeState
 
-    private val _addressState = MutableStateFlow<State<Address>>(State.Initial)
-    val addressState: StateFlow<State<Address>> = _addressState
-
     init {
         updateAccessedPlace(placeId)
 
         viewModelScope.launch(Dispatchers.IO) {
             placeRepository.getStream(placeId, Place.DetailsDataValidator())
-                .collectLatest {
-                    _placeState.emit(it)
-                    if (it is State.Success) getAddress(it.value)
-                }
+                .collectLatest(_placeState::emit)
         }
     }
 
@@ -77,24 +67,6 @@ class PlaceDetailsViewModel @Inject constructor(
                     val accessed = place.copy(accessed = ZonedDateTime.now())
                     placeRepository.persist(place.id, accessed)
                 }
-        }
-    }
-
-    private fun getAddress(place: Place) {
-        if (place.countryId == null) return
-
-        viewModelScope.launch(Dispatchers.IO) {
-            countryRepository.getStream(place.countryId, Accept())
-                .map { mergeAddress(place, it) }
-                .collectLatest(_addressState::emit)
-        }
-    }
-
-    private fun mergeAddress(place: Place, country: State<Country>): State<Address> {
-        return if (country is State.Success) {
-            State.Success(Address.from(place, country.value))
-        } else {
-            State.Loading()
         }
     }
 }

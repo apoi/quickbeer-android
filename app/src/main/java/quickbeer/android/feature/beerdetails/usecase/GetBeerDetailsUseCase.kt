@@ -26,10 +26,10 @@ import quickbeer.android.domain.style.repository.StyleRepository
 import quickbeer.android.domain.stylelist.repository.StyleListRepository
 import quickbeer.android.domain.user.User
 import quickbeer.android.domain.user.repository.CurrentUserRepository
-import quickbeer.android.feature.beerdetails.model.Address
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.feature.beerdetails.model.RatingState
 import quickbeer.android.feature.beerdetails.model.Tick
+import quickbeer.android.usecase.GetAddressUseCase
 import quickbeer.android.util.coroutines.combine
 
 class GetBeerDetailsUseCase @Inject constructor(
@@ -39,7 +39,8 @@ class GetBeerDetailsUseCase @Inject constructor(
     private val styleRepository: StyleRepository,
     private val styleListRepository: StyleListRepository,
     private val countryRepository: CountryRepository,
-    private val userBeerRatingRepository: UserBeerRatingRepository
+    private val userBeerRatingRepository: UserBeerRatingRepository,
+    private val getAddressUseCase: GetAddressUseCase
 ) {
 
     fun getBeerDetails(beerId: Int): Flow<State<BeerDetailsState>> {
@@ -53,7 +54,7 @@ class GetBeerDetailsUseCase @Inject constructor(
 
         val brewerFlow = getBrewer(beerFlow)
         val countryFlow = getCountry(beerFlow)
-        val addressFlow = getAddress(brewerFlow, countryFlow)
+        val addressFlow = getAddressUseCase.getBrewerAddress(brewerFlow, countryFlow)
         val styleFlow = getStyle(beerFlow)
         val ratingFlow = getRating(beerId, userFlow)
         val tickFlow = getTick(beerFlow, userFlow)
@@ -88,26 +89,6 @@ class GetBeerDetailsUseCase @Inject constructor(
                 countryRepository.getStream(countryId, Accept())
             }
             .onStart { emit(State.Initial) }
-    }
-
-    private fun getAddress(
-        brewerFlow: Flow<State<Brewer>>,
-        countryFlow: Flow<State<Country>>
-    ): Flow<State<Address>> {
-        return brewerFlow
-            .combine(countryFlow) { b, c -> mergeAddress(b, c) }
-            .onStart { emit(State.Initial) }
-    }
-
-    private fun mergeAddress(
-        brewerFlow: State<Brewer>,
-        countryFlow: State<Country>
-    ): State<Address> {
-        return if (brewerFlow is State.Success && countryFlow is State.Success) {
-            State.Success(Address.from(brewerFlow.value, countryFlow.value))
-        } else {
-            State.Loading()
-        }
     }
 
     private fun getRating(beerId: Int, userFlow: Flow<State<User>>): Flow<RatingState<Rating>> {

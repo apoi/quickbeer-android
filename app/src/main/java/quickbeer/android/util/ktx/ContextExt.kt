@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.annotation.AttrRes
 import androidx.core.content.ContextCompat
 import quickbeer.android.Constants
-import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.domain.address.Address
 
 fun Context.getThemeColor(@AttrRes colorId: Int): Int {
     val attrs = theme.obtainStyledAttributes(intArrayOf(colorId))

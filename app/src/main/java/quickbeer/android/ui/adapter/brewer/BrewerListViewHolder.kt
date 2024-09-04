@@ -9,7 +9,7 @@ import quickbeer.android.data.state.State
 import quickbeer.android.databinding.ListItemTwoRowsBinding
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.country.Country
-import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.domain.address.Address
 import quickbeer.android.ui.adapter.base.ScopeListViewHolder
 
 class BrewerListViewHolder(

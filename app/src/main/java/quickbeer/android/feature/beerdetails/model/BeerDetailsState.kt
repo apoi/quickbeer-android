@@ -1,6 +1,7 @@
 package quickbeer.android.feature.beerdetails.model
 
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.address.Address
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.rating.Rating

@@ -1,4 +1,4 @@
-package quickbeer.android.feature.beerdetails.model
+package quickbeer.android.domain.address
 
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.country.Country

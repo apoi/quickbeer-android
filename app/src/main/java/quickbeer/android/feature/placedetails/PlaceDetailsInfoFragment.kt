@@ -19,6 +19,7 @@ package quickbeer.android.feature.placedetails
 
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +27,10 @@ import javax.inject.Inject
 import quickbeer.android.R
 import quickbeer.android.databinding.DetailsInfoColumnsBinding
 import quickbeer.android.databinding.PlaceDetailsInfoFragmentBinding
+import quickbeer.android.domain.address.Address
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.place.Place
-import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.feature.placedetails.model.PlaceDetailsState
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
@@ -45,14 +48,18 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
     private val binding by viewBinding(PlaceDetailsInfoFragmentBinding::bind)
     private val columnBinding by viewBinding(DetailsInfoColumnsBinding::bind)
 
-    private val viewModel by viewModels<PlaceDetailsViewModel>()
+    private val viewModel by viewModels<PlaceDetailsInfoViewModel>()
 
     @Inject
     lateinit var toastProvider: ToastProvider
 
     override fun observeViewState() {
-        observeSuccess(viewModel.placeState, ::setPlace)
-        observeSuccess(viewModel.addressState, ::setAddress)
+        observeSuccess(viewModel.viewState, ::setViewState)
+    }
+
+    private fun setViewState(viewState: PlaceDetailsState) {
+        setPlace(viewState.place)
+        viewState.address?.let(::setAddress)
     }
 
     private fun setPlace(place: Place) {

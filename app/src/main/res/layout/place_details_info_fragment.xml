@@ -32,10 +32,25 @@
                 android:layout_marginTop="@dimen/spacing_m"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toTopOf="@id/country"
+                app:layout_constraintBottom_toTopOf="@id/brewer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/info"
+                app:title="@string/place_type"
+                app:top_divider="false" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/brewer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_m"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/country"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/type"
                 app:title="@string/place_type"
                 app:top_divider="false" />
 

@@ -38,7 +38,7 @@ import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.domain.address.Address
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticalMapper
 import quickbeer.android.util.ktx.navId

@@ -39,7 +39,7 @@ import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
-import quickbeer.android.feature.beerdetails.model.Address
+import quickbeer.android.domain.address.Address
 import quickbeer.android.feature.beerdetails.model.BeerDetailsInfoViewEvent.ShowMessage
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.feature.beerdetails.model.RatingAction
