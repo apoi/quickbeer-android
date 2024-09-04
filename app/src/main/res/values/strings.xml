@@ -105,6 +105,8 @@
     <string name="place_city">City</string>
     <string name="place_address">Address</string>
     <string name="place_opening_hours">Opening Hours</string>
+    <string name="place_beer_menu">Beer Menu</string>
+    <string name="place_food_menu">Food Menu</string>
     <string name="place_rating">Rating relative to all places on a scale from 0 to 100</string>
 
     <!-- Place types -->

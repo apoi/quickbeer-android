@@ -35,10 +35,12 @@ import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment
 import quickbeer.android.ui.binder.InfoColumnsBinder
+import quickbeer.android.util.LinkUtils
 import quickbeer.android.util.ToastProvider
 import quickbeer.android.util.ktx.ifNull
 import quickbeer.android.util.ktx.observeSuccess
 import quickbeer.android.util.ktx.openMaps
+import quickbeer.android.util.ktx.openUri
 import quickbeer.android.util.ktx.openWikipedia
 import quickbeer.android.util.ktx.viewBinding
 
@@ -84,6 +86,24 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
             ?.let { it.split(", ").joinToString("\n") }
             ?.let { value -> binding.openingHours.value = value }
             .ifNull { binding.openingHours.value = notAvailable }
+
+        place.beerMenu
+            ?.takeIf(String::isNotEmpty)
+            ?.let(LinkUtils::fixUrl)
+            ?.let { value ->
+                binding.beerMenu.value = value
+                binding.beerMenu.isVisible = true
+                binding.beerMenu.setOnClickListener { openUri(value) }
+            }
+
+        place.foodMenu
+            ?.takeIf(String::isNotEmpty)
+            ?.let(LinkUtils::fixUrl)
+            ?.let { value ->
+                binding.foodMenu.value = value
+                binding.foodMenu.isVisible = true
+                binding.foodMenu.setOnClickListener { openUri(value) }
+            }
     }
 
     private fun setAddress(address: Address) {
@@ -109,6 +129,10 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
 
     private fun onBrewerClicked(brewer: Brewer) {
         navigate(Destination.Brewer(brewer.id))
+    }
+
+    private fun openUri(uri: String) {
+        requireContext().openUri(uri)
     }
 
     companion object {

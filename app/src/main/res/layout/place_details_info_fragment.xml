@@ -25,6 +25,12 @@
 
             <!-- Separate fields -->
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/info"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
             <quickbeer.android.ui.view.ValueLabel
                 android:id="@+id/type"
                 android:layout_width="match_parent"
@@ -32,10 +38,6 @@
                 android:layout_marginTop="@dimen/spacing_m"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toTopOf="@id/brewer"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/info"
                 app:title="@string/place_type"
                 app:top_divider="false" />
 
@@ -47,10 +49,6 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:visibility="gone"
-                app:layout_constraintBottom_toTopOf="@id/country"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/type"
                 app:title="@string/place_brewer"
                 app:top_divider="true" />
 
@@ -60,10 +58,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toTopOf="@id/city"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/type"
                 app:title="@string/place_country"
                 app:top_divider="true" />
 
@@ -73,10 +67,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toTopOf="@id/address"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/country"
                 app:title="@string/place_city"
                 app:top_divider="true" />
 
@@ -86,10 +76,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintBottom_toTopOf="@id/opening_hours"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/city"
                 app:title="@string/place_address"
                 app:top_divider="true" />
 
@@ -99,11 +85,30 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:focusable="true"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/address"
                 app:title="@string/place_opening_hours"
                 app:top_divider="true" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/beer_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:title="@string/place_beer_menu"
+                app:top_divider="true" />
+
+            <quickbeer.android.ui.view.ValueLabel
+                android:id="@+id/food_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:title="@string/place_food_menu"
+                app:top_divider="true" />
+
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
