@@ -1,21 +1,21 @@
 package quickbeer.android.feature.placedetails.model
 
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.address.Address
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.place.Place
-import quickbeer.android.domain.address.Address
 
 data class PlaceDetailsState(
     val place: Place,
     val brewer: Brewer?,
-    val address: Address?,
+    val address: Address?
 ) {
 
     companion object {
         fun create(
             place: State<Place>,
             brewer: State<Brewer>,
-            address: State<Address>,
+            address: State<Address>
         ): PlaceDetailsState? {
             val placeValue = place.valueOrNull() ?: return null
             return PlaceDetailsState(

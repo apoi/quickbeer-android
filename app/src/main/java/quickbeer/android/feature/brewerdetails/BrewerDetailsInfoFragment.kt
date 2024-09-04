@@ -24,8 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import quickbeer.android.R
 import quickbeer.android.databinding.BrewerDetailsInfoFragmentBinding
 import quickbeer.android.databinding.DetailsInfoColumnsBinding
-import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.address.Address
+import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.navigation.Destination
 import quickbeer.android.navigation.NavParams
 import quickbeer.android.ui.base.BaseFragment

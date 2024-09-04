@@ -59,7 +59,14 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
 
     private fun setViewState(viewState: PlaceDetailsState) {
         setPlace(viewState.place)
+        viewState.brewer?.let(::setBrewer)
         viewState.address?.let(::setAddress)
+    }
+
+    private fun setBrewer(brewer: Brewer) {
+        binding.brewer.value = brewer.name
+        binding.brewer.isVisible = true
+        binding.brewer.setOnClickListener { onBrewerClicked(brewer) }
     }
 
     private fun setPlace(place: Place) {
@@ -98,6 +105,10 @@ class PlaceDetailsInfoFragment : BaseFragment(R.layout.place_details_info_fragme
 
     private fun onRatingClicked() {
         toastProvider.showCancelableToast(R.string.place_rating, Toast.LENGTH_LONG)
+    }
+
+    private fun onBrewerClicked(brewer: Brewer) {
+        navigate(Destination.Brewer(brewer.id))
     }
 
     companion object {

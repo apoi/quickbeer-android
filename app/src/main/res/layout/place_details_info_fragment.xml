@@ -51,8 +51,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/type"
-                app:title="@string/place_type"
-                app:top_divider="false" />
+                app:title="@string/place_brewer"
+                app:top_divider="true" />
 
             <quickbeer.android.ui.view.ValueLabel
                 android:id="@+id/country"

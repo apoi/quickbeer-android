@@ -33,12 +33,12 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.ZonedDateTime
 import quickbeer.android.data.repository.Accept
 import quickbeer.android.data.state.State
+import quickbeer.android.domain.address.Address
 import quickbeer.android.domain.beerlist.repository.BrewersBeersRepository
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.brewer.repository.BrewerRepository
 import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.country.repository.CountryRepository
-import quickbeer.android.domain.address.Address
 import quickbeer.android.ui.adapter.beer.BeerListModel
 import quickbeer.android.ui.adapter.beer.BeerListModelAlphabeticalMapper
 import quickbeer.android.util.ktx.navId

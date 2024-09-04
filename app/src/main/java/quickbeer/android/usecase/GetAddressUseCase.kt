@@ -1,5 +1,6 @@
 package quickbeer.android.usecase
 
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
@@ -10,7 +11,7 @@ import quickbeer.android.domain.country.Country
 import quickbeer.android.domain.place.Place
 
 // TODO some combination opportunities here surely
-class GetAddressUseCase {
+class GetAddressUseCase @Inject constructor() {
 
     fun getBrewerAddress(
         brewerFlow: Flow<State<Brewer>>,

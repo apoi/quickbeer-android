@@ -92,9 +92,9 @@ class PlaceDetailsInfoViewModel @Inject constructor(
 
     private fun getCountry(placeFlow: Flow<State<Place>>): Flow<State<Country>> {
         return placeFlow
-            .mapNotNull { it.valueOrNull()?.brewerId }
-            .flatMapLatest { brewerId ->
-                countryRepository.getStream(brewerId, Accept())
+            .mapNotNull { it.valueOrNull()?.countryId }
+            .flatMapLatest { countryId ->
+                countryRepository.getStream(countryId, Accept())
             }
             .onStart { emit(State.Initial) }
     }

@@ -33,13 +33,13 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 import quickbeer.android.R
 import quickbeer.android.databinding.BeerDetailsInfoFragmentBinding
+import quickbeer.android.domain.address.Address
 import quickbeer.android.domain.beer.Beer
 import quickbeer.android.domain.brewer.Brewer
 import quickbeer.android.domain.rating.Rating
 import quickbeer.android.domain.style.Style
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toActions
 import quickbeer.android.feature.beerdetails.BeerDetailsFragmentDirections.Companion.toRating
-import quickbeer.android.domain.address.Address
 import quickbeer.android.feature.beerdetails.model.BeerDetailsInfoViewEvent.ShowMessage
 import quickbeer.android.feature.beerdetails.model.BeerDetailsState
 import quickbeer.android.feature.beerdetails.model.RatingAction
