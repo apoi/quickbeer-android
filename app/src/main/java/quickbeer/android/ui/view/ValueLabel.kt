@@ -1,11 +1,15 @@
 package quickbeer.android.ui.view
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import kotlin.math.roundToInt
@@ -83,6 +87,23 @@ class ValueLabel @JvmOverloads constructor(
         }
 
         ta.recycle()
+
+        setLongPressHandler()
+    }
+
+    private fun setLongPressHandler() {
+        setOnLongClickListener {
+            val manager: ClipboardManager? = getSystemService(context, ClipboardManager::class.java)
+            val clip = value?.let { ClipData.newPlainText("Value", it) }
+
+            if (manager != null && clip != null) {
+                manager.setPrimaryClip(clip)
+                Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+                true
+            } else {
+                false
+            }
+        }
     }
 
     private fun Int.dp(): Int {

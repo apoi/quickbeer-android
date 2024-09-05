@@ -8,7 +8,9 @@
     <string name="action_ok">OK</string>
     <string name="action_yes">Yes</string>
     <string name="action_no">No</string>
+
     <string name="open_in_browser">Open in browser</string>
+    <string name="copied_to_clipboard">Copied</string>
 
     <!-- Pages -->
     <string name="recent_title">Search</string>

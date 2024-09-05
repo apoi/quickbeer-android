@@ -27,86 +27,85 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/info"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/info">
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_m"
-                android:clickable="true"
-                android:focusable="true"
-                app:title="@string/place_type"
-                app:top_divider="false" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_m"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:title="@string/place_type"
+                    app:top_divider="false" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/brewer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_m"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                app:title="@string/place_brewer"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/brewer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    app:title="@string/place_brewer"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/country"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:title="@string/place_country"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:title="@string/place_country"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/city"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:title="@string/place_city"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:title="@string/place_city"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:title="@string/place_address"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:title="@string/place_address"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/opening_hours"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                app:title="@string/place_opening_hours"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/opening_hours"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:title="@string/place_opening_hours"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/beer_menu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                app:title="@string/place_beer_menu"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/beer_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    app:title="@string/place_beer_menu"
+                    app:top_divider="true" />
 
-            <quickbeer.android.ui.view.ValueLabel
-                android:id="@+id/food_menu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"
-                app:title="@string/place_food_menu"
-                app:top_divider="true" />
+                <quickbeer.android.ui.view.ValueLabel
+                    android:id="@+id/food_menu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone"
+                    app:title="@string/place_food_menu"
+                    app:top_divider="true" />
 
             </LinearLayout>
 

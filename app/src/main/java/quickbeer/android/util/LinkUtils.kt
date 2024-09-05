@@ -9,7 +9,7 @@ object LinkUtils {
     private fun addMissingProtocol(value: String?): String? {
         return when {
             value == null -> null
-            !value.startsWith("http") -> "http://$value"
+            !value.startsWith("http") -> "https://$value"
             else -> value
         }
     }
